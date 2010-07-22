@@ -1,0 +1,33 @@
+
+            Cloudsim Project to Release CloudSim Toolkit 2.0
+
+The Cloudbus Project at The University of Melbourne, Australia along with collaborators
+from the High Performance Lab (LAD) at Pontifical Catholic University of Rio Grande do Sul
+(PUCRS), Porto Alegre, Brazil is proud to announce the release of the new version of its
+Cloud simulation software, the CloudSim.
+
+One year has passed since CloudSim beta was released. Since then, Cloud computing has gained
+more visibility, and a plenty of new projects, both in academia and in the industry, emerged.
+To help developers of such projects to evaluate new strategies and ideas before actual
+development, CloudSim 2.0 contains support for model and simulation of hot topics in Cloud
+Computing, including green/power-aware Cloud Computing and federated Cloud Computing.
+
+At the same time new features were added, major improvements in simulation core allowed enhanced
+scalability and performance of simulations and insertion and removal of simulation entities
+during simulation execution. It increases considerably scenarios that may be addressed in
+simulations, what we hope will contribute to a wider adoption of the tool by the research
+community.
+
+These improvements were possible due to extensive support from the Cloud Computing research
+community around the world, which used CloudSim, appointed bugs, and provided us feedback on
+new features they would like to have in future versions the toolkit. Community is invited to
+keep contribution to CloudSim.
+
+As in its previous version, all components developed as part of the CloudSim Toolkit are released
+as "open source" under the GPL license to encourage innovation and pass full freedom to our users.
+
+To download the CloudSim software, please visit the Cloudbus Project web site at
+http://www.cloudbus.org/cloudsim/
+
+The CloudSim Team
+Melbourne, May 2010
