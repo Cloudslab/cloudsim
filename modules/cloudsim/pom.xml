@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>modules</artifactId>
+    <groupId>org.cloudbus.cloudsim</groupId>
+    <version>2.0-SNAPSHOT</version>
+  </parent>
+  
+  <artifactId>cloudsim</artifactId>
+  <name>cloudsim</name>
+  
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-javadoc-plugin</artifactId>
+  			<executions>
+  				<execution>
+  					<id>docs</id>
+  					<phase>prepare-package</phase>
+  					<goals>
+  						<goal>jar</goal>
+  					</goals>
+  				</execution>
+  			</executions>
+		</plugin>
+	</plugins>
+  </build>  
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.7</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.2</version>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.maven.plugin</groupId>
+        <artifactId>emma-maven-plugin</artifactId>
+        <version>1.2</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+    </plugins>
+  </reporting>    
+  
+</project>
