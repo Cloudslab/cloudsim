@@ -79,7 +79,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 
 		if (!getVmTable().containsKey(vm.getUid())) { //if this vm was not created
 
-			do {//we still trying until we find a host or untill we try all of them
+			do {//we still trying until we find a host or until we try all of them
 				int moreFree = Integer.MIN_VALUE;
 				int idx = -1;
 
