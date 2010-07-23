@@ -1,9 +1,21 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Descripimport java.util.Random;
+mulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.distributions;
 
 import java.util.Random;
 
 /**
  * The Class ParetoDistr.
+ *
+ * @author		Marcos Dias de Assuncao
+ * @since		CloudSim Toolkit 1.0
  */
 public class ParetoDistr implements ContinuousDistribution {
 
@@ -56,6 +68,7 @@ public class ParetoDistr implements ContinuousDistribution {
 	/* (non-Javadoc)
 	 * @see cloudsim.distributions.ContinuousDistribution#sample()
 	 */
+	@Override
 	public double sample() {
 		return location/Math.pow(numGen.nextDouble(),1/shape);
 	}

@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.lists;
@@ -16,14 +15,13 @@ import java.util.List;
 import org.cloudbus.cloudsim.Cloudlet;
 
 /**
- * CloudletList is a link to store Cloudlets.
+ * CloudletList is a collection of operations on lists of Cloudlets.
  *
- * @author 		Rodrigo N. Calheiros
- * @since       CloudSim Toolkit 1.0 Beta
- * @invariant 	$none
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
  */
 public class CloudletList {
-	
+
     /**
      * Gets the by id.
      *
@@ -70,7 +68,8 @@ public class CloudletList {
              * @pre b != null
              * @post $none
              */
-            public int compare(T a, T b) throws ClassCastException {
+            @Override
+			public int compare(T a, T b) throws ClassCastException {
                 Double cla = Double.valueOf(a.getCloudletTotalLength());
                 Double clb = Double.valueOf(b.getCloudletTotalLength());
                 return cla.compareTo(clb);

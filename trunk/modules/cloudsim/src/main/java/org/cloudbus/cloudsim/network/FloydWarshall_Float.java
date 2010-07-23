@@ -1,44 +1,43 @@
 /*
  * @(#)FloydWarshall.java	ver 1.2  6/20/2005
  *
- * Modified by Weishuai Yang (wyang@cs.binghamton.edu). 
+ * Modified by Weishuai Yang (wyang@cs.binghamton.edu).
  * Originally written by Rahul Simha
- * 
+ *
  */
-
 
 package org.cloudbus.cloudsim.network;
 
-
 /**
  * FloydWarshall algorithm to calculate all pairs delay and predecessor matrix.
- * 
- * Modified by Weishuai Yang
- * Originally written by Rahul Simha
- * @version 1.2,  6/20/2005
+ *
+ * @author		Rahul Simha
+ * @author		Weishuai Yang
+ * @version 	1.2,  6/20/2005
+ * @since		CloudSim Toolkit 1.0
  */
 public class FloydWarshall_Float {
   /**
    * Number of vertices (when initialized)
    */
-  private int numVertices;                   
+  private int numVertices;
 
 //  /**
-//   * The adjacency matrix (given as input), 
+//   * The adjacency matrix (given as input),
 //   * here I use float rather than double to save memory,
-//   * since there won't be a lot of spilting for delay, 
+//   * since there won't be a lot of spilting for delay,
 //   * and float is accurate enough.
 //   */
-//  private float[][] adjMatrix; 
+//  private float[][] adjMatrix;
 
   /**
    * Matrices used in dynamic programming
    */
-  private float[][] Dk, Dk_minus_one;  
+  private float[][] Dk, Dk_minus_one;
   /**
    * Matrices used in dynamic programming
    */
-  private int[][] Pk, Pk_minus_one; 
+  private int[][] Pk, Pk_minus_one;
 
   /**
    * initialization matrix
@@ -55,7 +54,7 @@ public class FloydWarshall_Float {
       Dk[i] = new float [numVertices];
       Dk_minus_one[i] = new float [numVertices];
     }
-    
+
     // Initialize Pk matrices.
     Pk = new int [numVertices][];
     Pk_minus_one = new int [numVertices][];
@@ -63,7 +62,7 @@ public class FloydWarshall_Float {
       Pk[i] = new int [numVertices];
       Pk_minus_one[i] = new int [numVertices];
     }
-    
+
   }
 
   /**
@@ -88,7 +87,7 @@ public class FloydWarshall_Float {
         // this to avoid a comparison.
       }
     }
-    
+
     // Now iterate over k.
 
     for (int k=0; k<numVertices; k++) {
@@ -108,9 +107,9 @@ public class FloydWarshall_Float {
               Dk[i][j] = Dk_minus_one[i][k] + Dk_minus_one[k][j];
 			  Pk[i][j] = Pk_minus_one[k][j];
 			}
-          }
-          else
-          	Pk[i][j] = -1;
+          } else {
+			Pk[i][j] = -1;
+		}
         }
       }
 
@@ -142,7 +141,7 @@ public class FloydWarshall_Float {
   public static void main (String[] argv)
   {
     // A test case.
-     * 
+     *
       double[][] adjMatrix = {
         {0, 1, 0, 0, 1},
         {1, 0, 1, 3, 0},
@@ -156,7 +155,7 @@ public class FloydWarshall_Float {
       FloydWarshall fwAlg = new FloydWarshall ();
       fwAlg.initialize (n);
       adjMatrix=fwAlg.allPairsShortestPaths (adjMatrix);
-      
+
 	    //debug begin
 	    StringBuffer s0=new StringBuffer("Delay Information before floydwarshall:\n");
 	    for(int i=0;i<n;i++){
@@ -168,15 +167,15 @@ public class FloydWarshall_Float {
 	    	s0.append("\n");
 	    }
 	    Log.printLine(""+s0);
-	    
-	    
+
+
 	    int[][] Pk=fwAlg.getPK();
-	    
+
 
 	    Log.printLine("Path information");
 	    for(int i=0;i<n;i++){
 	    	for(int j=0;j<n;j++){
-	    		Log.print("From "+i+" to "+j+": ");		    	
+	    		Log.print("From "+i+" to "+j+": ");
 		    	int pre=Pk[i][j];
 		    	while((pre!=-1)&&(pre!=i)){
 		    		Log.print(" <-  "+ pre);
@@ -187,7 +186,7 @@ public class FloydWarshall_Float {
 				Log.printLine("\n");
 		    }
 	    }
-	    
+
   }
 
 */

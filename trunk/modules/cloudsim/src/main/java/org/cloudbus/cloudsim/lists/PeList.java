@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2002, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.lists;
@@ -16,23 +15,21 @@ import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * CloudSim PeList maintains a list of PEs (Processing Elements) that make up
- * a machine.
- * 
- * @author       Manzur Murshed and Rajkumar Buyya
- * @since        CloudSim Toolkit 1.0
- * @invariant $none
+ * PeList is a collection of operations on lists of PEs.
+ *
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
  */
 public class PeList {
-	
+
 	/**
 	 * Gets MIPS Rating for a specified Pe ID.
-	 * 
+	 *
 	 * @param id    the Pe ID
 	 * @param peList the pe list
-	 * 
+	 *
 	 * @return the MIPS rating if exists, otherwise returns -1
-	 * 
+	 *
 	 * @pre id >= 0
 	 * @post $none
 	 */
@@ -44,15 +41,15 @@ public class PeList {
 		}
     	return null;
     }
-	
+
 	/**
 	 * Gets MIPS Rating for a specified Pe ID.
-	 * 
+	 *
 	 * @param id    the Pe ID
 	 * @param peList the pe list
-	 * 
+	 *
 	 * @return the MIPS rating if exists, otherwise returns -1
-	 * 
+	 *
 	 * @pre id >= 0
 	 * @post $none
 	 */
@@ -63,31 +60,31 @@ public class PeList {
 		}
 		return -1;
 	}
-    
+
     /**
      * Gets total MIPS Rating for all PEs.
-     * 
+     *
      * @param peList the pe list
-     * 
+     *
      * @return the total MIPS Rating
-     * 
+     *
      * @pre $none
      * @post $none
      */
     public static <T extends Pe> int getTotalMips(List<Pe> peList) {
     	int totalMips = 0;
     	for (Pe pe : peList) {
-    		totalMips += pe.getMips();			
+    		totalMips += pe.getMips();
 		}
     	return totalMips;
     }
-    
-    
+
+
     /**
      * Gets the max utilization among by all PEs.
-     * 
+     *
      * @param peList the pe list
-     * 
+     *
      * @return the utilization
      */
     public static <T extends Pe> double getMaxUtilization(List<Pe> peList) {
@@ -96,18 +93,18 @@ public class PeList {
     		double utilization = pe.getPeProvisioner().getUtilization();
     		if (utilization > maxUtilization) {
     			maxUtilization = utilization;
-    		}		
-    	}		
+    		}
+    	}
     	return maxUtilization;
     }
-    
+
 	/**
 	 * Gets the max utilization among by all PEs
 	 * allocated to the VM.
-	 * 
+	 *
 	 * @param vm the vm
 	 * @param peList the pe list
-	 * 
+	 *
 	 * @return the utilization
 	 */
 	public static <T extends Pe> double getMaxUtilizationAmongVmsPes(List<Pe> peList, Vm vm) {
@@ -119,18 +116,18 @@ public class PeList {
 			double utilization = pe.getPeProvisioner().getUtilization();
 			if (utilization > maxUtilization) {
 				maxUtilization = utilization;
-			}		
-		}		
+			}
+		}
 		return maxUtilization;
 	}
 
     /**
      * Gets a Pe ID which is FREE.
-     * 
+     *
      * @param peList the pe list
-     * 
+     *
      * @return a Pe ID if it is FREE, otherwise returns -1
-     * 
+     *
      * @pre $none
      * @post $none
      */
@@ -145,11 +142,11 @@ public class PeList {
 
     /**
      * Gets the number of <tt>FREE</tt> or non-busy Pe.
-     * 
+     *
      * @param peList the pe list
-     * 
+     *
      * @return number of Pe
-     * 
+     *
      * @pre $none
      * @post $result >= 0
      */
@@ -165,14 +162,14 @@ public class PeList {
 
     /**
      * Sets the Pe status.
-     * 
+     *
      * @param status   Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
      * @param id the id
      * @param peList the pe list
-     * 
+     *
      * @return <tt>true</tt> if the Pe status has been changed, <tt>false</tt>
      * otherwise (Pe id might not be exist)
-     * 
+     *
      * @pre peID >= 0
      * @post $none
      */
@@ -187,11 +184,11 @@ public class PeList {
 
     /**
      * Gets the number of <tt>BUSY</tt> Pe.
-     * 
+     *
      * @param peList the pe list
-     * 
+     *
      * @return number of Pe
-     * 
+     *
      * @pre $none
      * @post $result >= 0
      */
@@ -207,14 +204,14 @@ public class PeList {
 
     /**
      * Gets the byte size of PeList internal data members.
-     * 
+     *
      * @param peList the pe list
      * @param resName the res name
      * @param hostId the host id
      * @param failed the failed
-     * 
+     *
      * @return the byte size
-     * 
+     *
      * @pre $none
      * @post $result >= 0
      */
@@ -229,7 +226,7 @@ public class PeList {
      * purposes, which is <b>ON</b> by default.
      * Use {@link #setStatusFailed(boolean)} if you do not want
      * this information.
-     * 
+     *
      * @param resName   the name of the resource
      * @param hostId the id of this machine
      * @param failed      the new value for the "failed" parameter
@@ -249,7 +246,7 @@ public class PeList {
 
     /**
      * Sets the status of PEs of this machine to FAILED.
-     * 
+     *
      * @param failed      the new value for the "failed" parameter
      * @param peList the pe list
      */
@@ -260,8 +257,8 @@ public class PeList {
             	pe.setStatus(Pe.FAILED);
             } else {
             	pe.setStatus(Pe.FREE);
-            }			
+            }
 		}
     }
 
-} 
+}

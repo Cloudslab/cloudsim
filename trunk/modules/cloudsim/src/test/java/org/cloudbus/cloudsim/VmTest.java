@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim;
 
 import static org.easymock.EasyMock.createMock;
@@ -15,6 +23,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
+ */
 public class VmTest {
 
 	private static final int ID = 1;

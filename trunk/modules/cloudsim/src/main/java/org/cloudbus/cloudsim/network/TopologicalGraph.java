@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.network;
 
 import java.util.Iterator;
@@ -5,15 +13,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * this class represents an graph containing nodes and edges,
+ * This class represents an graph containing nodes and edges,
  * used for input with an network-layer
  *
  * Graphical-Output Restricions!
  * EdgeColors:	GraphicalProperties.getColorEdge
  * NodeColors:	GraphicalProperties.getColorNode
  *
- * @author Thomas Hohnstein
- *
+ * @author		Thomas Hohnstein
+ * @since		CloudSim Toolkit 1.0
  */
 public class TopologicalGraph {
 

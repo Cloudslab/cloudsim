@@ -1,25 +1,22 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
 
 import java.util.List;
 
-
 /**
  * This class represents the coordinator of a federation of clouds.
  * It interacts with other clouds coordinators in order to exchange
  * virtual machines and user applicatoins, if required.
  *
- * @author       Rodrigo N. Calheiros
- * @since        CloudSim Toolkit 1.0 Beta
- * @invariant $none
+ * @author		Rodrigo N. Calheiros
+ * @since		CloudSim Toolkit 1.0
  */
 public abstract class CloudCoordinator {
 

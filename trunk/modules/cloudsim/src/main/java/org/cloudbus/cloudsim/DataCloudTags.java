@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- * Copyright (c) 2006, The University of Melbourne, Australia and
- * University of Ljubljana, Slovenia
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -14,8 +13,9 @@ package org.cloudbus.cloudsim;
  * such as file information retrieval, file transfers, and
  * storage info.
  *
- * @author  Uros Cibej and Anthony Sulistio
- * @since   CloudSim Toolkit 4.0
+ * @author		Uros Cibej
+ * @author		Anthony Sulistio
+ * @since		CloudSim Toolkit 1.0
  */
 public final class DataCloudTags {
     // to prevent a conflict with the existing CloudSimTags values

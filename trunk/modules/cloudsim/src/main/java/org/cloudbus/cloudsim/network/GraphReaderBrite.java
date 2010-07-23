@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.network;
 
 import java.io.BufferedReader;
@@ -6,7 +14,7 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 /**
- * this class is just an file-reader for the special brite-format!
+ * This class is just an file-reader for the special brite-format!
  *
  * the brite-file is structured as followed:
  * Node-section:
@@ -15,8 +23,8 @@ import java.util.StringTokenizer;
  * Edge-section:
  *		EdgeID, fromNode, toNode, euclideanLength, linkDelay, linkBandwith, AS_from, AS_to, type
  *
- * @author Thomas Hohnstein
- *
+ * @author		Thomas Hohnstein
+ * @since		CloudSim Toolkit 1.0
  */
 public class GraphReaderBrite implements GraphReaderIF {
 
@@ -36,6 +44,7 @@ public class GraphReaderBrite implements GraphReaderIF {
 	 * @return created TopologicalGraph
 	 * @throws IOException
 	 */
+	@Override
 	public TopologicalGraph readGraphFile(String filename) throws IOException{
 
 		graph = new TopologicalGraph();

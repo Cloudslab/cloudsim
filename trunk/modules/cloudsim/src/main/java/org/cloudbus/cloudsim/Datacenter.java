@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -30,9 +29,9 @@ import org.cloudbus.cloudsim.core.SimEvent;
  * it will not be used, as processing of cloudlets are handled by the CloudletScheduler
  * and processing of VirtualMachines are handled by the VmAllocationPolicy.
  *
- * @author       Rodrigo N. Calheiros
- * @since        CloudSim Toolkit 1.0 Beta
- * @invariant $none
+ * @author		Rodrigo N. Calheiros
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 1.0
  */
 public class Datacenter extends SimEntity {
 
@@ -629,9 +628,7 @@ public class Datacenter extends SimEntity {
 
 		debts.put(vm.getUserId(), amount);
 
-		if (!Log.isDisabled()) {
-			Log.print(String.format("%.2f: Migration of VM #%d to Host #%d is completed\n", CloudSim.clock(), vm.getId(), host.getId()));
-		}
+		Log.formatLine("%.2f: Migration of VM #%d to Host #%d is completed", CloudSim.clock(), vm.getId(), host.getId());
 		vm.setInMigration(false);
     }
 

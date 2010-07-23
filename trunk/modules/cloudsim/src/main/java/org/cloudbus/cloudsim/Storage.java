@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- * Copyright (c) 2006, The University of Melbourne, Australia and
- * University of Ljubljana, Slovenia
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -19,10 +18,9 @@ import java.util.List;
  * required to execute some common operations on the storage, e.g. storing a
  * file, getting a file and deleting a file.
  *
- * @author Uros Cibej and Anthony Sulistio
- * @since CloudSim Toolkit 4.0
- * @see gridsim.datagrid.storage.HarddriveStorage
- * @see gridsim.datagrid.storage.TapeStorage
+ * @author		Uros Cibej
+ * @author		Anthony Sulistio
+ * @since		CloudSim Toolkit 1.0
  */
 public interface Storage {
 

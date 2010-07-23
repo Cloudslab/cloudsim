@@ -1,16 +1,21 @@
-/* Sim_event.java */
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
 
 package org.cloudbus.cloudsim.core;
-
 
 /**
  * This class represents a simulation event which is passed between
  * the entities in the simulation.
  *
- * @see Simulation
- * @see SimEntity
-
- * @author Costas Simatos
+ * @author		Costas Simatos
+ *
+ * @see			Simulation
+ * @see			SimEntity
  */
 public class SimEvent implements Cloneable, Comparable<SimEvent> {
 	private final int etype; // internal event type
@@ -89,6 +94,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 	/**
 	 * @see Comparable#compareTo(Object)
 	 */
+	@Override
 	public int compareTo(SimEvent event) {
 		if (event == null) {
 			return 1;

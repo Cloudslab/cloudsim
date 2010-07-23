@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- * Copyright (c) 2006, The University of Melbourne, Australia and
- * University of Ljubljana, Slovenia
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -25,9 +24,9 @@ import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
  * <li> max transfer rate = 133 MB/sec
  * </ul>
  *
- * @author Uros Cibej and Anthony Sulistio
- * @since CloudSim Toolkit 4.0
- * @see gridsim.datagrid.storage.Storage
+ * @author		Uros Cibej
+ * @author		Anthony Sulistio
+ * @since		CloudSim Toolkit 1.0
  */
 public class HarddriveStorage implements Storage {
 
@@ -123,7 +122,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return  the available space in MB
      */
-    public double getAvailableSpace() {
+    @Override
+	public double getAvailableSpace() {
         return capacity - currentSize;
     }
 
@@ -133,7 +133,8 @@ public class HarddriveStorage implements Storage {
      * @return  <tt>true</tt> if the storage is full, <tt>false</tt>
      * otherwise
      */
-    public boolean isFull() {
+    @Override
+	public boolean isFull() {
         if (Math.abs(currentSize - capacity) < .0000001) { // currentSize == capacity
             return true;
         }
@@ -145,7 +146,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return the number of stored files
      */
-    public int getNumStoredFile() {
+    @Override
+	public int getNumStoredFile() {
         return fileList.size();
     }
 
@@ -157,7 +159,8 @@ public class HarddriveStorage implements Storage {
      * @return <tt>true</tt> if reservation succeeded, <tt>false</tt>
      * otherwise
      */
-    public boolean reserveSpace(int fileSize) {
+    @Override
+	public boolean reserveSpace(int fileSize) {
         if (fileSize <= 0) {
             return false;
         }
@@ -179,7 +182,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return the time (in seconds) required to add the file
      */
-    public double addReservedFile(File file) {
+    @Override
+	public double addReservedFile(File file) {
         if (file == null) {
             return 0;
         }
@@ -203,7 +207,8 @@ public class HarddriveStorage implements Storage {
      * @return <tt>true</tt> if enough space available, <tt>false</tt>
      * otherwise
      */
-    public boolean hasPotentialAvailableSpace(int fileSize) {
+    @Override
+	public boolean hasPotentialAvailableSpace(int fileSize) {
         if (fileSize <= 0) {
             return false;
         }
@@ -240,7 +245,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return  the capacity of the storage in MB
      */
-    public double getCapacity() {
+    @Override
+	public double getCapacity() {
         return capacity;
     }
 
@@ -249,7 +255,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return  the current size of the stored files in MB
      */
-    public double getCurrentSize() {
+    @Override
+	public double getCurrentSize() {
         return currentSize;
     }
 
@@ -258,7 +265,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return  the name of this storage
      */
-    public String getName() {
+    @Override
+	public String getName() {
         return name;
     }
 
@@ -296,7 +304,8 @@ public class HarddriveStorage implements Storage {
      * @return  <tt>true</tt> if the setting succeeded, <tt>false</tt>
      * otherwise
      */
-    public boolean setMaxTransferRate(int rate) {
+    @Override
+	public boolean setMaxTransferRate(int rate) {
         if (rate <= 0) {
             return false;
         }
@@ -310,7 +319,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return  the maximum transfer rate in MB/sec
      */
-    public double getMaxTransferRate() {
+    @Override
+	public double getMaxTransferRate() {
         return maxTransferRate;
     }
 
@@ -364,7 +374,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return the file with the specified filename
      */
-    public File getFile(String fileName) {
+    @Override
+	public File getFile(String fileName) {
         // check first whether file name is valid or not
         File obj = null;
         if (fileName == null || fileName.length() == 0) {
@@ -410,7 +421,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return a List of file names
      */
-    public List<String> getFileNameList() {
+    @Override
+	public List<String> getFileNameList() {
         return nameList;
     }
 
@@ -493,7 +505,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return the time taken (in seconds) for adding the specified file
      */
-    public double addFile(File file) {
+    @Override
+	public double addFile(File file) {
         double result = 0.0;
         // check if the file is valid or not
         if (!isFileValid(file, "addFile()")) {
@@ -531,7 +544,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return the time taken (in seconds) for adding the specified files
      */
-    public double addFile(List<File> list) {
+    @Override
+	public double addFile(List<File> list) {
         double result = 0.0;
         if (list == null || list.isEmpty()) {
             Log.printLine(name + ".addFile(): Warning - list is empty.");
@@ -556,7 +570,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return the deleted file
      */
-    public File deleteFile(String fileName) {
+    @Override
+	public File deleteFile(String fileName) {
         if (fileName == null || fileName.length() == 0) {
             return null;
         }
@@ -590,7 +605,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return the time taken (in seconds) for deleting the specified file
      */
-    public double deleteFile(String fileName, File file) {
+    @Override
+	public double deleteFile(String fileName, File file) {
         return deleteFile(file);
     }
 
@@ -604,7 +620,8 @@ public class HarddriveStorage implements Storage {
      *
      * @return the time taken (in seconds) for deleting the specified file
      */
-    public double deleteFile(File file) {
+    @Override
+	public double deleteFile(File file) {
         double result = 0.0;
         // check if the file is valid or not
         if (!isFileValid(file, "deleteFile()")) {
@@ -632,7 +649,8 @@ public class HarddriveStorage implements Storage {
      * @return <tt>true</tt> if the file is in the storage, <tt>false</tt>
      * otherwise
      */
-    public boolean contains(String fileName) {
+    @Override
+	public boolean contains(String fileName) {
         boolean result = false;
         if (fileName == null || fileName.length() == 0) {
             Log.printLine(name
@@ -659,7 +677,8 @@ public class HarddriveStorage implements Storage {
      * @return <tt>true</tt> if the file is in the storage, <tt>false</tt>
      * otherwise
      */
-    public boolean contains(File file) {
+    @Override
+	public boolean contains(File file) {
         boolean result = false;
         if (!isFileValid(file, "contains()")) {
             return result;
@@ -680,7 +699,8 @@ public class HarddriveStorage implements Storage {
      * @return <tt>true</tt> if the renaming succeeded, <tt>false</tt>
      * otherwise
      */
-    public boolean renameFile(File file, String newName) {
+    @Override
+	public boolean renameFile(File file, String newName) {
         // check whether the new filename is conflicting with existing ones
         // or not
         boolean result = false;

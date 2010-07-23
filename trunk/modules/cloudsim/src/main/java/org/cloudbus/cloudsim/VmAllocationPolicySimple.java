@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -21,9 +20,9 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * chooses, as the host for a VM, the host with
  * less PEs in use.
  *
- * @author Rodrigo N. Calheiros
- * @since CloudSim Toolkit 1.0 Beta
- * @invariant $none
+ * @author		Rodrigo N. Calheiros
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 1.0
  */
 public class VmAllocationPolicySimple extends VmAllocationPolicy {
 
@@ -263,9 +262,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 	public boolean allocateHostForVm(Vm vm, Host host) {
 		if (host.vmCreate(vm)) { //if vm has been succesfully created in the host
 			getVmTable().put(vm.getUid(), host);
-			if (!Log.isDisabled()) {
-				Log.print(String.format("%.2f: VM #" + vm.getId() + " has been allocated to the host #" + host.getId() + "\n", CloudSim.clock()));
-			}
+			Log.formatLine("%.2f: VM #" + vm.getId() + " has been allocated to the host #" + host.getId(), CloudSim.clock());
 			return true;
 		}
 

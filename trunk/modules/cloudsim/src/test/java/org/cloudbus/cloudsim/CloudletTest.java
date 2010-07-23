@@ -1,3 +1,14 @@
+/*
+ * Title:        CloudSim Toolkiimport static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+
+import java.util.LinkedList;
+
+import org.junit.Before;
+import org.junit.Test;
+c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim;
 
 import static org.junit.Assert.assertEquals;
@@ -8,6 +19,10 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
+ */
 public class CloudletTest {
 
 	private static final long CLOUDLET_LENGTH = 1000;

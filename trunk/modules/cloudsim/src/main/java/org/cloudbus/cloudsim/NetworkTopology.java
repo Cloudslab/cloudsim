@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -20,7 +19,6 @@ import org.cloudbus.cloudsim.network.TopologicalGraph;
 import org.cloudbus.cloudsim.network.TopologicalLink;
 import org.cloudbus.cloudsim.network.TopologicalNode;
 
-
 /**
  * NetworkTopology is a class that implements network layer
  * in CloudSim. It reads a BRITE file and generates a
@@ -34,13 +32,13 @@ import org.cloudbus.cloudsim.network.TopologicalNode;
  * one (and only one) BRITE node to allow proper work of the
  * network simulation. Each BRITE node can be mapped to only
  * one entity at a time.
- * 
- * @author Rodrigo N. Calheiros
- * @since CloudSim Toolkit 1.0
- * @invariant $none
+ *
+ * @author		Rodrigo N. Calheiros
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 1.0
  */
 public class NetworkTopology {
-	
+
 	protected static int nextIdx=0;
 	private static boolean networkEnabled = false;
 	protected static DelayMatrix_Float delayMatrix = null;
@@ -57,21 +55,21 @@ public class NetworkTopology {
 	 * @pre fileName != null
 	 * @post $none
 	 */
-	public static void buildNetworkTopology(String fileName) {		
+	public static void buildNetworkTopology(String fileName) {
     	Log.printLine("Topology file: " + fileName);
-		
+
 		//try to find the file
 		GraphReaderBrite reader = new GraphReaderBrite();
-		
+
 		try{
 			graph =  reader.readGraphFile(fileName);
-			map = new HashMap<Integer,Integer>();			
+			map = new HashMap<Integer,Integer>();
 			generateMatrices();
 		} catch(IOException e){
 			//problem with the file. Does not simulate network
 			Log.printLine("Problem in processing BRITE file. Network simulation is disabled. Error: "+e.getMessage());
 		}
-			
+
 	}
 
 	/**
@@ -82,13 +80,13 @@ public class NetworkTopology {
 	private static void generateMatrices() {
 		//creates the delay matrix
 		delayMatrix = new DelayMatrix_Float(graph, false);
-		
+
 		//creates the bw matrix
 		bwMatrix = createBwMatrix(graph,false);
-		
+
 		networkEnabled=true;
 	}
-	
+
 	/**
 	 * Adds a new link in the network topology
 	 * @param srcId ID of the link's source
@@ -100,64 +98,64 @@ public class NetworkTopology {
 	 * @post $none
 	 */
 	public static void addLink(int srcId, int destId, double bw, double lat){
-		
+
 		if(graph==null){
 			graph = new TopologicalGraph();
 		}
-		
+
 		if(map==null){
 			map = new HashMap<Integer,Integer>();
 		}
-		
+
 		//maybe add the nodes
 		if(!map.containsKey(srcId)){
 			graph.addNode(new TopologicalNode(nextIdx));
 			map.put(srcId, nextIdx);
 			nextIdx++;
 		}
-		
+
 		if(!map.containsKey(destId)){
 			graph.addNode(new TopologicalNode(nextIdx));
 			map.put(destId, nextIdx);
 			nextIdx++;
 		}
-		
+
 		//generate a new link
-		graph.addLink(new TopologicalLink((int)map.get(srcId),(int)map.get(destId),(float)lat,(float)bw));
-		
+		graph.addLink(new TopologicalLink(map.get(srcId),map.get(destId),(float)lat,(float)bw));
+
 		generateMatrices();
-			
+
 	}
-	
+
 	/**
 	 * Creates the matrix containiing the available bandiwdth beteen two nodes
 	 * @param graph topological graph describing the topology
 	 * @param directed true if the graph is directed; false otherwise
 	 * @return the bandwidth graph
 	 */
-	private static double[][] createBwMatrix(TopologicalGraph graph, boolean directed) {		
+	private static double[][] createBwMatrix(TopologicalGraph graph, boolean directed) {
 		int nodes = graph.getNumberOfNodes();
-		
+
 		double[][] mtx = new double[nodes][nodes];
-			
+
 		//cleanup matrix
 		for(int i=0;i<nodes;i++){
 			for(int j=0;j<nodes;j++){
 				mtx[i][j] = 0.0;
 			}
 		}
-		
+
 		Iterator<TopologicalLink> iter = graph.getLinkIterator();
 		while(iter.hasNext()){
 			TopologicalLink edge = iter.next();
-			
+
 			mtx[edge.getSrcNodeID()][edge.getDestNodeID()] = edge.getLinkBw();
-			
+
 			if(!directed){
 				mtx[edge.getDestNodeID()][edge.getSrcNodeID()] = edge.getLinkBw();
 			}
 		}
-		
+
 		return mtx;
 	}
 
@@ -169,7 +167,7 @@ public class NetworkTopology {
 	 * @pre briteID >= 0
 	 * @post $none
 	 */
-	public static void mapNode(int cloudSimEntityID, int briteID){		
+	public static void mapNode(int cloudSimEntityID, int briteID){
 		if(networkEnabled){
 			try{
 				if(!map.containsKey(cloudSimEntityID)){ //this CloudSim entity was already mapped?
@@ -186,14 +184,14 @@ public class NetworkTopology {
 			}
 		}
 	}
-	
+
 	/**
 	 * Unmaps a previously mapped CloudSim entity to a node in the network topology
 	 * @param cloudSimEntityID ID of the entity being unmapped
 	 * @pre cloudSimEntityID >= 0
 	 * @post $none
 	 */
-	public static void unmapNode(int cloudSimEntityID){		
+	public static void unmapNode(int cloudSimEntityID){
 		if(networkEnabled){
 			try{
 				map.remove(cloudSimEntityID);
@@ -202,7 +200,7 @@ public class NetworkTopology {
 			}
 		}
 	}
-	
+
 	/**
 	 * Calculates the delay between two nodes
 	 * @param srcID ID of the source node
@@ -212,20 +210,20 @@ public class NetworkTopology {
 	 * @pre destID >= 0
 	 * @post $none
 	 */
-	public static double getDelay(int srcID, int destID){		
+	public static double getDelay(int srcID, int destID){
 		if(networkEnabled){
 			try{
 				//add the network latency
 				double delay = delayMatrix.getDelay(map.get(srcID),map.get(destID));
-								
+
 				return delay;
 			} catch (Exception e){
 				//in case of error, just keep running and return 0.0
 			}
-		}		
+		}
 		return 0.0;
 	}
-	
+
 	/**
 	 * This method returns true if network simulation is working. If there were some problem
 	 * during creation of network (e.g., during parsing of BRITE file) that does not allow

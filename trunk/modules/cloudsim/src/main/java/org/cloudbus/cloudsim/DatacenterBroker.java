@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -28,9 +27,9 @@ import org.cloudbus.cloudsim.lists.VmList;
  * as vm creation, sumbission of cloudlets to this VMs
  * and destruction of VMs.
  *
- * @author       Rodrigo N. Calheiros
- * @since        CloudSim Toolkit 1.0 Beta
- * @invariant	 $none
+ * @author		Rodrigo N. Calheiros
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 1.0
  */
 public class DatacenterBroker extends SimEntity {
 

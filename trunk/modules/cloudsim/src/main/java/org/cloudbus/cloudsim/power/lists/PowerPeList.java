@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2002, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.power.lists;
@@ -15,12 +14,10 @@ import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.power.PowerPe;
 
 /**
- * CloudSim PowerPeList maintains a list of PEs (Processing Elements) that make up
- * a machine.
+ * PowerPeList is a collection of operations on lists of Power-enabled PEs.
  *
- * @author       Manzur Murshed and Rajkumar Buyya
- * @since        CloudSim Toolkit 1.0
- * @invariant $none
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
  */
 public class PowerPeList extends PeList {
 

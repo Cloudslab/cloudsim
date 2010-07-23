@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- * Copyright (c) 2006, The University of Melbourne, Australia and
- * University of Ljubljana, Slovenia
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -13,15 +12,14 @@ import java.util.Date;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 
-
 /**
  * A class for storing related information regarding to a
  * {@link gridsim.datagrid.File} entity.
  *
- * @author  Uros Cibej and Anthony Sulistio
- * @since   CloudSim Toolkit 4.0
+ * @author  	Uros Cibej
+ * @author		Anthony Sulistio
+ * @since   	CloudSim Toolkit 1.0
  */
-
 public class FileAttribute {
 
     private String name;           // logical file name

@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
@@ -10,7 +18,14 @@ import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.PeProvisioner;
 
 /**
- * The Class VmSchedulerTimeShared.
+ * VmSchedulerTimeShared is a VMM allocation policy that
+ * allocates one or more Pe to a VM, and allows sharing
+ * of PEs by multiple VMs. This class also implements
+ * 10% performance degration due to VM migration.
+ *
+ * @author		Rodrigo N. Calheiros
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 1.0
  */
 public class VmSchedulerTimeShared extends VmScheduler {
 

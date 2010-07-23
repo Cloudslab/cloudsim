@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -18,9 +17,9 @@ import java.util.List;
  * to a policy, defined by the CloudletScheduler. Each VM has a owner, which can
  * submit cloudlets to the VM to be executed
  *
- * @author       Rodrigo N. Calheiros
- * @since        CloudSim Toolkit 1.0 Beta
- * @invariant $none
+ * @author		Rodrigo N. Calheiros
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 1.0
  */
 public class Vm {
 
@@ -29,7 +28,7 @@ public class Vm {
 
 	/** The user id. */
 	private int userId;
-	
+
 	private String uid;
 
 	/** The size. */
@@ -159,7 +158,7 @@ public class Vm {
 					break;
 				}
 			}
-	
+
 			//if (mipsIsNull && isRecentlyCreated()) {
 			if (mipsIsNull) {
 				currentRequestedMips = new ArrayList<Double>();
@@ -224,7 +223,7 @@ public class Vm {
 	public double getTotalUtilizationOfCpuMips(double time) {
 		return getTotalUtilizationOfCpu(time) * getMips();
 	}
-	
+
 	public void setUid(String uid) {
 		this.uid = uid;
 	}

@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * $Id: CloudSimShutdown.java,v 1.1 2008/09/13 03:54:45 marcosd Exp $
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.core;
@@ -22,14 +21,13 @@ import java.util.Calendar;
  * This object signals the end of simulation to CloudInformationService (GIS)
  * entity.
  *
- * @author       Manzur Murshed and Rajkumar Buyya
- * @since        CloudSim Toolkit 1.0
- * @invariant $none
- *
- * @see gridsim.CloudSim#init(int, Calendar, boolean)
+ * @author		Manzur Murshed
+ * @author		Rajkumar Buyya
+ * @since		CloudSim Toolkit 1.0
  */
-public class CloudSimShutdown extends SimEntity
-{
+public class CloudSimShutdown extends SimEntity {
+
+    /** The num user. */
     private int numUser;
 
     /**
@@ -68,11 +66,13 @@ public class CloudSimShutdown extends SimEntity
      * the Constructor.
      * <br>
      * <b>NOTE:</b> This method shuts down grid hostList and GIS entities
-     * 				either <tt>AFTER</tt> all grid users have been shut down or
-     * 				an entity requires an abrupt end of the whole simulation.
-     *              In the first case, the number of grid users given in the
-     *              Constructor <tt>must</tt> be correct. Otherwise, CloudSim
-     *              package hangs forever or it does not terminate properly.
+     * either <tt>AFTER</tt> all grid users have been shut down or
+     * an entity requires an abrupt end of the whole simulation.
+     * In the first case, the number of grid users given in the
+     * Constructor <tt>must</tt> be correct. Otherwise, CloudSim
+     * package hangs forever or it does not terminate properly.
+     *
+     * @param ev the ev
      * @pre $none
      * @post $none
      */
@@ -84,16 +84,20 @@ public class CloudSimShutdown extends SimEntity
     	}
     }
 
+    /* (non-Javadoc)
+     * @see org.cloudbus.cloudsim.core.SimEntity#startEntity()
+     */
     @Override
 	public void startEntity() {
     	// do nothing
     }
 
+    /* (non-Javadoc)
+     * @see org.cloudbus.cloudsim.core.SimEntity#shutdownEntity()
+     */
     @Override
 	public void shutdownEntity() {
     	// do nothing
     }
 
-    /////////////////////// PRIVATE METHODS //////////////////////////
-
-} // end class
+}

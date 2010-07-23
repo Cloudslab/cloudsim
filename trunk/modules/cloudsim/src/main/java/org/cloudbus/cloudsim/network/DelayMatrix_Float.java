@@ -1,13 +1,21 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.network;
 
 import java.util.Iterator;
 
 /**
- * this class represents an delay-topology
+ * This class represents an delay-topology
  * storing every distance between connected nodes
  *
- * @author Thomas Hohnstein
- *
+ * @author		Thomas Hohnstein
+ * @since		CloudSim Toolkit 1.0
  */
 public class DelayMatrix_Float {
 

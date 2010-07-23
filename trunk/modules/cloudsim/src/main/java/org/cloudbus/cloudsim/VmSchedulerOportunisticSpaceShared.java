@@ -1,12 +1,10 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
-
 
 package org.cloudbus.cloudsim;
 
@@ -23,9 +21,9 @@ import java.util.Map;
  * However, if there is free PEs, they are scheduled to the VMs
  * This policy ignores requested number of MIPS.
  *
- * @author Rodrigo N. Calheiros
- * @since CloudSim Toolkit 1.0 Beta
- * @invariant $none
+ * @author		Rodrigo N. Calheiros
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 1.0
  */
 public class VmSchedulerOportunisticSpaceShared extends VmScheduler {
 

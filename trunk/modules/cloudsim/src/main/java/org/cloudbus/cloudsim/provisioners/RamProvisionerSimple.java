@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2008, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.provisioners;
@@ -18,9 +17,9 @@ import org.cloudbus.cloudsim.Vm;
  * RamProvisionerSimple is an extension of RamProvisioner
  * which uses a best-effort policy to allocate memory to a VM.
  *
- * @author Rodrigo N. Calheiros
- * @since CloudSim Toolkit 4.3
- * @invariant $none
+ * @author		Rodrigo N. Calheiros
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 1.0
  */
 public class RamProvisionerSimple extends RamProvisioner {
 
