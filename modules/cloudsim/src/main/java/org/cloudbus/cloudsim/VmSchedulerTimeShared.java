@@ -80,6 +80,10 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 * @return true, if successful
 	 */
 	protected boolean allocatePesForVm(String vmUid, List<Double> mipsShareRequested) {
+		/**
+		 * TODO: add a restriction of the amount of MIPS allocated to a VM. A VM must require
+		 * not more than is the capacity of a PE.
+		 */
 		getMipsMapRequested().put(vmUid, mipsShareRequested);
 		setPesInUse(getPesInUse() + mipsShareRequested.size());
 

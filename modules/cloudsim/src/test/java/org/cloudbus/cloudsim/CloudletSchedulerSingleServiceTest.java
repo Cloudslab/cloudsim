@@ -358,7 +358,7 @@ public class CloudletSchedulerSingleServiceTest {
 		if (requestedMips2 > totalCurrentMipsForCloudlet) {
 			requestedMips2 = totalCurrentMipsForCloudlet;
 		}
-		// TODO: CloudletSchedulerSingleService.cloudletSubmit change type of cloudlet length from double to int
+
 		double expectedCompletiontime2 = 1 + ((CLOUDLET_LENGTH * PES_NUMBER - requestedMips1 * 1)) / requestedMips2;
 		double actualCompletionTime2 = vmScheduler.updateVmProcessing(1, mipsShare);
 		assertEquals(expectedCompletiontime2, actualCompletionTime2, 0);

@@ -70,7 +70,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			rcl.updateCloudletFinishedSoFar((long) (getCapacity(mipsShare) * timeSpam * rcl.getPesNumber()));
-			// Log.printLine(CloudSim.clock()+": CloudletSchedulerTimeShared: updating cloudlet #"+rgl.getCloudletId()+": remaining:"+rgl.getRemainingCloudletLength());
 		}
 
 		if (getCloudletExecList().size() == 0) {
@@ -86,7 +85,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 			double remainingLength = rcl.getRemainingCloudletLength();
 			if (remainingLength == 0.00) {// finished: remove from the list
 				toRemove.add(rcl);
-				//getCloudletExecList().remove(rcl);
 				cloudletFinish(rcl);
 				continue;
 			}
@@ -322,9 +320,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 			rcl.setMachineAndPeId(0, i);
 		}
 
-		// double size = rgl.getRemainingCloudletLength();
-		// size*=rgl.getNumPE();
-		// rgl.getCloudlet().setCloudletLength(size);
 		getCloudletExecList().add(rcl);
 
 		// use the current capacity to estimate the extra amount of
@@ -447,6 +442,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	/**
 	 * Gets the cloudlet exec list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet exec list
 	 */
 	@SuppressWarnings("unchecked")
@@ -457,6 +453,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	/**
 	 * Sets the cloudlet exec list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletExecList the new cloudlet exec list
 	 */
 	protected <T extends ResCloudlet> void setCloudletExecList(List<T> cloudletExecList) {
@@ -466,6 +463,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	/**
 	 * Gets the cloudlet paused list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet paused list
 	 */
 	@SuppressWarnings("unchecked")
@@ -476,6 +474,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	/**
 	 * Sets the cloudlet paused list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletPausedList the new cloudlet paused list
 	 */
 	protected <T extends ResCloudlet> void setCloudletPausedList(List<T> cloudletPausedList) {
@@ -485,6 +484,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	/**
 	 * Gets the cloudlet finished list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet finished list
 	 */
 	@SuppressWarnings("unchecked")
@@ -495,6 +495,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	/**
 	 * Sets the cloudlet finished list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletFinishedList the new cloudlet finished list
 	 */
 	protected <T extends ResCloudlet> void setCloudletFinishedList(List<T> cloudletFinishedList) {
@@ -542,17 +543,5 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		// TODO Auto-generated method stub
 		return 0.0;
 	}
-
-//	@Override
-//	public List<Double> getCurrentAllocatedMips() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public double getTotalCurrentAllocatedMips() {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
 
 }

@@ -263,7 +263,6 @@ public class CloudInformationService extends SimEntity {
      *
      * @param ev   a Sim_event object
      *
-     * @see gridsim.CloudInformationService#body()
      * @pre ev != null
      * @post $none
      */

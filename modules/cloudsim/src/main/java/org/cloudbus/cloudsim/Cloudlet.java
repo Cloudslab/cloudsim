@@ -1006,23 +1006,6 @@ public class Cloudlet {
     }
 
     /**
-     * Gets the total execution time of this Cloudlet from the latest
-     * CloudResource.
-     *
-     * @return the total execution time of this Cloudlet in a CloudResource
-     *
-     * @pre $none
-     * @post $result >= 0.0
-     */
-    public double getActualCPUTimeOld() {
-    	//TODO: check which method to leave
-        if (index == -1) {
-            return 0.0;
-        }
-        return resList.get(index).actualCPUTime;
-    }
-
-    /**
      * Gets the cost running this Cloudlet in the latest CloudResource.
      *
      * @return the cost associated with running this Cloudlet
@@ -1036,33 +1019,6 @@ public class Cloudlet {
             return 0.0;
         }
         return resList.get(index).costPerSec;
-    }
-
-    /**
-     * Gets the total cost of processing or executing this Cloudlet
-     * <tt>Processing Cost = actual CPU Time * cost per sec</tt>.
-     *
-     * @return the total cost of processing Cloudlet
-     *
-     * @see CloudSim.Cloudlet#getActualCPUTime()
-     * @see CloudSim.Cloudlet#getCostPerSecond()
-     * @pre $none
-     * @post $result >= 0.0
-     */
-    public double getProcessingCostOld() {
-        //TODO: check which method to leave
-        if (index == -1) {
-            return 0.0;
-        }
-
-        Resource res = null;
-        double cost = 0.0;
-        for (int i = 0; i <= index; i++) {
-            res = resList.get(i);
-            cost += (res.actualCPUTime * res.costPerSec);
-        }
-
-        return cost;
     }
 
     /**
@@ -1549,22 +1505,6 @@ public class Cloudlet {
 	public void setUtilizationModelBw(final UtilizationModel utilizationModelBw) {
 		this.utilizationModelBw = utilizationModelBw;
 	}
-
-	/**
-	 * Gets the utilization of cpu.
-	 *
-	 * @param time the time
-	 *
-	 * @return the utilization of cpu
-	 */
-//	public List<Double> getUtilizationOfCpu(final double time) {
-//		double utilization = getUtilizationModelCpu().getUtilization(time);
-//		List<Double> utilizationMap = new ArrayList<Double>();
-//		for (int i = 0; i < getPesNumber(); i++) {
-//			utilizationMap.add(utilization);
-//		}
-//		return utilizationMap;
-//	}
 
 	/**
 	 * Gets the total utilization of cpu.

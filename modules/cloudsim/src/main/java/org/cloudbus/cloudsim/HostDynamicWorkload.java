@@ -39,8 +39,8 @@ public class HostDynamicWorkload extends Host {
 	 * @param ramProvisioner the ram provisioner
 	 * @param bwProvisioner the bw provisioner
 	 * @param storage the storage
-	 * @param vmScheduler the VM scheduler
 	 * @param peList the pe list
+	 * @param vmScheduler the VM scheduler
 	 */
 	public HostDynamicWorkload(
 			int id,
@@ -65,25 +65,14 @@ public class HostDynamicWorkload extends Host {
 		setUtilizationMips(0);
 
 		for (Vm vm : getVmList()) {
-//			if (vm.isInMigration()) {
-//				continue;
-//			}
 			getVmScheduler().deallocatePesForVm(vm);
 		}
 
 		for (Vm vm : getVmList()) {
-//			if (vm.isInMigration()) {
-//				continue;
-//			}
-
 			getVmScheduler().allocatePesForVm(vm, vm.getCurrentRequestedMips());
 		}
 
 		for (Vm vm : getVmList()) {
-//			if (vm.isInMigration()) {
-//				continue;
-//			}
-
 			double totalRequestedMips = vm.getCurrentRequestedTotalMips();
 
 			if (totalRequestedMips == 0) {
@@ -109,33 +98,14 @@ public class HostDynamicWorkload extends Host {
 			setUtilizationMips(getUtilizationMips() + totalAllocatedMips);
 		}
 
-
-//		for (Vm vm : getVmList()) {
-//			if (vm.isInMigration()) {
-//				continue;
-//			}
-//
-//			List<Double> requestedMips = vm.getCurrentRequestedMips();
-//			double totalRequestedMips = vm.getCurrentRequestedTotalMips();
-//
-//			getVmScheduler().allocatePesForVm(vm, requestedMips);
-//			double totalAllocatedMips = getVmScheduler().getTotalAllocatedMipsForVm(vm);
-//
-//			if (totalAllocatedMips + 0.1 < totalRequestedMips) {
-//				Log.printLine("Under allocated MIPS for VM #" + vm.getId() + ": requested " + totalRequestedMips + ", allocated " + totalAllocatedMips);
-//			}
-//
-//			updateUnderAllocatedMips(vm, totalRequestedMips, totalAllocatedMips);
-//
-//			setUtilizationMips(getUtilizationMips() + totalAllocatedMips);
-//
-//			Log.print(String.format("%.2f: Total allocated MIPS for VM #" + vm.getId() + " (Host #" + vm.getHost().getId() + ") is %.2f, was requested %.2f out of total %.2f (%.2f%%)\n", CloudSim.clock(), totalAllocatedMips, totalRequestedMips, vm.getMips(), totalRequestedMips / vm.getMips() * 100));
-//		}
-		//TODO: getTotalAllocatedMipsForVm should be done after all the vMs are allocated
-
 		return smallerTime;
 	}
 
+	/**
+	 * Gets the completed vms.
+	 *
+	 * @return the completed vms
+	 */
 	public List<Vm> getCompletedVms() {
 		List<Vm> vmsToRemove = new ArrayList<Vm>();
 		for (Vm vm : getVmList()) {

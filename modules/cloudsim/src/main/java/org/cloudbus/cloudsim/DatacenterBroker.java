@@ -420,6 +420,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Gets the vm list.
 	 *
+	 * @param <T> the generic type
 	 * @return the vm list
 	 */
 	@SuppressWarnings("unchecked")
@@ -430,6 +431,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Sets the vm list.
 	 *
+	 * @param <T> the generic type
 	 * @param vmList the new vm list
 	 */
 	protected <T extends Vm> void setVmList(List<T> vmList) {
@@ -440,6 +442,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Gets the cloudlet list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet list
 	 */
 	@SuppressWarnings("unchecked")
@@ -451,6 +454,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Sets the cloudlet list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletList the new cloudlet list
 	 */
 	protected <T extends Cloudlet> void setCloudletList(List<T> cloudletList) {
@@ -460,6 +464,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Gets the cloudlet submitted list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet submitted list
 	 */
 	@SuppressWarnings("unchecked")
@@ -471,6 +476,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Sets the cloudlet submitted list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletSubmittedList the new cloudlet submitted list
 	 */
 	protected <T extends Cloudlet> void setCloudletSubmittedList(List<T> cloudletSubmittedList) {
@@ -480,6 +486,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Gets the cloudlet received list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet received list
 	 */
 	@SuppressWarnings("unchecked")
@@ -490,6 +497,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Sets the cloudlet received list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletReceivedList the new cloudlet received list
 	 */
 	protected <T extends Cloudlet> void setCloudletReceivedList(List<T> cloudletReceivedList) {
@@ -499,6 +507,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Gets the vm list.
 	 *
+	 * @param <T> the generic type
 	 * @return the vm list
 	 */
 	@SuppressWarnings("unchecked")
@@ -509,6 +518,7 @@ public class DatacenterBroker extends SimEntity {
 	/**
 	 * Sets the vm list.
 	 *
+	 * @param <T> the generic type
 	 * @param vmsCreatedList the vms created list
 	 */
 	protected <T extends Vm> void setVmsCreatedList(List<T> vmsCreatedList) {
