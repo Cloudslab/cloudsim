@@ -1,23 +1,53 @@
-This directory contains examples in the use of CloudSim
+Running the CloudSim examples
+-----------------------------
+
+To run the CloudSim examples you need to do the following steps.
+
+In Windows:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>\jars
+2. java -classpath cloudsim-<VERSION>.jar;cloudsim-examples-<VERSION>.jar org.cloudbus.cloudsim.examples.CloudSimExample<EXAMPLE NUMBER>
+
+In Unix/Linux:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>/jars
+2. java -classpath cloudsim-<VERSION>.jar:cloudsim-examples-<VERSION>.jar org.cloudbus.cloudsim.examples.CloudSimExample<EXAMPLE NUMBER>
+
+Where you need to replace:
+
+<PATH TO CLOUDSIM PACKAGE> - by the path to a directory where you have unpacked the CloudSim package
+<VERSION> - by the version of the downloaded CloudSim package
+<EXAMPLE NUMBER> - by the of number of the example you want to run
 
 
-To compile the example source codes:
+CloudSim examples source code
+-----------------------------
 
-    In Unix/Linux: javac -classpath $CLOUDSIM/jar/cloudsim-2.0.jar:. cloudsim/examples/CloudSimExampleX.java
-    In Windows:    javac -classpath %CLOUDSIM%\jar\cloudsim-2.0.jar;. cloudsim\examples\CloudSimExampleX.java
-
-To run the class file:
-    In Unix/Linux:
-        java -classpath $CLOUDSIM/jar/cloudsim-2.0.jar:. cloudsim.examples.CloudSimExampleX > file.txt
-
-    In Windows:
-        java -classpath %CLOUDSIM%\jar\cloudsim-2.0.jar;. cloudsim.examples.CloudSimExampleX > file.txt
-
-The above command means run the program and output the results into a file
-named "file.txt" rather than into screen or standard output.
+You can find the source code of the examples in <PATH TO CLOUDSIM PACKAGE>/examples/org/cloudbus/cloudsim/examples/
 
 
-Here are the summary of what each example does:
+Compiling and running examples
+------------------------------
+
+To compile and run an example (let's say org.cloudbus.cloudsim.examples.CloudSimExample1) you need to do the following steps:
+
+In Windows:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>
+2. javac -classpath jars\cloudsim-<VERSION>.jar examples\org\cloudbus\cloudsim\examples\CloudSimExample1.java
+3. java -classpath jars\cloudsim-<VERSION>.jar;examples org.cloudbus.cloudsim.examples.CloudSimExample1
+
+In Unix/Linux:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>
+2. javac -classpath jars/cloudsim-<VERSION>.jar examples/org/cloudbus/cloudsim/examples/CloudSimExample1.java
+3. java -classpath jars/cloudsim-<VERSION>.jar:examples org.cloudbus.cloudsim.examples.CloudSimExample1
+
+
+Description of the CloudSim examples
+------------------------------------
+
+Here is the description of what each example does:
 
 CloudSimExample1.java : shows how to create a datacenter with one host and run one cloudlet on it.
 
@@ -38,6 +68,6 @@ CloudSimExample7.java : shows how to pause simulations.
 
 CloudSimExample8.java : shows how to add entities in run time.
 
-network: this directory contains examples on how to run simulation with network simulation.
+network: this package contains examples on how to run simulation with network simulation.
 
-power: this directory contains examples on how to use CloudSim's power-aware features.
+power: this package contains examples on how to use CloudSim's power-aware features.
