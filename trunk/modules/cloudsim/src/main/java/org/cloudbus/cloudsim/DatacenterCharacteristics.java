@@ -142,8 +142,7 @@ public class DatacenterCharacteristics {
     /**
      * Gets a Machine with at least one empty Pe.
      *
-     * @return a Machine object or <tt>null</tt> if not found
-     *
+     * @return a Machine object or  if not found
      * @pre $none
      * @post $none
      */
@@ -155,9 +154,7 @@ public class DatacenterCharacteristics {
      * Gets a Machine with at least a given number of free Pe.
      *
      * @param peNumber the pe number
-     *
-     * @return a Machine object or <tt>null</tt> if not found
-     *
+     * @return a Machine object or  if not found
      * @pre $none
      * @post $none
      */
@@ -169,8 +166,7 @@ public class DatacenterCharacteristics {
      * Gets Millions Instructions Per Second (MIPS) Rating of a Processing
      * Element (Pe). It is assumed all PEs' rating is same in a given machine.
      *
-     * @return the MIPS Rating or <tt>-1</tt> if no PEs are exists.
-     *
+     * @return the MIPS Rating or  if no PEs are exists.
      * @pre $none
      * @post $result >= -1
      */
@@ -191,9 +187,7 @@ public class DatacenterCharacteristics {
      *
      * @param id        the machine ID
      * @param peId      the Pe ID
-     *
-     * @return the MIPS Rating or <tt>-1</tt> if no PEs are exists.
-     *
+     * @return the MIPS Rating or  if no PEs are exists.
      * @pre id >= 0
      * @pre peID >= 0
      * @post $result >= -1
@@ -322,10 +316,8 @@ public class DatacenterCharacteristics {
      * @param status   Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
      * @param hostId    Machine ID
      * @param peId     Pe id
-     *
-     * @return <tt>true</tt> if the Pe status has changed, <tt>false</tt>
+     * @return
      * otherwise (Machine id or Pe id might not be exist)
-     *
      * @pre machineID >= 0
      * @pre peID >= 0
      * @post $none
@@ -345,27 +337,6 @@ public class DatacenterCharacteristics {
     public double getCostPerMi() {
         return getCostPerSecond() / getMipsOfOnePe();
     }
-
-    /**
-     * Gets the byte size of this class.
-     *
-     * @return the byte size
-     *
-     * @pre $none
-     * @post $result > 0
-     */
-    // TODO: check necessity
-//    public int getByteSize() {
-//        // this class overall has: 2 ints, 2 Strings, 1 HostList2 and
-//        //                         2 doubles.
-//        // NOTE: static attributes do not count
-//        int totalInt = 2 * 4;
-//        int totalDouble = 2 * 8;
-//        int totalSize = getArchitecture().length() + getOs().length() +
-//                   getHostList().getByteSize() + totalInt + totalDouble ;
-//
-//        return totalSize;
-//    }
 
     /**
      * Gets the total number of machines.
@@ -394,8 +365,8 @@ public class DatacenterCharacteristics {
     /**
      * Checks whether all machines of this resource are working properly or not.
      *
-     * @return <tt>true</tt> if all machines are working,
-     * <tt>false</tt> otherwise
+     * @return  if all machines are working,
+     *  otherwise
      */
     public boolean isWorking() {
         boolean result = false;
@@ -535,12 +506,9 @@ public class DatacenterCharacteristics {
 	/**
 	 * Gets the host list.
 	 *
+	 * @param <T> the generic type
 	 * @return the host list
 	 */
-//	protected HostList2<? extends Host> getHostList() {
-//		return hostList;
-//	}
-
 	@SuppressWarnings("unchecked")
 	public <T extends Host> List<T> getHostList() {
 		return (List<T>) hostList;
@@ -549,6 +517,7 @@ public class DatacenterCharacteristics {
 	/**
 	 * Sets the host list.
 	 *
+	 * @param <T> the generic type
 	 * @param hostList the new host list
 	 */
 	protected <T extends Host> void setHostList(List<T> hostList) {

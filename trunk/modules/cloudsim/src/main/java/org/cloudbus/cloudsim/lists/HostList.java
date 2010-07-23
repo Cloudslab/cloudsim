@@ -126,21 +126,10 @@ public class HostList {
     @SuppressWarnings("unchecked")
 	public static <T extends Host> T getHostWithFreePe(List<T> hostList, int pesNumber) {
         for (T host : hostList) {
-        	// If the machine is failed, do nothing. Otherwise...
-            //if (!host.getFailed())
         	if (PeList.getFreePesNumber((List<Pe>) host.getPeList()) >= pesNumber) {
         		return host;
         	}
-
-            /**************
-            // Uncomment this if you want more info on the progress of sims
-            else
-            {
-                Log.printLine("HostList2.getMachineWithFreePE(). MachineID: " +
-                    obj.getMachineID() + ". Machine is failed. Try other machine.");
-            }*/
 		}
-
         return null;
     }
 
@@ -166,25 +155,6 @@ public class HostList {
         }
         return host.setPeStatus(peId, status);
     }
-
-    /**
-     * Gets the byte size of this class.
-     *
-     * @return the byte size
-     *
-     * @pre $none
-     * @post $result >= 0
-     */
-    // TODO: check necessity
-//    public int getByteSize() {
-//        int byteSize = 0;
-//
-//        for (Host host : this) {
-//        	byteSize += host.getByteSize();
-//		}
-//
-//        return byteSize;
-//    }
 
 }
 

@@ -77,7 +77,6 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		}
 
 		if (!getVmTable().containsKey(vm.getUid())) { //if this vm was not created
-
 			do {//we still trying until we find a host or until we try all of them
 				int moreFree = Integer.MIN_VALUE;
 				int idx = -1;
@@ -129,38 +128,6 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 			getFreePes().set(idx, getFreePes().get(idx) + pes);
 		}
 	}
-
-	/**
-	 * Triggers a migration from a given virtual machine to a selected
-	 * host.
-	 *
-	 * @param vm the vm
-	 *
-	 * @return $true if the migration succeeds; $false otherwise
-	 *
-	 * @pre $none
-	 * @post $none
-	 */
-	// TODO: check necessity
-//	@Override
-//	public boolean migrateVm(Vm vm, Host destination) {
-//		//where is this VM running?
-//		Host source = getHost(vm);
-//		Vm _vm = source.vmMigrate(vm);
-//		if (_vm == null) {
-//			return false;
-//		}
-//
-//		if (destination == null) {
-//			return false;
-//		}
-//
-//		if (destination.getFreePesNumber() >= vm.getPesNumber()) {
-//			return destination.vmMigrate(vm);
-//		}
-//
-//		return false;
-//	}
 
 	/**
 	 * Gets the host that is executing the given VM belonging to the
@@ -258,6 +225,9 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#allocateHostForVm(org.cloudbus.cloudsim.Vm, org.cloudbus.cloudsim.Host)
+	 */
 	@Override
 	public boolean allocateHostForVm(Vm vm, Host host) {
 		if (host.vmCreate(vm)) { //if vm has been succesfully created in the host

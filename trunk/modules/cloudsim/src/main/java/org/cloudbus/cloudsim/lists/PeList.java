@@ -203,24 +203,6 @@ public class PeList {
     }
 
     /**
-     * Gets the byte size of PeList internal data members.
-     *
-     * @param peList the pe list
-     * @param resName the res name
-     * @param hostId the host id
-     * @param failed the failed
-     *
-     * @return the byte size
-     *
-     * @pre $none
-     * @post $result >= 0
-     */
-    // TODO: check necessaty
-//    public int getByteSize() {
-//        return size() * Pe.getByteSize();
-//    }
-
-    /**
      * Sets the status of PEs of this machine to FAILED.
      * NOTE: <tt>resName</tt> and <tt>machineID</tt> are used for debugging
      * purposes, which is <b>ON</b> by default.

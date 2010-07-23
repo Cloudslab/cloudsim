@@ -157,20 +157,6 @@ public class Pe {
         this.status = status;
     }
 
-    /**
-     * Gets the byte size of this class.
-     *
-     * @return the byte size
-     *
-     * @pre $none
-     * @post $result > 0
-     */
-    // TODO: check necessaty
-//    public static int getByteSize() {
-//        int totalInt = 2 * 4;  // NOTE: static int doesn't count
-//        return totalInt;
-//    }
-
 	/**
 	 * Sets the pe provisioner.
 	 *

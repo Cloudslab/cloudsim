@@ -63,13 +63,11 @@ public class CloudSim {
 	/**
 	 * Initialises all the common attributes.
 	 *
-	 * @param numUser number of users
 	 * @param _calendar the _calendar
 	 * @param _traceFlag the _trace flag
-	 *
+	 * @param numUser number of users
 	 * @throws Exception This happens when creating this entity before initialising
 	 * CloudSim package or this entity name is <tt>null</tt> or empty
-	 *
 	 * @pre $none
 	 * @post $none
 	 */
@@ -141,12 +139,11 @@ public class CloudSim {
 	 * <p>
 	 * <b>Note</b>: This method should be called after all the entities have
 	 * been setup and added.
-	 * @return
 	 *
+	 * @return the double
 	 * @throws NullPointerException This happens when creating this entity before initialising
 	 * CloudSim package or this entity name is <tt>null</tt> or
 	 * empty.
-	 *
 	 * @see gridsim.CloudSim#init(int, Calendar, boolean)
 	 * @pre $none
 	 * @post $none
@@ -196,9 +193,8 @@ public class CloudSim {
 	/**
 	 * Gets a new copy of initial simulation Calendar.
 	 *
-	 * @return a new copy of Calendar object or <tt>null</tt> if CloudSim hasn't
+	 * @return a new copy of Calendar object or  if CloudSim hasn't
 	 * been initialized
-	 *
 	 * @see gridsim.CloudSim#init(int, Calendar, boolean, String[], String[],
 	 * String)
 	 * @see gridsim.CloudSim#init(int, Calendar, boolean)
@@ -218,8 +214,7 @@ public class CloudSim {
 	/**
 	 * Gets the entity ID of <tt>CloudInformationService</tt>.
 	 *
-	 * @return the Entity ID or <tt>-1</tt> if it is not found
-	 *
+	 * @return the Entity ID or  if it is not found
 	 * @pre $none
 	 * @post $result >= -1
 	 */
@@ -232,8 +227,7 @@ public class CloudSim {
 	 * of all Cloud hostList.
 	 *
 	 * @return A List containing CloudResource ID (as an Integer object)
-	 * or <tt>null</tt> if a CIS entity hasn't been created before
-	 *
+	 * or  if a CIS entity hasn't been created before
 	 * @pre $none
 	 * @post $none
 	 */
@@ -278,9 +272,6 @@ public class CloudSim {
 
 	/** The pause at. */
 	private static long pauseAt = Long.MAX_VALUE;
-
-	/** The sync obj. */
-	//private static Object syncObj = new Object();
 
 	/** The abrupt terminate. */
 	private static boolean abruptTerminate = false;
@@ -332,51 +323,27 @@ public class CloudSim {
 	 * Get the entity with a given id.
 	 *
 	 * @param id the entity's unique id number
-	 *
-	 * @return The entity, or <code>null</code> if it could not be found
-	 *
-	 * @throws SimException If the entity was not found. This error can be left
-	 * unchecked.
+	 * @return The entity, or  if it could not be found
 	 */
 	public static SimEntity getEntity(int id) {
 		return entities.get(id);
-		// SimEntity obj = entities.get(id);
-		// if (obj == null)
-		// throw new IllegalArgumentException("Entity " + id +
-		// " does not exist.");
-		// else
-		// return obj;
 	}
 
 	/**
 	 * Get the entity with a given name.
 	 *
 	 * @param name The entity's name
-	 *
 	 * @return The entity
-	 *
-	 * @throws SimException If the entity was not found. This error can be left
-	 * unchecked.
 	 */
 	public static SimEntity getEntity(String name) {
 		return entitiesByName.get(name);
-		// SimEntity obj = entitiesByName.get(name);
-		// if (obj == null)
-		// throw new IllegalArgumentException("Entity " + name +
-		// " does not exist.");
-		// else
-		// return obj;
 	}
 
 	/**
 	 * Get the id of an entity with a given name.
 	 *
 	 * @param name The entity's name
-	 *
 	 * @return The entity's unique id number
-	 *
-	 * @throws SimException If the entity was not found. This error can be left
-	 * unchecked.
 	 */
 	public static int getEntityId(String name) {
 		SimEntity obj = entitiesByName.get(name);
@@ -391,9 +358,7 @@ public class CloudSim {
 	 * Gets name of the entity given its entity ID.
 	 *
 	 * @param entityID the entity ID
-	 *
-	 * @return the Entity name or <tt>null</tt> if this object does not have one
-	 *
+	 * @return the Entity name or  if this object does not have one
 	 * @pre entityID > 0
 	 * @post $none
 	 */
@@ -411,9 +376,7 @@ public class CloudSim {
 	 * Gets name of the entity given its entity ID.
 	 *
 	 * @param entityID the entity ID
-	 *
-	 * @return the Entity name or <tt>null</tt> if this object does not have one
-	 *
+	 * @return the Entity name or  if this object does not have one
 	 * @pre entityID > 0
 	 * @post $none
 	 */
@@ -452,14 +415,13 @@ public class CloudSim {
 			// Post an event to make this entity
 			evt = new SimEvent(SimEvent.CREATE, clock, 1, 0, 0, e);
 			future.addEvent(evt);
-		}// else {
+		}
 		if (e.getId() == -1) { // Only add once!
 			int id = entities.size();
 			e.setId(id);
 			entities.add(e);
 			entitiesByName.put(e.getName(), e);
 		}
-		//}
 	}
 
 	/**
@@ -475,10 +437,6 @@ public class CloudSim {
 		} else {
 			printMessage("Adding: " + e.getName());
 		}
-//		int id = entities.size();
-//		e.setId(id);
-//		entities.add(e);
-//		entitiesByName.put(e.getName(), e);
 		e.startEntity();
 	}
 
@@ -486,7 +444,7 @@ public class CloudSim {
 	 * Internal method used to run one tick of the simulation. This method
 	 * should <b>not</b> be called in simulations.
 	 *
-	 * @return <code>true</code> if the event queue is empty, <code>false</code>
+	 * @return true, if successful
 	 * otherwise
 	 */
 	public static boolean runClockTick() {
@@ -509,8 +467,6 @@ public class CloudSim {
 			SimEvent first = it.next();
 			processEvent(first);
 			future.remove(first);
-			//it.remove();
-			//toRemove.add(first);
 
 			it = future.iterator();
 
@@ -520,7 +476,6 @@ public class CloudSim {
 				SimEvent next = it.next();
 				if (next.eventTime() == first.eventTime()) {
 					processEvent(next);
-					//it.remove();
 					toRemove.add(next);
 					trymore = it.hasNext();
 				} else {
@@ -547,9 +502,8 @@ public class CloudSim {
 		printMessage("Simulation completed.");
 	}
 
-	// Used to hold an entity for some time
 	/**
-	 * Hold.
+	 * Used to hold an entity for some time.
 	 *
 	 * @param src the src
 	 * @param delay the delay
@@ -560,9 +514,8 @@ public class CloudSim {
 		entities.get(src).setState(SimEntity.HOLDING);
 	}
 
-	// Used to pause an entity for some time
 	/**
-	 * Pause.
+	 * Used to pause an entity for some time.
 	 *
 	 * @param src the src
 	 * @param delay the delay
@@ -573,9 +526,8 @@ public class CloudSim {
 		entities.get(src).setState(SimEntity.HOLDING);
 	}
 
-	// Used to send an event from one entity to another
 	/**
-	 * Send.
+	 * Used to send an event from one entity to another.
 	 *
 	 * @param src the src
 	 * @param dest the dest
@@ -592,14 +544,10 @@ public class CloudSim {
 		future.addEvent(e);
 	}
 
-	// Sets an entity's state to be waiting. The predicate used to wait for
-	// an
-	// event is now
-	// passed to Sim_system. Only events that satisfy the predicate will be
-	// passed to the
-	// entity. This is done to avoid unnecessary context switches.
 	/**
-	 * Wait.
+	 * Sets an entity's state to be waiting. The predicate used to wait for an event
+	 * is now passed to Sim_system. Only events that satisfy the predicate will be
+	 * passed to the entity. This is done to avoid unnecessary context switches.
 	 *
 	 * @param src the src
 	 * @param p the p
@@ -612,11 +560,8 @@ public class CloudSim {
 		}
 	}
 
-	// Checks if events for a specific entity are present in the deferred
-	// event
-	// queue
 	/**
-	 * Waiting.
+	 * Checks if events for a specific entity are present in the deferred event queue.
 	 *
 	 * @param d the d
 	 * @param p the p
@@ -636,9 +581,8 @@ public class CloudSim {
 		return count;
 	}
 
-	// Selects an event matching a predicate
 	/**
-	 * Select.
+	 * Selects an event matching a predicate.
 	 *
 	 * @param src the src
 	 * @param p the p
@@ -658,9 +602,8 @@ public class CloudSim {
 		return ev;
 	}
 
-	// Removes an event from the event queue
 	/**
-	 * Cancel.
+	 * Removes an event from the event queue.
 	 *
 	 * @param src the src
 	 * @param p the p
@@ -681,12 +624,9 @@ public class CloudSim {
 		return ev;
 	}
 
-	// Removes all events that match a given predicate from the future event
-	// queue
-	// returns true if at least one event has been cancelled; false
-	// otherwise
 	/**
-	 * Cancel all.
+	 * Removes all events that match a given predicate from the future event queue
+	 * returns true if at least one event has been cancelled; false otherwise.
 	 *
 	 * @param src the src
 	 * @param p the p
@@ -710,30 +650,12 @@ public class CloudSim {
 	// Private internal methods
 	//
 
-	// Processes an event
 	/**
-	 * Process event.
+	 * Processes an event.
 	 *
 	 * @param e the e
 	 */
 	private static void processEvent(SimEvent e) {
-		// ADDED TO ALLOW THE SIMULATION TO BE PAUSED
-
-		// TODO: check how to pause the simulation
-		/*
-		if (clock >= pauseAt)
-			paused = true;
-
-		while (paused) {
-			try {
-				syncObj.wait();
-			} catch (InterruptedException e1) {
-				// it should not happen, but if does,
-				// then show it to the user
-				e1.printStackTrace();
-			}
-		}*/
-
 		int dest, src;
 		SimEntity dest_ent;
 		// Update the system's clock
@@ -809,19 +731,17 @@ public class CloudSim {
 	 * Check if the simulation is still running. This method should be used by
 	 * entities to check if they should continue executing.
 	 *
-	 * @return <code>true</code> if the simulation is still running,
-	 * <code>false</code> otherwise
+	 * @return  if the simulation is still running,
+	 *  otherwise
 	 */
 	public static boolean running() {
 		return running;
 	}
 
-	// ADDED TO ALLOW THE SIMULATION TO BE PAUSED AND RESUMED
-
 	/**
 	 * This method is called if one wants to pause the simulation.
 	 *
-	 * @return <tt>true</tt>if the simulation has been paused or <tt>false</tt>
+	 * @return true, if successful
 	 * otherwise.
 	 */
 	public static boolean pauseSimulation() {
@@ -834,8 +754,7 @@ public class CloudSim {
 	 * time.
 	 *
 	 * @param time the time at which the simulation has to be paused
-	 *
-	 * @return <tt>true</tt>if the simulation has been paused or <tt>false</tt>
+	 * @return true, if successful
 	 * otherwise.
 	 */
 	public static boolean pauseSimulation(long time) {
@@ -851,8 +770,8 @@ public class CloudSim {
 	 * This method is called if one wants to resume the simulation that has
 	 * previously been paused.
 	 *
-	 * @return <tt>true</tt>if the simulation has been restarted or or
-	 * <tt>false</tt> otherwise.
+	 * @return if the simulation has been restarted or or
+	 *  otherwise.
 	 */
 	public static boolean resumeSimulation() {
 		paused = false;
@@ -861,11 +780,8 @@ public class CloudSim {
 			pauseAt = Long.MAX_VALUE;
 		}
 
-		//syncObj.notify();
 		return !paused;
 	}
-
-	// END OF METHODS USED TO PAUSE THE SIMULATION
 
 	/**
 	 * Start the simulation running. This should be called after all the
@@ -910,7 +826,6 @@ public class CloudSim {
 	 */
 	public static void finishSimulation() {
 		// Allow all entities to exit their body method
-
 		if (!abruptTerminate) {
 			for (SimEntity ent : entities) {
 				if (ent.getState() != SimEntity.FINISHED) {
@@ -945,9 +860,8 @@ public class CloudSim {
 		abruptTerminate = true;
 	}
 
-	// Prints a message about the progress of the simulation
 	/**
-	 * Prints the message.
+	 * Prints a message about the progress of the simulation.
 	 *
 	 * @param message the message
 	 */
@@ -955,6 +869,11 @@ public class CloudSim {
 		Log.printLine(message);
 	}
 
+	/**
+	 * Checks if is paused.
+	 *
+	 * @return true, if is paused
+	 */
 	public static boolean isPaused() {
 		return paused;
 	}

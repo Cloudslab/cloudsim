@@ -106,7 +106,6 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			if (rcl.getRemainingCloudletLength() == 0.0) {// finished anyway, rounding issue...
 				toRemove.add(rcl);
-				//getCloudletExecList().remove(obj);
 				cloudletFinish(rcl);
 				finished++;
 			}
@@ -127,7 +126,6 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 						getCloudletExecList().add(rcl);
 						usedPes += rcl.getPesNumber();
 						toRemove.add(rcl);
-						//getCloudletWaitingList().remove(j);
 						break;
 					}
 				}
@@ -380,19 +378,11 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 				rcl.setMachineAndPeId(0, i);
 			}
 
-			// double size = rgl.getRemainingCloudletLength();
-			// size*=rgl.getNumPE();
-			// rgl.getCloudlet().setCloudletLength(size);
-
 			getCloudletExecList().add(rcl);
 			usedPes += cloudlet.getPesNumber();
 		} else {// no enough free PEs: go to the waiting queue
 			ResCloudlet rcl = new ResCloudlet(cloudlet);
 			rcl.setCloudletStatus(Cloudlet.QUEUED);
-
-			// double size = rgl.getRemainingCloudletLength();
-			// size*=rgl.getNumPE();
-			// rgl.getCloudlet().setCloudletLength(size);
 
 			getCloudletWaitingList().add(rcl);
 			return 0.0;
@@ -542,6 +532,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/**
 	 * Gets the cloudlet waiting list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet waiting list
 	 */
 	@SuppressWarnings("unchecked")
@@ -552,6 +543,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/**
 	 * Cloudlet waiting list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletWaitingList the cloudlet waiting list
 	 */
 	protected <T extends ResCloudlet> void cloudletWaitingList(List<T> cloudletWaitingList) {
@@ -561,6 +553,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/**
 	 * Gets the cloudlet exec list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet exec list
 	 */
 	@SuppressWarnings("unchecked")
@@ -571,6 +564,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/**
 	 * Sets the cloudlet exec list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletExecList the new cloudlet exec list
 	 */
 	protected <T extends ResCloudlet> void setCloudletExecList(List<T> cloudletExecList) {
@@ -580,6 +574,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/**
 	 * Gets the cloudlet paused list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet paused list
 	 */
 	@SuppressWarnings("unchecked")
@@ -590,6 +585,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/**
 	 * Sets the cloudlet paused list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletPausedList the new cloudlet paused list
 	 */
 	protected <T extends ResCloudlet> void setCloudletPausedList(List<T> cloudletPausedList) {
@@ -599,6 +595,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/**
 	 * Gets the cloudlet finished list.
 	 *
+	 * @param <T> the generic type
 	 * @return the cloudlet finished list
 	 */
 	@SuppressWarnings("unchecked")
@@ -609,12 +606,16 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/**
 	 * Sets the cloudlet finished list.
 	 *
+	 * @param <T> the generic type
 	 * @param cloudletFinishedList the new cloudlet finished list
 	 */
 	protected <T extends ResCloudlet> void setCloudletFinishedList(List<T> cloudletFinishedList) {
 		this.cloudletFinishedList = cloudletFinishedList;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.cloudbus.cloudsim.CloudletScheduler#getCurrentRequestedMips()
+	 */
 	@Override
 	public List<Double> getCurrentRequestedMips() {
 		List<Double> mipsShare = new ArrayList<Double>();
@@ -626,6 +627,9 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		return mipsShare;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.cloudbus.cloudsim.CloudletScheduler#getTotalCurrentAvailableMipsForCloudlet(org.cloudbus.cloudsim.ResCloudlet, java.util.List)
+	 */
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
 		double capacity = 0.0;
@@ -641,28 +645,22 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		return capacity;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.cloudbus.cloudsim.CloudletScheduler#getTotalCurrentAllocatedMipsForCloudlet(org.cloudbus.cloudsim.ResCloudlet, double)
+	 */
 	@Override
 	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
 		// TODO Auto-generated method stub
 		return 0.0;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.cloudbus.cloudsim.CloudletScheduler#getTotalCurrentRequestedMipsForCloudlet(org.cloudbus.cloudsim.ResCloudlet, double)
+	 */
 	@Override
 	public double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time) {
 		// TODO Auto-generated method stub
 		return 0.0;
 	}
-
-//	@Override
-//	public List<Double> getCurrentAllocatedMips() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public double getTotalCurrentAllocatedMips() {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
 
 }
