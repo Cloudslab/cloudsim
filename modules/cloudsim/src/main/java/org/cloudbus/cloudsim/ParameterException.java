@@ -20,9 +20,9 @@ package org.cloudbus.cloudsim;
  * This exception is to report bad or invalid parameters given during
  * constructor.
  *
- * @invariant $none
- * @since CloudSim Toolkit 3.1
- * @author Gokul Poduval & Chen-Khong Tham, National University of Singapore
+ * @author		Gokul Poduval
+ * @author		Chen-Khong Tham, National University of Singapore
+ * @since		CloudSim Toolkit 1.0
  */
 public class ParameterException extends Exception {
 

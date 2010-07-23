@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
@@ -12,6 +20,9 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
 /**
  * The Class HostDynamicWorkload.
+ *
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
  */
 public class HostDynamicWorkload extends Host {
 
@@ -88,9 +99,7 @@ public class HostDynamicWorkload extends Host {
 
 			updateUnderAllocatedMips(vm, totalRequestedMips, totalAllocatedMips);
 
-			if (!Log.isDisabled()) {
-				Log.print(String.format("%.2f: Total allocated MIPS for VM #" + vm.getId() + " (Host #" + vm.getHost().getId() + ") is %.2f, was requested %.2f out of total %.2f (%.2f%%)\n", CloudSim.clock(), totalAllocatedMips, totalRequestedMips, vm.getMips(), totalRequestedMips / vm.getMips() * 100));
-			}
+			Log.formatLine("%.2f: Total allocated MIPS for VM #" + vm.getId() + " (Host #" + vm.getHost().getId() + ") is %.2f, was requested %.2f out of total %.2f (%.2f%%)", CloudSim.clock(), totalAllocatedMips, totalRequestedMips, vm.getMips(), totalRequestedMips / vm.getMips() * 100);
 
 			if (vm.isInMigration()) {
 				Log.printLine("VM #" + vm.getId() + " is in migration");

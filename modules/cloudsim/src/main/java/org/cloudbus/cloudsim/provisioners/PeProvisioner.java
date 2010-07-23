@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.provisioners;
 
 import java.util.List;
@@ -6,6 +14,9 @@ import org.cloudbus.cloudsim.Vm;
 
 /**
  * The Class PeProvisioner.
+ *
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
  */
 public abstract class PeProvisioner {
 

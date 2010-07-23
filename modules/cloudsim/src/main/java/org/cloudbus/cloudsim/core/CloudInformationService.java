@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * $Id: CloudInformationService.java,v 1.2 2008/09/15 08:34:29 marcosd Exp $
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.core;
@@ -32,13 +31,9 @@ import org.cloudbus.cloudsim.Log;
  * Hence, do not need to worry about creating an object of this class.
  * <p>
  *
- * @author       Manzur Murshed and Rajkumar Buyya
- * @since        CloudSim Toolkit 1.0
- * @invariant $none
- * @see CloudSimTags.CloudSimTags
- * @see CloudSimShutdown.CloudSimShutdown
- * @see gridsim.CloudSim#init(int, Calendar, boolean)
- * @see gridsim.CloudResource#startEntity()
+ * @author		Manzur Murshed
+ * @author		Rajkumar Buyya
+ * @since		CloudSim Toolkit 1.0
  */
 public class CloudInformationService extends SimEntity {
 

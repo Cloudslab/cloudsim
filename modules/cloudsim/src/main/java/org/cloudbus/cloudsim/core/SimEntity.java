@@ -1,9 +1,16 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.core;
 
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.NetworkTopology;
 import org.cloudbus.cloudsim.core.predicates.Predicate;
-
 
 /**
  * This class represents a simulation entity. An entity handles events and can
@@ -21,7 +28,8 @@ import org.cloudbus.cloudsim.core.predicates.Predicate;
  * in which the corresponding code would be placed.
  * </ul>
  *
- * @author Marcos Dias de Assuncao
+ * @author		Marcos Dias de Assuncao
+ * @since		CloudSim Toolkit 1.0
  */
 public abstract class SimEntity implements Cloneable {
 

@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2008, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.power;
@@ -23,13 +22,11 @@ import org.cloudbus.cloudsim.power.lists.PowerVmList;
 
 /**
  * PowerVmAllocationPolicySingleThreshold is an VMAllocationPolicy that
- * chooses, as the host for a VM, the host with
- * the least power increase due to utilization
- * increase.
+ * chooses a host with the least power increase due to utilization increase
+ * caused by the VM allocation.
  *
- * @author Anton Beloglazov
- * @since CloudSim Toolkit 4.3
- * @invariant $none
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
  */
 public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySimple {
 
@@ -122,9 +119,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 		if (result) { //if vm has been succesfully created in the host
 			getVmTable().put(vm.getUid(), allocatedHost);
-			if (!Log.isDisabled()) {
-				Log.print(String.format("%.2f: VM #" + vm.getId() + " has been sent to the host #" + allocatedHost.getId() + "\n", CloudSim.clock()));
-			}
+			Log.formatLine("%.2f: VM #" + vm.getId() + " has been sent to the host #" + allocatedHost.getId(), CloudSim.clock());
 		}
 
 		return result;

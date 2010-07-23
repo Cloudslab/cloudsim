@@ -35,11 +35,10 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
  * class of an InfoPacket to the same as the NetPacket, and send it to the same
  * destination from the same source.
  *
- * @since CloudSim Toolkit 3.1
- * @author Gokul Poduval & Chen-Khong Tham, National University of Singapore
- * @invariant $none
+ * @author		Gokul Poduval
+ * @author		Chen-Khong Tham, National University of Singapore
+ * @since		CloudSim Toolkit 1.0
  */
-
 public class InfoPacket implements Packet {
 
     /** The name. */
@@ -145,7 +144,8 @@ public class InfoPacket implements Packet {
      * @pre $none
      * @post $none
      */
-    public int getId() {
+    @Override
+	public int getId() {
         return packetId;
     }
 
@@ -246,7 +246,8 @@ public class InfoPacket implements Packet {
      * @pre $none
      * @post $none
      */
-    public long getSize() {
+    @Override
+	public long getSize() {
         return size;
     }
 
@@ -260,6 +261,7 @@ public class InfoPacket implements Packet {
      * @pre size >= 0
      * @post $none
      */
+	@Override
 	public boolean setSize(long size) {
 		if (size < 0) {
 			return false;
@@ -277,7 +279,8 @@ public class InfoPacket implements Packet {
      * @pre $none
      * @post $none
      */
-    public int getDestId() {
+    @Override
+	public int getDestId() {
         return destId;
     }
 
@@ -289,7 +292,8 @@ public class InfoPacket implements Packet {
      * @pre $none
      * @post $none
      */
-    public int getSrcId() {
+    @Override
+	public int getSrcId() {
         return srcId;
     }
 
@@ -504,7 +508,8 @@ public class InfoPacket implements Packet {
      * @pre $none
      * @post $none
      */
-    public int getLast() {
+    @Override
+	public int getLast() {
         return last;
     }
 
@@ -516,7 +521,8 @@ public class InfoPacket implements Packet {
      * @pre last > 0
      * @post $none
      */
-    public void setLast(int last) {
+    @Override
+	public void setLast(int last) {
         this.last = last;
     }
 
@@ -528,7 +534,8 @@ public class InfoPacket implements Packet {
      * @pre $none
      * @post $none
      */
-    public int getNetServiceType() {
+    @Override
+	public int getNetServiceType() {
         return netServiceType ;
     }
 
@@ -540,7 +547,8 @@ public class InfoPacket implements Packet {
      * @pre netServiceType >= 0
      * @post $none
      */
-    public void setNetServiceType(int netServiceType) {
+    @Override
+	public void setNetServiceType(int netServiceType) {
         this.netServiceType = netServiceType ;
     }
 
@@ -552,7 +560,8 @@ public class InfoPacket implements Packet {
      * @pre $none
      * @post $none
      */
-    public int getTag() {
+    @Override
+	public int getTag() {
         return tag ;
     }
 

@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.core;
@@ -32,9 +31,9 @@ import org.cloudbus.cloudsim.core.predicates.PredicateNone;
  * model are added to the messages send through CloudSim. Messages using the old
  * model are converted to the apropriate methods with the correct parameters.
  *
- * @author Rodrigo N. Calheiros
- * @since CloudSim Toolkit 1.0
- * @invariant $none
+ * @author		Rodrigo N. Calheiros
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 1.0
  */
 public class CloudSim {
 

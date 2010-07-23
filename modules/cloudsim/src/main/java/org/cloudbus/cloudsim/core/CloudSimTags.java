@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2002, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.core;
@@ -16,13 +15,12 @@ package org.cloudbus.cloudsim.core;
  * <b>NOTE:</b> To avoid conflicts with other tags, CloudSim reserves negative
  * numbers, 0 - 299, and 9600.
  *
- * @author       Manzur Murshed and Rajkumar Buyya
- * @author       Anthony Sulistio
- * @since        CloudSim Toolkit 1.0
- * @invariant $none
+ * @author		Manzur Murshed
+ * @author		Rajkumar Buyya
+ * @author		Anthony Sulistio
+ * @since		CloudSim Toolkit 1.0
  */
-public final class CloudSimTags
-{
+public final class CloudSimTags {
     // starting constant value for cloud-related tags
     private static final int BASE = 0;
 

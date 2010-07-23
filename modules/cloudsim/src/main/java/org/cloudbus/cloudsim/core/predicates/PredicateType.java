@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.core.predicates;
 
 import org.cloudbus.cloudsim.core.SimEvent;
@@ -5,11 +13,12 @@ import org.cloudbus.cloudsim.core.SimEvent;
 /**
  * A predicate to select events with specific tags.
  *
- * @see PredicateNotType
- * @see Predicate
- * @author Marcos Dias de Assuncao
+ * @author		Marcos Dias de Assuncao
+ * @since		CloudSim Toolkit 1.0
+ *
+ * @see			PredicateNotType
+ * @see			Predicate
  */
-
 public class PredicateType extends Predicate {
 
   /** The tags. */

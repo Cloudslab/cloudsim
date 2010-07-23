@@ -16,22 +16,22 @@
 
 package org.cloudbus.cloudsim;
 
-
 /**
  * This class contains the structure for a network packet.
  *
- * @since CloudSim Toolkit 3.1
- * @author Gokul Poduval & Chen-Khong Tham, National University of Singapore
+ * @author		Gokul Poduval
+ * @author		Chen-Khong Tham, National University of Singapore
+ * @since		CloudSim Toolkit 1.0
  */
-public interface Packet
-{
+public interface Packet {
     /**
      * Returns a string describing this packet in detail.
      * @return description of this packet
      * @pre $none
      * @post $none
      */
-    String toString();
+    @Override
+	String toString();
 
     /**
      * Returns the size of this packet
@@ -117,5 +117,4 @@ public interface Packet
      */
     int getTag();
 
-} // end interface
-
+}

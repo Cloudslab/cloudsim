@@ -1,34 +1,46 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.power.models;
 
 /**
  * The Class PowerModelSqrt.
+ *
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
  */
 public class PowerModelSqrt implements PowerModel {
-	
+
 	/** The max power. */
 	private double maxPower;
-	
+
 	/** The constant. */
 	private double constant;
-	
+
 	/** The static power. */
 	private double staticPower;
-	
+
 	/**
 	 * Instantiates a new power model sqrt.
-	 * 
+	 *
 	 * @param maxPower the max power
 	 * @param staticPowerPercent the static power percent
 	 */
 	public PowerModelSqrt(double maxPower, double staticPowerPercent) {
 		setMaxPower(maxPower);
-		setStaticPower(staticPowerPercent * maxPower);		
+		setStaticPower(staticPowerPercent * maxPower);
 		setConstant((maxPower - getStaticPower()) / Math.sqrt(100));
 	}
 
 	/* (non-Javadoc)
 	 * @see cloudsim.power.PowerModel#getPower(double)
 	 */
+	@Override
 	public double getPower(double utilization) throws IllegalArgumentException {
 		if (utilization < 0 || utilization > 1) {
 			throw new IllegalArgumentException("Utilization value must be between 0 and 1");
@@ -41,7 +53,7 @@ public class PowerModelSqrt implements PowerModel {
 
 	/**
 	 * Gets the max power.
-	 * 
+	 *
 	 * @return the max power
 	 */
 	protected double getMaxPower() {
@@ -50,7 +62,7 @@ public class PowerModelSqrt implements PowerModel {
 
 	/**
 	 * Sets the max power.
-	 * 
+	 *
 	 * @param maxPower the new max power
 	 */
 	protected void setMaxPower(double maxPower) {
@@ -59,7 +71,7 @@ public class PowerModelSqrt implements PowerModel {
 
 	/**
 	 * Gets the constant.
-	 * 
+	 *
 	 * @return the constant
 	 */
 	protected double getConstant() {
@@ -68,7 +80,7 @@ public class PowerModelSqrt implements PowerModel {
 
 	/**
 	 * Sets the constant.
-	 * 
+	 *
 	 * @param constant the new constant
 	 */
 	protected void setConstant(double constant) {
@@ -77,7 +89,7 @@ public class PowerModelSqrt implements PowerModel {
 
 	/**
 	 * Gets the static power.
-	 * 
+	 *
 	 * @return the static power
 	 */
 	protected double getStaticPower() {
@@ -86,7 +98,7 @@ public class PowerModelSqrt implements PowerModel {
 
 	/**
 	 * Sets the static power.
-	 * 
+	 *
 	 * @param staticPower the new static power
 	 */
 	protected void setStaticPower(double staticPower) {

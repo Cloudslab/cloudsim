@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.core;
 
 import java.util.Collection;
@@ -9,9 +17,11 @@ import java.util.TreeSet;
  * This class implements the future event queue used by {@link Simulation}.
  * The event queue uses a {@link TreeSet} in order to store the events.
  *
+ * @author		Marcos Dias de Assuncao
+ * @since		CloudSim Toolkit 1.0
+ *
  * @see Simulation
  * @see java.util.TreeSet
- * @author Marcos Dias de Assuncao
  */
 public class FutureQueue {
 

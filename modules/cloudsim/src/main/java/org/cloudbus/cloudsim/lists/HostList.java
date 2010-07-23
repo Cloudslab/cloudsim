@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2002, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.lists;
@@ -15,14 +14,10 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 
 /**
- * CloudSim HostList simulates a collection of machines. It is up to the
- * CloudSim users to define the connectivity among the machines in a collection.
- * Therefore, this class can be instantiated to model a simple LAN to cluster
- * to WAN.
+ * HostList is a collection of operations on lists of hosts.
  *
- * @author       Manzur Murshed and Rajkumar Buyya
- * @since        CloudSim Toolkit 1.0
- * @invariant $none
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
  */
 public class HostList {
 

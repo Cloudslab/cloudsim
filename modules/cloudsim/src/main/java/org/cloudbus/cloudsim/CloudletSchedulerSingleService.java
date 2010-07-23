@@ -1,10 +1,9 @@
 /*
  * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Parallel and Distributed Systems such as Clusters and Clouds
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2008, The University of Melbourne, Australia
+ * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -19,6 +18,9 @@ import java.util.Map;
  * scheduling performed by a virtual machine assuming
  * that there is just one cloudlet which is working as
  * an online service.
+ *
+ * @author		Anton Beloglazov
+ * @since		CloudSim Toolkit 2.0
  */
 public class CloudletSchedulerSingleService extends CloudletSchedulerTimeShared {
 
@@ -33,9 +35,9 @@ public class CloudletSchedulerSingleService extends CloudletSchedulerTimeShared 
 
 	/** The under allocated mips. */
 	private Map<String, Double> underAllocatedMips;
-	
+
 	private double cachePreviousTime;
-	
+
 	private List<Double> cacheCurrentRequestedMips;
 
 	/**
@@ -191,7 +193,7 @@ public class CloudletSchedulerSingleService extends CloudletSchedulerTimeShared 
 		for (int i = 0; i < getPesNumber(); i++) {
 			currentMips.add(mipsForPe);
 		}
-		
+
 		setCachePreviousTime(getPreviousTime());
 		setCacheCurrentRequestedMips(currentMips);
 
