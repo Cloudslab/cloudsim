@@ -142,6 +142,19 @@ public abstract class VmScheduler {
 	}
 
 	/**
+	 * Returns PE capacity in MIPS.
+	 *
+	 * @return mips
+	 */
+	public double getPeCapacity() {
+		if (getPeList() == null) {
+			Log.printLine("Pe list is empty");
+			return 0;
+		}
+		return getPeList().get(0).getMips();
+	}
+
+	/**
 	 * Gets the vm list.
 	 *
 	 * @return the vm list
