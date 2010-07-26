@@ -174,7 +174,7 @@ public class PowerDatacenter extends Datacenter {
 					vm.setInMigration(true);
 
 					/** VM migration delay = RAM / bandwidth + C    (C = 10 sec) **/
-					send(getId(), (double) vm.getRam() / (vm.getBw() / 8000) + 0, CloudSimTags.VM_MIGRATE, migrate);
+					send(getId(), vm.getRam() / ((double) vm.getBw() / 8000) + 0, CloudSimTags.VM_MIGRATE, migrate);
 				}
 			}
 

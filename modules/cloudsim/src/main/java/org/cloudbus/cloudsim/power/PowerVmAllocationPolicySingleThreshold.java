@@ -74,8 +74,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 		for (PowerHost host : this.<PowerHost>getHostList()) {
 			if (host.isSuitableForVm(vm)) {
 				double maxUtilization = getMaxUtilizationAfterAllocation(host, vm);
-				if ((!vm.isRecentlyCreated() && maxUtilization > getUtilizationThreshold()) ||
-						(vm.isRecentlyCreated() && maxUtilization > 1.0)) {
+				if ((!vm.isRecentlyCreated() && maxUtilization > getUtilizationThreshold()) || (vm.isRecentlyCreated() && maxUtilization > 1.0)) {
 					continue;
 				}
 				try {
@@ -107,22 +106,15 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 	 */
 	@Override
 	public boolean allocateHostForVm(Vm vm) {
-		boolean result = false;
-
 		PowerHost allocatedHost = findHostForVm(vm);
-
-		try {
-			result = allocatedHost.vmCreate(vm);
-		} catch (Exception e) {
-			result = false;
-		}
-
-		if (result) { //if vm has been succesfully created in the host
+		if (allocatedHost != null && allocatedHost.vmCreate(vm)) { //if vm has been succesfully created in the host
 			getVmTable().put(vm.getUid(), allocatedHost);
-			Log.formatLine("%.2f: VM #" + vm.getId() + " has been sent to the host #" + allocatedHost.getId(), CloudSim.clock());
+			if (!Log.isDisabled()) {
+				Log.print(String.format("%.2f: VM #" + vm.getId() + " has been allocated to the host #" + allocatedHost.getId() + "\n", CloudSim.clock()));
+			}
+			return true;
 		}
-
-		return result;
+		return false;
 	}
 
 	/**
@@ -136,7 +128,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 	@Override
 	public void deallocateHostForVm(Vm vm) {
 		if (getVmTable().containsKey(vm.getUid())) {
-			Host host = getVmTable().remove(vm.getUid());
+			PowerHost host = (PowerHost) getVmTable().remove(vm.getUid());
 			if (host != null) {
 				host.vmDestroy(vm);
 			}
@@ -165,33 +157,31 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 		vmTmpList.addAll(vmList);
 		PowerVmList.sortByCpuUtilization(vmTmpList);
 
+		for (PowerHost host : this.<PowerHost>getHostList()) {
+			host.reallocateMigratingVms();
+		}
+
 		for (Vm vm : vmTmpList) {
-			//Log.printLine("VM #" + vm.getId() + " utilization: " + String.format("%.2f;", vm.getTotalUtilization(CloudSim.clock()) * 100));
-			if (vm.isRecentlyCreated()) {
+			if (vm.isRecentlyCreated() || vm.isInMigration()) {
 				continue;
 			}
 
 			PowerHost oldHost = (PowerHost) getVmTable().get(vm.getUid());
-			//PowerHost oldHost = vm.getHost();
 			PowerHost allocatedHost = findHostForVm(vm);
 			if (allocatedHost != null) {
 				Log.printLine("VM #" + vm.getId() + " allocated to host #" + allocatedHost.getId());
 				allocatedHost.vmCreate(vm);
 
-				if (!allocatedHost.equals(oldHost)) {
+				if (allocatedHost.getId() != oldHost.getId()) {
 					Map<String, Object> migrate = new HashMap<String, Object>();
 					migrate.put("vm", vm);
 					migrate.put("host", allocatedHost);
 					migrationMap.add(migrate);
-					getVmTable().put(vm.getUid(), allocatedHost);
-
-					vmsToRestore.remove(vm);
-					//Log.printLine("Skip restore of VM #" + vm.getVmId());
 				}
 			}
 		}
 
-		restoreAllocation(vmsToRestore);
+		restoreAllocation(vmsToRestore, getHostList());
 
 		return migrationMap;
 	}
@@ -202,16 +192,12 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 	 * @param vmList the vm list
 	 */
 	protected void saveAllocation(List<? extends Vm> vmList) {
+		getSavedAllocation().clear();
 		for (Vm vm : vmList) {
-			if (vm != null) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				//Log.printLine("Trying to save VM #" + vm.getId());
-				map.put("vm", vm);
-				map.put("host", vm.getHost());
-				getSavedAllocation().add(map);
-				vm.getHost().vmDestroy(vm);
-				//getVmTable().remove(vm.getUid());
-			}
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("vm", vm);
+			map.put("host", vm.getHost());
+			getSavedAllocation().add(map);
 		}
 	}
 
@@ -220,34 +206,23 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 	 *
 	 * @param vmsToRestore the vms to restore
 	 */
-	protected void restoreAllocation(List<Vm> vmsToRestore) {
-		for (Map<String, Object> map : getSavedAllocation()) {
-			Vm vm = (Vm) map.get("vm");
-			PowerHost host = (PowerHost) vm.getHost();
-			if (host != null) {
-				vm.getHost().vmDestroy(vm);
-			}
-			//PowerHost host = (PowerHost) map.get("host");
-			//host.vmDestroy(vm);
-			//host.vmDestroyAll();
+	protected void restoreAllocation(List<Vm> vmsToRestore, List<Host> hostList) {
+		for (Host host : hostList) {
+			host.vmDestroyAll();
+			host.reallocateMigratingVms();
 		}
 		for (Map<String, Object> map : getSavedAllocation()) {
 			Vm vm = (Vm) map.get("vm");
 			PowerHost host = (PowerHost) map.get("host");
-			//Log.printLine("Trying to restore VM #" + vm.getVmId() + " on host #" + host.getMachineID());
 			if (!vmsToRestore.contains(vm)) {
-				//Log.printLine("VM #" + vm.getVmId() + " skipped because it's not in the toRestore list");
 				continue;
 			}
-			//host.vmDestroy(vm);
-//			if (!host.vmCreate(vm)) {
-//				host.vmCreateBestEffort(vm);
-//			}
-			//host.vmCreateBestEffort(vm);
-			host.vmCreate(vm);
+			if (!host.vmCreate(vm)) {
+				Log.printLine("failed");
+			}
 			getVmTable().put(vm.getUid(), host);
+			Log.printLine("Restored VM #" + vm.getId() + " on host #" + host.getId());
 		}
-		setSavedAllocation(new ArrayList<Map<String, Object>>());
 	}
 
 	/**

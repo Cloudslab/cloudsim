@@ -453,6 +453,10 @@ public abstract class SimEntity implements Cloneable {
 			delay = 0;
 		}
 
+		if (Double.isInfinite(delay)) {
+			throw new IllegalArgumentException("The specified delay is infinite value");
+		}
+
 		if (entityId < 0) {
 			Log.printLine(getName() + ".send(): Error - " +
 					"invalid entity id " + entityId);
