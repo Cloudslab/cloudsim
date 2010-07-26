@@ -271,7 +271,7 @@ public class CloudSim {
 	private static boolean paused = false;
 
 	/** The pause at. */
-	private static long pauseAt = Long.MAX_VALUE;
+	private static long pauseAt = -1;
 
 	/** The abrupt terminate. */
 	private static boolean abruptTerminate = false;
@@ -777,7 +777,7 @@ public class CloudSim {
 		paused = false;
 
 		if (pauseAt <= clock) {
-			pauseAt = Long.MAX_VALUE;
+			pauseAt = -1;
 		}
 
 		return !paused;
@@ -798,7 +798,7 @@ public class CloudSim {
 				break;
 			}
 
-			if ((future.size() > 0 && clock <= pauseAt && pauseAt <= future.iterator().next().eventTime()) || future.size() == 0 && pauseAt <= clock) {
+			if (pauseAt != -1 && ((future.size() > 0 && clock <= pauseAt && pauseAt <= future.iterator().next().eventTime()) || future.size() == 0 && pauseAt <= clock)) {
 				pauseSimulation();
 				clock = pauseAt;
 			}
@@ -849,7 +849,7 @@ public class CloudSim {
 
 		waitPredicates = null;
 		paused = false;
-		pauseAt = Long.MAX_VALUE;
+		pauseAt = -1;
 		abruptTerminate = false;
 	}
 

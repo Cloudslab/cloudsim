@@ -95,16 +95,6 @@ public class FederatedDatacenter extends SimEntity {
 		coordinator.setDatacenter(this);
 		this.sensorsList = new LinkedList<Sensor<Double>>();
 
-		//HostList2<Host> test = this.<Host>getHosts();
-//		LinkedList<Host> test = getHosts();
-//		test.add(new Host(0, null, null, null, 0, null));
-//		getHostsWildcard();
-//
-//
-//
-//		getHosts().add(new Host(0, null, null, null, 0, null));
-//		getHosts().add(new cloudsim.power.Host(0, null, null, null, 0, null));
-
 		setCharacteristics(characteristics);
 		setVmAllocationPolicy(vmAllocationPolicy);
 		setLastProcessTime(0.0);
