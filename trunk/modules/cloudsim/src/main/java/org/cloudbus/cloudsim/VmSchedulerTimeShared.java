@@ -80,22 +80,22 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 * @return true, if successful
 	 */
 	protected boolean allocatePesForVm(String vmUid, List<Double> mipsShareRequested) {
-		/**
-		 * TODO: add a restriction of the amount of MIPS allocated to a VM. A VM must require
-		 * not more than is the capacity of a PE.
-		 */
 		getMipsMapRequested().put(vmUid, mipsShareRequested);
 		setPesInUse(getPesInUse() + mipsShareRequested.size());
 
 		double totalRequestedMips = 0;
+		double peMips = getPeCapacity();
 		for (Double mips : mipsShareRequested) {
+			if (mips > peMips) { // each virtual PE of a VM must require not more than the capacity of a physical PE
+				return false;
+			}
 			totalRequestedMips += mips;
 		}
 
 		List<Double> mipsShareAllocated = new ArrayList<Double>();
 		for (Double mipsRequested : mipsShareRequested) {
 			if (getVmsInMigration().contains(vmUid)) {
-				mipsRequested *= 0.9; // performance degradation 10%
+				mipsRequested *= 0.9; // performance degradation due to migration = 10% MIPS
 			}
 			mipsShareAllocated.add(mipsRequested);
 		}
