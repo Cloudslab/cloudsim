@@ -68,8 +68,8 @@ public class HostTest {
 
 	@Test
 	public void testIsSuitableForVm() {
-		Vm vm0 = new Vm(0, 0, MIPS, 2, RAM, BW, 0, "", new CloudletSchedulerSingleService(MIPS, 2));
-		Vm vm1 = new Vm(1, 0, MIPS * 2, 1, RAM * 2, BW * 2, 0, "", new CloudletSchedulerSingleService(MIPS * 2, 2));
+		Vm vm0 = new Vm(0, 0, MIPS, 2, RAM, BW, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 2));
+		Vm vm1 = new Vm(1, 0, MIPS * 2, 1, RAM * 2, BW * 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS * 2, 2));
 
 		assertTrue(host.isSuitableForVm(vm0));
 		assertFalse(host.isSuitableForVm(vm1));
@@ -77,10 +77,10 @@ public class HostTest {
 
 	@Test
 	public void testVmCreate() {
-		Vm vm0 = new Vm(0, 0, MIPS / 2, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerSingleService(MIPS / 2, 1));
-		Vm vm1 = new Vm(1, 0, MIPS, 1, RAM, BW, 0, "", new CloudletSchedulerSingleService(MIPS, 1));
-		Vm vm2 = new Vm(2, 0, MIPS * 2, 1, RAM, BW, 0, "", new CloudletSchedulerSingleService(MIPS * 2, 1));
-		Vm vm3 = new Vm(3, 0, MIPS / 2, 2, RAM / 2, BW / 2, 0, "", new CloudletSchedulerSingleService(MIPS / 2, 2));
+		Vm vm0 = new Vm(0, 0, MIPS / 2, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS / 2, 1));
+		Vm vm1 = new Vm(1, 0, MIPS, 1, RAM, BW, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 1));
+		Vm vm2 = new Vm(2, 0, MIPS * 2, 1, RAM, BW, 0, "", new CloudletSchedulerDynamicWorkload(MIPS * 2, 1));
+		Vm vm3 = new Vm(3, 0, MIPS / 2, 2, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS / 2, 2));
 
 		assertTrue(host.vmCreate(vm0));
 		assertFalse(host.vmCreate(vm1));
@@ -90,7 +90,7 @@ public class HostTest {
 
 	@Test
 	public void testVmDestroy() {
-		Vm vm = new Vm(0, 0, MIPS, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerSingleService(MIPS, 1));
+		Vm vm = new Vm(0, 0, MIPS, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 1));
 
 		assertTrue(host.vmCreate(vm));
 		assertSame(vm, host.getVm(0, 0));
@@ -104,8 +104,8 @@ public class HostTest {
 
 	@Test
 	public void testVmDestroyAll() {
-		Vm vm0 = new Vm(0, 0, MIPS, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerSingleService(MIPS, 1));
-		Vm vm1 = new Vm(1, 0, MIPS, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerSingleService(MIPS, 1));
+		Vm vm0 = new Vm(0, 0, MIPS, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 1));
+		Vm vm1 = new Vm(1, 0, MIPS, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 1));
 
 		assertTrue(host.vmCreate(vm0));
 		assertSame(vm0, host.getVm(0, 0));
