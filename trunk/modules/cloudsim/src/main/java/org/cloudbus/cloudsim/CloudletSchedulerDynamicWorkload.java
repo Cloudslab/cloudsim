@@ -255,40 +255,6 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 		return totalCurrentRequestedMips;
 	}
 
-//	/* (non-Javadoc)
-//	 * @see cloudsim.CloudletScheduler#getTotalCurrentAllocatedMips()
-//	 */
-//	@Override
-//	public double getTotalCurrentAllocatedMips() {
-//		double totalAllocatedMips = 0;
-//		for (ResCloudlet rcl : getCloudletExecList()) {
-//			totalAllocatedMips += getTotalCurrentAllocatedMipsForCloudlet(rcl, getPreviousTime());
-//		}
-//		return totalAllocatedMips;
-//
-//	}
-//
-//	/* (non-Javadoc)
-//	 * @see cloudsim.CloudletSchedulerTimeShared#getCurrentAllocatedMips()
-//	 */
-//	@Override
-//	public List<Double> getCurrentAllocatedMips() {
-//		double totalAllocatedMips = getTotalCurrentAllocatedMips();
-//		List<Double> allocatedMips = new ArrayList<Double>();
-//		for (Double mips : getCurrentMipsShare()) {
-//			if (totalAllocatedMips == 0) {
-//				allocatedMips.add(0.0);
-//			} else if (totalAllocatedMips > mips) {
-//				allocatedMips.add(mips);
-//				totalAllocatedMips -= mips;
-//			} else {
-//				allocatedMips.add(totalAllocatedMips);
-//				totalAllocatedMips = 0;
-//			}
-//		}
-//		return allocatedMips;
-//	}
-
 	/**
 	 * Update under allocated mips for cloudlet.
 	 *

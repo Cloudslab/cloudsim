@@ -193,20 +193,6 @@ public abstract class CloudletScheduler {
 	 */
 	public abstract List<Double> getCurrentRequestedMips();
 
-//	/**
-//	 * Gets the current allocated mips.
-//	 *
-//	 * @return the current allocated mips
-//	 */
-//	public abstract List<Double> getCurrentAllocatedMips();
-//
-//	/**
-//	 * Gets the total current allocated mips.
-//	 *
-//	 * @return the total current allocated mips
-//	 */
-//	public abstract double getTotalCurrentAllocatedMips();
-
 	/**
 	 * Gets the total current mips for the Cloudlet.
 	 *
