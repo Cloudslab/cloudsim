@@ -8,11 +8,11 @@
 
 package org.cloudbus.cloudsim;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * VmSchedulerSpaceShared is a VMM allocation policy that
@@ -26,77 +26,125 @@ import java.util.Vector;
  */
 public class VmSchedulerSpaceShared extends VmScheduler {
 
-	//Map containing VM ID and a vector of PEs allocated to this VM
-	protected Map<String,Vector<Integer>> peAllocationMap;
-	protected Vector<Integer> freePesVector;
+	/** Map containing VM ID and a vector of PEs allocated to this VM. */
+	private Map<String, List<Integer>> peAllocationMap;
 
+	/** The free pes vector. */
+	private List<Integer> freePes;
+
+	/**
+	 * Instantiates a new vm scheduler space shared.
+	 *
+	 * @param pelist the pelist
+	 */
 	public VmSchedulerSpaceShared(List<? extends Pe> pelist) {
 		super(pelist);
-
-		this.peAllocationMap = new HashMap<String,Vector<Integer>>();
-
-		freePesVector = new Vector<Integer>();
-		for (int i=0;i<pelist.size();i++){
-			freePesVector.add(i);
+		setPeAllocationMap(new HashMap<String, List<Integer>>());
+		setFreePes(new ArrayList<Integer>());
+		for (int i = 0; i < pelist.size(); i++) {
+			getFreePes().add(i);
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.cloudbus.cloudsim.VmScheduler#allocatePesForVm(org.cloudbus.cloudsim.Vm, java.util.List)
+	 */
+	/**
+	 * TODO: rewrite using PeProvisioner
+	 */
 	@Override
 	public boolean allocatePesForVm(Vm vm, List<Double> mipsShare) {
-
 		//if there is no enough free PEs, fails
-		if (freePesVector.size() < mipsShare.size()) {
+		if (getFreePes().size() < mipsShare.size()) {
 			return false;
 		}
 
 		double currentFreeMips = getAvailableMips();
-		Vector<Integer> chosenPEs = new Vector<Integer>();
+		List<Integer> chosenPes = new ArrayList<Integer>();
 		List<Double> newMipsList = new LinkedList<Double>();
-		for(int i=0;i<mipsShare.size();i++){
-			int allocatedPe = freePesVector.remove(0);
-			chosenPEs.add(allocatedPe);
+		for (int i = 0; i < mipsShare.size(); i++) {
+			int allocatedPe = getFreePes().remove(0);
+			chosenPes.add(allocatedPe);
 
 			//add the smaller between requested MIPS and available MIPS: if PE supplied more capacity than requested,
 			//we reduce use of processor (and power consumption). Otherwise, we go PE's full power.
-			if(getPeList().get(allocatedPe).getMips() < mipsShare.get(i)){
-				newMipsList.add((double)getPeList().get(allocatedPe).getMips());
-				currentFreeMips-=getPeList().get(allocatedPe).getMips();
+			if (getPeList().get(allocatedPe).getMips() < mipsShare.get(i)) {
+				newMipsList.add((double) getPeList().get(allocatedPe).getMips());
+				currentFreeMips -= getPeList().get(allocatedPe).getMips();
 			} else {
 				newMipsList.add(mipsShare.get(i));
-				currentFreeMips-=mipsShare.get(i);
+				currentFreeMips -= mipsShare.get(i);
 			}
 		}
 
-		peAllocationMap.put(vm.getUid(),chosenPEs);
-		getMipsMap().put(vm.getUid(),newMipsList);
+		getPeAllocationMap().put(vm.getUid(), chosenPes);
+		getMipsMap().put(vm.getUid(), newMipsList);
 		setAvailableMips(currentFreeMips);
 
 		return true;
 	}
 
 
+	/* (non-Javadoc)
+	 * @see org.cloudbus.cloudsim.VmScheduler#deallocatePesForVm(org.cloudbus.cloudsim.Vm)
+	 */
 	@Override
 	public void deallocatePesForVm(Vm vm) {
+		// free Pes
+		List<Integer> peVector = getPeAllocationMap().remove(vm.getUid());
 
-		//free Pes
-		Vector<Integer> peVector = peAllocationMap.remove(vm.getUid());
-
-		if(peVector==null){
-			Log.printLine(this.getClass()+":[Error]: no Pes allocated for this VM.");
+		if (peVector == null) {
+			Log.printLine(this.getClass() + ":[Error]: no Pes allocated for this VM.");
 			return;
 		}
 
-		while(!peVector.isEmpty()){
+		while (!peVector.isEmpty()) {
 			Integer element = peVector.remove(0);
-			freePesVector.add(element);
+			getFreePes().add(element);
 		}
 
-		//update use of mips
-		double currentMips=getAvailableMips();
-		for (double mips: getMipsMap().get(vm.getUid())) {
-			currentMips+=mips;
+		// update use of mips
+		double currentMips = getAvailableMips();
+		for (double mips : getMipsMap().get(vm.getUid())) {
+			currentMips += mips;
 		}
 		setAvailableMips(currentMips);
+	}
+
+	/**
+	 * Sets the pe allocation map.
+	 *
+	 * @param peAllocationMap the pe allocation map
+	 */
+	protected void setPeAllocationMap(Map<String, List<Integer>> peAllocationMap) {
+		this.peAllocationMap = peAllocationMap;
+	}
+
+	/**
+	 * Gets the pe allocation map.
+	 *
+	 * @return the pe allocation map
+	 */
+	protected Map<String, List<Integer>> getPeAllocationMap() {
+		return peAllocationMap;
+	}
+
+	/**
+	 * Sets the free pes vector.
+	 *
+	 * @param freePes the new free pes vector
+	 */
+	protected void setFreePes(List<Integer> freePes) {
+		this.freePes = freePes;
+	}
+
+	/**
+	 * Gets the free pes vector.
+	 *
+	 * @return the free pes vector
+	 */
+	protected List<Integer> getFreePes() {
+		return freePes;
 	}
 
 }
