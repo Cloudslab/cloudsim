@@ -85,19 +85,6 @@ public abstract class VmAllocationPolicy {
 	public abstract void deallocateHostForVm(Vm vm);
 
 	/**
-	 * Trigger a migration from a given virtual machine to a selected
-	 * host.
-	 *
-	 * @param vm the vm
-	 *
-	 * @return $true if the migration succeeds; $false otherwise
-	 *
-	 * @pre $none
-	 * @post $none
-	 */
-	//public abstract boolean migrateVm(Vm vm, Host destination);
-
-	/**
 	 * Get the host that is executing the given VM belonging to the
 	 * given user.
 	 *

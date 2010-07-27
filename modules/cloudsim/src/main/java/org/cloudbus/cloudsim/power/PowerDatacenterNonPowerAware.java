@@ -60,11 +60,6 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 	 */
 	@Override
 	protected void updateCloudletProcessing() {
-//		if (isInMigration()) {
-//			CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
-//			schedule(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
-//			return;
-//		}
 		if (getCloudletSubmitted() == -1 || getCloudletSubmitted() == CloudSim.clock()) {
 			CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
 			schedule(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
@@ -85,7 +80,6 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 				double hostPower = 0.0;
 
 				try {
-					//hostPower = host.getPower() * timeDiff;
 					hostPower = host.getMaxPower() * timeDiff;
 					timeframePower += hostPower;
 				} catch (Exception e) {
@@ -143,18 +137,14 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 					vm.setInMigration(true);
 
 					/** VM migration delay = RAM / bandwidth + C    (C = 10 sec) **/
-					send(getId(), (double) vm.getRam() / (vm.getBw() / 8000) + 10, CloudSimTags.VM_MIGRATE, migrate);
+					send(getId(), vm.getRam() / ((double) vm.getBw() / 8000) + 10, CloudSimTags.VM_MIGRATE, migrate);
 				}
 			}
 
 			// schedules an event to the next time
 			if (minTime != Double.MAX_VALUE) {
-//				if (minTime > currentTime + 0.01 && minTime < getSchedulingInterval()) {
-//					send(getId(), minTime - currentTime, CloudSimTags.VM_DATACENTER_EVENT);
-//				} else {
-					CloudSim.cancelAll(getId(), CloudSim.SIM_ANY);
-					send(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
-//				}
+				CloudSim.cancelAll(getId(), CloudSim.SIM_ANY);
+				send(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
 			}
 
 			setLastProcessTime(currentTime);
