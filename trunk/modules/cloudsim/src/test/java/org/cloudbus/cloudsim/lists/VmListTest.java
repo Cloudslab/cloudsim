@@ -37,9 +37,9 @@ public class VmListTest {
 		assertNull(VmList.getById(vmList, 1));
 		assertNull(VmList.getById(vmList, 2));
 
-		Vm vm1 = new Vm(0, 0, 0, 1, 0, 0, 0, 0, "", null);
-		Vm vm2 = new Vm(1, 0, 0, 1, 0, 0, 0, 0, "", null);
-		Vm vm3 = new Vm(2, 0, 0, 2, 0, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(0, 0, 0, 1, 0, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, 0, 1, 0, 0, 0, "", null);
+		Vm vm3 = new Vm(2, 0, 0, 2, 0, 0, 0, "", null);
 
 		vmList.add(vm1);
 		vmList.add(vm2);
@@ -57,10 +57,10 @@ public class VmListTest {
 		assertNull(VmList.getByIdAndUserId(vmList, 0, 1));
 		assertNull(VmList.getByIdAndUserId(vmList, 1, 1));
 
-		Vm vm1 = new Vm(0, 0, 0, 1, 0, 0, 0, 0, "", null);
-		Vm vm2 = new Vm(1, 0, 0, 1, 0, 0, 0, 0, "", null);
-		Vm vm3 = new Vm(0, 1, 0, 2, 0, 0, 0, 0, "", null);
-		Vm vm4 = new Vm(1, 1, 0, 2, 0, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(0, 0, 0, 1, 0, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, 0, 1, 0, 0, 0, "", null);
+		Vm vm3 = new Vm(0, 1, 0, 2, 0, 0, 0, "", null);
+		Vm vm4 = new Vm(1, 1, 0, 2, 0, 0, 0, "", null);
 
 		vmList.add(vm1);
 		vmList.add(vm2);

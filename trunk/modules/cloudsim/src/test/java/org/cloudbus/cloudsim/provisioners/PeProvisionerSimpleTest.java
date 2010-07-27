@@ -56,9 +56,9 @@ public class PeProvisionerSimpleTest {
 
 	@Test
 	public void testAllocateMipsForVm() {
-		Vm vm1 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
-		Vm vm2 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
-		Vm vm3 = new Vm(2, 0, MIPS / 2, 2, 0, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, "", null);
+		Vm vm3 = new Vm(2, 0, MIPS / 2, 2, 0, 0, 0, "", null);
 
 		assertTrue(peProvisioner.allocateMipsForVm(vm1, MIPS / 2));
 		assertEquals(MIPS / 2, peProvisioner.getAvailableMips(), 0);
@@ -100,9 +100,9 @@ public class PeProvisionerSimpleTest {
 
 	@Test
 	public void testGetAllocatedMipsForVm() {
-		Vm vm1 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
-		Vm vm2 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
-		Vm vm3 = new Vm(2, 0, MIPS / 2, 2, 0, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, "", null);
+		Vm vm3 = new Vm(2, 0, MIPS / 2, 2, 0, 0, 0, "", null);
 
 		assertNull(peProvisioner.getAllocatedMipsForVm(vm1));
 		assertEquals(0, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm1, 0), 0);
@@ -175,8 +175,8 @@ public class PeProvisionerSimpleTest {
 
 	@Test
 	public void testDeallocateMipsForVM() {
-		Vm vm1 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
-		Vm vm2 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, "", null);
 
 		peProvisioner.allocateMipsForVm(vm1, MIPS / 2);
 		peProvisioner.allocateMipsForVm(vm2, MIPS / 4);

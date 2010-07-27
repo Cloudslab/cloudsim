@@ -81,11 +81,6 @@ public class PowerDatacenter extends Datacenter {
 	 */
 	@Override
 	protected void updateCloudletProcessing() {
-//		if (isInMigration()) {
-//			CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
-//			schedule(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
-//			return;
-//		}
 		if (getCloudletSubmitted() == -1 || getCloudletSubmitted() == CloudSim.clock()) {
 			CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
 			schedule(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
@@ -158,15 +153,10 @@ public class PowerDatacenter extends Datacenter {
 
 					targetHost.addMigratingInVm(vm);
 
-					if (targetHost.getVmList().size() + targetHost.getVmsMigratingIn().size() > 16) {
-						Log.printLine("problem");
-					}
-
 					if (oldHost == null) {
 						Log.formatLine("%.2f: Migration of VM #%d to Host #%d is started", CloudSim.clock(), vm.getId(), targetHost.getId());
 					} else {
 						Log.formatLine("%.2f: Migration of VM #%d from Host #%d to Host #%d is started", CloudSim.clock(), vm.getId(), oldHost.getId(), targetHost.getId());
-						//oldHost.vmDestroy(vm);
 					}
 
 					incrementMigrationCount();
