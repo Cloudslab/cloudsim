@@ -5,6 +5,7 @@
   <version>2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>cloudsim-package</name>
+  <description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
   <url>http://www.cloudbus.org/cloudsim/</url>
   
   <properties>
@@ -17,6 +18,21 @@
   	<module>documentation</module>
   	<module>distribution</module>
   </modules>
+  
+  <issueManagement>
+  	<system>Google Code</system>
+  	<url>http://code.google.com/p/cloudsim/issues/list</url>
+  </issueManagement>
+  <scm>
+  	<connection>scm:svn:http://cloudsim.googlecode.com/svn/trunk</connection>
+  	<developerConnection>scm:svn:https://cloudsim.googlecode.com/svn/trunk</developerConnection>
+  	<url>http://code.google.com/p/cloudsim/source/browse/</url>
+  </scm>
+  
+  <organization>
+  	<name>The Cloud Computing and Distributed Systems (CLOUDS) Laboratory, The University of Melbourne</name>
+  	<url>http://cloudbus.org/</url>
+  </organization>
   
   <build>
   	<pluginManagement>
