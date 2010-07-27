@@ -40,6 +40,7 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 	public VmSchedulerSpaceShared(List<? extends Pe> pelist) {
 		super(pelist);
 		setPeAllocationMap(new HashMap<String, List<Pe>>());
+		setFreePes(new ArrayList<Pe>());
 		getFreePes().addAll(pelist);
 	}
 
@@ -60,6 +61,9 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 		for (Double mips : mipsShare) {
 			if (mips <= pe.getMips()) {
 				selectedPes.add(pe);
+				if (!peIterator.hasNext()) {
+					break;
+				}
 				pe = peIterator.next();
 				totalMips += mips;
 			}
