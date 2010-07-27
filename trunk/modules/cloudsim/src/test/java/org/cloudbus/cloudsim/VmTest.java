@@ -38,12 +38,12 @@ public class VmTest {
 	private static final long SIZE = 1000;
 	private static final String VMM = "Xen";
 
-	private CloudletSchedulerSingleService vmScheduler;
+	private CloudletSchedulerDynamicWorkload vmScheduler;
 	private Vm vm;
 
 	@Before
 	public void setUp() throws Exception {
-		vmScheduler = new CloudletSchedulerSingleService(MIPS, PES_NUMBER);
+		vmScheduler = new CloudletSchedulerDynamicWorkload(MIPS, PES_NUMBER);
 		vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, vmScheduler);
 	}
 

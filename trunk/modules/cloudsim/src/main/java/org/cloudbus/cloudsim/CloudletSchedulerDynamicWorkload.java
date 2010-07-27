@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * CloudletSchedulerSingleService implements a policy of
+ * CloudletSchedulerDynamicWorkload implements a policy of
  * scheduling performed by a virtual machine assuming
  * that there is just one cloudlet which is working as
  * an online service.
@@ -22,7 +22,7 @@ import java.util.Map;
  * @author		Anton Beloglazov
  * @since		CloudSim Toolkit 2.0
  */
-public class CloudletSchedulerSingleService extends CloudletSchedulerTimeShared {
+public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShared {
 
 	/** The mips. */
 	private double mips;
@@ -46,7 +46,7 @@ public class CloudletSchedulerSingleService extends CloudletSchedulerTimeShared 
 	 * @param pesNumber the pes number
 	 * @param mips the mips
 	 */
-	public CloudletSchedulerSingleService(double mips, int pesNumber) {
+	public CloudletSchedulerDynamicWorkload(double mips, int pesNumber) {
 		super();
 		setMips(mips);
 		setPesNumber(pesNumber);

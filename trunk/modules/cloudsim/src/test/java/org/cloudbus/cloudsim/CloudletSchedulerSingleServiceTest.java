@@ -38,11 +38,11 @@ public class CloudletSchedulerSingleServiceTest {
 	private static final double MIPS = 1000;
 	private static final int PES_NUMBER = 2;
 
-	private CloudletSchedulerSingleService vmScheduler;
+	private CloudletSchedulerDynamicWorkload vmScheduler;
 
 	@Before
 	public void setUp() throws Exception {
-		vmScheduler = new CloudletSchedulerSingleService(MIPS, PES_NUMBER);
+		vmScheduler = new CloudletSchedulerDynamicWorkload(MIPS, PES_NUMBER);
 	}
 
 	@Test
