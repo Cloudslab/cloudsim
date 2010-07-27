@@ -1,4 +1,20 @@
-This document describes modifications in the CloudSim classes from CloudSim 1.0 beta to CloudSim 2.0
+-----------------------------------------
+Changes from CloudSim 2.0 to CloudSim 2.1
+-----------------------------------------
+
+- The project has been migrated to using Apache Maven (http://maven.apache.org/). Maven simplifies
+  java project management by providing various tools and plugins for project building, testing, and 
+  packaging, dependency management, etc. 
+- The directory structure has been changed to comply with the Maven specification
+- The VmSchedulerTimeSharedWithPriority has been removed as well as the priority field from the 
+  Vm class. Users can have the same functionality by using the VmSchedulerTimeShared class and 
+  setting the MIPS requirements for VMs. See examples 2 and 3. 
+- Bug fixes, refactoring and removing obsolete code.
+
+
+----------------------------------------------
+Changes from CloudSim 1.0 beta to CloudSim 2.0
+----------------------------------------------
 
 WHAT'S NEW
 ----------
