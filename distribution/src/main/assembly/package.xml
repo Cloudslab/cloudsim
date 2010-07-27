@@ -27,18 +27,6 @@
 			</includes>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>tests</outputDirectory>
-			<unpack>true</unpack>
-			<unpackOptions>
-				<excludes>
-					<exclude>META-INF/</exclude>
-				</excludes>
-			</unpackOptions>
-			<includes>
-				<include>${project.groupId}:cloudsim:jar:test-sources</include>
-			</includes>
-		</dependencySet>		
-		<dependencySet>
 			<outputDirectory>examples</outputDirectory>
 			<unpack>true</unpack>
 			<unpackOptions>
