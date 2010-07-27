@@ -83,11 +83,10 @@ public class NetworkExample1 {
 			int ram = 512; //vm memory (MB)
 			long bw = 1000;
 			int pesNumber = 1; //number of cpus
-			int priority = 1;
 			String vmm = "Xen"; //VMM name
 
 			//create VM
-			Vm vm1 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, priority, vmm, new CloudletSchedulerTimeShared());
+			Vm vm1 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 			//add the VM to the vmList
 			vmlist.add(vm1);

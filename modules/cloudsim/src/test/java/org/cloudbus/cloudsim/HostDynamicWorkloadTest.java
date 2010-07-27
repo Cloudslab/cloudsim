@@ -78,8 +78,8 @@ public class HostDynamicWorkloadTest {
 
 	@Test
 	public void testGetMaxUtilization() {
-		Vm vm0 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
-		Vm vm1 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
+		Vm vm0 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, "", null);
 
 		assertTrue(peList.get(0).getPeProvisioner().allocateMipsForVm(vm0, MIPS / 3));
 		assertTrue(peList.get(1).getPeProvisioner().allocateMipsForVm(vm1, MIPS / 5));
@@ -89,8 +89,8 @@ public class HostDynamicWorkloadTest {
 
 	@Test
 	public void testGetMaxUtilizationAmongVmsPes() {
-		Vm vm0 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
-		Vm vm1 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, 0, "", null);
+		Vm vm0 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, "", null);
 
 		assertTrue(peList.get(0).getPeProvisioner().allocateMipsForVm(vm0, MIPS / 3));
 		assertTrue(peList.get(1).getPeProvisioner().allocateMipsForVm(vm1, MIPS / 5));

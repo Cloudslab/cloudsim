@@ -30,7 +30,7 @@ import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
-import org.cloudbus.cloudsim.VmSchedulerTimeSharedWithPriority;
+import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -86,16 +86,14 @@ public class NetworkExample2 {
 			int ram = 512; //vm memory (MB)
 			long bw = 1000;
 			int pesNumber = 1; //number of cpus
-			int priority = 1;
 			String vmm = "Xen"; //VMM name
 
 			//create two VMs
-			Vm vm1 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, priority, vmm, new CloudletSchedulerTimeShared());
+			Vm vm1 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 			//the second VM will have twice the priority of VM1 and so will receive twice CPU time
 			vmid++;
-			priority = 2;
-			Vm vm2 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, priority, vmm, new CloudletSchedulerTimeShared());
+			Vm vm2 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 			//add the VMs to the vmList
 			vmlist.add(vm1);
@@ -209,7 +207,7 @@ public class NetworkExample2 {
 					new BwProvisionerSimple(bw),
 					storage,
 					peList,
-					new VmSchedulerTimeSharedWithPriority(peList)
+					new VmSchedulerTimeShared(peList)
 				)
 			); // This is our machine
 

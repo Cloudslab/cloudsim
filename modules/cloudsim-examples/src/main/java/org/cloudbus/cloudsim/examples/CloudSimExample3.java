@@ -28,7 +28,7 @@ import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
-import org.cloudbus.cloudsim.VmSchedulerTimeSharedWithPriority;
+import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -39,10 +39,10 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * A simple example showing how to create
  * a datacenter with two hosts and run two
  * cloudlets on it. The cloudlets run in
- * VMs with different priorities. However,
- * since each VM run exclusively in each host,
- * less priority will not delay the cloudlet
- * on it.
+ * VMs with different MIPS requirements.
+ * The cloudlets will take different time
+ * to complete the execution depending on
+ * the requested VM performance.
  */
 public class CloudSimExample3 {
 
@@ -82,21 +82,19 @@ public class CloudSimExample3 {
 
 			//VM description
 			int vmid = 0;
-			int mips = 1000;
+			int mips = 250;
 			long size = 10000; //image size (MB)
 			int ram = 2048; //vm memory (MB)
 			long bw = 1000;
 			int pesNumber = 1; //number of cpus
-			int priority = 1;
 			String vmm = "Xen"; //VMM name
 
 			//create two VMs
-			Vm vm1 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, priority, vmm, new CloudletSchedulerTimeShared());
+			Vm vm1 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 			//the second VM will have twice the priority of VM1 and so will receive twice CPU time
 			vmid++;
-			priority = 2;
-			Vm vm2 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, priority,vmm, new CloudletSchedulerTimeShared());
+			Vm vm2 = new Vm(vmid, brokerId, mips * 2, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 			//add the VMs to the vmList
 			vmlist.add(vm1);
@@ -187,7 +185,7 @@ public class CloudSimExample3 {
     				new BwProvisionerSimple(bw),
     				storage,
     				peList,
-    				new VmSchedulerTimeSharedWithPriority(peList)
+    				new VmSchedulerTimeShared(peList)
     			)
     		); // This is our first machine
 
@@ -205,7 +203,7 @@ public class CloudSimExample3 {
     				new BwProvisionerSimple(bw),
     				storage,
     				peList2,
-    				new VmSchedulerTimeSharedWithPriority(peList2)
+    				new VmSchedulerTimeShared(peList2)
     			)
     		); // This is our second machine
 

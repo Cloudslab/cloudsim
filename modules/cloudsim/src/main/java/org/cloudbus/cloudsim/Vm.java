@@ -46,9 +46,6 @@ public class Vm {
 	/** The bw. */
 	private long bw;
 
-	/** The priority. */
-	private int priority;
-
 	/** The vmm. */
 	private String vmm;
 
@@ -100,7 +97,7 @@ public class Vm {
 	 * @pre cloudletScheduler != null
 	 * @post $none
 	 */
-	public Vm(int id, int userId, double mips, int pesNumber, int ram, long bw, long size, int priority, String vmm, CloudletScheduler cloudletScheduler) {
+	public Vm(int id, int userId, double mips, int pesNumber, int ram, long bw, long size, String vmm, CloudletScheduler cloudletScheduler) {
 		setId(id);
 		setUserId(userId);
 		setUid(getUid(userId, id));
@@ -109,7 +106,6 @@ public class Vm {
 		setRam(ram);
 		setBw(bw);
 		setSize(size);
-		setPriority(priority);
 		setVmm(vmm);
 		setCloudletScheduler(cloudletScheduler);
 
@@ -394,34 +390,6 @@ public class Vm {
 	 */
 	public void setSize(long size) {
 		this.size = size;
-	}
-
-	/**
-	 * Returns the priority assigned to the VM.
-	 * Effect of the priority in the scheduling
-	 * is policy dependent
-	 *
-	 * @return VM priority
-	 *
-	 * @pre $none
-	 * @post $none
-	 */
-	public int getPriority() {
-		return this.priority;
-	}
-
-	/**
-	 * Sets the priority assigned to the VM.
-	 * Effect of the priority in the scheduling
-	 * is policy dependent
-	 *
-	 * @param priority new priority assigned to the VM
-	 *
-	 * @pre priority >= 0
-	 * @post $none
-	 */
-	public void setPriority(int priority) {
-		this.priority = priority;
 	}
 
 	/**

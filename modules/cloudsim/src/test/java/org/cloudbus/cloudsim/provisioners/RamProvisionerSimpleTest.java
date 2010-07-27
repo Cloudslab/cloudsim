@@ -43,8 +43,8 @@ public class RamProvisionerSimpleTest {
 
 	@Test
 	public void testAllocateRamForVm() {
-		Vm vm1 = new Vm(0, 0, 0, 0, RAM / 2, 0, 0, 0, "", null);
-		Vm vm2 = new Vm(1, 0, 0, 0, RAM, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(0, 0, 0, 0, RAM / 2, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, 0, 0, RAM, 0, 0, "", null);
 
 		assertTrue(ramProvisioner.isSuitableForVm(vm1, RAM / 2));
 		assertTrue(ramProvisioner.allocateRamForVm(vm1, RAM / 2));
@@ -65,8 +65,8 @@ public class RamProvisionerSimpleTest {
 
 	@Test
 	public void testGetAllocatedRamForVm() {
-		Vm vm1 = new Vm(0, 0, 0, 0, RAM / 2, 0, 0, 0, "", null);
-		Vm vm2 = new Vm(1, 0, 0, 0, RAM, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(0, 0, 0, 0, RAM / 2, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, 0, 0, RAM, 0, 0, "", null);
 
 		assertTrue(ramProvisioner.isSuitableForVm(vm1, RAM / 2));
 		assertTrue(ramProvisioner.allocateRamForVm(vm1, RAM / 2));
@@ -87,8 +87,8 @@ public class RamProvisionerSimpleTest {
 
 	@Test
 	public void testDeallocateBwForVm() {
-		Vm vm1 = new Vm(0, 0, 0, 0, RAM / 2, 0, 0, 0, "", null);
-		Vm vm2 = new Vm(1, 0, 0, 0, RAM / 2, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(0, 0, 0, 0, RAM / 2, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, 0, 0, RAM / 2, 0, 0, "", null);
 
 		assertEquals(0, vm1.getCurrentAllocatedRam());
 		assertEquals(0, vm2.getCurrentAllocatedRam());

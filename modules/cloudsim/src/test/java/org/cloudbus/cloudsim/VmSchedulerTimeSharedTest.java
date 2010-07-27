@@ -40,8 +40,8 @@ public class VmSchedulerTimeSharedTest {
 		peList.add(new Pe(0, new PeProvisionerSimple(MIPS)));
 		peList.add(new Pe(1, new PeProvisionerSimple(MIPS)));
 		vmScheduler = new VmSchedulerTimeShared(peList);
-		vm1 = new Vm(0, 0, MIPS / 4, 1, 0, 0, 0, 0, "", null);
-		vm2 = new Vm(1, 0, MIPS / 2, 2, 0, 0, 0, 0, "", null);
+		vm1 = new Vm(0, 0, MIPS / 4, 1, 0, 0, 0, "", null);
+		vm2 = new Vm(1, 0, MIPS / 2, 2, 0, 0, 0, "", null);
 		//vm3 = new Vm(2, 0, MIPS, 2, 0, 0, 0, 0, "", null);
 	}
 
@@ -144,10 +144,10 @@ public class VmSchedulerTimeSharedTest {
 		List<Pe> peList = new ArrayList<Pe>();
 		peList.add(new Pe(0, new PeProvisionerSimple(3500)));
 		VmScheduler vmScheduler = new VmSchedulerTimeShared(peList);
-		Vm vm1 = new Vm(0, 0, 170, 1, 0, 0, 0, 0, "", null);
-		Vm vm2 = new Vm(1, 0, 2000, 1, 0, 0, 0, 0, "", null);
-		Vm vm3 = new Vm(2, 0, 10, 1, 0, 0, 0, 0, "", null);
-		Vm vm4 = new Vm(3, 0, 2000, 1, 0, 0, 0, 0, "", null);
+		Vm vm1 = new Vm(0, 0, 170, 1, 0, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, 2000, 1, 0, 0, 0, "", null);
+		Vm vm3 = new Vm(2, 0, 10, 1, 0, 0, 0, "", null);
+		Vm vm4 = new Vm(3, 0, 2000, 1, 0, 0, 0, "", null);
 
 		List<Double> mipsShare1 = new ArrayList<Double>();
 		mipsShare1.add(170.0);

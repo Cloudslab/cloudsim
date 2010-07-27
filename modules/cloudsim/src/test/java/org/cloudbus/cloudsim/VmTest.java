@@ -36,7 +36,6 @@ public class VmTest {
 	private static final int RAM = 1024;
 	private static final int BW = 10000;
 	private static final long SIZE = 1000;
-	private static final int PRIORITY = 1;
 	private static final String VMM = "Xen";
 
 	private CloudletSchedulerSingleService vmScheduler;
@@ -45,7 +44,7 @@ public class VmTest {
 	@Before
 	public void setUp() throws Exception {
 		vmScheduler = new CloudletSchedulerSingleService(MIPS, PES_NUMBER);
-		vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, PRIORITY, VMM, vmScheduler);
+		vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, vmScheduler);
 	}
 
 	@Test
@@ -77,11 +76,6 @@ public class VmTest {
 	@Test
 	public void testGetSize() {
 		assertEquals(SIZE, vm.getSize());
-	}
-
-	@Test
-	public void testGetPriority() {
-		assertEquals(PRIORITY, vm.getPriority());
 	}
 
 	@Test
@@ -168,7 +162,7 @@ public class VmTest {
 	@Test
 	public void testGetCurrentRequestedMips() {
 		CloudletScheduler cloudletScheduler = createMock(CloudletScheduler.class);
-		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, PRIORITY, VMM, cloudletScheduler);
+		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
 
 		List<Double> expectedCurrentMips1 = new ArrayList<Double>();
 		expectedCurrentMips1.add(MIPS);
@@ -196,7 +190,7 @@ public class VmTest {
 	@Test
 	public void testGetCurrentRequestedTotalMips() {
 		CloudletScheduler cloudletScheduler = createMock(CloudletScheduler.class);
-		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, PRIORITY, VMM, cloudletScheduler);
+		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
 
 		ArrayList<Double> currentMips = new ArrayList<Double>();
 		currentMips.add(MIPS);

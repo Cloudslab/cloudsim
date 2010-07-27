@@ -532,9 +532,6 @@ public class Datacenter extends SimEntity {
 
 		Vm vm = (Vm) migrate.get("vm");
 		Host host = (Host) migrate.get("host");
-//		if (vm.getId() == 408 && host.getId() == 235) {
-//			Log.printLine("found");
-//		}
 
 		getVmAllocationPolicy().deallocateHostForVm(vm);
 		host.removeMigratingInVm(vm);

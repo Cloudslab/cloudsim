@@ -196,12 +196,11 @@ public class NonPowerAware {
 		int ram = 128; // vm memory (MB)
 		long bw = 2500; // bandwidth
 		long size = 2500; // image size (MB)
-		int priority = 1; // image size (MB)
 		String vmm = "Xen"; // VMM name
 
 		for (int i = 0; i < vmsNumber; i++) {
 			vms.add(
-				new Vm(i, brokerId, mips[i % mips.length], pesNumber, ram, bw, size, priority, vmm, new CloudletSchedulerSingleService(mips[i % mips.length], pesNumber))
+				new Vm(i, brokerId, mips[i % mips.length], pesNumber, ram, bw, size, vmm, new CloudletSchedulerSingleService(mips[i % mips.length], pesNumber))
 			);
 		}
 
