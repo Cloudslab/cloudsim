@@ -47,14 +47,7 @@
 		<version>${project.version}</version>
 		<type>jar</type>
 		<classifier>sources</classifier>
-  	</dependency>
-  	<dependency>
-  		<groupId>${project.groupId}</groupId>
-		<artifactId>cloudsim</artifactId>
-		<version>${project.version}</version>
-		<type>jar</type>
-		<classifier>test-sources</classifier>
-  	</dependency>  	
+  	</dependency> 	
   	<dependency>
   		<groupId>${project.groupId}</groupId>
 		<artifactId>cloudsim</artifactId>
