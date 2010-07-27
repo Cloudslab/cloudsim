@@ -22,7 +22,6 @@ import java.util.Map;
  * This policy ignores requested number of MIPS.
  *
  * @author		Rodrigo N. Calheiros
- * @author		Anton Beloglazov
  * @since		CloudSim Toolkit 1.0
  */
 public class VmSchedulerOportunisticSpaceShared extends VmScheduler {
