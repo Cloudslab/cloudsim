@@ -29,6 +29,7 @@
 				<descriptors>
 					<descriptor>src/main/assembly/package.xml</descriptor>
 				</descriptors>
+				<appendAssemblyId>false</appendAssemblyId>
 			</configuration>
 		</plugin>  	
   	</plugins>
