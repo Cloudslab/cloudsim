@@ -23,9 +23,9 @@
   	<url>http://code.google.com/p/cloudsim/issues/list</url>
   </issueManagement>
   <scm>
-  	<connection>scm:svn:http://cloudsim.googlecode.com/svn/tags/cloudsim-2.1</connection>
-  	<developerConnection>scm:svn:https://cloudsim.googlecode.com/svn/tags/cloudsim-2.1</developerConnection>
-  	<url>http://code.google.com/p/cloudsim/source/browse/tags/cloudsim-2.1</url>
+  	<connection>scm:svn:http://cloudsim.googlecode.com/svn/trunk</connection>
+  	<developerConnection>scm:svn:https://cloudsim.googlecode.com/svn/trunk</developerConnection>
+  	<url>http://code.google.com/p/cloudsim/source/browse/trunk</url>
   </scm>
   
   <organization>
