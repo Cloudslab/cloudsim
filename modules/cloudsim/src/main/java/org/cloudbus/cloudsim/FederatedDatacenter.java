@@ -58,12 +58,11 @@ public class FederatedDatacenter extends SimEntity {
 	/** The vm list. */
 	private List<? extends Vm> vmList;
 
-	/** The scheduling interval. */
-	private double schedulingInterval;
-
 	protected CloudCoordinator coordinator;
 	protected List<Integer> federationList;
 	protected List<Sensor<Double>> sensorsList;
+	
+	private int delay = 60*60;
 
 	/**
 	 * Allocates a new PowerDatacenter object.
@@ -101,7 +100,6 @@ public class FederatedDatacenter extends SimEntity {
 		setDebts(new HashMap<Integer,Double>());
 		setStorageList(storageList);
 		setVmList(new ArrayList<Vm>());
-		setSchedulingInterval(schedulingInterval);
 
         // If this resource doesn't have any PEs then no useful at all
         if (getCharacteristics().getPesNumber() == 0) {
@@ -282,6 +280,7 @@ public class FederatedDatacenter extends SimEntity {
 		updateCloudletProcessing();
 		checkCloudletCompletion();
 		coordinator.updateDatacenter();
+		send(getId(), delay, COORDINATOR_CALL);
 	}
 
 	/**
@@ -776,7 +775,8 @@ public class FederatedDatacenter extends SimEntity {
             CloudletScheduler scheduler = vm.getCloudletScheduler();
             double estimatedFinishTime = scheduler.cloudletSubmit(cl,fileTransferTime);
 
-            if (estimatedFinishTime > 0.0 && estimatedFinishTime < getSchedulingInterval()) { //if this cloudlet is in the exec queue
+            //if (estimatedFinishTime > 0.0 && estimatedFinishTime < getSchedulingInterval()) { //if this cloudlet is in the exec queue
+            if (estimatedFinishTime > 0.0) { //if this cloudlet is in the exec queue
             	//double estimatedFinishTime = (cl.getCloudletTotalLength()/(capacity*cl.getPesNumber())); //time to process the cloudlet
             	//Log.printLine(estimatedFinishTime+"="+gl.getCloudletLength()+"/("+capacity+"*"+gl.getNumPE()+")");
             	estimatedFinishTime += fileTransferTime;
@@ -784,7 +784,17 @@ public class FederatedDatacenter extends SimEntity {
             	//Log.printLine(CloudSim.clock()+": Next event set to "+estimatedFinishTime);
             	send(getId(), estimatedFinishTime, CloudSimTags.VM_DATACENTER_EVENT);
             }
+            
+            if (ack) {
+                int[] data = new int[3];
+                data[0] = getId();
+                data[1] = cl.getCloudletId();
+                data[2] = CloudSimTags.TRUE;
 
+                // unique tag = operation tag
+                int tag = CloudSimTags.CLOUDLET_SUBMIT_ACK;
+                sendNow(cl.getUserId(), tag, data);
+            }
         }
         catch (ClassCastException c) {
             Log.printLine(getName() + ".processCloudletSubmit(): " + "ClassCastException error.");
@@ -919,16 +929,15 @@ public class FederatedDatacenter extends SimEntity {
 			for (int i = 0; i < list.size(); i++) {
 				Host host = list.get(i);
 				double time = host.updateVmsProcessing(CloudSim.clock());//inform VMs to update processing
-
 				//what time do we expect that the next cloudlet will finish?
 				if (time < smallerTime) {
 					smallerTime = time;
 				}
 			}
-
 			//schedules an event to the next time, if valid
-			if (smallerTime > CloudSim.clock() + 0.01 && smallerTime != Double.MAX_VALUE && smallerTime < getSchedulingInterval()) {
-				schedule(getId(), (long) (smallerTime - CloudSim.clock()), CloudSimTags.VM_DATACENTER_EVENT);
+			//if (smallerTime > CloudSim.clock() + 0.01 && smallerTime != Double.MAX_VALUE && smallerTime < getSchedulingInterval()) {
+			if (smallerTime > CloudSim.clock() + 0.01 && smallerTime != Double.MAX_VALUE) {
+				schedule(getId(), (smallerTime - CloudSim.clock()), CloudSimTags.VM_DATACENTER_EVENT);
 			}
 			setLastProcessTime(CloudSim.clock());
 		}
@@ -1105,6 +1114,9 @@ public class FederatedDatacenter extends SimEntity {
         if (gisID == -1) {
             gisID = CloudSim.getCloudInfoServiceEntityId();
         }
+        
+        //schedule an internal event for coordinator
+        send(getId(), delay, COORDINATOR_CALL);
 
         // send the registration to GIS
         sendNow(gisID, CloudSimTags.REGISTER_RESOURCE, getId());
@@ -1252,24 +1264,6 @@ public class FederatedDatacenter extends SimEntity {
 	 */
 	protected <T extends Vm> void setVmList(List<T> vmList) {
 		this.vmList = vmList;
-	}
-
-	/**
-	 * Gets the scheduling interval.
-	 *
-	 * @return the scheduling interval
-	 */
-	protected double getSchedulingInterval() {
-		return schedulingInterval;
-	}
-
-	/**
-	 * Sets the scheduling interval.
-	 *
-	 * @param schedulingInterval the new scheduling interval
-	 */
-	protected void setSchedulingInterval(double schedulingInterval) {
-		this.schedulingInterval = schedulingInterval;
 	}
 
 	public void addSensor(Sensor<Double> sensor){

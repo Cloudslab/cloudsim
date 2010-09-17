@@ -354,7 +354,7 @@ public class DatacenterBroker extends SimEntity {
 			if (cloudlet.getVmId() == -1) { //if user didn't bind this cloudlet and it has not been executed yet
 				vm = getVmsCreatedList().get(vmIndex);
 			} else { //submit to the specific vm
-				vm = VmList.getById(getVmList(), cloudlet.getVmId());
+				vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
 				if (vm == null) { // vm was not created
 					Log.printLine(CloudSim.clock()+": "+getName()+ ": Postponing execution of cloudlet "+cloudlet.getCloudletId()+": bount VM not available");
 					continue;
