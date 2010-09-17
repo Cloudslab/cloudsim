@@ -768,7 +768,17 @@ public class Datacenter extends SimEntity {
             	//Log.printLine(CloudSim.clock()+": Next event scheduled to +"+estimatedFinishTime);
             	send(getId(), estimatedFinishTime, CloudSimTags.VM_DATACENTER_EVENT);
             }
+            
+            if (ack) {
+                int[] data = new int[3];
+                data[0] = getId();
+                data[1] = cl.getCloudletId();
+                data[2] = CloudSimTags.TRUE;
 
+                // unique tag = operation tag
+                int tag = CloudSimTags.CLOUDLET_SUBMIT_ACK;
+                sendNow(cl.getUserId(), tag, data);
+            }
         }
         catch (ClassCastException c) {
             Log.printLine(getName() + ".processCloudletSubmit(): " + "ClassCastException error.");
