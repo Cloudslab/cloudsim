@@ -56,6 +56,9 @@ public class Host {
 
 	/** The vms migrating in. */
 	private List<Vm> vmsMigratingIn;
+	
+	/** THe datacenter where the host is placed */
+	private Datacenter datacenter;
 
 	/**
 	 * Instantiates a new host.
@@ -581,6 +584,23 @@ public class Host {
 	 */
 	protected void setVmsMigratingIn(List<Vm> vmsMigratingIn) {
 		this.vmsMigratingIn = vmsMigratingIn;
+	}
+	
+	/**
+	 * Gets the data center.
+	 * @return the data center where the host runs
+	 */
+	public Datacenter getDatacenter(){
+		return this.datacenter;
+	}
+	
+	/**
+	 * Sets the data center.
+	 *
+	 * @param datacenter the data center from this host
+	 */
+	public void setDatacenter(Datacenter datacenter) {
+		this.datacenter = datacenter;
 	}
 
 }

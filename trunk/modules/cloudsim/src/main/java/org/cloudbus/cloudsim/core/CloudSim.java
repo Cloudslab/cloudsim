@@ -543,6 +543,24 @@ public class CloudSim {
 		SimEvent e = new SimEvent(SimEvent.SEND, clock + delay, src, dest, tag, data);
 		future.addEvent(e);
 	}
+	
+	/**
+	 * Used to send an event from one entity to another, with priority in the queue.
+	 *
+	 * @param src the src
+	 * @param dest the dest
+	 * @param delay the delay
+	 * @param tag the tag
+	 * @param data the data
+	 */
+	public static void sendFirst(int src, int dest, double delay, int tag, Object data) {
+		if (delay < 0) {
+			throw new IllegalArgumentException("Send delay can't be negative.");
+		}
+
+		SimEvent e = new SimEvent(SimEvent.SEND, clock + delay, src, dest, tag, data);
+		future.addEventFirst(e);
+	}
 
 	/**
 	 * Sets an entity's state to be waiting. The predicate used to wait for an event

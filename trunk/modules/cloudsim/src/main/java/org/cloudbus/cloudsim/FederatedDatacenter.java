@@ -100,7 +100,7 @@ public class FederatedDatacenter extends SimEntity {
 		setDebts(new HashMap<Integer,Double>());
 		setStorageList(storageList);
 		setVmList(new ArrayList<Vm>());
-
+		
         // If this resource doesn't have any PEs then no useful at all
         if (getCharacteristics().getPesNumber() == 0) {
             throw new Exception(super.getName() + " : Error - this entity has no PEs. Therefore, can't process any Cloudlets.");

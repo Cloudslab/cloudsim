@@ -93,6 +93,10 @@ public class Datacenter extends SimEntity {
 		setStorageList(storageList);
 		setVmList(new ArrayList<Vm>());
 		setSchedulingInterval(schedulingInterval);
+		
+		for (Host host: getCharacteristics().getHostList()) {
+			host.setDatacenter(this);
+		}
 
         // If this resource doesn't have any PEs then no useful at all
         if (getCharacteristics().getPesNumber() == 0) {

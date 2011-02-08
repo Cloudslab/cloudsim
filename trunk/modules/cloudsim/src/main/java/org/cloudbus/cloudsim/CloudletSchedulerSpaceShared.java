@@ -145,7 +145,6 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 				nextEvent = estimatedFinishTime;
 			}
 		}
-
 		setPreviousTime(currentTime);
 		return nextEvent;
 	}
@@ -187,7 +186,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		for (ResCloudlet rcl : getCloudletPausedList()) {
 			if (rcl.getCloudletId() == cloudletId) {
 				getCloudletPausedList().remove(rcl);
-				rcl.getCloudlet();
+				return rcl.getCloudlet();
 			}
 		}
 
@@ -383,7 +382,6 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		} else {// no enough free PEs: go to the waiting queue
 			ResCloudlet rcl = new ResCloudlet(cloudlet);
 			rcl.setCloudletStatus(Cloudlet.QUEUED);
-
 			getCloudletWaitingList().add(rcl);
 			return 0.0;
 		}
@@ -407,7 +405,6 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		long length = cloudlet.getCloudletLength();
 		length += extraSize;
 		cloudlet.setCloudletLength(length);
-
 		return cloudlet.getCloudletLength() / capacity;
 	}
 
