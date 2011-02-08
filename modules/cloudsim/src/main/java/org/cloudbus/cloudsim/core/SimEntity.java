@@ -183,6 +183,109 @@ public abstract class SimEntity implements Cloneable {
 	public void scheduleNow(String dest, int tag) {
 		schedule(dest, 0, tag, null);
 	}
+	
+	/**
+	 * Send a high priority event to another entity by id number, with data. Note that the
+	 * tag <code>9999</code> is reserved.
+	 *
+	 * @param dest The unique id number of the destination entity
+	 * @param delay How long from the current simulation time the event
+	 * should be sent
+	 * @param tag An user-defined number representing the type of event.
+	 * @param data The data to be sent with the event.
+	 */
+	public void scheduleFirst(int dest, double delay, int tag, Object data) {
+		if (!CloudSim.running()) {
+			return;
+		}
+		CloudSim.sendFirst(id, dest, delay, tag, data);
+	}
+
+	/**
+	 * Send a high priority event to another entity by id number and with <b>no</b> data.
+	 * Note that the tag <code>9999</code> is reserved.
+	 *
+	 * @param dest The unique id number of the destination entity
+	 * @param delay How long from the current simulation time the event
+	 * should be sent
+	 * @param tag An user-defined number representing the type of event.
+	 */
+	public void scheduleFirst(int dest, double delay, int tag) {
+		scheduleFirst(dest, delay, tag, null);
+	}
+
+	/**
+	 * Send a high priority event to another entity through a port with a given name, with
+	 * data. Note that the tag <code>9999</code> is reserved.
+	 *
+	 * @param dest The name of the port to send the event through
+	 * @param delay How long from the current simulation time the event
+	 * should be sent
+	 * @param tag An user-defined number representing the type of event.
+	 * @param data The data to be sent with the event.
+	 */
+	public void scheduleFirst(String dest, double delay, int tag, Object data) {
+		scheduleFirst(CloudSim.getEntityId(dest), delay, tag, data);
+	}
+
+	/**
+	 * Send a high priority event to another entity through a port with a given name, with
+	 * <b>no</b> data. Note that the tag <code>9999</code> is reserved.
+	 *
+	 * @param dest The name of the port to send the event through
+	 * @param delay How long from the current simulation time the event should be
+	 * sent
+	 * @param tag An user-defined number representing the type of event.
+	 */
+	public void scheduleFirst(String dest, double delay, int tag) {
+		scheduleFirst(dest, delay, tag, null);
+	}
+
+	/**
+	 * Send a high priority event to another entity by id number, with data. Note that the
+	 * tag <code>9999</code> is reserved.
+	 *
+	 * @param dest The unique id number of the destination entity
+	 * @param tag An user-defined number representing the type of event.
+	 * @param data The data to be sent with the event.
+	 */
+	public void scheduleFirstNow(int dest, int tag, Object data) {
+		scheduleFirst(dest, 0, tag, data);
+	}
+
+	/**
+	 * Send a high priority event to another entity by id number and with <b>no</b> data.
+	 * Note that the tag <code>9999</code> is reserved.
+	 *
+	 * @param dest The unique id number of the destination entity
+	 * @param tag An user-defined number representing the type of event.
+	 */
+	public void scheduleFirstNow(int dest, int tag) {
+		scheduleFirst(dest, 0, tag, null);
+	}
+
+	/**
+	 * Send a high priority event to another entity through a port with a given name, with
+	 * data. Note that the tag <code>9999</code> is reserved.
+	 *
+	 * @param dest The name of the port to send the event through
+	 * @param tag An user-defined number representing the type of event.
+	 * @param data The data to be sent with the event.
+	 */
+	public void scheduleFirstNow(String dest, int tag, Object data) {
+		scheduleFirst(CloudSim.getEntityId(dest), 0, tag, data);
+	}
+
+	/**
+	 * Send a high priority event to another entity through a port with a given name, with
+	 * <b>no</b> data. Note that the tag <code>9999</code> is reserved.
+	 *
+	 * @param dest The name of the port to send the event through
+	 * @param tag An user-defined number representing the type of event.
+	 */
+	public void scheduleFirstNow(String dest, int tag) {
+		scheduleFirst(dest, 0, tag, null);
+	}
 
 	/**
 	 * Set the entity to be inactive for a time period.

@@ -41,6 +41,16 @@ public class FutureQueue {
 		newEvent.setSerial(serial++);
 		sortedSet.add(newEvent);
 	}
+	
+	/**
+	 * Add a new event to the head of the queue. 
+	 *
+	 * @param newEvent The event to be put in the queue.
+	 */
+	public void addEventFirst(SimEvent newEvent) {
+		newEvent.setSerial(0);
+		sortedSet.add(newEvent);
+	}
 
 	/**
 	 * Returns an iterator to the queue.
