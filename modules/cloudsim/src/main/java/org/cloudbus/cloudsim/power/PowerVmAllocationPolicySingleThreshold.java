@@ -218,7 +218,8 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 				continue;
 			}
 			if (!host.vmCreate(vm)) {
-				Log.printLine("failed");
+				Log.printLine("Something is wrong, the VM can's be restored");
+				System.exit(0);
 			}
 			getVmTable().put(vm.getUid(), host);
 			Log.printLine("Restored VM #" + vm.getId() + " on host #" + host.getId());
