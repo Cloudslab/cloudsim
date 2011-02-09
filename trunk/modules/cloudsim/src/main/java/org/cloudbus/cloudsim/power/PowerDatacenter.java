@@ -131,6 +131,15 @@ public class PowerDatacenter extends Datacenter {
 			}
 
 			setPower(getPower() + timeframePower);
+			
+			/** Remove completed VMs **/
+			for (PowerHost host : this.<PowerHost>getHostList()) {
+				for (Vm vm : host.getCompletedVms()) {
+					getVmAllocationPolicy().deallocateHostForVm(vm);
+					getVmList().remove(vm);
+					Log.printLine("VM #" + vm.getId() + " has been deallocated from host #" + host.getId());
+				}
+			}
 
 			Log.printLine();
 
