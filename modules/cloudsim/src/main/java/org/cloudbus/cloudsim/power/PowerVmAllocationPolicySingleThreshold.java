@@ -153,31 +153,31 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 		List<Vm> vmsToRestore = new ArrayList<Vm>();
 		vmsToRestore.addAll(vmList);
 
-		List<Vm> vmTmpList = new ArrayList<Vm>();
-		vmTmpList.addAll(vmList);
-		PowerVmList.sortByCpuUtilization(vmTmpList);
+		List<Vm> vmsToMigrate = new ArrayList<Vm>();
+		for (Vm vm : vmList) {
+			if (vm.isRecentlyCreated() || vm.isInMigration()) {
+				continue;
+			}
+			vmsToMigrate.add(vm);
+			vm.getHost().vmDestroy(vm);			
+		}
+		PowerVmList.sortByCpuUtilization(vmsToMigrate);
 
 		for (PowerHost host : this.<PowerHost>getHostList()) {
 			host.reallocateMigratingVms();
 		}
 
-		for (Vm vm : vmTmpList) {
-			if (vm.isRecentlyCreated() || vm.isInMigration()) {
-				continue;
-			}
-
+		for (Vm vm : vmsToMigrate) {
 			PowerHost oldHost = (PowerHost) getVmTable().get(vm.getUid());
 			PowerHost allocatedHost = findHostForVm(vm);
-			if (allocatedHost != null) {
-				Log.printLine("VM #" + vm.getId() + " allocated to host #" + allocatedHost.getId());
+			if (allocatedHost != null && allocatedHost.getId() != oldHost.getId()) {
 				allocatedHost.vmCreate(vm);
+				Log.printLine("VM #" + vm.getId() + " allocated to host #" + allocatedHost.getId());
 
-				if (allocatedHost.getId() != oldHost.getId()) {
-					Map<String, Object> migrate = new HashMap<String, Object>();
-					migrate.put("vm", vm);
-					migrate.put("host", allocatedHost);
-					migrationMap.add(migrate);
-				}
+				Map<String, Object> migrate = new HashMap<String, Object>();
+				migrate.put("vm", vm);
+				migrate.put("host", allocatedHost);
+				migrationMap.add(migrate);
 			}
 		}
 
