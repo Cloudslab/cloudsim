@@ -1,0 +1,100 @@
+-----------------------------------------
+Changes from CloudSim 2.0 to CloudSim 2.1
+-----------------------------------------
+
+- The project has been migrated to using Apache Maven (http://maven.apache.org/). Maven simplifies
+  java project management by providing various tools and plugins for project building, testing, and 
+  packaging, dependency management, etc. 
+- The directory structure has been changed to comply with the Maven specification
+- The VmSchedulerTimeSharedWithPriority has been removed as well as the priority field from the 
+  Vm class. Users can have the same functionality by using the VmSchedulerTimeShared class and 
+  setting the MIPS requirements for VMs. See examples 2 and 3. 
+- Bug fixes, refactoring and removing obsolete code.
+
+
+----------------------------------------------
+Changes from CloudSim 1.0 beta to CloudSim 2.0
+----------------------------------------------
+
+WHAT'S NEW
+----------
+
+- NEW SIMULATION CORE. CloudSim 2.0 does not rely on SimJava to process simulation. Therefore, creation of threads was
+controlled, race conditions found in CloudSim beta were removed, scalability and performance of CloudSim improved.
+Moreover, support for dynamic creation and destruction of simulation entities was added.
+
+- IMPROVEMENT IN SCHEDULERS, which enhances accuracy of simulation results.
+
+- NEW FEATURES, including power-aware simulation, federation simulation, and network simulation.
+
+- PACKAGE ORGANIZATION CHANGES, including changes in class names, removal of classes, and changes in interfaces. Next, the
+main changes that affect CloudSim beta users are summarized.
+
+
+CHANGES IN CLASS NAMES
+----------------------
+
+The following classes had their names changed to better reflect its functionalities and/or to adhere to naming standards:
+
+(previous name) VMScheduler -> (current name) CloudletScheduler
+(previous name) TimeSharedVMScheduler -> (current name) CloudletSchedulerTimeShared
+(previous name) SpaceSharedVMScheduler -> (current name) CloudletSchedulerSpaceShared
+
+(previous name) VMMAllocationPolicy -> (current name) VmScheduler
+(previous name) TimeSharedAllocationPolicy -> (current name) VmSchedulerTimeShared
+(previous name) TimeSpaceSharedAllocationPolicy -> (current name) VmSchedulerOportunisticSpaceShared
+(previous name) TimeSharedWithPriorityAllocationPolicy -> (current name) VmSchedulerTimeShared
+(previous name) SpaceSharedAllocationPolicy -> (current name) VmSchedulerTimeSharedWithPriority
+
+(previous name) VMProvisioner -> (current name) VmAllocationPolicy
+(previous name) SimpleVMProvisioner -> (current name) VmAllocationPolicySimple 
+
+(previous name) DataCenter -> (current name) Datacenter
+(previous name) PE -> (current name) Pe
+(previous name) VirtualMachine -> (current name) Vm
+
+(previous name) SimpleMemoryProvisioner -> (current name) provisioners.RamProvisionerSimple
+(previous name) MemoryProvisioner -> (current name) provisioners.RamProvisioner
+
+(previous name) BWProvisioner -> (current name) provisioners.BwProvisioner
+(previous name) SimpleBWProvisioner -> (current name) provisioners.BwProvisionerSimple
+
+(previous name) DataCenterTags -> (current name) core.CloudSimTags
+
+(previous name) SANStorage -> (current name) HardDriveStorage
+
+
+REMOVED CLASSES
+---------------
+
+Previous classes that implemented list operations were removed from CloudSim. Instead of this classes, users should use standard lists from java.utils
+
+* CloudletList
+* VirtualMachineList
+
+The following classes were removed because they were redundant:
+
+* VMCharacteristics
+
+
+INTERFACE CHANGES
+-----------------
+
+Because dependencies from SimJava were removed, and due to other code optimizations, some classes suffered major changes in their interfaces. The main ones are listed below:
+
+* Vm (previous VirtualMachine) now receives directly all the relevant VM parameters (before, it was done through a VMCharacteristics object)
+
+* Simulation entities (Datacenter, FederatedDatacenter, DatacenterBroker) have now simpler constructors. Please, refer to examples or Javadoc for new constructors
+
+
+NEW FEATURES
+------------
+
+Below there is a list of CloudSim's new features. Please, refer to Javadoc and examples for instructions on how to use this new features.
+
+* Network effects added through determination of network link latency and bandwidth;
+
+* Support for simulation of Federation of Data centers (new classes FederatedDatacenter, CloudCoordinator, and Sensor);
+
+* Support for modeling of energy-aware cloud computing.
+
