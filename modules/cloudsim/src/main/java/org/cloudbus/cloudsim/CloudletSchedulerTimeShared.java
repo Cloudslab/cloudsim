@@ -336,8 +336,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	 */
 	@Override
 	public double cloudletSubmit(Cloudlet cloudlet) {
-		cloudletSubmit(cloudlet, 0);
-		return 0;
+		return cloudletSubmit(cloudlet, 0.0);
 	}
 
 	/**
