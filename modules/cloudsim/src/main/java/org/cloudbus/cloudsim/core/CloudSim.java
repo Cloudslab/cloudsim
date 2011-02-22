@@ -38,7 +38,7 @@ import org.cloudbus.cloudsim.core.predicates.PredicateNone;
 public class CloudSim {
 
 	/** The Constant CLOUDSIM_VERSION_STRING. */
-	private static final String CLOUDSIM_VERSION_STRING = "2.0";
+	private static final String CLOUDSIM_VERSION_STRING = "2.1.1";
 
 	/** The id of CIS entity. */
 	private static int cisId = -1;
