@@ -159,6 +159,11 @@ public class Host {
 	 * @post $none
 	 */
 	public boolean vmCreate(Vm vm) {
+		if (storage<vm.getSize()){
+			Log.printLine("Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by storage");
+			return false;
+		}
+		
 		if (!getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam())) {
 			Log.printLine("Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by RAM");
 			return false;
@@ -177,6 +182,7 @@ public class Host {
 			return false;
 		}
 
+		storage-=vm.getSize();
 		getVmList().add(vm);
 		vm.setHost(this);
 		return true;
@@ -195,6 +201,7 @@ public class Host {
 			vmDeallocate(vm);
 			getVmList().remove(vm);
 			vm.setHost(null);
+			storage+=vm.getSize();
 		}
 	}
 
@@ -208,6 +215,7 @@ public class Host {
 		vmDeallocateAll();
 		for (Vm vm : getVmList()) {
 			vm.setHost(null);
+			storage+=vm.getSize();
 		}
 		getVmList().clear();
 	}
@@ -383,7 +391,7 @@ public class Host {
 	 * @return the machine storage
 	 *
 	 * @pre $none
-	 * @post $result > 0
+	 * @post $result >= 0
 	 */
 	public long getStorage() {
 		return storage;
