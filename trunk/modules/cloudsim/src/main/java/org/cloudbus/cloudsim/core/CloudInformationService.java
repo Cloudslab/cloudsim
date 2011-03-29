@@ -8,7 +8,6 @@
 
 package org.cloudbus.cloudsim.core;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,17 +16,16 @@ import java.util.List;
 import org.cloudbus.cloudsim.Log;
 
 /**
- * A Cloud Information Service (GIS) is an entity that provides grid
+ * A Cloud Information Service (CIS) is an entity that provides cloud
  * resource registration, indexing and discovery services. The Cloud hostList
  * tell their readiness to process Cloudlets by registering themselves with
- * this entity, done via {@link gridsim.CloudResource#startEntity()} method.
+ * this entity.
  * <p>
  * Other entities such as the resource broker can contact
  * this class for resource discovery service, which returns a list of
  * registered resource IDs. In summary, it acts like a yellow page service.
  * <p>
- * This class will be created by CloudSim upon initialisation of the simulation,
- * i.e. done via {@link gridsim.CloudSim#init(int, Calendar, boolean)} method.
+ * This class will be created by CloudSim upon initialisation of the simulation.
  * Hence, do not need to worry about creating an object of this class.
  * <p>
  *
@@ -56,8 +54,6 @@ public class CloudInformationService extends SimEntity {
      * initialising CloudSim package or this entity name is
      * <tt>null</tt> or empty
      *
-     * @see gridsim.CloudSim#init(int, Calendar, boolean)
-     * @see yoursim.SimEntity
      * @pre name != null
      * @post $none
      */
