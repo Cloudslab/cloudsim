@@ -97,7 +97,6 @@ public class PowerDatacenter extends Datacenter {
 			Log.printLine("\n");
 
 			for (PowerHost host : this.<PowerHost>getHostList()) {
-
 				Log.formatLine("%.2f: Host #%d", CloudSim.clock(), host.getId());
 
 				double hostPower = 0.0;
@@ -131,6 +130,8 @@ public class PowerDatacenter extends Datacenter {
 			}
 
 			setPower(getPower() + timeframePower);
+			
+			checkCloudletCompletion();
 			
 			/** Remove completed VMs **/
 			for (PowerHost host : this.<PowerHost>getHostList()) {

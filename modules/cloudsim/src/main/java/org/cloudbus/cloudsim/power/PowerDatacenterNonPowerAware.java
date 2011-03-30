@@ -104,6 +104,8 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 			}
 
 			setPower(getPower() + timeframePower);
+			
+			checkCloudletCompletion();
 
 			/** Remove completed VMs **/
 			for (PowerHost host : this.<PowerHost>getHostList()) {
@@ -143,7 +145,8 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 
 			// schedules an event to the next time
 			if (minTime != Double.MAX_VALUE) {
-				CloudSim.cancelAll(getId(), CloudSim.SIM_ANY);
+				CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
+				//CloudSim.cancelAll(getId(), CloudSim.SIM_ANY);
 				send(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
 			}
 
