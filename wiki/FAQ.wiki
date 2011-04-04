@@ -1,4 +1,5 @@
 #summary CloudSim FAQ
+#labels Featured
 
 = FAQ =
 
