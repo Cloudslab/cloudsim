@@ -11,4 +11,4 @@ Here, you find answer to the most recurrent questions in the !CloudSim mailing l
 
 Gustedt, J.; Jeannot, E. and Quinson, M. Experimental methodologies for large-scale systems: a survey, Parallel Processing Letters, World Scientific, 2009, 19(3), 399-418.
 
-If the goal of your project is running actual software in an actual system perhaps you'd rather develop your software and test it in a small-scale data center, containing a few hosts running [http://www.eucalyptus.com/ Eucalyptus].
+Therefore, if the goal of your project is running an actual software that you developed, or plan to develop (a package, an algorithm) in an actual system perhaps you'd rather develop your software and test it in a small-scale data center, containing a few hosts running [http://www.eucalyptus.com/ Eucalyptus].
