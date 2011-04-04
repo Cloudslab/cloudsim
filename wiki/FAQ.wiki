@@ -7,9 +7,8 @@ Here, you find answer to the most recurrent questions in the CloudSim mailing li
 
 == Is !CloudSim the right tool for my project?  ==
 
-1. CloudSim is a simulator, so it doesn't run any actual software technology. Simulation can be defined as "running a model of a software in a model of hardware". As it's all about models, specific technology details are abstracted. More information about differences between simulation, emulation, and other experiments methodologies can
-be found in [1].
+1. CloudSim is a simulator, so it doesn't run any actual software technology. Simulation can be defined as "running a model of a software in a model of hardware". As it's all about models, specific technology details are abstracted. More information about differences between simulation, emulation, and other experiments methodologies can be found in:
+
+Gustedt, J.; Jeannot, E. & Quinson, M. Experimental methodologies for large-scale systems: a survey, Parallel Processing Letters, World Scientific, 2009, 19(3), 399-418.
 
 If the goal of your project is running actual software in an actual system perhaps you'd rather develop your software and test it in a small-scale data center, containing a few hosts running [http://www.eucalyptus.com/ Eucalyptus].
-
-[1] Gustedt, J.; Jeannot, E. & Quinson, M. Experimental methodologies for large-scale systems: a survey, Parallel Processing Letters, World Scientific, 2009, 19(3), 399-418.
