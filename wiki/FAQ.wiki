@@ -62,7 +62,7 @@ We do our best to answer all the questions we receive in a [http://en.wikipedia.
   # Question has been answered previously in either this FAQ or discussion group;
   # Message has been shadowed by other submission using the same thread. If there were too many of these messages, some of them may be missed. This can be avoided by using specific Subject of the message that clearly describes your problem.
 
-=== 7. Can you implemented the specific feature X, required by my project/assignment? ===
+=== 7. Can you implement the specific feature X, required by my project/assignment? ===
 
 Because we are a small team of developers, we can't add support to every scenario envisioned by users. But this is our intention: we provide generic classes and features that can be broadly used, and users develop case-specific behavior. Suggestion for new features that may be useful for significant number of users are welcomed and can be posted in the [http://code.google.com/p/cloudsim/issues/list issue tracker]. Classes and features that are narrow in applicability and are intended to solve specific problems, though, are unlikely to be developed.
 
