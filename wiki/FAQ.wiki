@@ -4,23 +4,47 @@
 
 Here, you find answer to the most recurrent questions in the !CloudSim mailing list.
 
+<wiki:toc max_depth="3" />
+
+----
+[FAQ Top]
 == General issues ==
 
 === 1. What is !CloudSim? What does it do and what doesn't it do? ===
 
-CloudSim is a toolkit (library) for simulation of Cloud computing scenarios. It provides basic classes for describing data centers, virtual machines, applications, users, computational resources, and policies for management of diverse parts of the system (e.g., scheduling and provisioning).
+!CloudSim is a toolkit (library) for simulation of Cloud computing scenarios. It provides basic classes for describing data centers, virtual machines, applications, users, computational resources, and policies for management of diverse parts of the system (e.g., scheduling and provisioning).
 
-These components can be out together for users to evaluate new strategies in utilization of Clouds (policies, scheduling algorithms, mapping and load balancing policies, etc).
+These components can be put together for users to evaluate new strategies in utilization of Clouds (policies, scheduling algorithms, mapping and load balancing policies, etc). It can also be used to evaluate efficiency of strategies from different perspectives, from cost/profit to speed up of application execution time. It also supports evaluation of Green IT policies.
+
+The above are some common scenarios we envisioned and that users have been explored. Nevertheless, there is no limit on the utilization you can make from it: classes can be extended or replaced, new policies can be added and new scenarios for utilization can be coded. Think of it as the building blocks for your own simulated Cloud environment.
+
+Therefore, !CloudSim is not a ready-to-use solution were you set parameters and collect results for use in your project. Being a library, !CloudSim requires that you write a Java program using its components to compose the desired scenario. Nevertheless, !CloudSim can be used to build such a ready-to-use solution. see, for example:
+
+Bhathiya Wickremasinghe, Rodrigo N. Calheiros, and Rajkumar Buyya. !CloudAnalyst: A !CloudSim-based Visual Modeller for Analysing Cloud Computing Environments and Applications. in: Proceedings of the 24th International Conference on Advanced Information Networking and Applications (AINA 2010), 2010.
 
 === 2. Is !CloudSim the right tool for my project?  ===
 
 !CloudSim is a simulator, so it doesn't run any actual software technology. Simulation can be defined as "running a model of a software in a model of hardware". As it's all about models, specific technology details are abstracted. More information about differences between simulation, emulation, and other experiments methodologies can be found in:
 
-Gustedt, J.; Jeannot, E. and Quinson, M. Experimental methodologies for large-scale systems: a survey, Parallel Processing Letters, World Scientific, 2009, 19(3), 399-418.
+Gustedt, J.; Jeannot, E.; and Quinson, M. Experimental methodologies for large-scale systems: a survey, Parallel Processing Letters, World Scientific, 2009, 19(3), 399-418.
 
 Therefore, if the goal of your project is running an actual software that you developed, or plan to develop (a package, an algorithm) in an actual system perhaps you'd rather develop your software and test it in a small-scale data center, containing a few hosts running [http://www.eucalyptus.com/ Eucalyptus].
 
-=== 3. I have a question. What should I do? ==
+=== 3. What do I need to use !CloudSim? How can I install it?  ===
+
+The only previous knowledge you need to use !CloudSim is basic Java programming (as !CloudSim is written in Java) and some knowledge about Cloud computing. Knowledge on programming IDEs like [http://www.eclipse.org/ Eclipse] or [http://netbeans.org/ NetBeans] is also handy, as they simplifies a lot application development tasks. Alternatively, [http://ant.apache.org/ Ant] or [http://maven.apache.org/ Maven] can be used for compilation of applications.
+
+CloudSim does not have to be installed: you just unpack the downloaded package on any directory, add it to your Java classpath and it is ready to be used. If you use Eclipse or !NetBeans, you can add !CloudSim as a project, and it will be available for further projects created via the IDE.
+
+=== 4. How can I learn more about CloudSim? ===
+
+you can start by the examples available in the !CloudSim package. They start with simple scenarios and progress to more complex ones. After that, you will have a good idea on how you can put components together to build your own scenarios.
+
+As the basic components are not sufficient for your project, you may start to study the API, so you will be able to use advanced features, and to extend or replace components.
+
+Other source of information is the [http://groups.google.com/group/cloudsim?pli=1 CloudSim group].
+
+=== 5. I have a question. What should I do? ===
 
 The first thing you should do is reading this FAQ. As we are periodically adding new answers here, we may find the answer to your problem here.
 
@@ -28,7 +52,7 @@ If your question is not answered here, you should try next previous discussions 
 
 Finally, if nether from the solves your problem, send an e-mail to the discussion group. Please, try to be clear about your question, as it is likely to speed up the answer.
 
-=== 4. How long does it take to my question to be answered? ==
+=== 6. How long does it take to my question to be answered? ==
 
 We do our best to answer all the questions we receive in a [http://en.wikipedia.org/wiki/Business_day business day]. Nevertheless, some factors may affect it, such as:
 
@@ -38,34 +62,36 @@ We do our best to answer all the questions we receive in a [http://en.wikipedia.
   # Question has been answered previously in either this FAQ or discussion group;
   # Message has been shadowed by other submission using the same thread. If there were too many of these messages, some of them may be missed. This can be avoided by using specific Subject of the message that clearly describes your problem.
 
-=== 5. Can you implemented the specific feature X, required by my project/assignment? ===
+=== 7. Can you implemented the specific feature X, required by my project/assignment? ===
 
 Because we are a small team of developers, we can't add support to every scenario envisioned by users. But this is our intention: we provide generic classes and features that can be broadly used, and users develop case-specific behavior. Suggestion for new features that may be useful for significant number of users are welcomed and can be posted in the [http://code.google.com/p/cloudsim/issues/list issue tracker]. Classes and features that are narrow in applicability and are intended to solve specific problems, though, are unlikely to be developed.
 
-=== 6. How do I report bugs, desirable features, unexpected behavior and other issues?  ===
+=== 8. How do I report bugs, desirable features, unexpected behavior and other issues?  ===
 
 Please, use the [http://code.google.com/p/cloudsim/issues/list issue tracker] for that. This helps to speed up update process. Issues reported in the discussion group may take longer time to be added to the issue tracker.
 
 ----
-[FAQ up]
+[FAQ Top]
 == !CloudSim components, communication, and events ==
 
-=== 7. What are the default behavior of components provided in CloudSim package? How can I change them?===
+=== 9. What are the default behavior of components provided in !CloudSim package? How can I change them?===
 
-=== 8. How can I code a periodic behavior to be adopted by entities? ===
+=== 10. How can I code a periodic behavior to be adopted by entities? ===
 
-=== 9. How can I create my own type of messages? How to make them be received by other entities? ===
+=== 11. How can I create my own type of messages? How to make them be received by other entities? ===
 
 ----
+[FAQ Top]
 == Policies ==
 
-=== 10. What are the default scheduling policies and how can I change them? ===
+=== 12. What are the default scheduling policies and how can I change them? ===
 
-=== 11. What scheduling decisions should be implemented at VM level and what scheduling decisions should be implemented at broker level? ===
+=== 13. What scheduling decisions should be implemented at VM level and what scheduling decisions should be implemented at broker level? ===
 
-=== 12. What is the default provisioning policy and how can I change it?  ===
+=== 14. What is the default provisioning policy and how can I change it?  ===
 
 ----
+[FAQ Top]
 == Advanced features ==
 
-=== 13. How can I code VM migration inside a data center? ===
+=== 15. How can I code VM migration inside a data center? ===
