@@ -8,6 +8,10 @@ Here, you find answer to the most recurrent questions in the !CloudSim mailing l
 
 === 1. What is !CloudSim? What does it do and what doesn't it do? ===
 
+CloudSim is a toolkit (library) for simulation of Cloud computing scenarios. It provides basic classes for describing data centers, virtual machines, applications, users, computational resources, and policies for management of diverse parts of the system (e.g., scheduling and provisioning).
+
+These components can be out together for users to evaluate new strategies in utilization of Clouds (policies, scheduling algorithms, mapping and load balancing policies, etc).
+
 === 2. Is !CloudSim the right tool for my project?  ===
 
 !CloudSim is a simulator, so it doesn't run any actual software technology. Simulation can be defined as "running a model of a software in a model of hardware". As it's all about models, specific technology details are abstracted. More information about differences between simulation, emulation, and other experiments methodologies can be found in:
@@ -40,4 +44,28 @@ Because we are a small team of developers, we can't add support to every scenari
 
 === 6. How do I report bugs, desirable features, unexpected behavior and other issues?  ===
 
-please, use the [http://code.google.com/p/cloudsim/issues/list issue tracker] for that. This helps to speed up update process. Issues reported in the discussion group may take longer time to be added to the issue tracker.
+Please, use the [http://code.google.com/p/cloudsim/issues/list issue tracker] for that. This helps to speed up update process. Issues reported in the discussion group may take longer time to be added to the issue tracker.
+
+----
+[FAQ]
+== !CloudSim components, communication, and events ==
+
+=== 7. What are the default behavior of components provided in CloudSim package? How can I change them?===
+
+=== 8. How can I code a periodic behavior to be adopted by entities? ===
+
+=== 9. How can I create my own type of messages? How to make them be received by other entities? ===
+
+----
+== Policies ==
+
+=== 10. What are the default scheduling policies and how can I change them? ===
+
+=== 11. What scheduling decisions should be implemented at VM level and what scheduling decisions should be implemented at broker level? ===
+
+=== 12. What is the default provisioning policy and how can I change it?  ===
+
+----
+== Advanced features ==
+
+=== 13. How can I code VM migration inside a data center? ===
