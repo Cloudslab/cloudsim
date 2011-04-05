@@ -8,7 +8,7 @@ Here, you find answer to the most recurrent questions in the !CloudSim mailing l
 
 ----
 [FAQ Top]
-== General issues ==
+== Getting started ==
 
 === 1. What is !CloudSim? What does it do and what doesn't it do? ===
 
@@ -44,7 +44,35 @@ As the basic components are not sufficient for your project, you may start to st
 
 Other source of information is the [http://groups.google.com/group/cloudsim?pli=1 CloudSim group].
 
-=== 5. I have a question. What should I do? ===
+----
+[FAQ Top]
+== !CloudSim components, communication, and events ==
+
+=== 5. What are the default behavior of components provided in !CloudSim package? How can I change them?===
+
+=== 6. How can I code a periodic behavior to be adopted by entities? ===
+
+=== 7. How can I create my own type of messages? How to make them be received by other entities? ===
+
+----
+[FAQ Top]
+== Policies ==
+
+=== 8. What are the default scheduling policies and how can I change them? ===
+
+=== 9. What scheduling decisions should be implemented at VM level and what scheduling decisions should be implemented at broker level? ===
+
+=== 10. What is the default provisioning policy and how can I change it?  ===
+
+----
+[FAQ Top]
+== Advanced features ==
+
+=== 11. How can I code VM migration inside a data center? ===
+
+== Getting help ==
+
+=== 12. I have a question. What should I do? ===
 
 The first thing you should do is reading this FAQ. As we are periodically adding new answers here, we may find the answer to your problem here.
 
@@ -52,7 +80,7 @@ If your question is not answered here, you should try next previous discussions 
 
 Finally, if nether from the solves your problem, send an e-mail to the discussion group. Please, try to be clear about your question, as it is likely to speed up the answer.
 
-=== 6. How long does it take to my question to be answered? ==
+=== 13. How long does it take to my question to be answered? ==
 
 We do our best to answer all the questions we receive in a [http://en.wikipedia.org/wiki/Business_day business day]. Nevertheless, some factors may affect it, such as:
 
@@ -62,36 +90,10 @@ We do our best to answer all the questions we receive in a [http://en.wikipedia.
   # Question has been answered previously in either this FAQ or discussion group;
   # Message has been shadowed by other submission using the same thread. If there were too many of these messages, some of them may be missed. This can be avoided by using specific Subject of the message that clearly describes your problem.
 
-=== 7. Can you implement the specific feature X, required by my project/assignment? ===
+=== 14. Can you implement the specific feature X, required by my project/assignment? ===
 
 Because we are a small team of developers, we can't add support to every scenario envisioned by users. But this is our intention: we provide generic classes and features that can be broadly used, and users develop case-specific behavior. Suggestion for new features that may be useful for significant number of users are welcomed and can be posted in the [http://code.google.com/p/cloudsim/issues/list issue tracker]. Classes and features that are narrow in applicability and are intended to solve specific problems, though, are unlikely to be developed.
 
-=== 8. How do I report bugs, desirable features, unexpected behavior and other issues?  ===
+=== 15. How do I report bugs, desirable features, unexpected behavior and other issues?  ===
 
 Please, use the [http://code.google.com/p/cloudsim/issues/list issue tracker] for that. This helps to speed up update process. Issues reported in the discussion group may take longer time to be added to the issue tracker.
-
-----
-[FAQ Top]
-== !CloudSim components, communication, and events ==
-
-=== 9. What are the default behavior of components provided in !CloudSim package? How can I change them?===
-
-=== 10. How can I code a periodic behavior to be adopted by entities? ===
-
-=== 11. How can I create my own type of messages? How to make them be received by other entities? ===
-
-----
-[FAQ Top]
-== Policies ==
-
-=== 12. What are the default scheduling policies and how can I change them? ===
-
-=== 13. What scheduling decisions should be implemented at VM level and what scheduling decisions should be implemented at broker level? ===
-
-=== 14. What is the default provisioning policy and how can I change it?  ===
-
-----
-[FAQ Top]
-== Advanced features ==
-
-=== 15. How can I code VM migration inside a data center? ===
