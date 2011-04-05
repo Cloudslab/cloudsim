@@ -1,15 +1,43 @@
 #summary CloudSim FAQ
-#labels Featured
 
 = FAQ =
 
 Here, you find answer to the most recurrent questions in the !CloudSim mailing list.
 
+== General issues ==
 
-== 1. Is !CloudSim the right tool for my project?  ==
+=== 1. What is !CloudSim? What does it do and what doesn't it do? ===
+
+=== 2. Is !CloudSim the right tool for my project?  ===
 
 !CloudSim is a simulator, so it doesn't run any actual software technology. Simulation can be defined as "running a model of a software in a model of hardware". As it's all about models, specific technology details are abstracted. More information about differences between simulation, emulation, and other experiments methodologies can be found in:
 
 Gustedt, J.; Jeannot, E. and Quinson, M. Experimental methodologies for large-scale systems: a survey, Parallel Processing Letters, World Scientific, 2009, 19(3), 399-418.
 
 Therefore, if the goal of your project is running an actual software that you developed, or plan to develop (a package, an algorithm) in an actual system perhaps you'd rather develop your software and test it in a small-scale data center, containing a few hosts running [http://www.eucalyptus.com/ Eucalyptus].
+
+=== 3. I have a question. What should I do? ==
+
+The first thing you should do is reading this FAQ. As we are periodically adding new answers here, we may find the answer to your problem here.
+
+If your question is not answered here, you should try next previous discussions from [http://groups.google.com/group/cloudsim?pli=1 CloudSim group]. Fragments of code that solve typical problems can be found there.
+
+Finally, if nether from the solves your problem, send an e-mail to the discussion group. Please, try to be clear about your question, as it is likely to speed up the answer.
+
+=== 4. How long does it take to my question to be answered? ==
+
+We do our best to answer all the questions we receive in a [http://en.wikipedia.org/wiki/Business_day business day]. Nevertheless, some factors may affect it, such as:
+
+  # Message has to be forwarded to another developer who is more familiar with the specific subject;
+  # Question is not clear or too generic, and we have first to try to understand it;
+  # Message reports bug or undesirable behavior of code (you should use the [http://code.google.com/p/cloudsim/issues/list issue tracker] to speed up the process);
+  # Question has been answered previously in either this FAQ or discussion group;
+  # Message has been shadowed by other submission using the same thread. If there were too many of these messages, some of them may be missed. This can be avoided by using specific Subject of the message that clearly describes your problem.
+
+=== 5. Can you implemented the specific feature X, required by my project/assignment? ===
+
+Because we are a small team of developers, we can't add support to every scenario envisioned by users. But this is our intention: we provide generic classes and features that can be broadly used, and users develop case-specific behavior. Suggestion for new features that may be useful for significant number of users are welcomed and can be posted in the [http://code.google.com/p/cloudsim/issues/list issue tracker]. Classes and features that are narrow in applicability and are intended to solve specific problems, though, are unlikely to be developed.
+
+=== 6. How do I report bugs, desirable features, unexpected behavior and other issues?  ===
+
+please, use the [http://code.google.com/p/cloudsim/issues/list issue tracker] for that. This helps to speed up update process. Issues reported in the discussion group may take longer time to be added to the issue tracker.
