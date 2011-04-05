@@ -70,6 +70,8 @@ Other source of information is the [http://groups.google.com/group/cloudsim?pli=
 
 === 11. How can I code VM migration inside a data center? ===
 
+----
+[FAQ Top]
 == Getting help ==
 
 === 12. I have a question. What should I do? ===
