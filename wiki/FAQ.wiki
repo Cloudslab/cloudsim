@@ -47,7 +47,7 @@ Because we are a small team of developers, we can't add support to every scenari
 Please, use the [http://code.google.com/p/cloudsim/issues/list issue tracker] for that. This helps to speed up update process. Issues reported in the discussion group may take longer time to be added to the issue tracker.
 
 ----
-[FAQ]
+[FAQ up]
 == !CloudSim components, communication, and events ==
 
 === 7. What are the default behavior of components provided in CloudSim package? How can I change them?===
