@@ -50,9 +50,11 @@ Other source of information is the [http://groups.google.com/group/cloudsim?pli=
 
 === 5. What are the default behavior of components provided in !CloudSim package? How can I change them?===
 
-Datacenter behaves like an IaaS provider: it receives requests for VMs from brokers and create the VMs in hosts. Creation of VMs follows a simple strategy where the host with less VMs running receives the next VM. This behaviour is defined in the VMAllocationPolicySimple class. To change this behavior, extend VMAllocationPolicy to define the new provisioning behavior, and pass this object in the initialization of Datacenter.
+Datacenter behaves like an IaaS provider: it receives requests for VMs from brokers and create the VMs in hosts.
 
-The Broker provider only submits a list of VMs to be created and schedules Cloudlets sequentially on them. *Broker is provided as an example and it should be replace by your own scheduling policy and/or policy for generation of VM requests and Cloudlets*.
+The Broker provided in !CloudSim only submits a list of VMs to be created and schedules Cloudlets sequentially on them. *Broker is provided as an example and it should be replace by your own scheduling policy and/or policy for generation of VM requests and Cloudlets*.
+
+To change default behavior, you can either extend these classes to add the intended behavior, or implement new ones from scratch. In the latter case, these new entities have to extend !SimEntity and implement the !processEvent(Simevent) method.
 
 === 6. How can I code a periodic behavior to be adopted by entities? ===
 
@@ -69,7 +71,6 @@ This is done by setting an internal event to be set periodically. Upon reception
 *Important: your code must contain a condition for stopping generation of internal events, otherwise simulation will never finish.*
 
 {{{
-
 class NewDatacenter extends Datacenter {
 
  public static final int PERIODIC_EVENT = 67567; //choose any unused value you want to represent the tag.
@@ -102,8 +103,6 @@ class NewDatacenter extends Datacenter {
  :
 
 }
-
-
 }}}
 
 === 7. How can I create my own type of messages? How to make them be received by other entities? ===
@@ -119,6 +118,8 @@ The process is similar to the previous one. First, a new message tag has to be d
 === 9. What scheduling decisions should be implemented at VM level and what scheduling decisions should be implemented at broker level? ===
 
 === 10. What is the default provisioning policy and how can I change it?  ===
+
+Provisioning of hosts to VMs in data centers follows a simple strategy where the host with less running VMs receives the next VM. This behavior is defined in the VMAllocationPolicySimple class. To change this behavior, extend VMAllocationPolicy to define the new provisioning behavior, and pass this object in the initialization of Datacenter.
 
 ----
 [FAQ Top]
