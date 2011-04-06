@@ -50,7 +50,61 @@ Other source of information is the [http://groups.google.com/group/cloudsim?pli=
 
 === 5. What are the default behavior of components provided in !CloudSim package? How can I change them?===
 
+Datacenter behaves like an IaaS provider: it receives requests for VMs from brokers and create the VMs in hosts. Creation of VMs follows a simple strategy where the host with less VMs running receives the next VM. This behaviour is defined in the VMAllocationPolicySimple class. To change this behavior, extend VMAllocationPolicy to define the new provisioning behavior, and pass this object in the initialization of Datacenter.
+
+The Broker provider only submits a list of VMs to be created and schedules Cloudlets sequentially on them. *Broker is provided as an example and it should be replace by your own scheduling policy and/or policy for generation of VM requests and Cloudlets*.
+
 === 6. How can I code a periodic behavior to be adopted by entities? ===
+
+This is done by setting an internal event to be set periodically. Upon reception of the event, the handler for it is called, and the desired behavior is implemented in such handler method. Below we show how to do it for Datacenter class. The same steps can be used to enable such behavior in Broker as well.
+
+1. Extend Datacenter
+
+2. Define a new tag to describe periodic event
+
+3. Override processOtherEvent, to detect the periodic event and call a handler for it
+
+4. Implement the handler method. Eventually, this method also schedules the next call for the event.
+
+*Important: your code must contain a condition for stopping generation of internal events, otherwise simulation will never finish.*
+
+{{{
+
+class NewDatacenter extends Datacenter {
+
+ public static final int PERIODIC_EVENT = 67567; //choose any unused value you want to represent the tag.
+
+  :
+
+ @Override
+ protected void processOtherEvent(SimEvent ev) {
+   if (ev == null){
+     Log.printLine("Warning: "+CloudSim.clock()+": "+this.getName()+": Null event ignored.");
+   } else {
+     int tag = ev.getTag();
+     switch(tag){
+       case PERIODIC_EVENT: processPeriodicEvent(ev); break;
+       default: Log.printLine("Warning: "+CloudSim.clock()+":"+this.getName()+": Unknown event ignored. Tag: +tag);
+     }
+   }
+ }
+
+ :
+
+ private void processPeriodicEvent(SimEvent ev) {
+   //implement your algorithm here
+    :
+   float delay; //contains the delay to the next periodic event
+   boolean generatePeriodicEvent; //true if new internal events have to be generated
+   if (generatePeriodicEvent) send(getId(),delay,PERIODIC_EVENT,data);
+ }
+
+ :
+
+}
+
+
+}}}
 
 === 7. How can I create my own type of messages? How to make them be received by other entities? ===
 
