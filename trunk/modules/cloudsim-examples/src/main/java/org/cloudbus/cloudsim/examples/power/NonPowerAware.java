@@ -143,7 +143,7 @@ public class NonPowerAware {
 			Log.printLine(String.format("Energy consumption: %.2f kWh", datacenter.getPower() / (3600 * 1000)));
 			Log.printLine(String.format("Number of VM migrations: %d", datacenter.getMigrationCount()));
 			Log.printLine(String.format("Number of SLA violations: %d", sla.size()));
-			Log.printLine(String.format("SLA violation percentage: %.2f%%", (double) sla.size() * 100 / numberOfAllocations));
+			Log.printLine(String.format("Overall SLA violation: %.2f%%", 100 * ((double) totalTotalRequested - totalTotalAllocated) / totalTotalRequested));
 			Log.printLine(String.format("Average SLA violation: %.2f%%", averageSla));
 			Log.printLine();
 
