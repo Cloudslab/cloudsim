@@ -84,7 +84,7 @@ class NewDatacenter extends Datacenter {
      int tag = ev.getTag();
      switch(tag){
        case PERIODIC_EVENT: processPeriodicEvent(ev); break;
-       default: Log.printLine("Warning: "+CloudSim.clock()+":"+this.getName()+": Unknown event ignored. Tag: +tag);
+       default: Log.printLine("Warning: "+CloudSim.clock()+":"+this.getName()+": Unknown event ignored. Tag:" +tag);
      }
    }
  }
@@ -92,7 +92,8 @@ class NewDatacenter extends Datacenter {
   :
 
  private void processPeriodicEvent(SimEvent ev) {
-    :
+    //your code here
+     :
    float delay; //contains the delay to the next periodic event
    boolean generatePeriodicEvent; //true if new internal events have to be generated
    if (generatePeriodicEvent) send(getId(),delay,PERIODIC_EVENT,data);
