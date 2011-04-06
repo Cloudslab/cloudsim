@@ -54,7 +54,7 @@ Datacenter behaves like an IaaS provider: it receives requests for VMs from brok
 
 The Broker provided in !CloudSim only submits a list of VMs to be created and schedules Cloudlets sequentially on them. *Broker is provided as an example and it should be replace by your own scheduling policy and/or policy for generation of VM requests and Cloudlets*.
 
-To change default behavior, you can either extend these classes to add the intended behavior, or implement new ones from scratch. In the latter case, these new entities have to extend !SimEntity and implement the !processEvent(Simevent) method.
+To change default behavior, you can either extend these classes to add the intended behavior, or implement new ones from scratch. In the latter case, these new entities have to extend !SimEntity and implement the processEvent(Simevent) method.
 
 === 6. How can I code a periodic behavior to be adopted by entities? ===
 
