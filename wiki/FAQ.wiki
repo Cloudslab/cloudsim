@@ -74,8 +74,6 @@ class NewDatacenter extends Datacenter {
 
  public static final int PERIODIC_EVENT = 67567; //choose any unused value you want to represent the tag.
 
-  :
-
  @Override
  protected void processOtherEvent(SimEvent ev) {
    if (ev == null){
@@ -88,8 +86,6 @@ class NewDatacenter extends Datacenter {
      }
    }
  }
-
- :
 
  private void processPeriodicEvent(SimEvent ev) {
    //implement your algorithm here
