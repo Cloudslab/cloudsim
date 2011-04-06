@@ -108,6 +108,8 @@ class NewDatacenter extends Datacenter {
 
 === 7. How can I create my own type of messages? How to make them be received by other entities? ===
 
+The process is similar to the previous one. First, a new message tag has to be declared somewhere. Then, a handler for this message have to be added in the receiver of the message. The code is similar to the previous, with the exception of the handler, that will not generate the event internally, but instead it will wait for some entity to send the message.
+
 ----
 [FAQ Top]
 == Policies ==
