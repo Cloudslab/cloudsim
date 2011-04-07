@@ -910,7 +910,7 @@ public class Datacenter extends SimEntity {
 	protected void updateCloudletProcessing() {
 		//Log.printLine(CloudSim.clock()+": PowerDatacenter #"+this.get_id()+": updating cloudlet processing.......................................");
 		//if some time passed since last processing
-		if (CloudSim.clock() > this.getLastProcessTime()) {
+		if (CloudSim.clock() > this.getLastProcessTime()+0.1) {
 			List<? extends Host> list = getVmAllocationPolicy().getHostList();
 			double smallerTime = Double.MAX_VALUE;
 			//for each host...
@@ -922,9 +922,10 @@ public class Datacenter extends SimEntity {
 					smallerTime = time;
 				}
 			}
-			//schedules an event to the next time, if valid
-			//if (smallerTime > CloudSim.clock() + 0.01 && smallerTime != Double.MAX_VALUE && smallerTime < getSchedulingInterval()) {
-			if (smallerTime > CloudSim.clock() + 0.01 && smallerTime != Double.MAX_VALUE) {
+			//gurantees a minimal interval before scheduling the event
+			if (smallerTime<CloudSim.clock()+0.1) smallerTime=CloudSim.clock()+0.1;
+
+			if (smallerTime != Double.MAX_VALUE) {
 				schedule(getId(), (smallerTime - CloudSim.clock()), CloudSimTags.VM_DATACENTER_EVENT);
 			}
 			setLastProcessTime(CloudSim.clock());
