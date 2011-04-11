@@ -91,7 +91,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		capacity /= cpus; // average capacity of each cpu
 
 		for (ResCloudlet rcl : getCloudletExecList()) { // each machine in the exec list has the same amount of cpu
-			rcl.updateCloudletFinishedSoFar((long) (capacity * timeSpam * rcl.getPesNumber()));
+			rcl.updateCloudletFinishedSoFar((long) Math.ceil((capacity * timeSpam * rcl.getPesNumber())));
 		}
 
 		if (getCloudletExecList().size() == 0 && getCloudletWaitingList().size() == 0) { // no more cloudlets in this scheduler
@@ -104,7 +104,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		int cont = 0;
 		List<ResCloudlet> toRemove = new ArrayList<ResCloudlet>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getRemainingCloudletLength() == 0.0) {// finished anyway, rounding issue...
+			if (rcl.getRemainingCloudletLength() == 0) {// finished anyway, rounding issue...
 				toRemove.add(rcl);
 				cloudletFinish(rcl);
 				finished++;
@@ -173,7 +173,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			if (rcl.getCloudletId() == cloudletId) {
 				getCloudletExecList().remove(rcl);
-				if (rcl.getRemainingCloudletLength() == 0.0) {
+				if (rcl.getRemainingCloudletLength() == 0) {
 					cloudletFinish(rcl);
 				} else {
 					rcl.setCloudletStatus(Cloudlet.CANCELED);
@@ -230,7 +230,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		if (found){
 			//moves to the paused list
 			ResCloudlet rgl = getCloudletExecList().remove(position);
-			if (rgl.getRemainingCloudletLength() == 0.0) {
+			if (rgl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(rgl);
 			} else {
 				rgl.setCloudletStatus(Cloudlet.PAUSED);
@@ -254,7 +254,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		if (found) {
 			// moves to the paused list
 			ResCloudlet rgl = getCloudletWaitingList().remove(position);
-			if (rgl.getRemainingCloudletLength() == 0.0) {
+			if (rgl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(rgl);
 			} else {
 				rgl.setCloudletStatus(Cloudlet.PAUSED);

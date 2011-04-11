@@ -69,7 +69,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		double timeSpam = currentTime - getPreviousTime();
 
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			rcl.updateCloudletFinishedSoFar((long) (getCapacity(mipsShare) * timeSpam * rcl.getPesNumber()));
+			rcl.updateCloudletFinishedSoFar((long) Math.ceil((getCapacity(mipsShare) * timeSpam * rcl.getPesNumber())));
 		}
 
 		if (getCloudletExecList().size() == 0) {
@@ -82,8 +82,8 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		int i = 0;
 		List<ResCloudlet> toRemove = new ArrayList<ResCloudlet>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			double remainingLength = rcl.getRemainingCloudletLength();
-			if (remainingLength == 0.00) {// finished: remove from the list
+			long remainingLength = rcl.getRemainingCloudletLength();
+			if (remainingLength == 0) {// finished: remove from the list
 				toRemove.add(rcl);
 				cloudletFinish(rcl);
 				continue;
@@ -181,7 +181,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 
 		if (found) {
 			ResCloudlet rcl = getCloudletExecList().remove(position);
-			if (rcl.getRemainingCloudletLength() == 0.0) {
+			if (rcl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(rcl);
 			} else {
 				rcl.setCloudletStatus(Cloudlet.CANCELED);
@@ -234,7 +234,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		if (found) {
 			// remove cloudlet from the exec list and put it in the paused list
 			ResCloudlet rcl = getCloudletExecList().remove(position);
-			if (rcl.getRemainingCloudletLength() == 0.0) {
+			if (rcl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(rcl);
 			} else {
 				rcl.setCloudletStatus(Cloudlet.PAUSED);
