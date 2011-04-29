@@ -14,7 +14,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
+// TODO: Auto-generated Javadoc
 /**
  * The UtilizationModelStochastic class implements a model, according to which
  * a Cloudlet generates random CPU utilization every time frame.
@@ -23,6 +25,9 @@ import java.util.Map;
  * @since		CloudSim Toolkit 2.0
  */
 public class UtilizationModelStochastic implements UtilizationModel {
+	
+	/** The random generator. */
+	private Random randomGenerator;
 
 	/** The history. */
 	private Map<Double, Double> history;
@@ -32,6 +37,12 @@ public class UtilizationModelStochastic implements UtilizationModel {
 	 */
 	public UtilizationModelStochastic() {
 		setHistory(new HashMap<Double, Double>());
+		setRandomGenerator(new Random());
+	}
+	
+	public UtilizationModelStochastic(long seed) {
+		setHistory(new HashMap<Double, Double>());
+		setRandomGenerator(new Random(seed));
 	}
 
 	/* (non-Javadoc)
@@ -43,7 +54,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 			return getHistory().get(time);
 		}
 
-		double utilization = Math.random();
+		double utilization = getRandomGenerator().nextDouble();
 		getHistory().put(time, utilization);
 		return utilization;
 	}
@@ -93,6 +104,24 @@ public class UtilizationModelStochastic implements UtilizationModel {
 		ObjectInputStream ois = new ObjectInputStream(fis);
 		setHistory((Map<Double, Double>) ois.readObject());
         ois.close();
+	}
+
+	/**
+	 * Sets the random generator.
+	 *
+	 * @param randomGenerator the new random generator
+	 */
+	public void setRandomGenerator(Random randomGenerator) {
+		this.randomGenerator = randomGenerator;
+	}
+
+	/**
+	 * Gets the random generator.
+	 *
+	 * @return the random generator
+	 */
+	public Random getRandomGenerator() {
+		return randomGenerator;
 	}
 
 }

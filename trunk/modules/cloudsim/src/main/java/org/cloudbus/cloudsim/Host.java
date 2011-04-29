@@ -456,7 +456,7 @@ public class Host {
 	 *
 	 * @return the VM scheduler
 	 */
-	protected VmScheduler getVmScheduler() {
+	public VmScheduler getVmScheduler() {
 		return vmScheduler;
 	}
 
