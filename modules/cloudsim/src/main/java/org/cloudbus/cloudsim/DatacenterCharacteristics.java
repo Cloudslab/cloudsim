@@ -170,13 +170,12 @@ public class DatacenterCharacteristics {
      * @pre $none
      * @post $result >= -1
      */
-    @SuppressWarnings("unchecked")
-	public int getMipsOfOnePe() {
+    public int getMipsOfOnePe() {
         if (getHostList().size() == 0) {
             return -1;
         }
 
-        return PeList.getMips((List<Pe>) getHostList().get(0).getPeList(), 0);
+        return PeList.getMips(getHostList().get(0).getPeList(), 0);
     }
 
     /**
@@ -192,13 +191,12 @@ public class DatacenterCharacteristics {
      * @pre peID >= 0
      * @post $result >= -1
      */
-    @SuppressWarnings("unchecked")
-	public int getMipsOfOnePe(int id, int peId) {
+    public int getMipsOfOnePe(int id, int peId) {
         if (getHostList().size() == 0) {
             return -1;
         }
 
-        return PeList.getMips((List<Pe>) HostList.getById(getHostList(), id).getPeList(), peId);
+        return PeList.getMips(HostList.getById(getHostList(), id).getPeList(), peId);
     }
 
     /**

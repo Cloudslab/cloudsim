@@ -109,9 +109,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 		PowerHost allocatedHost = findHostForVm(vm);
 		if (allocatedHost != null && allocatedHost.vmCreate(vm)) { //if vm has been succesfully created in the host
 			getVmTable().put(vm.getUid(), allocatedHost);
-			if (!Log.isDisabled()) {
-				Log.print(String.format("%.2f: VM #" + vm.getId() + " has been allocated to the host #" + allocatedHost.getId() + "\n", CloudSim.clock()));
-			}
+			Log.formatLine("%.2f: VM #" + vm.getId() + " has been allocated to the host #" + allocatedHost.getId() + "\n", CloudSim.clock());			
 			return true;
 		}
 		return false;
@@ -164,7 +162,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 		PowerVmList.sortByCpuUtilization(vmsToMigrate);
 
 		for (PowerHost host : this.<PowerHost>getHostList()) {
-			host.reallocateMigratingVms();
+			host.reallocateMigratingInVms();
 		}
 
 		for (Vm vm : vmsToMigrate) {
@@ -209,7 +207,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 	protected void restoreAllocation(List<Vm> vmsToRestore, List<Host> hostList) {
 		for (Host host : hostList) {
 			host.vmDestroyAll();
-			host.reallocateMigratingVms();
+			host.reallocateMigratingInVms();
 		}
 		for (Map<String, Object> map : getSavedAllocation()) {
 			Vm vm = (Vm) map.get("vm");

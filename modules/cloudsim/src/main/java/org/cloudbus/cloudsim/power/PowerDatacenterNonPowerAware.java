@@ -127,17 +127,14 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 						PowerHost targetHost = (PowerHost) migrate.get("host");
 						PowerHost oldHost = (PowerHost) vm.getHost();
 	
-						targetHost.addMigratingInVm(vm);
-	
 						if (oldHost == null) {
 							Log.formatLine("%.2f: Migration of VM #%d to Host #%d is started", CloudSim.clock(), vm.getId(), targetHost.getId());
 						} else {
 							Log.formatLine("%.2f: Migration of VM #%d from Host #%d to Host #%d is started", CloudSim.clock(), vm.getId(), oldHost.getId(), targetHost.getId());
 						}
 	
+						targetHost.addMigratingInVm(vm);
 						incrementMigrationCount();
-	
-						vm.setInMigration(true);
 	
 						/** VM migration delay = RAM / bandwidth + C    (C = 10 sec) **/
 						send(getId(), vm.getRam() / ((double) vm.getBw() / 8000) + 10, CloudSimTags.VM_MIGRATE, migrate);
