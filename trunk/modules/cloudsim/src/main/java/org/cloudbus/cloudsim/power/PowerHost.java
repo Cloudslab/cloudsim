@@ -29,10 +29,10 @@ public class PowerHost extends HostDynamicWorkload {
 	 * Instantiates a new host.
 	 *
 	 * @param id the id
-	 * @param cpuProvisioner the cpu provisioner
 	 * @param ramProvisioner the ram provisioner
 	 * @param bwProvisioner the bw provisioner
 	 * @param storage the storage
+	 * @param peList the pe list
 	 * @param vmScheduler the VM scheduler
 	 */
 	public PowerHost(
@@ -50,9 +50,8 @@ public class PowerHost extends HostDynamicWorkload {
 	 *
 	 * @return the power
 	 */
-	@SuppressWarnings("unchecked")
 	public double getPower() {
-		return PowerPeList.getPower((List<PowerPe>) getPeList());
+		return PowerPeList.getPower(this.<PowerPe>getPeList());
 	}
 
 	/**
@@ -60,9 +59,8 @@ public class PowerHost extends HostDynamicWorkload {
 	 *
 	 * @return the power
 	 */
-	@SuppressWarnings("unchecked")
 	public double getMaxPower() {
-    	return PowerPeList.getMaxPower((List<PowerPe>) getPeList());
+    	return PowerPeList.getMaxPower(this.<PowerPe>getPeList());
 	}
 
 }

@@ -11,13 +11,13 @@ package org.cloudbus.cloudsim;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
 /**
- * Host class extends a Machine to include other hostList beside PEs
- * to support simulation of virtualized grids. It executes actions related
+ * Host executes actions related
  * to management of virtual machines (e.g., creation and destruction). A host has
  * a defined policy for provisioning memory and bw, as well as an allocation policy
  * for Pe's to virtual machines.
@@ -57,16 +57,16 @@ public class Host {
 	/** The vms migrating in. */
 	private List<Vm> vmsMigratingIn;
 	
-	/** THe datacenter where the host is placed */
+	/** The datacenter where the host is placed. */
 	private Datacenter datacenter;
 
 	/**
 	 * Instantiates a new host.
 	 *
 	 * @param id the id
-	 * @param storage the storage
 	 * @param ramProvisioner the ram provisioner
 	 * @param bwProvisioner the bw provisioner
+	 * @param storage the storage
 	 * @param peList the pe list
 	 * @param vmScheduler the vm scheduler
 	 */
@@ -102,9 +102,6 @@ public class Host {
 		double smallerTime = Double.MAX_VALUE;
 
 		for (Vm vm : getVmList()) {
-//			if (vm.isInMigration()) {
-//				continue;
-//			}
 			double time = vm.updateVmProcessing(currentTime, getVmScheduler().getAllocatedMipsForVm(vm));
 			if (time > 0.0 && time < smallerTime) {
 				smallerTime = time;
@@ -114,24 +111,73 @@ public class Host {
 		return smallerTime;
 	}
 
+	/**
+	 * Adds the migrating in vm.
+	 *
+	 * @param vm the vm
+	 */
 	public void addMigratingInVm(Vm vm) {
+		vm.setInMigration(true);
+		
 		if (!getVmsMigratingIn().contains(vm)) {
-			getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam());
-			getBwProvisioner().allocateBwForVm(vm, vm.getCurrentRequestedBw());
+			if (getStorage() < vm.getSize()){
+				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by storage");
+				System.exit(0);
+			}
+			
+			if (!getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam())) {
+				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by RAM");
+				System.exit(0);
+			}
+
+			if (!getBwProvisioner().allocateBwForVm(vm, vm.getCurrentRequestedBw())) {
+				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by BW");
+				System.exit(0);
+			}
+
+			getVmScheduler().getVmsMigratingIn().add(vm.getUid());
+			if (!getVmScheduler().allocatePesForVm(vm, vm.getCurrentRequestedMips())) {
+				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by MIPS");
+				System.exit(0);
+			}
+
+			setStorage(getStorage() - vm.getSize());
+			
 			getVmsMigratingIn().add(vm);
+			getVmList().add(vm);
+			updateVmsProcessing(CloudSim.clock());
+			vm.getHost().updateVmsProcessing(CloudSim.clock());
 		}
 	}
 
+	/**
+	 * Removes the migrating in vm.
+	 *
+	 * @param vm the vm
+	 */
 	public void removeMigratingInVm(Vm vm) {
-		getRamProvisioner().deallocateRamForVm(vm);
-		getBwProvisioner().deallocateBwForVm(vm);
+		vmDeallocate(vm);
 		getVmsMigratingIn().remove(vm);
+		getVmList().remove(vm);
+		getVmScheduler().getVmsMigratingIn().remove(vm.getUid());
+		vm.setInMigration(false);
 	}
 
-	public void reallocateMigratingVms() {
+	/**
+	 * Reallocate migrating in vms.
+	 */
+	public void reallocateMigratingInVms() {
 		for (Vm vm : getVmsMigratingIn()) {
+			if (!getVmList().contains(vm)) {
+				getVmList().add(vm);
+			}
+			if (!getVmScheduler().getVmsMigratingIn().contains(vm.getUid())) {
+				getVmScheduler().getVmsMigratingIn().add(vm.getUid());
+			}
 			getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam());
 			getBwProvisioner().allocateBwForVm(vm, vm.getCurrentRequestedBw());
+			getVmScheduler().allocatePesForVm(vm, vm.getCurrentRequestedMips());
+			setStorage(getStorage() - vm.getSize());
 		}
 	}
 
@@ -159,18 +205,18 @@ public class Host {
 	 * @post $none
 	 */
 	public boolean vmCreate(Vm vm) {
-		if (storage<vm.getSize()){
-			Log.printLine("Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by storage");
+		if (getStorage() < vm.getSize()){
+			Log.printLine("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by storage");
 			return false;
 		}
 		
 		if (!getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam())) {
-			Log.printLine("Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by RAM");
+			Log.printLine("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by RAM");
 			return false;
 		}
 
 		if (!getBwProvisioner().allocateBwForVm(vm, vm.getCurrentRequestedBw())) {
-			Log.printLine("Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by BW");
+			Log.printLine("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by BW");
 			getRamProvisioner().deallocateRamForVm(vm);
 			return false;
 		}
@@ -182,7 +228,7 @@ public class Host {
 			return false;
 		}
 
-		storage-=vm.getSize();
+		setStorage(getStorage() - vm.getSize());
 		getVmList().add(vm);
 		vm.setHost(this);
 		return true;
@@ -201,7 +247,6 @@ public class Host {
 			vmDeallocate(vm);
 			getVmList().remove(vm);
 			vm.setHost(null);
-			storage+=vm.getSize();
 		}
 	}
 
@@ -215,7 +260,7 @@ public class Host {
 		vmDeallocateAll();
 		for (Vm vm : getVmList()) {
 			vm.setHost(null);
-			storage+=vm.getSize();
+			setStorage(getStorage() + vm.getSize());
 		}
 		getVmList().clear();
 	}
@@ -229,12 +274,12 @@ public class Host {
 		getRamProvisioner().deallocateRamForVm(vm);
 		getBwProvisioner().deallocateBwForVm(vm);
 		getVmScheduler().deallocatePesForVm(vm);
+		setStorage(getStorage() + vm.getSize());
 	}
 
 	/**
 	 * Deallocate all hostList for the VM.
 	 *
-	 * @param vm the VM
 	 */
 	protected void vmDeallocateAll() {
 		getRamProvisioner().deallocateRamForAllVms();
@@ -276,7 +321,6 @@ public class Host {
 	 *
 	 * @return the free pes number
 	 */
-	@SuppressWarnings("unchecked")
 	public int getFreePesNumber() {
 		return PeList.getFreePesNumber((List<Pe>) getPeList());
 	}
@@ -286,7 +330,6 @@ public class Host {
 	 *
 	 * @return the total mips
 	 */
-	@SuppressWarnings("unchecked")
 	public int getTotalMips() {
 		return PeList.getTotalMips((List<Pe>) getPeList());
 	}
@@ -468,28 +511,32 @@ public class Host {
 	protected void setVmScheduler(VmScheduler vmScheduler) {
 		this.vmScheduler = vmScheduler;
 	}
-
+	
 	/**
 	 * Gets the pe list.
 	 *
+	 * @param <T> the generic type
 	 * @return the pe list
 	 */
-	public List<? extends Pe> getPeList() {
-		return this.peList;
+	@SuppressWarnings("unchecked")
+	public <T extends Pe> List<T> getPeList() {
+		return (List<T>) peList;
 	}
 
 	/**
 	 * Sets the pe list.
 	 *
+	 * @param <T> the generic type
 	 * @param peList the new pe list
 	 */
-	protected void setPeList(List<? extends Pe> peList) {
+	protected <T extends Pe> void setPeList(List<T> peList) {
 		this.peList = peList;
 	}
 
 	/**
 	 * Gets the vm list.
 	 *
+	 * @param <T> the generic type
 	 * @return the vm list
 	 */
 	@SuppressWarnings("unchecked")
@@ -500,6 +547,7 @@ public class Host {
 	/**
 	 * Sets the vm list.
 	 *
+	 * @param <T> the generic type
 	 * @param vmList the new vm list
 	 */
 	protected <T extends Vm> void setVmList(List<T> vmList) {
@@ -536,8 +584,7 @@ public class Host {
      *
      * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
      */
-    @SuppressWarnings("unchecked")
-	public boolean setFailed(String resName, boolean failed) {
+    public boolean setFailed(String resName, boolean failed) {
         // all the PEs are failed (or recovered, depending on fail)
     	this.failed = failed;
         PeList.setStatusFailed((List<Pe>) getPeList(), resName, getId(), failed);
@@ -551,8 +598,7 @@ public class Host {
      *
      * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
      */
-    @SuppressWarnings("unchecked")
-	public boolean setFailed(boolean failed) {
+    public boolean setFailed(boolean failed) {
         // all the PEs are failed (or recovered, depending on fail)
     	this.failed = failed;
         PeList.setStatusFailed((List<Pe>) getPeList(), failed);
@@ -562,17 +608,14 @@ public class Host {
     /**
      * Sets the particular Pe status on this Machine.
      *
-     * @param status   Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
      * @param peId the pe id
-     *
+     * @param status   Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
      * @return <tt>true</tt> if the Pe status has changed, <tt>false</tt>
      * otherwise (Pe id might not be exist)
-     *
      * @pre peID >= 0
      * @post $none
      */
-    @SuppressWarnings("unchecked")
-	public boolean setPeStatus(int peId, int status) {
+    public boolean setPeStatus(int peId, int status) {
         return PeList.setPeStatus((List<Pe>) getPeList(), peId, status);
     }
 

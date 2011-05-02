@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-// TODO: Auto-generated Javadoc
 /**
  * The UtilizationModelStochastic class implements a model, according to which
  * a Cloudlet generates random CPU utilization every time frame.
@@ -40,6 +39,11 @@ public class UtilizationModelStochastic implements UtilizationModel {
 		setRandomGenerator(new Random());
 	}
 	
+	/**
+	 * Instantiates a new utilization model stochastic.
+	 *
+	 * @param seed the seed
+	 */
 	public UtilizationModelStochastic(long seed) {
 		setHistory(new HashMap<Double, Double>());
 		setRandomGenerator(new Random(seed));

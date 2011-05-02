@@ -8,6 +8,7 @@
 
 package org.cloudbus.cloudsim;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,12 @@ public abstract class VmScheduler {
 
 	/** The total available mips. */
 	private double availableMips;
+	
+	/** The VMs migrating in. */
+	private List<String> vmsMigratingIn;
+	
+	/** The VMs migrating out. */
+	private List<String> vmsMigratingOut;
 
 	/**
 	 * Creates a new HostAllocationPolicy.
@@ -46,6 +53,8 @@ public abstract class VmScheduler {
 		setPeList(pelist);
 		setMipsMap(new HashMap<String, List<Double>>());
 		setAvailableMips(PeList.getTotalMips(getPeList()));
+		setVmsMigratingIn(new ArrayList<String>());
+		setVmsMigratingOut(new ArrayList<String>());
 	}
 
 	/**
@@ -207,6 +216,42 @@ public abstract class VmScheduler {
 	 */
 	protected void setAvailableMips(double availableMips) {
 		this.availableMips = availableMips;
+	}
+
+	/**
+	 * Gets the vms in migration.
+	 *
+	 * @return the vms in migration
+	 */
+	public List<String> getVmsMigratingOut() {
+		return vmsMigratingOut;
+	}
+
+	/**
+	 * Sets the vms in migration.
+	 *
+	 * @param vmsInMigration the new vms migrating out
+	 */
+	protected void setVmsMigratingOut(List<String> vmsInMigration) {
+		this.vmsMigratingOut = vmsInMigration;
+	}
+
+	/**
+	 * Gets the vms migrating in.
+	 *
+	 * @return the vms migrating in
+	 */
+	public List<String> getVmsMigratingIn() {
+		return vmsMigratingIn;
+	}
+
+	/**
+	 * Sets the vms migrating in.
+	 *
+	 * @param vmsMigratingIn the new vms migrating in
+	 */
+	protected void setVmsMigratingIn(List<String> vmsMigratingIn) {
+		this.vmsMigratingIn = vmsMigratingIn;
 	}
 
 }

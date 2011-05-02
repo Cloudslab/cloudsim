@@ -13,10 +13,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.PeProvisioner;
 
+// TODO: Auto-generated Javadoc
 /**
  * VmSchedulerTimeShared is a VMM allocation policy that
  * allocates one or more Pe to a VM, and allows sharing
@@ -35,9 +37,6 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	/** The pes in use. */
 	private int pesInUse;
 
-	/** The vms in migration. */
-	private List<String> vmsMigratingOut;
-
 	/**
 	 * Instantiates a new vm scheduler time shared.
 	 *
@@ -46,7 +45,6 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	public VmSchedulerTimeShared(List<? extends Pe> pelist) {
 		super(pelist);
 		setMipsMapRequested(new HashMap<String, List<Double>>());
-		setVmsInMigration(new ArrayList<String>());
 	}
 
 	/* (non-Javadoc)
@@ -54,16 +52,19 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 */
 	@Override
 	public boolean allocatePesForVm(Vm vm, List<Double> mipsShareRequested) {
+		if (getVmsMigratingIn().contains(vm.getUid()) && getVmsMigratingOut().contains(vm.getUid())) {
+			Log.print("found\n");
+		}
 		/**
 		 * TODO: add the same to RAM and BW provisioners
 		 */
 		if (vm.isInMigration()) {
-			if (!getVmsInMigration().contains(vm.getUid())) {
-				getVmsInMigration().add(vm.getUid());
+			if (!getVmsMigratingIn().contains(vm.getUid()) && !getVmsMigratingOut().contains(vm.getUid())) {
+				getVmsMigratingOut().add(vm.getUid());
 			}
 		} else {
-			if (getVmsInMigration().contains(vm.getUid())) {
-				getVmsInMigration().remove(vm.getUid());
+			if (getVmsMigratingOut().contains(vm.getUid())) {
+				getVmsMigratingOut().remove(vm.getUid());
 			}
 		}
 		boolean result = allocatePesForVm(vm.getUid(), mipsShareRequested);
@@ -91,11 +92,17 @@ public class VmSchedulerTimeShared extends VmScheduler {
 			}
 			totalRequestedMips += mips;
 		}
+		
+		if (getVmsMigratingIn().contains(vmUid)) {
+			totalRequestedMips *= 0.1; // performance cost incurred by the destination host = 10% MIPS
+		}
 
 		List<Double> mipsShareAllocated = new ArrayList<Double>();
 		for (Double mipsRequested : mipsShareRequested) {
-			if (getVmsInMigration().contains(vmUid)) {
+			if (getVmsMigratingOut().contains(vmUid)) {
 				mipsRequested *= 0.9; // performance degradation due to migration = 10% MIPS
+			} else if (getVmsMigratingIn().contains(vmUid)) {
+				mipsRequested *= 0.1; // performance cost incurred by the destination host = 10% MIPS
 			}
 			mipsShareAllocated.add(mipsRequested);
 		}
@@ -122,7 +129,11 @@ public class VmSchedulerTimeShared extends VmScheduler {
 			double additionalShortage = 0;
 			do {
 				additionalShortage = 0;
-				for (List<Double> mipsMap : getMipsMap().values()) {
+				for (Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
+					if (getVmsMigratingIn().contains(entry.getKey())) {
+						continue;
+					}
+					List<Double> mipsMap = entry.getValue(); 
 					for (int i = 0; i < mipsMap.size(); i++) {
 						if (mipsMap.get(i) == 0) {
 							continue;
@@ -205,8 +216,6 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	/**
 	 * Releases PEs allocated to all the VMs.
 	 *
-	 * @param vm the vm
-	 *
 	 * @pre $none
 	 * @post $none
 	 */
@@ -263,24 +272,6 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 */
 	protected void setMipsMapRequested(Map<String, List<Double>> mipsMapRequested) {
 		this.mipsMapRequested = mipsMapRequested;
-	}
-
-	/**
-	 * Gets the vms in migration.
-	 *
-	 * @return the vms in migration
-	 */
-	protected List<String> getVmsInMigration() {
-		return vmsMigratingOut;
-	}
-
-	/**
-	 * Sets the vms in migration.
-	 *
-	 * @param vmsMigratingOut the new vms in migration
-	 */
-	protected void setVmsInMigration(List<String> vmsInMigration) {
-		this.vmsMigratingOut = vmsInMigration;
 	}
 
 }
