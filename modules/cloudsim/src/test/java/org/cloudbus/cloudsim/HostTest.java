@@ -17,8 +17,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cloudbus.cloudsim.power.PowerPe;
-import org.cloudbus.cloudsim.power.models.PowerModelSqrt;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -40,9 +38,6 @@ public class HostTest {
 
 	//private static final int PES_NUMBER = 2;
 
-	private static final double MAX_POWER = 200;
-	private static final double STATIC_POWER_PERCENT = 0.3;
-
 	//private static final double CLOUDLET_LENGTH = 1000;
 	//private static final long CLOUDLET_FILE_SIZE = 300;
 	//private static final long CLOUDLET_OUTPUT_SIZE = 300;
@@ -53,8 +48,8 @@ public class HostTest {
 	@Before
 	public void setUp() throws Exception {
 		peList = new ArrayList<Pe>();
-		peList.add(new PowerPe(0, new PeProvisionerSimple(MIPS), new PowerModelSqrt(MAX_POWER, STATIC_POWER_PERCENT)));
-		peList.add(new PowerPe(1, new PeProvisionerSimple(MIPS), new PowerModelSqrt(MAX_POWER, STATIC_POWER_PERCENT)));
+		peList.add(new Pe(0, new PeProvisionerSimple(MIPS)));
+		peList.add(new Pe(1, new PeProvisionerSimple(MIPS)));
 
 		host = new Host(
 			ID,

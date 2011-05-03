@@ -199,7 +199,11 @@ public class HostDynamicWorkload extends Host {
 	 * @return current utilization of CPU in percents
 	 */
 	public double getUtilizationOfCpu() {
-		return getUtilizationMips() / getTotalMips();
+		double utilization = getUtilizationMips() / getTotalMips();
+		if (utilization > 1 && utilization < 1.01) {
+			utilization = 1;
+		}
+		return utilization;
 	}
 
 	/**
