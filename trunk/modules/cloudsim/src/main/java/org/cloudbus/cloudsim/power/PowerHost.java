@@ -56,9 +56,19 @@ public class PowerHost extends HostDynamicWorkload {
 	 * @return the power
 	 */
 	public double getPower() {
+		return getPower(getUtilizationOfCpu());
+	}
+	
+	/**
+	 * Gets the power. For this moment only consumed by all PEs.
+	 *
+	 * @param utilization the utilization
+	 * @return the power
+	 */
+	protected double getPower(double utilization) {
 		double power = 0;
 		try {
-			power = getPowerModel().getPower(getUtilizationOfCpu());
+			power = getPowerModel().getPower(utilization);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -80,6 +90,20 @@ public class PowerHost extends HostDynamicWorkload {
 			System.exit(0);
 		}
 		return power;
+	}
+	
+	/**
+	 * Gets the energy consumption using linear interpolation of the utilization change.
+	 *
+	 * @param fromUtilization the from utilization
+	 * @param toUtilization the to utilization
+	 * @param time the time
+	 * @return the energy
+	 */
+	public double getEnergyLinearInterpolation(double fromUtilization, double toUtilization, double time) {
+		double fromPower = getPower(fromUtilization);
+		double toPower = getPower(toUtilization);
+		return (fromPower + (toPower - fromPower) / 2) * time;		
 	}
 	
 	/**

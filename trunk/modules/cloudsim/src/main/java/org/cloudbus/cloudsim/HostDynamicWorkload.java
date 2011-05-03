@@ -18,6 +18,7 @@ import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class HostDynamicWorkload.
  *
@@ -28,6 +29,9 @@ public class HostDynamicWorkload extends Host {
 
 	/** The utilization mips. */
 	private double utilizationMips;
+	
+	/** The previous utilization mips. */
+	private double previousUtilizationMips;
 
 	/** The under allocated mips. */
 	private Map<String, List<List<Double>>> underAllocatedMips;
@@ -51,6 +55,7 @@ public class HostDynamicWorkload extends Host {
 			VmScheduler vmScheduler) {
 		super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler);
 		setUtilizationMips(0);
+		setPreviousUtilizationMips(0);
 		setUnderAllocatedMips(new HashMap<String, List<List<Double>>>());
 		setVmsMigratingIn(new ArrayList<Vm>());
 	}
@@ -64,6 +69,7 @@ public class HostDynamicWorkload extends Host {
 			Log.printLine();
 		}
 		double smallerTime = super.updateVmsProcessing(currentTime);
+		setPreviousUtilizationMips(getUtilizationMips());
 		setUtilizationMips(0);
 
 		for (Vm vm : getVmList()) {
@@ -197,12 +203,25 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	/**
-	 * Get current utilization of CPU in percents.
+	 * Get current utilization of CPU in percentage.
 	 *
 	 * @return current utilization of CPU in percents
 	 */
 	public double getUtilizationOfCpu() {
 		double utilization = getUtilizationMips() / getTotalMips();
+		if (utilization > 1 && utilization < 1.01) {
+			utilization = 1;
+		}
+		return utilization;
+	}
+	
+	/**
+	 * Gets the previous utilization of CPU in percentage.
+	 *
+	 * @return the previous utilization of cpu
+	 */
+	public double getPreviousUtilizationOfCpu() {
+		double utilization = getPreviousUtilizationMips() / getTotalMips();
 		if (utilization > 1 && utilization < 1.01) {
 			utilization = 1;
 		}
@@ -223,7 +242,7 @@ public class HostDynamicWorkload extends Host {
 	 *
 	 * @return the utilization mips
 	 */
-	protected double getUtilizationMips() {
+	public double getUtilizationMips() {
 		return utilizationMips;
 	}
 
@@ -234,6 +253,24 @@ public class HostDynamicWorkload extends Host {
 	 */
 	protected void setUtilizationMips(double utilizationMips) {
 		this.utilizationMips = utilizationMips;
+	}	
+
+	/**
+	 * Gets the previous utilization mips.
+	 *
+	 * @return the previous utilization mips
+	 */
+	public double getPreviousUtilizationMips() {
+		return previousUtilizationMips;
+	}
+	
+	/**
+	 * Sets the previous utilization mips.
+	 *
+	 * @param previousUtilizationMips the new previous utilization mips
+	 */
+	protected void setPreviousUtilizationMips(double previousUtilizationMips) {
+		this.previousUtilizationMips = previousUtilizationMips;
 	}
 
     /**
