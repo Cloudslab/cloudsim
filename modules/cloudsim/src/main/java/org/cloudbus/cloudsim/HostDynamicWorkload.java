@@ -60,6 +60,9 @@ public class HostDynamicWorkload extends Host {
 	 */
 	@Override
 	public double updateVmsProcessing(double currentTime) {
+		if (CloudSim.clock() > 5 && getId() == 3) { 
+			Log.printLine();
+		}
 		double smallerTime = super.updateVmsProcessing(currentTime);
 		setUtilizationMips(0);
 

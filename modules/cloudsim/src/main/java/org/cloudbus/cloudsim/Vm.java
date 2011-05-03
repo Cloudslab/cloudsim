@@ -179,6 +179,21 @@ public class Vm {
 		}
 		return totalRequestedMips;
 	}
+	
+	/**
+	 * Gets the current requested max mips among all virtual PEs.
+	 *
+	 * @return the current requested max mips
+	 */
+	public double getCurrentRequestedMaxMips() {
+		double maxMips = 0;
+		for (double mips : getCurrentRequestedMips()) {
+			if (mips > maxMips) {
+				maxMips = mips;
+			}
+		}
+		return maxMips;
+	}
 
 	/**
 	 * Gets the current requested bw.
