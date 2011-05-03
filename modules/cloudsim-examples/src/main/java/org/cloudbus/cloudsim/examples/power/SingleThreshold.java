@@ -21,6 +21,7 @@ import org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.UtilizationModelStochastic;
 import org.cloudbus.cloudsim.Vm;
@@ -28,7 +29,6 @@ import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.PowerDatacenter;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerPe;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySingleThreshold;
 import org.cloudbus.cloudsim.power.models.PowerModelLinear;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -236,8 +236,8 @@ public class SingleThreshold {
 			// 2. A Machine contains one or more PEs or CPUs/Cores.
 			// In this example, it will have only one core.
 			// 3. Create PEs and add these into an object of PowerPeList.
-			List<PowerPe> peList = new ArrayList<PowerPe>();
-			peList.add(new PowerPe(0, new PeProvisionerSimple(mips[i % mips.length]), new PowerModelLinear(maxPower, staticPowerPercent))); // need to store PowerPe id and MIPS Rating
+			List<Pe> peList = new ArrayList<Pe>();
+			peList.add(new Pe(0, new PeProvisionerSimple(mips[i % mips.length]))); // need to store PowerPe id and MIPS Rating
 
 			// 4. Create PowerHost with its id and list of PEs and add them to the list of machines
 			hostList.add(
@@ -247,7 +247,8 @@ public class SingleThreshold {
 					new BwProvisionerSimple(bw),
 					storage,
 					peList,
-					new VmSchedulerTimeShared(peList)
+					new VmSchedulerTimeShared(peList), 
+					new PowerModelLinear(maxPower, staticPowerPercent)
 				)
 			); // This is our machine
 		}
