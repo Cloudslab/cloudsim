@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +19,6 @@ import java.util.Map.Entry;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.PeProvisioner;
 
-// TODO: Auto-generated Javadoc
 /**
  * VmSchedulerTimeShared is a VMM allocation policy that
  * allocates one or more Pe to a VM, and allows sharing
@@ -52,9 +52,6 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 */
 	@Override
 	public boolean allocatePesForVm(Vm vm, List<Double> mipsShareRequested) {
-		if (getVmsMigratingIn().contains(vm.getUid()) && getVmsMigratingOut().contains(vm.getUid())) {
-			Log.print("found\n");
-		}
 		/**
 		 * TODO: add the same to RAM and BW provisioners
 		 */
@@ -160,31 +157,38 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 * Update allocation of VMs on PEs.
 	 */
 	protected void updatePeProvisioning() {
+		getPeMap().clear();
+		for (Pe pe : getPeList()) {
+			pe.getPeProvisioner().deallocateMipsForAllVms();
+		}
+		
 		Iterator<Pe> peIterator  = getPeList().iterator();
 		Pe pe = peIterator.next();
 		PeProvisioner peProvisioner = pe.getPeProvisioner();
-		peProvisioner.deallocateMipsForAllVms();
 		double availableMips = peProvisioner.getAvailableMips();
 		for (Map.Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
 			String vmUid = entry.getKey();
+			getPeMap().put(vmUid, new LinkedList<Pe>());
 			for (double mips : entry.getValue()) {
-				if (availableMips >= mips) {
-					peProvisioner.allocateMipsForVm(vmUid, mips);
-					availableMips -= mips;
-				} else {
-					while (mips >= 0) {
+				while (mips >= 0.1) {
+					if (availableMips >= mips) {
+						peProvisioner.allocateMipsForVm(vmUid, mips);
+						getPeMap().get(vmUid).add(pe);
+						availableMips -= mips;
+						break;
+					} else {
 						peProvisioner.allocateMipsForVm(vmUid, availableMips);
+						getPeMap().get(vmUid).add(pe);
 						mips -= availableMips;
 						if (mips <= 0.1) {
-							mips = 0;
 							break;
 						}
 						if (!peIterator.hasNext()) {
 							Log.printLine("There is no enough MIPS (" + mips + ") to accommodate VM " + vmUid);
+							System.exit(0);
 						}
 						pe = peIterator.next();
 						peProvisioner = pe.getPeProvisioner();
-						peProvisioner.deallocateMipsForAllVms();
 						availableMips = peProvisioner.getAvailableMips();
 					}
 				}
