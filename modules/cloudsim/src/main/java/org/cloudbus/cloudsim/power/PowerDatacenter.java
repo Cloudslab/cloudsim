@@ -137,29 +137,21 @@ public class PowerDatacenter extends Datacenter {
 		double currentTime = CloudSim.clock();
 		double minTime = Double.MAX_VALUE;
 		double timeDiff = currentTime - getLastProcessTime();
-		double timeframePower = 0.0;
+		double timeFrameDatacenterEnergy = 0.0;
 
 		if (timeDiff > 0) {
 			Log.formatLine("\nEnergy consumption for the last time frame from %.2f to %.2f:", getLastProcessTime(), currentTime);
 
 			for (PowerHost host : this.<PowerHost>getHostList()) {
+				double timeFrameHostEnergy = host.getEnergyLinearInterpolation(host.getPreviousUtilizationOfCpu(), host.getUtilizationOfCpu(), timeDiff);
+				timeFrameDatacenterEnergy += timeFrameHostEnergy;
+
 				Log.printLine();
-				double hostPower = 0.0;
-
-				if (host.getUtilizationOfCpu() > 0) {
-					try {
-						hostPower = host.getPower() * timeDiff;
-						timeframePower += hostPower;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-
 				Log.formatLine("%.2f: [Host #%d] utilization is %.2f%%", currentTime, host.getId(), host.getUtilizationOfCpu() * 100);
-				Log.formatLine("%.2f: [Host #%d] energy is %.2f W*sec", currentTime, host.getId(), hostPower);
+				Log.formatLine("%.2f: [Host #%d] energy is %.2f W*sec", currentTime, host.getId(), timeFrameHostEnergy);
 			}
 
-			Log.formatLine("\n%.2f: Consumed energy is %.2f W*sec\n", currentTime, timeframePower);
+			Log.formatLine("\n%.2f: Consumed energy is %.2f W*sec\n", currentTime, timeFrameDatacenterEnergy);
 		}
 
 		Log.printLine("\n\n--------------------------------------------------------------\n\n");
@@ -176,7 +168,7 @@ public class PowerDatacenter extends Datacenter {
 			Log.formatLine("%.2f: [Host #%d] utilization is %.2f%%", currentTime, host.getId(), host.getUtilizationOfCpu() * 100);
 		}
 
-		setPower(getPower() + timeframePower);
+		setPower(getPower() + timeFrameDatacenterEnergy);
 		
 		checkCloudletCompletion();
 		
