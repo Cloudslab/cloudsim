@@ -13,7 +13,7 @@ import java.util.List;
 import org.cloudbus.cloudsim.HostDynamicWorkload;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.VmScheduler;
-import org.cloudbus.cloudsim.power.lists.PowerPeList;
+import org.cloudbus.cloudsim.power.models.PowerModel;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
@@ -24,6 +24,9 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
  * @since		CloudSim Toolkit 2.0
  */
 public class PowerHost extends HostDynamicWorkload {
+	
+	/** The power model. */
+	private PowerModel powerModel;
 
 	/**
 	 * Instantiates a new host.
@@ -41,8 +44,10 @@ public class PowerHost extends HostDynamicWorkload {
 			BwProvisioner bwProvisioner,
 			long storage,
 			List<? extends Pe> peList,
-			VmScheduler vmScheduler) {
+			VmScheduler vmScheduler,
+			PowerModel powerModel) {
 		super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler);
+		setPowerModel(powerModel);
 	}
 
 	/**
@@ -51,16 +56,48 @@ public class PowerHost extends HostDynamicWorkload {
 	 * @return the power
 	 */
 	public double getPower() {
-		return PowerPeList.getPower(this.<PowerPe>getPeList());
+		double power = 0;
+		try {
+			power = getPowerModel().getPower(getUtilizationOfCpu());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		return power;
+	}
+	
+	/**
+	 * Gets the max power that can be consumed by the host.
+	 *
+	 * @return the max power
+	 */
+	public double getMaxPower() {
+		double power = 0;
+		try {
+			power = getPowerModel().getPower(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		return power;
+	}
+	
+	/**
+	 * Sets the power model.
+	 *
+	 * @param powerModel the new power model
+	 */
+	protected void setPowerModel(PowerModel powerModel) {
+		this.powerModel = powerModel;
 	}
 
 	/**
-	 * Gets the maximum power. For this moment only consumed by all PEs.
+	 * Gets the power model.
 	 *
-	 * @return the power
+	 * @return the power model
 	 */
-	public double getMaxPower() {
-    	return PowerPeList.getMaxPower(this.<PowerPe>getPeList());
+	public PowerModel getPowerModel() {
+		return powerModel;
 	}
-
+	
 }

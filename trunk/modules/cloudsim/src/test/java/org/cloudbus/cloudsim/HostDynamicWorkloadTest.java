@@ -14,8 +14,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cloudbus.cloudsim.power.PowerPe;
-import org.cloudbus.cloudsim.power.models.PowerModelSqrt;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -34,17 +32,14 @@ public class HostDynamicWorkloadTest {
 	private static final int BW = 10000;
 	private static final double MIPS = 1000;
 
-	private static final double MAX_POWER = 200;
-	private static final double STATIC_POWER_PERCENT = 0.3;
-
 	private HostDynamicWorkload host;
 	private List<Pe> peList;
 
 	@Before
 	public void setUp() throws Exception {
 		peList = new ArrayList<Pe>();
-		peList.add(new PowerPe(0, new PeProvisionerSimple(MIPS), new PowerModelSqrt(MAX_POWER, STATIC_POWER_PERCENT)));
-		peList.add(new PowerPe(1, new PeProvisionerSimple(MIPS), new PowerModelSqrt(MAX_POWER, STATIC_POWER_PERCENT)));
+		peList.add(new Pe(0, new PeProvisionerSimple(MIPS)));
+		peList.add(new Pe(1, new PeProvisionerSimple(MIPS)));
 
 		host = new HostDynamicWorkload (
 			ID,
