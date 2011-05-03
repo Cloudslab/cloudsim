@@ -20,6 +20,7 @@ import org.cloudbus.cloudsim.provisioners.PeProvisioner;
  */
 public class PowerPe extends Pe {
 
+	// TODO: move power model to PowerHost
 	/** The power model. */
 	private PowerModel powerModel;
 

@@ -28,6 +28,9 @@ public abstract class VmScheduler {
 
 	/** The peList. */
 	private List<? extends Pe> peList;
+	
+	/** The map of VMs to PEs. */
+	private Map<String, List<Pe>> peMap;
 
 	/** The MIPS that are currently allocated to the VMs. */
 	private Map<String, List<Double>> mipsMap;
@@ -51,6 +54,7 @@ public abstract class VmScheduler {
 	 */
 	public VmScheduler(List<? extends Pe> pelist) {
 		setPeList(pelist);
+		setPeMap(new HashMap<String, List<Pe>>());
 		setMipsMap(new HashMap<String, List<Double>>());
 		setAvailableMips(PeList.getTotalMips(getPeList()));
 		setVmsMigratingIn(new ArrayList<String>());
@@ -83,8 +87,6 @@ public abstract class VmScheduler {
 	/**
 	 * Releases PEs allocated to all the VMs.
 	 *
-	 * @param vm the vm
-	 *
 	 * @pre $none
 	 * @post $none
 	 */
@@ -94,6 +96,16 @@ public abstract class VmScheduler {
 		for (Pe pe : getPeList()) {
 			pe.getPeProvisioner().deallocateMipsForAllVms();
 		}
+	}
+	
+	/**
+	 * Gets the pes allocated for vm.
+	 *
+	 * @param vm the vm
+	 * @return the pes allocated for vm
+	 */
+	public List<Pe> getPesAllocatedForVM(Vm vm) {
+		return getPeMap().get(vm.getUid());		
 	}
 
 	/**
@@ -166,6 +178,7 @@ public abstract class VmScheduler {
 	/**
 	 * Gets the vm list.
 	 *
+	 * @param <T> the generic type
 	 * @return the vm list
 	 */
 	@SuppressWarnings("unchecked")
@@ -176,6 +189,7 @@ public abstract class VmScheduler {
 	/**
 	 * Sets the vm list.
 	 *
+	 * @param <T> the generic type
 	 * @param peList the pe list
 	 */
 	protected <T extends Pe> void setPeList(List<T> peList) {
@@ -252,6 +266,24 @@ public abstract class VmScheduler {
 	 */
 	protected void setVmsMigratingIn(List<String> vmsMigratingIn) {
 		this.vmsMigratingIn = vmsMigratingIn;
+	}
+	
+	/**
+	 * Gets the pe map.
+	 *
+	 * @return the pe map
+	 */
+	public Map<String, List<Pe>> getPeMap() {
+		return peMap;
+	}
+
+	/**
+	 * Sets the pe map.
+	 *
+	 * @param peMap the pe map
+	 */
+	protected void setPeMap(Map<String, List<Pe>> peMap) {
+		this.peMap = peMap;
 	}
 
 }
