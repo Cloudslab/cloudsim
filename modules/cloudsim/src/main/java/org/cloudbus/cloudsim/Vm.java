@@ -9,6 +9,7 @@
 package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class Vm {
 	/** The user id. */
 	private int userId;
 
+	/** The uid. */
 	private String uid;
 
 	/** The size. */
@@ -73,20 +75,21 @@ public class Vm {
 	/** The recently created. */
 	private boolean recentlyCreated;
 
+	/** The mips allocation history. */
+	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<VmStateHistoryEntry>();
+
 	/**
 	 * Creates a new VMCharacteristics object.
 	 *
 	 * @param id unique ID of the VM
 	 * @param userId ID of the VM's owner
-	 * @param size amount of storage
+	 * @param mips the mips
+	 * @param pesNumber amount of CPUs
 	 * @param ram amount of ram
 	 * @param bw amount of bandwidth
-	 * @param pesNumber amount of CPUs
+	 * @param size amount of storage
 	 * @param vmm virtual machine monitor
 	 * @param cloudletScheduler cloudletScheduler policy for cloudlets
-	 * @param priority the priority
-	 * @param mips the mips
-	 *
 	 * @pre id >= 0
 	 * @pre userId >= 0
 	 * @pre size > 0
@@ -179,7 +182,7 @@ public class Vm {
 		}
 		return totalRequestedMips;
 	}
-	
+
 	/**
 	 * Gets the current requested max mips among all virtual PEs.
 	 *
@@ -235,6 +238,11 @@ public class Vm {
 		return getTotalUtilizationOfCpu(time) * getMips();
 	}
 
+	/**
+	 * Sets the uid.
+	 *
+	 * @param uid the new uid
+	 */
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
@@ -574,6 +582,27 @@ public class Vm {
 	 */
 	public void setRecentlyCreated(boolean recentlyCreated) {
 		this.recentlyCreated = recentlyCreated;
+	}
+
+    /**
+     * Gets the state history.
+     *
+     * @return the state history
+     */
+    public List<VmStateHistoryEntry> getStateHistory() {
+		return stateHistory;
+	}
+
+    /**
+     * Adds the state history entry.
+     *
+     * @param time the time
+     * @param allocatedMips the allocated mips
+     * @param requestedMips the requested mips
+     * @param isInMigration the is in migration
+     */
+    public void addStateHistoryEntry(double time, double allocatedMips, double requestedMips, boolean isInMigration) {
+		getStateHistory().add(new VmStateHistoryEntry(time, allocatedMips, requestedMips, isInMigration));
 	}
 
 }
