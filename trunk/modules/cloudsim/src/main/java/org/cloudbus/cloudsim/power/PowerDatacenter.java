@@ -8,11 +8,8 @@
 
 package org.cloudbus.cloudsim.power;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
@@ -100,16 +97,16 @@ public class PowerDatacenter extends Datacenter {
 						Vm vm = (Vm) migrate.get("vm");
 						PowerHost targetHost = (PowerHost) migrate.get("host");
 						PowerHost oldHost = (PowerHost) vm.getHost();
-		
+
 						if (oldHost == null) {
 							Log.formatLine("%.2f: Migration of VM #%d to Host #%d is started", currentTime, vm.getId(), targetHost.getId());
 						} else {
 							Log.formatLine("%.2f: Migration of VM #%d from Host #%d to Host #%d is started", currentTime, vm.getId(), oldHost.getId(), targetHost.getId());
 						}
-	
+
 						targetHost.addMigratingInVm(vm);
 						incrementMigrationCount();
-	
+
 						/** VM migration delay = RAM / bandwidth **/
 						// we use BW / 2 to model BW available for migration purposes, the other half of BW is for VM communication
 						// around 16 seconds for 1024 MB using 1 Gbit/s network
@@ -127,7 +124,7 @@ public class PowerDatacenter extends Datacenter {
 			setLastProcessTime(currentTime);
 		}
 	}
-	
+
 	/**
 	 * Update cloudet processing without scheduling future events.
 	 *
@@ -169,9 +166,9 @@ public class PowerDatacenter extends Datacenter {
 		}
 
 		setPower(getPower() + timeFrameDatacenterEnergy);
-		
+
 		checkCloudletCompletion();
-		
+
 		/** Remove completed VMs **/
 		for (PowerHost host : this.<PowerHost>getHostList()) {
 			for (Vm vm : host.getCompletedVms()) {
@@ -182,19 +179,19 @@ public class PowerDatacenter extends Datacenter {
 		}
 
 		Log.printLine();
-		
+
 		setLastProcessTime(currentTime);
 		return minTime;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.cloudbus.cloudsim.Datacenter#processVmMigrate(org.cloudbus.cloudsim.core.SimEvent, boolean)
 	 */
 	@Override
 	protected void processVmMigrate(SimEvent ev, boolean ack) {
-		updateCloudetProcessingWithoutSchedulingFutureEvents();		
+		updateCloudetProcessingWithoutSchedulingFutureEvents();
 		super.processVmMigrate(ev, ack);
-		updateCloudetProcessingWithoutSchedulingFutureEvents();	
+		updateCloudetProcessingWithoutSchedulingFutureEvents();
     }
 
 	/* (non-Javadoc)
@@ -238,25 +235,6 @@ public class PowerDatacenter extends Datacenter {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Gets the under allocated mips.
-	 *
-	 * @return the under allocated mips
-	 */
-	public Map<String, List<List<Double>>> getUnderAllocatedMips() {
-		Map<String, List<List<Double>>> underAllocatedMips = new HashMap<String, List<List<Double>>>();
-		for (PowerHost host : this.<PowerHost>getHostList()) {
-			for (Entry<String, List<List<Double>>> entry : host.getUnderAllocatedMips().entrySet()) {
-				if (!underAllocatedMips.containsKey(entry.getKey())) {
-					underAllocatedMips.put(entry.getKey(), new ArrayList<List<Double>>());
-				}
-				underAllocatedMips.get(entry.getKey()).addAll(entry.getValue());
-
-			}
-		}
-		return underAllocatedMips;
 	}
 
 	/**

@@ -9,9 +9,8 @@
 package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.PeList;
@@ -32,8 +31,8 @@ public class HostDynamicWorkload extends Host {
 	/** The previous utilization mips. */
 	private double previousUtilizationMips;
 
-	/** The under allocated mips. */
-	private Map<String, List<List<Double>>> underAllocatedMips;
+	/** The state history. */
+	private final List<HostStateHistoryEntry> stateHistory = new LinkedList<HostStateHistoryEntry>();
 
 	/**
 	 * Instantiates a new host.
@@ -55,8 +54,6 @@ public class HostDynamicWorkload extends Host {
 		super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler);
 		setUtilizationMips(0);
 		setPreviousUtilizationMips(0);
-		setUnderAllocatedMips(new HashMap<String, List<List<Double>>>());
-		setVmsMigratingIn(new ArrayList<Vm>());
 	}
 
 	/* (non-Javadoc)
@@ -67,6 +64,7 @@ public class HostDynamicWorkload extends Host {
 		double smallerTime = super.updateVmsProcessing(currentTime);
 		setPreviousUtilizationMips(getUtilizationMips());
 		setUtilizationMips(0);
+		double hostTotalRequestedMips = 0;
 
 		for (Vm vm : getVmList()) {
 			getVmScheduler().deallocatePesForVm(vm);
@@ -97,14 +95,14 @@ public class HostDynamicWorkload extends Host {
 				Log.formatLine("%.2f: [Host #" + getId() + "] MIPS for VM #" + vm.getId() + " by PEs (" + getPesNumber() + " * " + getVmScheduler().getPeCapacity() + ")." + pesString, CloudSim.clock());
 			}
 
+			vm.addStateHistoryEntry(currentTime, totalAllocatedMips, totalRequestedMips, (vm.isInMigration() && !getVmsMigratingIn().contains(vm)));
+
 			if (getVmsMigratingIn().contains(vm)) {
 				Log.formatLine("%.2f: [Host #" + getId() + "] VM #" + vm.getId() + " is being migrated to Host #" + getId(), CloudSim.clock());
 			} else {
 				if (totalAllocatedMips + 0.1 < totalRequestedMips) {
 					Log.formatLine("%.2f: [Host #" + getId() + "] Under allocated MIPS for VM #" + vm.getId() + ": %.2f", CloudSim.clock(), totalRequestedMips - totalAllocatedMips);
 				}
-
-				updateUnderAllocatedMips(vm, totalRequestedMips, totalAllocatedMips);
 
 				if (vm.isInMigration()) {
 					Log.formatLine("%.2f: [Host #" + getId() + "] VM #" + vm.getId() + " is in migration", CloudSim.clock());
@@ -113,7 +111,10 @@ public class HostDynamicWorkload extends Host {
 			}
 
 			setUtilizationMips(getUtilizationMips() + totalAllocatedMips);
+			hostTotalRequestedMips += totalRequestedMips;
 		}
+
+		addStateHistoryEntry(currentTime, getUtilizationMips(), hostTotalRequestedMips, (getUtilizationMips() > 0));
 
 		return smallerTime;
 	}
@@ -173,29 +174,6 @@ public class HostDynamicWorkload extends Host {
 	 */
 	public double getUtilizationOfBw() {
 		return getBwProvisioner().getUsedBw();
-	}
-
-	/**
-	 * Update under allocated mips.
-	 *
-	 * @param vm the vm
-	 * @param requested the requested
-	 * @param allocated the allocated
-	 */
-	protected void updateUnderAllocatedMips(Vm vm, double requested, double allocated) {
-		List<List<Double>> underAllocatedMipsArray;
-		List<Double> underAllocatedMips = new ArrayList<Double>();
-		underAllocatedMips.add(requested);
-		underAllocatedMips.add(allocated);
-
-		if (getUnderAllocatedMips().containsKey(vm.getUid())) {
-			underAllocatedMipsArray = getUnderAllocatedMips().get(vm.getUid());
-		} else {
-			underAllocatedMipsArray = new ArrayList<List<Double>>();
-		}
-
-		underAllocatedMipsArray.add(underAllocatedMips);
-		getUnderAllocatedMips().put(vm.getUid(), underAllocatedMipsArray);
 	}
 
 	/**
@@ -269,22 +247,25 @@ public class HostDynamicWorkload extends Host {
 		this.previousUtilizationMips = previousUtilizationMips;
 	}
 
-    /**
-     * Gets the under allocated mips.
-     *
-     * @return the under allocated mips
-     */
-    public Map<String, List<List<Double>>> getUnderAllocatedMips() {
-		return underAllocatedMips;
+	/**
+	 * Gets the state history.
+	 *
+	 * @return the state history
+	 */
+	public List<HostStateHistoryEntry> getStateHistory() {
+		return stateHistory;
 	}
 
-	/**
-	 * Sets the under allocated mips.
-	 *
-	 * @param underAllocatedMips the under allocated mips
-	 */
-	protected void setUnderAllocatedMips(Map<String, List<List<Double>>> underAllocatedMips) {
-		this.underAllocatedMips = underAllocatedMips;
+    /**
+     * Adds the state history entry.
+     *
+     * @param time the time
+     * @param allocatedMips the allocated mips
+     * @param requestedMips the requested mips
+     * @param isActive the is active
+     */
+    public void addStateHistoryEntry(double time, double allocatedMips, double requestedMips, boolean isActive) {
+		getStateHistory().add(new HostStateHistoryEntry(time, allocatedMips, requestedMips, isActive));
 	}
 
 }

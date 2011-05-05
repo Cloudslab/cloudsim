@@ -46,7 +46,7 @@ public class Host {
 	private VmScheduler vmScheduler;
 
 	/** The vm list. */
-	private List<? extends Vm> vmList;
+	private final List<? extends Vm> vmList = new ArrayList<Vm>();
 
 	/** The pe list. */
 	private List<? extends Pe> peList;
@@ -55,8 +55,8 @@ public class Host {
     private boolean failed;
 
 	/** The vms migrating in. */
-	private List<Vm> vmsMigratingIn;
-	
+	private final List<Vm> vmsMigratingIn = new ArrayList<Vm>();
+
 	/** The datacenter where the host is placed. */
 	private Datacenter datacenter;
 
@@ -83,7 +83,6 @@ public class Host {
 		setVmScheduler(vmScheduler);
 
 		setPeList(peList);
-		setVmList(new ArrayList<Vm>());
 		setFailed(false);
 	}
 
@@ -118,13 +117,13 @@ public class Host {
 	 */
 	public void addMigratingInVm(Vm vm) {
 		vm.setInMigration(true);
-		
+
 		if (!getVmsMigratingIn().contains(vm)) {
 			if (getStorage() < vm.getSize()){
 				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by storage");
 				System.exit(0);
 			}
-			
+
 			if (!getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam())) {
 				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by RAM");
 				System.exit(0);
@@ -142,7 +141,7 @@ public class Host {
 			}
 
 			setStorage(getStorage() - vm.getSize());
-			
+
 			getVmsMigratingIn().add(vm);
 			getVmList().add(vm);
 			updateVmsProcessing(CloudSim.clock());
@@ -210,7 +209,7 @@ public class Host {
 			Log.printLine("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by storage");
 			return false;
 		}
-		
+
 		if (!getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam())) {
 			Log.printLine("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId() + " failed by RAM");
 			return false;
@@ -323,7 +322,7 @@ public class Host {
 	 * @return the free pes number
 	 */
 	public int getFreePesNumber() {
-		return PeList.getFreePesNumber((List<Pe>) getPeList());
+		return PeList.getFreePesNumber(getPeList());
 	}
 
 	/**
@@ -332,7 +331,7 @@ public class Host {
 	 * @return the total mips
 	 */
 	public int getTotalMips() {
-		return PeList.getTotalMips((List<Pe>) getPeList());
+		return PeList.getTotalMips(getPeList());
 	}
 
 	/**
@@ -512,7 +511,7 @@ public class Host {
 	protected void setVmScheduler(VmScheduler vmScheduler) {
 		this.vmScheduler = vmScheduler;
 	}
-	
+
 	/**
 	 * Gets the pe list.
 	 *
@@ -543,16 +542,6 @@ public class Host {
 	@SuppressWarnings("unchecked")
 	public <T extends Vm> List<T> getVmList() {
 		return (List<T>) vmList;
-	}
-
-	/**
-	 * Sets the vm list.
-	 *
-	 * @param <T> the generic type
-	 * @param vmList the new vm list
-	 */
-	protected <T extends Vm> void setVmList(List<T> vmList) {
-		this.vmList = vmList;
 	}
 
 	/**
@@ -588,7 +577,7 @@ public class Host {
     public boolean setFailed(String resName, boolean failed) {
         // all the PEs are failed (or recovered, depending on fail)
     	this.failed = failed;
-        PeList.setStatusFailed((List<Pe>) getPeList(), resName, getId(), failed);
+        PeList.setStatusFailed(getPeList(), resName, getId(), failed);
         return true;
     }
 
@@ -602,7 +591,7 @@ public class Host {
     public boolean setFailed(boolean failed) {
         // all the PEs are failed (or recovered, depending on fail)
     	this.failed = failed;
-        PeList.setStatusFailed((List<Pe>) getPeList(), failed);
+        PeList.setStatusFailed(getPeList(), failed);
         return true;
     }
 
@@ -617,7 +606,7 @@ public class Host {
      * @post $none
      */
     public boolean setPeStatus(int peId, int status) {
-        return PeList.setPeStatus((List<Pe>) getPeList(), peId, status);
+        return PeList.setPeStatus(getPeList(), peId, status);
     }
 
 	/**
@@ -630,22 +619,13 @@ public class Host {
 	}
 
 	/**
-	 * Sets the vms migrating in.
-	 *
-	 * @param vmsMigratingIn the new vms migrating in
-	 */
-	protected void setVmsMigratingIn(List<Vm> vmsMigratingIn) {
-		this.vmsMigratingIn = vmsMigratingIn;
-	}
-	
-	/**
 	 * Gets the data center.
 	 * @return the data center where the host runs
 	 */
 	public Datacenter getDatacenter(){
 		return this.datacenter;
 	}
-	
+
 	/**
 	 * Sets the data center.
 	 *
