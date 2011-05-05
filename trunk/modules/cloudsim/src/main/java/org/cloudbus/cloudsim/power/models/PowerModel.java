@@ -23,11 +23,9 @@ public interface PowerModel {
 	 * according to the power model.
 	 *
 	 * @param utilization the utilization
-	 *
 	 * @return power consumption
-	 *
-	 * @throws Exception the exception
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	double getPower(double utilization) throws Exception;
+	double getPower(double utilization) throws IllegalArgumentException;
 
 }
