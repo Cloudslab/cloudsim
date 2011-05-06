@@ -24,7 +24,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
  * @since		CloudSim Toolkit 2.0
  */
 public class PowerHost extends HostDynamicWorkload {
-	
+
 	/** The power model. */
 	private PowerModel powerModel;
 
@@ -58,7 +58,7 @@ public class PowerHost extends HostDynamicWorkload {
 	public double getPower() {
 		return getPower(getUtilizationOfCpu());
 	}
-	
+
 	/**
 	 * Gets the power. For this moment only consumed by all PEs.
 	 *
@@ -75,7 +75,7 @@ public class PowerHost extends HostDynamicWorkload {
 		}
 		return power;
 	}
-	
+
 	/**
 	 * Gets the max power that can be consumed by the host.
 	 *
@@ -91,7 +91,7 @@ public class PowerHost extends HostDynamicWorkload {
 		}
 		return power;
 	}
-	
+
 	/**
 	 * Gets the energy consumption using linear interpolation of the utilization change.
 	 *
@@ -101,11 +101,14 @@ public class PowerHost extends HostDynamicWorkload {
 	 * @return the energy
 	 */
 	public double getEnergyLinearInterpolation(double fromUtilization, double toUtilization, double time) {
+		if (fromUtilization == 0 && toUtilization == 0) {
+			return 0;
+		}
 		double fromPower = getPower(fromUtilization);
 		double toPower = getPower(toUtilization);
-		return (fromPower + (toPower - fromPower) / 2) * time;		
+		return (fromPower + (toPower - fromPower) / 2) * time;
 	}
-	
+
 	/**
 	 * Sets the power model.
 	 *
@@ -123,5 +126,5 @@ public class PowerHost extends HostDynamicWorkload {
 	public PowerModel getPowerModel() {
 		return powerModel;
 	}
-	
+
 }
