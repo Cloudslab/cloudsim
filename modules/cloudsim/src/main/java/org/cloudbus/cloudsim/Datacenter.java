@@ -93,7 +93,7 @@ public class Datacenter extends SimEntity {
 		setStorageList(storageList);
 		setVmList(new ArrayList<Vm>());
 		setSchedulingInterval(schedulingInterval);
-		
+
 		for (Host host: getCharacteristics().getHostList()) {
 			host.setDatacenter(this);
 		}
@@ -542,7 +542,7 @@ public class Datacenter extends SimEntity {
 		boolean result = getVmAllocationPolicy().allocateHostForVm(vm, host);
 		if (!result) {
 			Log.printLine("[Datacenter.processVmMigrate] VM allocation to the destination host failed");
-			System.exit(0);			
+			System.exit(0);
 		}
 
 		if (ack) {
@@ -765,7 +765,7 @@ public class Datacenter extends SimEntity {
             double estimatedFinishTime = scheduler.cloudletSubmit(cl,fileTransferTime);
 
             //if (estimatedFinishTime > 0.0 && estimatedFinishTime < getSchedulingInterval()) { //if this cloudlet is in the exec queue
-            if (estimatedFinishTime > 0.0) { //if this cloudlet is in the exec queue
+            if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) { //if this cloudlet is in the exec queue
             	//double estimatedFinishTime = (cl.getCloudletTotalLength()/(capacity*cl.getPesNumber())); //time to process the cloudlet
             	//Log.printLine(estimatedFinishTime+"="+gl.getCloudletLength()+"/("+capacity+"*"+gl.getNumPE()+")");
             	estimatedFinishTime += fileTransferTime;
@@ -773,7 +773,7 @@ public class Datacenter extends SimEntity {
             	//Log.printLine(CloudSim.clock()+": Next event scheduled to +"+estimatedFinishTime);
             	send(getId(), estimatedFinishTime, CloudSimTags.VM_DATACENTER_EVENT);
             }
-            
+
             if (ack) {
                 int[] data = new int[3];
                 data[0] = getId();
@@ -924,7 +924,9 @@ public class Datacenter extends SimEntity {
 				}
 			}
 			//gurantees a minimal interval before scheduling the event
-			if (smallerTime<CloudSim.clock()+0.1) smallerTime=CloudSim.clock()+0.1;
+			if (smallerTime<CloudSim.clock()+0.1) {
+				smallerTime=CloudSim.clock()+0.1;
+			}
 
 			if (smallerTime != Double.MAX_VALUE) {
 				schedule(getId(), (smallerTime - CloudSim.clock()), CloudSimTags.VM_DATACENTER_EVENT);
