@@ -543,7 +543,7 @@ public class CloudSim {
 		SimEvent e = new SimEvent(SimEvent.SEND, clock + delay, src, dest, tag, data);
 		future.addEvent(e);
 	}
-	
+
 	/**
 	 * Used to send an event from one entity to another, with priority in the queue.
 	 *
@@ -614,6 +614,25 @@ public class CloudSim {
 			ev = iterator.next();
 			if (ev.getDestination() == src && p.match(ev)) {
 				iterator.remove();
+				break;
+			}
+		}
+		return ev;
+	}
+
+	/**
+	 * Find first deferred event matching a predicate.
+	 *
+	 * @param src the src
+	 * @param p the p
+	 * @return the sim event
+	 */
+	public static SimEvent findFirstDeferred(int src, Predicate p) {
+		SimEvent ev = null;
+		Iterator<SimEvent> iterator = deferred.iterator();
+		while (iterator.hasNext()) {
+			ev = iterator.next();
+			if (ev.getDestination() == src && p.match(ev)) {
 				break;
 			}
 		}
