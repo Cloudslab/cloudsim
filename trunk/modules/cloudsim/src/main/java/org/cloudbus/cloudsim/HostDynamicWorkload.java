@@ -77,10 +77,10 @@ public class HostDynamicWorkload extends Host {
 		for (Vm vm : getVmList()) {
 			double totalRequestedMips = vm.getCurrentRequestedTotalMips();
 
-			if (totalRequestedMips == 0) {
-				Log.printLine("VM #" + vm.getId() + " has completed its execution and destroyed");
-				continue;
-			}
+//			if (totalRequestedMips == 0) {
+//				Log.printLine("VM #" + vm.getId() + " has completed its execution and destroyed");
+//				continue;
+//			}
 
 			double totalAllocatedMips = getVmScheduler().getTotalAllocatedMipsForVm(vm);
 
@@ -95,14 +95,14 @@ public class HostDynamicWorkload extends Host {
 				Log.formatLine("%.2f: [Host #" + getId() + "] MIPS for VM #" + vm.getId() + " by PEs (" + getPesNumber() + " * " + getVmScheduler().getPeCapacity() + ")." + pesString, CloudSim.clock());
 			}
 
-			vm.addStateHistoryEntry(currentTime, totalAllocatedMips, totalRequestedMips, (vm.isInMigration() && !getVmsMigratingIn().contains(vm)));
-
 			if (getVmsMigratingIn().contains(vm)) {
 				Log.formatLine("%.2f: [Host #" + getId() + "] VM #" + vm.getId() + " is being migrated to Host #" + getId(), CloudSim.clock());
 			} else {
 				if (totalAllocatedMips + 0.1 < totalRequestedMips) {
 					Log.formatLine("%.2f: [Host #" + getId() + "] Under allocated MIPS for VM #" + vm.getId() + ": %.2f", CloudSim.clock(), totalRequestedMips - totalAllocatedMips);
 				}
+
+				vm.addStateHistoryEntry(currentTime, totalAllocatedMips, totalRequestedMips, (vm.isInMigration() && !getVmsMigratingIn().contains(vm)));
 
 				if (vm.isInMigration()) {
 					Log.formatLine("%.2f: [Host #" + getId() + "] VM #" + vm.getId() + " is in migration", CloudSim.clock());
@@ -265,7 +265,15 @@ public class HostDynamicWorkload extends Host {
      * @param isActive the is active
      */
     public void addStateHistoryEntry(double time, double allocatedMips, double requestedMips, boolean isActive) {
-		getStateHistory().add(new HostStateHistoryEntry(time, allocatedMips, requestedMips, isActive));
+		HostStateHistoryEntry newState = new HostStateHistoryEntry(time, allocatedMips, requestedMips, isActive);
+    	if (!getStateHistory().isEmpty()) {
+    		HostStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
+	     	if (previousState.getTime() == time) {
+	    		getStateHistory().set(getStateHistory().size() - 1, newState);
+	    		return;
+	    	}
+    	}
+		getStateHistory().add(newState);
 	}
 
 }

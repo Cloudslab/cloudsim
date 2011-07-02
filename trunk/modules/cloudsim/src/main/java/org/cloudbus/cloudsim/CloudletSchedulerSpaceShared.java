@@ -659,4 +659,16 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		return 0.0;
 	}
 
+	@Override
+	public double getCurrentRequestedUtilizationOfRam() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getCurrentRequestedUtilizationOfBw() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

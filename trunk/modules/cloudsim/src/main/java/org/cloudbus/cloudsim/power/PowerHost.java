@@ -101,7 +101,7 @@ public class PowerHost extends HostDynamicWorkload {
 	 * @return the energy
 	 */
 	public double getEnergyLinearInterpolation(double fromUtilization, double toUtilization, double time) {
-		if (fromUtilization == 0 && toUtilization == 0) {
+		if (fromUtilization == 0) {
 			return 0;
 		}
 		double fromPower = getPower(fromUtilization);
