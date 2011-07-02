@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.cloudbus.cloudsim.core.CloudSim;
+
 /**
  * Vm represents a VM: it runs inside a Host, sharing hostList
  * with other VMs. It processes cloudlets. This processing happens according
@@ -150,13 +152,17 @@ public class Vm {
 
 		if (isRecentlyCreated()) {
 			boolean mipsIsNull = true;
-			for (double mips : currentRequestedMips) {
-				if (mips > 0.0) {
-					mipsIsNull = false;
-					setRecentlyCreated(false);
-					break;
-				}
+			if (CloudSim.clock() > 0) {
+				mipsIsNull = false;
+				setRecentlyCreated(false);
 			}
+//			for (double mips : currentRequestedMips) {
+//				if (mips > 0.0) {
+//					mipsIsNull = false;
+//					setRecentlyCreated(false);
+//					break;
+//				}
+//			}
 
 			//if (mipsIsNull && isRecentlyCreated()) {
 			if (mipsIsNull) {
@@ -204,7 +210,10 @@ public class Vm {
 	 * @return the current requested bw
 	 */
 	public long getCurrentRequestedBw() {
-		return getBw();
+		if (isRecentlyCreated()) {
+			return getBw();
+		}
+		return (long) (getCloudletScheduler().getCurrentRequestedUtilizationOfBw() * getBw());
 	}
 
 	/**
@@ -213,7 +222,10 @@ public class Vm {
 	 * @return the current requested ram
 	 */
 	public int getCurrentRequestedRam() {
-		return getRam();
+		if (isRecentlyCreated()) {
+			return getRam();
+		}
+		return (int) (getCloudletScheduler().getCurrentRequestedUtilizationOfRam() * getRam());
 	}
 
 	/**
@@ -602,7 +614,15 @@ public class Vm {
      * @param isInMigration the is in migration
      */
     public void addStateHistoryEntry(double time, double allocatedMips, double requestedMips, boolean isInMigration) {
-		getStateHistory().add(new VmStateHistoryEntry(time, allocatedMips, requestedMips, isInMigration));
+    	VmStateHistoryEntry newState = new VmStateHistoryEntry(time, allocatedMips, requestedMips, isInMigration);
+    	if (!getStateHistory().isEmpty()) {
+	    	VmStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
+	     	if (previousState.getTime() == time) {
+	    		getStateHistory().set(getStateHistory().size() - 1, newState);
+	    		return;
+	    	}
+    	}
+		getStateHistory().add(newState);
 	}
 
 }

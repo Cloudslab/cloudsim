@@ -224,6 +224,20 @@ public abstract class CloudletScheduler {
 	public abstract double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time);
 
 	/**
+	 * Gets the current requested ram.
+	 *
+	 * @return the current requested ram
+	 */
+	public abstract double getCurrentRequestedUtilizationOfRam();
+
+	/**
+	 * Gets the current requested bw.
+	 *
+	 * @return the current requested bw
+	 */
+	public abstract double getCurrentRequestedUtilizationOfBw();
+
+	/**
 	 * Gets the previous time.
 	 *
 	 * @return the previous time

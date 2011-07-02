@@ -543,4 +543,22 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return 0.0;
 	}
 
+	@Override
+	public double getCurrentRequestedUtilizationOfRam() {
+		double ram = 0;
+		for (ResCloudlet cloudlet : cloudletExecList) {
+			ram += cloudlet.getCloudlet().getUtilizationOfRam(CloudSim.clock());
+		}
+		return ram;
+	}
+
+	@Override
+	public double getCurrentRequestedUtilizationOfBw() {
+		double bw = 0;
+		for (ResCloudlet cloudlet : cloudletExecList) {
+			bw += cloudlet.getCloudlet().getUtilizationOfBw(CloudSim.clock());
+		}
+		return bw;
+	}
+
 }

@@ -87,6 +87,8 @@ public class PowerDatacenter extends Datacenter {
 
 		// if some time passed since last processing
 		if (currentTime > getLastProcessTime()) {
+			System.out.print(currentTime + " ");
+
 			double minTime = updateCloudetProcessingWithoutSchedulingFutureEventsForce();
 
 			if (!isDisableMigrations()) {
@@ -110,7 +112,7 @@ public class PowerDatacenter extends Datacenter {
 						/** VM migration delay = RAM / bandwidth **/
 						// we use BW / 2 to model BW available for migration purposes, the other half of BW is for VM communication
 						// around 16 seconds for 1024 MB using 1 Gbit/s network
-						send(getId(), vm.getCurrentAllocatedRam() / ((double) targetHost.getBw() / (2 * 8000)), CloudSimTags.VM_MIGRATE, migrate);
+						send(getId(), vm.getRam() / ((double) targetHost.getBw() / (2 * 8000)), CloudSimTags.VM_MIGRATE, migrate);
 					}
 				}
 			}
@@ -148,23 +150,8 @@ public class PowerDatacenter extends Datacenter {
 		double timeDiff = currentTime - getLastProcessTime();
 		double timeFrameDatacenterEnergy = 0.0;
 
-		if (timeDiff > 0) {
-			Log.formatLine("\nEnergy consumption for the last time frame from %.2f to %.2f:", getLastProcessTime(), currentTime);
-
-			for (PowerHost host : this.<PowerHost>getHostList()) {
-				double timeFrameHostEnergy = host.getEnergyLinearInterpolation(host.getPreviousUtilizationOfCpu(), host.getUtilizationOfCpu(), timeDiff);
-				timeFrameDatacenterEnergy += timeFrameHostEnergy;
-
-				Log.printLine();
-				Log.formatLine("%.2f: [Host #%d] utilization is %.2f%%", currentTime, host.getId(), host.getUtilizationOfCpu() * 100);
-				Log.formatLine("%.2f: [Host #%d] energy is %.2f W*sec", currentTime, host.getId(), timeFrameHostEnergy);
-			}
-
-			Log.formatLine("\n%.2f: Consumed energy is %.2f W*sec\n", currentTime, timeFrameDatacenterEnergy);
-		}
-
 		Log.printLine("\n\n--------------------------------------------------------------\n\n");
-		Log.printLine("New resource usage for the next time frame:");
+		Log.formatLine("New resource usage for the time frame starting at %.2f:", currentTime);
 
 		for (PowerHost host : this.<PowerHost>getHostList()) {
 			Log.printLine();
@@ -175,6 +162,24 @@ public class PowerDatacenter extends Datacenter {
 			}
 
 			Log.formatLine("%.2f: [Host #%d] utilization is %.2f%%", currentTime, host.getId(), host.getUtilizationOfCpu() * 100);
+		}
+
+		if (timeDiff > 0) {
+			Log.formatLine("\nEnergy consumption for the last time frame from %.2f to %.2f:", getLastProcessTime(), currentTime);
+
+			for (PowerHost host : this.<PowerHost>getHostList()) {
+				double previousUtilizationOfCpu = host.getPreviousUtilizationOfCpu();
+				double utilizationOfCpu = host.getUtilizationOfCpu();
+				double timeFrameHostEnergy = host.getEnergyLinearInterpolation(previousUtilizationOfCpu, utilizationOfCpu, timeDiff);
+				timeFrameDatacenterEnergy += timeFrameHostEnergy;
+
+				Log.printLine();
+				Log.formatLine("%.2f: [Host #%d] utilization at %.2f was %.2f%%, now is %.2f%%",
+						currentTime, host.getId(), getLastProcessTime(), previousUtilizationOfCpu * 100, utilizationOfCpu * 100);
+				Log.formatLine("%.2f: [Host #%d] energy is %.2f W*sec", currentTime, host.getId(), timeFrameHostEnergy);
+			}
+
+			Log.formatLine("\n%.2f: Data center's energy is %.2f W*sec\n", currentTime, timeFrameDatacenterEnergy);
 		}
 
 		setPower(getPower() + timeFrameDatacenterEnergy);
