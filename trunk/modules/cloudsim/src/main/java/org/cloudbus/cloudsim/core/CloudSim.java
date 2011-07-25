@@ -241,15 +241,14 @@ public class CloudSim {
 
 	// ======== SIMULATION METHODS ===============//
 
-	// Private data members
 	/** The entities. */
 	private static List<SimEntity> entities;
 
 	/** The future event queue. */
-	private static FutureQueue future;
+	protected static FutureQueue future;
 
 	/** The deferred event queue. */
-	private static DeferredQueue deferred;
+	protected static DeferredQueue deferred;
 
 	/** The simulation clock. */
 	private static double clock;
@@ -257,9 +256,6 @@ public class CloudSim {
 	/** Flag for checking if the simulation is running. */
 	private static boolean running;
 
-	/*
-	 * (non-javadoc)
-	 */
 	/** The entities by name. */
 	private static Map<String, SimEntity> entitiesByName;
 

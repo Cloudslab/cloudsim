@@ -303,8 +303,7 @@ public class CloudSimExample8 {
 		public void processEvent(SimEvent ev) {
 			switch (ev.getTag()) {
 			case CREATE_BROKER:
-
-				setBroker(createBroker("Broker_1"));
+				setBroker(createBroker(super.getName()+"_"));
 
 				//Create VMs and Cloudlets and send them to broker
 				setVmList(createVM(getBroker().getId(), 5, 100)); //creating 5 vms
@@ -325,7 +324,7 @@ public class CloudSimExample8 {
 
 		@Override
 		public void startEntity() {
-			Log.printLine("GlobalBroker is starting...");
+			Log.printLine(super.getName()+" is starting...");
 			schedule(getId(), 200, CREATE_BROKER);
 		}
 

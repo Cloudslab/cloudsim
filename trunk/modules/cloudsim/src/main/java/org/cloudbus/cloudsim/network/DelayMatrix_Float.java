@@ -121,7 +121,7 @@ public class DelayMatrix_Float {
 	public String toString(){
 		StringBuffer buffer = new StringBuffer();
 
-		buffer.append("just an simple printout of the distance-aware-topology-class\n");
+		buffer.append("just a simple printout of the distance-aware-topology-class\n");
 		buffer.append("delay-matrix is:\n");
 
 		for(int column = 0; column < mTotalNodeNum; ++column){
