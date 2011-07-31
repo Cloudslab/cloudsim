@@ -168,7 +168,7 @@ Finally, if nether from the solves your problem, send an e-mail to the discussio
 
 === 13. How long does it take to my question to be answered? ==
 
-We do our best to answer all the questions we receive in a [http://en.wikipedia.org/wiki/Business_day business day]. Nevertheless, some factors may affect it, such as:
+We do our best to answer all the questions we receive. Nevertheless, some factors may affect it, such as:
 
   # Message has to be forwarded to another developer who is more familiar with the specific subject;
   # Question is not clear or too generic, and we have first to try to understand it;
