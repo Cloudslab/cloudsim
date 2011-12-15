@@ -232,6 +232,12 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 	public boolean allocateHostForVm(Vm vm, Host host) {
 		if (host.vmCreate(vm)) { //if vm has been succesfully created in the host
 			getVmTable().put(vm.getUid(), host);
+			
+			 int requiredPes = vm.getPesNumber();
+		     int idx = getHostList().indexOf(host);
+		     getUsedPes().put(vm.getUid(), requiredPes);
+		     getFreePes().set(idx, getFreePes().get(idx) - requiredPes);
+			
 			Log.formatLine("%.2f: VM #" + vm.getId() + " has been allocated to the host #" + host.getId(), CloudSim.clock());
 			return true;
 		}

@@ -452,7 +452,7 @@ public class DatacenterCharacteristics {
 	 *
 	 * @return the id
 	 */
-	protected int getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -545,7 +545,7 @@ public class DatacenterCharacteristics {
 	 *
 	 * @return the cost per second
 	 */
-	protected double getCostPerSecond() {
+	public double getCostPerSecond() {
 		return costPerSecond;
 	}
 

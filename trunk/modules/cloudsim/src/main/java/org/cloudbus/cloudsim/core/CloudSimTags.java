@@ -20,7 +20,7 @@ package org.cloudbus.cloudsim.core;
  * @author		Anthony Sulistio
  * @since		CloudSim Toolkit 1.0
  */
-public final class CloudSimTags {
+public class CloudSimTags {
     // starting constant value for cloud-related tags
     private static final int BASE = 0;
 
@@ -388,6 +388,17 @@ public final class CloudSimTags {
      * Denotes an internal event generated in a Broker
      */
     public static final int VM_BROKER_EVENT = BASE + 42;
+    
+    public static final int Network_Event_UP=BASE+43;
+    public static final int Network_Event_send=BASE+44;
+
+	public static final int RESOURCE_Register = BASE+45;
+
+	public static final int Network_Event_DOWN = BASE+46;
+
+	public static final int Network_Event_Host = BASE+47;
+
+	public static final int NextCycle = BASE+48;
 
 
 //    /////////////////////////////////////////////////////////////

@@ -77,7 +77,6 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 		getPeAllocationMap().put(vm.getUid(), selectedPes);
 		getMipsMap().put(vm.getUid(), mipsShare);
 		setAvailableMips(getAvailableMips() - totalMips);
-
 		return true;
 	}
 

@@ -471,7 +471,7 @@ public class Datacenter extends SimEntity {
            } else {
         	   data[2] = CloudSimTags.FALSE;
            }
-		   sendNow(vm.getUserId(), CloudSimTags.VM_CREATE_ACK, data);
+		   send(vm.getUserId(), 0.1, CloudSimTags.VM_CREATE_ACK, data);
  	    }
 
  	    if (result) {
@@ -909,7 +909,7 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void updateCloudletProcessing() {
-		//Log.printLine(CloudSim.clock()+": PowerDatacenter #"+this.get_id()+": updating cloudlet processing.......................................");
+		//Log.printLine(CloudSim.clock()+": PowerDatacenter #: updating cloudlet processing.......................................");
 		//if some time passed since last processing
 		if (CloudSim.clock() > this.getLastProcessTime()+0.1) {
 			List<? extends Host> list = getVmAllocationPolicy().getHostList();

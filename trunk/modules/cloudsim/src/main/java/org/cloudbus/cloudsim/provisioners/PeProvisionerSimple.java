@@ -68,6 +68,8 @@ public class PeProvisionerSimple extends PeProvisioner {
 
 		setAvailableMips(getAvailableMips() - mips);
 		getPeTable().put(vmUid, allocatedMips);
+System.out.print("MIPS allocated for vm "+vmUid+" :");
+for (double m:allocatedMips) System.out.print(" "+m+" "); System.out.println();
 
 		return true;
 	}

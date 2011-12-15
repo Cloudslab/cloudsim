@@ -89,7 +89,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 			}
 			totalRequestedMips += mips;
 		}
-		
+
 		if (getVmsMigratingIn().contains(vmUid)) {
 			totalRequestedMips *= 0.1; // performance cost incurred by the destination host = 10% MIPS
 		}
@@ -166,10 +166,12 @@ public class VmSchedulerTimeShared extends VmScheduler {
 		Pe pe = peIterator.next();
 		PeProvisioner peProvisioner = pe.getPeProvisioner();
 		double availableMips = peProvisioner.getAvailableMips();
+
 		for (Map.Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
 			String vmUid = entry.getKey();
 			getPeMap().put(vmUid, new LinkedList<Pe>());
 			for (double mips : entry.getValue()) {
+				System.out.println("=> mips:"+mips);
 				while (mips >= 0.1) {
 					if (availableMips >= mips) {
 						peProvisioner.allocateMipsForVm(vmUid, mips);
