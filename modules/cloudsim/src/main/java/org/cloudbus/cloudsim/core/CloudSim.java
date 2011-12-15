@@ -61,7 +61,7 @@ public class CloudSim {
 	private static Calendar calendar = null;
 	
 	/** The termination time. */
-	private static long terminateAt = -1;
+	private static double terminateAt = -1;
 
 	/**
 	 * Initialises all the common attributes.
@@ -212,7 +212,7 @@ public class CloudSim {
 	 * @return true, if successful
 	 * otherwise.
 	 */
-	public static boolean terminateSimulation(long time) {
+	public static boolean terminateSimulation(double time) {
 		if (time <= clock) {
 			return false;
 		} else {
@@ -863,7 +863,7 @@ public class CloudSim {
 			}
 			
 			//this block allows termination of simulation at a specific time
-			if (terminateAt != -1 && clock >= terminateAt) {
+			if (terminateAt > 0.0 && clock >= terminateAt) {
 				terminateSimulation();
 				clock = terminateAt;
 				break;
