@@ -151,11 +151,11 @@ public class Vm {
 		List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
 
 		if (isRecentlyCreated()) {
-			boolean mipsIsNull = true;
-			if (CloudSim.clock() > 0) {
-				mipsIsNull = false;
+			//boolean mipsIsNull = true;
+			//if (CloudSim.clock() > 0) {
+				//mipsIsNull = false;
 				setRecentlyCreated(false);
-			}
+			//}
 //			for (double mips : currentRequestedMips) {
 //				if (mips > 0.0) {
 //					mipsIsNull = false;
@@ -165,14 +165,13 @@ public class Vm {
 //			}
 
 			//if (mipsIsNull && isRecentlyCreated()) {
-			if (mipsIsNull) {
+			//if (mipsIsNull) {
 				currentRequestedMips = new ArrayList<Double>();
 				for (int i = 0; i < getPesNumber(); i++) {
 					currentRequestedMips.add(getMips());
 				}
-			}
+			//}
 		}
-
 		return currentRequestedMips;
 	}
 

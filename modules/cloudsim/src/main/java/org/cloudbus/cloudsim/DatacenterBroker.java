@@ -33,46 +33,44 @@ import org.cloudbus.cloudsim.lists.VmList;
  */
 public class DatacenterBroker extends SimEntity {
 
-	// TODO: remove unnecessary variables
-
 	/** The vm list. */
-	private List<? extends Vm> vmList;
+	protected List<? extends Vm> vmList;
 
 	/** The vms created list. */
-	private List<? extends Vm> vmsCreatedList;
+	protected List<? extends Vm> vmsCreatedList;
 
 	/** The cloudlet list. */
-	private List<? extends Cloudlet> cloudletList;
+	protected List<? extends Cloudlet> cloudletList;
 
 	/** The cloudlet submitted list. */
-	private List<? extends Cloudlet> cloudletSubmittedList;
+	protected List<? extends Cloudlet> cloudletSubmittedList;
 
 	/** The cloudlet received list. */
-	private List<? extends Cloudlet> cloudletReceivedList;
+	protected List<? extends Cloudlet> cloudletReceivedList;
 
 	/** The cloudlets submitted. */
-	private int cloudletsSubmitted;
+	protected int cloudletsSubmitted;
 
 	/** The vms requested. */
-	private int vmsRequested;
+	protected int vmsRequested;
 
 	/** The vms acks. */
-	private int vmsAcks;
+	protected int vmsAcks;
 
 	/** The vms destroyed. */
-	private int vmsDestroyed;
+	protected int vmsDestroyed;
 
 	/** The datacenter ids list. */
-	private List<Integer> datacenterIdsList;
+	protected List<Integer> datacenterIdsList;
 
 	/** The datacenter requested ids list. */
-	private List<Integer> datacenterRequestedIdsList;
+	protected List<Integer> datacenterRequestedIdsList;
 
 	/** The vms to datacenters map. */
-	private Map<Integer, Integer> vmsToDatacentersMap;
+	protected Map<Integer, Integer> vmsToDatacentersMap;
 
 	/** The datacenter characteristics list. */
-	private Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList;
+	protected Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList;
 
 
 	/**
@@ -396,7 +394,7 @@ public class DatacenterBroker extends SimEntity {
 	 * @pre $none
 	 * @post $none
 	 */
-	private void finishExecution() {
+	protected void finishExecution() {
 		sendNow(getId(), CloudSimTags.END_OF_SIMULATION);
 	}
 

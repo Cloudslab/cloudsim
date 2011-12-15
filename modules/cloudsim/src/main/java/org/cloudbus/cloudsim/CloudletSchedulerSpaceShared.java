@@ -376,7 +376,6 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 			for (int i = 0; i < cloudlet.getPesNumber(); i++) {
 				rcl.setMachineAndPeId(0, i);
 			}
-
 			getCloudletExecList().add(rcl);
 			usedPes += cloudlet.getPesNumber();
 		} else {// no enough free PEs: go to the waiting queue

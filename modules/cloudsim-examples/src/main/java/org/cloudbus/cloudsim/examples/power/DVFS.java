@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload;
+import org.cloudbus.cloudsim.CloudletSchedulerSpaceShared;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
@@ -48,9 +49,9 @@ public class DVFS {
 	/** The vm list. */
 	private static List<Vm> vmList;
 
-	private static double hostsNumber = 10;
-	private static double vmsNumber = 20;
-	private static double cloudletsNumber = 20;
+	private static double hostsNumber = 2;
+	private static double vmsNumber = 10;
+	private static double cloudletsNumber = 10;
 
 	/**
 	 * Creates main() to run this example.
@@ -109,7 +110,7 @@ public class DVFS {
 		    int totalTotalRequested = 0;
 		    int totalTotalAllocated = 0;
 		    ArrayList<Double> sla = new ArrayList<Double>();
-		    int numberOfAllocations = 0;
+		    /*int numberOfAllocations = 0;
 			for (Entry<String, List<List<Double>>> entry : datacenter.getUnderAllocatedMips().entrySet()) {
 			    List<List<Double>> underAllocatedMips = entry.getValue();
 			    double totalRequested = 0;
@@ -127,7 +128,7 @@ public class DVFS {
 				}
 			    totalTotalRequested += totalRequested;
 			    totalTotalAllocated += totalAllocated;
-			}
+			}*/
 
 			double averageSla = 0;
 			if (sla.size() > 0) {
@@ -167,7 +168,7 @@ public class DVFS {
 		List<Cloudlet> list = new ArrayList<Cloudlet>();
 
 		long length = 150000; // 10 min on 250 MIPS
-		int pesNumber = 1;
+		int pesNumber = 2;
 		long fileSize = 300;
 		long outputSize = 300;
 
@@ -201,8 +202,7 @@ public class DVFS {
 
 		for (int i = 0; i < vmsNumber; i++) {
 			vms.add(
-				new Vm(i, brokerId, mips[i % mips.length], pesNumber, ram, bw, size, vmm, new CloudletSchedulerDynamicWorkload(mips[i % mips.length], pesNumber))
-			);
+				new Vm(i, brokerId, mips[i % mips.length], pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared()));
 		}
 
 		return vms;

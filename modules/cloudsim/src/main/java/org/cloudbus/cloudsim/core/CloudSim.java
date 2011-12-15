@@ -59,6 +59,9 @@ public class CloudSim {
 
 	/** The calendar. */
 	private static Calendar calendar = null;
+	
+	/** The termination time. */
+	private static long terminateAt = -1;
 
 	/**
 	 * Initialises all the common attributes.
@@ -188,6 +191,34 @@ public class CloudSim {
 			throw new NullPointerException("CloudSim.stopCloudSimulation() : "
 					+ "Error - can't stop Cloud Simulation.");
 		}
+	}
+	
+	/**
+	 * This method is called if one wants to terminate the simulation.
+	 *
+	 * @return true, if successful; false otherwise.
+	 */
+	public static boolean terminateSimulation() {
+		running = false;
+		printMessage("Simulation: Reached termination time.");
+		return true;
+	}
+
+	/**
+	 * This method is called if one wants to terminate the simulation at a 
+	 * given time.
+	 *
+	 * @param time the time at which the simulation has to be terminated
+	 * @return true, if successful
+	 * otherwise.
+	 */
+	public static boolean terminateSimulation(long time) {
+		if (time <= clock) {
+			return false;
+		} else {
+			terminateAt = time;
+		}
+		return true;
 	}
 
 	/**
@@ -828,6 +859,13 @@ public class CloudSim {
 		}
 		while (true) {
 			if (runClockTick() || abruptTerminate) {
+				break;
+			}
+			
+			//this block allows termination of simulation at a specific time
+			if (terminateAt != -1 && clock >= terminateAt) {
+				terminateSimulation();
+				clock = terminateAt;
 				break;
 			}
 
