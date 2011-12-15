@@ -227,7 +227,7 @@ public class ResCloudlet {
 
         // In case a Cloudlet has been executed partially by some other grid
         // hostList.
-        this.cloudletFinishedSoFar = cloudlet.getCloudletFinishedSoFar();
+        this.cloudletFinishedSoFar = cloudlet.getCloudletFinishedSoFar()*1000000;
     }
 
     /**
@@ -471,15 +471,14 @@ public class ResCloudlet {
      * @post $result >= 0
      */
     public long getRemainingCloudletLength() {
-        long length = cloudlet.getCloudletTotalLength() - cloudletFinishedSoFar;
+        long length = cloudlet.getCloudletTotalLength()*1000000 - cloudletFinishedSoFar;
 
-        // Remaining Cloudlet length can't be negative number. This can be
-        // happening when this.updateCloudletFinishedSoFar() keep calling.
+        // Remaining Cloudlet length can't be negative number.
         if (length < 0) {
-            length = 0;
+            return 0;
         }
 
-        return length;
+        return (long) Math.ceil(length/1000000);
     }
 
     /**
@@ -502,11 +501,11 @@ public class ResCloudlet {
         cloudlet.setExecParam(wallClockTime, totalCompletionTime);
 
         long finished = 0;
-        if (cloudlet.getCloudletTotalLength() < cloudletFinishedSoFar) {
+        if (cloudlet.getCloudletTotalLength()*1000000 < cloudletFinishedSoFar) {
             finished = cloudlet.getCloudletLength();
         }
         else {
-            finished = cloudletFinishedSoFar;
+            finished = cloudletFinishedSoFar/1000000;
         }
 
         cloudlet.setCloudletFinishedSoFar(finished);
@@ -515,7 +514,7 @@ public class ResCloudlet {
     /**
      * A method that updates the length of cloudlet that has been completed.
      *
-     * @param miLength cloudlet length in Million Instructions (MI)
+     * @param miLength cloudlet length in Instructions (I)
      *
      * @pre miLength >= 0.0
      * @post $none
