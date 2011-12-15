@@ -91,7 +91,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		capacity /= cpus; // average capacity of each cpu
 
 		for (ResCloudlet rcl : getCloudletExecList()) { // each machine in the exec list has the same amount of cpu
-			rcl.updateCloudletFinishedSoFar((long) Math.ceil((capacity * timeSpam * rcl.getPesNumber())));
+			rcl.updateCloudletFinishedSoFar((long) (capacity * timeSpam * rcl.getPesNumber() * 1000000));
 		}
 
 		if (getCloudletExecList().size() == 0 && getCloudletWaitingList().size() == 0) { // no more cloudlets in this scheduler

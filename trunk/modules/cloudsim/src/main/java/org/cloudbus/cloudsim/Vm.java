@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.cloudbus.cloudsim.core.CloudSim;
-
 /**
  * Vm represents a VM: it runs inside a Host, sharing hostList
  * with other VMs. It processes cloudlets. This processing happens according
@@ -136,6 +134,7 @@ public class Vm {
 	 * @post $none
 	 */
 	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
+		setRecentlyCreated(false);
 		if (mipsShare != null) {
 			return getCloudletScheduler().updateVmProcessing(currentTime, mipsShare);
 		}
@@ -154,7 +153,7 @@ public class Vm {
 			//boolean mipsIsNull = true;
 			//if (CloudSim.clock() > 0) {
 				//mipsIsNull = false;
-				setRecentlyCreated(false);
+				//
 			//}
 //			for (double mips : currentRequestedMips) {
 //				if (mips > 0.0) {
