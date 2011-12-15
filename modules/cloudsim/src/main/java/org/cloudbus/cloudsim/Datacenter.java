@@ -911,7 +911,9 @@ public class Datacenter extends SimEntity {
 	protected void updateCloudletProcessing() {
 		//Log.printLine(CloudSim.clock()+": PowerDatacenter #: updating cloudlet processing.......................................");
 		//if some time passed since last processing
-		if (CloudSim.clock() > this.getLastProcessTime()+0.1) {
+		//R: for term is to allow loop at simulation start. Otherwise, one initial
+		//   simulation step is skipped and schedulers are not properly initialized
+		if (CloudSim.clock() < 0.11 ||  CloudSim.clock() > this.getLastProcessTime()+0.1) {
 			List<? extends Host> list = getVmAllocationPolicy().getHostList();
 			double smallerTime = Double.MAX_VALUE;
 			//for each host...
