@@ -109,10 +109,6 @@ public class Datacenter extends SimEntity {
 
     /**
      * Overrides this method when making a new and different type of resource.
-     * This method is called by {@link #body()} to register other type to
-     * GIS entity. In doing so, you
-     * need to create a new child class extending from
-     * gridsim.CloudInformationService.
      * <br>
      * <b>NOTE:</b> You do not need to override {@link #body()} method, if
      * you use this method.
@@ -913,7 +909,7 @@ public class Datacenter extends SimEntity {
 		//if some time passed since last processing
 		//R: for term is to allow loop at simulation start. Otherwise, one initial
 		//   simulation step is skipped and schedulers are not properly initialized
-		if (CloudSim.clock() < 0.11 ||  CloudSim.clock() > this.getLastProcessTime()+0.1) {
+		if (CloudSim.clock() < 0.111 ||  CloudSim.clock() > this.getLastProcessTime()+0.1) {
 			List<? extends Host> list = getVmAllocationPolicy().getHostList();
 			double smallerTime = Double.MAX_VALUE;
 			//for each host...
@@ -926,10 +922,9 @@ public class Datacenter extends SimEntity {
 				}
 			}
 			//gurantees a minimal interval before scheduling the event
-			if (smallerTime<CloudSim.clock()+0.1) {
-				smallerTime=CloudSim.clock()+0.1;
+			if (smallerTime<CloudSim.clock()+0.11) {
+				smallerTime=CloudSim.clock()+0.11;
 			}
-
 			if (smallerTime != Double.MAX_VALUE) {
 				schedule(getId(), (smallerTime - CloudSim.clock()), CloudSimTags.VM_DATACENTER_EVENT);
 			}
@@ -967,9 +962,6 @@ public class Datacenter extends SimEntity {
     * @param file  a DataCloud file
     *
     * @return a tag number denoting whether this operation is a success or not
-    *
-    * @see CloudSim.datagrid.DataCloudTags#FILE_ADD_SUCCESSFUL
-    * @see CloudSim.datagrid.DataCloudTags#FILE_ADD_ERROR_EMPTY
     */
     public int addFile(File file) {
         if (file == null) {
@@ -1047,12 +1039,7 @@ public class Datacenter extends SimEntity {
      *
      * @param fileName      the name of the file to be deleted
      *
-     * @return the error message as defined in
-     * {@link CloudSim.datagrid.DataCloudTags}
-     *
-     * @see CloudSim.datagrid.DataCloudTags#FILE_DELETE_SUCCESSFUL
-     * @see CloudSim.datagrid.DataCloudTags#FILE_DELETE_ERROR_ACCESS_DENIED
-     * @see CloudSim.datagrid.DataCloudTags#FILE_DELETE_ERROR
+     * @return the error message
      */
     private int deleteFileFromStorage(String fileName) {
         Storage tempStorage = null;
@@ -1073,7 +1060,7 @@ public class Datacenter extends SimEntity {
 	 * Prints the debts.
 	 */
 	public void printDebts() {
-		Log.printLine("*****PowerDatacenter: "+this.getName()+"*****");
+		Log.printLine("*****Datacenter: "+this.getName()+"*****");
 		Log.printLine("User id\t\tDebt");
 
 		Set<Integer> keys = getDebts().keySet();
