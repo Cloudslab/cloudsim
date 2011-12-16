@@ -134,7 +134,6 @@ public class Vm {
 	 * @post $none
 	 */
 	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
-		setRecentlyCreated(false);
 		if (mipsShare != null) {
 			return getCloudletScheduler().updateVmProcessing(currentTime, mipsShare);
 		}
@@ -150,6 +149,8 @@ public class Vm {
 		List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
 
 		if (isRecentlyCreated()) {
+			setRecentlyCreated(false);
+
 			//boolean mipsIsNull = true;
 			//if (CloudSim.clock() > 0) {
 				//mipsIsNull = false;
