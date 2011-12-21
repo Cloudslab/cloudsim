@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.examples;
+package org.cloudbus.cloudsim;
 
 /*
  * Title:        CloudSim Toolkit
@@ -38,7 +38,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * A simple example showing how to create a datacenter with one host and run one
  * cloudlet on it.
  */
-public class CloudSimExample1 {
+public class TimeSharedProblemDetector {
 
 	/** The cloudlet list. */
 	private static List<Cloudlet> cloudletList;
@@ -88,9 +88,15 @@ public class CloudSimExample1 {
 
 			// create VM
 			Vm vm = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+			
+			Vm vm1 = new Vm(1, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+			Vm vm2 = new Vm(2, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 			// add the VM to the vmList
 			vmlist.add(vm);
+			
+			vmlist.add(vm1);
+			vmlist.add(vm2);
 
 			// submit vm list to the broker
 			broker.submitVmList(vmlist);
@@ -108,9 +114,20 @@ public class CloudSimExample1 {
 			Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 			cloudlet.setUserId(brokerId);
 			cloudlet.setVmId(vmid);
+			
+			Cloudlet cloudlet1 = new Cloudlet(1, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+			cloudlet1.setUserId(brokerId);
+			cloudlet1.setVmId(1);
+			
+			Cloudlet cloudlet2 = new Cloudlet(2, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+			cloudlet2.setUserId(brokerId);
+			cloudlet2.setVmId(2);
+			
 
 			// add the cloudlet to the list
-			cloudletList.add(cloudlet);
+			cloudletList.add(cloudlet);	
+			cloudletList.add(cloudlet1);
+			cloudletList.add(cloudlet2);
 
 			// submit cloudlet list to the broker
 			broker.submitCloudletList(cloudletList);

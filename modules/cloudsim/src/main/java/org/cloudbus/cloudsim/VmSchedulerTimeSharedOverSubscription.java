@@ -86,36 +86,7 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 				pesSkipped += mipsShareRequested.size();
 			}	
 
-			double shortage = (totalRequestedMips - getAvailableMips()) / (getPesInUse() - pesSkipped);
-
-			getMipsMap().put(vmUid, mipsShareAllocated);
-			setAvailableMips(0);
-
-			double additionalShortage = 0;
-			do {
-				additionalShortage = 0;
-				for (Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
-					if (getVmsMigratingIn().contains(entry.getKey())) {
-						continue;
-					}
-					List<Double> mipsMap = entry.getValue(); 
-					for (int i = 0; i < mipsMap.size(); i++) {
-						if (mipsMap.get(i) == 0) {
-							continue;
-						}
-						if (mipsMap.get(i) >= shortage) {
-							mipsMap.set(i, mipsMap.get(i) - shortage);
-						} else {
-							additionalShortage += shortage - mipsMap.get(i);
-							mipsMap.set(i, 0.0);
-						}
-						if (mipsMap.get(i) == 0) {
-							pesSkipped++;
-						}
-					}
-				}
-				shortage = additionalShortage / (getPesInUse() - pesSkipped);
-			} while (additionalShortage > 0);
+			updateShortage();
 		}
 
 		return true;
