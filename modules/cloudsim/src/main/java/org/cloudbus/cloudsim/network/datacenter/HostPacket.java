@@ -1,22 +1,39 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
+/**
+ * HostPacket represents the packet that travels through the virtual network with a Host. 
+ * It contains information about cloudlets  which are communicating
+ * 
+ * Please refer to following publication for more details:
+ * 
+ * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel
+ * Applications in Cloud Simulations, Proceedings of the 4th IEEE/ACM
+ * International Conference on Utility and Cloud Computing (UCC 2011, IEEE CS
+ * Press, USA), Melbourne, Australia, December 5-7, 2011.
+ *
+ * 
+ * @author Saurabh Kumar Garg
+ * @since CloudSim Toolkit 1.0
+ */
+
 public class HostPacket {
-	public HostPacket(int id, NetPacket pkt2, int vmid, int cloudletid) {
-		// TODO Auto-generated constructor stub
-		this.pkt=pkt2;
-		this.sendervmid=vmid;
-		this.cloudletid=cloudletid;
-		this.senderhostid=id;
-		this.stime=pkt.sendtime;
-		this.recievervmid=pkt2.reciever;
-		
+	public HostPacket(int sender, int reciever, double data, double sendtime,
+			double recievetime, int vsnd, int vrvd) {
+		super();
+		this.sender = sender;
+		this.reciever = reciever;
+		this.data = data;
+		this.sendtime = sendtime;
+		this.recievetime = recievetime;
+		this.virtualrecvid = vrvd;
+		this.virtualsendid = vsnd;
 	}
-	NetPacket pkt;
-    int senderhostid;
-    int recieverhostid;
-    int sendervmid;
-    int recievervmid;
-    int cloudletid;
-    double stime;//time when sent
-    double rtime;//time when received
+
+	int sender;
+	int virtualrecvid;
+	int virtualsendid;
+	int reciever;
+	double data;
+	double sendtime;
+	double recievetime;
 }
