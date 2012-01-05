@@ -33,7 +33,7 @@ public class IqrMu {
 		String inputFolder = "";
 		String outputFolder = "";
 		String workload = "random"; // Random workload
-		String vmAllocationPolicy = "iqr"; // Inter Quartile Range VM allocation policy
+		String vmAllocationPolicy = "iqr"; // Inter Quartile Range (IQR) VM allocation policy
 		String vmSelectionPolicy = "mu"; // Minimum Utilization (MU) VM selection policy
 		String parameter = "1.5"; // the safety parameter of the IQR policy
 
