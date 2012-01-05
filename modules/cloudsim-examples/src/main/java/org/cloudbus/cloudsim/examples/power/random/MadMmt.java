@@ -33,7 +33,7 @@ public class MadMmt {
 		String inputFolder = "";
 		String outputFolder = "";
 		String workload = "random"; // Random workload
-		String vmAllocationPolicy = "mad"; // Median Absolute Deviation VM allocation policy
+		String vmAllocationPolicy = "mad"; // Median Absolute Deviation (MAD) VM allocation policy
 		String vmSelectionPolicy = "mmt"; // Minimum Migration Time (MMT) VM selection policy
 		String parameter = "2.5"; // the safety parameter of the MAD policy
 
