@@ -1,74 +1,51 @@
 package org.cloudbus.cloudsim.examples.power.random;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.List;
-
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.DatacenterBroker;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.power.PowerDatacenter;
-import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime;
 
 /**
- * A simulation of a heterogeneous non-power aware data center: all hosts consume maximum power all
- * the time.
+ * A simulation of a heterogeneous power aware data center that applies the Median Absolute
+ * Deviation (MAD) VM allocation policy and Minimum Migration Time (MMT) VM selection policy.
+ * 
+ * The remaining configuration parameters are in the Constants and RandomConstants classes.
+ * 
+ * If you are using any algorithms, policies or workload included in the power package please cite
+ * the following paper:
+ * 
+ * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
+ * Cloud Data Centers", Concurrency and Computation: Practice and Experience, ISSN: 1532-0626, Wiley
+ * Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
+ * 
+ * @author Anton Beloglazov
+ * @since Jan 5, 2012
  */
 public class MadMmt {
 
 	/**
-	 * Creates main() to run this example.
+	 * The main method.
 	 * 
-	 * @param args the args
+	 * @param args the arguments
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void main(String[] args) throws IOException {
-		String experimentName = "mad_mmt_1";
-		String outputFolder = "output";
+		boolean enableOutput = true;
+		boolean outputToFile = false;
+		String inputFolder = "";
+		String outputFolder = "";
+		String workload = "random"; // Random workload
+		String vmAllocationPolicy = "mad"; // Median Absolute Deviation VM allocation policy
+		String vmSelectionPolicy = "mmt"; // Minimum Migration Time (MMT) VM selection policy
+		String parameter = "2.5"; // the safety parameter of the MAD policy
 
-		Log.setDisabled(!RandomConstants.ENABLE_OUTPUT);
-		Log.printLine("Starting " + experimentName);
-
-		try {
-			CloudSim.init(1, Calendar.getInstance(), false);
-
-			DatacenterBroker broker = RandomHelper.createBroker();
-			int brokerId = broker.getId();
-
-			List<Cloudlet> cloudletList = RandomHelper.createCloudletList(brokerId, RandomConstants.NUMBER_OF_VMS);
-			List<Vm> vmList = RandomHelper.createVmList(brokerId, cloudletList.size());
-			List<PowerHost> hostList = RandomHelper.createHostList(RandomConstants.NUMBER_OF_HOSTS);
-
-			PowerDatacenter datacenter = (PowerDatacenter) RandomHelper.createDatacenter("Datacenter",
-					PowerDatacenter.class, hostList,
-					new PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(hostList,
-							new PowerVmSelectionPolicyMinimumMigrationTime(), 1), -1);
-
-			datacenter.setDisableMigrations(false);
-
-			broker.submitVmList(vmList);
-			broker.submitCloudletList(cloudletList);
-
-			double lastClock = CloudSim.startSimulation();
-
-			List<Cloudlet> newList = broker.getCloudletReceivedList();
-			Log.printLine("Received " + newList.size() + " cloudlets");
-
-			CloudSim.stopSimulation();
-
-			RandomHelper.printResults(datacenter, vmList, lastClock, experimentName, RandomConstants.OUTPUT_CSV,
-					outputFolder);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			Log.printLine("Unwanted errors happen");
-		}
-
-		Log.printLine("Finished " + experimentName);
+		new RandomRunner(
+				enableOutput,
+				outputToFile,
+				inputFolder,
+				outputFolder,
+				workload,
+				vmAllocationPolicy,
+				vmSelectionPolicy,
+				parameter);
 	}
 
 }

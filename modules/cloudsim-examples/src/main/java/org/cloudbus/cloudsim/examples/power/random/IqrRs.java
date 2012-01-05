@@ -34,7 +34,7 @@ public class IqrRs {
 		String outputFolder = "";
 		String workload = "random"; // Random workload
 		String vmAllocationPolicy = "iqr"; // Inter Quartile Range VM allocation policy
-		String vmSelectionPolicy = "rs"; // Random Selection VM selection policy
+		String vmSelectionPolicy = "rs"; // Random Selection (RS) VM selection policy
 		String parameter = "1.5"; // the safety parameter of the IQR policy
 
 		new RandomRunner(

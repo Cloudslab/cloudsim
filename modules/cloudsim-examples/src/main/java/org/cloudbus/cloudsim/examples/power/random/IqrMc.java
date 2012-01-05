@@ -34,7 +34,7 @@ public class IqrMc {
 		String outputFolder = "";
 		String workload = "random"; // Random workload
 		String vmAllocationPolicy = "iqr"; // Inter Quartile Range VM allocation policy
-		String vmSelectionPolicy = "mc"; // Maximum Correlation VM selection policy
+		String vmSelectionPolicy = "mc"; // Maximum Correlation (MC) VM selection policy
 		String parameter = "1.5"; // the safety parameter of the IQR policy
 
 		new RandomRunner(

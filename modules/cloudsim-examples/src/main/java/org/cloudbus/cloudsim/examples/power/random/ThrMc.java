@@ -34,7 +34,7 @@ public class ThrMc {
 		String outputFolder = "";
 		String workload = "random"; // Random workload
 		String vmAllocationPolicy = "thr"; // Static Threshold VM allocation policy
-		String vmSelectionPolicy = "mc"; // Maximum Correlation VM selection policy
+		String vmSelectionPolicy = "mc"; // Maximum Correlation (MC) VM selection policy
 		String parameter = "0.8"; // the static utilization threshold
 
 		new RandomRunner(
