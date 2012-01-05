@@ -75,7 +75,8 @@ public class NonPowerAware {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("Unwanted errors happen");
+			Log.printLine("The simulation has been terminated due to an unexpected error");
+			System.exit(0);
 		}
 
 		Log.printLine("Finished " + experimentName);

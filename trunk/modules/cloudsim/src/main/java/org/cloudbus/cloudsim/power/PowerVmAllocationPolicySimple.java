@@ -7,21 +7,21 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * This a simple class representing a DVFS VM allocation policy. The actual application of DVFS
- * (adjustment of the host's power consumption) happens in the PowerDatacenter class.
+ * This a simple class representing a simple VM allocation policy that does not perform any
+ * optimization of the VM allocation.
  * 
  * @author Anton Beloglazov
  * @since Jan 5, 2012
  * 
  */
-public class PowerVmAllocationPolicyDvfs extends PowerVmAllocationPolicyAbstract {
+public class PowerVmAllocationPolicySimple extends PowerVmAllocationPolicyAbstract {
 
 	/**
-	 * Instantiates a new power vm allocation policy dvfs.
+	 * Instantiates a new power vm allocation policy simple.
 	 * 
 	 * @param list the list
 	 */
-	public PowerVmAllocationPolicyDvfs(List<? extends Host> list) {
+	public PowerVmAllocationPolicySimple(List<? extends Host> list) {
 		super(list);
 	}
 
@@ -32,7 +32,7 @@ public class PowerVmAllocationPolicyDvfs extends PowerVmAllocationPolicyAbstract
 	 */
 	@Override
 	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
-		// This policy doesn't optimize the VM allocation
+		// This policy does not optimize the VM allocation
 		return null;
 	}
 

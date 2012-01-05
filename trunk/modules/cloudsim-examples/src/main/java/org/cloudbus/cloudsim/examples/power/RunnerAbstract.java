@@ -14,14 +14,14 @@ import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.PowerDatacenter;
 import org.cloudbus.cloudsim.power.PowerHost;
+import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationAbstract;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationInterQuartileRange;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegression;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegressionRobust;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation2;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationThresholds;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
+import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationStaticThreshold;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicy;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime;
@@ -51,8 +51,11 @@ public abstract class RunnerAbstract {
 	/**
 	 * Run.
 	 * 
+	 * @param enableOutput the enable output
+	 * @param outputToFile the output to file
 	 * @param inputFolder the input folder
 	 * @param outputFolder the output folder
+	 * @param workload the workload
 	 * @param vmAllocationPolicy the vm allocation policy
 	 * @param vmSelectionPolicy the vm selection policy
 	 * @param parameter the parameter
@@ -87,6 +90,19 @@ public abstract class RunnerAbstract {
 				getVmAllocationPolicy(vmAllocationPolicy, vmSelectionPolicy, parameter));
 	}
 
+	/**
+	 * Inits the log output.
+	 * 
+	 * @param enableOutput the enable output
+	 * @param outputToFile the output to file
+	 * @param outputFolder the output folder
+	 * @param workload the workload
+	 * @param vmAllocationPolicy the vm allocation policy
+	 * @param vmSelectionPolicy the vm selection policy
+	 * @param parameter the parameter
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws FileNotFoundException the file not found exception
+	 */
 	protected void initLogOutput(
 			boolean enableOutput,
 			boolean outputToFile,
@@ -123,7 +139,7 @@ public abstract class RunnerAbstract {
 	protected abstract void init(String inputFolder);
 
 	/**
-	 * Run.
+	 * Starts the simulation.
 	 * 
 	 * @param experimentName the experiment name
 	 * @param outputFolder the output folder
@@ -162,7 +178,8 @@ public abstract class RunnerAbstract {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("Unwanted errors happen");
+			Log.printLine("The simulation has been terminated due to an unexpected error");
+			System.exit(0);
 		}
 
 		Log.printLine("Finished " + experimentName);
@@ -210,7 +227,7 @@ public abstract class RunnerAbstract {
 			parameter = Double.valueOf(parameterName);
 		}
 		if (vmAllocationPolicyName.equals("iqr")) {
-			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationThresholds(
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
 					hostList,
 					vmSelectionPolicy,
 					0.7);
@@ -220,7 +237,7 @@ public abstract class RunnerAbstract {
 					parameter,
 					fallbackVmSelectionPolicy);
 		} else if (vmAllocationPolicyName.equals("mad")) {
-			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationThresholds(
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
 					hostList,
 					vmSelectionPolicy,
 					0.7);
@@ -230,7 +247,7 @@ public abstract class RunnerAbstract {
 					parameter,
 					fallbackVmSelectionPolicy);
 		} else if (vmAllocationPolicyName.equals("mad2")) {
-			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationThresholds(
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
 					hostList,
 					vmSelectionPolicy,
 					0.7);
@@ -240,7 +257,7 @@ public abstract class RunnerAbstract {
 					parameter,
 					fallbackVmSelectionPolicy);
 		} else if (vmAllocationPolicyName.equals("lr")) {
-			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationThresholds(
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
 					hostList,
 					vmSelectionPolicy,
 					0.7);
@@ -251,7 +268,7 @@ public abstract class RunnerAbstract {
 					Constants.SCHEDULING_INTERVAL,
 					fallbackVmSelectionPolicy);
 		} else if (vmAllocationPolicyName.equals("lrr")) {
-			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationThresholds(
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
 					hostList,
 					vmSelectionPolicy,
 					0.7);
@@ -262,7 +279,7 @@ public abstract class RunnerAbstract {
 					Constants.SCHEDULING_INTERVAL,
 					fallbackVmSelectionPolicy);
 		} else if (vmAllocationPolicyName.equals("thr")) {
-			vmAllocationPolicy = new PowerVmAllocationPolicyMigrationThresholds(
+			vmAllocationPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
 					hostList,
 					vmSelectionPolicy,
 					parameter);
@@ -299,10 +316,20 @@ public abstract class RunnerAbstract {
 		return vmSelectionPolicy;
 	}
 
+	/**
+	 * Sets the enable output.
+	 * 
+	 * @param enableOutput the new enable output
+	 */
 	public void setEnableOutput(boolean enableOutput) {
 		RunnerAbstract.enableOutput = enableOutput;
 	}
 
+	/**
+	 * Checks if is enable output.
+	 * 
+	 * @return true, if is enable output
+	 */
 	public boolean isEnableOutput() {
 		return enableOutput;
 	}
