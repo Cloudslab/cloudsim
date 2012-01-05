@@ -46,8 +46,8 @@ public class CloudletSchedulerSingleServiceTest {
 	}
 
 	@Test
-	public void testGetPesNumber() {
-		assertEquals(PES_NUMBER, vmScheduler.getPesNumber());
+	public void testGetNumberOfPes() {
+		assertEquals(PES_NUMBER, vmScheduler.getNumberOfPes());
 	}
 
 	@Test

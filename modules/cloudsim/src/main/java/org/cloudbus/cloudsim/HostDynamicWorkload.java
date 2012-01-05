@@ -92,7 +92,7 @@ public class HostDynamicWorkload extends Host {
 				for (Pe pe : pes) {
 					pesString.append(String.format(" PE #" + pe.getId() + ": %.2f.", pe.getPeProvisioner().getTotalAllocatedMipsForVm(vm)));
 				}
-				Log.formatLine("%.2f: [Host #" + getId() + "] MIPS for VM #" + vm.getId() + " by PEs (" + getPesNumber() + " * " + getVmScheduler().getPeCapacity() + ")." + pesString, CloudSim.clock());
+				Log.formatLine("%.2f: [Host #" + getId() + "] MIPS for VM #" + vm.getId() + " by PEs (" + getNumberOfPes() + " * " + getVmScheduler().getPeCapacity() + ")." + pesString, CloudSim.clock());
 			}
 
 			if (getVmsMigratingIn().contains(vm)) {

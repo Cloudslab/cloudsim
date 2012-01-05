@@ -50,12 +50,12 @@ public class HostList {
      * @pre $none
      * @post $result >= 0
      */
-    public static <T extends Host> int getPesNumber(List<T> hostList) {
-        int pesNumber = 0;
+    public static <T extends Host> int getNumberOfPes(List<T> hostList) {
+        int numberOfPes = 0;
         for (T host : hostList) {
-    		pesNumber += host.getPeList().size();
+    		numberOfPes += host.getPeList().size();
 		}
-        return pesNumber;
+        return numberOfPes;
     }
 
     /**
@@ -67,12 +67,12 @@ public class HostList {
      * @pre $none
      * @post $result >= 0
      */
-    public static <T extends Host> int getFreePesNumber(List<T> hostList) {
-        int freePesNumber = 0;
+    public static <T extends Host> int getNumberOfFreePes(List<T> hostList) {
+        int numberOfFreePes = 0;
         for (T host : hostList) {
-        	freePesNumber += PeList.getFreePesNumber(host.getPeList());
+        	numberOfFreePes += PeList.getNumberOfFreePes(host.getPeList());
 		}
-        return freePesNumber;
+        return numberOfFreePes;
     }
 
     /**
@@ -84,12 +84,12 @@ public class HostList {
      * @pre $none
      * @post $result >= 0
      */
-    public static <T extends Host> int getBusyPesNumber(List<T> hostList) {
-        int busyPesNumber = 0;
+    public static <T extends Host> int getNumberOfBusyPes(List<T> hostList) {
+        int numberOfBusyPes = 0;
         for (T host : hostList) {
-        	busyPesNumber += PeList.getBusyPesNumber(host.getPeList());
+        	numberOfBusyPes += PeList.getNumberOfBusyPes(host.getPeList());
 		}
-        return busyPesNumber;
+        return numberOfBusyPes;
     }
 
     /**
@@ -117,7 +117,7 @@ public class HostList {
      */
     public static <T extends Host> T getHostWithFreePe(List<T> hostList, int pesNumber) {
         for (T host : hostList) {
-        	if (PeList.getFreePesNumber(host.getPeList()) >= pesNumber) {
+        	if (PeList.getNumberOfFreePes(host.getPeList()) >= pesNumber) {
         		return host;
         	}
 		}

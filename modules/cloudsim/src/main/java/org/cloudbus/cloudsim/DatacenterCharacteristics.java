@@ -224,7 +224,7 @@ public class DatacenterCharacteristics {
             // Assuming all PEs in all Machine have same rating.
             case DatacenterCharacteristics.TIME_SHARED:
             case DatacenterCharacteristics.OTHER_POLICY_SAME_RATING:
-                mips = getMipsOfOnePe() * HostList.getPesNumber(getHostList());
+                mips = getMipsOfOnePe() * HostList.getNumberOfPes(getHostList());
                 break;
 
             // Assuming all PEs in a given Machine have the same rating.
@@ -280,8 +280,8 @@ public class DatacenterCharacteristics {
      * @pre $none
      * @post $result >= 0
      */
-    public int getPesNumber() {
-        return HostList.getPesNumber(getHostList());
+    public int getNumberOfPes() {
+        return HostList.getNumberOfPes(getHostList());
     }
 
     /**
@@ -292,8 +292,8 @@ public class DatacenterCharacteristics {
      * @pre $none
      * @post $result >= 0
      */
-    public int getFreePesNumber() {
-        return HostList.getFreePesNumber(getHostList());
+    public int getNumberOfFreePes() {
+        return HostList.getNumberOfFreePes(getHostList());
     }
 
     /**
@@ -304,8 +304,8 @@ public class DatacenterCharacteristics {
      * @pre $none
      * @post $result >= 0
      */
-    public int getBusyPesNumber() {
-        return HostList.getBusyPesNumber(getHostList());
+    public int getNumberOfBusyPes() {
+        return HostList.getNumberOfBusyPes(getHostList());
     }
 
     /**
@@ -341,7 +341,7 @@ public class DatacenterCharacteristics {
      *
      * @return total number of machines this resource has.
      */
-    public int getHostsNumber() {
+    public int getNumberOfHosts() {
         return getHostList().size();
     }
 
@@ -350,14 +350,14 @@ public class DatacenterCharacteristics {
      *
      * @return current number of failed machines this resource has.
      */
-    public int getFailedHostsNumber() {
-        int failedHostsNumber = 0;
+    public int getNumberOfFailedHosts() {
+        int numberOfFailedHosts = 0;
         for (Host host : getHostList()) {
             if (host.isFailed()) {
-                failedHostsNumber++;
+                numberOfFailedHosts++;
             }
         }
-        return failedHostsNumber;
+        return numberOfFailedHosts;
     }
 
     /**
@@ -368,7 +368,7 @@ public class DatacenterCharacteristics {
      */
     public boolean isWorking() {
         boolean result = false;
-        if (getFailedHostsNumber() == 0) {
+        if (getNumberOfFailedHosts() == 0) {
             result = true;
         }
 

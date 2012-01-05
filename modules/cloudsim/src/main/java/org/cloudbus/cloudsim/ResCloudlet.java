@@ -164,7 +164,7 @@ public class ResCloudlet {
      * @pre $none
      * @post $none
      */
-    public int getPesNumber() {
+    public int getNumberOfPes() {
         return pesNumber;
     }
 
@@ -205,7 +205,7 @@ public class ResCloudlet {
      */
     private void init() {
         // get number of PEs required to run this Cloudlet
-        this.pesNumber = cloudlet.getPesNumber();
+        this.pesNumber = cloudlet.getNumberOfPes();
 
         // if more than 1 Pe, then create an array
         if (pesNumber > 1)

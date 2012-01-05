@@ -69,7 +69,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		double timeSpam = currentTime - getPreviousTime();
 
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			rcl.updateCloudletFinishedSoFar((long) (getCapacity(mipsShare) * timeSpam * rcl.getPesNumber() * 1000000));
+			rcl.updateCloudletFinishedSoFar((long) (getCapacity(mipsShare) * timeSpam * rcl.getNumberOfPes() * 1000000));
 		}
 
 		if (getCloudletExecList().size() == 0) {
@@ -95,7 +95,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
         //estimate finish time of cloudlets
         i=0;
         for (ResCloudlet rcl : getCloudletExecList()) {
-			double estimatedFinishTime = currentTime + (rcl.getRemainingCloudletLength() / (getCapacity(mipsShare) * rcl.getPesNumber()));
+			double estimatedFinishTime = currentTime + (rcl.getRemainingCloudletLength() / (getCapacity(mipsShare) * rcl.getNumberOfPes()));
 			if (estimatedFinishTime - currentTime < 0.1) {
 				estimatedFinishTime = currentTime + 0.1;
 			}
@@ -130,7 +130,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 
 		int pesInUse = 0;
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			pesInUse += rcl.getPesNumber();
+			pesInUse += rcl.getNumberOfPes();
 		}
 
 		if (pesInUse > currentCPUs) {
@@ -293,7 +293,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 			// first: how many PEs do we have?
 
 			double remainingLength = rgl.getRemainingCloudletLength();
-			double estimatedFinishTime = CloudSim.clock() + (remainingLength / (getCapacity(getCurrentMipsShare()) * rgl.getPesNumber()));
+			double estimatedFinishTime = CloudSim.clock() + (remainingLength / (getCapacity(getCurrentMipsShare()) * rgl.getNumberOfPes()));
 
 			return estimatedFinishTime;
 		}
@@ -316,7 +316,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	public double cloudletSubmit(Cloudlet cloudlet, double fileTransferTime) {
 		ResCloudlet rcl = new ResCloudlet(cloudlet);
 		rcl.setCloudletStatus(Cloudlet.INEXEC);
-		for (int i = 0; i < cloudlet.getPesNumber(); i++) {
+		for (int i = 0; i < cloudlet.getNumberOfPes(); i++) {
 			rcl.setMachineAndPeId(0, i);
 		}
 

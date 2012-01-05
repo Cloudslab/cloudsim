@@ -1,8 +1,7 @@
 /*
- * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
- * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- *
+ * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
+ * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
+ * 
  * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
@@ -24,21 +23,29 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author		Anton Beloglazov
- * @since		CloudSim Toolkit 2.0
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 2.0
  */
 public class VmTest {
 
 	private static final int ID = 1;
+
 	private static final int USER_ID = 1;
+
 	private static final double MIPS = 1000;
+
 	private static final int PES_NUMBER = 2;
+
 	private static final int RAM = 1024;
+
 	private static final int BW = 10000;
+
 	private static final long SIZE = 1000;
+
 	private static final String VMM = "Xen";
 
 	private CloudletSchedulerDynamicWorkload vmScheduler;
+
 	private Vm vm;
 
 	@Before
@@ -59,8 +66,8 @@ public class VmTest {
 	}
 
 	@Test
-	public void testGetPEsNumber() {
-		assertEquals(PES_NUMBER, vm.getPesNumber());
+	public void testGetNumberOfPes() {
+		assertEquals(PES_NUMBER, vm.getNumberOfPes());
 	}
 
 	@Test
@@ -123,7 +130,6 @@ public class VmTest {
 		assertEquals(vmScheduler.updateVmProcessing(0, mipsShare1), vm.updateVmProcessing(0, mipsShare2), 0);
 	}
 
-
 	@Test
 	public void testGetCurrentAllocatedSize() {
 		assertEquals(0, vm.getCurrentAllocatedSize());
@@ -147,16 +153,16 @@ public class VmTest {
 
 	@Test
 	public void testGetCurrentAllocatedMips() {
-//		ArrayList<Integer> currentAllocatedMips = new ArrayList<Integer>();
-//		assertEquals(currentAllocatedMips, vm.getCurrentAllocatedMips());
+		// ArrayList<Integer> currentAllocatedMips = new ArrayList<Integer>();
+		// assertEquals(currentAllocatedMips, vm.getCurrentAllocatedMips());
 		assertNull(vm.getCurrentAllocatedMips());
 	}
 
 	@Test
-	public void testIsRecentlyCreated() {
-		assertTrue(vm.isRecentlyCreated());
-		vm.setRecentlyCreated(false);
-		assertFalse(vm.isRecentlyCreated());
+	public void testIsBeingInstantiated() {
+		assertTrue(vm.isBeingInstantiated());
+		vm.setBeingInstantiated(false);
+		assertFalse(vm.isBeingInstantiated());
 	}
 
 	@Test
@@ -164,25 +170,16 @@ public class VmTest {
 		CloudletScheduler cloudletScheduler = createMock(CloudletScheduler.class);
 		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
 
-		List<Double> expectedCurrentMips1 = new ArrayList<Double>();
-		expectedCurrentMips1.add(MIPS);
-		expectedCurrentMips1.add(MIPS);
+		List<Double> expectedCurrentMips = new ArrayList<Double>();
+		expectedCurrentMips.add(MIPS / 2);
+		expectedCurrentMips.add(MIPS / 2);
 
-		List<Double> expectedCurrentMips2 = new ArrayList<Double>();
-		expectedCurrentMips2.add(MIPS / 2);
-		expectedCurrentMips2.add(MIPS / 2);
-
-		expect(cloudletScheduler.getCurrentRequestedMips())
-			.andReturn(new ArrayList<Double>())
-			.andReturn(expectedCurrentMips2);
+		expect(cloudletScheduler.getCurrentRequestedMips()).andReturn(new ArrayList<Double>()).andReturn(
+				expectedCurrentMips);
 
 		replay(cloudletScheduler);
 
-		assertEquals(expectedCurrentMips1, vm.getCurrentRequestedMips());
-		assertTrue(vm.isRecentlyCreated());
-
-		assertEquals(expectedCurrentMips2, vm.getCurrentRequestedMips());
-		assertFalse(vm.isRecentlyCreated());
+		assertEquals(expectedCurrentMips, vm.getCurrentRequestedMips());
 
 		verify(cloudletScheduler);
 	}
@@ -196,8 +193,7 @@ public class VmTest {
 		currentMips.add(MIPS);
 		currentMips.add(MIPS);
 
-		expect(cloudletScheduler.getCurrentRequestedMips())
-			.andReturn(currentMips);
+		expect(cloudletScheduler.getCurrentRequestedMips()).andReturn(currentMips);
 
 		replay(cloudletScheduler);
 

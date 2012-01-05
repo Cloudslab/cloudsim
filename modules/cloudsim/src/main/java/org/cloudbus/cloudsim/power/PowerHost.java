@@ -1,8 +1,7 @@
 /*
- * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
- * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- *
+ * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
+ * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
+ * 
  * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
@@ -19,9 +18,9 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
 /**
  * PowerHost class enables simulation of power-aware hosts.
- *
- * @author		Anton Beloglazov
- * @since		CloudSim Toolkit 2.0
+ * 
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 2.0
  */
 public class PowerHost extends HostDynamicWorkload {
 
@@ -30,7 +29,7 @@ public class PowerHost extends HostDynamicWorkload {
 
 	/**
 	 * Instantiates a new host.
-	 *
+	 * 
 	 * @param id the id
 	 * @param ramProvisioner the ram provisioner
 	 * @param bwProvisioner the bw provisioner
@@ -52,7 +51,7 @@ public class PowerHost extends HostDynamicWorkload {
 
 	/**
 	 * Gets the power. For this moment only consumed by all PEs.
-	 *
+	 * 
 	 * @return the power
 	 */
 	public double getPower() {
@@ -61,7 +60,7 @@ public class PowerHost extends HostDynamicWorkload {
 
 	/**
 	 * Gets the power. For this moment only consumed by all PEs.
-	 *
+	 * 
 	 * @param utilization the utilization
 	 * @return the power
 	 */
@@ -78,7 +77,7 @@ public class PowerHost extends HostDynamicWorkload {
 
 	/**
 	 * Gets the max power that can be consumed by the host.
-	 *
+	 * 
 	 * @return the max power
 	 */
 	public double getMaxPower() {
@@ -94,7 +93,7 @@ public class PowerHost extends HostDynamicWorkload {
 
 	/**
 	 * Gets the energy consumption using linear interpolation of the utilization change.
-	 *
+	 * 
 	 * @param fromUtilization the from utilization
 	 * @param toUtilization the to utilization
 	 * @param time the time
@@ -111,7 +110,7 @@ public class PowerHost extends HostDynamicWorkload {
 
 	/**
 	 * Sets the power model.
-	 *
+	 * 
 	 * @param powerModel the new power model
 	 */
 	protected void setPowerModel(PowerModel powerModel) {
@@ -120,7 +119,7 @@ public class PowerHost extends HostDynamicWorkload {
 
 	/**
 	 * Gets the power model.
-	 *
+	 * 
 	 * @return the power model
 	 */
 	public PowerModel getPowerModel() {
