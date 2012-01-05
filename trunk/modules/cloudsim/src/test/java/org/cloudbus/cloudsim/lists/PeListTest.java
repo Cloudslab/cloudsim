@@ -55,19 +55,19 @@ public class PeListTest {
 
 	@Test
 	public void testSetPeStatus() {
-		assertEquals(2, PeList.getFreePesNumber(peList));
-		assertEquals(0, PeList.getBusyPesNumber(peList));
+		assertEquals(2, PeList.getNumberOfFreePes(peList));
+		assertEquals(0, PeList.getNumberOfBusyPes(peList));
 		assertTrue(PeList.setPeStatus(peList, 0, Pe.BUSY));
 		assertEquals(Pe.BUSY, PeList.getById(peList, 0).getStatus());
-		assertEquals(1, PeList.getFreePesNumber(peList));
-		assertEquals(1, PeList.getBusyPesNumber(peList));
+		assertEquals(1, PeList.getNumberOfFreePes(peList));
+		assertEquals(1, PeList.getNumberOfBusyPes(peList));
 		assertTrue(PeList.setPeStatus(peList, 1, Pe.BUSY));
 		assertEquals(Pe.BUSY, PeList.getById(peList, 1).getStatus());
-		assertEquals(0, PeList.getFreePesNumber(peList));
-		assertEquals(2, PeList.getBusyPesNumber(peList));
+		assertEquals(0, PeList.getNumberOfFreePes(peList));
+		assertEquals(2, PeList.getNumberOfBusyPes(peList));
 		assertFalse(PeList.setPeStatus(peList, 2, Pe.BUSY));
-		assertEquals(0, PeList.getFreePesNumber(peList));
-		assertEquals(2, PeList.getBusyPesNumber(peList));
+		assertEquals(0, PeList.getNumberOfFreePes(peList));
+		assertEquals(2, PeList.getNumberOfBusyPes(peList));
 	}
 
 	@Test

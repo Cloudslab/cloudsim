@@ -1,8 +1,7 @@
 /*
- * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
- * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- *
+ * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
+ * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
+ * 
  * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
@@ -20,14 +19,13 @@ import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.PeProvisioner;
 
 /**
- * VmSchedulerTimeShared is a VMM allocation policy that
- * allocates one or more Pe to a VM, and allows sharing
- * of PEs by multiple VMs. This class also implements
- * 10% performance degration due to VM migration.
- *
- * @author		Rodrigo N. Calheiros
- * @author		Anton Beloglazov
- * @since		CloudSim Toolkit 1.0
+ * VmSchedulerTimeShared is a VMM allocation policy that allocates one or more Pe to a VM, and
+ * allows sharing of PEs by multiple VMs. This class also implements 10% performance degration due
+ * to VM migration.
+ * 
+ * @author Rodrigo N. Calheiros
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 1.0
  */
 public class VmSchedulerTimeShared extends VmScheduler {
 
@@ -39,7 +37,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/**
 	 * Instantiates a new vm scheduler time shared.
-	 *
+	 * 
 	 * @param pelist the pelist
 	 */
 	public VmSchedulerTimeShared(List<? extends Pe> pelist) {
@@ -47,7 +45,9 @@ public class VmSchedulerTimeShared extends VmScheduler {
 		setMipsMapRequested(new HashMap<String, List<Double>>());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cloudsim.VmScheduler#allocatePesForVm(cloudsim.Vm, java.util.List)
 	 */
 	@Override
@@ -71,10 +71,10 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/**
 	 * Allocate pes for vm.
-	 *
+	 * 
 	 * @param vmUid the vm uid
 	 * @param mipsShareRequested the mips share requested
-	 *
+	 * 
 	 * @return true, if successful
 	 */
 	protected boolean allocatePesForVm(String vmUid, List<Double> mipsShareRequested) {
@@ -84,14 +84,16 @@ public class VmSchedulerTimeShared extends VmScheduler {
 		double totalRequestedMips = 0;
 		double peMips = getPeCapacity();
 		for (Double mips : mipsShareRequested) {
-			if (mips > peMips) { // each virtual PE of a VM must require not more than the capacity of a physical PE
+			if (mips > peMips) { // each virtual PE of a VM must require not more than the capacity
+									// of a physical PE
 				return false;
 			}
 			totalRequestedMips += mips;
 		}
 
 		if (getVmsMigratingIn().contains(vmUid)) {
-			totalRequestedMips *= 0.1; // performance cost incurred by the destination host = 10% MIPS
+			totalRequestedMips *= 0.1; // performance cost incurred by the destination host = 10%
+										// MIPS
 		}
 
 		List<Double> mipsShareAllocated = new ArrayList<Double>();
@@ -191,8 +193,8 @@ public class VmSchedulerTimeShared extends VmScheduler {
 		for (Pe pe : getPeList()) {
 			pe.getPeProvisioner().deallocateMipsForAllVms();
 		}
-		
-		Iterator<Pe> peIterator  = getPeList().iterator();
+
+		Iterator<Pe> peIterator = getPeList().iterator();
 		Pe pe = peIterator.next();
 		PeProvisioner peProvisioner = pe.getPeProvisioner();
 		double availableMips = peProvisioner.getAvailableMips();
@@ -228,11 +230,13 @@ public class VmSchedulerTimeShared extends VmScheduler {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cloudsim.VmScheduler#deallocatePesForVm(cloudsim.Vm)
 	 */
 	@Override
-	public void deallocatePesForVm(Vm vm){
+	public void deallocatePesForVm(Vm vm) {
 		getMipsMapRequested().remove(vm.getUid());
 		setPesInUse(0);
 		getMipsMap().clear();
@@ -251,7 +255,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/**
 	 * Releases PEs allocated to all the VMs.
-	 *
+	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -263,10 +267,9 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	}
 
 	/**
-	 * Returns maximum available MIPS among all the PEs.
-	 * For the time shared policy it is just all the avaiable
-	 * MIPS.
-	 *
+	 * Returns maximum available MIPS among all the PEs. For the time shared policy it is just all
+	 * the avaiable MIPS.
+	 * 
 	 * @return max mips
 	 */
 	@Override
@@ -276,7 +279,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/**
 	 * Sets the pes in use.
-	 *
+	 * 
 	 * @param pesInUse the new pes in use
 	 */
 	protected void setPesInUse(int pesInUse) {
@@ -285,7 +288,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/**
 	 * Gets the pes in use.
-	 *
+	 * 
 	 * @return the pes in use
 	 */
 	protected int getPesInUse() {
@@ -294,7 +297,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/**
 	 * Gets the mips map requested.
-	 *
+	 * 
 	 * @return the mips map requested
 	 */
 	protected Map<String, List<Double>> getMipsMapRequested() {
@@ -303,7 +306,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/**
 	 * Sets the mips map requested.
-	 *
+	 * 
 	 * @param mipsMapRequested the mips map requested
 	 */
 	protected void setMipsMapRequested(Map<String, List<Double>> mipsMapRequested) {

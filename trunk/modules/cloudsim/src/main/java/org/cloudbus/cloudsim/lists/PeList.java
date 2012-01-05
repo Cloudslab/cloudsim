@@ -150,7 +150,7 @@ public class PeList {
      * @pre $none
      * @post $result >= 0
      */
-    public static <T extends Pe> int getFreePesNumber(List<Pe> peList) {
+    public static <T extends Pe> int getNumberOfFreePes(List<Pe> peList) {
         int cnt = 0;
     	for (Pe pe : peList) {
     		if (pe.getStatus() == Pe.FREE) {
@@ -192,7 +192,7 @@ public class PeList {
      * @pre $none
      * @post $result >= 0
      */
-    public static <T extends Pe> int getBusyPesNumber(List<Pe> peList){
+    public static <T extends Pe> int getNumberOfBusyPes(List<Pe> peList){
         int cnt = 0;
     	for (Pe pe : peList) {
     		if (pe.getStatus() == Pe.BUSY) {

@@ -48,7 +48,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 
 		setFreePes(new ArrayList<Integer>());
 		for (Host host : getHostList()) {
-			getFreePes().add(host.getPesNumber());
+			getFreePes().add(host.getNumberOfPes());
 
 		}
 
@@ -68,7 +68,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 	 */
 	@Override
 	public boolean allocateHostForVm(Vm vm) {
-		int requiredPes = vm.getPesNumber();
+		int requiredPes = vm.getNumberOfPes();
 		boolean result = false;
 		int tries = 0;
 		List<Integer> freePesTmp = new ArrayList<Integer>();
@@ -233,7 +233,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		if (host.vmCreate(vm)) { //if vm has been succesfully created in the host
 			getVmTable().put(vm.getUid(), host);
 			
-			 int requiredPes = vm.getPesNumber();
+			 int requiredPes = vm.getNumberOfPes();
 		     int idx = getHostList().indexOf(host);
 		     getUsedPes().put(vm.getUid(), requiredPes);
 		     getFreePes().set(idx, getFreePes().get(idx) - requiredPes);

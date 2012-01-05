@@ -1,8 +1,7 @@
 /*
- * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
- * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- *
+ * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
+ * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
+ * 
  * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
@@ -21,12 +20,11 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.lists.PowerVmList;
 
 /**
- * PowerVmAllocationPolicySingleThreshold is an VMAllocationPolicy that
- * chooses a host with the least power increase due to utilization increase
- * caused by the VM allocation.
- *
- * @author		Anton Beloglazov
- * @since		CloudSim Toolkit 2.0
+ * PowerVmAllocationPolicySingleThreshold is an VMAllocationPolicy that chooses a host with the
+ * least power increase due to utilization increase caused by the VM allocation.
+ * 
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 2.0
  */
 public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySimple {
 
@@ -50,31 +48,30 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Instantiates a new vM provisioner mpp.
-	 *
+	 * 
 	 * @param list the list
 	 * @param utilizationThreshold the utilization bound
 	 */
 	public PowerVmAllocationPolicySingleThreshold(List<? extends PowerHost> list, double utilizationThreshold) {
 		super(list);
-		setSavedAllocation(new ArrayList<Map<String,Object>>());
+		setSavedAllocation(new ArrayList<Map<String, Object>>());
 		setUtilizationThreshold(utilizationThreshold);
 	}
 
 	/**
 	 * Determines a host to allocate for the VM.
-	 *
+	 * 
 	 * @param vm the vm
-	 *
+	 * 
 	 * @return the host
 	 */
 	public PowerHost findHostForVm(Vm vm) {
 		double minPower = Double.MAX_VALUE;
 		PowerHost allocatedHost = null;
 
-		for (PowerHost host : this.<PowerHost>getHostList()) {
+		for (PowerHost host : this.<PowerHost> getHostList()) {
 			if (host.isSuitableForVm(vm)) {
-				double maxUtilization = getMaxUtilizationAfterAllocation(host, vm);
-				if ((!vm.isRecentlyCreated() && maxUtilization > getUtilizationThreshold()) || (vm.isRecentlyCreated() && maxUtilization > 1.0)) {
+				if (getMaxUtilizationAfterAllocation(host, vm) > getUtilizationThreshold()) {
 					continue;
 				}
 				try {
@@ -96,20 +93,24 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Allocates a host for a given VM.
-	 *
+	 * 
 	 * @param vm VM specification
-	 *
+	 * 
 	 * @return $true if the host could be allocated; $false otherwise
-	 *
+	 * 
 	 * @pre $none
 	 * @post $none
 	 */
 	@Override
 	public boolean allocateHostForVm(Vm vm) {
 		PowerHost allocatedHost = findHostForVm(vm);
-		if (allocatedHost != null && allocatedHost.vmCreate(vm)) { //if vm has been succesfully created in the host
+		if (allocatedHost != null && allocatedHost.vmCreate(vm)) { // if vm has been succesfully
+																	// created in the host
 			getVmTable().put(vm.getUid(), allocatedHost);
-			Log.formatLine("%.2f: VM #" + vm.getId() + " has been allocated to the host #" + allocatedHost.getId() + "\n", CloudSim.clock());			
+			Log.formatLine(
+					"%.2f: VM #" + vm.getId() + " has been allocated to the host #" + allocatedHost.getId()
+							+ "\n",
+					CloudSim.clock());
 			return true;
 		}
 		return false;
@@ -117,9 +118,9 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Releases the host used by a VM.
-	 *
+	 * 
 	 * @param vm the vm
-	 *
+	 * 
 	 * @pre $none
 	 * @post none
 	 */
@@ -135,10 +136,10 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Optimize allocation of the VMs according to current utilization.
-	 *
+	 * 
 	 * @param vmList the vm list
 	 * @param utilizationThreshold the utilization bound
-	 *
+	 * 
 	 * @return the array list< hash map< string, object>>
 	 */
 	@Override
@@ -153,15 +154,15 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 		List<Vm> vmsToMigrate = new ArrayList<Vm>();
 		for (Vm vm : vmList) {
-			if (vm.isRecentlyCreated() || vm.isInMigration()) {
+			if (vm.isInMigration()) {
 				continue;
 			}
 			vmsToMigrate.add(vm);
-			vm.getHost().vmDestroy(vm);			
+			vm.getHost().vmDestroy(vm);
 		}
 		PowerVmList.sortByCpuUtilization(vmsToMigrate);
 
-		for (PowerHost host : this.<PowerHost>getHostList()) {
+		for (PowerHost host : this.<PowerHost> getHostList()) {
 			host.reallocateMigratingInVms();
 		}
 
@@ -186,7 +187,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Save allocation.
-	 *
+	 * 
 	 * @param vmList the vm list
 	 */
 	protected void saveAllocation(List<? extends Vm> vmList) {
@@ -201,7 +202,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Restore allocation.
-	 *
+	 * 
 	 * @param vmsToRestore the vms to restore
 	 */
 	protected void restoreAllocation(List<Vm> vmsToRestore, List<Host> hostList) {
@@ -226,10 +227,10 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Gets the power after allocation.
-	 *
+	 * 
 	 * @param host the host
 	 * @param vm the vm
-	 *
+	 * 
 	 * @return the power after allocation
 	 */
 	protected double getPowerAfterAllocation(PowerHost host, Vm vm) {
@@ -257,10 +258,10 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Gets the power after allocation.
-	 *
+	 * 
 	 * @param host the host
 	 * @param vm the vm
-	 *
+	 * 
 	 * @return the power after allocation
 	 */
 	protected double getMaxUtilizationAfterAllocation(PowerHost host, Vm vm) {
@@ -288,7 +289,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Gets the saved allocation.
-	 *
+	 * 
 	 * @return the saved allocation
 	 */
 	protected List<Map<String, Object>> getSavedAllocation() {
@@ -297,7 +298,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Sets the saved allocation.
-	 *
+	 * 
 	 * @param savedAllocation the saved allocation
 	 */
 	protected void setSavedAllocation(List<Map<String, Object>> savedAllocation) {
@@ -306,7 +307,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Gets the utilization bound.
-	 *
+	 * 
 	 * @return the utilization bound
 	 */
 	protected double getUtilizationThreshold() {
@@ -315,7 +316,7 @@ public class PowerVmAllocationPolicySingleThreshold extends VmAllocationPolicySi
 
 	/**
 	 * Sets the utilization bound.
-	 *
+	 * 
 	 * @param utilizationThreshold the new utilization bound
 	 */
 	protected void setUtilizationThreshold(double utilizationThreshold) {

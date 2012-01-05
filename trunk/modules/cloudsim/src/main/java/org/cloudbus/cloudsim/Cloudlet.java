@@ -43,7 +43,7 @@ public class Cloudlet {
     private final long cloudletOutputSize;
 
     /** The pes number. */
-    private int pesNumber;              // num of Pe required to execute this job
+    private int numberOfPes;              // num of Pe required to execute this job
 
     /** The cloudlet id. */
     private final int cloudletId;          // this Cloudlet ID
@@ -315,7 +315,7 @@ public class Cloudlet {
         this.userId = -1;          // to be set by a Broker or user
         this.status = CREATED;
         this.cloudletId = cloudletId;
-        this.pesNumber = pesNumber;
+        this.numberOfPes = pesNumber;
         this.execStartTime = 0.0;
         this.finishTime = -1.0;    // meaning this Cloudlet hasn't finished yet
         this.classType = 0;
@@ -534,16 +534,16 @@ public class Cloudlet {
      * For example, this Cloudlet has a length of 500 MI and requires 2 PEs.
      * This means each Pe will execute 500 MI of this Cloudlet.
      *
-     * @param pesNumber     number of Pe
+     * @param numberOfPes     number of Pe
      *
      * @return <tt>true</tt> if it is successful, <tt>false</tt> otherwise
      *
      * @pre numPE > 0
      * @post $none
      */
-	public boolean setPesNumber(final int pesNumber) {
-		if (pesNumber > 0) {
-			this.pesNumber = pesNumber;
+	public boolean setNumberOfPes(final int numberOfPes) {
+		if (numberOfPes > 0) {
+			this.numberOfPes = numberOfPes;
 			return true;
 		}
 		return false;
@@ -557,8 +557,8 @@ public class Cloudlet {
      * @pre $none
      * @post $none
      */
-    public int getPesNumber() {
-        return pesNumber;
+    public int getNumberOfPes() {
+        return numberOfPes;
     }
 
     /**
@@ -1002,7 +1002,7 @@ public class Cloudlet {
      * @post $result >= 0.0
      */
     public long getCloudletTotalLength() {
-        return getCloudletLength() * getPesNumber();
+        return getCloudletLength() * getNumberOfPes();
     }
 
     /**

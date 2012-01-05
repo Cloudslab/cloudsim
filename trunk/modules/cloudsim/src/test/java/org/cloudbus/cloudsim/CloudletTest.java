@@ -51,7 +51,7 @@ public class CloudletTest {
 		assertEquals(CLOUDLET_LENGTH * PES_NUMBER, cloudlet.getCloudletTotalLength(), 0);
 		assertEquals(CLOUDLET_FILE_SIZE, cloudlet.getCloudletFileSize());
 		assertEquals(CLOUDLET_OUTPUT_SIZE, cloudlet.getCloudletOutputSize());
-		assertEquals(PES_NUMBER, cloudlet.getPesNumber());
+		assertEquals(PES_NUMBER, cloudlet.getNumberOfPes());
 		assertSame(utilizationModelCpu, cloudlet.getUtilizationModelCpu());
 		assertSame(utilizationModelRam, cloudlet.getUtilizationModelRam());
 		assertSame(utilizationModelBw, cloudlet.getUtilizationModelBw());

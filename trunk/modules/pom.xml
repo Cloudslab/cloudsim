@@ -46,7 +46,12 @@
   <dependency>
     <groupId>org.easymock</groupId>
     <artifactId>easymockclassextension</artifactId>
-  </dependency>        
+  </dependency>
+  <dependency>
+    <groupId>org.flanagan</groupId>
+    <artifactId>flanagan</artifactId>
+    <version>1.0</version>
+  </dependency>                
   </dependencies>
   
 </project>

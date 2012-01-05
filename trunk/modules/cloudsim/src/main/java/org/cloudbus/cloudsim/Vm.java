@@ -1,8 +1,7 @@
 /*
- * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
- * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- *
+ * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
+ * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
+ * 
  * Copyright (c) 2009-2010, The University of Melbourne, Australia
  */
 
@@ -13,14 +12,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Vm represents a VM: it runs inside a Host, sharing hostList
- * with other VMs. It processes cloudlets. This processing happens according
- * to a policy, defined by the CloudletScheduler. Each VM has a owner, which can
- * submit cloudlets to the VM to be executed
- *
- * @author		Rodrigo N. Calheiros
- * @author		Anton Beloglazov
- * @since		CloudSim Toolkit 1.0
+ * Vm represents a VM: it runs inside a Host, sharing hostList with other VMs. It processes
+ * cloudlets. This processing happens according to a policy, defined by the CloudletScheduler. Each
+ * VM has a owner, which can submit cloudlets to the VM to be executed
+ * 
+ * @author Rodrigo N. Calheiros
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 1.0
  */
 public class Vm {
 
@@ -39,8 +37,8 @@ public class Vm {
 	/** The MIPS. */
 	private double mips;
 
-	/** The PEs number. */
-	private int pesNumber;
+	/** The number of PEs. */
+	private int numberOfPes;
 
 	/** The ram. */
 	private int ram;
@@ -72,19 +70,19 @@ public class Vm {
 	/** The current allocated mips. */
 	private List<Double> currentAllocatedMips;
 
-	/** The recently created. */
-	private boolean recentlyCreated;
+	/** The VM is being instantiated. */
+	private boolean beingInstantiated;
 
 	/** The mips allocation history. */
 	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<VmStateHistoryEntry>();
 
 	/**
 	 * Creates a new VMCharacteristics object.
-	 *
+	 * 
 	 * @param id unique ID of the VM
 	 * @param userId ID of the VM's owner
 	 * @param mips the mips
-	 * @param pesNumber amount of CPUs
+	 * @param numberOfPes amount of CPUs
 	 * @param ram amount of ram
 	 * @param bw amount of bandwidth
 	 * @param size amount of storage
@@ -100,12 +98,21 @@ public class Vm {
 	 * @pre cloudletScheduler != null
 	 * @post $none
 	 */
-	public Vm(int id, int userId, double mips, int pesNumber, int ram, long bw, long size, String vmm, CloudletScheduler cloudletScheduler) {
+	public Vm(
+			int id,
+			int userId,
+			double mips,
+			int numberOfPes,
+			int ram,
+			long bw,
+			long size,
+			String vmm,
+			CloudletScheduler cloudletScheduler) {
 		setId(id);
 		setUserId(userId);
 		setUid(getUid(userId, id));
 		setMips(mips);
-		setPesNumber(pesNumber);
+		setNumberOfPes(numberOfPes);
 		setRam(ram);
 		setBw(bw);
 		setSize(size);
@@ -113,7 +120,7 @@ public class Vm {
 		setCloudletScheduler(cloudletScheduler);
 
 		setInMigration(false);
-		setRecentlyCreated(true);
+		setBeingInstantiated(true);
 
 		setCurrentAllocatedBw(0);
 		setCurrentAllocatedMips(null);
@@ -123,13 +130,13 @@ public class Vm {
 
 	/**
 	 * Updates the processing of cloudlets running on this VM.
-	 *
+	 * 
 	 * @param currentTime current simulation time
 	 * @param mipsShare array with MIPS share of each Pe available to the scheduler
-	 *
-	 * @return time predicted completion time of the earliest finishing cloudlet, or 0
-	 * if there is no next events
-	 *
+	 * 
+	 * @return time predicted completion time of the earliest finishing cloudlet, or 0 if there is
+	 *         no next events
+	 * 
 	 * @pre currentTime >= 0
 	 * @post $none
 	 */
@@ -142,42 +149,23 @@ public class Vm {
 
 	/**
 	 * Gets the current requested mips.
-	 *
+	 * 
 	 * @return the current requested mips
 	 */
 	public List<Double> getCurrentRequestedMips() {
 		List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
-
-		if (isRecentlyCreated()) {
-			setRecentlyCreated(false);
-
-			//boolean mipsIsNull = true;
-			//if (CloudSim.clock() > 0) {
-				//mipsIsNull = false;
-				//
-			//}
-//			for (double mips : currentRequestedMips) {
-//				if (mips > 0.0) {
-//					mipsIsNull = false;
-//					setRecentlyCreated(false);
-//					break;
-//				}
-//			}
-
-			//if (mipsIsNull && isRecentlyCreated()) {
-			//if (mipsIsNull) {
-				currentRequestedMips = new ArrayList<Double>();
-				for (int i = 0; i < getPesNumber(); i++) {
-					currentRequestedMips.add(getMips());
-				}
-			//}
+		if (isBeingInstantiated()) {
+			currentRequestedMips = new ArrayList<Double>();
+			for (int i = 0; i < getNumberOfPes(); i++) {
+				currentRequestedMips.add(getMips());
+			}
 		}
 		return currentRequestedMips;
 	}
 
 	/**
 	 * Gets the current requested total mips.
-	 *
+	 * 
 	 * @return the current requested total mips
 	 */
 	public double getCurrentRequestedTotalMips() {
@@ -190,7 +178,7 @@ public class Vm {
 
 	/**
 	 * Gets the current requested max mips among all virtual PEs.
-	 *
+	 * 
 	 * @return the current requested max mips
 	 */
 	public double getCurrentRequestedMaxMips() {
@@ -205,33 +193,27 @@ public class Vm {
 
 	/**
 	 * Gets the current requested bw.
-	 *
+	 * 
 	 * @return the current requested bw
 	 */
 	public long getCurrentRequestedBw() {
-		if (isRecentlyCreated()) {
-			return getBw();
-		}
 		return (long) (getCloudletScheduler().getCurrentRequestedUtilizationOfBw() * getBw());
 	}
 
 	/**
 	 * Gets the current requested ram.
-	 *
+	 * 
 	 * @return the current requested ram
 	 */
 	public int getCurrentRequestedRam() {
-		if (isRecentlyCreated()) {
-			return getRam();
-		}
 		return (int) (getCloudletScheduler().getCurrentRequestedUtilizationOfRam() * getRam());
 	}
 
 	/**
 	 * Get utilization created by all clouddlets running on this VM.
-	 *
+	 * 
 	 * @param time the time
-	 *
+	 * 
 	 * @return total utilization
 	 */
 	public double getTotalUtilizationOfCpu(double time) {
@@ -240,9 +222,9 @@ public class Vm {
 
 	/**
 	 * Get utilization created by all cloudlets running on this VM in MIPS.
-	 *
+	 * 
 	 * @param time the time
-	 *
+	 * 
 	 * @return total utilization
 	 */
 	public double getTotalUtilizationOfCpuMips(double time) {
@@ -251,7 +233,7 @@ public class Vm {
 
 	/**
 	 * Sets the uid.
-	 *
+	 * 
 	 * @param uid the new uid
 	 */
 	public void setUid(String uid) {
@@ -260,7 +242,7 @@ public class Vm {
 
 	/**
 	 * Get unique string identificator of the VM.
-	 *
+	 * 
 	 * @return string uid
 	 */
 	public String getUid() {
@@ -269,10 +251,10 @@ public class Vm {
 
 	/**
 	 * Generate unique string identificator of the VM.
-	 *
+	 * 
 	 * @param userId the user id
 	 * @param vmId the vm id
-	 *
+	 * 
 	 * @return string uid
 	 */
 	public static String getUid(int userId, int vmId) {
@@ -281,7 +263,7 @@ public class Vm {
 
 	/**
 	 * Gets the id.
-	 *
+	 * 
 	 * @return the id
 	 */
 	public int getId() {
@@ -290,7 +272,7 @@ public class Vm {
 
 	/**
 	 * Sets the id.
-	 *
+	 * 
 	 * @param id the new id
 	 */
 	protected void setId(int id) {
@@ -299,7 +281,7 @@ public class Vm {
 
 	/**
 	 * Sets the user id.
-	 *
+	 * 
 	 * @param userId the new user id
 	 */
 	protected void setUserId(int userId) {
@@ -308,9 +290,9 @@ public class Vm {
 
 	/**
 	 * Gets the ID of the owner of the VM.
-	 *
+	 * 
 	 * @return VM's owner ID
-	 *
+	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -320,7 +302,7 @@ public class Vm {
 
 	/**
 	 * Gets the mips.
-	 *
+	 * 
 	 * @return the mips
 	 */
 	public double getMips() {
@@ -329,7 +311,7 @@ public class Vm {
 
 	/**
 	 * Sets the mips.
-	 *
+	 * 
 	 * @param mips the new mips
 	 */
 	protected void setMips(double mips) {
@@ -337,28 +319,28 @@ public class Vm {
 	}
 
 	/**
-	 * Gets the pes number.
-	 *
-	 * @return the pes number
+	 * Gets the number of pes.
+	 * 
+	 * @return the number of pes
 	 */
-	public int getPesNumber() {
-		return pesNumber;
+	public int getNumberOfPes() {
+		return numberOfPes;
 	}
 
 	/**
-	 * Sets the pes number.
-	 *
-	 * @param pesNumber the new pes number
+	 * Sets the number of pes.
+	 * 
+	 * @param numberOfPes the new number of pes
 	 */
-	protected void setPesNumber(int pesNumber) {
-		this.pesNumber = pesNumber;
+	protected void setNumberOfPes(int numberOfPes) {
+		this.numberOfPes = numberOfPes;
 	}
 
 	/**
 	 * Gets the amount of ram.
-	 *
+	 * 
 	 * @return amount of ram
-	 *
+	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -368,9 +350,9 @@ public class Vm {
 
 	/**
 	 * Sets the amount of ram.
-	 *
+	 * 
 	 * @param ram new amount of ram
-	 *
+	 * 
 	 * @pre ram > 0
 	 * @post $none
 	 */
@@ -380,9 +362,9 @@ public class Vm {
 
 	/**
 	 * Gets the amount of bandwidth.
-	 *
+	 * 
 	 * @return amount of bandwidth
-	 *
+	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -392,9 +374,9 @@ public class Vm {
 
 	/**
 	 * Sets the amount of bandwidth.
-	 *
+	 * 
 	 * @param bw new amount of bandwidth
-	 *
+	 * 
 	 * @pre bw > 0
 	 * @post $none
 	 */
@@ -404,9 +386,9 @@ public class Vm {
 
 	/**
 	 * Gets the amount of storage.
-	 *
+	 * 
 	 * @return amount of storage
-	 *
+	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -416,9 +398,9 @@ public class Vm {
 
 	/**
 	 * Sets the amount of storage.
-	 *
+	 * 
 	 * @param size new amount of storage
-	 *
+	 * 
 	 * @pre size > 0
 	 * @post $none
 	 */
@@ -428,19 +410,19 @@ public class Vm {
 
 	/**
 	 * Gets the VMM.
-	 *
+	 * 
 	 * @return VMM
-	 *
+	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public String getVmm(){
+	public String getVmm() {
 		return vmm;
 	}
 
 	/**
 	 * Sets the VMM.
-	 *
+	 * 
 	 * @param vmm the new VMM
 	 */
 	protected void setVmm(String vmm) {
@@ -449,19 +431,19 @@ public class Vm {
 
 	/**
 	 * Sets the host that runs this VM.
-	 *
+	 * 
 	 * @param host Host running the VM
-	 *
+	 * 
 	 * @pre host != $null
 	 * @post $none
 	 */
-	public void setHost(Host host){
+	public void setHost(Host host) {
 		this.host = host;
 	}
 
 	/**
 	 * Gets the host.
-	 *
+	 * 
 	 * @return the host
 	 */
 	public Host getHost() {
@@ -470,7 +452,7 @@ public class Vm {
 
 	/**
 	 * Gets the vm scheduler.
-	 *
+	 * 
 	 * @return the vm scheduler
 	 */
 	public CloudletScheduler getCloudletScheduler() {
@@ -479,7 +461,7 @@ public class Vm {
 
 	/**
 	 * Sets the vm scheduler.
-	 *
+	 * 
 	 * @param cloudletScheduler the new vm scheduler
 	 */
 	protected void setCloudletScheduler(CloudletScheduler cloudletScheduler) {
@@ -488,7 +470,7 @@ public class Vm {
 
 	/**
 	 * Checks if is in migration.
-	 *
+	 * 
 	 * @return true, if is in migration
 	 */
 	public boolean isInMigration() {
@@ -497,7 +479,7 @@ public class Vm {
 
 	/**
 	 * Sets the in migration.
-	 *
+	 * 
 	 * @param inMigration the new in migration
 	 */
 	public void setInMigration(boolean inMigration) {
@@ -506,7 +488,7 @@ public class Vm {
 
 	/**
 	 * Gets the current allocated size.
-	 *
+	 * 
 	 * @return the current allocated size
 	 */
 	public long getCurrentAllocatedSize() {
@@ -515,7 +497,7 @@ public class Vm {
 
 	/**
 	 * Sets the current allocated size.
-	 *
+	 * 
 	 * @param currentAllocatedSize the new current allocated size
 	 */
 	protected void setCurrentAllocatedSize(long currentAllocatedSize) {
@@ -524,7 +506,7 @@ public class Vm {
 
 	/**
 	 * Gets the current allocated ram.
-	 *
+	 * 
 	 * @return the current allocated ram
 	 */
 	public int getCurrentAllocatedRam() {
@@ -533,7 +515,7 @@ public class Vm {
 
 	/**
 	 * Sets the current allocated ram.
-	 *
+	 * 
 	 * @param currentAllocatedRam the new current allocated ram
 	 */
 	public void setCurrentAllocatedRam(int currentAllocatedRam) {
@@ -542,7 +524,7 @@ public class Vm {
 
 	/**
 	 * Gets the current allocated bw.
-	 *
+	 * 
 	 * @return the current allocated bw
 	 */
 	public long getCurrentAllocatedBw() {
@@ -551,7 +533,7 @@ public class Vm {
 
 	/**
 	 * Sets the current allocated bw.
-	 *
+	 * 
 	 * @param currentAllocatedBw the new current allocated bw
 	 */
 	public void setCurrentAllocatedBw(long currentAllocatedBw) {
@@ -560,7 +542,7 @@ public class Vm {
 
 	/**
 	 * Gets the current allocated mips.
-	 *
+	 * 
 	 * @return the current allocated mips
 	 * @TODO replace returning the field by a call to getCloudletScheduler().getCurrentMipsShare()
 	 */
@@ -570,7 +552,7 @@ public class Vm {
 
 	/**
 	 * Sets the current allocated mips.
-	 *
+	 * 
 	 * @param currentAllocatedMips the new current allocated mips
 	 */
 	public void setCurrentAllocatedMips(List<Double> currentAllocatedMips) {
@@ -578,49 +560,57 @@ public class Vm {
 	}
 
 	/**
-	 * Checks if is recently created.
-	 *
-	 * @return true, if is recently created
+	 * Checks if is being instantiated.
+	 * 
+	 * @return true, if is being instantiated
 	 */
-	public boolean isRecentlyCreated() {
-		return recentlyCreated;
+	public boolean isBeingInstantiated() {
+		return beingInstantiated;
 	}
 
 	/**
-	 * Sets the recently created.
-	 *
-	 * @param recentlyCreated the new recently created
+	 * Sets the being instantiated.
+	 * 
+	 * @param beingInstantiated the new being instantiated
 	 */
-	public void setRecentlyCreated(boolean recentlyCreated) {
-		this.recentlyCreated = recentlyCreated;
+	public void setBeingInstantiated(boolean beingInstantiated) {
+		this.beingInstantiated = beingInstantiated;
 	}
 
-    /**
-     * Gets the state history.
-     *
-     * @return the state history
-     */
-    public List<VmStateHistoryEntry> getStateHistory() {
+	/**
+	 * Gets the state history.
+	 * 
+	 * @return the state history
+	 */
+	public List<VmStateHistoryEntry> getStateHistory() {
 		return stateHistory;
 	}
 
-    /**
-     * Adds the state history entry.
-     *
-     * @param time the time
-     * @param allocatedMips the allocated mips
-     * @param requestedMips the requested mips
-     * @param isInMigration the is in migration
-     */
-    public void addStateHistoryEntry(double time, double allocatedMips, double requestedMips, boolean isInMigration) {
-    	VmStateHistoryEntry newState = new VmStateHistoryEntry(time, allocatedMips, requestedMips, isInMigration);
-    	if (!getStateHistory().isEmpty()) {
-	    	VmStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
-	     	if (previousState.getTime() == time) {
-	    		getStateHistory().set(getStateHistory().size() - 1, newState);
-	    		return;
-	    	}
-    	}
+	/**
+	 * Adds the state history entry.
+	 * 
+	 * @param time the time
+	 * @param allocatedMips the allocated mips
+	 * @param requestedMips the requested mips
+	 * @param isInMigration the is in migration
+	 */
+	public void addStateHistoryEntry(
+			double time,
+			double allocatedMips,
+			double requestedMips,
+			boolean isInMigration) {
+		VmStateHistoryEntry newState = new VmStateHistoryEntry(
+				time,
+				allocatedMips,
+				requestedMips,
+				isInMigration);
+		if (!getStateHistory().isEmpty()) {
+			VmStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
+			if (previousState.getTime() == time) {
+				getStateHistory().set(getStateHistory().size() - 1, newState);
+				return;
+			}
+		}
 		getStateHistory().add(newState);
 	}
 
