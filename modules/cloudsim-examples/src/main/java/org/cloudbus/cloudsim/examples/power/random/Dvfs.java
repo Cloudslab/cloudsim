@@ -20,39 +20,7 @@ import java.io.IOException;
  * @author Anton Beloglazov
  * @since Jan 5, 2012
  */
-public class Dvfs extends RandomRunnerAbstract {
-
-	/**
-	 * Instantiates a new dvfs.
-	 * 
-	 * @param enableOutput the enable output
-	 * @param outputToFile the output to file
-	 * @param inputFolder the input folder
-	 * @param outputFolder the output folder
-	 * @param workload the workload
-	 * @param vmAllocationPolicy the vm allocation policy
-	 * @param vmSelectionPolicy the vm selection policy
-	 * @param parameter the parameter
-	 */
-	public Dvfs(
-			boolean enableOutput,
-			boolean outputToFile,
-			String inputFolder,
-			String outputFolder,
-			String workload,
-			String vmAllocationPolicy,
-			String vmSelectionPolicy,
-			String parameter) {
-		super(
-				enableOutput,
-				outputToFile,
-				inputFolder,
-				outputFolder,
-				workload,
-				vmAllocationPolicy,
-				vmSelectionPolicy,
-				parameter);
-	}
+public class Dvfs {
 
 	/**
 	 * The main method.
@@ -70,7 +38,7 @@ public class Dvfs extends RandomRunnerAbstract {
 		String vmSelectionPolicy = "";
 		String parameter = "";
 
-		new Dvfs(
+		new RandomRunner(
 				enableOutput,
 				outputToFile,
 				inputFolder,

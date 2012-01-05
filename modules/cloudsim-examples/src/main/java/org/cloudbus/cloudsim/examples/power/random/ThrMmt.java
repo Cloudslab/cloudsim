@@ -19,28 +19,14 @@ import java.io.IOException;
  * @author Anton Beloglazov
  * @since Jan 5, 2012
  */
-public class ThrMmt extends RandomRunnerAbstract {
+public class ThrMmt {
 
-	public ThrMmt(
-			boolean enableOutput,
-			boolean outputToFile,
-			String inputFolder,
-			String outputFolder,
-			String workload,
-			String vmAllocationPolicy,
-			String vmSelectionPolicy,
-			String parameter) {
-		super(
-				enableOutput,
-				outputToFile,
-				inputFolder,
-				outputFolder,
-				workload,
-				vmAllocationPolicy,
-				vmSelectionPolicy,
-				parameter);
-	}
-
+	/**
+	 * The main method.
+	 * 
+	 * @param args the arguments
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void main(String[] args) throws IOException {
 		boolean enableOutput = true;
 		boolean outputToFile = false;
@@ -51,7 +37,7 @@ public class ThrMmt extends RandomRunnerAbstract {
 		String vmSelectionPolicy = "mmt"; // Minimum Migration Time VM selection policy
 		String parameter = "0.8"; // the static utilization threshold
 
-		new Dvfs(
+		new RandomRunner(
 				enableOutput,
 				outputToFile,
 				inputFolder,

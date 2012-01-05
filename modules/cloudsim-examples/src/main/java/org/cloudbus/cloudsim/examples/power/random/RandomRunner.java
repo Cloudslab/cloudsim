@@ -12,7 +12,7 @@ import org.cloudbus.cloudsim.examples.power.RunnerAbstract;
  * @since Dec 17, 2011
  * 
  */
-public class RandomRunnerAbstract extends RunnerAbstract {
+public class RandomRunner extends RunnerAbstract {
 
 	/**
 	 * @param enableOutput
@@ -24,7 +24,7 @@ public class RandomRunnerAbstract extends RunnerAbstract {
 	 * @param vmSelectionPolicy
 	 * @param parameter
 	 */
-	public RandomRunnerAbstract(
+	public RandomRunner(
 			boolean enableOutput,
 			boolean outputToFile,
 			String inputFolder,
@@ -62,7 +62,7 @@ public class RandomRunnerAbstract extends RunnerAbstract {
 			hostList = Helper.createHostList(RandomConstants.NUMBER_OF_HOSTS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("Unwanted errors happen");
+			Log.printLine("The simulation has been terminated due to an unexpected error");
 		}
 	}
 
