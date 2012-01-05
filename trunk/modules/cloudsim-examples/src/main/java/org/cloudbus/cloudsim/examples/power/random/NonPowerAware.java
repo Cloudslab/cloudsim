@@ -18,6 +18,19 @@ import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 /**
  * A simulation of a heterogeneous non-power aware data center: all hosts consume maximum power all
  * the time.
+ * 
+ * The remaining configuration parameters are in the Constants and RandomConstants classes.
+ * 
+ * If you are using any algorithms, policies or workload included in the power package please cite
+ * the following paper:
+ * 
+ * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
+ * Cloud Data Centers", Concurrency and Computation: Practice and Experience, ISSN: 1532-0626, Wiley
+ * Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
+ * 
+ * @author Anton Beloglazov
+ * @since Jan 5, 2012
  */
 public class NonPowerAware {
 
@@ -28,7 +41,7 @@ public class NonPowerAware {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		String experimentName = "npa";
+		String experimentName = "random_npa";
 		String outputFolder = "output";
 
 		Log.setDisabled(!Constants.ENABLE_OUTPUT);
