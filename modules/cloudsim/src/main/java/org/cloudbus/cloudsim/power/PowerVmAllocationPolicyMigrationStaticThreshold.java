@@ -8,7 +8,10 @@ import org.cloudbus.cloudsim.Vm;
 /**
  * The Class PowerVmAllocationPolicyMigrationThresholds.
  */
-public class PowerVmAllocationPolicyMigrationThresholds extends PowerVmAllocationPolicyMigrationAbstract {
+public class PowerVmAllocationPolicyMigrationStaticThreshold extends PowerVmAllocationPolicyMigrationAbstract {
+
+	/** The utilization threshold. */
+	private double utilizationThreshold = 0.9;
 
 	/**
 	 * Instantiates a new power vm allocation policy migration mad.
@@ -17,11 +20,12 @@ public class PowerVmAllocationPolicyMigrationThresholds extends PowerVmAllocatio
 	 * @param vmSelectionPolicy the vm selection policy
 	 * @param utilizationThreshold the utilization threshold
 	 */
-	public PowerVmAllocationPolicyMigrationThresholds(
+	public PowerVmAllocationPolicyMigrationStaticThreshold(
 			List<? extends Host> hostList,
 			PowerVmSelectionPolicy vmSelectionPolicy,
 			double utilizationThreshold) {
-		super(hostList, vmSelectionPolicy, utilizationThreshold);
+		super(hostList, vmSelectionPolicy);
+		setUtilizationThreshold(utilizationThreshold);
 	}
 
 	/**
@@ -39,6 +43,24 @@ public class PowerVmAllocationPolicyMigrationThresholds extends PowerVmAllocatio
 		}
 		double utilization = totalRequestedMips / host.getTotalMips();
 		return utilization > getUtilizationThreshold();
+	}
+
+	/**
+	 * Sets the utilization threshold.
+	 * 
+	 * @param utilizationThreshold the new utilization threshold
+	 */
+	protected void setUtilizationThreshold(double utilizationThreshold) {
+		this.utilizationThreshold = utilizationThreshold;
+	}
+
+	/**
+	 * Gets the utilization threshold.
+	 * 
+	 * @return the utilization threshold
+	 */
+	protected double getUtilizationThreshold() {
+		return utilizationThreshold;
 	}
 
 }

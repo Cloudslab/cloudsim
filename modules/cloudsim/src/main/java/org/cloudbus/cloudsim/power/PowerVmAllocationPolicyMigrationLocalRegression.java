@@ -36,7 +36,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 			double schedulingInterval,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy,
 			double utilizationThreshold) {
-		super(hostList, vmSelectionPolicy, utilizationThreshold);
+		super(hostList, vmSelectionPolicy);
 		setSafetyParameter(safetyParameter);
 		setSchedulingInterval(schedulingInterval);
 		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);

@@ -127,10 +127,10 @@ public class CloudSim {
 			// set all the above entity IDs
 			cisId = cis.getId();
 		} catch (IllegalArgumentException s) {
-			Log.printLine("CloudSim.init(): Unwanted errors happen");
+			Log.printLine("CloudSim.init(): The simulation has been terminated due to an unexpected error");
 			Log.printLine(s.getMessage());
 		} catch (Exception e) {
-			Log.printLine("CloudSim.init(): Unwanted errors happen");
+			Log.printLine("CloudSim.init(): The simulation has been terminated due to an unexpected error");
 			Log.printLine(e.getMessage());
 		}
 	}
