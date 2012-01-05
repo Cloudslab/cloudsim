@@ -8,24 +8,34 @@ import org.cloudbus.cloudsim.examples.power.Helper;
 import org.cloudbus.cloudsim.examples.power.RunnerAbstract;
 
 /**
- * The Class PlanetLabRunnerAbstract.
+ * The example runner for the PlanetLab workload.
+ * 
+ * If you are using any algorithms, policies or workload included in the power package please cite
+ * the following paper:
+ * 
+ * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
+ * Cloud Data Centers", Concurrency and Computation: Practice and Experience, ISSN: 1532-0626, Wiley
+ * Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
  * 
  * @author Anton Beloglazov
- * @since Dec 17, 2011
+ * @since Jan 5, 2012
  */
-public class PlanetLabRunnerAbstract extends RunnerAbstract {
+public class PlanetLabRunner extends RunnerAbstract {
 
 	/**
-	 * @param enableOutput
-	 * @param outputToFile
-	 * @param inputFolder
-	 * @param outputFolder
-	 * @param workload
-	 * @param vmAllocationPolicy
-	 * @param vmSelectionPolicy
-	 * @param parameter
+	 * Instantiates a new planet lab runner.
+	 * 
+	 * @param enableOutput the enable output
+	 * @param outputToFile the output to file
+	 * @param inputFolder the input folder
+	 * @param outputFolder the output folder
+	 * @param workload the workload
+	 * @param vmAllocationPolicy the vm allocation policy
+	 * @param vmSelectionPolicy the vm selection policy
+	 * @param parameter the parameter
 	 */
-	public PlanetLabRunnerAbstract(
+	public PlanetLabRunner(
 			boolean enableOutput,
 			boolean outputToFile,
 			String inputFolder,
@@ -63,7 +73,7 @@ public class PlanetLabRunnerAbstract extends RunnerAbstract {
 			hostList = Helper.createHostList(PlanetLabConstants.NUMBER_OF_HOSTS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("Unwanted errors happen");
+			Log.printLine("The simulation has been terminated due to an unexpected error");
 		}
 	}
 
