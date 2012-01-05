@@ -19,7 +19,7 @@ public class PowerVm extends Vm {
 	public static final int HISTORY_LENGTH = 30;
 
 	/** The utilization history. */
-	private List<Double> utilizationHistory;
+	private final List<Double> utilizationHistory = new LinkedList<Double>();
 
 	/** The previous time. */
 	private double previousTime;
@@ -55,7 +55,6 @@ public class PowerVm extends Vm {
 			CloudletScheduler cloudletScheduler,
 			double schedulingInterval) {
 		super(id, userId, mips, pesNumber, ram, bw, size, vmm, cloudletScheduler);
-		setUtilizationHistory(new LinkedList<Double>());
 		setSchedulingInterval(schedulingInterval);
 	}
 
@@ -74,7 +73,7 @@ public class PowerVm extends Vm {
 	@Override
 	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
 		double time = super.updateVmProcessing(currentTime, mipsShare);
-		if (currentTime > getPreviousTime() && currentTime % getSchedulingInterval() == 0) {
+		if (currentTime > getPreviousTime() && (currentTime - 0.1) % getSchedulingInterval() == 0) {
 			double utilization = getTotalUtilizationOfCpu(getCloudletScheduler().getPreviousTime());
 			if (CloudSim.clock() != 0 || utilization != 0) {
 				addUtilizationHistoryValue(utilization);
@@ -167,15 +166,6 @@ public class PowerVm extends Vm {
 	 */
 	protected List<Double> getUtilizationHistory() {
 		return utilizationHistory;
-	}
-
-	/**
-	 * Sets the utilization history.
-	 * 
-	 * @param utilizationHistory the new utilization history
-	 */
-	protected void setUtilizationHistory(List<Double> utilizationHistory) {
-		this.utilizationHistory = utilizationHistory;
 	}
 
 	/**
