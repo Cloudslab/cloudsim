@@ -34,7 +34,7 @@ public class ThrMu {
 		String outputFolder = "";
 		String workload = "random"; // Random workload
 		String vmAllocationPolicy = "thr"; // Static Threshold VM allocation policy
-		String vmSelectionPolicy = "mu"; // Minimum Utilization VM selection policy
+		String vmSelectionPolicy = "mu"; // Minimum Utilization (MU) VM selection policy
 		String parameter = "0.8"; // the static utilization threshold
 
 		new RandomRunner(
