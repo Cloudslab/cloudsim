@@ -3,20 +3,26 @@ package org.cloudbus.cloudsim.examples.power.random;
 import java.io.IOException;
 
 /**
- * A simulation of a heterogeneous non-power aware data center: all hosts consume maximum power all
- * the time.
+ * A simulation of a heterogeneous power aware data center that only applied DVFS, but no dynamic
+ * optimization of the VM allocation. The adjustment of the hosts' power consumption according to
+ * their CPU utilization is happening in the PowerDatacenter class.
+ * 
+ * @author Anton Beloglazov
+ * @since Jan 5, 2012
  */
 public class Dvfs extends RandomRunnerAbstract {
 
 	/**
-	 * @param enableOutput
-	 * @param outputToFile
-	 * @param inputFolder
-	 * @param outputFolder
-	 * @param workload
-	 * @param vmAllocationPolicy
-	 * @param vmSelectionPolicy
-	 * @param parameter
+	 * Instantiates a new dvfs.
+	 * 
+	 * @param enableOutput the enable output
+	 * @param outputToFile the output to file
+	 * @param inputFolder the input folder
+	 * @param outputFolder the output folder
+	 * @param workload the workload
+	 * @param vmAllocationPolicy the vm allocation policy
+	 * @param vmSelectionPolicy the vm selection policy
+	 * @param parameter the parameter
 	 */
 	public Dvfs(
 			boolean enableOutput,
@@ -39,10 +45,10 @@ public class Dvfs extends RandomRunnerAbstract {
 	}
 
 	/**
-	 * Creates main() to run this example.
+	 * The main method.
 	 * 
-	 * @param args the args
-	 * @throws IOException
+	 * @param args the arguments
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void main(String[] args) throws IOException {
 		boolean enableOutput = true;
