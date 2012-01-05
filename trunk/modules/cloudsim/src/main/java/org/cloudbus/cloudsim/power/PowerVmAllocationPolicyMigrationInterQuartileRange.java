@@ -33,7 +33,7 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 			double safetyParameter,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy,
 			double utilizationThreshold) {
-		super(hostList, vmSelectionPolicy, utilizationThreshold);
+		super(hostList, vmSelectionPolicy);
 		setSafetyParameter(safetyParameter);
 		setFallbackVmAllocationPolicy(fallbackVmAllocationPolicy);
 	}

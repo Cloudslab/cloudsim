@@ -1,11 +1,3 @@
-/*
- * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
- * Simulation of Parallel and Distributed Systems such as Clusters and Clouds Licence: GPL -
- * http://www.gnu.org/copyleft/gpl.html
- * 
- * Copyright (c) 2008, The University of Melbourne, Australia
- */
-
 package org.cloudbus.cloudsim.power;
 
 import java.util.HashMap;
@@ -19,34 +11,29 @@ import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * PowerVmAllocationPolicySingleThresholdFixed is an VMAllocationPolicy that chooses, as the host
- * for a VM, the host with the least power increase due to utilization increase.
+ * The Class PowerVmAllocationPolicyAbstract.
  * 
  * @author Anton Beloglazov
- * @since CloudSim Toolkit 4.3
- * @invariant $none
+ * @since Jan 5, 2012
  */
-public class PowerVmAllocationPolicySimple extends VmAllocationPolicy {
+public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy {
 
 	/** The vm table. */
-	private Map<String, Host> vmTable;
+	private final Map<String, Host> vmTable = new HashMap<String, Host>();
 
 	/**
-	 * Instantiates a new PowerVmAllocationPolicySimple.
+	 * Instantiates a new power vm allocation policy abstract.
 	 * 
-	 * @param hostList the host list
+	 * @param list the list
 	 */
-	public PowerVmAllocationPolicySimple(List<? extends Host> hostList) {
-		super(hostList);
-		setVmTable(new HashMap<String, Host>());
+	public PowerVmAllocationPolicyAbstract(List<? extends Host> list) {
+		super(list);
 	}
 
-	/**
-	 * Allocates a host for a given VM.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param vm VM specification
-	 * 
-	 * @return $true if the host could be allocated; $false otherwise
+	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#allocateHostForVm(org.cloudbus.cloudsim.Vm)
 	 */
 	@Override
 	public boolean allocateHostForVm(Vm vm) {
@@ -79,11 +66,10 @@ public class PowerVmAllocationPolicySimple extends VmAllocationPolicy {
 	}
 
 	/**
-	 * Determines a host to allocate for the VM.
+	 * Find host for vm.
 	 * 
 	 * @param vm the vm
-	 * 
-	 * @return the host
+	 * @return the power host
 	 */
 	public PowerHost findHostForVm(Vm vm) {
 		for (PowerHost host : this.<PowerHost> getHostList()) {
@@ -97,18 +83,7 @@ public class PowerVmAllocationPolicySimple extends VmAllocationPolicy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#optimizeAllocation(java.util.List)
-	 */
-	@Override
-	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
-		// This policy doesn't optimize the VM allocation
-		return null;
-	}
-
-	/**
-	 * Releases the host used by a VM.
-	 * 
-	 * @param vm the vm
+	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#deallocateHostForVm(org.cloudbus.cloudsim.Vm)
 	 */
 	@Override
 	public void deallocateHostForVm(Vm vm) {
@@ -118,38 +93,24 @@ public class PowerVmAllocationPolicySimple extends VmAllocationPolicy {
 		}
 	}
 
-	/**
-	 * Gets the host that is executing the given VM belonging to the given user.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param vm the vm
-	 * 
-	 * @return the Host with the given vmID and userID; $null if not found
+	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#getHost(org.cloudbus.cloudsim.Vm)
 	 */
 	@Override
 	public Host getHost(Vm vm) {
 		return getVmTable().get(vm.getUid());
 	}
 
-	/**
-	 * Gets the host that is executing the given VM belonging to the given user.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param vmId the vm id
-	 * @param userId the user id
-	 * 
-	 * @return the Host with the given vmID and userID; $null if not found
+	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#getHost(int, int)
 	 */
 	@Override
 	public Host getHost(int vmId, int userId) {
 		return getVmTable().get(Vm.getUid(userId, vmId));
-	}
-
-	/**
-	 * Sets the vm table.
-	 * 
-	 * @param vmTable the vm table
-	 */
-	public void setVmTable(Map<String, Host> vmTable) {
-		this.vmTable = vmTable;
 	}
 
 	/**
