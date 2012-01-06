@@ -4,7 +4,7 @@ import java.io.IOException;
 
 /**
  * A simulation of a heterogeneous power aware data center that applies the Local Regression Robust
- * (LRR) VM allocation policy and Maximum Correlation (MC) VM selection policy.
+ * (LRR) VM allocation policy and Minimum Utilization (MU) VM selection policy.
  * 
  * This example uses a real PlanetLab workload: 20110303.
  * 
@@ -21,7 +21,7 @@ import java.io.IOException;
  * @author Anton Beloglazov
  * @since Jan 5, 2012
  */
-public class LrrMc {
+public class LrrMu {
 
 	/**
 	 * The main method.
@@ -32,11 +32,11 @@ public class LrrMc {
 	public static void main(String[] args) throws IOException {
 		boolean enableOutput = true;
 		boolean outputToFile = false;
-		String inputFolder = LrrMc.class.getClassLoader().getResource("workload/planetlab").getPath();
+		String inputFolder = LrrMu.class.getClassLoader().getResource("workload/planetlab").getPath();
 		String outputFolder = "output";
 		String workload = "20110303"; // PlanetLab workload
 		String vmAllocationPolicy = "lrr"; // Local Regression Robust (LRR) VM allocation policy
-		String vmSelectionPolicy = "mc"; // Maximum Correlation (MC) VM selection policy
+		String vmSelectionPolicy = "mu"; // Minimum Utilization (MU) VM selection policy
 		String parameter = "1.2"; // the safety parameter of the LRR policy
 
 		new PlanetLabRunner(
