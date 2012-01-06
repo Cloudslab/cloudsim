@@ -19,6 +19,9 @@ import org.cloudbus.cloudsim.util.MathUtil;
  * still allows the allocation of VMs that require more CPU capacity that is available.
  * Oversubscription results in performance degradation. Each virtual PE cannot be allocated more CPU
  * capacity than MIPS of a single PE.
+ * 
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 2.0
  */
 public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared {
 
@@ -123,7 +126,7 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 				} else if (getVmsMigratingIn().contains(vmUid)) {
 					// the destination host only experiences 10% of the migrating VM's MIPS
 					mips *= 0.1;
-					// the final 10% are scaled
+					// the final 10% of the requested MIPS are scaled
 					mips *= scalingFactor;
 				} else {
 					mips *= scalingFactor;
