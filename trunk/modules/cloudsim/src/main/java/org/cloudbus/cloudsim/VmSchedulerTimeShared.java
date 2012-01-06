@@ -78,30 +78,32 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 * @return true, if successful
 	 */
 	protected boolean allocatePesForVm(String vmUid, List<Double> mipsShareRequested) {
-		getMipsMapRequested().put(vmUid, mipsShareRequested);
-		setPesInUse(getPesInUse() + mipsShareRequested.size());
-
 		double totalRequestedMips = 0;
 		double peMips = getPeCapacity();
 		for (Double mips : mipsShareRequested) {
-			if (mips > peMips) { // each virtual PE of a VM must require not more than the capacity
-									// of a physical PE
+			// each virtual PE of a VM must require not more than the capacity of a physical PE
+			if (mips > peMips) {
 				return false;
 			}
 			totalRequestedMips += mips;
 		}
 
+		getMipsMapRequested().put(vmUid, mipsShareRequested);
+		setPesInUse(getPesInUse() + mipsShareRequested.size());
+
 		if (getVmsMigratingIn().contains(vmUid)) {
-			totalRequestedMips *= 0.1; // performance cost incurred by the destination host = 10%
-										// MIPS
+			// performance cost incurred by the destination host = 10% MIPS
+			totalRequestedMips *= 0.1;
 		}
 
 		List<Double> mipsShareAllocated = new ArrayList<Double>();
 		for (Double mipsRequested : mipsShareRequested) {
 			if (getVmsMigratingOut().contains(vmUid)) {
-				mipsRequested *= 0.9; // performance degradation due to migration = 10% MIPS
+				// performance degradation due to migration = 10% MIPS
+				mipsRequested *= 0.9;
 			} else if (getVmsMigratingIn().contains(vmUid)) {
-				mipsRequested *= 0.1; // performance cost incurred by the destination host = 90% MIPS
+				// performance cost incurred by the destination host = 10% MIPS
+				mipsRequested *= 0.1;
 			}
 			mipsShareAllocated.add(mipsRequested);
 		}
@@ -109,7 +111,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 		if (getAvailableMips() >= totalRequestedMips) {
 			getMipsMap().put(vmUid, mipsShareAllocated);
 			setAvailableMips(getAvailableMips() - totalRequestedMips);
-		} else {			
+		} else {
 			updateShortage();
 		}
 
@@ -121,68 +123,69 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 * compared to the amount requested by VMs.
 	 */
 	protected void updateShortage() {
-		//first, we have to know the wight of each VM
-		//in the allocation of mips. We want to keep
-		//allocation proportional to it
-		
-		HashMap<String,Double> weightMap = new  HashMap<String,Double>();
+		// first, we have to know the weight of each VM in the allocation of mips. We want to keep
+		// allocation proportional to it
+
+		HashMap<String, Double> weightMap = new HashMap<String, Double>();
 		double totalRequiredMips = 0.0;
-		
+
 		Iterator<Entry<String, List<Double>>> iter = mipsMapRequested.entrySet().iterator();
-		while (iter.hasNext()){
+		while (iter.hasNext()) {
 			Entry<String, List<Double>> entry = iter.next();
-			
-			//each element of the iterator is one entry of the table: (vmId, mipsShare)
+
+			// each element of the iterator is one entry of the table: (vmId, mipsShare)
 			String vmId = entry.getKey();
 			List<Double> shares = entry.getValue();
-			
-			//count amount of mips required by the vm
+
+			// count amount of mips required by the vm
 			double requiredMipsByThisVm = 0.0;
-			for(double share: shares){
-				totalRequiredMips+=share;
-				requiredMipsByThisVm+=share;
+			for (double share : shares) {
+				totalRequiredMips += share;
+				requiredMipsByThisVm += share;
 			}
-			
-			//store the value to use later to define weights
+
+			// store the value to use later to define weights
 			weightMap.put(vmId, requiredMipsByThisVm);
 		}
-			
-		//now, we have the information on individual weights
-		//use this information to define actual shares of
-		//mips received by each VM
-				
+
+		// now, we have the information on individual weights
+		// use this information to define actual shares of
+		// mips received by each VM
+
 		iter = mipsMapRequested.entrySet().iterator();
-		while (iter.hasNext()){
+		while (iter.hasNext()) {
 			Entry<String, List<Double>> entry = iter.next();
-			
-			//each element of the iterator is one entry of the table: (vmId, mipsShare)
+
+			// each element of the iterator is one entry of the table: (vmId, mipsShare)
 			String vmId = entry.getKey();
 			List<Double> shares = entry.getValue();
-			
-			//get weight of this vm
-			double vmWeight = weightMap.get(vmId)/totalRequiredMips;
-			
-			//update actual received share
+
+			// get weight of this vm
+			double vmWeight = weightMap.get(vmId) / totalRequiredMips;
+
+			// update actual received share
 			LinkedList<Double> updatedSharesList = new LinkedList<Double>();
 			double actuallyAllocatedMips = 0.0;
-			for(double share: shares){
-				double updatedShare = share*vmWeight;
-				
-				//update share if migrating
+			for (double share : shares) {
+				double updatedShare = share * vmWeight;
+
+				// update share if migrating
 				if (getVmsMigratingOut().contains(vmId)) {
-					updatedShare *= 0.9; // performance degradation due to migration = 10% MIPS
+					// performance degradation due to migration = 10% MIPS
+					updatedShare *= 0.9;
 				} else if (getVmsMigratingIn().contains(vmId)) {
-					updatedShare *= 0.1; // performance cost incurred by the destination host = 90% MIPS
+					// performance cost incurred by the destination host = 10% MIPS
+					updatedShare *= 0.1;
 				}
-				
-				actuallyAllocatedMips+=updatedShare;
+
+				actuallyAllocatedMips += updatedShare;
 				updatedSharesList.add(updatedShare);
 			}
-			
-			//add in the new map
+
+			// add in the new map
 			getMipsMap().put(vmId, updatedSharesList);
 			setAvailableMips(getAvailableMips() - actuallyAllocatedMips);
-		}	
+		}
 	}
 
 	/**
@@ -202,7 +205,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 		for (Map.Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
 			String vmUid = entry.getKey();
 			getPeMap().put(vmUid, new LinkedList<Pe>());
-			
+
 			for (double mips : entry.getValue()) {
 				while (mips >= 0.1) {
 					if (availableMips >= mips) {
