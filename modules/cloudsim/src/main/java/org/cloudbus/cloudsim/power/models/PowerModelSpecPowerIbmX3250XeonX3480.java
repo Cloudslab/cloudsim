@@ -3,13 +3,25 @@ package org.cloudbus.cloudsim.power.models;
 /**
  * The power model of an IBM server x3250 (1 x [Xeon X3480 3067 MHz, 4 cores], 8GB).
  * http://www.spec.org/power_ssj2008/results/res2010q4/power_ssj2008-20101001-00297.html
+ * 
+ * If you are using any algorithms, policies or workload included in the power package, please cite
+ * the following paper:
+ * 
+ * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
+ * Cloud Data Centers", Concurrency and Computation: Practice and Experience, ISSN: 1532-0626, Wiley
+ * Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
+ * 
+ * @author Anton Beloglazov
  */
 public class PowerModelSpecPowerIbmX3250XeonX3480 extends PowerModelSpecPower {
 
 	/** The power. */
 	private final double[] power = { 42.3, 46.7, 49.7, 55.4, 61.8, 69.3, 76.1, 87, 96.1, 106, 113 };
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.cloudbus.cloudsim.power.models.PowerModelSpecPower#getPowerData(int)
 	 */
 	@Override
