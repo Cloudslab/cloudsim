@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.examples;
+package org.cloudbus.cloudsim.power;
 
 import static org.junit.Assert.assertEquals;
 
