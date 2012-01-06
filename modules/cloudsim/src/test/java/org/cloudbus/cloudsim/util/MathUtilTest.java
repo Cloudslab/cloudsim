@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.examples;
+package org.cloudbus.cloudsim.util;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
