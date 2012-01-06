@@ -74,6 +74,7 @@ public class PlanetLabRunner extends RunnerAbstract {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.printLine("The simulation has been terminated due to an unexpected error");
+			System.exit(0);
 		}
 	}
 
