@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.PeProvisioner;
@@ -21,7 +20,7 @@ import org.cloudbus.cloudsim.provisioners.PeProvisioner;
 /**
  * VmSchedulerTimeShared is a VMM allocation policy that allocates one or more Pe to a VM, and
  * allows sharing of PEs by multiple VMs. This class also implements 10% performance degration due
- * to VM migration.
+ * to VM migration. This scheduler does not support over-subscription.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
@@ -88,11 +87,16 @@ public class VmSchedulerTimeShared extends VmScheduler {
 			totalRequestedMips += mips;
 		}
 
+		// This scheduler does not allow over-subscription
+		if (getAvailableMips() < totalRequestedMips) {
+			return false;
+		}
+
 		getMipsMapRequested().put(vmUid, mipsShareRequested);
 		setPesInUse(getPesInUse() + mipsShareRequested.size());
 
 		if (getVmsMigratingIn().contains(vmUid)) {
-			// performance cost incurred by the destination host = 10% MIPS
+			// the destination host only experience 10% of the migrating VM's MIPS
 			totalRequestedMips *= 0.1;
 		}
 
@@ -102,90 +106,16 @@ public class VmSchedulerTimeShared extends VmScheduler {
 				// performance degradation due to migration = 10% MIPS
 				mipsRequested *= 0.9;
 			} else if (getVmsMigratingIn().contains(vmUid)) {
-				// performance cost incurred by the destination host = 10% MIPS
+				// the destination host only experience 10% of the migrating VM's MIPS
 				mipsRequested *= 0.1;
 			}
 			mipsShareAllocated.add(mipsRequested);
 		}
 
-		if (getAvailableMips() >= totalRequestedMips) {
-			getMipsMap().put(vmUid, mipsShareAllocated);
-			setAvailableMips(getAvailableMips() - totalRequestedMips);
-		} else {
-			updateShortage();
-		}
+		getMipsMap().put(vmUid, mipsShareAllocated);
+		setAvailableMips(getAvailableMips() - totalRequestedMips);
 
 		return true;
-	}
-
-	/**
-	 * This method recalculates distribution of MIPs among VMs considering eventual shortage of MIPS
-	 * compared to the amount requested by VMs.
-	 */
-	protected void updateShortage() {
-		// first, we have to know the weight of each VM in the allocation of mips. We want to keep
-		// allocation proportional to it
-
-		HashMap<String, Double> weightMap = new HashMap<String, Double>();
-		double totalRequiredMips = 0.0;
-
-		Iterator<Entry<String, List<Double>>> iter = mipsMapRequested.entrySet().iterator();
-		while (iter.hasNext()) {
-			Entry<String, List<Double>> entry = iter.next();
-
-			// each element of the iterator is one entry of the table: (vmId, mipsShare)
-			String vmId = entry.getKey();
-			List<Double> shares = entry.getValue();
-
-			// count amount of mips required by the vm
-			double requiredMipsByThisVm = 0.0;
-			for (double share : shares) {
-				totalRequiredMips += share;
-				requiredMipsByThisVm += share;
-			}
-
-			// store the value to use later to define weights
-			weightMap.put(vmId, requiredMipsByThisVm);
-		}
-
-		// now, we have the information on individual weights
-		// use this information to define actual shares of
-		// mips received by each VM
-
-		iter = mipsMapRequested.entrySet().iterator();
-		while (iter.hasNext()) {
-			Entry<String, List<Double>> entry = iter.next();
-
-			// each element of the iterator is one entry of the table: (vmId, mipsShare)
-			String vmId = entry.getKey();
-			List<Double> shares = entry.getValue();
-
-			// get weight of this vm
-			double vmWeight = weightMap.get(vmId) / totalRequiredMips;
-
-			// update actual received share
-			LinkedList<Double> updatedSharesList = new LinkedList<Double>();
-			double actuallyAllocatedMips = 0.0;
-			for (double share : shares) {
-				double updatedShare = share * vmWeight;
-
-				// update share if migrating
-				if (getVmsMigratingOut().contains(vmId)) {
-					// performance degradation due to migration = 10% MIPS
-					updatedShare *= 0.9;
-				} else if (getVmsMigratingIn().contains(vmId)) {
-					// performance cost incurred by the destination host = 10% MIPS
-					updatedShare *= 0.1;
-				}
-
-				actuallyAllocatedMips += updatedShare;
-				updatedSharesList.add(updatedShare);
-			}
-
-			// add in the new map
-			getMipsMap().put(vmId, updatedSharesList);
-			setAvailableMips(getAvailableMips() - actuallyAllocatedMips);
-		}
 	}
 
 	/**
@@ -222,7 +152,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 						}
 						if (!peIterator.hasNext()) {
 							Log.printLine("There is no enough MIPS (" + mips + ") to accommodate VM " + vmUid);
-							System.exit(0);
+							// System.exit(0);
 						}
 						pe = peIterator.next();
 						peProvisioner = pe.getPeProvisioner();

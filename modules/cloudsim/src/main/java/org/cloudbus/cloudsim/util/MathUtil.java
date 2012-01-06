@@ -12,6 +12,20 @@ import flanagan.analysis.Stat;
 public class MathUtil {
 
 	/**
+	 * Sums a list of numbers.
+	 * 
+	 * @param list the list
+	 * @return the double
+	 */
+	public static double sum(List<? extends Number> list) {
+		double sum = 0;
+		for (Number number : list) {
+			sum += number.doubleValue();
+		}
+		return sum;
+	}
+
+	/**
 	 * List to array.
 	 * 
 	 * @param list the list
