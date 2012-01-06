@@ -197,6 +197,9 @@ public class Vm {
 	 * @return the current requested bw
 	 */
 	public long getCurrentRequestedBw() {
+		if (isBeingInstantiated()) {
+			return getBw();
+		}
 		return (long) (getCloudletScheduler().getCurrentRequestedUtilizationOfBw() * getBw());
 	}
 
@@ -206,6 +209,9 @@ public class Vm {
 	 * @return the current requested ram
 	 */
 	public int getCurrentRequestedRam() {
+		if (isBeingInstantiated()) {
+			return getRam();
+		}
 		return (int) (getCloudletScheduler().getCurrentRequestedUtilizationOfRam() * getRam());
 	}
 
