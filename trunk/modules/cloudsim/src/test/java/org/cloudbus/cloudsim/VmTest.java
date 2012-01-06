@@ -169,13 +169,13 @@ public class VmTest {
 	public void testGetCurrentRequestedMips() {
 		CloudletScheduler cloudletScheduler = createMock(CloudletScheduler.class);
 		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
+		vm.setBeingInstantiated(false);
 
 		List<Double> expectedCurrentMips = new ArrayList<Double>();
 		expectedCurrentMips.add(MIPS / 2);
 		expectedCurrentMips.add(MIPS / 2);
 
-		expect(cloudletScheduler.getCurrentRequestedMips()).andReturn(new ArrayList<Double>()).andReturn(
-				expectedCurrentMips);
+		expect(cloudletScheduler.getCurrentRequestedMips()).andReturn(expectedCurrentMips);
 
 		replay(cloudletScheduler);
 
