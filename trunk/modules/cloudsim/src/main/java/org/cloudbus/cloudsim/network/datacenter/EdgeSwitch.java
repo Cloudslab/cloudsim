@@ -16,10 +16,10 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
  * It interacts with other switches in order to exchange
  * packets. Please refer to following publication for more details:
  * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel 
- * Applications in Cloud Simulations, Proceedings of the 4th IEEE/ACM International 
- * Conference on Utility and Cloud Computing (UCC 2011, IEEE CS Press, USA), 
- * Melbourne, Australia, December 5-7, 2011. 
+ * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel
+ * Applications in Cloud Simulations, Proceedings of the 4th IEEE/ACM International
+ * Conference on Utility and Cloud Computing (UCC 2011, IEEE CS Press, USA),
+ * Melbourne, Australia, December 5-7, 2011.
  *
  * @author		Saurabh Kumar Garg
  * @since		CloudSim Toolkit 3.0
@@ -31,25 +31,24 @@ public class EdgeSwitch extends Switch{
 	/**
 	 * Constructor for Edge  Switch
 	 * We have to specify switches that are connected to its downlink and uplink ports,
-	 * and corresponding bandwidths. In this switch downlink ports are 
+	 * and corresponding bandwidths. In this switch downlink ports are
 	 * connected to hosts not to a switch.
 	 *
-	 * @param name Name of the switch 
+	 * @param name Name of the switch
 	 * @param level At which level switch is with respect to hosts.
 	 * @param dc  Pointer to Datacenter
 	 */
-	
+
 	public EdgeSwitch(String name, int level, NetworkDatacenter dc) {
 		super(name, level, dc);
 		hostlist=new HashMap<Integer,NetworkHost>();
 		uplinkswitchpktlist=new HashMap<Integer,List<NetworkPacket>>();
 		packetTohost=new HashMap<Integer,List<NetworkPacket>>();
-        uplinkbandwidth=NetworkConstants.BandWidthEdgeAgg;
+		uplinkbandwidth=NetworkConstants.BandWidthEdgeAgg;
 		downlinkbandwidth=NetworkConstants.BandWidthEdgeHost;
 		this.switching_delay=NetworkConstants.SwitchingDelayEdge;
 		numport=NetworkConstants.EdgeSwitchPort;
 		uplinkswitches=new ArrayList<Switch>();
-		// TODO Auto-generated constructor stub
 	}
 	/**
 	 * Send Packet to switch connected through a uplink port
@@ -58,66 +57,64 @@ public class EdgeSwitch extends Switch{
 	 */
 	@Override
 	protected void processpacket_up(SimEvent ev) {
-		// TODO Auto-generated method stub
 		//packet coming from down level router/host.
 		//has to send up
-		//check which switch to forward to 
+		//check which switch to forward to
 		//add packet in the switch list
 		//
 		//int src=ev.getSource();
 		NetworkPacket hspkt=(NetworkPacket) ev.getData();
-	    int recvVMid=hspkt.pkt.reciever;
-	    CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
+		int recvVMid=hspkt.pkt.reciever;
+		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(),this.switching_delay, CloudSimTags.Network_Event_send);
-	    
-    	// packet is recieved from host
-    	//packet is to be sent to aggregate level or to another host in the same level
-    	
-    	int hostid=dc.VmtoHostlist.get(recvVMid);
-    	NetworkHost hs=this.hostlist.get(hostid);
-    	hspkt.recieverhostid=hostid;
-    	
-    	//packet needs to go to a host which is connected directly to switch
-    	if(hs!=null)
-    	{
-    		//packet to be sent to host connected to the switch
-    		List<NetworkPacket> pktlist=this.packetTohost.get(hostid);
-	    	if(pktlist==null){
-	    		pktlist=new ArrayList<NetworkPacket>();
-	    		this.packetTohost.put(hostid, pktlist);
-	    	}
-	    	pktlist.add(hspkt);
-	    	return;
-    		
-    	}
-    	//otherwise
-    	//packet is to be sent to upper switch
-    	//ASSUMPTION EACH EDGE is Connected to one aggregate level switch
-    	//if there are more than one Aggregate level switch one need to modify following code
-             	
-    	Switch sw=this.uplinkswitches.get(0);
-    	List<NetworkPacket> pktlist=this.uplinkswitchpktlist.get(sw.getId());
-    	if(pktlist==null){
-    		pktlist=new ArrayList<NetworkPacket>();
-    		this.uplinkswitchpktlist.put(sw.getId(), pktlist);
-    	}
-    	pktlist.add(hspkt);
-    	return;
-	  	    
-	   
+
+		// packet is recieved from host
+		//packet is to be sent to aggregate level or to another host in the same level
+
+		int hostid=dc.VmtoHostlist.get(recvVMid);
+		NetworkHost hs=this.hostlist.get(hostid);
+		hspkt.recieverhostid=hostid;
+
+		//packet needs to go to a host which is connected directly to switch
+		if(hs!=null)
+		{
+			//packet to be sent to host connected to the switch
+			List<NetworkPacket> pktlist=this.packetTohost.get(hostid);
+			if(pktlist==null){
+				pktlist=new ArrayList<NetworkPacket>();
+				this.packetTohost.put(hostid, pktlist);
+			}
+			pktlist.add(hspkt);
+			return;
+
+		}
+		//otherwise
+		//packet is to be sent to upper switch
+		//ASSUMPTION EACH EDGE is Connected to one aggregate level switch
+		//if there are more than one Aggregate level switch one need to modify following code
+
+		Switch sw=this.uplinkswitches.get(0);
+		List<NetworkPacket> pktlist=this.uplinkswitchpktlist.get(sw.getId());
+		if(pktlist==null){
+			pktlist=new ArrayList<NetworkPacket>();
+			this.uplinkswitchpktlist.put(sw.getId(), pktlist);
+		}
+		pktlist.add(hspkt);
+		return;
+
+
 	}
 	/**
 	 * Send Packet to hosts connected to the switch
 	 *
 	 * @param ev Event/packet to process
 	 */
-	
+
 	@Override
 	protected void processpacketforward(SimEvent ev) {
-		// TODO Auto-generated method stub
 		//search for the host and packets..send to them
-		
-		
+
+
 		if(this.uplinkswitchpktlist!=null)
 		{
 			for(Entry<Integer, List<NetworkPacket>> es:uplinkswitchpktlist.entrySet())
@@ -132,7 +129,7 @@ public class EdgeSwitch extends Switch{
 					{
 						NetworkPacket hspkt=it.next();
 						double delay=1000*hspkt.pkt.data/avband;
-						
+
 						this.send(tosend,delay,CloudSimTags.Network_Event_UP, hspkt);
 					}
 					hspktlist.clear();
@@ -143,8 +140,6 @@ public class EdgeSwitch extends Switch{
 		{
 			for(Entry<Integer, List<NetworkPacket>> es:packetTohost.entrySet())
 			{
-				int tosend=es.getKey();
-				NetworkHost hs=this.hostlist.get(tosend);
 				List<NetworkPacket> hspktlist=es.getValue();
 				if(!hspktlist.isEmpty()){
 					double avband=this.downlinkbandwidth/hspktlist.size();
@@ -157,13 +152,13 @@ public class EdgeSwitch extends Switch{
 					}
 					hspktlist.clear();
 				}
-			}		
+			}
 		}
-		
-		
+
+
 		//or to switch at next level.
 		//clear the list
-		
+
 	}
 
 

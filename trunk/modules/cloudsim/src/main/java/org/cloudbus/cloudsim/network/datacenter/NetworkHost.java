@@ -9,13 +9,10 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmScheduler;
@@ -27,11 +24,11 @@ import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
 /**
- * NetworkHost class extends Host to support simulation of networked datacenters. 
- * It executes actions related to management of packets (send and receive)other than that of 
- * virtual machines (e.g., creation and destruction). A host has a defined
- * policy for provisioning memory and bw, as well as an allocation policy for
- * Pe's to virtual machines.
+ * NetworkHost class extends Host to support simulation of networked
+ * datacenters. It executes actions related to management of packets (send and
+ * receive)other than that of virtual machines (e.g., creation and destruction).
+ * A host has a defined policy for provisioning memory and bw, as well as an
+ * allocation policy for Pe's to virtual machines.
  * 
  * Please refer to following publication for more details:
  * 
@@ -39,10 +36,10 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
  * Applications in Cloud Simulations, Proceedings of the 4th IEEE/ACM
  * International Conference on Utility and Cloud Computing (UCC 2011, IEEE CS
  * Press, USA), Melbourne, Australia, December 5-7, 2011.
- *
+ * 
  * 
  * @author Saurabh Kumar Garg
- * @since CloudSim Toolkit 1.0
+ * @since CloudSim Toolkit 3.0
  */
 public class NetworkHost extends Host {
 
@@ -50,20 +47,24 @@ public class NetworkHost extends Host {
 	public List<NetworkPacket> packetTosendGlobal;
 	public List<NetworkPacket> packetrecieved;
 	public double memory;
-	public Switch sw; //Edge switch in general
+	public Switch sw; // Edge switch in general
 	public double bandwidth;// latency
 	public List<Double> CPUfinTimeCPU = new ArrayList<Double>();// time when
-																// last job will
-																// finish on
-																// CPU1
+	// last job will
+	// finish on
+	// CPU1
 
 	public double fintime = 0;
 
-	public NetworkHost(int id, RamProvisioner ramProvisioner,
-			BwProvisioner bwProvisioner, long storage,
-			List<? extends Pe> peList, VmScheduler vmScheduler) {
+	public NetworkHost(
+			int id,
+			RamProvisioner ramProvisioner,
+			BwProvisioner bwProvisioner,
+			long storage,
+			List<? extends Pe> peList,
+			VmScheduler vmScheduler) {
 		super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler);
-		
+
 		this.packetrecieved = new ArrayList<NetworkPacket>();
 		this.packetTosendGlobal = new ArrayList<NetworkPacket>();
 		this.packetTosendLocal = new ArrayList<NetworkPacket>();
@@ -79,11 +80,12 @@ public class NetworkHost extends Host {
 	 * 
 	 * @return expected time of completion of the next cloudlet in all VMs in
 	 *         this host. Double.MAX_VALUE if there is no future events expected
-	 *         in th  is host
+	 *         in th is host
 	 * 
 	 * @pre currentTime >= 0.0
 	 * @post $none
 	 */
+	@Override
 	public double updateVmsProcessing(double currentTime) {
 		double smallerTime = Double.MAX_VALUE;
 		// insert in each vm packet recieved
@@ -93,18 +95,19 @@ public class NetworkHost extends Host {
 			// continue;
 			// }
 
-			double time = ((NetworkVm) vm).updateVmProcessing(currentTime,
-					getVmScheduler().getAllocatedMipsForVm(vm));
+			double time = ((NetworkVm) vm).updateVmProcessing(currentTime, getVmScheduler()
+					.getAllocatedMipsForVm(vm));
 			if (time > 0.0 && time < smallerTime) {
 				smallerTime = time;
 			}
 		}
-		//send the packets to other hosts/VMs
+		// send the packets to other hosts/VMs
 		sendpackets();
 
 		return smallerTime;
 
 	}
+
 	/**
 	 * Receives packet and forward it to the corresponding VM for processing
 	 * host.
@@ -112,49 +115,49 @@ public class NetworkHost extends Host {
 	 * 
 	 */
 	private void recvpackets() {
-		
+
 		for (NetworkPacket hs : packetrecieved) {
 			// hs.stime=hs.rtime;
 			hs.pkt.recievetime = CloudSim.clock();
 
 			// insertthe packet in recievedlist of VM
 			Vm vm = VmList.getById(getVmList(), hs.pkt.reciever);
-			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm
-					.getCloudletScheduler()).pktrecv.get(hs.pkt.sender);
-			
+			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
+					.get(hs.pkt.sender);
+
 			if (pktlist == null) {
 				pktlist = new ArrayList<HostPacket>();
-				((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
-						.put(hs.pkt.sender, pktlist);
-				
+				((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv.put(
+						hs.pkt.sender,
+						pktlist);
+
 			}
 			pktlist.add(hs.pkt);
 
 		}
 		packetrecieved.clear();
 	}
+
 	/**
-	 * Send packet check whether a packet belongs to a local VM or to a VM hosted on other machine.
+	 * Send packet check whether a packet belongs to a local VM or to a VM
+	 * hosted on other machine.
 	 * 
 	 * 
 	 */
 	private void sendpackets() {
-		
 
 		for (Vm vm : super.getVmList()) {
 			for (Entry<Integer, List<HostPacket>> es : ((NetworkCloudletSpaceSharedScheduler) vm
-					.getCloudletScheduler()).pkttosend.entrySet())
-			{
+					.getCloudletScheduler()).pkttosend.entrySet()) {
 				List<HostPacket> pktlist = es.getValue();
 				for (HostPacket pkt : pktlist) {
-					NetworkPacket hpkt = new NetworkPacket(this.getId(), pkt,
-							vm.getId(), pkt.sender);
-					Vm vm2 = VmList
-							.getById(this.getVmList(), hpkt.recievervmid);
-					if (vm2 != null)
+					NetworkPacket hpkt = new NetworkPacket(this.getId(), pkt, vm.getId(), pkt.sender);
+					Vm vm2 = VmList.getById(this.getVmList(), hpkt.recievervmid);
+					if (vm2 != null) {
 						this.packetTosendLocal.add(hpkt);
-					else
+					} else {
 						this.packetTosendGlobal.add(hpkt);
+					}
 				}
 				pktlist.clear();
 
@@ -172,12 +175,13 @@ public class NetworkHost extends Host {
 			Vm vm = VmList.getById(getVmList(), hs.pkt.reciever);
 			// Vm vm=getVmList().get(hs.pkt.reciever);
 
-			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm
-					.getCloudletScheduler()).pktrecv.get(hs.pkt.sender);
+			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
+					.get(hs.pkt.sender);
 			if (pktlist == null) {
 				pktlist = new ArrayList<HostPacket>();
-				((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
-						.put(hs.pkt.sender, pktlist);
+				((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv.put(
+						hs.pkt.sender,
+						pktlist);
 			}
 			pktlist.add(hs.pkt);
 
@@ -188,14 +192,14 @@ public class NetworkHost extends Host {
 				// continue;
 				// }
 
-				double time = ((NetworkVm) vm).updateVmProcessing(CloudSim
-						.clock(), getVmScheduler().getAllocatedMipsForVm(vm));
+				vm.updateVmProcessing(CloudSim.clock(), getVmScheduler().getAllocatedMipsForVm(vm));
 
 			}
 		}
-		
-		//Sending packet to other VMs therefore packet is forwarded to a Edge switch
-		
+
+		// Sending packet to other VMs therefore packet is forwarded to a Edge
+		// switch
+
 		this.packetTosendLocal.clear();
 		double avband = this.bandwidth / packetTosendGlobal.size();
 		for (NetworkPacket hs : packetTosendGlobal) {
@@ -203,16 +207,19 @@ public class NetworkHost extends Host {
 			NetworkConstants.totaldatatransfer += hs.pkt.data;
 			// System.out.println(hs.pkt.virtualsendid+"  "+hs.pkt.virtualrecvid+" "+hs.pkt.data);
 
-			CloudSim.send(this.getDatacenter().getId(), this.sw.getId(), delay,
-					CloudSimTags.Network_Event_UP, hs);
+			CloudSim.send(
+					this.getDatacenter().getId(),
+					this.sw.getId(),
+					delay,
+					CloudSimTags.Network_Event_UP,
+					hs);
 			// send to switch with delay
 		}
 		this.packetTosendGlobal.clear();
 	}
 
-	@SuppressWarnings("unchecked")
 	public double getMaxUtilizationAmongVmsPes(Vm vm) {
-		return PeList.getMaxUtilizationAmongVmsPes((List<Pe>) getPeList(), vm);
+		return PeList.getMaxUtilizationAmongVmsPes(getPeList(), vm);
 	}
 
 }
