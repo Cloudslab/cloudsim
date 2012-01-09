@@ -202,5 +202,44 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 		assertEquals(3500, vmScheduler.getAvailableMips(), 0);
 		assertEquals(3500, vmScheduler.getMaxAvailableMips(), 0);
 	}
+	
+	@Test
+	public void testAllocatePesForSameSizedVmsOversubscribed() {
+		List<Pe> peList = new ArrayList<Pe>();
+		peList.add(new Pe(0, new PeProvisionerSimple(1000)));
+		VmScheduler vmScheduler = new VmSchedulerTimeSharedOverSubscription(peList);
+		Vm vm1 = new Vm(0, 0, 1500, 1, 0, 0, 0, "", null);
+		Vm vm2 = new Vm(1, 0, 1000, 1, 0, 0, 0, "", null);
+		Vm vm3 = new Vm(2, 0, 1000, 1, 0, 0, 0, "", null);
+
+		List<Double> mipsShare1 = new ArrayList<Double>();
+		mipsShare1.add(1500.0);
+
+		List<Double> mipsShare2 = new ArrayList<Double>();
+		mipsShare2.add(1000.0);
+
+		List<Double> mipsShare3 = new ArrayList<Double>();
+		mipsShare3.add(1000.0);
+
+		assertTrue(vmScheduler.allocatePesForVm(vm1, mipsShare1));
+		assertEquals(0, vmScheduler.getAvailableMips(), 0);
+		assertEquals(1000, vmScheduler.getTotalAllocatedMipsForVm(vm1), 0);
+
+		assertTrue(vmScheduler.allocatePesForVm(vm2, mipsShare2));
+		assertEquals(0, vmScheduler.getAvailableMips(), 0);
+		assertEquals(500, vmScheduler.getTotalAllocatedMipsForVm(vm1), 0);
+		assertEquals(500, vmScheduler.getTotalAllocatedMipsForVm(vm2), 0);
+
+		assertTrue(vmScheduler.allocatePesForVm(vm3, mipsShare3));
+		assertEquals(0, vmScheduler.getAvailableMips(), 0);
+		assertEquals(333, vmScheduler.getTotalAllocatedMipsForVm(vm1), 0);
+		assertEquals(333, vmScheduler.getTotalAllocatedMipsForVm(vm2), 0);
+		assertEquals(333, vmScheduler.getTotalAllocatedMipsForVm(vm3), 0);
+
+		vmScheduler.deallocatePesForAllVms();
+
+		assertEquals(1000, vmScheduler.getAvailableMips(), 0);
+		assertEquals(1000, vmScheduler.getMaxAvailableMips(), 0);
+	}
 
 }
