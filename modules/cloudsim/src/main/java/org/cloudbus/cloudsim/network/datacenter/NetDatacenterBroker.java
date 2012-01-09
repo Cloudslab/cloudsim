@@ -13,14 +13,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.UUID;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerSpaceShared;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
@@ -29,14 +23,13 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.distributions.UniformDistr;
-import org.cloudbus.cloudsim.lists.CloudletList;
 import org.cloudbus.cloudsim.lists.VmList;
 
 /**
  * NetDatacentreBroker represents a broker acting on behalf of Datacenter
  * provider. It hides VM management, as vm creation, submission of cloudlets to
  * this VMs and destruction of VMs. NOTE- It is an example only. It work on behalf of a provider not for
- * users. One has to implement interaction with user broker to this broker. 
+ * users. One has to implement interaction with user broker to this broker.
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
@@ -56,7 +49,7 @@ public class NetDatacenterBroker extends SimEntity {
 
 	private List<? extends AppCloudlet> appCloudletList;
 	/** The Appcloudlet submitted list. */
-	private Map<Integer, Integer> appCloudletRecieved;
+	private final Map<Integer, Integer> appCloudletRecieved;
 
 	private List<? extends Cloudlet> cloudletSubmittedList;
 
@@ -170,8 +163,8 @@ public class NetDatacenterBroker extends SimEntity {
 	// public void bindCloudletToVm(int cloudletId, int vmId){
 	// CloudletList.getById(getCloudletList(), cloudletId).setVmId(vmId);
 	// }
-	public void setLinkDC(NetworkDatacenter linkDC) {
-		this.linkDC = linkDC;
+	public void setLinkDC(NetworkDatacenter alinkDC) {
+		linkDC = alinkDC;
 	}
 
 	/**
@@ -191,26 +184,27 @@ public class NetDatacenterBroker extends SimEntity {
 		case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST:
 			processResourceCharacteristicsRequest(ev);
 			break;
-		// Resource characteristics answer
+			// Resource characteristics answer
 		case CloudSimTags.RESOURCE_CHARACTERISTICS:
 			processResourceCharacteristics(ev);
 			break;
-		// VM Creation answer
+			// VM Creation answer
 
-		// A finished cloudlet returned
+			// A finished cloudlet returned
 		case CloudSimTags.CLOUDLET_RETURN:
 			processCloudletReturn(ev);
 			break;
-		// if the simulation finishes
+			// if the simulation finishes
 		case CloudSimTags.END_OF_SIMULATION:
 			shutdownEntity();
 			break;
 		case CloudSimTags.NextCycle:
-			if (NetworkConstants.BASE)
-				this.createVmsInDatacenterBase(this.linkDC.getId());
+			if (NetworkConstants.BASE) {
+				this.createVmsInDatacenterBase(linkDC.getId());
+			}
 
 			break;
-		// other unknown tags are processed by this method
+			// other unknown tags are processed by this method
 		default:
 			processOtherEvent(ev);
 			break;
@@ -229,7 +223,7 @@ public class NetDatacenterBroker extends SimEntity {
 	 */
 	protected void processResourceCharacteristics(SimEvent ev) {
 		DatacenterCharacteristics characteristics = (DatacenterCharacteristics) ev
-				.getData();
+		.getData();
 		getDatacenterCharacteristicsList().put(characteristics.getId(),
 				characteristics);
 
@@ -341,8 +335,6 @@ public class NetDatacenterBroker extends SimEntity {
 		// send as much vms as possible for this datacenter before trying the
 		// next one
 		int requestedVms = 0;
-		String datacenterName = CloudSim.getEntityName(datacenterId);
-		int j = 0;
 
 		// All host will have two VMs (assumption) VM is the minimum unit
 
@@ -360,16 +352,14 @@ public class NetDatacenterBroker extends SimEntity {
 			NetworkConstants.currentAppId++;
 
 		}
-		int seed = 5;
 		int k = 0;
-		int totalvm = this.vmsCreatedList.size();
 		int currentvmid = 0;
-		
+
 		//schedule the application on VMs
 		for (AppCloudlet app : this.getAppCloudletList()) {
 
 			List<Integer> vmids = new ArrayList<Integer>();
-			int numVms = this.linkDC.getVmList().size();
+			int numVms = linkDC.getVmList().size();
 			UniformDistr ufrnd = new UniformDistr(0, numVms, 5);
 			for (int i = 0; i < app.numbervm; i++) {
 
@@ -409,18 +399,17 @@ public class NetDatacenterBroker extends SimEntity {
 					CloudSimTags.NextCycle);
 		}
 
-		
+
 
 		setVmsRequested(requestedVms);
 		setVmsAcks(0);
 	}
 
 	private void CreateVMs(int datacenterId) {
-		// TODO Auto-generated method stub
-		int numVM = this.linkDC.getHostList().size() * NetworkConstants.maxhostVM; // two
-																			// VMs
-																			// per
-																			// host
+		int numVM = linkDC.getHostList().size() * NetworkConstants.maxhostVM; // two
+		// VMs
+		// per
+		// host
 		for (int i = 0; i < numVM; i++) {
 			int requestedVms = 0;
 			int vmid = i;
@@ -429,14 +418,14 @@ public class NetDatacenterBroker extends SimEntity {
 			int ram = 512; // vm memory (MB)
 			long bw = 1000;
 			int pesNumber = NetworkConstants.HOST_PEs / NetworkConstants.maxhostVM; // number
-																		// of
-																		// cpus
+			// of
+			// cpus
 			String vmm = "Xen"; // VMM name
 
 			// create VM
 			NetworkVm vm = new NetworkVm(vmid, this.getId(), mips, pesNumber,
 					ram, bw, size, vmm, new NetworkCloudletSpaceSharedScheduler());
-			this.linkDC.processVmCreateNetwork(vm);
+			linkDC.processVmCreateNetwork(vm);
 			// add the VM to the vmList
 			getVmList().add(vm);
 			requestedVms++;
@@ -545,6 +534,7 @@ public class NetDatacenterBroker extends SimEntity {
 		this.cloudletList = cloudletList;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends AppCloudlet> List<T> getAppCloudletList() {
 		return (List<T>) appCloudletList;
 	}

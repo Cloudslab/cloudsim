@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
@@ -67,30 +67,7 @@ public class Switch extends SimEntity {
 	public Switch(String name, int level, NetworkDatacenter dc) {
 		super(name);
 		this.level = level;
-
-		/*
-		 * if(level==Constants.EDGE_LEVEL) { hostlist=new HashMap<Integer,HPCHost>();
-		 * uplinkswitchpktlist=new HashMap<Integer,List<HostPacket>>(); packetTohost=new
-		 * HashMap<Integer,List<HostPacket>>(); uplinkbandwidth=Constants.BandWidthEdgeAgg;
-		 * downlinkbandwidth=Constants.BandWidthEdgeHost; latency=Constants.SwitchingDelayEdge;
-		 * numport=Constants.EdgeSwitchPort; uplinkswitches=new ArrayList<Switch>();
-		 * 
-		 * } if(level==Constants.Agg_LEVEL) { downlinkswitchpktlist=new
-		 * HashMap<Integer,List<HostPacket>>(); uplinkswitchpktlist=new
-		 * HashMap<Integer,List<HostPacket>>(); uplinkbandwidth=Constants.BandWidthAggRoot;
-		 * downlinkbandwidth=Constants.BandWidthEdgeAgg; latency=Constants.SwitchingDelayAgg;
-		 * numport=Constants.AggSwitchPort; uplinkswitches=new ArrayList<Switch>();
-		 * downlinkswitches=new ArrayList<Switch>(); } if(level==Constants.ROOT_LEVEL) {
-		 * downlinkswitchpktlist=new HashMap<Integer,List<HostPacket>>(); downlinkswitches=new
-		 * ArrayList<Switch>();
-		 * 
-		 * downlinkbandwidth=Constants.BandWidthAggRoot; latency=Constants.SwitchingDelayRoot;
-		 * numport=Constants.RootSwitchPort;
-		 * 
-		 * }
-		 */
 		this.dc = dc;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -104,34 +81,33 @@ public class Switch extends SimEntity {
 		// Log.printLine(CloudSim.clock()+"[Broker]: event received:"+ev.getTag());
 		switch (ev.getTag()) {
 		// Resource characteristics request
-			case CloudSimTags.Network_Event_UP:
-				// process the packet from down switch or host
-				processpacket_up(ev);
-				break;
-			case CloudSimTags.Network_Event_DOWN:
-				// process the packet from uplink
-				processpacket_down(ev);
-				break;
-			case CloudSimTags.Network_Event_send:
-				processpacketforward(ev);
-				break;
+		case CloudSimTags.Network_Event_UP:
+			// process the packet from down switch or host
+			processpacket_up(ev);
+			break;
+		case CloudSimTags.Network_Event_DOWN:
+			// process the packet from uplink
+			processpacket_down(ev);
+			break;
+		case CloudSimTags.Network_Event_send:
+			processpacketforward(ev);
+			break;
 
-			case CloudSimTags.Network_Event_Host:
-				processhostpacket(ev);
-				break;
-			// Resource characteristics answer
-			case CloudSimTags.RESOURCE_Register:
-				registerHost(ev);
-				break;
-			// other unknown tags are processed by this method
-			default:
-				processOtherEvent(ev);
-				break;
+		case CloudSimTags.Network_Event_Host:
+			processhostpacket(ev);
+			break;
+		// Resource characteristics answer
+		case CloudSimTags.RESOURCE_Register:
+			registerHost(ev);
+			break;
+		// other unknown tags are processed by this method
+		default:
+			processOtherEvent(ev);
+			break;
 		}
 	}
 
 	protected void processhostpacket(SimEvent ev) {
-		// TODO Auto-generated method stub
 		// Send packet to host
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
 		NetworkHost hs = hostlist.get(hspkt.recieverhostid);
@@ -139,7 +115,6 @@ public class Switch extends SimEntity {
 	}
 
 	protected void processpacket_down(SimEvent ev) {
-		// TODO Auto-generated method stub
 		// packet coming from up level router.
 		// has to send downward
 		// check which switch to forward to
@@ -178,7 +153,6 @@ public class Switch extends SimEntity {
 	}
 
 	protected void processpacket_up(SimEvent ev) {
-		// TODO Auto-generated method stub
 		// packet coming from down level router.
 		// has to send up
 		// check which switch to forward to
@@ -277,13 +251,11 @@ public class Switch extends SimEntity {
 	}
 
 	private void registerHost(SimEvent ev) {
-		// TODO Auto-generated method stub
 		NetworkHost hs = (NetworkHost) ev.getData();
 		hostlist.put(hs.getId(), (NetworkHost) ev.getData());
 	}
 
 	protected void processpacket(SimEvent ev) {
-		// TODO Auto-generated method stub
 		// send packet to itself with switching delay (discarding other)
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_UP));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_UP);
@@ -294,12 +266,10 @@ public class Switch extends SimEntity {
 	}
 
 	private void processOtherEvent(SimEvent ev) {
-		// TODO Auto-generated method stub
 
 	}
 
 	protected void processpacketforward(SimEvent ev) {
-		// TODO Auto-generated method stub
 		// search for the host and packets..send to them
 
 		if (downlinkswitchpktlist != null) {
@@ -338,8 +308,6 @@ public class Switch extends SimEntity {
 		}
 		if (packetTohost != null) {
 			for (Entry<Integer, List<NetworkPacket>> es : packetTohost.entrySet()) {
-				int tosend = es.getKey();
-				NetworkHost hs = hostlist.get(tosend);
 				List<NetworkPacket> hspktlist = es.getValue();
 				if (!hspktlist.isEmpty()) {
 					double avband = downlinkbandwidth / hspktlist.size();
@@ -360,8 +328,11 @@ public class Switch extends SimEntity {
 
 	}
 
-	private NetworkHost getHostwithVM(int vmid) {
-		// TODO Auto-generated method stub
+	//
+	// R: We changed visibility of the below methods from private to protected.
+	//
+
+	protected NetworkHost getHostwithVM(int vmid) {
 		for (Entry<Integer, NetworkHost> es : hostlist.entrySet()) {
 			Vm vm = VmList.getById(es.getValue().getVmList(), vmid);
 			if (vm != null) {
@@ -371,8 +342,7 @@ public class Switch extends SimEntity {
 		return null;
 	}
 
-	private List<NetworkVm> getfreeVmlist(int numVMReq) {
-		// TODO Auto-generated method stub
+	protected List<NetworkVm> getfreeVmlist(int numVMReq) {
 		List<NetworkVm> freehostls = new ArrayList<NetworkVm>();
 		for (Entry<Integer, NetworkVm> et : Vmlist.entrySet()) {
 			if (et.getValue().isFree()) {
@@ -386,8 +356,7 @@ public class Switch extends SimEntity {
 		return freehostls;
 	}
 
-	private List<NetworkHost> getfreehostlist(int numhost) {
-		// TODO Auto-generated method stub
+	protected List<NetworkHost> getfreehostlist(int numhost) {
 		List<NetworkHost> freehostls = new ArrayList<NetworkHost>();
 		for (Entry<Integer, NetworkHost> et : hostlist.entrySet()) {
 			if (et.getValue().getNumberOfFreePes() == et.getValue().getNumberOfPes()) {

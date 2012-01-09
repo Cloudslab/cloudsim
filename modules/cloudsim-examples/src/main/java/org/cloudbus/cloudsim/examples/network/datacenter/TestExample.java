@@ -1,7 +1,5 @@
 package org.cloudbus.cloudsim.examples.network.datacenter;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -10,20 +8,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerSpaceShared;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.UtilizationModel;
-import org.cloudbus.cloudsim.UtilizationModelFull;
-import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.distributions.UniformDistr;
-import org.cloudbus.cloudsim.network.datacenter.AppCloudlet;
 import org.cloudbus.cloudsim.network.datacenter.EdgeSwitch;
 import org.cloudbus.cloudsim.network.datacenter.NetDatacenterBroker;
 import org.cloudbus.cloudsim.network.datacenter.NetworkConstants;
@@ -36,13 +27,6 @@ import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 public class TestExample {
-
-	/**
-	 * @param args
-	 */
-
-	/** The cloudlet list. */
-	private static List<AppCloudlet> cloudletList;
 
 	/** The vmlist. */
 	private static List<NetworkVm> vmlist;
@@ -72,11 +56,9 @@ public class TestExample {
 
 			// Third step: Create Broker
 			NetDatacenterBroker broker = createBroker();
-			int brokerId = broker.getId();
 			broker.setLinkDC(datacenter0);
 			// broker.setLinkDC(datacenter0);
 			// Fifth step: Create one Cloudlet
-			cloudletList = new ArrayList<AppCloudlet>();
 
 			vmlist = new ArrayList<NetworkVm>();
 
@@ -92,9 +74,9 @@ public class TestExample {
 			// Final step: Print results when simulation is over
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
-			System.out.println("numberofcloudlet " + newList.size()
-					+ " Cached " + NetDatacenterBroker.cachedcloudlet
-					+ " Data transfered " + NetworkConstants.totaldatatransfer);
+			System.out.println("numberofcloudlet " + newList.size() + " Cached "
+					+ NetDatacenterBroker.cachedcloudlet + " Data transfered "
+					+ NetworkConstants.totaldatatransfer);
 			// Print the debt of each user to each datacenter
 			datacenter0.printDebts();
 
@@ -133,70 +115,72 @@ public class TestExample {
 
 		// 4. Create Host with its id and list of PEs and add them to the list
 		// of machines
-		int hostId = 0;
 		int ram = 2048; // host memory (MB)
 		long storage = 1000000; // host storage
 		int bw = 10000;
-		for (int i = 0; i < NetworkConstants.EdgeSwitchPort
-				* NetworkConstants.AggSwitchPort
+		for (int i = 0; i < NetworkConstants.EdgeSwitchPort * NetworkConstants.AggSwitchPort
 				* NetworkConstants.RootSwitchPort; i++) {
 			// 2. A Machine contains one or more PEs or CPUs/Cores.
 			// In this example, it will have only one core.
 			// 3. Create PEs and add these into an object of PowerPeList.
 			List<Pe> peList = new ArrayList<Pe>();
 			peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to
-																	// store
-																	// PowerPe
-																	// id and
-																	// MIPS
-																	// Rating
+			// store
+			// PowerPe
+			// id and
+			// MIPS
+			// Rating
 			peList.add(new Pe(1, new PeProvisionerSimple(mips))); // need to
-																	// store
-																	// PowerPe
-																	// id and
-																	// MIPS
-																	// Rating
+			// store
+			// PowerPe
+			// id and
+			// MIPS
+			// Rating
 			peList.add(new Pe(2, new PeProvisionerSimple(mips))); // need to
-																	// store
-																	// PowerPe
-																	// id and
-																	// MIPS
-																	// Rating
+			// store
+			// PowerPe
+			// id and
+			// MIPS
+			// Rating
 			peList.add(new Pe(3, new PeProvisionerSimple(mips))); // need to
-																	// store
-																	// PowerPe
-																	// id and
-																	// MIPS
-																	// Rating
+			// store
+			// PowerPe
+			// id and
+			// MIPS
+			// Rating
 			peList.add(new Pe(4, new PeProvisionerSimple(mips))); // need to
-																	// store
-																	// PowerPe
-																	// id and
-																	// MIPS
-																	// Rating
+			// store
+			// PowerPe
+			// id and
+			// MIPS
+			// Rating
 			peList.add(new Pe(5, new PeProvisionerSimple(mips))); // need to
-																	// store
-																	// PowerPe
-																	// id and
-																	// MIPS
-																	// Rating
+			// store
+			// PowerPe
+			// id and
+			// MIPS
+			// Rating
 			peList.add(new Pe(6, new PeProvisionerSimple(mips))); // need to
-																	// store
-																	// PowerPe
-																	// id and
-																	// MIPS
-																	// Rating
+			// store
+			// PowerPe
+			// id and
+			// MIPS
+			// Rating
 			peList.add(new Pe(7, new PeProvisionerSimple(mips))); // need to
-																	// store
-																	// PowerPe
-																	// id and
-																	// MIPS
-																	// Rating
+			// store
+			// PowerPe
+			// id and
+			// MIPS
+			// Rating
 
 			// 4. Create PowerHost with its id and list of PEs and add them to
 			// the list of machines
-			hostList.add(new NetworkHost(i, new RamProvisionerSimple(ram),
-					new BwProvisionerSimple(bw), storage, peList,
+			hostList.add(new NetworkHost(
+					i,
+					new RamProvisionerSimple(ram),
+					new BwProvisionerSimple(bw),
+					storage,
+					peList,
 					new VmSchedulerTimeShared(peList))); // This is our machine
 		}
 
@@ -211,23 +195,34 @@ public class TestExample {
 		double cost = 3.0; // the cost of using processing in this resource
 		double costPerMem = 0.05; // the cost of using memory in this resource
 		double costPerStorage = 0.001; // the cost of using storage in this
-										// resource
+		// resource
 		double costPerBw = 0.0; // the cost of using bw in this resource
 		LinkedList<Storage> storageList = new LinkedList<Storage>(); // we are
-																		// not
-																		// adding
-																		// SAN
+		// not
+		// adding
+		// SAN
 		// devices by now
 
 		DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
-				arch, os, vmm, hostList, time_zone, cost, costPerMem,
-				costPerStorage, costPerBw);
+				arch,
+				os,
+				vmm,
+				hostList,
+				time_zone,
+				cost,
+				costPerMem,
+				costPerStorage,
+				costPerBw);
 
 		// 6. Finally, we need to create a NetworkDatacenter object.
 		NetworkDatacenter datacenter = null;
 		try {
-			datacenter = new NetworkDatacenter(name, characteristics,
-					new NetworkVmAllocationPolicy(hostList), storageList, 0);
+			datacenter = new NetworkDatacenter(
+					name,
+					characteristics,
+					new NetworkVmAllocationPolicy(hostList),
+					storageList,
+					0);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -263,17 +258,14 @@ public class TestExample {
 	 *            list of Cloudlets
 	 * @throws IOException
 	 */
-	private static void printCloudletList(List<Cloudlet> list)
-			throws IOException {
+	private static void printCloudletList(List<Cloudlet> list) throws IOException {
 		int size = list.size();
 		Cloudlet cloudlet;
-		double fintime = 0;
 		String indent = "    ";
 		Log.printLine();
 		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
-				+ "Data center ID" + indent + "VM ID" + indent + "Time"
-				+ indent + "Start Time" + indent + "Finish Time");
+		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent + "Data center ID" + indent + "VM ID"
+				+ indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
 		for (int i = 0; i < size; i++) {
@@ -282,13 +274,9 @@ public class TestExample {
 
 			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS) {
 				Log.print("SUCCESS");
-				fintime = cloudlet.getFinishTime();
-				Log.printLine(indent + indent + cloudlet.getResourceId()
-						+ indent + indent + indent + cloudlet.getVmId()
-						+ indent + indent
-						+ dft.format(cloudlet.getActualCPUTime()) + indent
-						+ indent + dft.format(cloudlet.getExecStartTime())
-						+ indent + indent
+				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
+						+ cloudlet.getVmId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
+						+ indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent
 						+ dft.format(cloudlet.getFinishTime()));
 			}
 		}
@@ -297,24 +285,11 @@ public class TestExample {
 
 	static void CreateNetwork(int numhost, NetworkDatacenter dc) {
 
-		// //Root Switch
-		// Switch swroot=new Switch("Root", Constants.ROOT_LEVEL, dc);
-		// dc.Switchlist.put(swroot.getId(), swroot);
-		// //Agg Switch
-		// Switch aggswitch[]=new Switch[(int) Constants.RootSwitchPort];
-		// for(int j=0;j<Constants.RootSwitchPort;j++)
-		// {
-		// aggswitch[j]=new Switch("Agg"+j, Constants.Agg_LEVEL, dc);
-		// swroot.downlinkswitches.add(aggswitch[j]);
-		// aggswitch[j].uplinkswitches.add(swroot);
-		// dc.Switchlist.put(aggswitch[j].getId(), aggswitch[j]);
-		// }
 		// Edge Switch
 		EdgeSwitch edgeswitch[] = new EdgeSwitch[1];
 
 		for (int i = 0; i < 1; i++) {
-			edgeswitch[i] = new EdgeSwitch("Edge" + i,
-					NetworkConstants.EDGE_LEVEL, dc);
+			edgeswitch[i] = new EdgeSwitch("Edge" + i, NetworkConstants.EDGE_LEVEL, dc);
 			// edgeswitch[i].uplinkswitches.add(null);
 			dc.Switchlist.put(edgeswitch[i].getId(), edgeswitch[i]);
 			// aggswitch[(int)
