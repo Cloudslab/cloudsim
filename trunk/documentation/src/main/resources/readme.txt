@@ -77,4 +77,17 @@ Usage:
 Note:
 
   * You need to set up PATH for ant in Windows and/or Unix.
+  
+  
+ 7. Downloading and using external jars
+---------------------------------------
+
+Utilization of the power package (for energy modelling) requires the Michael Thomas
+Flanagan's Java Scientific Library. This library can be downloaded from
+
+http://www.ee.ucl.ac.uk/~mflanaga/java/
+
+Please, make sure that, by using such library, you are respecting the terms of use
+defined by the software's author.
+
 
