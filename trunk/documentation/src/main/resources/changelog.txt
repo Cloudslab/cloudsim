@@ -15,9 +15,21 @@ of switches connecting hosts in arbitrary network topologies. New Vm classes and
 take advantage of this feature without breaking compatibility of older code. This new feature also enables
 modelling of message-passing applications. They are included in the package 'network.datacenter'.
 
-- NEW POWER MODELS. 3 power models of IBM servers using the data from SPECpower were added to the power package.
-They are PowerModelSpecPowerIbmX3250XeonX3480, PowerModelSpecPowerIbmX3550XeonX5670, and
-PowerModelSpecPowerIbmX3550XeonX5675.
+- NEW VM ALLOCATION AND SELECTION POLICIES. 6 new VM allocation and 4 VM selection policies were added to the 
+power package. To find more details about the policies please refer to the following paper: 
+
+	Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive Heuristics for 
+	Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in Cloud Data Centers", Concurrency 
+	and Computation: Practice and Experience, ISSN: 1532-0626, Wiley Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
+
+- NEW POWER MODELS. 7 power models of real servers using the data from SPECpower were added to the power package.
+They are PowerModelSpecPowerHpProLiantMl110G3PentiumD930, PowerModelSpecPowerHpProLiantMl110G4Xeon3040,
+PowerModelSpecPowerHpProLiantMl110G5Xeon3075, PowerModelSpecPowerIbmX3250XeonX3470, PowerModelSpecPowerIbmX3250XeonX3480, 
+PowerModelSpecPowerIbmX3550XeonX5670, and PowerModelSpecPowerIbmX3550XeonX5675.
+
+- NEW WORKLOAD TRACES. Workload traces from the PlanetLab project were added and used in the examples of the
+power package. The data have originally been provided as a part of the CoMon project, a monitoring infrastructure 
+for PlanetLab (http://comon.cs.princeton.edu/).
 
 - SUPPORT FOR EXTERNAL WORKLOADS. External workloads written in the Standard Workload Format (SWF, from the
 Parallel Workload Archive) can be loaded and read by CloudSim. Relevant classes are WorkloadModel and
@@ -43,6 +55,7 @@ API CHANGES
 - CloudSim.terminateSimulation(long time) was changed to CloudSim.terminateSimulation(double time), to comply
 with clock field of CloudSim class.
 - PowerModel was moved from PowerPe to PowerHost
+- VM allocation policies in the power package were replaced by a completely new implementation.
 
 
 BUGFIXES AND IMPROVEMENTS
