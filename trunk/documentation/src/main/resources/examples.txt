@@ -60,9 +60,10 @@ In Windows:
 In Unix/Linux:
 
 1. cd <PATH TO CLOUDSIM PACKAGE>
-2. ./install-flanagan.jar
-2. javac -classpath jars/cloudsim-<VERSION>.jar:jars/flanagan.jar:examples examples/org/cloudbus/cloudsim/examples/CloudSimExample1.java
-3. java -classpath jars/cloudsim-<VERSION>.jar:jars/flanagan.jar:examples org.cloudbus.cloudsim.examples.CloudSimExample1
+2. chmod +x ./install-flanagan.jar
+3. ./install-flanagan.jar
+4. javac -classpath jars/cloudsim-<VERSION>.jar:jars/flanagan.jar:examples examples/org/cloudbus/cloudsim/examples/CloudSimExample1.java
+5. java -classpath jars/cloudsim-<VERSION>.jar:jars/flanagan.jar:examples org.cloudbus.cloudsim.examples.CloudSimExample1
 
 
 Description of the CloudSim examples
