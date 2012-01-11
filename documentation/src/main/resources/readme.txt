@@ -82,10 +82,14 @@ Note:
  7. Downloading and using external jars
 ---------------------------------------
 
-Utilization of the power package (for energy modelling) requires the Michael Thomas
-Flanagan's Java Scientific Library. This library can be downloaded from
+Some of the algorithms in the power package require Michael Thomas Flanagan's 
+Java Scientific Library. This library can be downloaded from
 
 http://www.ee.ucl.ac.uk/~mflanaga/java/
+
+Once the library is downloaded, copy it to the jars/ directory. If you are running 
+Linux, you can just run the ./install-flanagan.sh script, that will download the
+library and place it in the jars/ directory.
 
 Please, make sure that, by using such library, you are respecting the terms of use
 defined by the software's author.
