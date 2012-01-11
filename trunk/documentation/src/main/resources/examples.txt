@@ -34,13 +34,13 @@ To compile and run an example (let's say org.cloudbus.cloudsim.examples.CloudSim
 In Windows:
 
 1. cd <PATH TO CLOUDSIM PACKAGE>
-2. javac -classpath jars\cloudsim-<VERSION>.jar examples\org\cloudbus\cloudsim\examples\CloudSimExample1.java
+2. javac -classpath jars\cloudsim-<VERSION>.jar;examples examples\org\cloudbus\cloudsim\examples\CloudSimExample1.java
 3. java -classpath jars\cloudsim-<VERSION>.jar;examples org.cloudbus.cloudsim.examples.CloudSimExample1
 
 In Unix/Linux:
 
 1. cd <PATH TO CLOUDSIM PACKAGE>
-2. javac -classpath jars/cloudsim-<VERSION>.jar examples/org/cloudbus/cloudsim/examples/CloudSimExample1.java
+2. javac -classpath jars/cloudsim-<VERSION>.jar:examples examples/org/cloudbus/cloudsim/examples/CloudSimExample1.java
 3. java -classpath jars/cloudsim-<VERSION>.jar:examples org.cloudbus.cloudsim.examples.CloudSimExample1
 
 
