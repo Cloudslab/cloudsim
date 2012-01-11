@@ -20,8 +20,7 @@
 
   * *NEW WORKLOAD TRACES.* Workload traces from the PlanetLab project were added and used in the examples of the power package. The data have originally been provided as a part of the CoMon project, a monitoring infrastructure for PlanetLab (http://comon.cs.princeton.edu/).
 
-  * *SUPPORT FOR EXTERNAL WORKLOADS.* External workloads written in the Standard Workload Format (SWF, from the Parallel Workload Archive) can be loaded and read by CloudSim. Relevant classes are WorkloadModel and
-WorkloadFileReader ('util' package).
+  * *SUPPORT FOR EXTERNAL WORKLOADS.* External workloads written in the Standard Workload Format (SWF, from the Parallel Workload Archive) can be loaded and read by CloudSim. Relevant classes are WorkloadModel and WorkloadFileReader ('util' package).
 
   * *SUPPORT FOR USER-DEFINED END OF SIMULATION.* Users are now able to specify a given event that causes the simulation to finish. We thanks Gaston Keller for developing this new feature.
 
