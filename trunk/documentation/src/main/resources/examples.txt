@@ -44,6 +44,27 @@ In Unix/Linux:
 3. java -classpath jars/cloudsim-<VERSION>.jar:examples org.cloudbus.cloudsim.examples.CloudSimExample1
 
 
+Compiling and running examples from the power package
+-----------------------------------------------------
+
+To compile and run an example (let's say org.cloudbus.cloudsim.examples.power.planetlab.LrMc) you need to do the following steps:
+
+In Windows:
+
+1. Download Michael Thomas Flanagan's Java Scientific Library from http://www.ee.ucl.ac.uk/~mflanaga/java/
+2. Copy flanagan.jar to <PATH TO CLOUDSIM PACKAGE>/jars/
+3. cd <PATH TO CLOUDSIM PACKAGE>
+4. javac -classpath jars\cloudsim-<VERSION>.jar;jars\flanagan.jar;examples examples\org\cloudbus\cloudsim\examples\CloudSimExample1.java
+5. java -classpath jars\cloudsim-<VERSION>.jar;jars\flanagan.jar;examples org.cloudbus.cloudsim.examples.CloudSimExample1
+
+In Unix/Linux:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>
+2. ./install-flanagan.jar
+2. javac -classpath jars/cloudsim-<VERSION>.jar:jars/flanagan.jar:examples examples/org/cloudbus/cloudsim/examples/CloudSimExample1.java
+3. java -classpath jars/cloudsim-<VERSION>.jar:jars/flanagan.jar:examples org.cloudbus.cloudsim.examples.CloudSimExample1
+
+
 Description of the CloudSim examples
 ------------------------------------
 
