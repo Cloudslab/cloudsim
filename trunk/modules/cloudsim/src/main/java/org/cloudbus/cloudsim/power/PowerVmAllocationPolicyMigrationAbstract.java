@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.power;
 
 import java.util.ArrayList;
@@ -17,7 +25,8 @@ import org.cloudbus.cloudsim.power.lists.PowerVmList;
 import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
 
 /**
- * The Class PowerVmAllocationPolicyMigrationAbstract.
+ * The class of an abstract power-aware VM allocation policy that dynamically optimizes the VM
+ * allocation using migration.
  * 
  * If you are using any algorithms, policies or workload included in the power package, please cite
  * the following paper:
@@ -28,6 +37,7 @@ import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
  * Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
  * 
  * @author Anton Beloglazov
+ * @since CloudSim Toolkit 3.0
  */
 public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAllocationPolicyAbstract {
 

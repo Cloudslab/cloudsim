@@ -10,9 +10,9 @@ package org.cloudbus.cloudsim;
 
 /**
  * The Class VmMipsAllocationHistoryEntry.
- *
- * @author		Anton Beloglazov
- * @since		CloudSim Toolkit 2.1.2
+ * 
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 2.1.2
  */
 public class VmStateHistoryEntry {
 
@@ -30,7 +30,7 @@ public class VmStateHistoryEntry {
 
 	/**
 	 * Instantiates a new vm mips allocation history entry.
-	 *
+	 * 
 	 * @param time the time
 	 * @param allocatedMips the allocated mips
 	 * @param requestedMips the requested mips
@@ -45,7 +45,7 @@ public class VmStateHistoryEntry {
 
 	/**
 	 * Sets the time.
-	 *
+	 * 
 	 * @param time the new time
 	 */
 	protected void setTime(double time) {
@@ -54,7 +54,7 @@ public class VmStateHistoryEntry {
 
 	/**
 	 * Gets the time.
-	 *
+	 * 
 	 * @return the time
 	 */
 	public double getTime() {
@@ -63,7 +63,7 @@ public class VmStateHistoryEntry {
 
 	/**
 	 * Sets the allocated mips.
-	 *
+	 * 
 	 * @param allocatedMips the new allocated mips
 	 */
 	protected void setAllocatedMips(double allocatedMips) {
@@ -72,7 +72,7 @@ public class VmStateHistoryEntry {
 
 	/**
 	 * Gets the allocated mips.
-	 *
+	 * 
 	 * @return the allocated mips
 	 */
 	public double getAllocatedMips() {
@@ -81,7 +81,7 @@ public class VmStateHistoryEntry {
 
 	/**
 	 * Sets the requested mips.
-	 *
+	 * 
 	 * @param requestedMips the new requested mips
 	 */
 	protected void setRequestedMips(double requestedMips) {
@@ -90,7 +90,7 @@ public class VmStateHistoryEntry {
 
 	/**
 	 * Gets the requested mips.
-	 *
+	 * 
 	 * @return the requested mips
 	 */
 	public double getRequestedMips() {
@@ -99,7 +99,7 @@ public class VmStateHistoryEntry {
 
 	/**
 	 * Sets the in migration.
-	 *
+	 * 
 	 * @param isInMigration the new in migration
 	 */
 	protected void setInMigration(boolean isInMigration) {
@@ -108,7 +108,7 @@ public class VmStateHistoryEntry {
 
 	/**
 	 * Checks if is in migration.
-	 *
+	 * 
 	 * @return true, if is in migration
 	 */
 	public boolean isInMigration() {

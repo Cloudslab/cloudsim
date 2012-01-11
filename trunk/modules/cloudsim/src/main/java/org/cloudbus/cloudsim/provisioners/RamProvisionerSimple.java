@@ -3,7 +3,7 @@
  * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.provisioners;
@@ -14,12 +14,12 @@ import java.util.Map;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * RamProvisionerSimple is an extension of RamProvisioner
- * which uses a best-effort policy to allocate memory to a VM.
- *
- * @author		Rodrigo N. Calheiros
- * @author		Anton Beloglazov
- * @since		CloudSim Toolkit 1.0
+ * RamProvisionerSimple is an extension of RamProvisioner which uses a best-effort policy to
+ * allocate memory to a VM.
+ * 
+ * @author Rodrigo N. Calheiros
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 1.0
  */
 public class RamProvisionerSimple extends RamProvisioner {
 
@@ -28,7 +28,7 @@ public class RamProvisionerSimple extends RamProvisioner {
 
 	/**
 	 * Instantiates a new ram provisioner simple.
-	 *
+	 * 
 	 * @param availableRam the available ram
 	 */
 	public RamProvisionerSimple(int availableRam) {
@@ -36,7 +36,8 @@ public class RamProvisionerSimple extends RamProvisioner {
 		setRamTable(new HashMap<String, Integer>());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see cloudsim.provisioners.RamProvisioner#allocateRamForVm(cloudsim.Vm, int)
 	 */
 	@Override
@@ -61,7 +62,8 @@ public class RamProvisionerSimple extends RamProvisioner {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see cloudsim.provisioners.RamProvisioner#getAllocatedRamForVm(cloudsim.Vm)
 	 */
 	@Override
@@ -72,7 +74,8 @@ public class RamProvisionerSimple extends RamProvisioner {
 		return 0;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see cloudsim.provisioners.RamProvisioner#deallocateRamForVm(cloudsim.Vm)
 	 */
 	@Override
@@ -84,7 +87,8 @@ public class RamProvisionerSimple extends RamProvisioner {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see cloudsim.provisioners.RamProvisioner#deallocateRamForVm(cloudsim.Vm)
 	 */
 	@Override
@@ -93,7 +97,8 @@ public class RamProvisionerSimple extends RamProvisioner {
 		getRamTable().clear();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see cloudsim.provisioners.RamProvisioner#isSuitableForVm(cloudsim.Vm, int)
 	 */
 	@Override
@@ -109,7 +114,7 @@ public class RamProvisionerSimple extends RamProvisioner {
 
 	/**
 	 * Gets the ram table.
-	 *
+	 * 
 	 * @return the ram table
 	 */
 	protected Map<String, Integer> getRamTable() {
@@ -118,12 +123,11 @@ public class RamProvisionerSimple extends RamProvisioner {
 
 	/**
 	 * Sets the ram table.
-	 *
+	 * 
 	 * @param ramTable the ram table
 	 */
 	protected void setRamTable(Map<String, Integer> ramTable) {
 		this.ramTable = ramTable;
 	}
-
 
 }

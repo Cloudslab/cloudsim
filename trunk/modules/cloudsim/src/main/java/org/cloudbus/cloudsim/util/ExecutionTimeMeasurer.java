@@ -1,10 +1,21 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.util;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The Class ExecutionTimeMeasurer.
+ * The class for measuring the execution time.
+ * 
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 3.0
  */
 public class ExecutionTimeMeasurer {
 

@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.power;
 
 import java.util.HashMap;
@@ -11,7 +19,7 @@ import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * The Class PowerVmAllocationPolicyAbstract.
+ * The class of an abstract power-aware VM allocation policy.
  * 
  * If you are using any algorithms, policies or workload included in the power package, please cite
  * the following paper:
@@ -22,6 +30,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
  * 
  * @author Anton Beloglazov
+ * @since CloudSim Toolkit 3.0
  */
 public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy {
 
@@ -39,7 +48,6 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#allocateHostForVm(org.cloudbus.cloudsim.Vm)
 	 */
 	@Override
@@ -49,7 +57,6 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#allocateHostForVm(org.cloudbus.cloudsim.Vm,
 	 * org.cloudbus.cloudsim.Host)
 	 */
@@ -89,7 +96,6 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#deallocateHostForVm(org.cloudbus.cloudsim.Vm)
 	 */
 	@Override
@@ -102,7 +108,6 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#getHost(org.cloudbus.cloudsim.Vm)
 	 */
 	@Override
@@ -112,7 +117,6 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#getHost(int, int)
 	 */
 	@Override

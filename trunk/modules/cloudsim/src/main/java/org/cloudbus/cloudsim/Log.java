@@ -3,7 +3,7 @@
  * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -12,12 +12,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * The Log class used for performing loggin of the simulation process.
- * It provides the ability to substitute the output stream by any
- * OutputStream subclass.
- *
- * @author		Anton Beloglazov
- * @since		CloudSim Toolkit 2.0
+ * The Log class used for performing loggin of the simulation process. It provides the ability to
+ * substitute the output stream by any OutputStream subclass.
+ * 
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 2.0
  */
 public class Log {
 
@@ -32,7 +31,7 @@ public class Log {
 
 	/**
 	 * Prints the message.
-	 *
+	 * 
 	 * @param message the message
 	 */
 	public static void print(String message) {
@@ -47,7 +46,7 @@ public class Log {
 
 	/**
 	 * Prints the message passed as a non-String object.
-	 *
+	 * 
 	 * @param message the message
 	 */
 	public static void print(Object message) {
@@ -58,7 +57,7 @@ public class Log {
 
 	/**
 	 * Prints the line.
-	 *
+	 * 
 	 * @param message the message
 	 */
 	public static void printLine(String message) {
@@ -78,7 +77,7 @@ public class Log {
 
 	/**
 	 * Prints the line passed as a non-String object.
-	 *
+	 * 
 	 * @param message the message
 	 */
 	public static void printLine(Object message) {
@@ -89,11 +88,11 @@ public class Log {
 
 	/**
 	 * Prints a string formated as in String.format().
-	 *
+	 * 
 	 * @param format the format
 	 * @param args the args
 	 */
-	public static void format(String format, Object... args ) {
+	public static void format(String format, Object... args) {
 		if (!isDisabled()) {
 			print(String.format(format, args));
 		}
@@ -101,11 +100,11 @@ public class Log {
 
 	/**
 	 * Prints a line formated as in String.format().
-	 *
+	 * 
 	 * @param format the format
 	 * @param args the args
 	 */
-	public static void formatLine(String format, Object... args ) {
+	public static void formatLine(String format, Object... args) {
 		if (!isDisabled()) {
 			printLine(String.format(format, args));
 		}
@@ -113,7 +112,7 @@ public class Log {
 
 	/**
 	 * Sets the output.
-	 *
+	 * 
 	 * @param _output the new output
 	 */
 	public static void setOutput(OutputStream _output) {
@@ -122,7 +121,7 @@ public class Log {
 
 	/**
 	 * Gets the output.
-	 *
+	 * 
 	 * @return the output
 	 */
 	public static OutputStream getOutput() {
@@ -134,7 +133,7 @@ public class Log {
 
 	/**
 	 * Sets the disable output flag.
-	 *
+	 * 
 	 * @param _disabled the new disabled
 	 */
 	public static void setDisabled(boolean _disabled) {
@@ -143,7 +142,7 @@ public class Log {
 
 	/**
 	 * Checks if the output is disabled.
-	 *
+	 * 
 	 * @return true, if is disable
 	 */
 	public static boolean isDisabled() {

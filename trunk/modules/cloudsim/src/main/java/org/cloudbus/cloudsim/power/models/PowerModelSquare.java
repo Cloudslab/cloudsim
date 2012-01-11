@@ -1,8 +1,9 @@
 /*
- * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
- * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
- * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.power.models;
@@ -46,7 +47,6 @@ public class PowerModelSquare implements PowerModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see gridsim.virtualization.power.PowerModel#getPower(double)
 	 */
 	@Override

@@ -3,25 +3,24 @@
  * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.network;
 
 /**
- * Just represents an topological network node
- * retrieves its information from an topological-generated file
- * (eg. topology-generator)
- *
- * @author		Thomas Hohnstein
- * @since		CloudSim Toolkit 1.0
+ * Just represents an topological network node retrieves its information from an
+ * topological-generated file (eg. topology-generator)
+ * 
+ * @author Thomas Hohnstein
+ * @since CloudSim Toolkit 1.0
  */
 public class TopologicalNode {
 
 	/**
 	 * its the nodes-ID inside this network
 	 */
-	private int nodeID=0;
+	private int nodeID = 0;
 
 	/**
 	 * describes the nodes-name inside the network
@@ -32,68 +31,73 @@ public class TopologicalNode {
 	 * representing the x an y world-coordinates
 	 */
 	private int worldX = 0;
+
 	private int worldY = 0;
 
 	/**
 	 * constructs an new node
 	 */
-	public TopologicalNode(int nodeID){
-		//lets initialize all private class attributes
+	public TopologicalNode(int nodeID) {
+		// lets initialize all private class attributes
 		this.nodeID = nodeID;
-		this.nodeName = String.valueOf(nodeID);
+		nodeName = String.valueOf(nodeID);
 	}
 
 	/**
 	 * constructs an new node including world-coordinates
 	 */
-	public TopologicalNode(int nodeID, int x, int y){
-		//lets initialize all private class attributes
+	public TopologicalNode(int nodeID, int x, int y) {
+		// lets initialize all private class attributes
 		this.nodeID = nodeID;
-		this.nodeName = String.valueOf(nodeID);
-		this.worldX = x;
-		this.worldY = y;
+		nodeName = String.valueOf(nodeID);
+		worldX = x;
+		worldY = y;
 	}
 
 	/**
 	 * constructs an new node including world-coordinates and the nodeName
 	 */
-	public TopologicalNode(int nodeID, String nodeName, int x, int y){
-		//lets initialize all private class attributes
+	public TopologicalNode(int nodeID, String nodeName, int x, int y) {
+		// lets initialize all private class attributes
 		this.nodeID = nodeID;
 		this.nodeName = nodeName;
-		this.worldX = x;
-		this.worldY = y;
+		worldX = x;
+		worldY = y;
 	}
 
 	/**
 	 * delivers the nodes id
+	 * 
 	 * @return just the nodeID
 	 */
-	public int getNodeID(){
+	public int getNodeID() {
 		return nodeID;
 	}
 
 	/**
 	 * delivers the name of the node
+	 * 
 	 * @return name of the node
 	 */
-	public String getNodeLabel(){
-		return this.nodeName;
+	public String getNodeLabel() {
+		return nodeName;
 	}
 
 	/**
 	 * returns the x coordinate of this network-node
+	 * 
 	 * @return the x coordinate
 	 */
-	public int getCoordinateX(){
+	public int getCoordinateX() {
 		return worldX;
 	}
 
 	/**
 	 * returns the y coordinate of this network-node
+	 * 
 	 * @return the y coordinate
 	 */
-	public int getCoordinateY(){
+	public int getCoordinateY() {
 		return worldY;
 	}
 

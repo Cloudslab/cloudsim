@@ -1,20 +1,12 @@
-package org.cloudbus.cloudsim.network.datacenter;
-
-/**
- * WorkflowApp is an example of AppCloudlet having three communicating tasks. 
- * Task A and B sends the data (packet) while Task C receives them
- * 
- * Please refer to following publication for more details:
- * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel
- * Applications in Cloud Simulations, Proceedings of the 4th IEEE/ACM
- * International Conference on Utility and Cloud Computing (UCC 2011, IEEE CS
- * Press, USA), Melbourne, Australia, December 5-7, 2011.
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * 
- * @author Saurabh Kumar Garg
- * @since CloudSim Toolkit 1.0
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
+
+package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.List;
 
@@ -22,11 +14,24 @@ import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.core.CloudSim;
 
+/**
+ * WorkflowApp is an example of AppCloudlet having three communicating tasks. Task A and B sends the
+ * data (packet) while Task C receives them
+ * 
+ * Please refer to following publication for more details:
+ * 
+ * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.
+ * 
+ * @author Saurabh Kumar Garg
+ * @since CloudSim Toolkit 1.0
+ */
 public class WorkflowApp extends AppCloudlet {
 
 	public WorkflowApp(int type, int appID, double deadline, int numbervm, int userId) {
 		super(type, appID, deadline, numbervm, userId);
-		this.exeTime = 100;
+		exeTime = 100;
 		this.numbervm = 3;
 	}
 

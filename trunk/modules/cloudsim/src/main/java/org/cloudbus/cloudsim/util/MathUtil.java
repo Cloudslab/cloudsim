@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.util;
 
 import java.util.Arrays;
@@ -7,7 +15,13 @@ import flanagan.analysis.Regression;
 import flanagan.analysis.Stat;
 
 /**
- * The Class MathUtil.
+ * A class containing multiple convenient math functions. To use some of the function you must
+ * download Michael Thomas Flanagan's Java Scientific Library:
+ * 
+ * http://www.ee.ucl.ac.uk/~mflanaga/java/
+ * 
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 3.0
  */
 public class MathUtil {
 
@@ -57,7 +71,6 @@ public class MathUtil {
 	 * @return the average
 	 */
 	public static double mean(List<Double> list) {
-		// return Stat.mean(listToArray(list));
 		double sum = 0;
 		for (Double number : list) {
 			sum += number;
@@ -95,7 +108,6 @@ public class MathUtil {
 	 */
 	public static double stDev(List<Double> list) {
 		return Math.sqrt(variance(list));
-		// return Stat.standardDeviation(listToArray(list));
 	}
 
 	/**

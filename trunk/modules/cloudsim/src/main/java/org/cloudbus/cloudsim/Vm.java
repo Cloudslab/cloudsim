@@ -2,7 +2,7 @@
  * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
  * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
  * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -133,10 +133,8 @@ public class Vm {
 	 * 
 	 * @param currentTime current simulation time
 	 * @param mipsShare array with MIPS share of each Pe available to the scheduler
-	 * 
-	 * @return time predicted completion time of the earliest finishing cloudlet, or 0 if there is
-	 *         no next events
-	 * 
+	 * @return time predicted completion time of the earliest finishing cloudlet, or 0 if there is no
+	 *         next events
 	 * @pre currentTime >= 0
 	 * @post $none
 	 */
@@ -219,7 +217,6 @@ public class Vm {
 	 * Get utilization created by all clouddlets running on this VM.
 	 * 
 	 * @param time the time
-	 * 
 	 * @return total utilization
 	 */
 	public double getTotalUtilizationOfCpu(double time) {
@@ -230,7 +227,6 @@ public class Vm {
 	 * Get utilization created by all cloudlets running on this VM in MIPS.
 	 * 
 	 * @param time the time
-	 * 
 	 * @return total utilization
 	 */
 	public double getTotalUtilizationOfCpuMips(double time) {
@@ -260,7 +256,6 @@ public class Vm {
 	 * 
 	 * @param userId the user id
 	 * @param vmId the vm id
-	 * 
 	 * @return string uid
 	 */
 	public static String getUid(int userId, int vmId) {
@@ -298,7 +293,6 @@ public class Vm {
 	 * Gets the ID of the owner of the VM.
 	 * 
 	 * @return VM's owner ID
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -346,7 +340,6 @@ public class Vm {
 	 * Gets the amount of ram.
 	 * 
 	 * @return amount of ram
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -358,7 +351,6 @@ public class Vm {
 	 * Sets the amount of ram.
 	 * 
 	 * @param ram new amount of ram
-	 * 
 	 * @pre ram > 0
 	 * @post $none
 	 */
@@ -370,7 +362,6 @@ public class Vm {
 	 * Gets the amount of bandwidth.
 	 * 
 	 * @return amount of bandwidth
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -382,7 +373,6 @@ public class Vm {
 	 * Sets the amount of bandwidth.
 	 * 
 	 * @param bw new amount of bandwidth
-	 * 
 	 * @pre bw > 0
 	 * @post $none
 	 */
@@ -394,7 +384,6 @@ public class Vm {
 	 * Gets the amount of storage.
 	 * 
 	 * @return amount of storage
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -406,7 +395,6 @@ public class Vm {
 	 * Sets the amount of storage.
 	 * 
 	 * @param size new amount of storage
-	 * 
 	 * @pre size > 0
 	 * @post $none
 	 */
@@ -418,7 +406,6 @@ public class Vm {
 	 * Gets the VMM.
 	 * 
 	 * @return VMM
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -439,7 +426,6 @@ public class Vm {
 	 * Sets the host that runs this VM.
 	 * 
 	 * @param host Host running the VM
-	 * 
 	 * @pre host != $null
 	 * @post $none
 	 */

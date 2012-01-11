@@ -2,7 +2,7 @@
  * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
  * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
  * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -18,10 +18,11 @@ import org.cloudbus.cloudsim.lists.PeList;
 /**
  * This is a Time-Shared VM Scheduler, which allows over-subscription. In other words, the scheduler
  * still allows the allocation of VMs that require more CPU capacity that is available.
- * Oversubscription results in performance degradation. 
+ * Oversubscription results in performance degradation.
  * 
  * @author Anton Beloglazov
- * @since CloudSim Toolkit 2.0
+ * @author Rodrigo N. Calheiros
+ * @since CloudSim Toolkit 3.0
  */
 public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared {
 
@@ -42,15 +43,14 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 	 * 
 	 * @param vmUid the vm uid
 	 * @param mipsShareRequested the mips share requested
-	 * 
 	 * @return true, if successful
 	 */
 	@Override
 	protected boolean allocatePesForVm(String vmUid, List<Double> mipsShareRequested) {
 		double totalRequestedMips = 0;
-		
-		//if the requested mips is bigger than the capacity of a single PE, we cap
-		//the request to the PE's capacity
+
+		// if the requested mips is bigger than the capacity of a single PE, we cap
+		// the request to the PE's capacity
 		List<Double> mipsShareRequestedCapped = new ArrayList<Double>();
 		double peMips = getPeCapacity();
 		for (Double mips : mipsShareRequested) {
@@ -101,12 +101,12 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 		// First, we calculate the scaling factor - the MIPS allocation for all VMs will be scaled
 		// proportionally
 		double totalRequiredMipsByAllVms = 0;
-		
-		Map<String,List<Double>> mipsMapCapped = new HashMap<String,List<Double>>();
+
+		Map<String, List<Double>> mipsMapCapped = new HashMap<String, List<Double>>();
 		for (Entry<String, List<Double>> entry : getMipsMapRequested().entrySet()) {
-			
+
 			double requiredMipsByThisVm = 0.0;
-			String vmId = entry.getKey(); 
+			String vmId = entry.getKey();
 			List<Double> mipsShareRequested = entry.getValue();
 			List<Double> mipsShareRequestedCapped = new ArrayList<Double>();
 			double peMips = getPeCapacity();
@@ -119,9 +119,9 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 					requiredMipsByThisVm += mips;
 				}
 			}
-			
+
 			mipsMapCapped.put(vmId, mipsShareRequestedCapped);
-					
+
 			if (getVmsMigratingIn().contains(entry.getKey())) {
 				// the destination host only experience 10% of the migrating VM's MIPS
 				requiredMipsByThisVm *= 0.1;
@@ -167,51 +167,5 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 		// As the host is oversubscribed, there no more available MIPS
 		setAvailableMips(0);
 	}
-	
-//	/**
-//	 * Update allocation of VMs on PEs.
-//	 */
-//	@Override
-//	protected void updatePeProvisioning() {
-//		getPeMap().clear();
-//		for (Pe pe : getPeList()) {
-//			pe.getPeProvisioner().deallocateMipsForAllVms();
-//		}
-//
-//		Iterator<Pe> peIterator = getPeList().iterator();
-//		Pe pe = peIterator.next();
-//		PeProvisioner peProvisioner = pe.getPeProvisioner();
-//		double availableMips = peProvisioner.getAvailableMips();
-//
-//		for (Map.Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
-//			String vmUid = entry.getKey();
-//			getPeMap().put(vmUid, new LinkedList<Pe>());
-//
-//			for (double mips : entry.getValue()) {
-//				while (mips >= 0.1) {
-//					if (availableMips >= mips) {
-//						peProvisioner.allocateMipsForVm(vmUid, mips);
-//						getPeMap().get(vmUid).add(pe);
-//						availableMips -= mips;
-//						break;
-//					} else {
-//						peProvisioner.allocateMipsForVm(vmUid, availableMips);
-//						getPeMap().get(vmUid).add(pe);
-//						mips -= availableMips;
-//						if (mips <= 0.1) {
-//							break;
-//						}
-//						if (!peIterator.hasNext()) {
-//							Log.printLine("There is no enough MIPS (" + mips + ") to accommodate VM " + vmUid);
-//							// System.exit(0);
-//						}
-//						pe = peIterator.next();
-//						peProvisioner = pe.getPeProvisioner();
-//						availableMips = peProvisioner.getAvailableMips();
-//					}
-//				}
-//			}
-//		}
-//	}
 
 }

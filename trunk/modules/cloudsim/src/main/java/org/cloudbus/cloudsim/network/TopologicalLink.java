@@ -3,16 +3,16 @@
  * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.network;
 
 /**
  * This class represents an link (edge) from an graph
- *
- * @author		Thomas Hohnstein
- * @since		CloudSim Toolkit 1.0
+ * 
+ * @author Thomas Hohnstein
+ * @since CloudSim Toolkit 1.0
  */
 public class TopologicalLink {
 
@@ -36,8 +36,8 @@ public class TopologicalLink {
 	/**
 	 * creates an new link-object
 	 */
-	public TopologicalLink(int srcNode, int destNode, float delay, float bw){
-		//lets initialize all internal attributes
+	public TopologicalLink(int srcNode, int destNode, float delay, float bw) {
+		// lets initialize all internal attributes
 		linkDelay = delay;
 		srcNodeID = srcNode;
 		destNodeID = destNode;
@@ -46,33 +46,37 @@ public class TopologicalLink {
 
 	/**
 	 * returns the node-ID from the SrcNode
+	 * 
 	 * @return nodeID
 	 */
-	public int getSrcNodeID(){
+	public int getSrcNodeID() {
 		return srcNodeID;
 	}
 
 	/**
 	 * return the node-ID from the DestNode
+	 * 
 	 * @return nodeID
 	 */
-	public int getDestNodeID(){
+	public int getDestNodeID() {
 		return destNodeID;
 	}
 
 	/**
 	 * return the link-delay of the defined linke
+	 * 
 	 * @return the delay-amount
 	 */
-	public float getLinkDelay(){
+	public float getLinkDelay() {
 		return linkDelay;
 	}
 
 	/**
 	 * return the link-bw of the defined linke
+	 * 
 	 * @return the bw
 	 */
-	public float getLinkBw(){
+	public float getLinkBw() {
 		return linkBw;
 	}
 

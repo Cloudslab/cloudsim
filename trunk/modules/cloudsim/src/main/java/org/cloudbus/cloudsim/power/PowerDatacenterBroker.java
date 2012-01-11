@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.power;
 
 import org.cloudbus.cloudsim.DatacenterBroker;
@@ -6,7 +14,7 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 
 /**
- * The Class PowerDatacenterBroker.
+ * A broker for the power package.
  * 
  * If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:
@@ -33,7 +41,6 @@ public class PowerDatacenterBroker extends DatacenterBroker {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.cloudbus.cloudsim.DatacenterBroker#processVmCreate(org.cloudbus.cloudsim.core.SimEvent)
 	 */

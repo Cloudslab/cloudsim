@@ -2,7 +2,7 @@
  * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
  * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
  * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -46,7 +46,6 @@ public abstract class VmScheduler {
 	 * Creates a new HostAllocationPolicy.
 	 * 
 	 * @param pelist the pelist
-	 * 
 	 * @pre peList != $null
 	 * @post $none
 	 */
@@ -64,9 +63,7 @@ public abstract class VmScheduler {
 	 * 
 	 * @param vm the vm
 	 * @param mipsShare the mips share
-	 * 
 	 * @return $true if this policy allows a new VM in the host, $false otherwise
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -76,7 +73,6 @@ public abstract class VmScheduler {
 	 * Releases PEs allocated to a VM.
 	 * 
 	 * @param vm the vm
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -110,9 +106,7 @@ public abstract class VmScheduler {
 	 * Returns the MIPS share of each Pe that is allocated to a given VM.
 	 * 
 	 * @param vm the vm
-	 * 
 	 * @return an array containing the amount of MIPS of each pe that is available to the VM
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -124,7 +118,6 @@ public abstract class VmScheduler {
 	 * Gets the total allocated MIPS for a VM over all the PEs.
 	 * 
 	 * @param vm the vm
-	 * 
 	 * @return the allocated mips for vm
 	 */
 	public double getTotalAllocatedMipsForVm(Vm vm) {

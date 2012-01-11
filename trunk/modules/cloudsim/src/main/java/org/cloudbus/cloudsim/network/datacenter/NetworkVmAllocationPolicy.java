@@ -1,8 +1,9 @@
 /*
- * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
- * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
- * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.network.datacenter;
@@ -97,8 +98,6 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 				result = host.vmCreate(vm);
 
 				if (result) { // if vm were succesfully created in the host
-					// Log.printLine("VmAllocationPolicy: VM #"+vm.getVmId()+
-					// "Chosen host: #"+host.getMachineID()+" idx:"+idx);
 					getVmTable().put(vm.getUid(), host);
 					getUsedPes().put(vm.getUid(), requiredPes);
 					getFreePes().set(idx, getFreePes().get(idx) - requiredPes);
@@ -244,7 +243,6 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see cloudsim.VmAllocationPolicy#optimizeAllocation(double, cloudsim.VmList, double)
 	 */
 	@Override
@@ -255,7 +253,6 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#allocateHostForVm(org.cloudbus.cloudsim.Vm,
 	 * org.cloudbus.cloudsim.Host)
 	 */

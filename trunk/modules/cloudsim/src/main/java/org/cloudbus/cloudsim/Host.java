@@ -2,7 +2,7 @@
  * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
  * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
  * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -18,9 +18,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 /**
  * Host executes actions related to management of virtual machines (e.g., creation and destruction).
  * A host has a defined policy for provisioning memory and bw, as well as an allocation policy for
- * Pe's to virtual machines.
- * 
- * A host is associated to a datacenter. It can host virtual machines.
+ * Pe's to virtual machines. A host is associated to a datacenter. It can host virtual machines.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
@@ -89,10 +87,8 @@ public class Host {
 	 * Requests updating of processing of cloudlets in the VMs running in this host.
 	 * 
 	 * @param currentTime the current time
-	 * 
 	 * @return expected time of completion of the next cloudlet in all VMs in this host.
 	 *         Double.MAX_VALUE if there is no future events expected in this host
-	 * 
 	 * @pre currentTime >= 0.0
 	 * @post $none
 	 */
@@ -187,7 +183,6 @@ public class Host {
 	 * Checks if is suitable for vm.
 	 * 
 	 * @param vm the vm
-	 * 
 	 * @return true, if is suitable for vm
 	 */
 	public boolean isSuitableForVm(Vm vm) {
@@ -201,9 +196,7 @@ public class Host {
 	 * Allocates PEs and memory to a new VM in the Host.
 	 * 
 	 * @param vm Vm being started
-	 * 
 	 * @return $true if the VM could be started in the host; $false otherwise
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -245,7 +238,6 @@ public class Host {
 	 * Destroys a VM running in the host.
 	 * 
 	 * @param vm the VM
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -286,7 +278,6 @@ public class Host {
 
 	/**
 	 * Deallocate all hostList for the VM.
-	 * 
 	 */
 	protected void vmDeallocateAll() {
 		getRamProvisioner().deallocateRamForAllVms();
@@ -299,9 +290,7 @@ public class Host {
 	 * 
 	 * @param vmId the vm id
 	 * @param userId ID of VM's owner
-	 * 
 	 * @return the virtual machine object, $null if not found
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -346,9 +335,7 @@ public class Host {
 	 * 
 	 * @param vm the vm
 	 * @param mipsShare the mips share
-	 * 
 	 * @return $true if this policy allows a new VM in the host, $false otherwise
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -360,7 +347,6 @@ public class Host {
 	 * Releases PEs allocated to a VM.
 	 * 
 	 * @param vm the vm
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -372,9 +358,7 @@ public class Host {
 	 * Returns the MIPS share of each Pe that is allocated to a given VM.
 	 * 
 	 * @param vm the vm
-	 * 
 	 * @return an array containing the amount of MIPS of each pe that is available to the VM
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -386,7 +370,6 @@ public class Host {
 	 * Gets the total allocated MIPS for a VM over all the PEs.
 	 * 
 	 * @param vm the vm
-	 * 
 	 * @return the allocated mips for vm
 	 */
 	public double getTotalAllocatedMipsForVm(Vm vm) {
@@ -415,7 +398,6 @@ public class Host {
 	 * Gets the machine bw.
 	 * 
 	 * @return the machine bw
-	 * 
 	 * @pre $none
 	 * @post $result > 0
 	 */
@@ -427,7 +409,6 @@ public class Host {
 	 * Gets the machine memory.
 	 * 
 	 * @return the machine memory
-	 * 
 	 * @pre $none
 	 * @post $result > 0
 	 */
@@ -439,7 +420,6 @@ public class Host {
 	 * Gets the machine storage.
 	 * 
 	 * @return the machine storage
-	 * 
 	 * @pre $none
 	 * @post $result >= 0
 	 */
@@ -576,7 +556,6 @@ public class Host {
 	 * 
 	 * @param resName the name of the resource
 	 * @param failed the failed
-	 * 
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
 	 */
 	public boolean setFailed(String resName, boolean failed) {
@@ -590,7 +569,6 @@ public class Host {
 	 * Sets the PEs of this machine to a FAILED status.
 	 * 
 	 * @param failed the failed
-	 * 
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
 	 */
 	public boolean setFailed(boolean failed) {

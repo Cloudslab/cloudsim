@@ -3,7 +3,7 @@
  * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.distributions;
@@ -12,9 +12,9 @@ import java.util.Random;
 
 /**
  * A random number generator based on the Uniform distribution.
- *
- * @author		Marcos Dias de Assuncao
- * @since		CloudSim Toolkit 1.0
+ * 
+ * @author Marcos Dias de Assuncao
+ * @since CloudSim Toolkit 1.0
  */
 public class UniformDistr implements ContinuousDistribution {
 
@@ -26,7 +26,7 @@ public class UniformDistr implements ContinuousDistribution {
 
 	/**
 	 * Creates new uniform distribution.
-	 *
+	 * 
 	 * @param min minimum value
 	 * @param max maximum value
 	 */
@@ -35,13 +35,13 @@ public class UniformDistr implements ContinuousDistribution {
 			throw new IllegalArgumentException("Maximum must be greater than the minimum.");
 		}
 		numGen = new Random();
-		this.mag = max - min;
+		mag = max - min;
 		this.min = min;
 	}
 
 	/**
 	 * Creates new uniform distribution.
-	 *
+	 * 
 	 * @param min minimum value
 	 * @param max maximum value
 	 * @param seed simulation seed to be used
@@ -52,13 +52,13 @@ public class UniformDistr implements ContinuousDistribution {
 		}
 
 		numGen = new Random(seed);
-		this.mag = max - min;
+		mag = max - min;
 		this.min = min;
 	}
 
 	/**
 	 * Generate a new random number.
-	 *
+	 * 
 	 * @return the next random number in the sequence
 	 */
 	@Override
@@ -67,13 +67,12 @@ public class UniformDistr implements ContinuousDistribution {
 	}
 
 	/**
-	 * Generates a new random number based on the number generator and values
-	 * provided as parameters.
-	 *
+	 * Generates a new random number based on the number generator and values provided as
+	 * parameters.
+	 * 
 	 * @param rd the random number generator
 	 * @param min the minimum value
 	 * @param max the maximum value
-	 *
 	 * @return the next random number in the sequence
 	 */
 	public static double sample(Random rd, double min, double max) {
@@ -86,7 +85,7 @@ public class UniformDistr implements ContinuousDistribution {
 
 	/**
 	 * Set the random number generator's seed.
-	 *
+	 * 
 	 * @param seed the new seed for the generator
 	 */
 	public void setSeed(long seed) {

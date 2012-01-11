@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.power.models;
 
 /**
@@ -13,12 +21,12 @@ package org.cloudbus.cloudsim.power.models;
  * Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
  * 
  * @author Anton Beloglazov
+ * @since CloudSim Toolkit 3.0
  */
 public abstract class PowerModelSpecPower implements PowerModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.cloudbus.cloudsim.power.models.PowerModel#getPower(double)
 	 */
 	@Override
@@ -36,7 +44,6 @@ public abstract class PowerModelSpecPower implements PowerModel {
 		double delta = (power2 - power1) / 10;
 		double power = power1 + delta * (utilization - (double) utilization1 / 10) * 100;
 		return power;
-
 	}
 
 	/**
