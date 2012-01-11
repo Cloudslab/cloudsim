@@ -3,35 +3,51 @@
  * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.core;
 
 /**
- * This class represents a simulation event which is passed between
- * the entities in the simulation.
- *
- * @author		Costas Simatos
- *
- * @see			Simulation
- * @see			SimEntity
+ * This class represents a simulation event which is passed between the entities in the simulation.
+ * 
+ * @author Costas Simatos
+ * @see Simulation
+ * @see SimEntity
  */
 public class SimEvent implements Cloneable, Comparable<SimEvent> {
-	private final int etype; // internal event type
-	private final double time; // time at which event should occur
-	private double endWaitingTime; // time that the event was removed from the
-									// queue for service
-	private int entSrc; // id of entity who scheduled event
-	private int entDst; // id of entity event will be sent to
-	private final int tag; // the user defined type of the event
-	private final Object data; // any data the event is carrying
+
+	/** internal event type **/
+	private final int etype;
+
+	/** time at which event should occur **/
+	private final double time;
+
+	/** time that the event was removed from the queue for service **/
+	private double endWaitingTime;
+
+	/** id of entity who scheduled event **/
+	private int entSrc;
+
+	/** id of entity event will be sent to **/
+	private int entDst;
+
+	/** the user defined type of the event **/
+	private final int tag;
+
+	/** any data the event is carrying **/
+	private final Object data;
+
 	private long serial = -1;
 
 	// Internal event types
+
 	public static final int ENULL = 0;
+
 	public static final int SEND = 1;
+
 	public static final int HOLD_DONE = 2;
+
 	public static final int CREATE = 3;
 
 	/**
@@ -39,11 +55,11 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 	 */
 	public SimEvent() {
 		etype = ENULL;
-		this.time = -1L;
+		time = -1L;
 		endWaitingTime = -1.0;
 		entSrc = -1;
 		entDst = -1;
-		this.tag = -1;
+		tag = -1;
 		data = null;
 	}
 
@@ -62,7 +78,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 		this.time = time;
 		entSrc = src;
 		entDst = -1;
-		this.tag = -1;
+		tag = -1;
 		data = null;
 	}
 
@@ -70,21 +86,26 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 		this.serial = serial;
 	}
 
-	// Used to set the time at which this event finished waiting in the event
-	// queue. This is used for statistical purposes.
+	/**
+	 * Used to set the time at which this event finished waiting in the event
+	 * 
+	 * @param end_waiting_time
+	 */
 	protected void setEndWaitingTime(double end_waiting_time) {
-		this.endWaitingTime = end_waiting_time;
+		endWaitingTime = end_waiting_time;
 	}
 
 	@Override
 	public String toString() {
-		return "Event tag = " + tag + " source = "
-				+ CloudSim.getEntity(this.entSrc).getName()
-				+ " destination = "
-				+ CloudSim.getEntity(this.entDst).getName();
+		return "Event tag = " + tag + " source = " + CloudSim.getEntity(entSrc).getName() + " destination = "
+				+ CloudSim.getEntity(entDst).getName();
 	}
 
-	// The internal type
+	/**
+	 * The internal type
+	 * 
+	 * @return
+	 */
 	public int getType() {
 		return etype;
 	}
@@ -111,9 +132,9 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 		}
 	}
 
-
 	/**
 	 * Get the unique id number of the entity which received this event.
+	 * 
 	 * @return the id number
 	 */
 	public int getDestination() {
@@ -122,6 +143,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/**
 	 * Get the unique id number of the entity which scheduled this event.
+	 * 
 	 * @return the id number
 	 */
 	public int getSource() {
@@ -130,6 +152,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/**
 	 * Get the simulation time that this event was scheduled.
+	 * 
 	 * @return The simulation time
 	 */
 	public double eventTime() {
@@ -137,8 +160,8 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 	}
 
 	/**
-	 * Get the simulation time that this event was removed from the queue for
-	 * service.
+	 * Get the simulation time that this event was removed from the queue for service.
+	 * 
 	 * @return The simulation time
 	 */
 	public double endWaitingTime() {
@@ -147,6 +170,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/**
 	 * Get the user-defined tag of this event
+	 * 
 	 * @return The tag
 	 */
 	public int type() {
@@ -155,6 +179,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/**
 	 * Get the unique id number of the entity which scheduled this event.
+	 * 
 	 * @return the id number
 	 */
 	public int scheduledBy() {
@@ -163,6 +188,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/**
 	 * Get the user-defined tag of this event.
+	 * 
 	 * @return The tag
 	 */
 	public int getTag() {
@@ -171,6 +197,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/**
 	 * Get the data passed in this event.
+	 * 
 	 * @return A reference to the data
 	 */
 	public Object getData() {
@@ -179,6 +206,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/**
 	 * Create an exact copy of this event.
+	 * 
 	 * @return The event's copy
 	 */
 	@Override
@@ -188,6 +216,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/**
 	 * Set the source entity of this event.
+	 * 
 	 * @param s The unique id number of the entity
 	 */
 	public void setSource(int s) {
@@ -196,6 +225,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/**
 	 * Set the destination entity of this event.
+	 * 
 	 * @param d The unique id number of the entity
 	 */
 	public void setDestination(int d) {

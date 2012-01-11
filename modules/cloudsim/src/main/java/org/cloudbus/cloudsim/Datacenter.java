@@ -2,7 +2,7 @@
  * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
  * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
  * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -65,7 +65,6 @@ public class Datacenter extends SimEntity {
 	 * @param characteristics an object of DatacenterCharacteristics
 	 * @param storageList a LinkedList of storage elements, for data simulation
 	 * @param vmAllocationPolicy the vmAllocationPolicy
-	 * 
 	 * @throws Exception This happens when one of the following scenarios occur:
 	 *             <ul>
 	 *             <li>creating this entity before initializing CloudSim package
@@ -74,7 +73,6 @@ public class Datacenter extends SimEntity {
 	 *             No PEs mean the Cloudlets can't be processed. A CloudResource must contain one or
 	 *             more Machines. A Machine must contain one or more PEs.
 	 *             </ul>
-	 * 
 	 * @pre name != null
 	 * @pre resource != null
 	 * @post $none
@@ -124,14 +122,12 @@ public class Datacenter extends SimEntity {
 	 * Processes events or services that are available for this PowerDatacenter.
 	 * 
 	 * @param ev a Sim_event object
-	 * 
 	 * @pre ev != null
 	 * @post $none
 	 */
 	@Override
 	public void processEvent(SimEvent ev) {
 		int srcId = -1;
-		// Log.printLine(CloudSim.clock()+"[PowerDatacenter]: event received:"+ev.getTag());
 
 		switch (ev.getTag()) {
 		// Resource characteristics inquiry
@@ -357,7 +353,6 @@ public class Datacenter extends SimEntity {
 	 * Processes a ping request.
 	 * 
 	 * @param ev a Sim_event object
-	 * 
 	 * @pre ev != null
 	 * @post $none
 	 */
@@ -375,7 +370,6 @@ public class Datacenter extends SimEntity {
 	 * PowerDatacenter will then send the status back to the User/Broker.
 	 * 
 	 * @param ev a Sim_event object
-	 * 
 	 * @pre ev != null
 	 * @post $none
 	 */
@@ -430,7 +424,6 @@ public class Datacenter extends SimEntity {
 	 * method.
 	 * 
 	 * @param ev the received event
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -446,7 +439,6 @@ public class Datacenter extends SimEntity {
 	 * 
 	 * @param ev a Sim_event object
 	 * @param ack the ack
-	 * 
 	 * @pre ev != null
 	 * @post $none
 	 */
@@ -497,7 +489,6 @@ public class Datacenter extends SimEntity {
 	 * 
 	 * @param ev a Sim_event object
 	 * @param ack the ack
-	 * 
 	 * @pre ev != null
 	 * @post $none
 	 */
@@ -581,7 +572,6 @@ public class Datacenter extends SimEntity {
 	 * 
 	 * @param ev a Sim_event object
 	 * @param type event type
-	 * 
 	 * @pre ev != null
 	 * @pre type > 0
 	 * @post $none
@@ -648,7 +638,6 @@ public class Datacenter extends SimEntity {
 	 * 
 	 * @param receivedData information about the migration
 	 * @param type event tag
-	 * 
 	 * @pre receivedData != null
 	 * @pre type > 0
 	 * @post $none
@@ -690,11 +679,8 @@ public class Datacenter extends SimEntity {
 				if (vm == null) {
 					failed = true;
 				} else {
-					double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles()); // time
-																								// to
-																								// transfer
-																								// the
-																								// files
+					// time to transfer the files
+					double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());
 					vm.getCloudletScheduler().cloudletSubmit(cl, fileTransferTime);
 				}
 			} else {// the cloudlet will migrate from one resource to another
@@ -722,7 +708,6 @@ public class Datacenter extends SimEntity {
 	 * 
 	 * @param ev a SimEvent object
 	 * @param ack an acknowledgement
-	 * 
 	 * @pre ev != null
 	 * @post $none
 	 */
@@ -769,29 +754,17 @@ public class Datacenter extends SimEntity {
 			int userId = cl.getUserId();
 			int vmId = cl.getVmId();
 
-			double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles()); // time to
-																						// transfer
-																						// the files
+			// time to transfer the files
+			double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());
 
 			Host host = getVmAllocationPolicy().getHost(vmId, userId);
 			Vm vm = host.getVm(vmId, userId);
 			CloudletScheduler scheduler = vm.getCloudletScheduler();
 			double estimatedFinishTime = scheduler.cloudletSubmit(cl, fileTransferTime);
 
-			// if (estimatedFinishTime > 0.0 && estimatedFinishTime < getSchedulingInterval()) {
-			// //if this cloudlet is in the exec queue
-			if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) { // if this
-																						// cloudlet
-																						// is in the
-																						// exec
-																						// queue
-				// double estimatedFinishTime =
-				// (cl.getCloudletTotalLength()/(capacity*cl.getPesNumber())); //time to process the
-				// cloudlet
-				// Log.printLine(estimatedFinishTime+"="+gl.getCloudletLength()+"/("+capacity+"*"+gl.getNumPE()+")");
+			// if this cloudlet is in the exec queue
+			if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) {
 				estimatedFinishTime += fileTransferTime;
-				// estimatedFinishTime += CloudSim.clock();
-				// Log.printLine(CloudSim.clock()+": Next event scheduled to +"+estimatedFinishTime);
 				send(getId(), estimatedFinishTime, CloudSimTags.VM_DATACENTER_EVENT);
 			}
 
@@ -820,7 +793,6 @@ public class Datacenter extends SimEntity {
 	 * Predict file transfer time.
 	 * 
 	 * @param requiredFiles the required files
-	 * 
 	 * @return the double
 	 */
 	protected double predictFileTransferTime(List<String> requiredFiles) {
@@ -848,7 +820,6 @@ public class Datacenter extends SimEntity {
 	 * @param userId ID of the cloudlet's owner
 	 * @param ack $true if an ack is requested after operation
 	 * @param vmId the vm id
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -884,7 +855,6 @@ public class Datacenter extends SimEntity {
 	 * @param userId ID of the cloudlet's owner
 	 * @param ack $true if an ack is requested after operation
 	 * @param vmId the vm id
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -911,7 +881,6 @@ public class Datacenter extends SimEntity {
 	 * @param cloudletId resuming cloudlet ID
 	 * @param userId ID of the cloudlet's owner
 	 * @param vmId the vm id
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
@@ -931,7 +900,6 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void updateCloudletProcessing() {
-		// Log.printLine(CloudSim.clock()+": PowerDatacenter #: updating cloudlet processing.......................................");
 		// if some time passed since last processing
 		// R: for term is to allow loop at simulation start. Otherwise, one initial
 		// simulation step is skipped and schedulers are not properly initialized
@@ -941,8 +909,8 @@ public class Datacenter extends SimEntity {
 			// for each host...
 			for (int i = 0; i < list.size(); i++) {
 				Host host = list.get(i);
-				double time = host.updateVmsProcessing(CloudSim.clock());// inform VMs to update
-																			// processing
+				// inform VMs to update processing
+				double time = host.updateVmsProcessing(CloudSim.clock());
 				// what time do we expect that the next cloudlet will finish?
 				if (time < smallerTime) {
 					smallerTime = time;
@@ -986,7 +954,6 @@ public class Datacenter extends SimEntity {
 	 * file, then it will be registered to the RC when the experiment begins.
 	 * 
 	 * @param file a DataCloud file
-	 * 
 	 * @return a tag number denoting whether this operation is a success or not
 	 */
 	public int addFile(File file) {
@@ -1022,7 +989,6 @@ public class Datacenter extends SimEntity {
 	 * Checks whether the resource has the given file.
 	 * 
 	 * @param file a file to be searched
-	 * 
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
 	 */
 	protected boolean contains(File file) {
@@ -1036,7 +1002,6 @@ public class Datacenter extends SimEntity {
 	 * Checks whether the resource has the given file.
 	 * 
 	 * @param fileName a file name to be searched
-	 * 
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
 	 */
 	protected boolean contains(String fileName) {
@@ -1064,7 +1029,6 @@ public class Datacenter extends SimEntity {
 	 * the storage.
 	 * 
 	 * @param fileName the name of the file to be deleted
-	 * 
 	 * @return the error message
 	 */
 	private int deleteFileFromStorage(String fileName) {
@@ -1102,7 +1066,6 @@ public class Datacenter extends SimEntity {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see cloudsim.core.SimEntity#shutdownEntity()
 	 */
 	@Override
@@ -1112,7 +1075,6 @@ public class Datacenter extends SimEntity {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see cloudsim.core.SimEntity#startEntity()
 	 */
 	@Override

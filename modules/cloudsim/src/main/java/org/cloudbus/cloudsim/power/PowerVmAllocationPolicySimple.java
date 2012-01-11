@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.power;
 
 import java.util.List;
@@ -19,8 +27,7 @@ import org.cloudbus.cloudsim.Vm;
  * Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
  * 
  * @author Anton Beloglazov
- * @since Jan 5, 2012
- * 
+ * @since CloudSim Toolkit 3.0
  */
 public class PowerVmAllocationPolicySimple extends PowerVmAllocationPolicyAbstract {
 
@@ -35,7 +42,6 @@ public class PowerVmAllocationPolicySimple extends PowerVmAllocationPolicyAbstra
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#optimizeAllocation(java.util.List)
 	 */
 	@Override

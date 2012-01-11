@@ -3,7 +3,7 @@
  * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  *
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -17,14 +17,14 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * The UtilizationModelStochastic class implements a model, according to which
- * a Cloudlet generates random CPU utilization every time frame.
- *
- * @author		Anton Beloglazov
- * @since		CloudSim Toolkit 2.0
+ * The UtilizationModelStochastic class implements a model, according to which a Cloudlet generates
+ * random CPU utilization every time frame.
+ * 
+ * @author Anton Beloglazov
+ * @since CloudSim Toolkit 2.0
  */
 public class UtilizationModelStochastic implements UtilizationModel {
-	
+
 	/** The random generator. */
 	private Random randomGenerator;
 
@@ -38,10 +38,10 @@ public class UtilizationModelStochastic implements UtilizationModel {
 		setHistory(new HashMap<Double, Double>());
 		setRandomGenerator(new Random());
 	}
-	
+
 	/**
 	 * Instantiates a new utilization model stochastic.
-	 *
+	 * 
 	 * @param seed the seed
 	 */
 	public UtilizationModelStochastic(long seed) {
@@ -49,7 +49,8 @@ public class UtilizationModelStochastic implements UtilizationModel {
 		setRandomGenerator(new Random(seed));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see cloudsim.power.UtilizationModel#getUtilization(double)
 	 */
 	@Override
@@ -65,7 +66,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 
 	/**
 	 * Gets the history.
-	 *
+	 * 
 	 * @return the history
 	 */
 	protected Map<Double, Double> getHistory() {
@@ -74,7 +75,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 
 	/**
 	 * Sets the history.
-	 *
+	 * 
 	 * @param history the history
 	 */
 	protected void setHistory(Map<Double, Double> history) {
@@ -83,9 +84,8 @@ public class UtilizationModelStochastic implements UtilizationModel {
 
 	/**
 	 * Save history.
-	 *
+	 * 
 	 * @param filename the filename
-	 *
 	 * @throws Exception the exception
 	 */
 	public void saveHistory(String filename) throws Exception {
@@ -97,9 +97,8 @@ public class UtilizationModelStochastic implements UtilizationModel {
 
 	/**
 	 * Load history.
-	 *
+	 * 
 	 * @param filename the filename
-	 *
 	 * @throws Exception the exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -107,12 +106,12 @@ public class UtilizationModelStochastic implements UtilizationModel {
 		FileInputStream fis = new FileInputStream(filename);
 		ObjectInputStream ois = new ObjectInputStream(fis);
 		setHistory((Map<Double, Double>) ois.readObject());
-        ois.close();
+		ois.close();
 	}
 
 	/**
 	 * Sets the random generator.
-	 *
+	 * 
 	 * @param randomGenerator the new random generator
 	 */
 	public void setRandomGenerator(Random randomGenerator) {
@@ -121,7 +120,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 
 	/**
 	 * Gets the random generator.
-	 *
+	 * 
 	 * @return the random generator
 	 */
 	public Random getRandomGenerator() {

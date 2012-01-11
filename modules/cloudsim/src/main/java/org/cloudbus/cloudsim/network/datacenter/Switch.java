@@ -1,12 +1,20 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
@@ -81,29 +89,29 @@ public class Switch extends SimEntity {
 		// Log.printLine(CloudSim.clock()+"[Broker]: event received:"+ev.getTag());
 		switch (ev.getTag()) {
 		// Resource characteristics request
-		case CloudSimTags.Network_Event_UP:
-			// process the packet from down switch or host
-			processpacket_up(ev);
-			break;
-		case CloudSimTags.Network_Event_DOWN:
-			// process the packet from uplink
-			processpacket_down(ev);
-			break;
-		case CloudSimTags.Network_Event_send:
-			processpacketforward(ev);
-			break;
+			case CloudSimTags.Network_Event_UP:
+				// process the packet from down switch or host
+				processpacket_up(ev);
+				break;
+			case CloudSimTags.Network_Event_DOWN:
+				// process the packet from uplink
+				processpacket_down(ev);
+				break;
+			case CloudSimTags.Network_Event_send:
+				processpacketforward(ev);
+				break;
 
-		case CloudSimTags.Network_Event_Host:
-			processhostpacket(ev);
-			break;
-		// Resource characteristics answer
-		case CloudSimTags.RESOURCE_Register:
-			registerHost(ev);
-			break;
-		// other unknown tags are processed by this method
-		default:
-			processOtherEvent(ev);
-			break;
+			case CloudSimTags.Network_Event_Host:
+				processhostpacket(ev);
+				break;
+			// Resource characteristics answer
+			case CloudSimTags.RESOURCE_Register:
+				registerHost(ev);
+				break;
+			// other unknown tags are processed by this method
+			default:
+				processOtherEvent(ev);
+				break;
 		}
 	}
 

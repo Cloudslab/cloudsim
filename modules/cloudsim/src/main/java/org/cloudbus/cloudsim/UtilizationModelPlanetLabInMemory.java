@@ -12,8 +12,8 @@ public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 	/** The scheduling interval. */
 	private double schedulingInterval;
 
-	/** The data. */
-	private final double[] data = new double[289]; // 5 min * 288 = 24 hours
+	/** The data (5 min * 288 = 24 hours). */
+	private final double[] data = new double[289];
 
 	/**
 	 * Instantiates a new utilization model PlanetLab.
@@ -23,7 +23,8 @@ public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public UtilizationModelPlanetLabInMemory(String inputPath, double schedulingInterval)
-			throws NumberFormatException, IOException {
+			throws NumberFormatException,
+			IOException {
 		setSchedulingInterval(schedulingInterval);
 		BufferedReader input = new BufferedReader(new FileReader(inputPath));
 		int n = data.length;
@@ -36,7 +37,6 @@ public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see cloudsim.power.UtilizationModel#getUtilization(double)
 	 */
 	@Override

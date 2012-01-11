@@ -1,8 +1,9 @@
 /*
- * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
- * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
- * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim.power;
@@ -58,7 +59,6 @@ public class PowerDatacenter extends Datacenter {
 	 * @param utilizationBound the utilization bound
 	 * @param vmAllocationPolicy the vm provisioner
 	 * @param storageList the storage list
-	 * 
 	 * @throws Exception the exception
 	 */
 	public PowerDatacenter(
@@ -247,7 +247,6 @@ public class PowerDatacenter extends Datacenter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.cloudbus.cloudsim.Datacenter#processVmMigrate(org.cloudbus.cloudsim.core.SimEvent,
 	 * boolean)
 	 */
@@ -263,7 +262,6 @@ public class PowerDatacenter extends Datacenter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see cloudsim.Datacenter#processCloudletSubmit(cloudsim.core.SimEvent, boolean)
 	 */
 	@Override

@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
@@ -10,32 +18,27 @@ import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 
 /**
- * This class allows to simulate Root switch which connects Datacenter to
- * external network. It interacts with other switches in order to exchange
- * packets. Please refer to following publication for more details:
+ * This class allows to simulate Root switch which connects Datacenter to external network. It
+ * interacts with other switches in order to exchange packets.
  * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel
- * Applications in Cloud Simulations, Proceedings of the 4th IEEE/ACM
- * International Conference on Utility and Cloud Computing (UCC 2011, IEEE CS
- * Press, USA), Melbourne, Australia, December 5-7, 2011.
+ * Please refer to following publication for more details:
+ * 
+ * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
- * 
  */
-
 public class RootSwitch extends Switch {
 
 	/**
-	 * Constructor for Root Switch We have to specify switches that are
-	 * connected to its downlink ports, and corresponding bandwidths
+	 * Constructor for Root Switch We have to specify switches that are connected to its downlink
+	 * ports, and corresponding bandwidths
 	 * 
-	 * @param name
-	 *            Name of the switch
-	 * @param level
-	 *            At which level switch is with respect to hosts.
-	 * @param dc
-	 *            Pointer to Datacenter
+	 * @param name Name of the switch
+	 * @param level At which level switch is with respect to hosts.
+	 * @param dc Pointer to Datacenter
 	 */
 	public RootSwitch(String name, int level, NetworkDatacenter dc) {
 		super(name, level, dc);
@@ -45,15 +48,12 @@ public class RootSwitch extends Switch {
 		downlinkbandwidth = NetworkConstants.BandWidthAggRoot;
 		latency = NetworkConstants.SwitchingDelayRoot;
 		numport = NetworkConstants.RootSwitchPort;
-
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * Send Packet to switch connected through a downlink port
 	 * 
-	 * @param ev
-	 *            Event/packet to process
+	 * @param ev Event/packet to process
 	 */
 	@Override
 	protected void processpacket_up(SimEvent ev) {
@@ -62,21 +62,19 @@ public class RootSwitch extends Switch {
 		// has to send up
 		// check which switch to forward to
 		// add packet in the switch list
-		//
-		
+
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
 		int recvVMid = hspkt.pkt.reciever;
-		CloudSim.cancelAll(getId(), new PredicateType(
-				CloudSimTags.Network_Event_send));
-		schedule(getId(), this.switching_delay, CloudSimTags.Network_Event_send);
+		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
+		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 
-		if (this.level == NetworkConstants.ROOT_LEVEL) {
+		if (level == NetworkConstants.ROOT_LEVEL) {
 			// get id of edge router
 			int edgeswitchid = dc.VmToSwitchid.get(recvVMid);
 			// search which aggregate switch has it
 			int aggSwtichid = -1;
 			;
-			for (Switch sw : this.downlinkswitches) {
+			for (Switch sw : downlinkswitches) {
 				for (Switch edge : sw.downlinkswitches) {
 					if (edge.getId() == edgeswitchid) {
 						aggSwtichid = sw.getId();
@@ -84,14 +82,13 @@ public class RootSwitch extends Switch {
 					}
 				}
 			}
-			if (aggSwtichid < 0)
+			if (aggSwtichid < 0) {
 				System.out.println(" No destination for this packet");
-			else {
-				List<NetworkPacket> pktlist = this.downlinkswitchpktlist
-						.get(aggSwtichid);
+			} else {
+				List<NetworkPacket> pktlist = downlinkswitchpktlist.get(aggSwtichid);
 				if (pktlist == null) {
 					pktlist = new ArrayList<NetworkPacket>();
-					this.downlinkswitchpktlist.put(aggSwtichid, pktlist);
+					downlinkswitchpktlist.put(aggSwtichid, pktlist);
 				}
 				pktlist.add(hspkt);
 			}

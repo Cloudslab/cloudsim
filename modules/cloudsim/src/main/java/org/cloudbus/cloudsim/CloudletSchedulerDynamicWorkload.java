@@ -2,7 +2,7 @@
  * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
  * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
  * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -59,10 +59,8 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * 
 	 * @param currentTime current simulation time
 	 * @param mipsShare array with MIPS share of each Pe available to the scheduler
-	 * 
 	 * @return time predicted completion time of the earliest finishing cloudlet, or 0 if there is
 	 *         no next events
-	 * 
 	 * @pre currentTime >= 0
 	 * @post $none
 	 */
@@ -110,9 +108,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * Receives an cloudlet to be executed in the VM managed by this scheduler.
 	 * 
 	 * @param cl the cl
-	 * 
 	 * @return predicted completion time
-	 * 
 	 * @pre _gl != null
 	 * @post $none
 	 */
@@ -126,9 +122,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * 
 	 * @param cl the cl
 	 * @param fileTransferTime the file transfer time
-	 * 
 	 * @return predicted completion time
-	 * 
 	 * @pre _gl != null
 	 * @post $none
 	 */
@@ -149,7 +143,6 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * Processes a finished cloudlet.
 	 * 
 	 * @param rcl finished cloudlet
-	 * 
 	 * @pre rgl != $null
 	 * @post $none
 	 */
@@ -164,7 +157,6 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * Get utilization created by all cloudlets.
 	 * 
 	 * @param time the time
-	 * 
 	 * @return total utilization
 	 */
 	@Override
@@ -205,7 +197,6 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * 
 	 * @param rcl the rcl
 	 * @param time the time
-	 * 
 	 * @return the current mips
 	 */
 	@Override
@@ -218,7 +209,6 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * 
 	 * @param rcl the rcl
 	 * @param mipsShare the mips share
-	 * 
 	 * @return the total current mips
 	 */
 	@Override
@@ -242,7 +232,6 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * 
 	 * @param rcl the rcl
 	 * @param time the time
-	 * 
 	 * @return the current mips
 	 */
 	@Override

@@ -1,3 +1,11 @@
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
+ */
+
 package org.cloudbus.cloudsim.power;
 
 import java.util.List;
@@ -6,7 +14,7 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * The Class PowerVmSelectionPolicyMinimumUtilization.
+ * The Minimum Utilization (MU) VM selection policy.
  * 
  * If you are using any algorithms, policies or workload included in the power package, please cite
  * the following paper:
@@ -17,12 +25,12 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
  * 
  * @author Anton Beloglazov
+ * @since CloudSim Toolkit 3.0
  */
 public class PowerVmSelectionPolicyMinimumUtilization extends PowerVmSelectionPolicy {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.cloudbus.cloudsim.experiments.power.PowerVmSelectionPolicy#getVmsToMigrate(org.cloudbus
 	 * .cloudsim.power.PowerHost)

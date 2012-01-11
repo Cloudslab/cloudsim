@@ -2,7 +2,7 @@
  * Title: CloudSim Toolkit Description: CloudSim (Cloud Simulation) Toolkit for Modeling and
  * Simulation of Clouds Licence: GPL - http://www.gnu.org/copyleft/gpl.html
  * 
- * Copyright (c) 2009-2010, The University of Melbourne, Australia
+ * Copyright (c) 2009-2012, The University of Melbourne, Australia
  */
 
 package org.cloudbus.cloudsim;
@@ -46,7 +46,6 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see cloudsim.VmScheduler#allocatePesForVm(cloudsim.Vm, java.util.List)
 	 */
 	@Override
@@ -73,7 +72,6 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 * 
 	 * @param vmUid the vm uid
 	 * @param mipsShareRequested the mips share requested
-	 * 
 	 * @return true, if successful
 	 */
 	protected boolean allocatePesForVm(String vmUid, List<Double> mipsShareRequested) {
@@ -165,7 +163,6 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see cloudsim.VmScheduler#deallocatePesForVm(cloudsim.Vm)
 	 */
 	@Override
