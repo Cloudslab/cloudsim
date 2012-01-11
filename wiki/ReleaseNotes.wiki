@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Cloudsim Project to Release CloudSim Toolkit 3.0
 #labels Featured
 
 = Cloudsim Project to Release CloudSim Toolkit 3.0 =
