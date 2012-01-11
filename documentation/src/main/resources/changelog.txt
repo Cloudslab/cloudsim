@@ -35,7 +35,7 @@ for PlanetLab (http://comon.cs.princeton.edu/).
 Parallel Workload Archive) can be loaded and read by CloudSim. Relevant classes are WorkloadModel and
 WorkloadFileReader ('util' package).
 
-- SUPPORT FOR USER-DEFINED END OF SIMULATION. Users are now able to specify a given event that causes the simulaton
+- SUPPORT FOR USER-DEFINED END OF SIMULATION. Users are now able to specify a given event that causes the simulation
 to finish. We thanks Gaston Keller for developing this new feature.
 
 
