@@ -22,10 +22,10 @@ This version of CloudSim brings enhanced modelling of power-aware and energy eff
 computing, and also a new package allowing modelling of internal data center topologies and
 message-passing applications.
 
-We encourage community to keep collaborating with us by notifying any identified bugs, providing 
-us feedback on new features they would like to have in future versions the toolkit, and also 
-developing their own extension packages, which we will be happy in promoting in the project 
-homepage. We will also be happy in listing in our homepage scientific peer-reviewed papers whose 
+We encourage the community to keep collaborating with us by notifying us about any identified 
+bugs, providing feedback on new features you would like to have in future versions of the toolkit, 
+and also developing your own extension packages, which we will be happy to promote on the project's 
+homepage. We will also be happy to list on our homepage scientific peer-reviewed papers, whose 
 results were obtained with CloudSim. 
 
 As in its previous version, all components developed as part of the CloudSim Toolkit are open
