@@ -3,7 +3,7 @@
 
 = Cloudsim Project to Release !CloudSim Toolkit 3.0 =
 
-The !Cloudbus Project at The University of Melbourne, Australia  is proud to announce the release of the new version of its Cloud simulation software, the !CloudSim.
+The Cloudbus Project at The University of Melbourne, Australia  is proud to announce the release of the new version of its Cloud simulation software, the !CloudSim.
 
 One year has passed since last version of !CloudSim was released. Cloud computing now is mainstream, and has been heavily adopted by different industries. It is also omnipresent in conferences and journals from diverse fields such as high performance computing, grid computing, distributed systems, operating systems, software engineering, databases and so on. !CloudSim has been present in publications in all the above fields.
 
