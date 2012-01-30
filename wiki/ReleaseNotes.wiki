@@ -1,7 +1,7 @@
 #summary Cloudsim Project to Release CloudSim Toolkit 3.0
 #labels Featured
 
-= !Cloudsim Project to Release !CloudSim Toolkit 3.0 =
+= Cloudsim Project to Release !CloudSim Toolkit 3.0 =
 
 The !Cloudbus Project at The University of Melbourne, Australia  is proud to announce the release of the new version of its Cloud simulation software, the !CloudSim.
 
@@ -12,7 +12,7 @@ and group discussion. Based on this feedback, we could identify bugs, concepts t
 
 This version of !CloudSim brings enhanced modelling of power-aware and energy efficient Cloud computing, and also a new package allowing modelling of internal data center topologies and message-passing applications.
 
-We encourage the community to keep collaborating with us by notifying us about any identified bugs, providing feedback on new features you would like to have in future versions of the toolkit, and also developing your own extension packages, which we will be happy to promote on the project's homepage. We will also be happy to list on our homepage scientific peer-reviewed papers, whose results were obtained with CloudSim. 
+We encourage the community to keep collaborating with us by notifying us about any identified bugs, providing feedback on new features you would like to have in future versions of the toolkit, and also developing your own extension packages, which we will be happy to promote on the project's homepage. We will also be happy to list on our homepage scientific peer-reviewed papers, whose results were obtained with !CloudSim. 
 
 As in its previous version, all components developed as part of the !CloudSim Toolkit are open source released under the LGPL license to encourage innovation and pass full freedom to our users.
 
