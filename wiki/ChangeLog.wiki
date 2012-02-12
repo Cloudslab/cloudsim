@@ -1,14 +1,14 @@
 #labels Featured
-#CloudSim change log
+#!CloudSim change log
 
-=Changes from CloudSim 2.1 to CloudSim 3.0=
+=Changes from !CloudSim 2.1 to !CloudSim 3.0=
 
 
 ==What's new==
 
-  * *NEW VM SCHEDULER.* VmSchedulerTimeSharedOverSubscription models a scheduler that allows unbounded number of VMS to be deployed in a single VM, regardless its requirements in terms of number of MIPS. Notice that this was the behaviour of VmSchedulerTimeShared in CloudSim 1.0 Beta, but this behaviour had changed in CloudSim 2.0 to accommodate requests with specific amount of MIPS.
+  * *NEW VM SCHEDULER.* !VmSchedulerTimeSharedOverSubscription models a scheduler that allows unbounded number of VMS to be deployed in a single VM, regardless its requirements in terms of number of MIPS. Notice that this was the behaviour of !VmSchedulerTimeShared in !CloudSim 1.0 Beta, but this behaviour had changed in !CloudSim 2.0 to accommodate requests with specific amount of MIPS.
 
-  * *NEW DATACENTER NETWORK MODEL.* A internal network model has been added to CloudSim 3.0. It supports definition of switches connecting hosts in arbitrary network topologies. New Vm classes and Cloudlet classes were added to take advantage of this feature without breaking compatibility of older code. This new feature also enables modelling of message-passing applications. They are included in the package 'network.datacenter'.
+  * *NEW DATACENTER NETWORK MODEL.* A internal network model has been added to !CloudSim 3.0. It supports definition of switches connecting hosts in arbitrary network topologies. New Vm classes and Cloudlet classes were added to take advantage of this feature without breaking compatibility of older code. This new feature also enables modelling of message-passing applications. They are included in the package 'network.datacenter'.
 
   * *NEW VM ALLOCATION AND SELECTION POLICIES.* 6 new VM allocation and 4 VM selection policies were added to the power package. To find more details about the policies please refer to the following paper: 
 
@@ -16,22 +16,22 @@
 	Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in Cloud Data Centers", Concurrency 
 	and Computation: Practice and Experience, ISSN: 1532-0626, Wiley Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
 
-  * *NEW POWER MODELS.* 7 power models of real servers using the data from SPECpower were added to the power package. They are PowerModelSpecPowerHpProLiantMl110G3PentiumD930, PowerModelSpecPowerHpProLiantMl110G4Xeon3040, PowerModelSpecPowerHpProLiantMl110G5Xeon3075, PowerModelSpecPowerIbmX3250XeonX3470, PowerModelSpecPowerIbmX3250XeonX3480, PowerModelSpecPowerIbmX3550XeonX5670, and PowerModelSpecPowerIbmX3550XeonX5675.
+  * *NEW POWER MODELS.* 7 power models of real servers using the data from SPECpower were added to the power package. They are !PowerModelSpecPowerHpProLiantMl110G3PentiumD930, !PowerModelSpecPowerHpProLiantMl110G4Xeon3040, !PowerModelSpecPowerHpProLiantMl110G5Xeon3075, !PowerModelSpecPowerIbmX3250XeonX3470, !PowerModelSpecPowerIbmX3250XeonX3480, !PowerModelSpecPowerIbmX3550XeonX5670, and !PowerModelSpecPowerIbmX3550XeonX5675.
 
-  * *NEW WORKLOAD TRACES.* Workload traces from the PlanetLab project were added and used in the examples of the power package. The data have originally been provided as a part of the CoMon project, a monitoring infrastructure for PlanetLab (http://comon.cs.princeton.edu/).
+  * *NEW WORKLOAD TRACES.* Workload traces from the !PlanetLab project were added and used in the examples of the power package. The data have originally been provided as a part of the !CoMon project, a monitoring infrastructure for !PlanetLab (http://comon.cs.princeton.edu/).
 
-  * *SUPPORT FOR EXTERNAL WORKLOADS.* External workloads written in the Standard Workload Format (SWF, from the Parallel Workload Archive) can be loaded and read by CloudSim. Relevant classes are WorkloadModel and WorkloadFileReader ('util' package).
+  * *SUPPORT FOR EXTERNAL WORKLOADS.* External workloads written in the Standard Workload Format (SWF, from the Parallel Workload Archive) can be loaded and read by !CloudSim. Relevant classes are !WorkloadModel and !WorkloadFileReader ('util' package).
 
   * *SUPPORT FOR USER-DEFINED END OF SIMULATION.* Users are now able to specify a given event that causes the simulation to finish. We thanks Gaston Keller for developing this new feature.
 
 
 ==Removed classes==
 
-  * CloudCoordinator
+  * !CloudCoordinator
   * Sensor
-  * CloudCoordinator
-  * PowerPe
-  * Power.PeList
+  * !CloudCoordinator
+  * !PowerPe
+  * !Power.PeList
 
 
 ==API changes==
