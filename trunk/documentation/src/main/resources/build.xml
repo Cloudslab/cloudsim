@@ -36,6 +36,9 @@ Acknowledgement:
             This is the build file for CloudSim
     </description>
 
+    <!-- location of libraries -->         
+    <property name="classpath" location="./jars/flanagan.jar" />
+
     <!-- location to store Java classes -->         
     <property name="class.dir" location="./classes" />
     
@@ -51,7 +54,8 @@ Acknowledgement:
 
     <!-- rule to compile CloudSim source files -->
     <target name="build" depends="prepare">
-        <javac srcdir="${src.dir}" destdir="${class.dir}" classpath="${classpath}" />
+        <javac srcdir="${src.dir}" destdir="${class.dir}" classpath="${classpath}" 
+	       includeantruntime="false" />
     </target>
 
     <!-- Rule for making a jar file. 
