@@ -89,7 +89,6 @@ public class CloudSimExample4 {
 			//create two VMs
 			Vm vm1 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
-			//the second VM will have twice the priority of VM1 and so will receive twice CPU time
 			vmid++;
 			Vm vm2 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
