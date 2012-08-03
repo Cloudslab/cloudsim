@@ -386,7 +386,7 @@ public class Datacenter extends SimEntity {
 			userId = data[1];
 			vmId = data[2];
 
-			status = getVmAllocationPolicy().getHost(vmId, userId).getVm(userId, vmId).getCloudletScheduler()
+			status = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId).getCloudletScheduler()
 					.getCloudletStatus(cloudletId);
 		}
 
@@ -397,7 +397,7 @@ public class Datacenter extends SimEntity {
 				cloudletId = cl.getCloudletId();
 				userId = cl.getUserId();
 
-				status = getVmAllocationPolicy().getHost(vmId, userId).getVm(userId, vmId)
+				status = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
 						.getCloudletScheduler().getCloudletStatus(cloudletId);
 			} catch (Exception e) {
 				Log.printLine(getName() + ": Error in processing CloudSimTags.CLOUDLET_STATUS");
@@ -653,7 +653,7 @@ public class Datacenter extends SimEntity {
 		int destId = array[4];
 
 		// get the cloudlet
-		Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getVm(userId, vmId)
+		Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
 				.getCloudletScheduler().cloudletCancel(cloudletId);
 
 		boolean failed = false;
@@ -675,7 +675,7 @@ public class Datacenter extends SimEntity {
 
 			// the cloudlet will migrate from one vm to another does the destination VM exist?
 			if (destId == getId()) {
-				Vm vm = getVmAllocationPolicy().getHost(vmDestId, userId).getVm(userId, vmDestId);
+				Vm vm = getVmAllocationPolicy().getHost(vmDestId, userId).getVm(vmDestId,userId);
 				if (vm == null) {
 					failed = true;
 				} else {
@@ -824,7 +824,7 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void processCloudletResume(int cloudletId, int userId, int vmId, boolean ack) {
-		double eventTime = getVmAllocationPolicy().getHost(vmId, userId).getVm(userId, vmId)
+		double eventTime = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
 				.getCloudletScheduler().cloudletResume(cloudletId);
 
 		boolean status = false;
@@ -859,7 +859,7 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void processCloudletPause(int cloudletId, int userId, int vmId, boolean ack) {
-		boolean status = getVmAllocationPolicy().getHost(vmId, userId).getVm(userId, vmId)
+		boolean status = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
 				.getCloudletScheduler().cloudletPause(cloudletId);
 
 		if (ack) {
@@ -885,9 +885,8 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void processCloudletCancel(int cloudletId, int userId, int vmId) {
-		Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getVm(userId, vmId)
+		Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
 				.getCloudletScheduler().cloudletCancel(cloudletId);
-
 		sendNow(userId, CloudSimTags.CLOUDLET_CANCEL, cl);
 	}
 
