@@ -161,6 +161,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		}
 
 		// Then searches in the exec list
+		position=0;
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			if (rcl.getCloudletId() == cloudletId) {
 				found = true;
@@ -177,11 +178,11 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 				rcl.setCloudletStatus(Cloudlet.CANCELED);
 			}
 			return rcl.getCloudlet();
-
 		}
 
 		// Now, looks in the paused queue
 		found = false;
+		position=0;
 		for (ResCloudlet rcl : getCloudletPausedList()) {
 			if (rcl.getCloudletId() == cloudletId) {
 				found = true;
