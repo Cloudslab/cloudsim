@@ -188,7 +188,7 @@ public class Cloudlet {
 				utilizationModelCpu,
 				utilizationModelRam,
 				utilizationModelBw,
-				true);
+				false);
 		vmId = -1;
 		accumulatedBwCost = 0.0;
 		costPerBw = 0.0;
@@ -288,7 +288,7 @@ public class Cloudlet {
 				utilizationModelCpu,
 				utilizationModelRam,
 				utilizationModelBw,
-				true);
+				false);
 		vmId = -1;
 		accumulatedBwCost = 0.0;
 		costPerBw = 0.0;
