@@ -437,7 +437,7 @@ public class ResCloudlet {
 			return 0;
 		}
 
-		return (long) Math.ceil(length / 1000000);
+		return (long) Math.floor(length / 1000000);
 	}
 
 	/**
@@ -459,7 +459,8 @@ public class ResCloudlet {
 		cloudlet.setExecParam(wallClockTime, totalCompletionTime);
 
 		long finished = 0;
-		if (cloudlet.getCloudletTotalLength() * 1000000 < cloudletFinishedSoFar) {
+		//if (cloudlet.getCloudletTotalLength() * 1000000 < cloudletFinishedSoFar) {
+		if (cloudlet.getCloudletStatus()==Cloudlet.SUCCESS) {
 			finished = cloudlet.getCloudletLength();
 		} else {
 			finished = cloudletFinishedSoFar / 1000000;
