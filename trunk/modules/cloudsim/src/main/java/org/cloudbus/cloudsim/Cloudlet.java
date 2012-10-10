@@ -619,7 +619,6 @@ public class Cloudlet {
 		if (result <= 0.0) {
 			completed = true;
 		}
-
 		return completed;
 	}
 
