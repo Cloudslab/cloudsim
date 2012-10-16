@@ -31,7 +31,7 @@ public class PeList {
 	 * @pre id >= 0
 	 * @post $none
 	 */
-	public static <T extends Pe> Pe getById(List<Pe> peList, int id) {
+	public static <T extends Pe> Pe getById(List<T> peList, int id) {
 		for (Pe pe : peList) {
 			if (pe.getId() == id) {
 				return pe;
@@ -49,7 +49,7 @@ public class PeList {
 	 * @pre id >= 0
 	 * @post $none
 	 */
-	public static <T extends Pe> int getMips(List<Pe> peList, int id) {
+	public static <T extends Pe> int getMips(List<T> peList, int id) {
 		Pe pe = getById(peList, id);
 		if (pe != null) {
 			return pe.getMips();
@@ -65,7 +65,7 @@ public class PeList {
 	 * @pre $none
 	 * @post $none
 	 */
-	public static <T extends Pe> int getTotalMips(List<Pe> peList) {
+	public static <T extends Pe> int getTotalMips(List<T> peList) {
 		int totalMips = 0;
 		for (Pe pe : peList) {
 			totalMips += pe.getMips();
@@ -79,7 +79,7 @@ public class PeList {
 	 * @param peList the pe list
 	 * @return the utilization
 	 */
-	public static <T extends Pe> double getMaxUtilization(List<Pe> peList) {
+	public static <T extends Pe> double getMaxUtilization(List<T> peList) {
 		double maxUtilization = 0;
 		for (Pe pe : peList) {
 			double utilization = pe.getPeProvisioner().getUtilization();
@@ -97,7 +97,7 @@ public class PeList {
 	 * @param peList the pe list
 	 * @return the utilization
 	 */
-	public static <T extends Pe> double getMaxUtilizationAmongVmsPes(List<Pe> peList, Vm vm) {
+	public static <T extends Pe> double getMaxUtilizationAmongVmsPes(List<T> peList, Vm vm) {
 		double maxUtilization = 0;
 		for (Pe pe : peList) {
 			if (pe.getPeProvisioner().getAllocatedMipsForVm(vm) == null) {
@@ -119,7 +119,7 @@ public class PeList {
 	 * @pre $none
 	 * @post $none
 	 */
-	public static <T extends Pe> Pe getFreePe(List<Pe> peList) {
+	public static <T extends Pe> Pe getFreePe(List<T> peList) {
 		for (Pe pe : peList) {
 			if (pe.getStatus() == Pe.FREE) {
 				return pe;
@@ -136,7 +136,7 @@ public class PeList {
 	 * @pre $none
 	 * @post $result >= 0
 	 */
-	public static <T extends Pe> int getNumberOfFreePes(List<Pe> peList) {
+	public static <T extends Pe> int getNumberOfFreePes(List<T> peList) {
 		int cnt = 0;
 		for (Pe pe : peList) {
 			if (pe.getStatus() == Pe.FREE) {
@@ -157,7 +157,7 @@ public class PeList {
 	 * @pre peID >= 0
 	 * @post $none
 	 */
-	public static <T extends Pe> boolean setPeStatus(List<Pe> peList, int id, int status) {
+	public static <T extends Pe> boolean setPeStatus(List<T> peList, int id, int status) {
 		Pe pe = getById(peList, id);
 		if (pe != null) {
 			pe.setStatus(status);
@@ -174,7 +174,7 @@ public class PeList {
 	 * @pre $none
 	 * @post $result >= 0
 	 */
-	public static <T extends Pe> int getNumberOfBusyPes(List<Pe> peList) {
+	public static <T extends Pe> int getNumberOfBusyPes(List<T> peList) {
 		int cnt = 0;
 		for (Pe pe : peList) {
 			if (pe.getStatus() == Pe.BUSY) {
@@ -194,7 +194,7 @@ public class PeList {
 	 * @param failed the new value for the "failed" parameter
 	 */
 	public static <T extends Pe> void setStatusFailed(
-			List<Pe> peList,
+			List<T> peList,
 			String resName,
 			int hostId,
 			boolean failed) {
@@ -216,7 +216,7 @@ public class PeList {
 	 * @param failed the new value for the "failed" parameter
 	 * @param peList the pe list
 	 */
-	public static <T extends Pe> void setStatusFailed(List<Pe> peList, boolean failed) {
+	public static <T extends Pe> void setStatusFailed(List<T> peList, boolean failed) {
 		// a loop to set the status of all the PEs in this machine
 		for (Pe pe : peList) {
 			if (failed) {
