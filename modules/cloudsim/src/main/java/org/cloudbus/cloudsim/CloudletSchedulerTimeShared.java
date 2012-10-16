@@ -109,7 +109,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	 * @param mipsShare the mips share
 	 * @return the capacity
 	 */
-	private double getCapacity(List<Double> mipsShare) {
+	protected double getCapacity(List<Double> mipsShare) {
 		double capacity = 0.0;
 		int cpus = 0;
 		for (Double mips : mipsShare) {
