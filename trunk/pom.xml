@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.cloudbus.cloudsim</groupId>
   <artifactId>cloudsim-package</artifactId>
-  <version>3.0.1</version>
+  <version>3.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>cloudsim-package</name>
   <description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
@@ -58,7 +58,7 @@
   			<plugin>
   				<groupId>org.apache.maven.plugins</groupId>
   				<artifactId>maven-release-plugin</artifactId>
-  				<version>2.2.2</version>
+  				<version>2.3.2</version>
   				<configuration>
   					<remoteTagging>true</remoteTagging>  				
   					<preparationGoals>clean install</preparationGoals>
