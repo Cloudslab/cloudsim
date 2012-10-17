@@ -7,7 +7,7 @@
   <name>cloudsim-package</name>
   <description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
   <url>http://www.cloudbus.org/cloudsim/</url>
-  
+
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -33,6 +33,7 @@
   	<url>http://cloudbus.org/</url>
   </organization>
   
+
   <build>
   	<pluginManagement>
   		<plugins>
@@ -57,7 +58,15 @@
   			</plugin>
   		</plugins>
   	</pluginManagement>
-  </build>  
+  </build>
+
+  <distributionManagement>
+	<repository>
+		<id>local-repository</id>
+		<name>Local Repository</name>
+		<url>file://${basedir}/target/deployed-artifacts</url>
+	</repository>
+  </distributionManagement> 
   
   <dependencyManagement>
   	<dependencies>
