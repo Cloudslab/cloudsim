@@ -1,4 +1,24 @@
 -----------------------------------------
+Changes from CloudSim 3.0 to CloudSim 3.0.1
+-----------------------------------------
+
+WHAT'S NEW
+----------
+
+This is mainly a bug fix release. The following updates have been made:
+
+- Made the CloudletSchedulerTimeShared.getCapacity method protected, to facilitate the development of new cloudlet schedulers.
+- Fixed in PeList: problem in the generics declaration.
+- Fixed Issue #40: Inconsistencies on the return of Cloudlet.isCloudletFinished() and the Cloudlet status.
+- Fixed Issue #35: Default behaviour of Cloudlet may lead to unnecessary usage of heap space.
+- Fixed bug when searching for Cloudlets to cancel in cloudletSchedulerTimeshared
+- Fixed Issue #34: Call getVm(vmId, userId) Function had swaped parameters in several parts of the Datacenter class.
+- Fixed misleading comment on Example 4 that said that capacity of created VMs were different.
+- Fixed comment on example 2, which said that MIPS requirements were different. Actually, they are the same.
+- Fixed the ant building problem: added Flanagan's library to the classpath; updated the readme.txt
+
+
+-----------------------------------------
 Changes from CloudSim 2.1 to CloudSim 3.0
 -----------------------------------------
 
