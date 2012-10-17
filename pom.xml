@@ -27,6 +27,21 @@
   	<developerConnection>scm:svn:https://cloudsim.googlecode.com/svn/trunk</developerConnection>
   	<url>http://code.google.com/p/cloudsim/source/browse/trunk</url>
   </scm>
+
+	<distributionManagement>
+		<!-- use the following if you're not using a snapshot version. -->
+		<repository>
+			<id>localRepo</id>
+			<name>RepositoryProxyRel</name>
+			<url>file:///${project.build.directory}/repo</url>
+		</repository>
+		<!-- use the following if you ARE using a snapshot version. -->
+		<snapshotRepository>
+			<id>localSnap</id>
+			<name>RepositoryProxySnap</name>
+			<url>file:///${project.build.directory}/snapshot</url>
+		</snapshotRepository>
+	</distributionManagement> 
   
   <organization>
   	<name>The Cloud Computing and Distributed Systems (CLOUDS) Laboratory, The University of Melbourne</name>
@@ -60,13 +75,7 @@
   	</pluginManagement>
   </build>
 
-  <distributionManagement>
-	<repository>
-		<id>local-repository</id>
-		<name>Local Repository</name>
-		<url>file://${basedir}/target/deployed-artifacts</url>
-	</repository>
-  </distributionManagement> 
+
   
   <dependencyManagement>
   	<dependencies>
