@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.cloudbus.cloudsim</groupId>
   <artifactId>cloudsim-package</artifactId>
-  <version>3.0.1</version>
+  <version>3.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>cloudsim-package</name>
   <description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
@@ -35,12 +35,6 @@
 			<name>RepositoryProxyRel</name>
 			<url>file:///${project.build.directory}/repo</url>
 		</repository>
-		<!-- use the following if you ARE using a snapshot version. -->
-		<snapshotRepository>
-			<id>localSnap</id>
-			<name>RepositoryProxySnap</name>
-			<url>file:///${project.build.directory}/snapshot</url>
-		</snapshotRepository>
 	</distributionManagement> 
   
   <organization>
