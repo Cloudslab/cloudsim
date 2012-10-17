@@ -1,0 +1,119 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.cloudbus.cloudsim</groupId>
+  <artifactId>cloudsim-package</artifactId>
+  <version>3.0.1</version>
+  <packaging>pom</packaging>
+  <name>cloudsim-package</name>
+  <description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
+  <url>http://www.cloudbus.org/cloudsim/</url>
+  
+  <properties>
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <modules>
+  	<module>modules</module>
+  	<module>documentation</module>
+  	<module>distribution</module>
+  </modules>
+  
+  <issueManagement>
+  	<system>Google Code</system>
+  	<url>http://code.google.com/p/cloudsim/issues/list</url>
+  </issueManagement>
+  <scm>
+  	<connection>scm:svn:http://cloudsim.googlecode.com/svn/tags/cloudsim-3.0.1</connection>
+  	<developerConnection>scm:svn:https://cloudsim.googlecode.com/svn/tags/cloudsim-3.0.1</developerConnection>
+  	<url>http://code.google.com/p/cloudsim/source/browse/tags/cloudsim-3.0.1</url>
+  </scm>
+  
+  <organization>
+  	<name>The Cloud Computing and Distributed Systems (CLOUDS) Laboratory, The University of Melbourne</name>
+  	<url>http://cloudbus.org/</url>
+  </organization>
+  
+  <build>
+  	<pluginManagement>
+  		<plugins>
+  			<plugin>
+  				<groupId>org.apache.maven.plugins</groupId>
+  				<artifactId>maven-compiler-plugin</artifactId>
+  				<version>2.3.2</version>
+  				<configuration>
+  					<source>1.7</source>
+  					<target>1.7</target>
+  				</configuration>
+  			</plugin>
+  			<plugin>
+  				<groupId>org.apache.maven.plugins</groupId>
+  				<artifactId>maven-release-plugin</artifactId>
+  				<version>2.3.2</version>
+  				<configuration>
+  					<remoteTagging>true</remoteTagging>  				
+  					<preparationGoals>clean install</preparationGoals>
+  					<autoVersionSubmodules>true</autoVersionSubmodules>  					
+  				</configuration>
+  			</plugin>
+  		</plugins>
+  	</pluginManagement>
+  </build>  
+  
+  <distributionManagement>
+	<repository>
+		<id>localrepo</id>
+		<name>LocalRepository</name>
+		<url>file:///${project.build.directory}/deployment-artifacts</url>
+	</repository>
+  </distributionManagement> 
+  
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>${project.groupId}</groupId>
+  			<artifactId>modules</artifactId>
+  			<version>${project.version}</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>${project.groupId}</groupId>
+  			<artifactId>cloudsim</artifactId>
+  			<version>${project.version}</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>${project.groupId}</groupId>
+  			<artifactId>cloudsim-examples</artifactId>
+  			<version>${project.version}</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>${project.groupId}</groupId>
+  			<artifactId>documentation</artifactId>
+  			<version>${project.version}</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>${project.groupId}</groupId>
+  			<artifactId>distribution</artifactId>
+  			<version>${project.version}</version>
+  		</dependency>
+  		
+  		<dependency>
+  			<groupId>junit</groupId>
+  			<artifactId>junit</artifactId>
+  			<version>4.10</version>
+  			<scope>test</scope>
+  		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>3.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymockclassextension</artifactId>
+			<version>3.1</version>
+			<scope>test</scope>
+		</dependency>  		  		
+  	</dependencies>
+  </dependencyManagement>
+    
+</project>
