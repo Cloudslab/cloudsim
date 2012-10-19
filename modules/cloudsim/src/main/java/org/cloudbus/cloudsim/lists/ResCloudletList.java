@@ -89,4 +89,20 @@ public class ResCloudletList {
 		return false;
 	}
 
+	/**
+	 * Returns the position of the cloudlet with that id, if it exists. Otherwise -1.
+	 * @param cloudletList - the list of cloudlets.
+	 * @param id - the id we search for.
+	 * @return - the position of the cloudlet with that id, or -1 otherwise.
+	 */
+	public static <T extends ResCloudlet> int getPositionById(List<T> cloudletList, int id) {
+		int i = 0 ;
+	        for (T cloudlet : cloudletList) {
+			if (cloudlet.getCloudletId() == id) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
 }

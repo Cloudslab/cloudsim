@@ -27,7 +27,7 @@ import org.junit.Test;
 public class HostDynamicWorkloadTest {
 
 	private static final int ID = 0;
-	private static final long STORAGE = 1000000;
+	private static final long STORAGE = Consts.MILLION;
 	private static final int RAM = 1024;
 	private static final int BW = 10000;
 	private static final double MIPS = 1000;

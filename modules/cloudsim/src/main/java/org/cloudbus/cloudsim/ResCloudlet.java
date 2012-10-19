@@ -216,7 +216,7 @@ public class ResCloudlet {
 
 		// In case a Cloudlet has been executed partially by some other grid
 		// hostList.
-		cloudletFinishedSoFar = cloudlet.getCloudletFinishedSoFar() * 1000000;
+		cloudletFinishedSoFar = cloudlet.getCloudletFinishedSoFar() * Consts.MILLION;
 	}
 
 	/**
@@ -430,14 +430,14 @@ public class ResCloudlet {
 	 * @post $result >= 0
 	 */
 	public long getRemainingCloudletLength() {
-		long length = cloudlet.getCloudletTotalLength() * 1000000 - cloudletFinishedSoFar;
+		long length = cloudlet.getCloudletTotalLength() * Consts.MILLION - cloudletFinishedSoFar;
 
 		// Remaining Cloudlet length can't be negative number.
 		if (length < 0) {
 			return 0;
 		}
 
-		return (long) Math.floor(length / 1000000);
+		return (long) Math.floor(length / Consts.MILLION);
 	}
 
 	/**
@@ -459,11 +459,11 @@ public class ResCloudlet {
 		cloudlet.setExecParam(wallClockTime, totalCompletionTime);
 
 		long finished = 0;
-		//if (cloudlet.getCloudletTotalLength() * 1000000 < cloudletFinishedSoFar) {
+		//if (cloudlet.getCloudletTotalLength() * Consts.MILLION < cloudletFinishedSoFar) {
 		if (cloudlet.getCloudletStatus()==Cloudlet.SUCCESS) {
 			finished = cloudlet.getCloudletLength();
 		} else {
-			finished = cloudletFinishedSoFar / 1000000;
+			finished = cloudletFinishedSoFar / Consts.MILLION;
 		}
 
 		cloudlet.setCloudletFinishedSoFar(finished);
