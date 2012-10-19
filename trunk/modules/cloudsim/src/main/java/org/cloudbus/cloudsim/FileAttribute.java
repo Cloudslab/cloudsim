@@ -237,7 +237,7 @@ public class FileAttribute {
 	 * @return the file size (in bytes)
 	 */
 	public int getFileSizeInByte() {
-		return size * 1000000;   // 1e6
+		return size * Consts.MILLION;   // 1e6
 		// return size * 1048576; // 1e6 - more accurate
 	}
 

@@ -89,7 +89,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 		// each machine in the exec list has the same amount of cpu
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			rcl.updateCloudletFinishedSoFar((long) (capacity * timeSpam * rcl.getNumberOfPes() * 1000000));
+			rcl.updateCloudletFinishedSoFar((long) (capacity * timeSpam * rcl.getNumberOfPes() * Consts.MILLION));
 		}
 
 		// no more cloudlets in this scheduler
