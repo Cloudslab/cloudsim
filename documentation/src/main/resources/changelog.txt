@@ -1,6 +1,20 @@
------------------------------------------
+-------------------------------------------
+Changes from CloudSim 3.0 to CloudSim 3.0.2
+-------------------------------------------
+
+WHAT'S NEW
+----------
+
+This is a bug fix release. The following updates have been made:
+
+- Fixed Issue 32: a problem with the ant classpath declaration
+- Fixed Issue 37: recalculating MIPS in PowerVmAllocationPolicyMigrationAbstract.findHostForVm()
+- Updated the references to the CCPE paper
+
+
+-------------------------------------------
 Changes from CloudSim 3.0 to CloudSim 3.0.1
------------------------------------------
+-------------------------------------------
 
 WHAT'S NEW
 ----------
@@ -35,20 +49,20 @@ of switches connecting hosts in arbitrary network topologies. New Vm classes and
 take advantage of this feature without breaking compatibility of older code. This new feature also enables
 modelling of message-passing applications. They are included in the package 'network.datacenter'.
 
-- NEW VM ALLOCATION AND SELECTION POLICIES. 6 new VM allocation and 4 VM selection policies were added to the 
-power package. To find more details about the policies please refer to the following paper: 
+- NEW VM ALLOCATION AND SELECTION POLICIES. 6 new VM allocation and 4 VM selection policies were added to the
+power package. To find more details about the policies please refer to the following paper:
 
-	Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive Heuristics for 
-	Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in Cloud Data Centers", Concurrency 
+	Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive Heuristics for
+	Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in Cloud Data Centers", Concurrency
 	and Computation: Practice and Experience, ISSN: 1532-0626, Wiley Press, New York, USA, 2011, DOI: 10.1002/cpe.1867
 
 - NEW POWER MODELS. 7 power models of real servers using the data from SPECpower were added to the power package.
 They are PowerModelSpecPowerHpProLiantMl110G3PentiumD930, PowerModelSpecPowerHpProLiantMl110G4Xeon3040,
-PowerModelSpecPowerHpProLiantMl110G5Xeon3075, PowerModelSpecPowerIbmX3250XeonX3470, PowerModelSpecPowerIbmX3250XeonX3480, 
+PowerModelSpecPowerHpProLiantMl110G5Xeon3075, PowerModelSpecPowerIbmX3250XeonX3470, PowerModelSpecPowerIbmX3250XeonX3480,
 PowerModelSpecPowerIbmX3550XeonX5670, and PowerModelSpecPowerIbmX3550XeonX5675.
 
 - NEW WORKLOAD TRACES. Workload traces from the PlanetLab project were added and used in the examples of the
-power package. The data have originally been provided as a part of the CoMon project, a monitoring infrastructure 
+power package. The data have originally been provided as a part of the CoMon project, a monitoring infrastructure
 for PlanetLab (http://comon.cs.princeton.edu/).
 
 - SUPPORT FOR EXTERNAL WORKLOADS. External workloads written in the Standard Workload Format (SWF, from the
@@ -109,12 +123,12 @@ Changes from CloudSim 2.0 to CloudSim 2.1
 -----------------------------------------
 
 - The project has been migrated to using Apache Maven (http://maven.apache.org/). Maven simplifies
-  java project management by providing various tools and plugins for project building, testing, and 
-  packaging, dependency management, etc. 
+  java project management by providing various tools and plugins for project building, testing, and
+  packaging, dependency management, etc.
 - The directory structure has been changed to comply with the Maven specification
-- The VmSchedulerTimeSharedWithPriority has been removed as well as the priority field from the 
-  Vm class. Users can have the same functionality by using the VmSchedulerTimeShared class and 
-  setting the MIPS requirements for VMs. See examples 2 and 3. 
+- The VmSchedulerTimeSharedWithPriority has been removed as well as the priority field from the
+  Vm class. Users can have the same functionality by using the VmSchedulerTimeShared class and
+  setting the MIPS requirements for VMs. See examples 2 and 3.
 - Bug fixes, refactoring and removal of obsolete code.
 
 
@@ -153,7 +167,7 @@ The following classes had their names changed to better reflect its functionalit
 (previous name) SpaceSharedAllocationPolicy -> (current name) VmSchedulerTimeSharedWithPriority
 
 (previous name) VMProvisioner -> (current name) VmAllocationPolicy
-(previous name) SimpleVMProvisioner -> (current name) VmAllocationPolicySimple 
+(previous name) SimpleVMProvisioner -> (current name) VmAllocationPolicySimple
 
 (previous name) DataCenter -> (current name) Datacenter
 (previous name) PE -> (current name) Pe
@@ -203,4 +217,3 @@ Below there is a list of CloudSim's new features. Please, refer to Javadoc and e
 * Support for simulation of Federation of Data centers (new classes FederatedDatacenter, CloudCoordinator, and Sensor);
 
 * Support for modeling of energy-aware cloud computing.
-
