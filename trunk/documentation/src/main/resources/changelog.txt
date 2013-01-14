@@ -40,7 +40,7 @@ WHAT'S NEW
 ----------
 
 - NEW VM SCHEDULER. VmSchedulerTimeSharedOverSubscription models a scheduler that allows unbounded number of
-VMS to be deployed in a single VM, regardless its requirements in terms of number of MIPS. Notice that this
+VMS to be deployed in a single Host, regardless its requirements in terms of number of MIPS. Notice that this
 was the behaviour of VmSchedulerTimeShared in CloudSim 1.0 Beta, but this behaviour had changed in
 CloudSim 2.0 to accommodate requests with specific amount of MIPS.
 
