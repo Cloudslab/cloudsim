@@ -53,7 +53,7 @@ No, !CloudSim is a simulator -- it does not run real applications. It is intende
 [FAQ Top]
 == !CloudSim components, communication, and events ==
 
-=== 5. What are the default behavior of components provided in !CloudSim package? How can I change them?===
+=== 1. What are the default behavior of components provided in !CloudSim package? How can I change them?===
 
 Datacenter behaves like an IaaS provider: it receives requests for VMs from brokers and create the VMs in hosts.
 
@@ -61,7 +61,7 @@ The Broker provided in !CloudSim only submits a list of VMs to be created and sc
 
 To change default behavior, you can either extend these classes to add the intended behavior, or implement new ones from scratch. In the latter case, these new entities have to extend !SimEntity and implement the processEvent(Simevent) method.
 
-=== 6. How can I code a periodic behavior to be adopted by entities? ===
+=== 2. How can I code a periodic behavior to be adopted by entities? ===
 
 This is done by setting an internal event to be set periodically. Upon reception of the event, the handler for it is called, and the desired behavior is implemented in such handler method. Below we show how to do it for Datacenter class. The same steps can be used to enable such behavior in Broker as well.
 
@@ -110,15 +110,15 @@ class NewDatacenter extends Datacenter {
 }
 }}}
 
-=== 7. How can I create my own type of messages? How to make them be received by other entities? ===
+=== 3. How can I create my own type of messages? How to make them be received by other entities? ===
 
 The process is similar to the previous one. First, a new message tag has to be declared somewhere. Then, a handler for this message have to be added in the receiver of the message. The code is similar to the previous, with the exception of the handler, that will not generate the event internally, but instead it will wait for some entity to send the message.
 
 ----
 [FAQ Top]
-== Policies ==
+== Policies and algorithms ==
 
-=== 8. What are the default scheduling policies and how can I change them? ===
+=== 1. What are the default scheduling policies and how can I change them? ===
 
 !CloudSim models scheduling of CPU resources at two levels: Host and VM.
 
@@ -132,7 +132,7 @@ Policies for VM scheduling and Cloudlet scheduling can be used in any combinatio
 
 To define your own policy, you have to extend either !VmScheduler or !CloudletScheduler, create the methods for deciding sharing of PEs and pass the new class during construction of the relevant object.
 
-=== 9. What scheduling decisions should be implemented at VM level and what scheduling decisions should be implemented at broker level? ===
+=== 2. What scheduling decisions should be implemented at VM level and what scheduling decisions should be implemented at broker level? ===
 
 The !VmScheduler models the behavior of scheduling at virtual machine level like VMMs such as Xen and VMware. Therefore, if you want to model behavior of this kind of software regarding distribution of resources among VMs running in the same host, this is the place where your new policy sahould be implemented.
 
@@ -140,7 +140,7 @@ Similarly, !CloudletScheduler models the behavior of scheduling at operating sys
 
 There is one point that is not considered by either scheduler: given a number of Cloudlets from a broker, which one should execute first? This kind of decision, which represents application-level behavior, should be defined at Broker level.
 
-=== 10. What is the default provisioning policy and how can I change it?  ===
+=== 3. What is the default provisioning policy and how can I change it?  ===
 
 The provisioning problem consists of defining, among the available hosts in the data center, which one should receive a new machine requested by a user. Provisioning of hosts to VMs in data centers follows a simple strategy where the host with less running VMs receives the next VM. This behavior is defined in the VMAllocationPolicySimple class. To change this behavior, extend VMAllocationPolicy to define the new provisioning behavior, and pass this object in the initialization of Datacenter.
 
@@ -148,7 +148,7 @@ The provisioning problem consists of defining, among the available hosts in the 
 [FAQ Top]
 == Advanced features ==
 
-=== 11. How can I code VM migration inside a data center? ===
+=== 1. How can I code VM migration inside a data center? ===
 
 VM migrations are triggered inside the data center, by an internal data center event. Therefore, triggering a migration means receiving and processing a VM_MIGRATION event:
 
@@ -162,7 +162,7 @@ The `delay` field contains the estimated migration completion time. Therefore, w
 [FAQ Top]
 == Getting help ==
 
-=== 12. I have a question. What should I do? ===
+=== 1. I have a question. What should I do? ===
 
 The first thing you should do is reading this FAQ. As we are periodically adding new answers here, we may find the answer to your problem here.
 
@@ -170,7 +170,7 @@ If your question is not answered here, you should try next previous discussions 
 
 Finally, if nether from the solves your problem, send an e-mail to the discussion group. Please, try to be clear about your question, as it is likely to speed up the answer.
 
-=== 13. How long does it take to my question to be answered? ==
+=== 2. How long does it take to my question to be answered? ==
 
 We do our best to answer all the questions we receive. Nevertheless, some factors may affect it, such as:
 
@@ -180,10 +180,10 @@ We do our best to answer all the questions we receive. Nevertheless, some factor
   # Question has been answered previously in either this FAQ or discussion group;
   # Message has been shadowed by other submission using the same thread. If there were too many of these messages, some of them may be missed. This can be avoided by using specific Subject of the message that clearly describes your problem.
 
-=== 14. How do I report bugs, desirable features, unexpected behavior and other issues?  ===
+=== 3. How do I report bugs, desirable features, unexpected behavior and other issues?  ===
 
 Please, use the [http://code.google.com/p/cloudsim/issues/list issue tracker] for that. This helps to speed up update process. Issues reported in the discussion group may take longer time to be added to the issue tracker.
 
-=== 15. Can you implement the specific feature X, required by my project/assignment? ===
+=== 4. Can you implement the specific feature X, required by my project/assignment? ===
 
 Because we are a small team of developers, we can't add support to every scenario envisioned by users. But this is our intention: we provide generic classes and features that can be broadly used, and users develop case-specific behavior. Suggestion for new features that may be useful for significant number of users are welcomed and can be posted in the [http://code.google.com/p/cloudsim/issues/list issue tracker]. Classes and features that are narrow in applicability and are intended to solve specific problems, though, are unlikely to be developed.
