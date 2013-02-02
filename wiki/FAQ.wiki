@@ -45,6 +45,10 @@ As the basic components are not sufficient for your project, you may start to st
 
 Other source of information is the [http://groups.google.com/group/cloudsim?pli=1 CloudSim group].
 
+=== 4. Can !CloudSim? run my application? ===
+
+No, CloudSim is a simulator -- it does not run real applications. It is intended to be used for simulating and experimenting with various scheduling and VM allocation algorithms.
+
 ----
 [FAQ Top]
 == !CloudSim components, communication, and events ==
