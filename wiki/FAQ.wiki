@@ -198,7 +198,7 @@ Please, use the [http://code.google.com/p/cloudsim/issues/list issue tracker] fo
 
 Because we are a small team of developers, we can't add support to every scenario envisioned by users. But this is our intention: we provide generic classes and features that can be broadly used, and users develop case-specific behavior. Suggestion for new features that may be useful for significant number of users are welcomed and can be posted in the [http://code.google.com/p/cloudsim/issues/list issue tracker]. Classes and features that are narrow in applicability and are intended to solve specific problems, though, are unlikely to be developed.
 
-=== 5. I'm getting a NullPointerException in MathUtil, why? ===
+=== 5. I'm getting a !NullPointerException in !MathUtil, why? ===
 
 You need to install Flanagan's Java library. Some of the algorithms in the power package require Michael Thomas Flanagan's Java Scientific Library. In order to compile CloudSim, it is necessary to download this library. The library can be downloaded from:
 
