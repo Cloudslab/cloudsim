@@ -47,7 +47,7 @@ Other source of information is the [http://groups.google.com/group/cloudsim?pli=
 
 === 5. Can !CloudSim run my application X? ===
 
-No, CloudSim is a simulator -- it does not run real applications. It is intended to be used for simulating and experimenting with various scheduling and VM allocation algorithms.
+No, !CloudSim is a simulator -- it does not run real applications. It is intended to be used for simulating and experimenting with various scheduling and VM allocation algorithms.
 
 ----
 [FAQ Top]
