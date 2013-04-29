@@ -118,14 +118,6 @@ public class NetworkDatacenter extends Datacenter {
 			VmToSwitchid.put(vm.getId(), ((NetworkHost) vm.getHost()).sw.getId());
 			VmtoHostlist.put(vm.getId(), vm.getHost().getId());
 			System.out.println(vm.getId() + " VM is created on " + vm.getHost().getId());
-			double amount = 0.0;
-			if (getDebts().containsKey(vm.getUserId())) {
-				amount = getDebts().get(vm.getUserId());
-			}
-			amount += getCharacteristics().getCostPerMem() * vm.getRam();
-			amount += getCharacteristics().getCostPerStorage() * vm.getSize();
-
-			getDebts().put(vm.getUserId(), amount);
 
 			getVmList().add(vm);
 

@@ -8,13 +8,13 @@ import java.io.IOException;
  * The Class UtilizationModelPlanetLab.
  */
 public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
-
+	
 	/** The scheduling interval. */
 	private double schedulingInterval;
 
 	/** The data (5 min * 288 = 24 hours). */
-	private final double[] data = new double[289];
-
+	private final double[] data; 
+	
 	/**
 	 * Instantiates a new utilization model PlanetLab.
 	 * 
@@ -25,7 +25,30 @@ public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 	public UtilizationModelPlanetLabInMemory(String inputPath, double schedulingInterval)
 			throws NumberFormatException,
 			IOException {
+		data = new double[289];
 		setSchedulingInterval(schedulingInterval);
+		BufferedReader input = new BufferedReader(new FileReader(inputPath));
+		int n = data.length;
+		for (int i = 0; i < n - 1; i++) {
+			data[i] = Integer.valueOf(input.readLine()) / 100.0;
+		}
+		data[n - 1] = data[n - 2];
+		input.close();
+	}
+	
+	/**
+	 * Instantiates a new utilization model PlanetLab with variable data samples.
+	 * 
+	 * @param inputPath the input path
+	 * @param dataSamples number of samples in the file
+	 * @throws NumberFormatException the number format exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public UtilizationModelPlanetLabInMemory(String inputPath, double schedulingInterval, int dataSamples)
+			throws NumberFormatException,
+			IOException {
+		setSchedulingInterval(schedulingInterval);
+		data = new double[dataSamples];
 		BufferedReader input = new BufferedReader(new FileReader(inputPath));
 		int n = data.length;
 		for (int i = 0; i < n - 1; i++) {

@@ -77,8 +77,6 @@ public class TestExample {
 			System.out.println("numberofcloudlet " + newList.size() + " Cached "
 					+ NetDatacenterBroker.cachedcloudlet + " Data transfered "
 					+ NetworkConstants.totaldatatransfer);
-			// Print the debt of each user to each datacenter
-			datacenter0.printDebts();
 
 			Log.printLine("CloudSimExample1 finished!");
 		} catch (Exception e) {

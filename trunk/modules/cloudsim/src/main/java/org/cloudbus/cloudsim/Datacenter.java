@@ -7,13 +7,11 @@
 
 package org.cloudbus.cloudsim;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
@@ -44,9 +42,6 @@ public class Datacenter extends SimEntity {
 
 	/** The last process time. */
 	private double lastProcessTime;
-
-	/** The debts. */
-	private Map<Integer, Double> debts;
 
 	/** The storage list. */
 	private List<Storage> storageList;
@@ -88,7 +83,6 @@ public class Datacenter extends SimEntity {
 		setCharacteristics(characteristics);
 		setVmAllocationPolicy(vmAllocationPolicy);
 		setLastProcessTime(0.0);
-		setDebts(new HashMap<Integer, Double>());
 		setStorageList(storageList);
 		setVmList(new ArrayList<Vm>());
 		setSchedulingInterval(schedulingInterval);
@@ -331,17 +325,6 @@ public class Datacenter extends SimEntity {
 
 		int msg = addFile(file); // add the file
 
-		double debit;
-		if (getDebts().containsKey(sentFrom)) {
-			debit = getDebts().get(sentFrom);
-		} else {
-			debit = 0.0;
-		}
-
-		debit += getCharacteristics().getCostPerBw() * file.getSize();
-
-		getDebts().put(sentFrom, debit);
-
 		if (ack) {
 			data[1] = Integer.valueOf(-1); // no sender id
 			data[2] = Integer.valueOf(msg); // the result of adding a master file
@@ -461,15 +444,6 @@ public class Datacenter extends SimEntity {
 		}
 
 		if (result) {
-			double amount = 0.0;
-			if (getDebts().containsKey(vm.getUserId())) {
-				amount = getDebts().get(vm.getUserId());
-			}
-			amount += getCharacteristics().getCostPerMem() * vm.getRam();
-			amount += getCharacteristics().getCostPerStorage() * vm.getSize();
-
-			getDebts().put(vm.getUserId(), amount);
-
 			getVmList().add(vm);
 
 			if (vm.isBeingInstantiated()) {
@@ -548,16 +522,6 @@ public class Datacenter extends SimEntity {
 			}
 			sendNow(ev.getSource(), CloudSimTags.VM_CREATE_ACK, data);
 		}
-
-		double amount = 0.0;
-		if (debts.containsKey(vm.getUserId())) {
-			amount = debts.get(vm.getUserId());
-		}
-
-		amount += getCharacteristics().getCostPerMem() * vm.getRam();
-		amount += getCharacteristics().getCostPerStorage() * vm.getSize();
-
-		debts.put(vm.getUserId(), amount);
 
 		Log.formatLine(
 				"%.2f: Migration of VM #%d to Host #%d is completed",
@@ -1045,24 +1009,6 @@ public class Datacenter extends SimEntity {
 		return msg;
 	}
 
-	/**
-	 * Prints the debts.
-	 */
-	public void printDebts() {
-		Log.printLine("*****Datacenter: " + getName() + "*****");
-		Log.printLine("User id\t\tDebt");
-
-		Set<Integer> keys = getDebts().keySet();
-		Iterator<Integer> iter = keys.iterator();
-		DecimalFormat df = new DecimalFormat("#.##");
-		while (iter.hasNext()) {
-			int key = iter.next();
-			double value = getDebts().get(key);
-			Log.printLine(key + "\t\t" + df.format(value));
-		}
-		Log.printLine("**********************************");
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see cloudsim.core.SimEntity#shutdownEntity()
@@ -1173,24 +1119,6 @@ public class Datacenter extends SimEntity {
 	 */
 	protected void setLastProcessTime(double lastProcessTime) {
 		this.lastProcessTime = lastProcessTime;
-	}
-
-	/**
-	 * Gets the debts.
-	 * 
-	 * @return the debts
-	 */
-	protected Map<Integer, Double> getDebts() {
-		return debts;
-	}
-
-	/**
-	 * Sets the debts.
-	 * 
-	 * @param debts the debts
-	 */
-	protected void setDebts(Map<Integer, Double> debts) {
-		this.debts = debts;
 	}
 
 	/**

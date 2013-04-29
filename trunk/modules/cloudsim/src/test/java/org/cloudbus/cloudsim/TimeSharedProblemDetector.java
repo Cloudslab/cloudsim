@@ -62,6 +62,7 @@ public class TimeSharedProblemDetector {
 			// Second step: Create Datacenters
 			// Datacenters are the resource providers in CloudSim. We need at
 			// list one of them to run a CloudSim simulation
+			@SuppressWarnings("unused")
 			Datacenter datacenter0 = createDatacenter("Datacenter_0");
 
 			// Third step: Create Broker
@@ -134,9 +135,6 @@ public class TimeSharedProblemDetector {
 			//Final step: Print results when simulation is over
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
-
-			// Print the debt of each user to each datacenter
-			datacenter0.printDebts();
 
 			Log.printLine("CloudSimExample1 finished!");
 		} catch (Exception e) {

@@ -51,6 +51,7 @@ public class CloudSimExample1 {
 	 *
 	 * @param args the args
 	 */
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 
 		Log.printLine("Starting CloudSimExample1...");
@@ -123,9 +124,6 @@ public class CloudSimExample1 {
 			//Final step: Print results when simulation is over
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
-
-			// Print the debt of each user to each datacenter
-			datacenter0.printDebts();
 
 			Log.printLine("CloudSimExample1 finished!");
 		} catch (Exception e) {

@@ -463,6 +463,7 @@ public class CloudSim {
 	public static boolean runClockTick() {
 		SimEntity ent;
 		boolean queue_empty;
+		
 		int entities_size = entities.size();
 
 		for (int i = 0; i < entities_size; i++) {
@@ -471,26 +472,26 @@ public class CloudSim {
 				ent.run();
 			}
 		}
-
+				
 		// If there are more future events then deal with them
 		if (future.size() > 0) {
 			List<SimEvent> toRemove = new ArrayList<SimEvent>();
-			Iterator<SimEvent> it = future.iterator();
+			Iterator<SimEvent> fit = future.iterator();
 			queue_empty = false;
-			SimEvent first = it.next();
+			SimEvent first = fit.next();
 			processEvent(first);
 			future.remove(first);
 
-			it = future.iterator();
+			fit = future.iterator();
 
 			// Check if next events are at same time...
-			boolean trymore = it.hasNext();
+			boolean trymore = fit.hasNext();
 			while (trymore) {
-				SimEvent next = it.next();
+				SimEvent next = fit.next();
 				if (next.eventTime() == first.eventTime()) {
 					processEvent(next);
 					toRemove.add(next);
-					trymore = it.hasNext();
+					trymore = fit.hasNext();
 				} else {
 					trymore = false;
 				}

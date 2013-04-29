@@ -163,10 +163,6 @@ public class NetworkExample2 {
 
 			printCloudletList(newList);
 
-			//Print the debt of each user to each datacenter
-			datacenter0.printDebts();
-			datacenter1.printDebts();
-
 			Log.printLine("NetworkExample2 finished!");
 		}
 		catch (Exception e) {

@@ -120,7 +120,9 @@ public class CloudSimExample8 {
 
 			// Second step: Create Datacenters
 			//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
+			@SuppressWarnings("unused")
 			Datacenter datacenter0 = createDatacenter("Datacenter_0");
+			@SuppressWarnings("unused")
 			Datacenter datacenter1 = createDatacenter("Datacenter_1");
 
 			//Third step: Create Broker
@@ -144,10 +146,6 @@ public class CloudSimExample8 {
 			CloudSim.stopSimulation();
 
 			printCloudletList(newList);
-
-			//Print the debt of each user to each datacenter
-			datacenter0.printDebts();
-			datacenter1.printDebts();
 
 			Log.printLine("CloudSimExample8 finished!");
 		}
