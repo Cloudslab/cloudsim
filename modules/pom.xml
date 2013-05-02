@@ -17,6 +17,16 @@
 
   <build>
     <plugins>
+      <!-- Sets the version of the code -->
+      <plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      		<artifactId>maven-compiler-plugin</artifactId>
+      		<configuration>
+      		<source>1.6</source>
+      		<target>1.6</target>
+      		</configuration>
+      </plugin>
+
       <plugin>
         <inherited>true</inherited>
         <groupId>org.apache.maven.plugins</groupId>
@@ -49,10 +59,11 @@
     <artifactId>easymockclassextension</artifactId>
   </dependency>
   <dependency>
-    <groupId>org.flanagan</groupId>
-    <artifactId>flanagan</artifactId>
-    <version>1.0</version>
-  </dependency>                
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-math3</artifactId>
+    <version>3.0</version>
+  </dependency>
+              
   </dependencies>
   
 </project>

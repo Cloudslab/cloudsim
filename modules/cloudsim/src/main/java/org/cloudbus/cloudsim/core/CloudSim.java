@@ -62,6 +62,9 @@ public class CloudSim {
 	/** The termination time. */
 	private static double terminateAt = -1;
 
+	/** The minimal time between events. Events within shorter periods after the last event are discarded. */
+	private static double minTimeBetweenEvents = 0.1;
+	
 	/**
 	 * Initialises all the common attributes.
 	 * 
@@ -131,6 +134,40 @@ public class CloudSim {
 		}
 	}
 
+	/**
+	 * Initialises CloudSim parameters. This method should be called before creating any entities.
+	 * <p>
+	 * Inside this method, it will create the following CloudSim entities:
+	 * <ul>
+	 * <li>CloudInformationService.
+	 * <li>CloudSimShutdown
+	 * </ul>
+	 * <p>
+	 * 
+	 * @param numUser the number of User Entities created. This parameters indicates that
+	 *            {@link gridsim.CloudSimShutdown} first waits for all user entities's
+	 *            END_OF_SIMULATION signal before issuing terminate signal to other entities
+	 * @param cal starting time for this simulation. If it is <tt>null</tt>, then the time will be
+	 *            taken from <tt>Calendar.getInstance()</tt>
+	 * @param traceFlag <tt>true</tt> if CloudSim trace need to be written
+	 * @param periodBetweenEvents - the minimal period between events. Events within shorter periods
+	 * after the last event are discarded.
+	 * @see gridsim.CloudSimShutdown
+	 * @see CloudInformationService.CloudInformationService
+	 * @pre numUser >= 0
+	 * @post $none
+	 */
+	public static void init(int numUser, Calendar cal, boolean traceFlag, double periodBetweenEvents) {
+	    if (periodBetweenEvents <= 0) {
+		throw new IllegalArgumentException("The minimal time between events should be positive, but is:" + periodBetweenEvents);
+	    }
+	    
+	    init(numUser, cal, traceFlag);
+	    minTimeBetweenEvents = periodBetweenEvents;
+	}
+	
+	
+	
 	/**
 	 * Starts the execution of CloudSim simulation. It waits for complete execution of all entities,
 	 * i.e. until all entities threads reach non-RUNNABLE state or there are no more events in the
@@ -210,6 +247,15 @@ public class CloudSim {
 			terminateAt = time;
 		}
 		return true;
+	}
+
+	
+	/**
+	 * Returns the minimum time between events. Events within shorter periods after the last event are discarded. 
+	 * @return the minimum time between events.
+	 */
+	public static double getMinTimeBetweenEvents() {
+	    return minTimeBetweenEvents;
 	}
 
 	/**
