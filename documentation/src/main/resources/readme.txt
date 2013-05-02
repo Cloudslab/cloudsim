@@ -57,24 +57,7 @@ To understand how to use CloudSim, please go through the examples provided
 in the examples/ directory.
 
 
-6. Downloading and using external jars
----------------------------------------
-
-Some of the algorithms in the power package require Michael Thomas Flanagan's 
-Java Scientific Library. In order to compile CloudSim, it is necessary to
-download this library. The library can be downloaded from:
-
-http://www.ee.ucl.ac.uk/~mflanaga/java/
-
-Once the library is downloaded, copy it to the jars/ directory. If you are running 
-Linux, you can just run the ./install-flanagan.sh script, that will download the
-library and place it in the jars/ directory.
-
-Please, make sure that, by using such library, you are respecting the terms of use
-defined by the software's author.
-
-
-7. Compiling CloudSim: using Ant
+6. Compiling CloudSim: using Ant
 --------------------------------
 
 This release contains a simple buildfile for compiling CloudSim classes.
