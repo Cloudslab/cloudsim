@@ -11,9 +11,9 @@ package org.cloudbus.cloudsim.power;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.cloudbus.cloudsim.Vm;
-
-import flanagan.analysis.Regression;
+import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
  * The Maximum Correlation (MC) VM selection policy.
@@ -39,19 +39,19 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 	 * 
 	 * @param fallbackPolicy the fallback policy
 	 */
-	public PowerVmSelectionPolicyMaximumCorrelation(PowerVmSelectionPolicy fallbackPolicy) {
+	public PowerVmSelectionPolicyMaximumCorrelation(final PowerVmSelectionPolicy fallbackPolicy) {
 		super();
 		setFallbackPolicy(fallbackPolicy);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * org.cloudbus.cloudsim.experiments.power.PowerVmSelectionPolicy#getVmsToMigrate(org.cloudbus
-	 * .cloudsim.power.PowerHost)
+	 * 
+	 * @see org.cloudbus.cloudsim.experiments.power.PowerVmSelectionPolicy#
+	 * getVmsToMigrate(org.cloudbus .cloudsim.power.PowerHost)
 	 */
 	@Override
-	public Vm getVmToMigrate(PowerHost host) {
+	public Vm getVmToMigrate(final PowerHost host) {
 		List<PowerVm> migratableVms = getMigratableVms(host);
 		if (migratableVms.isEmpty()) {
 			return null;
@@ -80,7 +80,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 	 * @param vmList the host
 	 * @return the utilization matrix
 	 */
-	protected double[][] getUtilizationMatrix(List<PowerVm> vmList) {
+	protected double[][] getUtilizationMatrix(final List<PowerVm> vmList) {
 		int n = vmList.size();
 		int m = getMinUtilizationHistorySize(vmList);
 		double[][] utilization = new double[n][m];
@@ -99,7 +99,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 	 * @param vmList the vm list
 	 * @return the min utilization history size
 	 */
-	protected int getMinUtilizationHistorySize(List<PowerVm> vmList) {
+	protected int getMinUtilizationHistorySize(final List<PowerVm> vmList) {
 		int minSize = Integer.MAX_VALUE;
 		for (PowerVm vm : vmList) {
 			int size = vm.getUtilizationHistory().size();
@@ -116,7 +116,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 	 * @param data the data
 	 * @return the correlation coefficients
 	 */
-	protected List<Double> getCorrelationCoefficients(double[][] data) {
+	protected List<Double> getCorrelationCoefficients(final double[][] data) {
 		int n = data.length;
 		int m = data[0].length;
 		List<Double> correlationCoefficients = new LinkedList<Double>();
@@ -129,9 +129,12 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 				}
 			}
 
-			Regression reg = new Regression(x, data[i]);
-			reg.linear();
-			correlationCoefficients.add(reg.getCoefficientOfDetermination());
+			// Transpose the matrix so that it fits the linear model
+			double[][] xT = new Array2DRowRealMatrix(x).transpose().getData();
+
+			// RSquare is the "coefficient of determination"
+			correlationCoefficients.add(MathUtil.createLinearRegression(xT,
+					data[i]).calculateRSquared());
 		}
 		return correlationCoefficients;
 	}
@@ -150,7 +153,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 	 * 
 	 * @param fallbackPolicy the new fallback policy
 	 */
-	public void setFallbackPolicy(PowerVmSelectionPolicy fallbackPolicy) {
+	public void setFallbackPolicy(final PowerVmSelectionPolicy fallbackPolicy) {
 		this.fallbackPolicy = fallbackPolicy;
 	}
 

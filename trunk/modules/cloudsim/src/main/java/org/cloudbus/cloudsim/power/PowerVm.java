@@ -16,8 +16,6 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.util.MathUtil;
 
-import flanagan.analysis.Stat;
-
 /**
  * The class of a VM that stores its CPU utilization history. The history is used by VM allocation
  * and selection policies.
@@ -63,17 +61,17 @@ public class PowerVm extends Vm {
 	 * @param schedulingInterval the scheduling interval
 	 */
 	public PowerVm(
-			int id,
-			int userId,
-			double mips,
-			int pesNumber,
-			int ram,
-			long bw,
-			long size,
-			int priority,
-			String vmm,
-			CloudletScheduler cloudletScheduler,
-			double schedulingInterval) {
+			final int id,
+			final int userId,
+			final double mips,
+			final int pesNumber,
+			final int ram,
+			final long bw,
+			final long size,
+			final int priority,
+			final String vmm,
+			final CloudletScheduler cloudletScheduler,
+			final double schedulingInterval) {
 		super(id, userId, mips, pesNumber, ram, bw, size, vmm, cloudletScheduler);
 		setSchedulingInterval(schedulingInterval);
 	}
@@ -85,13 +83,13 @@ public class PowerVm extends Vm {
 	 * @param mipsShare array with MIPS share of each Pe available to the scheduler
 	 * 
 	 * @return time predicted completion time of the earliest finishing cloudlet, or 0 if there is
-	 *         no next events
+	 * 		no next events
 	 * 
 	 * @pre currentTime >= 0
 	 * @post $none
 	 */
 	@Override
-	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
+	public double updateVmProcessing(final double currentTime, final List<Double> mipsShare) {
 		double time = super.updateVmProcessing(currentTime, mipsShare);
 		if (currentTime > getPreviousTime() && (currentTime - 0.1) % getSchedulingInterval() == 0) {
 			double utilization = getTotalUtilizationOfCpu(getCloudletScheduler().getPreviousTime());
@@ -120,7 +118,7 @@ public class PowerVm extends Vm {
 			for (int i = 0; i < n; i++) {
 				deviationSum[i] = Math.abs(median - getUtilizationHistory().get(i));
 			}
-			mad = Stat.median(deviationSum);
+			mad = MathUtil.median(deviationSum);
 		}
 		return mad;
 	}
@@ -172,7 +170,7 @@ public class PowerVm extends Vm {
 	 * 
 	 * @param utilization the utilization
 	 */
-	public void addUtilizationHistoryValue(double utilization) {
+	public void addUtilizationHistoryValue(final double utilization) {
 		getUtilizationHistory().add(0, utilization);
 		if (getUtilizationHistory().size() > HISTORY_LENGTH) {
 			getUtilizationHistory().remove(HISTORY_LENGTH);
@@ -202,7 +200,7 @@ public class PowerVm extends Vm {
 	 * 
 	 * @param previousTime the new previous time
 	 */
-	public void setPreviousTime(double previousTime) {
+	public void setPreviousTime(final double previousTime) {
 		this.previousTime = previousTime;
 	}
 
@@ -220,7 +218,7 @@ public class PowerVm extends Vm {
 	 * 
 	 * @param schedulingInterval the schedulingInterval to set
 	 */
-	protected void setSchedulingInterval(double schedulingInterval) {
+	protected void setSchedulingInterval(final double schedulingInterval) {
 		this.schedulingInterval = schedulingInterval;
 	}
 

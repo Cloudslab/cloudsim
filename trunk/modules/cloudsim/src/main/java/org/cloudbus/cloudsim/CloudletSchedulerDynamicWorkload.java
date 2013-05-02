@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.cloudbus.cloudsim.core.CloudSim;
+
 /**
  * CloudletSchedulerDynamicWorkload implements a policy of scheduling performed by a virtual machine
  * assuming that there is just one cloudlet which is working as an online service.
@@ -81,8 +83,8 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 				continue;
 			} else { // not finish: estimate the finish time
 				double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
-				if (estimatedFinishTime - currentTime < 0.1) {
-					estimatedFinishTime = currentTime + 0.1;
+				if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
+					estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
 				}
 				if (estimatedFinishTime < nextEvent) {
 					nextEvent = estimatedFinishTime;
