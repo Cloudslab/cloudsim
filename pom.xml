@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.cloudbus.cloudsim</groupId>
   <artifactId>cloudsim-package</artifactId>
-  <version>3.0.4-SNAPSHOT</version>
+  <version>3.0.3</version>
   <packaging>pom</packaging>
   <name>cloudsim-package</name>
   <description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
@@ -23,9 +23,9 @@
   	<url>http://code.google.com/p/cloudsim/issues/list</url>
   </issueManagement>
   <scm>
-  	<connection>scm:svn:http://cloudsim.googlecode.com/svn/trunk</connection>
-  	<developerConnection>scm:svn:https://cloudsim.googlecode.com/svn/trunk</developerConnection>
-  	<url>http://code.google.com/p/cloudsim/source/browse/trunk</url>
+  	<connection>scm:svn:http://cloudsim.googlecode.com/svn/tags/cloudsim-3.0.3</connection>
+  	<developerConnection>scm:svn:https://cloudsim.googlecode.com/svn/tags/cloudsim-3.0.3</developerConnection>
+  	<url>http://code.google.com/p/cloudsim/source/browse/tags/cloudsim-3.0.3</url>
   </scm>
   
   <organization>
