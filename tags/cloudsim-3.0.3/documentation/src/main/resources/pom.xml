@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ 
+February 2011
+
+Build file for CloudSim.
+
+Note: 
+
+  Make sure you have installed Maven and put the location of it into
+  your path so you can access it anywhere.
+  Maven can be downloadable from http://maven.apache.org/
+      
+Usage:
+ 
+  * Type 'mvn package' to compile all cloudsim source files, put them into the 
+    classes/ directory and to create a cloudsim-new.jar file in the jars/ directory.
+    
+  * Type 'mvn clean' to delete all the compiled classes and the classes/ 
+    directory itself. The generated cloudsim-new.jar is not deleted.  
+    
+Note:
+
+  * The generated package is an OSGi-bundle can be used with any OSGi-container.
+    Particularly, it has been tested with Equinox.    
+  
+Acknowledgement: 
+  Thank to Miguel Rojas from the High Performance Lab (LAD) at Pontifical Catholic 
+  University of Rio Grande do Sul (PUCRS), Porto Alegre, Brazil for providing this file.
+   
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.cloudbus.cloudsim</groupId>
+	<artifactId>cloudsim-toolkit</artifactId>
+	<version>2.1</version>
+	<packaging>bundle</packaging>
+	<name>cloudsim-toolkit</name>
+	<description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
+	<url>http://www.cloudbus.org/cloudsim/</url>
+
+	<properties>
+		<jdk.version>1.6</jdk.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<felix-version>2.0.1</felix-version>
+	</properties>
+
+	<build>
+		<directory>classes</directory>
+		<outputDirectory>classes</outputDirectory>
+		<finalName>cloudsim-new</finalName>
+		<testOutputDirectory>classes/test-classes</testOutputDirectory>
+		<sourceDirectory>sources</sourceDirectory>
+
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<maxmemory>1024</maxmemory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<debug>true</debug>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>activator</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<bundlor.enabled>true</bundlor.enabled>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.felix</groupId>
+						<artifactId>maven-bundle-plugin</artifactId>
+						<version>${felix-version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<instructions>
+								<Bundle-Name>cloudsim-toolkit</Bundle-Name>
+								<Bundle-SymbolicName>cloudsim-toolkit</Bundle-SymbolicName>
+								<Import-Package>org.apache.log4j;resolution:=optional</Import-Package>
+								<Export-Package>org.cloudbus.cloudsim.*;version="${project.version}"</Export-Package>
+							</instructions>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
