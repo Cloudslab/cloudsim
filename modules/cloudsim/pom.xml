@@ -4,7 +4,7 @@
   <parent>
     <artifactId>modules</artifactId>
     <groupId>org.cloudbus.cloudsim</groupId>
-    <version>3.0.3</version>
+    <version>3.0.4-SNAPSHOT</version>
   </parent>
   
   <artifactId>cloudsim</artifactId>
