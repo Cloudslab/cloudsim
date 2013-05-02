@@ -3,7 +3,7 @@
   <parent>
     <artifactId>cloudsim-package</artifactId>
     <groupId>org.cloudbus.cloudsim</groupId>
-    <version>3.1-SNAPSHOT</version>
+    <version>3.0.3</version>
   </parent>
   <artifactId>documentation</artifactId>
   <name>documentation</name>
