@@ -1,5 +1,20 @@
 -------------------------------------------
-Changes from CloudSim 3.0 to CloudSim 3.0.2
+Changes from CloudSim 3.0.2 to CloudSim 3.0.3
+-------------------------------------------
+
+WHAT'S NEW
+----------
+
+This is a bug fix and refactoring release. The following updates have been made:
+
+- Removed the dependency on the flanagan library. It is now replaced with Apache Math. The implementation and interface of the MathUtil has been changed accordingly.
+- The minimal time between events is now configurable.
+- Fixed Issue 44 : UtilizationModelPlanetLabInMemory: use a global constant to define the size of the data field: a new constructor for the classes, allowing definition of data size, was added.
+- Fixed Issue 49 : Wrong calculation of debt during migrationL: all references to debt from Datacenter and its subclasses were removed.
+
+
+-------------------------------------------
+Changes from CloudSim 3.0.1 to CloudSim 3.0.2
 -------------------------------------------
 
 WHAT'S NEW
