@@ -22,15 +22,6 @@ import org.cloudbus.cloudsim.core.CloudSim;
  */
 public class CloudletSchedulerTimeShared extends CloudletScheduler {
 
-	/** The cloudlet exec list. */
-	private List<? extends ResCloudlet> cloudletExecList;
-
-	/** The cloudlet paused list. */
-	private List<? extends ResCloudlet> cloudletPausedList;
-
-	/** The cloudlet finished list. */
-	private List<? extends ResCloudlet> cloudletFinishedList;
-
 	/** The current cp us. */
 	protected int currentCPUs;
 
@@ -43,9 +34,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	 */
 	public CloudletSchedulerTimeShared() {
 		super();
-		cloudletExecList = new ArrayList<ResCloudlet>();
-		cloudletPausedList = new ArrayList<ResCloudlet>();
-		cloudletFinishedList = new ArrayList<ResCloudlet>();
 		currentCPUs = 0;
 	}
 
@@ -416,68 +404,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return rgl.getCloudlet();
 	}
 
-	/**
-	 * Gets the cloudlet exec list.
-	 * 
-	 * @param <T> the generic type
-	 * @return the cloudlet exec list
-	 */
-	@SuppressWarnings("unchecked")
-	protected <T extends ResCloudlet> List<T> getCloudletExecList() {
-		return (List<T>) cloudletExecList;
-	}
-
-	/**
-	 * Sets the cloudlet exec list.
-	 * 
-	 * @param <T> the generic type
-	 * @param cloudletExecList the new cloudlet exec list
-	 */
-	protected <T extends ResCloudlet> void setCloudletExecList(List<T> cloudletExecList) {
-		this.cloudletExecList = cloudletExecList;
-	}
-
-	/**
-	 * Gets the cloudlet paused list.
-	 * 
-	 * @param <T> the generic type
-	 * @return the cloudlet paused list
-	 */
-	@SuppressWarnings("unchecked")
-	protected <T extends ResCloudlet> List<T> getCloudletPausedList() {
-		return (List<T>) cloudletPausedList;
-	}
-
-	/**
-	 * Sets the cloudlet paused list.
-	 * 
-	 * @param <T> the generic type
-	 * @param cloudletPausedList the new cloudlet paused list
-	 */
-	protected <T extends ResCloudlet> void setCloudletPausedList(List<T> cloudletPausedList) {
-		this.cloudletPausedList = cloudletPausedList;
-	}
-
-	/**
-	 * Gets the cloudlet finished list.
-	 * 
-	 * @param <T> the generic type
-	 * @return the cloudlet finished list
-	 */
-	@SuppressWarnings("unchecked")
-	protected <T extends ResCloudlet> List<T> getCloudletFinishedList() {
-		return (List<T>) cloudletFinishedList;
-	}
-
-	/**
-	 * Sets the cloudlet finished list.
-	 * 
-	 * @param <T> the generic type
-	 * @param cloudletFinishedList the new cloudlet finished list
-	 */
-	protected <T extends ResCloudlet> void setCloudletFinishedList(List<T> cloudletFinishedList) {
-		this.cloudletFinishedList = cloudletFinishedList;
-	}
 
 	/*
 	 * (non-Javadoc)
