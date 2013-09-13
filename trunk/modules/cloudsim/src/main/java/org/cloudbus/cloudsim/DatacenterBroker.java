@@ -340,6 +340,7 @@ public class DatacenterBroker extends SimEntity {
 	 */
 	protected void submitCloudlets() {
 		int vmIndex = 0;
+		List<Cloudlet> successfullySubmitted = new ArrayList<Cloudlet>();
 		for (Cloudlet cloudlet : getCloudletList()) {
 			Vm vm;
 			// if user didn't bind this cloudlet and it has not been executed yet
@@ -361,12 +362,11 @@ public class DatacenterBroker extends SimEntity {
 			cloudletsSubmitted++;
 			vmIndex = (vmIndex + 1) % getVmsCreatedList().size();
 			getCloudletSubmittedList().add(cloudlet);
+			successfullySubmitted.add(cloudlet);
 		}
 
 		// remove submitted cloudlets from waiting list
-		for (Cloudlet cloudlet : getCloudletSubmittedList()) {
-			getCloudletList().remove(cloudlet);
-		}
+		getCloudletList().removeAll(successfullySubmitted);
 	}
 
 	/**
