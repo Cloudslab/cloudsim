@@ -57,7 +57,7 @@ public class NetworkTopology {
 	 * @post $none
 	 */
 	public static void buildNetworkTopology(String fileName) {
-		Log.printLine("Topology file: " + fileName);
+		Log.printConcatLine("Topology file: ", fileName);
 
 		// try to find the file
 		GraphReaderBrite reader = new GraphReaderBrite();
@@ -178,15 +178,15 @@ public class NetworkTopology {
 					if (!map.containsValue(briteID)) { // this BRITE node was already mapped?
 						map.put(cloudSimEntityID, briteID);
 					} else {
-						Log.printLine("Error in network mapping. BRITE node " + briteID + " already in use.");
+						Log.printConcatLine("Error in network mapping. BRITE node ", briteID, " already in use.");
 					}
 				} else {
-					Log.printLine("Error in network mapping. CloudSim entity " + cloudSimEntityID
-							+ " already mapped.");
+					Log.printConcatLine("Error in network mapping. CloudSim entity ", cloudSimEntityID,
+							" already mapped.");
 				}
 			} catch (Exception e) {
-				Log.printLine("Error in network mapping. CloudSim node " + cloudSimEntityID
-						+ " not mapped to BRITE node " + briteID + ".");
+				Log.printConcatLine("Error in network mapping. CloudSim node ", cloudSimEntityID,
+						" not mapped to BRITE node ", briteID, ".");
 			}
 		}
 	}
@@ -203,7 +203,7 @@ public class NetworkTopology {
 			try {
 				map.remove(cloudSimEntityID);
 			} catch (Exception e) {
-				Log.printLine("Error in network unmapping. CloudSim node: " + cloudSimEntityID);
+				Log.printConcatLine("Error in network unmapping. CloudSim node: ", cloudSimEntityID);
 			}
 		}
 	}

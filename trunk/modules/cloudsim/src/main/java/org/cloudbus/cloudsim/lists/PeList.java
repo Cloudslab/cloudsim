@@ -205,7 +205,7 @@ public class PeList {
 			status = "WORKING";
 		}
 
-		Log.printLine(resName + " - Machine: " + hostId + " is " + status);
+		Log.printConcatLine(resName, " - Machine: ", hostId, " is ", status);
 
 		setStatusFailed(peList, failed);
 	}

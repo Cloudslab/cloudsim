@@ -237,8 +237,8 @@ public class CloudInformationService extends SimEntity {
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			Log.printLine("CloudInformationService.processOtherEvent(): "
-					+ "Unable to handle a request since the event is null.");
+			Log.printConcatLine("CloudInformationService.processOtherEvent(): ",
+					"Unable to handle a request since the event is null.");
 			return;
 		}
 
@@ -294,7 +294,7 @@ public class CloudInformationService extends SimEntity {
 	 * @post $none
 	 */
 	private void notifyAllEntity() {
-		Log.printLine(super.getName() + ": Notify all CloudSim entities for shutting down.");
+		Log.printConcatLine(super.getName(), ": Notify all CloudSim entities for shutting down.");
 
 		signalShutdown(resList);
 		signalShutdown(gisList);

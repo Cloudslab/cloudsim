@@ -28,6 +28,9 @@ public class Log {
 
 	/** The disable output flag. */
 	private static boolean disabled;
+	
+	/** Buffer to avoid creating new string builder upon every print. */
+	private static StringBuilder buffer = new StringBuilder();		    
 
 	/**
 	 * Prints the message.
@@ -75,17 +78,52 @@ public class Log {
 		}
 	}
 
+
+	/**
+	 * Prints the concatenated text representation of the arguements.
+	 * 
+	 * @param messages the messages to print
+	 */
+	public static void printConcat(Object... messages) {
+		if (!isDisabled()) {
+			buffer.setLength(0); // Clear the buffer		    
+			for(int i = 0 ; i < messages.length ; i ++) {
+				buffer.append(String.valueOf(messages[i]));
+			}
+			print(buffer);
+		}
+	}
+	
+	/**
+	 * Prints the concatenated text representation of the arguements and a new line.
+	 * 
+	 * @param messages the messages to print
+	 */
+	public static void printConcatLine(Object... messages) {
+		if (!isDisabled()) {
+			buffer.setLength(0); // Clear the buffer		    
+			for(int i = 0 ; i < messages.length ; i ++) {
+				buffer.append(String.valueOf(messages[i]));
+			}
+			printLine(buffer);
+		}
+	}
+
+	
+	
 	/**
 	 * Prints the line passed as a non-String object.
 	 * 
 	 * @param message the message
 	 */
 	public static void printLine(Object message) {
-		if (!isDisabled()) {
-			printLine(String.valueOf(message));
-		}
+	    if (!isDisabled()) {
+		printLine(String.valueOf(message));
+	    }
 	}
 
+	
+	
 	/**
 	 * Prints a string formated as in String.format().
 	 * 

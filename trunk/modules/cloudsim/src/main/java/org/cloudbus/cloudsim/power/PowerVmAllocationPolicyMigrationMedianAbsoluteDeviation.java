@@ -119,8 +119,8 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	 */
 	protected void setSafetyParameter(double safetyParameter) {
 		if (safetyParameter < 0) {
-			Log.printLine("The safety parameter cannot be less than zero. The passed value is: "
-					+ safetyParameter);
+			Log.printConcatLine("The safety parameter cannot be less than zero. The passed value is: ",
+					safetyParameter);
 			System.exit(0);
 		}
 		this.safetyParameter = safetyParameter;
