@@ -156,7 +156,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 				break;
 			}
 
-			Log.printLine("Under-utilized host: host #" + underUtilizedHost.getId() + "\n");
+			Log.printConcatLine("Under-utilized host: host #", underUtilizedHost.getId(), "\n");
 
 			excludedHostsForFindingUnderUtilizedHost.add(underUtilizedHost);
 			excludedHostsForFindingNewVmPlacement.add(underUtilizedHost);
@@ -196,7 +196,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 		if (!Log.isDisabled()) {
 			Log.printLine("Over-utilized hosts:");
 			for (PowerHostUtilizationHistory host : overUtilizedHosts) {
-				Log.printLine("Host #" + host.getId());
+				Log.printConcatLine("Host #", host.getId());
 			}
 			Log.printLine();
 		}
@@ -299,7 +299,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
 			if (allocatedHost != null) {
 				allocatedHost.vmCreate(vm);
-				Log.printLine("VM #" + vm.getId() + " allocated to host #" + allocatedHost.getId());
+				Log.printConcatLine("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
 
 				Map<String, Object> migrate = new HashMap<String, Object>();
 				migrate.put("vm", vm);
@@ -326,7 +326,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
 			if (allocatedHost != null) {
 				allocatedHost.vmCreate(vm);
-				Log.printLine("VM #" + vm.getId() + " allocated to host #" + allocatedHost.getId());
+				Log.printConcatLine("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
 
 				Map<String, Object> migrate = new HashMap<String, Object>();
 				migrate.put("vm", vm);
@@ -519,7 +519,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			Vm vm = (Vm) map.get("vm");
 			PowerHost host = (PowerHost) map.get("host");
 			if (!host.vmCreate(vm)) {
-				Log.printLine("Couldn't restore VM #" + vm.getId() + " on host #" + host.getId());
+				Log.printConcatLine("Couldn't restore VM #", vm.getId(), " on host #", host.getId());
 				System.exit(0);
 			}
 			getVmTable().put(vm.getUid(), host);

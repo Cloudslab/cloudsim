@@ -356,7 +356,7 @@ public class HarddriveStorage implements Storage {
 		// check first whether file name is valid or not
 		File obj = null;
 		if (fileName == null || fileName.length() == 0) {
-			Log.printLine(name + ".getFile(): Warning - invalid " + "file name.");
+			Log.printConcatLine(name, ".getFile(): Warning - invalid " + "file name.");
 			return obj;
 		}
 
@@ -450,13 +450,13 @@ public class HarddriveStorage implements Storage {
 	private boolean isFileValid(File file, String methodName) {
 
 		if (file == null) {
-			Log.printLine(name + "." + methodName + ": Warning - the given file is null.");
+			Log.printConcatLine(name, ".", methodName, ": Warning - the given file is null.");
 			return false;
 		}
 
 		String fileName = file.getName();
 		if (fileName == null || fileName.length() == 0) {
-			Log.printLine(name + "." + methodName + ": Warning - invalid file name.");
+			Log.printConcatLine(name, "." + methodName, ": Warning - invalid file name.");
 			return false;
 		}
 
@@ -482,7 +482,7 @@ public class HarddriveStorage implements Storage {
 
 		// check the capacity
 		if (file.getSize() + currentSize > capacity) {
-			Log.printLine(name + ".addFile(): Warning - not enough space" + " to store " + file.getName());
+			Log.printConcatLine(name, ".addFile(): Warning - not enough space to store ", file.getName());
 			return result;
 		}
 
@@ -512,7 +512,7 @@ public class HarddriveStorage implements Storage {
 	public double addFile(List<File> list) {
 		double result = 0.0;
 		if (list == null || list.isEmpty()) {
-			Log.printLine(name + ".addFile(): Warning - list is empty.");
+			Log.printConcatLine(name, ".addFile(): Warning - list is empty.");
 			return result;
 		}
 
@@ -607,7 +607,7 @@ public class HarddriveStorage implements Storage {
 	public boolean contains(String fileName) {
 		boolean result = false;
 		if (fileName == null || fileName.length() == 0) {
-			Log.printLine(name + ".contains(): Warning - invalid file name");
+			Log.printConcatLine(name, ".contains(): Warning - invalid file name");
 			return result;
 		}
 		// check each file in the list

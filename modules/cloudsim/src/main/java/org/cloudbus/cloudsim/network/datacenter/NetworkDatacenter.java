@@ -147,8 +147,8 @@ public class NetworkDatacenter extends Datacenter {
 			// checks whether this Cloudlet has finished or not
 			if (cl.isFinished()) {
 				String name = CloudSim.getEntityName(cl.getUserId());
-				Log.printLine(getName() + ": Warning - Cloudlet #" + cl.getCloudletId() + " owned by " + name
-						+ " is already completed/finished.");
+				Log.printConcatLine(getName(), ": Warning - Cloudlet #", cl.getCloudletId(), " owned by ", name,
+						" is already completed/finished.");
 				Log.printLine("Therefore, it is not being executed again");
 				Log.printLine();
 

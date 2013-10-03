@@ -383,12 +383,12 @@ public class Datacenter extends SimEntity {
 				status = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
 						.getCloudletScheduler().getCloudletStatus(cloudletId);
 			} catch (Exception e) {
-				Log.printLine(getName() + ": Error in processing CloudSimTags.CLOUDLET_STATUS");
+				Log.printConcatLine(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
 				Log.printLine(e.getMessage());
 				return;
 			}
 		} catch (Exception e) {
-			Log.printLine(getName() + ": Error in processing CloudSimTags.CLOUDLET_STATUS");
+			Log.printConcatLine(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
 			Log.printLine(e.getMessage());
 			return;
 		}
@@ -412,7 +412,7 @@ public class Datacenter extends SimEntity {
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			Log.printLine(getName() + ".processOtherEvent(): Error - an event is null.");
+			Log.printConcatLine(getName(), ".processOtherEvent(): Error - an event is null.");
 		}
 	}
 
@@ -560,12 +560,12 @@ public class Datacenter extends SimEntity {
 				userId = cl.getUserId();
 				vmId = cl.getVmId();
 			} catch (Exception e) {
-				Log.printLine(super.getName() + ": Error in processing Cloudlet");
+				Log.printConcatLine(super.getName(), ": Error in processing Cloudlet");
 				Log.printLine(e.getMessage());
 				return;
 			}
 		} catch (Exception e) {
-			Log.printLine(super.getName() + ": Error in processing a Cloudlet.");
+			Log.printConcatLine(super.getName(), ": Error in processing a Cloudlet.");
 			Log.printLine(e.getMessage());
 			return;
 		}
@@ -685,8 +685,8 @@ public class Datacenter extends SimEntity {
 			// checks whether this Cloudlet has finished or not
 			if (cl.isFinished()) {
 				String name = CloudSim.getEntityName(cl.getUserId());
-				Log.printLine(getName() + ": Warning - Cloudlet #" + cl.getCloudletId() + " owned by " + name
-						+ " is already completed/finished.");
+				Log.printConcatLine(getName(), ": Warning - Cloudlet #", cl.getCloudletId(), " owned by ", name,
+						" is already completed/finished.");
 				Log.printLine("Therefore, it is not being executed again");
 				Log.printLine();
 
@@ -1015,7 +1015,7 @@ public class Datacenter extends SimEntity {
 	 */
 	@Override
 	public void shutdownEntity() {
-		Log.printLine(getName() + " is shutting down...");
+		Log.printConcatLine(getName(), " is shutting down...");
 	}
 
 	/*
@@ -1024,7 +1024,7 @@ public class Datacenter extends SimEntity {
 	 */
 	@Override
 	public void startEntity() {
-		Log.printLine(getName() + " is starting...");
+		Log.printConcatLine(getName(), " is starting...");
 		// this resource should register to regional GIS.
 		// However, if not specified, then register to system GIS (the
 		// default CloudInformationService) entity.

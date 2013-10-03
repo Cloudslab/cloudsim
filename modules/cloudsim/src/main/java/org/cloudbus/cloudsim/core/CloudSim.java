@@ -183,7 +183,7 @@ public class CloudSim {
 	 * @post $none
 	 */
 	public static double startSimulation() throws NullPointerException {
-		Log.printLine("Starting CloudSim version " + CLOUDSIM_VERSION_STRING);
+		Log.printConcatLine("Starting CloudSim version ", CLOUDSIM_VERSION_STRING);
 		try {
 			double clock = run();
 
