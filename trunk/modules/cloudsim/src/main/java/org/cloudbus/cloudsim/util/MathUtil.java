@@ -311,7 +311,7 @@ public class MathUtil {
 
 		double[] estimates = tricubeBySquareRegression.regress()
 				.getParameterEstimates();
-		if (estimates[0] == Double.NaN || estimates[1] == Double.NaN) {
+		if (Double.isNaN(estimates[0]) || Double.isNaN(estimates[1])) {
 			return tricubeRegression.regress().getParameterEstimates();
 		}
 		return estimates;

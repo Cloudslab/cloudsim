@@ -80,7 +80,7 @@ public class NetworkDatacenter extends Datacenter {
 		Switchlist = new HashMap<Integer, Switch>();
 	}
 
-	public Map<Integer, Integer> VmToSwitchid;
+	public Map<Integer, Integer> VmToSwitchid = new HashMap<Integer, Integer>();
 
 	public Map<Integer, Integer> HostToSwitchid;
 

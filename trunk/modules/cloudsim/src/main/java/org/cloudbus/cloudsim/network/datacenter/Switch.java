@@ -9,6 +9,7 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -64,13 +65,13 @@ public class Switch extends SimEntity {
 	// something is running on these hosts
 	public SortedMap<Double, List<NetworkVm>> fintimelistVM = new TreeMap<Double, List<NetworkVm>>();
 
-	public ArrayList<NetworkPacket> pktlist;
+	public ArrayList<NetworkPacket> pktlist = new ArrayList<NetworkPacket>();
 
 	public List<Vm> BagofTaskVm = new ArrayList<Vm>();
 
 	public double switching_delay;
 
-	public Map<Integer, NetworkVm> Vmlist;
+	public Map<Integer, NetworkVm> Vmlist = new HashMap<Integer, NetworkVm>();
 
 	public Switch(String name, int level, NetworkDatacenter dc) {
 		super(name);
