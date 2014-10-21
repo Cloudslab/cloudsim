@@ -146,7 +146,7 @@ public class NetDatacenterBroker extends SimEntity {
 		getCloudletList().addAll(list);
 	}
 
-	public void setLinkDC(NetworkDatacenter alinkDC) {
+	public static void setLinkDC(NetworkDatacenter alinkDC) {
 		linkDC = alinkDC;
 	}
 

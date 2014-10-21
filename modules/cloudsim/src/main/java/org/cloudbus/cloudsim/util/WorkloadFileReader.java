@@ -404,8 +404,9 @@ public class WorkloadFileReader implements WorkloadModel {
 
 			// read one line at the time
 			int line = 1;
-			while (reader.ready()) {
-				parseValue(reader.readLine(), line);
+			String readLine = null;
+			while (reader.ready() && (readLine = reader.readLine()) != null) {
+				parseValue(readLine, line);
 				line++;
 			}
 
@@ -435,9 +436,10 @@ public class WorkloadFileReader implements WorkloadModel {
 			reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(fl))));
 
 			// read one line at the time
-			int line = 1;
-			while (reader.ready()) {
-				parseValue(reader.readLine(), line);
+			int line = 1;                       
+			String readLine = null;
+                        while (reader.ready() && (readLine = reader.readLine()) != null) {
+				parseValue(readLine, line);
 				line++;
 			}
 
@@ -475,9 +477,10 @@ public class WorkloadFileReader implements WorkloadModel {
 				reader = new BufferedReader(new InputStreamReader(zipFile.getInputStream(zipEntry)));
 
 				// read one line at the time
-				int line = 1;
-				while (reader.ready()) {
-					parseValue(reader.readLine(), line);
+				int line = 1;                       
+				String readLine = null;
+	                        while (reader.ready() && (readLine = reader.readLine()) != null)  {
+					parseValue(readLine, line);
 					line++;
 				}
 
