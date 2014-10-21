@@ -11,6 +11,8 @@ package org.cloudbus.cloudsim.distributions;
 
 import java.util.Random;
 
+import org.apache.commons.math3.distribution.ParetoDistribution;
+
 /**
  * The Class ParetoDistr.
  * 
@@ -20,13 +22,7 @@ import java.util.Random;
 public class ParetoDistr implements ContinuousDistribution {
 
 	/** The num gen. */
-	private final Random numGen;
-
-	/** The shape. */
-	private final double shape;
-
-	/** The location. */
-	private final double location;
+	private final ParetoDistribution numGen;
 
 	/**
 	 * Instantiates a new pareto distr.
@@ -36,13 +32,8 @@ public class ParetoDistr implements ContinuousDistribution {
 	 * @param location the location
 	 */
 	public ParetoDistr(Random seed, double shape, double location) {
-		if (shape <= 0.0 || location <= 0.0) {
-			throw new IllegalArgumentException("Mean and deviation must be greater than 0.0");
-		}
-
-		numGen = seed;
-		this.shape = shape;
-		this.location = location;
+		this(shape, location);
+		numGen.reseedRandomGenerator(seed.nextLong());
 	}
 
 	/**
@@ -52,13 +43,7 @@ public class ParetoDistr implements ContinuousDistribution {
 	 * @param location the location
 	 */
 	public ParetoDistr(double shape, double location) {
-		if (shape <= 0.0 || location <= 0.0) {
-			throw new IllegalArgumentException("Mean and deviation must be greater than 0.0");
-		}
-
-		numGen = new Random(System.currentTimeMillis());
-		this.shape = shape;
-		this.location = location;
+		numGen = new ParetoDistribution(location, shape);
 	}
 
 	/*
@@ -67,7 +52,7 @@ public class ParetoDistr implements ContinuousDistribution {
 	 */
 	@Override
 	public double sample() {
-		return location / Math.pow(numGen.nextDouble(), 1 / shape);
+		return numGen.sample();
 	}
 
 }

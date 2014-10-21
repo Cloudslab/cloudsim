@@ -10,6 +10,8 @@ package org.cloudbus.cloudsim.distributions;
 
 import java.util.Random;
 
+import org.apache.commons.math3.distribution.LogNormalDistribution;
+
 /**
  * The Class LognormalDistr.
  * 
@@ -18,14 +20,10 @@ import java.util.Random;
  */
 public class LognormalDistr implements ContinuousDistribution {
 
+	
 	/** The num gen. */
-	private final Random numGen;
+	private final LogNormalDistribution numGen;
 
-	/** The mean. */
-	private final double mean;
-
-	/** The dev. */
-	private final double dev;
 
 	/**
 	 * Instantiates a new lognormal distr.
@@ -34,14 +32,9 @@ public class LognormalDistr implements ContinuousDistribution {
 	 * @param mean the mean
 	 * @param dev the dev
 	 */
-	public LognormalDistr(Random seed, double mean, double dev) {
-		if (mean <= 0.0 || dev <= 0.0) {
-			throw new IllegalArgumentException("Mean and deviation must be greater than 0.0");
-		}
-
-		numGen = seed;
-		this.mean = mean;
-		this.dev = dev;
+	public LognormalDistr(Random seed, double shape, double scale) {
+		this(shape, scale);
+		numGen.reseedRandomGenerator(seed.nextLong());
 	}
 
 	/**
@@ -50,14 +43,8 @@ public class LognormalDistr implements ContinuousDistribution {
 	 * @param mean the mean
 	 * @param dev the dev
 	 */
-	public LognormalDistr(double mean, double dev) {
-		if (mean <= 0.0 || dev <= 0.0) {
-			throw new IllegalArgumentException("Mean and deviation must be greater than 0.0");
-		}
-
-		numGen = new Random(System.currentTimeMillis());
-		this.mean = mean;
-		this.dev = dev;
+	public LognormalDistr(double shape, double scale) {
+		numGen = new LogNormalDistribution(scale, shape);
 	}
 
 	/*
@@ -66,12 +53,7 @@ public class LognormalDistr implements ContinuousDistribution {
 	 */
 	@Override
 	public double sample() {
-		// generate a normal variate from a uniform variate
-		double n = Math.sqrt(-2 * Math.log(numGen.nextDouble()))
-				* Math.sin(2 * Math.PI * numGen.nextDouble());
-
-		// use it to generate the lognormal variate
-		return Math.pow(Math.E, mean + dev * n);
+		return numGen.sample();
 	}
 
 }
