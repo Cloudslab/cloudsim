@@ -11,6 +11,8 @@ package org.cloudbus.cloudsim.distributions;
 
 import java.util.Random;
 
+import org.apache.commons.math3.distribution.WeibullDistribution;
+
 /**
  * The Class WeibullDistr.
  * 
@@ -20,13 +22,7 @@ import java.util.Random;
 public class WeibullDistr implements ContinuousDistribution {
 
 	/** The num gen. */
-	private final Random numGen;
-
-	/** The alpha. */
-	private final double alpha;
-
-	/** The beta. */
-	private final double beta;
+	private final WeibullDistribution numGen;
 
 	/**
 	 * Instantiates a new weibull distr.
@@ -36,13 +32,8 @@ public class WeibullDistr implements ContinuousDistribution {
 	 * @param beta the beta
 	 */
 	public WeibullDistr(Random seed, double alpha, double beta) {
-		if (alpha <= 0.0 || beta <= 0.0) {
-			throw new IllegalArgumentException("Alpha and beta must be greater than 0.0");
-		}
-
-		numGen = seed;
-		this.alpha = alpha;
-		this.beta = beta;
+		this(alpha, beta);
+		numGen.reseedRandomGenerator(seed.nextLong());
 	}
 
 	/**
@@ -52,13 +43,7 @@ public class WeibullDistr implements ContinuousDistribution {
 	 * @param beta the beta
 	 */
 	public WeibullDistr(double alpha, double beta) {
-		if (alpha <= 0.0 || beta <= 0.0) {
-			throw new IllegalArgumentException("Alpha and beta must be greater than 0.0");
-		}
-
-		numGen = new Random(System.currentTimeMillis());
-		this.alpha = alpha;
-		this.beta = beta;
+		numGen = new WeibullDistribution(alpha, beta);
 	}
 
 	/*
@@ -67,7 +52,7 @@ public class WeibullDistr implements ContinuousDistribution {
 	 */
 	@Override
 	public double sample() {
-		return beta * Math.pow(-Math.log(numGen.nextDouble()), 1 / alpha);
+		return numGen.sample();
 	}
 
 }
