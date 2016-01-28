@@ -11,9 +11,11 @@ package org.cloudbus.cloudsim;
 import org.cloudbus.cloudsim.provisioners.PeProvisioner;
 
 /**
- * CloudSim Pe (Processing Element) class represents CPU unit, defined in terms of Millions
+ * Pe (Processing Element) class represents a CPU core, defined in terms of Millions
  * Instructions Per Second (MIPS) rating.<br>
  * <b>ASSUMPTION:<b> All PEs under the same Machine have the same MIPS rating.
+ * @todo This assumption is not being assured on different class (where other TODOs where introduced)
+ * @todo Pe statuses have to be defined using an enum
  * 
  * @author Manzur Murshed
  * @author Rajkumar Buyya
@@ -24,7 +26,7 @@ public class Pe {
 	/** Denotes Pe is FREE for allocation. */
 	public static final int FREE = 1;
 
-	/** Denotes Pe is allocated and hence busy in processing Cloudlet. */
+	/** Denotes Pe is allocated and hence busy processing some Cloudlet. */
 	public static final int BUSY = 2;
 
 	/**
@@ -33,10 +35,9 @@ public class Pe {
 	 */
 	public static final int FAILED = 3;
 
-	/** The id. */
+	/** The Pe id. */
 	private int id;
 
-	// FOR SPACE SHARED RESOURCE: Jan 21
 	/** The status of Pe: FREE, BUSY, FAILED: . */
 	private int status;
 
@@ -44,7 +45,7 @@ public class Pe {
 	private PeProvisioner peProvisioner;
 
 	/**
-	 * Allocates a new Pe object.
+	 * Instantiates a new Pe object.
 	 * 
 	 * @param id the Pe ID
 	 * @param peProvisioner the pe provisioner

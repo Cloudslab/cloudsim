@@ -15,7 +15,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * keeps track the time for all activities in the CloudResource for a specific Cloudlet. Before a
  * Cloudlet exits the CloudResource, it is RECOMMENDED to call this method
  * {@link #finalizeCloudlet()}.
- * <p>
+ * <p/>
  * It contains a Cloudlet object along with its arrival time and the ID of the machine and the Pe
  * (Processing Element) allocated to it. It acts as a placeholder for maintaining the amount of
  * resource share allocated at various times for simulating any scheduling using internal events.
@@ -40,14 +40,14 @@ public class ResCloudlet {
 
 	/**
 	 * Cloudlet execution start time. This attribute will only hold the latest time since a Cloudlet
-	 * can be cancel, paused or resumed.
+	 * can be canceled, paused or resumed.
 	 */
 	private double startExecTime;
 
 	/** The total time to complete this Cloudlet. */
 	private double totalCompletionTime;
 
-	// The below attributes are only be used by the SpaceShared policy.
+	// The below attributes are only to be used by the SpaceShared policy.
 
 	/** The machine id this Cloudlet is assigned to. */
 	private int machineId;
@@ -362,6 +362,11 @@ public class ResCloudlet {
 	 * @pre machineID >= 0
 	 * @pre peID >= 0
 	 * @post $none
+         * 
+         * @todo the machineId param and attribute mean a VM or a PM id?
+         * Only the term machine is ambiguous. 
+         * At {@link  CloudletSchedulerTimeShared#cloudletSubmit(org.cloudbus.cloudsim.Cloudlet)}
+         * it is stated it is a VM.
 	 */
 	public void setMachineAndPeId(int machineId, int peId) {
 		// if this job only requires 1 Pe
@@ -423,7 +428,8 @@ public class ResCloudlet {
 	}
 
 	/**
-	 * Gets the remaining cloudlet length.
+	 * Gets the remaining cloudlet length that has to be execute yet,
+         * considering the {@link #getCloudletTotalLength()}.
 	 * 
 	 * @return cloudlet length
 	 * @pre $none
@@ -447,7 +453,7 @@ public class ResCloudlet {
 	 * <li>wall clock time, i.e. the time of this Cloudlet resides in a CloudResource (from arrival
 	 * time until departure time).
 	 * <li>actual CPU time, i.e. the total execution time of this Cloudlet in a CloudResource.
-	 * <li>Cloudlet's finished so far
+	 * <li>Cloudlet's finished time so far
 	 * </ul>
 	 * 
 	 * @pre $none
@@ -470,7 +476,7 @@ public class ResCloudlet {
 	}
 
 	/**
-	 * A method that updates the length of cloudlet that has been completed.
+	 * Updates the length of cloudlet that has already been completed.
 	 * 
 	 * @param miLength cloudlet length in Instructions (I)
 	 * @pre miLength >= 0.0
@@ -486,6 +492,11 @@ public class ResCloudlet {
 	 * @return arrival time
 	 * @pre $none
 	 * @post $result >= 0.0
+         * 
+         * @todo It is being used different words for the same term.
+         * Here it is used arrival time while at Resource inner classe of the Cloudlet class
+         * it is being used submissionTime. It needs to be checked if they are 
+         * the same term or different ones in fact.
 	 */
 	public double getCloudletArrivalTime() {
 		return arrivalTime;
@@ -518,7 +529,7 @@ public class ResCloudlet {
 	}
 
 	/**
-	 * Gets this Cloudlet object.
+	 * Gets the related Cloudlet object.
 	 * 
 	 * @return cloudlet object
 	 * @pre $none
@@ -540,9 +551,9 @@ public class ResCloudlet {
 	}
 
 	/**
-	 * Get unique string identificator of the VM.
+	 * Get am Unique Identifier (UID) of the cloudlet.
 	 * 
-	 * @return string uid
+	 * @return The UID
 	 */
 	public String getUid() {
 		return getUserId() + "-" + getCloudletId();

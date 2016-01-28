@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * The Log class used for performing logging of the simulation process. It provides the ability to
+ * Logger used for performing logging of the simulation process. It provides the ability to
  * substitute the output stream by any OutputStream subclass.
  * 
  * @author Anton Beloglazov
@@ -23,17 +23,18 @@ public class Log {
 	/** The Constant LINE_SEPARATOR. */
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	/** The output. */
+	/** The stream where the log will the outputted. */
 	private static OutputStream output;
 
-	/** The disable output flag. */
+	/** Indicates if the logger is disabled or not. If set to true,
+         the call for any print method has no effect. */
 	private static boolean disabled;
 	
 	/** Buffer to avoid creating new string builder upon every print. */
 	private static StringBuilder buffer = new StringBuilder();		    
 
 	/**
-	 * Prints the message.
+	 * Prints a message.
 	 * 
 	 * @param message the message
 	 */
@@ -59,7 +60,7 @@ public class Log {
 	}
 
 	/**
-	 * Prints the line.
+	 * Prints a message and a new line.
 	 * 
 	 * @param message the message
 	 */
@@ -70,7 +71,7 @@ public class Log {
 	}
 
 	/**
-	 * Prints the empty line.
+	 * Prints an empty line.
 	 */
 	public static void printLine() {
 		if (!isDisabled()) {
@@ -80,7 +81,7 @@ public class Log {
 
 
 	/**
-	 * Prints the concatenated text representation of the arguements.
+	 * Prints the concatenated text representation of the arguments.
 	 * 
 	 * @param messages the messages to print
 	 */
@@ -95,7 +96,7 @@ public class Log {
 	}
 	
 	/**
-	 * Prints the concatenated text representation of the arguements and a new line.
+	 * Prints the concatenated text representation of the arguments and a new line.
 	 * 
 	 * @param messages the messages to print
 	 */
@@ -112,7 +113,7 @@ public class Log {
 	
 	
 	/**
-	 * Prints the line passed as a non-String object.
+	 * Prints the message passed as a non-String object and a new line.
 	 * 
 	 * @param message the message
 	 */
@@ -137,7 +138,7 @@ public class Log {
 	}
 
 	/**
-	 * Prints a line formated as in String.format().
+	 * Prints a string formated as in String.format(), followed by a new line.
 	 * 
 	 * @param format the format
 	 * @param args the args
@@ -149,7 +150,7 @@ public class Log {
 	}
 
 	/**
-	 * Sets the output.
+	 * Sets the output stream.
 	 * 
 	 * @param _output the new output
 	 */
@@ -158,7 +159,7 @@ public class Log {
 	}
 
 	/**
-	 * Gets the output.
+	 * Gets the output stream.
 	 * 
 	 * @return the output
 	 */

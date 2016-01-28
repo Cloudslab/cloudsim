@@ -13,7 +13,7 @@ import java.util.List;
 import org.cloudbus.cloudsim.Host;
 
 /**
- * HostList is a collection of operations on lists of hosts.
+ * HostList is a collection of operations on lists of hosts (PMs).
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
@@ -21,13 +21,14 @@ import org.cloudbus.cloudsim.Host;
 public class HostList {
 
 	/**
-	 * Gets the Machine object for a particular ID.
+	 * Gets the host (PM) object for a particular ID.
 	 * 
 	 * @param <T> the generic type
 	 * @param hostList the host list
 	 * @param id the host ID
-	 * @return the Machine object or <tt>null</tt> if no machine exists
+	 * @return the host object or <tt>null</tt> if no host exists
 	 * @see gridsim.Machine
+         * 
 	 * @pre id >= 0
 	 * @post $none
 	 */
@@ -41,7 +42,7 @@ public class HostList {
 	}
 
 	/**
-	 * Gets the total number of PEs for all Machines.
+	 * Gets the total number of PEs for all PMs.
 	 * 
 	 * @param <T> the generic type
 	 * @param hostList the host list
@@ -58,7 +59,7 @@ public class HostList {
 	}
 
 	/**
-	 * Gets the total number of <tt>FREE</tt> or non-busy PEs for all Machines.
+	 * Gets the total number of <tt>FREE</tt> or non-busy PEs for all PMs.
 	 * 
 	 * @param <T> the generic type
 	 * @param hostList the host list
@@ -75,7 +76,7 @@ public class HostList {
 	}
 
 	/**
-	 * Gets the total number of <tt>BUSY</tt> PEs for all Machines.
+	 * Gets the total number of <tt>BUSY</tt> PEs for all PMs.
 	 * 
 	 * @param <T> the generic type
 	 * @param hostList the host list
@@ -92,7 +93,7 @@ public class HostList {
 	}
 
 	/**
-	 * Gets a Machine with free Pe.
+	 * Gets the first host with free Pe's.
 	 * 
 	 * @param <T> the generic type
 	 * @param hostList the host list
@@ -105,7 +106,7 @@ public class HostList {
 	}
 
 	/**
-	 * Gets a Machine with a specified number of free Pe.
+	 * Gets the first PM with a specified number of free Pe's.
 	 * 
 	 * @param <T> the generic type
 	 * @param hostList the host list
@@ -124,14 +125,14 @@ public class HostList {
 	}
 
 	/**
-	 * Sets the particular Pe status on a Machine.
+	 * Sets the particular Pe status on a PM.
 	 * 
 	 * @param <T> the generic type
 	 * @param hostList the host list
 	 * @param status Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
 	 * @param hostId the host id
 	 * @param peId the pe id
-	 * @return <tt>true</tt> if the Pe status has changed, <tt>false</tt> otherwise (Machine id or
+	 * @return <tt>true</tt> if the Pe status has changed, <tt>false</tt> otherwise (host id or
 	 *         Pe id might not be exist)
 	 * @pre machineID >= 0
 	 * @pre peID >= 0

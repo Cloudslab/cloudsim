@@ -17,18 +17,23 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * The UtilizationModelStochastic class implements a model, according to which a Cloudlet generates
- * random CPU utilization every time frame.
+ * Implements a model, according to which a Cloudlet generates
+ * random resource utilization every time frame.
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
+ * @todo This class is the only one that stores the utilization history and
+ * make use of the time attribute at the {@link #getUtilization(double) } method.
+ * Check the other classes to implement the same behavior
+ * (that can be placed in the super class)
  */
 public class UtilizationModelStochastic implements UtilizationModel {
 
 	/** The random generator. */
 	private Random randomGenerator;
 
-	/** The history. */
+	/** The utilization history map, where each key is a time and
+         * each value is the utilization percentage in that time. */
 	private Map<Double, Double> history;
 
 	/**
@@ -49,10 +54,6 @@ public class UtilizationModelStochastic implements UtilizationModel {
 		setRandomGenerator(new Random(seed));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.power.UtilizationModel#getUtilization(double)
-	 */
 	@Override
 	public double getUtilization(double time) {
 		if (getHistory().containsKey(time)) {
@@ -65,7 +66,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 	}
 
 	/**
-	 * Gets the history.
+	 * Gets the utilization history.
 	 * 
 	 * @return the history
 	 */
@@ -74,7 +75,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 	}
 
 	/**
-	 * Sets the history.
+	 * Sets the utilization history.
 	 * 
 	 * @param history the history
 	 */
@@ -83,7 +84,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 	}
 
 	/**
-	 * Save history.
+	 * Save the utilization history to a file.
 	 * 
 	 * @param filename the filename
 	 * @throws Exception the exception
@@ -96,7 +97,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 	}
 
 	/**
-	 * Load history.
+	 * Load an utilization history from a file.
 	 * 
 	 * @param filename the filename
 	 * @throws Exception the exception

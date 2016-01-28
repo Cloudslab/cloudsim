@@ -20,12 +20,13 @@ import org.cloudbus.cloudsim.network.TopologicalLink;
 import org.cloudbus.cloudsim.network.TopologicalNode;
 
 /**
- * NetworkTopology is a class that implements network layer in CloudSim. It reads a BRITE file and
+ * Implements the network layer in CloudSim. It reads a file in the <a href="http://www.cs.bu.edu/brite/user_manual/node29.html">BRITE format</a>,
+ * the <a href="http://www.cs.bu.edu/brite/">Boston university Representative Topology gEnerator</a>, and
  * generates a topological network from it. Information of this network is used to simulate latency
  * in network traffic of CloudSim.
- * <p>
- * The topology file may contain more nodes the the number of entities in the simulation. It allows
- * for users to increase the scale of the simulation without changing the topology file.
+ * <p/>
+ * The topology file may contain more nodes than the number of entities in the simulation. It allows
+ * users to increase the scale of the simulation without changing the topology file.
  * Nevertheless, each CloudSim entity must be mapped to one (and only one) BRITE node to allow
  * proper work of the network simulation. Each BRITE node can be mapped to only one entity at a
  * time.
@@ -33,6 +34,10 @@ import org.cloudbus.cloudsim.network.TopologicalNode;
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
+ * 
+ * @todo The class only have static methods, that indicates it doesn't have to be instantiated.
+ * In fact, it doesn't appear it is being instantiated anywhere.
+ * A private default constructor would be created to avoid instantiation.
  */
 public class NetworkTopology {
 
@@ -42,15 +47,23 @@ public class NetworkTopology {
 
 	protected static DelayMatrix_Float delayMatrix = null;
 
+        /**
+         * A matrix containing the bandwidth between every pair of nodes in the network.
+         */
 	protected static double[][] bwMatrix = null;
 
 	protected static TopologicalGraph graph = null;
 
-	protected static Map<Integer, Integer> map = null;
+	/**
+         * The map between CloudSim entities and BRITE entities.
+         * Each key is a CloudSim entity ID and each value the corresponding
+         * BRITE entity ID.
+         */
+        protected static Map<Integer, Integer> map = null;
 
 	/**
-	 * Creates the network topology if file exists and if file can be succesfully parsed. File is
-	 * written in the BRITE format and contains topologycal information on simulation entities.
+	 * Creates the network topology if the file exists and can be successfully parsed. File is
+	 * written in the BRITE format and contains topological information on simulation entities.
 	 * 
 	 * @param fileName name of the BRITE file
 	 * @pre fileName != null
@@ -75,7 +88,7 @@ public class NetworkTopology {
 	}
 
 	/**
-	 * Generates the matrices used internally to set latency and bandwidth between elements
+	 * Generates the matrices used internally to set latency and bandwidth between elements.
 	 */
 	private static void generateMatrices() {
 		// creates the delay matrix
@@ -88,10 +101,12 @@ public class NetworkTopology {
 	}
 
 	/**
-	 * Adds a new link in the network topology
+	 * Adds a new link in the network topology.
+         * The CloudSim entities that represent the source and destination of the link
+         * will be mapped to the BRITE entity.
 	 * 
-	 * @param srcId ID of the link's source
-	 * @param destId ID of the link's destination
+	 * @param srcId ID of the CloudSim entity that represents the link's source node
+	 * @param destId ID of the CloudSim entity that represents the link's destination node
 	 * @param bw Link's bandwidth
 	 * @param lat link's latency
 	 * @pre srcId > 0
@@ -129,7 +144,7 @@ public class NetworkTopology {
 	}
 
 	/**
-	 * Creates the matrix containiing the available bandiwdth beteen two nodes
+	 * Creates the matrix containing the available bandwidth between every pair of nodes.
 	 * 
 	 * @param graph topological graph describing the topology
 	 * @param directed true if the graph is directed; false otherwise
@@ -162,7 +177,7 @@ public class NetworkTopology {
 	}
 
 	/**
-	 * Maps a CloudSim entity to a node in the network topology
+	 * Maps a CloudSim entity to a BRITE node in the network topology.
 	 * 
 	 * @param cloudSimEntityID ID of the entity being mapped
 	 * @param briteID ID of the BRITE node that corresponds to the CloudSim entity
@@ -192,7 +207,7 @@ public class NetworkTopology {
 	}
 
 	/**
-	 * Unmaps a previously mapped CloudSim entity to a node in the network topology
+	 * Unmaps a previously mapped CloudSim entity to a BRITE node in the network topology.
 	 * 
 	 * @param cloudSimEntityID ID of the entity being unmapped
 	 * @pre cloudSimEntityID >= 0
@@ -209,10 +224,10 @@ public class NetworkTopology {
 	}
 
 	/**
-	 * Calculates the delay between two nodes
+	 * Calculates the delay between two CloudSim nodes.
 	 * 
-	 * @param srcID ID of the source node
-	 * @param destID ID of the destination node
+	 * @param srcID ID of the CloudSim entity that represents the link's source node
+	 * @param destID ID of the CloudSim entity that represents the link's destination node
 	 * @return communication delay between the two nodes
 	 * @pre srcID >= 0
 	 * @pre destID >= 0

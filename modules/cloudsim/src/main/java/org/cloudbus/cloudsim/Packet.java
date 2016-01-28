@@ -15,7 +15,7 @@
 package org.cloudbus.cloudsim;
 
 /**
- * This class contains the structure for a network packet.
+ * Defines the structure for a network packet.
  * 
  * @author Gokul Poduval
  * @author Chen-Khong Tham, National University of Singapore
@@ -85,6 +85,10 @@ public interface Packet {
 	 * @return the network service type
 	 * @pre $none
 	 * @post $none
+         * 
+         * @todo Is it the Type of Service (ToS) of IPv4, like in
+         * the {@link Cloudlet#netToS}? If yes, so the names would
+         * be standardized.
 	 */
 	int getNetServiceType();
 

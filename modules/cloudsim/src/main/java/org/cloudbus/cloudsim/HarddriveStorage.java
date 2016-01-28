@@ -15,13 +15,13 @@ import java.util.List;
 import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
 
 /**
- * An implementation of a storage system. It simulates the behaviour of a typical harddrive storage.
- * The default values for this storage are those of a Maxtor DiamonMax 10 ATA harddisk with the
+ * An implementation of a storage system. It simulates the behavior of a typical hard drive storage.
+ * The default values for this storage are those of a "Maxtor DiamonMax 10 ATA" hard disk with the
  * following parameters:
  * <ul>
- * <li>latency = 4.17 ms
- * <li>avg seek time = 9 ms
- * <li>max transfer rate = 133 MB/sec
+ *   <li>latency = 4.17 ms</li>
+ *   <li>avg seek time = 9 m/s</li>
+ *   <li>max transfer rate = 133 MB/sec</li>
  * </ul>
  * 
  * @author Uros Cibej
@@ -30,37 +30,37 @@ import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
  */
 public class HarddriveStorage implements Storage {
 
-	/** a list storing the names of all the files on the harddrive. */
+	/** A list storing the names of all files on the hard drive. */
 	private List<String> nameList;
 
-	/** a list storing all the files stored on the harddrive. */
+	/** A list storing all files stored on the hard drive. */
 	private List<File> fileList;
 
-	/** the name of the harddrive. */
+	/** The name of the hard drive. */
 	private final String name;
 
-	/** a generator required to randomize the seek time. */
+	/** A generator required to randomize the seek time. */
 	private ContinuousDistribution gen;
 
-	/** the current size of files on the harddrive. */
+	/** The current size of files on the hard drive. */
 	private double currentSize;
 
-	/** the total capacity of the harddrive in MB. */
+	/** The total capacity of the hard drive in MB. */
 	private final double capacity;
 
-	/** the maximum transfer rate in MB/sec. */
+	/** The maximum transfer rate in MB/sec. */
 	private double maxTransferRate;
 
-	/** the latency of the harddrive in seconds. */
+	/** The latency of the hard drive in seconds. */
 	private double latency;
 
-	/** the average seek time in seconds. */
+	/** The average seek time in seconds. */
 	private double avgSeekTime;
 
 	/**
-	 * Creates a new harddrive storage with a given name and capacity.
+	 * Creates a new hard drive storage with a given name and capacity.
 	 * 
-	 * @param name the name of the new harddrive storage
+	 * @param name the name of the new hard drive storage
 	 * @param capacity the capacity in MByte
 	 * @throws ParameterException when the name and the capacity are not valid
 	 */
@@ -79,7 +79,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Creates a new harddrive storage with a given capacity. In this case the name of the storage
+	 * Creates a new hard drive storage with a given capacity. In this case the name of the storage
 	 * is a default name.
 	 * 
 	 * @param capacity the capacity in MByte
@@ -95,9 +95,9 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * The initialization of the harddrive is done in this method. The most common parameters, such
+	 * The initialization of the hard drive is done in this method. The most common parameters, such
 	 * as latency, average seek time and maximum transfer rate are set. The default values are set
-	 * to simulate the Maxtor DiamonMax 10 ATA harddisk. Furthermore, the necessary lists are
+	 * to simulate the "Maxtor DiamonMax 10 ATA" hard disk. Furthermore, the necessary lists are
 	 * created.
 	 */
 	private void init() {
@@ -135,7 +135,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Gets the number of files stored on this storage.
+	 * Gets the number of files stored on this hard drive.
 	 * 
 	 * @return the number of stored files
 	 */
@@ -145,7 +145,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Makes a reservation of the space on the storage to store a file.
+	 * Reserves space on the hard drive to store a file.
 	 * 
 	 * @param fileSize the size to be reserved in MB
 	 * @return <tt>true</tt> if reservation succeeded, <tt>false</tt> otherwise
@@ -189,7 +189,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Checks whether there is enough space on the storage for a certain file.
+	 * Checks whether there is enough space on the hard drive for a certain file.
 	 * 
 	 * @param fileSize a FileAttribute object to compare to
 	 * @return <tt>true</tt> if enough space available, <tt>false</tt> otherwise
@@ -258,7 +258,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Sets the latency of this harddrive in seconds.
+	 * Sets the latency of this hard drive in seconds.
 	 * 
 	 * @param latency the new latency in seconds
 	 * @return <tt>true</tt> if the setting succeeded, <tt>false</tt> otherwise
@@ -273,7 +273,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Gets the latency of this harddrive in seconds.
+	 * Gets the latency of this hard drive in seconds.
 	 * 
 	 * @return the latency in seconds
 	 */
@@ -336,7 +336,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Gets the average seek time of the harddrive in seconds.
+	 * Gets the average seek time of the hard drive in seconds.
 	 * 
 	 * @return the average seek time in seconds
 	 */
@@ -441,7 +441,7 @@ public class HarddriveStorage implements Storage {
 	/**
 	 * Check if the file is valid or not. This method checks whether the given file or the file name
 	 * of the file is valid. The method name parameter is used for debugging purposes, to output in
-	 * which method an error has occured.
+	 * which method an error has occurred.
 	 * 
 	 * @param file the file to be checked for validity
 	 * @param methodName the name of the method in which we check for validity of the file

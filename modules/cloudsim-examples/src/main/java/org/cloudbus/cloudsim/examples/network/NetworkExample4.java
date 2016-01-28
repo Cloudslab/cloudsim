@@ -119,8 +119,8 @@ public class NetworkExample4 {
 			//Sixth step: configure network
 
 			//maps CloudSim entities to BRITE entities
-			NetworkTopology.addLink(datacenter0.getId(),broker.getId(),10.0,10);
-
+			NetworkTopology.addLink(datacenter0.getId(), broker.getId(),10.0,10);
+                        
 			// Seventh step: Starts the simulation
 			CloudSim.startSimulation();
 

@@ -12,9 +12,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Vm represents a VM: it runs inside a Host, sharing hostList with other VMs. It processes
+ * Represents a Virtual Machine (VM) that runs inside a Host, sharing a hostList with other VMs. It processes
  * cloudlets. This processing happens according to a policy, defined by the CloudletScheduler. Each
- * VM has a owner, which can submit cloudlets to the VM to be executed
+ * VM has a owner, which can submit cloudlets to the VM to execute them.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
@@ -22,43 +22,43 @@ import java.util.List;
  */
 public class Vm {
 
-	/** The id. */
+	/** The VM unique id. */
 	private int id;
 
 	/** The user id. */
 	private int userId;
 
-	/** The uid. */
+	/** A Unique Identifier (UID) for the VM, that is compounded by the user id and VM id. */
 	private String uid;
 
-	/** The size. */
+	/** The size the VM image size (the amount of storage it will use, at least initially). */
 	private long size;
 
-	/** The MIPS. */
+	/** The MIPS capacity of each VM's PE. */
 	private double mips;
 
-	/** The number of PEs. */
+	/** The number of PEs required by the VM. */
 	private int numberOfPes;
 
-	/** The ram. */
+	/** The required ram. */
 	private int ram;
 
-	/** The bw. */
+	/** The required bw. */
 	private long bw;
 
-	/** The vmm. */
+	/** The Virtual Machine Monitor (VMM) that manages the VM. */
 	private String vmm;
 
-	/** The Cloudlet scheduler. */
+	/** The Cloudlet scheduler the VM uses to schedule cloudlets execution. */
 	private CloudletScheduler cloudletScheduler;
 
-	/** The host. */
+	/** The PM that hosts the VM. */
 	private Host host;
 
-	/** In migration flag. */
+	/** Indicates if the VM is in migration process. */
 	private boolean inMigration;
 
-	/** The current allocated size. */
+	/** The current allocated storage size. */
 	private long currentAllocatedSize;
 
 	/** The current allocated ram. */
@@ -67,17 +67,17 @@ public class Vm {
 	/** The current allocated bw. */
 	private long currentAllocatedBw;
 
-	/** The current allocated mips. */
+	/** The current allocated mips for each VM's PE. */
 	private List<Double> currentAllocatedMips;
 
-	/** The VM is being instantiated. */
+	/** Indicates if the VM is being instantiated. */
 	private boolean beingInstantiated;
 
 	/** The mips allocation history. */
 	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<VmStateHistoryEntry>();
 
 	/**
-	 * Creates a new VMCharacteristics object.
+	 * Creates a new Vm object.
 	 * 
 	 * @param id unique ID of the VM
 	 * @param userId ID of the VM's owner
@@ -85,9 +85,10 @@ public class Vm {
 	 * @param numberOfPes amount of CPUs
 	 * @param ram amount of ram
 	 * @param bw amount of bandwidth
-	 * @param size amount of storage
+	 * @param size The size the VM image size (the amount of storage it will use, at least initially).
 	 * @param vmm virtual machine monitor
-	 * @param cloudletScheduler cloudletScheduler policy for cloudlets
+	 * @param cloudletScheduler cloudletScheduler policy for cloudlets scheduling
+         * 
 	 * @pre id >= 0
 	 * @pre userId >= 0
 	 * @pre size > 0
@@ -132,7 +133,7 @@ public class Vm {
 	 * Updates the processing of cloudlets running on this VM.
 	 * 
 	 * @param currentTime current simulation time
-	 * @param mipsShare array with MIPS share of each Pe available to the scheduler
+	 * @param mipsShare list with MIPS share of each Pe available to the scheduler
 	 * @return time predicted completion time of the earliest finishing cloudlet, or 0 if there is no
 	 *         next events
 	 * @pre currentTime >= 0
@@ -214,20 +215,21 @@ public class Vm {
 	}
 
 	/**
-	 * Get utilization created by all clouddlets running on this VM.
+	 * Gets total CPU utilization percentage of all clouddlets running on this VM at the given time
 	 * 
 	 * @param time the time
-	 * @return total utilization
+	 * @return total utilization percentage
 	 */
 	public double getTotalUtilizationOfCpu(double time) {
 		return getCloudletScheduler().getTotalUtilizationOfCpu(time);
 	}
 
 	/**
-	 * Get utilization created by all cloudlets running on this VM in MIPS.
+	 * Get total CPU utilization of all cloudlets running on this VM at the given time (in MIPS).
 	 * 
 	 * @param time the time
-	 * @return total utilization
+	 * @return total cpu utilization in MIPS
+         * @see #getTotalUtilizationOfCpu(double) 
 	 */
 	public double getTotalUtilizationOfCpuMips(double time) {
 		return getTotalUtilizationOfCpu(time) * getMips();
@@ -243,7 +245,7 @@ public class Vm {
 	}
 
 	/**
-	 * Get unique string identificator of the VM.
+	 * Gets unique string identifier of the VM.
 	 * 
 	 * @return string uid
 	 */
@@ -252,7 +254,7 @@ public class Vm {
 	}
 
 	/**
-	 * Generate unique string identificator of the VM.
+	 * Generate unique string identifier of the VM.
 	 * 
 	 * @param userId the user id
 	 * @param vmId the vm id
@@ -263,7 +265,7 @@ public class Vm {
 	}
 
 	/**
-	 * Gets the id.
+	 * Gets the VM id.
 	 * 
 	 * @return the id
 	 */
@@ -272,7 +274,7 @@ public class Vm {
 	}
 
 	/**
-	 * Sets the id.
+	 * Sets the VM id.
 	 * 
 	 * @param id the new id
 	 */
@@ -579,7 +581,7 @@ public class Vm {
 	}
 
 	/**
-	 * Adds the state history entry.
+	 * Adds a VM state history entry.
 	 * 
 	 * @param time the time
 	 * @param allocatedMips the allocated mips

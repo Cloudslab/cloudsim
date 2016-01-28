@@ -74,14 +74,14 @@ public interface Storage {
 	boolean isFull();
 
 	/**
-	 * Gets the number of files stored on this storage.
+	 * Gets the number of files stored on this device.
 	 * 
 	 * @return the number of stored files
 	 */
 	int getNumStoredFile();
 
 	/**
-	 * Makes a reservation of the space on the storage to store a file.
+	 * Makes reservation of space on the storage to store a file.
 	 * 
 	 * @param fileSize the size to be reserved in MB
 	 * @return <tt>true</tt> if reservation succeeded, <tt>false</tt> otherwise

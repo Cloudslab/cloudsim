@@ -12,9 +12,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * SANStorage represents a storage area network composed of a set of harddisks connected in a LAN.
+ * SanStorage represents a Storage Area Network (SAN) composed of a set of harddisks connected in a LAN.
  * Capacity of individual disks are abstracted, thus only the overall capacity of the SAN is
- * considered. WARNING: This class is not yet fully functional. Effects of network contention are
+ * considered. <tt>WARNING</tt>: This class is not yet fully functional. Effects of network contention are
  * not considered in the simulation. So, time for file transfer is underestimated in the presence of
  * high network load.
  * 
@@ -23,10 +23,10 @@ import java.util.List;
  */
 public class SanStorage extends HarddriveStorage {
 
-	/** The bandwidth. */
+	/** The bandwidth of SAN network. */
 	double bandwidth;
 
-	/** The network latency. */
+	/** The SAN's network latency. */
 	double networkLatency;
 
 	/**
@@ -44,9 +44,10 @@ public class SanStorage extends HarddriveStorage {
 	}
 
 	/**
-	 * Creates a new SAN with a given capacity, latency, and bandwidth of the network connection.
+	 * Creates a new SAN with a given capacity, latency, and bandwidth of the network connection
+         * and with a specific name.
 	 * 
-	 * @param name the name of the new harddrive storage
+	 * @param name the name of the new storage device
 	 * @param capacity Storage device capacity
 	 * @param bandwidth Network bandwidth
 	 * @param networkLatency Network latency

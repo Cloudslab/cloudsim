@@ -17,7 +17,7 @@ import org.cloudbus.cloudsim.lists.PeList;
 
 /**
  * This is a Time-Shared VM Scheduler, which allows over-subscription. In other words, the scheduler
- * still allows the allocation of VMs that require more CPU capacity that is available.
+ * still allows the allocation of VMs that require more CPU capacity than is available.
  * Oversubscription results in performance degradation.
  * 
  * @author Anton Beloglazov
@@ -29,20 +29,21 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 	/**
 	 * Instantiates a new vm scheduler time shared over subscription.
 	 * 
-	 * @param pelist the pelist
+	 * @param pelist the list of PEs of the host where the VmScheduler is associated to.
 	 */
 	public VmSchedulerTimeSharedOverSubscription(List<? extends Pe> pelist) {
 		super(pelist);
 	}
 
 	/**
-	 * Allocate pes for vm. The policy allows over-subscription. In other words, the policy still
-	 * allows the allocation of VMs that require more CPU capacity that is available.
-	 * Oversubscription results in performance degradation. Each virtual PE cannot be allocated more
-	 * CPU capacity than MIPS of a single PE.
+	 * Allocates PEs for vm. The policy allows over-subscription. In other words, the policy still
+	 * allows the allocation of VMs that require more CPU capacity than is available.
+	 * Oversubscription results in performance degradation.
+         * It cannot be allocated more CPU capacity for each virtual PE than the MIPS 
+         * capacity of a single physical PE.
 	 * 
 	 * @param vmUid the vm uid
-	 * @param mipsShareRequested the mips share requested
+	 * @param mipsShareRequested the list of mips share requested
 	 * @return true, if successful
 	 */
 	@Override
@@ -94,7 +95,7 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 	}
 
 	/**
-	 * This method recalculates distribution of MIPs among VMs considering eventual shortage of MIPS
+	 * Recalculates distribution of MIPs among VMs, considering eventual shortage of MIPS
 	 * compared to the amount requested by VMs.
 	 */
 	protected void redistributeMipsDueToOverSubscription() {

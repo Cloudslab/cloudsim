@@ -23,15 +23,19 @@ import org.cloudbus.cloudsim.Vm;
 public class PeList {
 
 	/**
-	 * Gets MIPS Rating for a specified Pe ID.
+	 * Gets a Pe by its id.
 	 * 
-	 * @param id the Pe ID
-	 * @param peList the pe list
-	 * @return the MIPS rating if exists, otherwise returns -1
+	 * @param peList the PE list where to get a given PE
+	 * @param id the id of the PE to be get
+	 * @return the PE if the given id or null if not found
 	 * @pre id >= 0
 	 * @post $none
 	 */
 	public static <T extends Pe> Pe getById(List<T> peList, int id) {
+                /*@todo such kind of search would be made using a HashMap
+                (to avoid always iterating over the list),
+                where the key is the id of the object and the value the object
+                itself. The same occurs for lists of hosts and VMs.*/
 		for (Pe pe : peList) {
 			if (pe.getId() == id) {
 				return pe;
@@ -41,11 +45,11 @@ public class PeList {
 	}
 
 	/**
-	 * Gets MIPS Rating for a specified Pe ID.
+	 * Gets MIPS Rating of a PE with a specified ID.
 	 * 
-	 * @param id the Pe ID
-	 * @param peList the pe list
-	 * @return the MIPS rating if exists, otherwise returns -1
+	 * @param peList the PE list where to get a given PE
+	 * @param id the id of the PE to be get
+	 * @return the MIPS rating of the PE or -1 if the PE was not found
 	 * @pre id >= 0
 	 * @post $none
 	 */
@@ -74,10 +78,10 @@ public class PeList {
 	}
 
 	/**
-	 * Gets the max utilization among by all PEs.
+	 * Gets the max utilization percentage among by all PEs.
 	 * 
 	 * @param peList the pe list
-	 * @return the utilization
+	 * @return the utilization percentage
 	 */
 	public static <T extends Pe> double getMaxUtilization(List<T> peList) {
 		double maxUtilization = 0;
@@ -91,11 +95,11 @@ public class PeList {
 	}
 
 	/**
-	 * Gets the max utilization among by all PEs allocated to the VM.
+	 * Gets the max utilization percentage among by all PEs allocated to a VM.
 	 * 
-	 * @param vm the vm
+	 * @param vm the vm to get the maximum utilization percentage
 	 * @param peList the pe list
-	 * @return the utilization
+	 * @return the utilization percentage
 	 */
 	public static <T extends Pe> double getMaxUtilizationAmongVmsPes(List<T> peList, Vm vm) {
 		double maxUtilization = 0;
@@ -112,10 +116,10 @@ public class PeList {
 	}
 
 	/**
-	 * Gets a Pe ID which is FREE.
+	 * Gets the first PE which is FREE.
 	 * 
-	 * @param peList the pe list
-	 * @return a Pe ID if it is FREE, otherwise returns -1
+	 * @param peList the PE list
+	 * @return the first free PE, otherwise returns null
 	 * @pre $none
 	 * @post $none
 	 */
@@ -129,10 +133,10 @@ public class PeList {
 	}
 
 	/**
-	 * Gets the number of <tt>FREE</tt> or non-busy Pe.
+	 * Gets the number of <tt>FREE</tt> or non-busy PEs.
 	 * 
-	 * @param peList the pe list
-	 * @return number of Pe
+	 * @param peList the PE list
+	 * @return number of free PEs
 	 * @pre $none
 	 * @post $result >= 0
 	 */
@@ -147,12 +151,12 @@ public class PeList {
 	}
 
 	/**
-	 * Sets the Pe status.
+	 * Sets a PE status.
 	 * 
-	 * @param status Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
-	 * @param id the id
-	 * @param peList the pe list
-	 * @return <tt>true</tt> if the Pe status has been changed, <tt>false</tt> otherwise (Pe id might
+	 * @param status PE status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
+	 * @param id the id of the PE to be set
+	 * @param peList the PE list
+	 * @return <tt>true</tt> if the PE status has been changed, <tt>false</tt> otherwise (PE id might
 	 *         not be exist)
 	 * @pre peID >= 0
 	 * @post $none
@@ -167,10 +171,10 @@ public class PeList {
 	}
 
 	/**
-	 * Gets the number of <tt>BUSY</tt> Pe.
+	 * Gets the number of <tt>BUSY</tt> PEs.
 	 * 
-	 * @param peList the pe list
-	 * @return number of Pe
+	 * @param peList the PE list
+	 * @return number of busy PEs
 	 * @pre $none
 	 * @post $result >= 0
 	 */
@@ -185,13 +189,15 @@ public class PeList {
 	}
 
 	/**
-	 * Sets the status of PEs of this machine to FAILED. NOTE: <tt>resName</tt> and
-	 * <tt>machineID</tt> are used for debugging purposes, which is <b>ON</b> by default. Use
-	 * {@link #setStatusFailed(boolean)} if you do not want this information.
+	 * Sets the status of PEs of a host to FAILED or FREE. NOTE: <tt>resName</tt> and
+	 * <tt>machineID</tt> are used for debugging purposes, which is <b>ON</b> by default. 
+         * Use {@link #setStatusFailed(boolean)} if you do not want this information.
 	 * 
+         * @param peList the host's PE list to be set as failed or free
 	 * @param resName the name of the resource
-	 * @param hostId the id of this machine
-	 * @param failed the new value for the "failed" parameter
+	 * @param hostId the id of this host
+	 * @param failed true if the host's PEs have to be set as FAILED, false
+         * if they have to be set as FREE.
 	 */
 	public static <T extends Pe> void setStatusFailed(
 			List<T> peList,
@@ -211,10 +217,11 @@ public class PeList {
 	}
 
 	/**
-	 * Sets the status of PEs of this machine to FAILED.
+	 * Sets the status of PEs of a host to FAILED or FREE.
 	 * 
-	 * @param failed the new value for the "failed" parameter
-	 * @param peList the pe list
+	 * @param peList the host's PE list to be set as failed or free
+	 * @param failed true if the host's PEs have to be set as FAILED, false
+         * if they have to be set as FREE.
 	 */
 	public static <T extends Pe> void setStatusFailed(List<T> peList, boolean failed) {
 		// a loop to set the status of all the PEs in this machine

@@ -289,7 +289,7 @@ public class CloudSim {
 	}
 
 	/**
-	 * Sends a request to Cloud Information Service (GIS) entity to get the list of all Cloud
+	 * Sends a request to Cloud Information Service (CIS) entity to get the list of all Cloud
 	 * hostList.
 	 * 
 	 * @return A List containing CloudResource ID (as an Integer object) or if a CIS entity hasn't

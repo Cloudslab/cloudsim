@@ -9,7 +9,7 @@
 package org.cloudbus.cloudsim;
 
 /**
- * The Class HostStateHistoryEntry.
+ * Stores historic data about a host.
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.1.2
@@ -25,11 +25,13 @@ public class HostStateHistoryEntry {
 	/** The requested mips. */
 	private double requestedMips;
 
-	/** The is active. */
+	/** Indicates if the host was active in the indicated time. 
+         * @see #time
+         */
 	private boolean isActive;
 
 	/**
-	 * Instantiates a new vm mips allocation history entry.
+	 * Instantiates a new host state history entry.
 	 * 
 	 * @param time the time
 	 * @param allocatedMips the allocated mips

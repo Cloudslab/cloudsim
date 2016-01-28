@@ -15,50 +15,60 @@ import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.lists.PeList;
 
 /**
- * DatacenterCharacteristics represents static properties of a resource such as resource
- * architecture, Operating System (OS), management policy (time- or space-shared), cost and time
- * zone at which the resource is located along resource configuration.
+ * Represents static properties of a resource such as 
+ * architecture, Operating System (OS), management policy (time- or space-shared), 
+ * cost and time zone at which the resource is located along resource configuration.
  * 
  * @author Manzur Murshed
  * @author Rajkumar Buyya
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
+ * @todo the characteristics are used only for datacenter (as the class name indicates),
+ * however, the class documentation uses the generic term "resource" instead of "datacenter",
+ * giving the idea that the class can be used to describe characteristics of other resources.
+ * However, the class was found being used only for datacenters.
  */
 public class DatacenterCharacteristics {
 
-	/** The resource id -- setup when Resource is created. */
+	/** The datacenter id -- setup when datacenter is created. */
 	private int id;
 
-	/** The architecture. */
+	/** The architecture of the resource. */
 	private String architecture;
 
-	/** The os. */
+	/** The Operating System (OS) of the resource. */
 	private String os;
 
-	/** The host list. */
+	/** The hosts owned by the datacenter. */
 	private List<? extends Host> hostList;
 
-	/** The time zone -- difference from GMT. */
+	/** The time zone, defined as the difference from GMT. */
 	private double timeZone;
 
-	/** Price/CPU-unit if unit = sec., then G$/CPU-sec. */
+	/** Price/CPU-unit. If unit = sec., then the price is defined as G$/CPU-sec. */
 	private double costPerSecond;
 
-	/** Resource Types -- allocation policy. */
+	/** The CPU allocation policy for all PMs of the datacenter, according to
+         * constants such as {@link #TIME_SHARED}
+         * and {@link #SPACE_SHARED}.
+         * 
+         * @todo The use of int constants difficult to know the valid values
+         * for the property. It may be used a enum instead.
+         */
 	private int allocationPolicy;
 
-	/** Time-shared system using Round-Robin algorithm. */
+	/** Time-shared CPU allocation policy using Round-Robin algorithm. */
 	public static final int TIME_SHARED = 0;
 
-	/** Spaced-shared system using First Come First Serve (FCFS) algorithm. */
+	/** Spaced-shared CPU allocation policy using First Come First Serve (FCFS) algorithm. */
 	public static final int SPACE_SHARED = 1;
 
-	/** Assuming all PEs in all Machines have the same rating. */
+	/** Assuming all PEs in all PMs have the same rating. */
 	public static final int OTHER_POLICY_SAME_RATING = 2;
 
 	/**
-	 * Assuming all PEs in a Machine have the same rating. However, each Machine has different
+	 * Assuming all PEs in a PM have the same rating. However, each PM has different
 	 * rating to each other.
 	 */
 	public static final int OTHER_POLICY_DIFFERENT_RATING = 3;
@@ -66,32 +76,34 @@ public class DatacenterCharacteristics {
 	/** A resource that supports Advanced Reservation mechanisms. */
 	public static final int ADVANCE_RESERVATION = 4;
 
-	/** The vmm. */
+	/** The Virtual Machine Monitor (VMM), also called hypervisor, used
+         * in the datacenter.. */
 	private String vmm;
 
-	/** The cost per mem. */
+	/** The cost per each unity of RAM memory. */
 	private double costPerMem;
 
-	/** The cost per storage. */
+	/** The cost per each unit of storage. */
 	private double costPerStorage;
 
-	/** The cost per bw. */
+	/** The cost of each byte of bandwidth (bw) consumed. */
 	private double costPerBw;
 
 	/**
-	 * Allocates a new DatacenterCharacteristics object. If the time zone is invalid, then by
+	 * Creates a new DatacenterCharacteristics object. If the time zone is invalid, then by
 	 * default, it will be GMT+0.
 	 * 
-	 * @param architecture the architecture of a resource
-	 * @param os the operating system used
+	 * @param architecture the architecture of the datacenter
+	 * @param os the operating system used on the datacenter's PMs
 	 * @param vmm the virtual machine monitor used
-	 * @param hostList list of machines in a resource
+	 * @param hostList list of machines in the datacenter
 	 * @param timeZone local time zone of a user that owns this reservation. Time zone should be of
 	 *            range [GMT-12 ... GMT+13]
-	 * @param costPerSec the cost per sec to use this resource
-	 * @param costPerMem the cost to use memory in this resource
-	 * @param costPerStorage the cost to use storage in this resource
-	 * @param costPerBw the cost per bw
+	 * @param costPerSec the cost per sec of CPU use in the datacenter
+	 * @param costPerMem the cost to use memory in the datacenter
+	 * @param costPerStorage the cost to use storage in the datacenter
+	 * @param costPerBw the cost of each byte of bandwidth (bw) consumed
+         * 
 	 * @pre architecture != null
 	 * @pre OS != null
 	 * @pre VMM != null
@@ -116,6 +128,8 @@ public class DatacenterCharacteristics {
 		setArchitecture(architecture);
 		setOs(os);
 		setHostList(hostList);
+                /*@todo allocationPolicy is not a parameter. It is setting
+                the attribute to itself, what has not effect. */
 		setAllocationPolicy(allocationPolicy);
 		setCostPerSecond(costPerSec);
 
@@ -139,7 +153,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets a Machine with at least one empty Pe.
+	 * Gets the first PM with at least one empty Pe.
 	 * 
 	 * @return a Machine object or if not found
 	 * @pre $none
@@ -162,31 +176,45 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets Millions Instructions Per Second (MIPS) Rating of a Processing Element (Pe). It is
-	 * assumed all PEs' rating is same in a given machine.
+	 * Gets the Million Instructions Per Second (MIPS) Rating of the first Processing Element (Pe)
+         * of the first PM. 
+         * <tt>NOTE:</tt>It is assumed all PEs' rating is same in a given machine.
+         * 
 	 * 
-	 * @return the MIPS Rating or if no PEs are exists.
+	 * @return the MIPS Rating or -1 if no PEs exists
+         * 
 	 * @pre $none
 	 * @post $result >= -1
+         * @todo It considers that all PEs of all PM have the same MIPS capacity,
+         * what is not ensured because it is possible to add PMs of different configurations
+         * to a datacenter. Even for the {@link Host} it is possible
+         * to add Pe's of different capacities through the {@link Host#peList} attribute.
 	 */
 	public int getMipsOfOnePe() {
 		if (getHostList().size() == 0) {
 			return -1;
 		}
 
+                /*@todo Why is it always get the MIPS of the first host in the datacenter?
+                The note in the method states that it is considered that all PEs into
+                a PM have the same MIPS capacity, but different PM can have different
+                PEs' MIPS.*/
 		return PeList.getMips(getHostList().get(0).getPeList(), 0);
 	}
 
 	/**
 	 * Gets Millions Instructions Per Second (MIPS) Rating of a Processing Element (Pe). It is
-	 * essential to use this method when a resource is made up of heterogenous PEs/machines.
+	 * essential to use this method when a datacenter is made up of heterogenous PEs per PMs.
 	 * 
 	 * @param id the machine ID
 	 * @param peId the Pe ID
-	 * @return the MIPS Rating or if no PEs are exists.
+	 * @return the MIPS Rating or -1 if no PEs are exists.
+         * 
 	 * @pre id >= 0
 	 * @pre peID >= 0
 	 * @post $result >= -1
+         * 
+         * @todo The id parameter would be renamed to pmId to be clear.
 	 */
 	public int getMipsOfOnePe(int id, int peId) {
 		if (getHostList().size() == 0) {
@@ -197,7 +225,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets the total MIPS rating, which is the sum of MIPS rating of all machines in a resource.
+	 * Gets the total MIPS rating, which is the sum of MIPS rating of all PMs in a datacenter.
 	 * <p>
 	 * Total MIPS rating for:
 	 * <ul>
@@ -209,41 +237,66 @@ public class DatacenterCharacteristics {
 	 * </ul>
 	 * 
 	 * @return the sum of MIPS ratings
+         * 
 	 * @pre $none
 	 * @post $result >= 0
 	 */
 	public int getMips() {
 		int mips = 0;
+                /*@todo It assumes that the heterogeinety of PE's capacity of PMs
+                is dependent of the CPU allocation policy of the Datacenter.
+                However, I don't see any relation between PMs heterogeinety and
+                allocation policy.
+                I can have a time shared policy in a datacenter of
+                PMs with the same or different processing capacity.
+                The same is true for a space shared or even any other policy. 
+                */
+                
+                /*@todo the method doesn't use polymorphism to ensure that it will
+                automatically behave according to the instance of the allocationPolicy used.
+                The use of a switch here breaks the Open/Close Principle (OCP).
+                Thus, it doesn't allow the class to be closed for changes
+                and opened for extension.
+                If a new scheduler is created, the class has to be changed
+                to include the new scheduler in switches like that below.
+                */
 		switch (getAllocationPolicy()) {
-		// Assuming all PEs in all Machine have same rating.
+                        // Assuming all PEs in all PMs have same rating.
+                        /*@todo But it is possible to add PMs of different configurations
+                            in a hostlist attached to a DatacenterCharacteristic attribute
+                            of a Datacenter*/
 			case DatacenterCharacteristics.TIME_SHARED:
 			case DatacenterCharacteristics.OTHER_POLICY_SAME_RATING:
 				mips = getMipsOfOnePe() * HostList.getNumberOfPes(getHostList());
-				break;
+			break;
 
-			// Assuming all PEs in a given Machine have the same rating.
-			// But different machines in a Cluster can have different rating
+			// Assuming all PEs in a given PM have the same rating.
+			// But different PMs in a Cluster can have different rating
 			case DatacenterCharacteristics.SPACE_SHARED:
 			case DatacenterCharacteristics.OTHER_POLICY_DIFFERENT_RATING:
 				for (Host host : getHostList()) {
 					mips += host.getTotalMips();
 				}
-				break;
+			break;
 
 			default:
-				break;
+			break;
 		}
 
 		return mips;
 	}
 
 	/**
-	 * Gets the CPU time given the specified parameters (only for TIME_SHARED). <tt>NOTE:</tt> The
+	 * Gets the amount of CPU time (in seconds) that the cloudlet will spend
+         * to finish processing, considering the current CPU allocation policy 
+         * (currently only for TIME_SHARED) and cloudlet load. 
+         * @todo <tt>NOTE:</tt> The
 	 * CPU time for SPACE_SHARED and ADVANCE_RESERVATION are not yet implemented.
 	 * 
 	 * @param cloudletLength the length of a Cloudlet
-	 * @param load the load of a Cloudlet
-	 * @return the CPU time
+	 * @param load the current load of a Cloudlet (percentage of load from 0 to 1)
+	 * @return the CPU time (in seconds)
+         * 
 	 * @pre cloudletLength >= 0.0
 	 * @pre load >= 0.0
 	 * @post $result >= 0.0
@@ -253,6 +306,23 @@ public class DatacenterCharacteristics {
 
 		switch (getAllocationPolicy()) {
 			case DatacenterCharacteristics.TIME_SHARED:
+                                /*@todo It is not exacly clear what this method does.
+                                I guess it computes how many time the cloudlet will
+                                spend using the CPU to finish its job, considering 
+                                the CPU allocation policy. By this way,
+                                the load parameter may be cloudlet's the percentage of load (from 0 to 1).
+                                Then, (getMipsOfOnePe() * (1.0 - load)) computes the amount
+                                MIPS that is currently being used by the cloudlet.
+                                Dividing the total cloudlet length in MI by that result
+                                returns the number of seconds that the cloudlet will spend
+                                to execute its total MI.
+                                
+                                This method has to be reviewed and documentation
+                                checked.
+                            
+                                If load is equals to 1, this calculation will 
+                                raise and division by zero exception, what makes invalid
+                                the pre condition defined in the method documention*/
 				cpuTime = cloudletLength / (getMipsOfOnePe() * (1.0 - load));
 				break;
 
@@ -264,7 +334,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets the total number of PEs for all Machines.
+	 * Gets the total number of PEs for all PMs.
 	 * 
 	 * @return number of PEs
 	 * @pre $none
@@ -275,7 +345,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets the total number of <tt>FREE</tt> or non-busy PEs for all Machines.
+	 * Gets the total number of <tt>FREE</tt> or non-busy PEs for all PMs.
 	 * 
 	 * @return number of PEs
 	 * @pre $none
@@ -286,7 +356,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets the total number of <tt>BUSY</tt> PEs for all Machines.
+	 * Gets the total number of <tt>BUSY</tt> PEs for all PMs.
 	 * 
 	 * @return number of PEs
 	 * @pre $none
@@ -297,7 +367,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Sets the particular Pe status on a Machine.
+	 * Sets the particular Pe status on a PM.
 	 * 
 	 * @param status Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
 	 * @param hostId Machine ID
@@ -312,29 +382,32 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets the cost per Millions Instruction (MI) associated with a resource.
+	 * Gets the cost per Million Instruction (MI) associated with a Datacenter.
 	 * 
-	 * @return the cost using a resource
+	 * @return the cost using CPU of PM in the Datacenter
 	 * @pre $none
 	 * @post $result >= 0.0
+         * @todo Again, it considers that all PEs of all PM have the same MIPS capacity,
+         * what is not ensured because it is possible to add PMs of different configurations
+         * to a datacenter
 	 */
 	public double getCostPerMi() {
 		return getCostPerSecond() / getMipsOfOnePe();
 	}
 
 	/**
-	 * Gets the total number of machines.
+	 * Gets the total number of PMs.
 	 * 
-	 * @return total number of machines this resource has.
+	 * @return total number of machines the Datacenter has.
 	 */
 	public int getNumberOfHosts() {
 		return getHostList().size();
 	}
 
 	/**
-	 * Gets the current number of failed machines.
+	 * Gets the current number of failed PMs.
 	 * 
-	 * @return current number of failed machines this resource has.
+	 * @return current number of failed PMs the Datacenter has.
 	 */
 	public int getNumberOfFailedHosts() {
 		int numberOfFailedHosts = 0;
@@ -347,9 +420,9 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Checks whether all machines of this resource are working properly or not.
+	 * Checks whether all PMs of the datacenter are working properly or not.
 	 * 
-	 * @return if all machines are working, otherwise
+	 * @return if all PMs are working, otherwise
 	 */
 	public boolean isWorking() {
 		boolean result = false;
@@ -361,7 +434,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Get the cost to use memory in this resource.
+	 * Get the cost to use memory in the datacenter.
 	 * 
 	 * @return the cost to use memory
 	 */
@@ -381,7 +454,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Get the cost to use storage in this resource.
+	 * Get the cost to use storage in the datacenter.
 	 * 
 	 * @return the cost to use storage
 	 */
@@ -401,7 +474,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Get the cost to use bandwidth in this resource.
+	 * Get the cost to use bandwidth in the datacenter.
 	 * 
 	 * @return the cost to use bw
 	 */
@@ -410,7 +483,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Sets cost to use bw cost to use bw.
+	 * Sets cost to use bw.
 	 * 
 	 * @param costPerBw the cost per bw
 	 * @pre costPerBw >= 0
@@ -430,7 +503,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets the id.
+	 * Gets the datacenter id.
 	 * 
 	 * @return the id
 	 */
@@ -439,7 +512,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Sets the id.
+	 * Sets the datacenter id.
 	 * 
 	 * @param id the new id
 	 */
@@ -466,18 +539,18 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets the os.
+	 * Gets the Operating System (OS).
 	 * 
-	 * @return the os
+	 * @return the Operating System (OS)
 	 */
 	protected String getOs() {
 		return os;
 	}
 
 	/**
-	 * Sets the os.
+	 * Sets the Operating System (OS).
 	 * 
-	 * @param os the new os
+	 * @param os the new Operating System (OS)
 	 */
 	protected void setOs(String os) {
 		this.os = os;
@@ -488,6 +561,7 @@ public class DatacenterCharacteristics {
 	 * 
 	 * @param <T> the generic type
 	 * @return the host list
+         * @todo check this warning below
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Host> List<T> getHostList() {
@@ -523,7 +597,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Gets the cost per second.
+	 * Gets the cost per second of CPU.
 	 * 
 	 * @return the cost per second
 	 */
@@ -532,7 +606,7 @@ public class DatacenterCharacteristics {
 	}
 
 	/**
-	 * Sets the cost per second.
+	 * Sets the cost per second of CPU.
 	 * 
 	 * @param costPerSecond the new cost per second
 	 */

@@ -22,6 +22,7 @@ package org.cloudbus.cloudsim;
  * @author Gokul Poduval
  * @author Chen-Khong Tham, National University of Singapore
  * @since CloudSim Toolkit 1.0
+ * @todo It would be used the native class InvalidArgumentException instead of this new one.
  */
 public class ParameterException extends Exception {
 
