@@ -86,7 +86,7 @@ public class Cloudlet {
 	private int reservationId = -1;
 
 	/** Indicates if transaction history records for this Cloudlet 
-         * it to be outputted. */
+         * is to be outputted. */
 	private final boolean record;
 
 	/** Stores the operating system line separator. */
@@ -1015,7 +1015,7 @@ public class Cloudlet {
 
 	/**
 	 * Gets the total length (across all PEs) of this Cloudlet.
-         * It considers the {@link #cloudletLength} of the cloudlet to be execute
+         * It considers the {@link #cloudletLength} of the cloudlet to be executed
          * in each Pe and the {@link #numberOfPes}.<br/>
          * 
          * For example, setting the cloudletLenght as 10000 MI and {@link #numberOfPes}

@@ -20,13 +20,14 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
+ * @todo Using Java 8 Stream, some methods here can be improved or removed.
  */
 public class MathUtil {
 
 	/**
 	 * Sums a list of numbers.
 	 * 
-	 * @param list the list
+	 * @param list the list of numbers
 	 * @return the double
 	 */
 	public static double sum(final List<? extends Number> list) {
@@ -38,10 +39,12 @@ public class MathUtil {
 	}
 
 	/**
-	 * List to array.
+	 * Converts a List to array.
 	 * 
-	 * @param list the list
+	 * @param list the list of numbers
 	 * @return the double[]
+         * @todo The method {@link List#toArray()} could be used directly
+         * instead of creating this method.
 	 */
 	public static double[] listToArray(final List<? extends Number> list) {
 		double[] array = new double[list.size()];
@@ -52,9 +55,9 @@ public class MathUtil {
 	}
 
 	/**
-	 * Gets the median.
+	 * Gets the median from a list of numbers.
 	 * 
-	 * @param list the list
+	 * @param list the list of numbers
 	 * @return the median
 	 */
 	public static double median(final List<Double> list) {
@@ -62,9 +65,9 @@ public class MathUtil {
 	}
 
 	/**
-	 * Gets the median.
+	 * Gets the median from an array of numbers.
 	 * 
-	 * @param list the list
+	 * @param list the array of numbers
 	 * 
 	 * @return the median
 	 */
@@ -73,11 +76,10 @@ public class MathUtil {
 	}
 
 	/**
-	 * Returns descriptive statistics for the list of numbers.
+	 * Returns an object to compute descriptive statistics for an list of numbers.
 	 * 
-	 * @param list
-	 *            - the list of numbers. Must not be null.
-	 * @return - descriptive statistics for the list of numbers.
+	 * @param list the list of numbers. Must not be null.
+	 * @return descriptive statistics for the list of numbers.
 	 */
 	public static DescriptiveStatistics getStatistics(final List<Double> list) {
 		// Get a DescriptiveStatistics instance
@@ -91,10 +93,10 @@ public class MathUtil {
 	}
 
 	/**
-	 * Returns descriptive statistics for the array of numbers.
+	 * Returns an object to compute descriptive statistics for an array of numbers.
 	 * 
-	 * @param list - the array of numbers. Must not be null.
-	 * @return - descriptive statistics for the array of numbers.
+	 * @param list the array of numbers. Must not be null.
+	 * @return descriptive statistics for the array of numbers.
 	 */
 	public static DescriptiveStatistics getStatistics(final double[] list) {
 		// Get a DescriptiveStatistics instance
@@ -108,9 +110,9 @@ public class MathUtil {
 	}
 
 	/**
-	 * Gets the average.
+	 * Gets the average from a list of numbers.
 	 * 
-	 * @param list the list
+	 * @param list the list of numbers
 	 * 
 	 * @return the average
 	 */
@@ -123,10 +125,10 @@ public class MathUtil {
 	}
 
 	/**
-	 * Variance.
+	 * Gets the Variance from a list of numbers.
 	 * 
-	 * @param list the list
-	 * @return the double
+	 * @param list the list of numbers
+	 * @return the variance
 	 */
 	public static double variance(final List<Double> list) {
 		long n = 0;
@@ -145,19 +147,19 @@ public class MathUtil {
 	}
 
 	/**
-	 * Gets the standard deviation.
+	 * Gets the standard deviation from a list of numbers.
 	 * 
-	 * @param list the list
-	 * @return the double
+	 * @param list the list of numbers
+	 * @return the standard deviation
 	 */
 	public static double stDev(final List<Double> list) {
 		return Math.sqrt(variance(list));
 	}
 
 	/**
-	 * Gets the mad.
+	 * Gets the mad from a array of numbers.
 	 * 
-	 * @param data the data
+	 * @param data the array of numbers
 	 * @return the mad
 	 */
 	public static double mad(final double[] data) {
@@ -174,9 +176,9 @@ public class MathUtil {
 	}
 
 	/**
-	 * Gets the IQR.
+	 * Gets the Interquartile Range (IQR) from an array of numbers.
 	 * 
-	 * @param data the data
+	 * @param data the array of numbers
 	 * @return the IQR
 	 */
 	public static double iqr(final double[] data) {
@@ -187,10 +189,11 @@ public class MathUtil {
 	}
 
 	/**
-	 * Count non zero beginning of the data.
+	 * Counts the number of values different of zero at the beginning of 
+         * an array.
 	 * 
-	 * @param data the data
-	 * @return the int
+	 * @param data the array of numbers
+	 * @return the number of values different of zero at the beginning of the array
 	 */
 	public static int countNonZeroBeginning(final double[] data) {
 		int i = data.length - 1;
@@ -203,10 +206,10 @@ public class MathUtil {
 	}
 
 	/**
-	 * Count shortest row.
+	 * Gets the length of the shortest row in a given matrix
 	 * 
-	 * @param data the data
-	 * @return the int
+	 * @param data the data matrix
+	 * @return the length of the shortest row int he matrix
 	 */
 	public static int countShortestRow(final double[][] data) {
 		int minLength = 0;
@@ -219,10 +222,10 @@ public class MathUtil {
 	}
 
 	/**
-	 * Trim zero tail.
+	 * Trims zeros at the end of an array.
 	 * 
-	 * @param data the data
-	 * @return the double[]
+	 * @param data the data array
+	 * @return the trimmed array
 	 */
 	public static double[] trimZeroTail(final double[] data) {
 		return Arrays.copyOfRange(data, 0, countNonZeroBeginning(data));
@@ -231,7 +234,7 @@ public class MathUtil {
 	/**
 	 * Gets the loess parameter estimates.
 	 * 
-	 * @param y the y
+	 * @param y the y array
 	 * @return the loess parameter estimates
 	 */
 	public static double[] getLoessParameterEstimates(final double[] y) {
@@ -291,7 +294,7 @@ public class MathUtil {
 	/**
 	 * Gets the robust loess parameter estimates.
 	 * 
-	 * @param y the y
+	 * @param y the y array
 	 * @return the robust loess parameter estimates
 	 */
 	public static double[] getRobustLoessParameterEstimates(final double[] y) {
@@ -318,10 +321,11 @@ public class MathUtil {
 	}
 
 	/**
-	 * Gets the tricube weigts.
+	 * Gets the tricube weigths.
 	 * 
-	 * @param n the n
-	 * @return the tricube weigts
+	 * @param n the number of weights
+	 * @return an array of tricube weigths with n elements
+         * @todo The word "weight" is misspelled in the method name.
 	 */
 	public static double[] getTricubeWeigts(final int n) {
 		double[] weights = new double[n];
@@ -340,10 +344,11 @@ public class MathUtil {
 	}
 
 	/**
-	 * Gets the tricube bisquare weigts.
+	 * Gets the tricube bisquare weigths.
 	 * 
-	 * @param residuals the residuals
-	 * @return the tricube bisquare weigts
+	 * @param residuals the residuals array
+	 * @return the tricube bisquare weigths
+         * @todo The word "weight" is misspelled in the method name.
 	 */
 	public static double[] getTricubeBisquareWeigts(final double[] residuals) {
 		int n = residuals.length;
@@ -363,10 +368,10 @@ public class MathUtil {
 	}
 
 	/**
-	 * Abs.
+	 * Gets the absolute values of an array of values
 	 * 
-	 * @param data the data
-	 * @return the double[]
+	 * @param data the array of values
+	 * @return a new array with the absolute value of each element in the given array.
 	 */
 	public static double[] abs(final double[] data) {
 		double[] result = new double[data.length];
