@@ -20,7 +20,7 @@ import org.cloudbus.cloudsim.core.SimEvent;
  */
 public class PredicateNotType extends Predicate {
 
-	/** The tags. */
+	/** Array of tags to verify if the tag of received events doesn't correspond to. */
 	private final int[] tags;
 
 	/**
@@ -42,10 +42,11 @@ public class PredicateNotType extends Predicate {
 	}
 
 	/**
-	 * The match function called by {@link Simulation}, not used directly by the user.
+	 * Matches any event that hasn't one of the specified {@link #tags}.
 	 * 
-	 * @param ev the ev
-	 * @return true, if match
+	 * @param ev the event to check
+	 * @return <code>true</code> if the event matches the predicate, <code>false</code> otherwise
+         * @see #tags
 	 */
 	@Override
 	public boolean match(SimEvent ev) {
