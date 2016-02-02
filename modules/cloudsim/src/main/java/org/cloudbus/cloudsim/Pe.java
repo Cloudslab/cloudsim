@@ -11,8 +11,8 @@ package org.cloudbus.cloudsim;
 import org.cloudbus.cloudsim.provisioners.PeProvisioner;
 
 /**
- * Pe (Processing Element) class represents a CPU core, defined in terms of Millions
- * Instructions Per Second (MIPS) rating.<br>
+ * Pe (Processing Element) class represents a CPU core of a physical machine (PM), 
+ * defined in terms of Millions Instructions Per Second (MIPS) rating.<br/>
  * <b>ASSUMPTION:<b> All PEs under the same Machine have the same MIPS rating.
  * @todo This assumption is not being assured on different class (where other TODOs where introduced)
  * @todo Pe statuses have to be defined using an enum
