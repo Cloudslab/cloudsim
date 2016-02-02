@@ -21,13 +21,12 @@ import org.cloudbus.cloudsim.Host;
 public class HostList {
 
 	/**
-	 * Gets the host (PM) object for a particular ID.
+	 * Gets a {@link Host} with a given id.
 	 * 
 	 * @param <T> the generic type
-	 * @param hostList the host list
+	 * @param hostList the list of existing hosts
 	 * @param id the host ID
-	 * @return the host object or <tt>null</tt> if no host exists
-	 * @see gridsim.Machine
+	 * @return a Host with the given ID or $null if not found
          * 
 	 * @pre id >= 0
 	 * @post $none
@@ -42,11 +41,11 @@ public class HostList {
 	}
 
 	/**
-	 * Gets the total number of PEs for all PMs.
+	 * Gets the total number of PEs for all Hosts.
 	 * 
 	 * @param <T> the generic type
-	 * @param hostList the host list
-	 * @return number of PEs
+	 * @param hostList the list of existing hosts
+	 * @return total number of PEs for all PMs
 	 * @pre $none
 	 * @post $result >= 0
 	 */
@@ -59,11 +58,11 @@ public class HostList {
 	}
 
 	/**
-	 * Gets the total number of <tt>FREE</tt> or non-busy PEs for all PMs.
+	 * Gets the total number of <tt>FREE</tt> (non-busy) PEs for all Hosts.
 	 * 
 	 * @param <T> the generic type
-	 * @param hostList the host list
-	 * @return number of PEs
+	 * @param hostList the list of existing hosts
+	 * @return total number of free PEs
 	 * @pre $none
 	 * @post $result >= 0
 	 */
@@ -76,11 +75,11 @@ public class HostList {
 	}
 
 	/**
-	 * Gets the total number of <tt>BUSY</tt> PEs for all PMs.
+	 * Gets the total number of <tt>BUSY</tt> PEs for all Hosts.
 	 * 
 	 * @param <T> the generic type
-	 * @param hostList the host list
-	 * @return number of PEs
+	 * @param hostList the list of existing hosts
+	 * @return total number of busy PEs
 	 * @pre $none
 	 * @post $result >= 0
 	 */
@@ -93,11 +92,11 @@ public class HostList {
 	}
 
 	/**
-	 * Gets the first host with free Pe's.
+	 * Gets the first host with free PEs.
 	 * 
 	 * @param <T> the generic type
-	 * @param hostList the host list
-	 * @return a machine object or <tt>null</tt> if not found
+	 * @param hostList the list of existing hosts
+	 * @return a Host object or <tt>null</tt> if not found
 	 * @pre $none
 	 * @post $none
 	 */
@@ -106,12 +105,12 @@ public class HostList {
 	}
 
 	/**
-	 * Gets the first PM with a specified number of free Pe's.
+	 * Gets the first Host with a specified number of free PEs.
 	 * 
 	 * @param <T> the generic type
-	 * @param hostList the host list
+	 * @param hostList the list of existing hosts
 	 * @param pesNumber the pes number
-	 * @return a machine object or <tt>null</tt> if not found
+	 * @return a Host object or <tt>null</tt> if not found
 	 * @pre $none
 	 * @post $none
 	 */
@@ -125,17 +124,17 @@ public class HostList {
 	}
 
 	/**
-	 * Sets the particular Pe status on a PM.
+	 * Sets the status of a particular PE on a given Host.
 	 * 
 	 * @param <T> the generic type
-	 * @param hostList the host list
-	 * @param status Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
+	 * @param hostList the list of existing hosts
+	 * @param status the PE status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
 	 * @param hostId the host id
-	 * @param peId the pe id
-	 * @return <tt>true</tt> if the Pe status has changed, <tt>false</tt> otherwise (host id or
-	 *         Pe id might not be exist)
-	 * @pre machineID >= 0
-	 * @pre peID >= 0
+	 * @param peId the id of the PE to set the status
+	 * @return <tt>true</tt> if the PE status has changed, <tt>false</tt> otherwise (host id or
+	 *         PE id might not be exist)
+	 * @pre hostId >= 0
+	 * @pre peId >= 0
 	 * @post $none
 	 */
 	public static <T extends Host> boolean setPeStatus(List<T> hostList, int status, int hostId, int peId) {

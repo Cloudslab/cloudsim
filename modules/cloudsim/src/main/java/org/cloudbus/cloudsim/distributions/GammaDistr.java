@@ -29,8 +29,8 @@ public class GammaDistr implements ContinuousDistribution {
 	 * Instantiates a new Gamma pseudo random number generator.
 	 * 
 	 * @param seed the seed
-	 * @param alpha the alpha
-	 * @param beta the beta
+	 * @param shape the shape
+	 * @param scale the scale
 	 */
 	public GammaDistr(Random seed, int shape, double scale) {
 		this(shape, scale);
@@ -40,8 +40,8 @@ public class GammaDistr implements ContinuousDistribution {
 	/**
 	 * Instantiates a new Gamma pseudo random number generator.
 	 * 
-	 * @param alpha the alpha
-	 * @param beta the beta
+	 * @param shape the shape
+	 * @param scale the scale
 	 */
 	public GammaDistr(int shape, double scale) {
 		numGen = new GammaDistribution(shape, scale);
