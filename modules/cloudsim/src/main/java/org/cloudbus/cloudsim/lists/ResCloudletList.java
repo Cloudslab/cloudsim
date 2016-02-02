@@ -29,12 +29,11 @@ public class ResCloudletList {
 	 * @param userId an User Id
 	 * @param list the list of ResCloudlet
 	 * @return a Cloudlet or null if not found
-
-         * @pre cloudletId >= 0
+     * @pre cloudletId >= 0
 	 * @pre userId >= 0
 	 * @post $none
-         * 
-         * @todo The second phrase of the class documentation is not clear. 
+     * 
+     * @todo The second phrase of the class documentation is not clear. 
 	 */
 	public static <T extends ResCloudlet> ResCloudlet getByIdAndUserId(
 			List<T> list,
@@ -50,7 +49,7 @@ public class ResCloudletList {
 
 	/**
 	 * Finds the index of a ResCloudlet inside a list. 
-         * This method needs a combination of Cloudlet Id
+     * This method needs a combination of Cloudlet Id
 	 * and User Id because each Cloud User might have exactly the same Cloudlet Id.
 	 * 
 	 * @param cloudletId a Cloudlet Id
@@ -94,7 +93,7 @@ public class ResCloudletList {
 
 	/**
 	 * Gets the position of a ResCloudlet with a given id.
-         * 
+     * 
 	 * @param cloudletList the list of cloudlets.
 	 * @param id the cloudlet id
 	 * @return the position of the cloudlet with that id, or -1 if not found.
