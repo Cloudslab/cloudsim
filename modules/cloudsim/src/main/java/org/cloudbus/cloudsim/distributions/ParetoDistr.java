@@ -14,18 +14,19 @@ import java.util.Random;
 import org.apache.commons.math3.distribution.ParetoDistribution;
 
 /**
- * The Class ParetoDistr.
+ * A pseudo random number generator following the
+ * <a href="https://en.wikipedia.org/wiki/Pareto_distribution">Pareto</a> distribution.
  * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
  */
 public class ParetoDistr implements ContinuousDistribution {
 
-	/** The num gen. */
+	/** The internal Pareto pseudo random number generator. */
 	private final ParetoDistribution numGen;
 
 	/**
-	 * Instantiates a new pareto distr.
+	 * Instantiates a new Pareto pseudo random number generator.
 	 * 
 	 * @param seed the seed
 	 * @param shape the shape
@@ -37,7 +38,7 @@ public class ParetoDistr implements ContinuousDistribution {
 	}
 
 	/**
-	 * Instantiates a new pareto distr.
+	 * Instantiates a new Pareto pseudo random number generator.
 	 * 
 	 * @param shape the shape
 	 * @param location the location
@@ -46,10 +47,6 @@ public class ParetoDistr implements ContinuousDistribution {
 		numGen = new ParetoDistribution(location, shape);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.distributions.ContinuousDistribution#sample()
-	 */
 	@Override
 	public double sample() {
 		return numGen.sample();
