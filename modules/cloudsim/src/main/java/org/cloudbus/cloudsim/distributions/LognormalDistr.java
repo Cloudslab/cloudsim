@@ -30,8 +30,8 @@ public class LognormalDistr implements ContinuousDistribution {
 	 * Instantiates a new Log-normal pseudo random number generator.
 	 * 
 	 * @param seed the seed
-	 * @param mean the mean
-	 * @param dev the dev
+	 * @param shape the shape
+	 * @param scale the scale
 	 */
 	public LognormalDistr(Random seed, double shape, double scale) {
 		this(shape, scale);
@@ -41,8 +41,8 @@ public class LognormalDistr implements ContinuousDistribution {
 	/**
 	 * Instantiates a new Log-normal pseudo random number generator.
 	 * 
-	 * @param mean the mean
-	 * @param dev the dev
+	 * @param shape the shape
+	 * @param scale the scale
 	 */
 	public LognormalDistr(double shape, double scale) {
 		numGen = new LogNormalDistribution(scale, shape);

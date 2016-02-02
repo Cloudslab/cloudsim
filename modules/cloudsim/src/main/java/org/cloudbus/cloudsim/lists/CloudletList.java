@@ -23,11 +23,11 @@ import org.cloudbus.cloudsim.Cloudlet;
 public class CloudletList {
 
 	/**
-	 * Gets the by id.
+	 * Gets a reference to a {@link Cloudlet} that has a given id.
 	 * 
-	 * @param cloudletList the cloudlet list
-	 * @param id the id
-	 * @return the by id
+	 * @param cloudletList the list of existing Cloudlets
+	 * @param id the Cloudlet id
+	 * @return a Cloudlet with the given ID or $null if not found
 	 */
 	public static <T extends Cloudlet> T getById(List<T> cloudletList, int id) {
 		for (T cloudlet : cloudletList) {
@@ -39,10 +39,11 @@ public class CloudletList {
 	}
 
 	/**
-	 * Returns the position of the cloudlet with that id, if it exists. Otherwise -1.
-	 * @param cloudletList - the list of cloudlets.
-	 * @param id - the id we search for.
-	 * @return - the position of the cloudlet with that id, or -1 otherwise.
+	 * Gets the position of a cloudlet with a given id.
+         * 
+	 * @param cloudletList the list of existing cloudlets
+	 * @param id the cloudlet id
+	 * @return the position of the cloudlet with the given id or -1 if not found
 	 */
 	public static <T extends Cloudlet> int getPositionById(List<T> cloudletList, int id) {
 		int i = 0 ;
