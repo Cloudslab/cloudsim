@@ -40,11 +40,16 @@ import org.cloudbus.cloudsim.network.TopologicalNode;
  * A private default constructor would be created to avoid instantiation.
  */
 public class NetworkTopology {
-
+        /**
+         * The BRITE id to use for the next node to be created in the network.
+         */
 	protected static int nextIdx = 0;
 
 	private static boolean networkEnabled = false;
 
+        /**
+         * A matrix containing the delay between every pair of nodes in the network.
+         */
 	protected static DelayMatrix_Float delayMatrix = null;
 
         /**
@@ -52,6 +57,9 @@ public class NetworkTopology {
          */
 	protected static double[][] bwMatrix = null;
 
+        /**
+         * The Topological Graph of the network.
+         */
 	protected static TopologicalGraph graph = null;
 
 	/**
@@ -103,7 +111,7 @@ public class NetworkTopology {
 	/**
 	 * Adds a new link in the network topology.
          * The CloudSim entities that represent the source and destination of the link
-         * will be mapped to the BRITE entity.
+         * will be mapped to BRITE entities.
 	 * 
 	 * @param srcId ID of the CloudSim entity that represents the link's source node
 	 * @param destId ID of the CloudSim entity that represents the link's destination node
@@ -224,7 +232,7 @@ public class NetworkTopology {
 	}
 
 	/**
-	 * Calculates the delay between two CloudSim nodes.
+	 * Calculates the delay between two nodes.
 	 * 
 	 * @param srcID ID of the CloudSim entity that represents the link's source node
 	 * @param destID ID of the CloudSim entity that represents the link's destination node
@@ -248,11 +256,11 @@ public class NetworkTopology {
 	}
 
 	/**
-	 * This method returns true if network simulation is working. If there were some problem during
+	 * Checks if the network simulation is working. If there were some problem during
 	 * creation of network (e.g., during parsing of BRITE file) that does not allow a proper
 	 * simulation of the network, this method returns false.
 	 * 
-	 * @return $true if network simulation is ok. $false otherwise
+	 * @return $true if network simulation is working, $false otherwise
 	 * @pre $none
 	 * @post $none
 	 */

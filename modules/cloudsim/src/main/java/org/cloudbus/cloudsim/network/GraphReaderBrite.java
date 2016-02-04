@@ -14,10 +14,13 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 /**
- * This class is just an file-reader for the special brite-format! the brite-file is structured as
- * followed: Node-section: NodeID, xpos, ypos, indegree, outdegree, ASid, type(router/AS)
- * Edge-section: EdgeID, fromNode, toNode, euclideanLength, linkDelay, linkBandwith, AS_from, AS_to,
+ * A file reader for the special BRITE-format. A BRITE file is structured as
+ * follows:<br/> 
+ * <ul>
+ * <li>Node-section: NodeID, xpos, ypos, indegree, outdegree, ASid, type(router/AS)
+ * <li>Edge-section: EdgeID, fromNode, toNode, euclideanLength, linkDelay, linkBandwith, AS_from, AS_to,
  * type
+ * </ul>
  * 
  * @author Thomas Hohnstein
  * @since CloudSim Toolkit 1.0
@@ -32,15 +35,11 @@ public class GraphReaderBrite implements GraphReaderIF {
 
 	private int state = PARSE_NOTHING;
 
+        /**
+         * The network Topological Graph.
+         */
 	private TopologicalGraph graph = null;
 
-	/**
-	 * this method just reads the file and creates an TopologicalGraph object
-	 * 
-	 * @param filename name of the file to read
-	 * @return created TopologicalGraph
-	 * @throws IOException
-	 */
 	@Override
 	public TopologicalGraph readGraphFile(String filename) throws IOException {
 
@@ -92,8 +91,12 @@ public class GraphReaderBrite implements GraphReaderIF {
 		return graph;
 	}
 
+        /**
+         * Parses nodes inside a line from the BRITE file.
+         * 
+         * @param nodeLine A line read from the file
+         */
 	private void parseNodeString(String nodeLine) {
-
 		StringTokenizer tokenizer = new StringTokenizer(nodeLine);
 
 		// number of node parameters to parse (counts at linestart)
@@ -144,8 +147,13 @@ public class GraphReaderBrite implements GraphReaderIF {
 		TopologicalNode topoNode = new TopologicalNode(nodeID, nodeLabel, xPos, yPos);
 		graph.addNode(topoNode);
 
-	}// parseNodeString-END
+	}
 
+        /**
+         * Parses edges inside a line from the BRITE file.
+         * 
+         * @param nodeLine A line read from the file
+         */
 	private void parseEdgesString(String nodeLine) {
 		StringTokenizer tokenizer = new StringTokenizer(nodeLine);
 

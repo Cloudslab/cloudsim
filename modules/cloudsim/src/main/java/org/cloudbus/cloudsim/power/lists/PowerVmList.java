@@ -31,13 +31,20 @@ import org.cloudbus.cloudsim.lists.VmList;
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
+ * @todo It is a list, so it would be better inside the org.cloudbus.cloudsim.lists package.
+ * This class in fact doesn't use a list or PowerVm, but a list of Vm.
+ * The used methods are just of the Vm class, thus doesn't have
+ * a reason to create another class. This classes don't either stores lists of VM,
+ * they only perform operations on lists given by parameter.
+ * So, the method of this class would be moved to the VmList class
+ * and the class erased.
  */
 public class PowerVmList extends VmList {
 
 	/**
-	 * Sort by cpu utilization.
+	 * Sort a given list of VMs by cpu utilization.
 	 * 
-	 * @param vmList the vm list
+	 * @param vmList the vm list to be sorted
 	 */
 	public static <T extends Vm> void sortByCpuUtilization(List<T> vmList) {
 		Collections.sort(vmList, new Comparator<T>() {
