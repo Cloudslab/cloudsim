@@ -280,6 +280,9 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 
 	@Override
 	public double getTotalUtilizationOfCpu(double time) {
+                /*
+                 * @todo 
+                 */
 		double totalUtilization = 0;
 		for (ResCloudlet gl : getCloudletExecList()) {
 			totalUtilization += gl.getCloudlet().getUtilizationOfCpu(time);

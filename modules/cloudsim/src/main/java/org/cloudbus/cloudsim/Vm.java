@@ -73,7 +73,14 @@ public class Vm {
 	/** Indicates if the VM is being instantiated. */
 	private boolean beingInstantiated;
 
-	/** The mips allocation history. */
+	/** The mips allocation history. 
+         * @todo Instead of using a list, this attribute would be 
+         * a map, where the key can be the history time
+         * and the value the history itself. 
+         * By this way, if one wants to get the history for a given
+         * time, he/she doesn't have to iterate over the entire list
+         * to find the desired entry.
+         */
 	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<VmStateHistoryEntry>();
 
 	/**

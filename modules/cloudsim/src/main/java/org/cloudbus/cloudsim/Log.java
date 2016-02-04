@@ -17,6 +17,8 @@ import java.io.OutputStream;
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
+ * @todo To add a method to print formatted text, such as the 
+ * {@link String#format(java.lang.String, java.lang.Object...)} method.
  */
 public class Log {
 

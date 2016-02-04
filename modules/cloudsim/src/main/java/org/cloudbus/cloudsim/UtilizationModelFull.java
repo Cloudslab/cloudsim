@@ -18,7 +18,9 @@ package org.cloudbus.cloudsim;
 public class UtilizationModelFull implements UtilizationModel {
 
 	/**
-	 * Gets the utilization percentage of a given resource.
+	 * Gets the utilization percentage of a given resource
+         * in relation to the total capacity of that resource allocated
+         * to the cloudlet.
          * @param time the time to get the resource usage, that isn't considered
          * for this UtilizationModel.
 	 * @return Always return 1 (100% of utilization), independent of the time.

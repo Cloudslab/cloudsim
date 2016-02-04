@@ -1045,31 +1045,23 @@ public class Datacenter extends SimEntity {
 		return msg;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.core.SimEntity#shutdownEntity()
-	 */
 	@Override
 	public void shutdownEntity() {
 		Log.printConcatLine(getName(), " is shutting down...");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.core.SimEntity#startEntity()
-	 */
 	@Override
 	public void startEntity() {
 		Log.printConcatLine(getName(), " is starting...");
-		// this resource should register to regional GIS.
-		// However, if not specified, then register to system GIS (the
+		// this resource should register to regional CIS.
+		// However, if not specified, then register to system CIS (the
 		// default CloudInformationService) entity.
 		int gisID = CloudSim.getEntityId(regionalCisName);
 		if (gisID == -1) {
 			gisID = CloudSim.getCloudInfoServiceEntityId();
 		}
 
-		// send the registration to GIS
+		// send the registration to CIS
 		sendNow(gisID, CloudSimTags.REGISTER_RESOURCE, getId());
 		// Below method is for a child class to override
 		registerOtherEntity();

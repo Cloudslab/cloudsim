@@ -175,7 +175,7 @@ public class CloudSim {
 	 * <p>
 	 * <b>Note</b>: This method should be called after all the entities have been setup and added.
 	 * 
-	 * @return the double
+	 * @return the last clock time
 	 * @throws NullPointerException This happens when creating this entity before initialising
 	 *             CloudSim package or this entity name is <tt>null</tt> or empty.
 	 * @see gridsim.CloudSim#init(int, Calendar, boolean)
@@ -872,7 +872,7 @@ public class CloudSim {
 	 * Start the simulation running. This should be called after all the entities have been setup
 	 * and added, and their ports linked.
 	 * 
-	 * @return the double last clock value
+	 * @return the last clock value
 	 */
 	public static double run() {
 		if (!running) {
