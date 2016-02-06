@@ -242,8 +242,10 @@ public class CloudInformationService extends SimEntity {
 	// //////////////////////// PROTECTED METHODS ////////////////////////////
 
 	/**
-	 * This method needs to override by child classes for processing other events. These events are
-	 * based on tags that are not mentioned in {@link #body()} method.
+	 * Process non-default received events that aren't processed by
+         * the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
+         * This method should be overridden by subclasses in other to process
+         * new defined events.
 	 * 
 	 * @param ev a SimEvent object
 	 * @pre ev != null

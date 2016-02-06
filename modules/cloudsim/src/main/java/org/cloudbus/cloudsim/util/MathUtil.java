@@ -157,7 +157,7 @@ public class MathUtil {
 	}
 
 	/**
-	 * Gets the mad from a array of numbers.
+	 * Gets the Median absolute deviation (MAD) from a array of numbers.
 	 * 
 	 * @param data the array of numbers
 	 * @return the mad

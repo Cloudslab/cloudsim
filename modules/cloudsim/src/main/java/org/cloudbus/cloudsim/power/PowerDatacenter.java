@@ -25,13 +25,15 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
 /**
  * PowerDatacenter is a class that enables simulation of power-aware data centers.
  * 
- * If you are using any algorithms, policies or workload included in the power package please cite
- * the following paper:
+ * <br/>If you are using any algorithms, policies or workload included in the power package please cite
+ * the following paper:<br/>
  * 
- * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012
+ * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * </ul>
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
@@ -245,11 +247,6 @@ public class PowerDatacenter extends Datacenter {
 		return minTime;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.cloudbus.cloudsim.Datacenter#processVmMigrate(org.cloudbus.cloudsim.core.SimEvent,
-	 * boolean)
-	 */
 	@Override
 	protected void processVmMigrate(SimEvent ev, boolean ack) {
 		updateCloudetProcessingWithoutSchedulingFutureEvents();
@@ -260,10 +257,6 @@ public class PowerDatacenter extends Datacenter {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.Datacenter#processCloudletSubmit(cloudsim.core.SimEvent, boolean)
-	 */
 	@Override
 	protected void processCloudletSubmit(SimEvent ev, boolean ack) {
 		super.processCloudletSubmit(ev, ack);

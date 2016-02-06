@@ -190,21 +190,12 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		this.freePes = freePes;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.VmAllocationPolicy#optimizeAllocation(double, cloudsim.VmList, double)
-	 */
 	@Override
 	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#allocateHostForVm(org.cloudbus.cloudsim.Vm,
-	 * org.cloudbus.cloudsim.Host)
-	 */
 	@Override
 	public boolean allocateHostForVm(Vm vm, Host host) {
 		if (host.vmCreate(vm)) { // if vm has been succesfully created in the host

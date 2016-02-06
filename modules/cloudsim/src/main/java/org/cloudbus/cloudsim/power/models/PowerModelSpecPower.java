@@ -9,26 +9,23 @@
 package org.cloudbus.cloudsim.power.models;
 
 /**
- * The abstract class of power models created based on data from SPECpower benchmark:
- * http://www.spec.org/power_ssj2008/
+ * The abstract class of power models created based on data from 
+ * <a href="http://www.spec.org/power_ssj2008/">SPECpower benchmark</a>.
  * 
- * If you are using any algorithms, policies or workload included in the power package, please cite
- * the following paper:
+ * <br/>If you are using any algorithms, policies or workload included in the power package please cite
+ * the following paper:<br/>
  * 
- * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012
+ * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * </ul>
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
  */
 public abstract class PowerModelSpecPower implements PowerModel {
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.cloudbus.cloudsim.power.models.PowerModel#getPower(double)
-	 */
 	@Override
 	public double getPower(double utilization) throws IllegalArgumentException {
 		if (utilization < 0 || utilization > 1) {

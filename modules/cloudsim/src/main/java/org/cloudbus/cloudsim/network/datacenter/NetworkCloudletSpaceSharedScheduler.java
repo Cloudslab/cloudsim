@@ -33,24 +33,30 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
  * @author Saurabh Kumar Garg
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
+ * @todo Attributes should be private
  */
 public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
-
 	/** The current CPUs. */
 	protected int currentCpus;
 
 	/** The used PEs. */
 	protected int usedPes;
 
-	// for network
-
+        /**
+         * The map of packets to send, where each key is a destination VM
+         * and each value is the list of packets to sent to that VM.
+         */
 	public Map<Integer, List<HostPacket>> pkttosend;
 
+        /**
+         * The map of packets received, where each key is a sender VM
+         * and each value is the list of packets sent by that VM.
+         */
 	public Map<Integer, List<HostPacket>> pktrecv;
 
 	/**
-	 * Creates a new CloudletSchedulerSpaceShared object. This method must be invoked before
-	 * starting the actual simulation.
+	 * Creates a new CloudletSchedulerSpaceShared object. 
+         * This method must be invoked before starting the actual simulation.
 	 * 
 	 * @pre $none
 	 * @post $none
@@ -211,7 +217,10 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 		return nextEvent;
 	}
 
-        /**@todo It has to be corrected the method name case. Method too long
+        /**
+         * Changes a cloudlet to the next stage.
+         * 
+         * @todo It has to be corrected the method name case. Method too long
          * to understand what is its responsibility.*/
 	private void changetonextstage(NetworkCloudlet cl, TaskStage st) {
 		cl.timespentInStage = 0;

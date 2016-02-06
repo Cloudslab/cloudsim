@@ -56,8 +56,7 @@ public class Datacenter extends SimEntity {
 	/** The vm list. */
 	private List<? extends Vm> vmList;
 
-	/** The scheduling interval.
-         * @todo It is not exactly clear the goal of this attribute */
+	/** The scheduling delay to process each datacenter received event. */
 	private double schedulingInterval;
 
 	/**
@@ -67,11 +66,12 @@ public class Datacenter extends SimEntity {
 	 * @param characteristics the characteristics of the datacenter to be created
 	 * @param storageList a List of storage elements, for data simulation
 	 * @param vmAllocationPolicy the policy to be used to allocate VMs into hosts
+         * @param schedulingInterval the scheduling delay to process each datacenter received event
 	 * @throws Exception when one of the following scenarios occur:
 	 *  <ul>
 	 *    <li>creating this entity before initializing CloudSim package
 	 *    <li>this entity name is <tt>null</tt> or empty
-	 *    <li>this entity has <tt>zero</tt> number of PEs (Processing Elements). <br>
+	 *    <li>this entity has <tt>zero</tt> number of PEs (Processing Elements). <br/>
 	 *    No PEs mean the Cloudlets can't be processed. A CloudResource must contain 
 	 *    one or more Machines. A Machine must contain one or more PEs.
 	 *  </ul>
@@ -418,13 +418,15 @@ public class Datacenter extends SimEntity {
 	}
 
 	/**
-	 * Receives every VM request and forward each one to the related processing method.
+	 * Process non-default received events that aren't processed by
+         * the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
+         * This method should be overridden by subclasses in other to process
+         * new defined events.
 	 * 
 	 * @param ev information about the event just happened
          * 
 	 * @pre $none
 	 * @post $none
-         * @todo This method doesn't appear to be used and, in fact, it does nothing.
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {

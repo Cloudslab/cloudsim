@@ -9,20 +9,48 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
 /**
- * Taskstage represents various stages a networkCloudlet can have during execution. Four stage types
- * which are possible-> EXECUTION=0; WAIT_SEND=1; WAIT_RECV=2; FINISH=-2; Check NeworkConstants.java
- * file for that.
+ * TaskStage represents various stages a {@link NetworkCloudlet} can have during execution. 
+ * Four stage types which are possible: {@link NetworkConstants#EXECUTION}, 
+ * {@link NetworkConstants#WAIT_SEND}, {@link NetworkConstants#WAIT_RECV}, 
+ * {@link NetworkConstants#FINISH}.
  * 
- * Please refer to following publication for more details:
- * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * <br/>Please refer to following publication for more details:<br/>
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1109/UCC.2011.24">Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
  * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
- * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.</a>
+ * </ul>
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 1.0
+ * @todo Attributes should be defined as private.
  */
 public class TaskStage {
+	int vpeer;
+
+        /**
+         * The task type, either {@link NetworkConstants#EXECUTION}, 
+         * {@link NetworkConstants#WAIT_SEND} or {@link NetworkConstants#WAIT_RECV}.
+         * @todo It would be used enum instead of int constants.
+         */
+	int type;
+
+        /**
+         * The data length generated for the task (in bytes).
+        */
+	double data;
+
+        /** Execution time for this stage. */
+	double time;
+
+        /** Stage (task) id. */
+	double stageid;
+
+        /** Memory used by the task. */
+	long memory;
+
+        /** From whom data needed to be received or sent. */
+	int peer;
 
 	public TaskStage(int type, double data, double time, double stageid, long memory, int peer, int vpeer) {
 		super();
@@ -34,19 +62,4 @@ public class TaskStage {
 		this.peer = peer;
 		this.vpeer = vpeer;
 	}
-
-	int vpeer;
-
-	int type;// execution, recv, send,
-
-	double data;// data generated or send or recv
-
-	double time;// execution time for this stage
-
-	double stageid;
-
-	long memory;
-
-	int peer;// from whom data needed to be recieved or send
-
 }

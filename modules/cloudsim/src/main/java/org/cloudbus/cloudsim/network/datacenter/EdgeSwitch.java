@@ -20,14 +20,15 @@ import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 
 /**
- * This class allows to simulate Edge switch for Datacenter network. It interacts with other
- * switches in order to exchange packets.
+ * This class represents an Edge Switch in a Datacenter network. 
+ * It interacts with other switches in order to exchange packets.
  * 
- * Please refer to following publication for more details:
- * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * <br/>Please refer to following publication for more details:<br/>
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1109/UCC.2011.24">Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
  * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
- * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.</a>
+ * </ul>
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
@@ -35,13 +36,13 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
 public class EdgeSwitch extends Switch {
 
 	/**
-	 * Constructor for Edge Switch We have to specify switches that are connected to its downlink
-	 * and uplink ports, and corresponding bandwidths. In this switch downlink ports are connected
-	 * to hosts not to a switch.
+	 * Instantiates a EdgeSwitch specifying switches that are connected to its downlink
+	 * and uplink ports, and corresponding bandwidths. 
+         * In this switch, downlink ports aren't connected to other switch but to hosts.
 	 * 
 	 * @param name Name of the switch
-	 * @param level At which level switch is with respect to hosts.
-	 * @param dc Pointer to Datacenter
+	 * @param level At which level the switch is with respect to hosts.
+	 * @param dc The Datacenter where the switch is connected to
 	 */
 	public EdgeSwitch(String name, int level, NetworkDatacenter dc) {
 		super(name, level, dc);
@@ -55,11 +56,6 @@ public class EdgeSwitch extends Switch {
 		uplinkswitches = new ArrayList<Switch>();
 	}
 
-	/**
-	 * Send Packet to switch connected through a uplink port
-	 * 
-	 * @param ev Event/packet to process
-	 */
 	@Override
 	protected void processpacket_up(SimEvent ev) {
 		// packet coming from down level router/host.
@@ -108,11 +104,6 @@ public class EdgeSwitch extends Switch {
 
 	}
 
-	/**
-	 * Send Packet to hosts connected to the switch
-	 * 
-	 * @param ev Event/packet to process
-	 */
 	@Override
 	protected void processpacketforward(SimEvent ev) {
 		// search for the host and packets..send to them

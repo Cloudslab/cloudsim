@@ -26,51 +26,130 @@ import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 import org.cloudbus.cloudsim.lists.VmList;
 
+/**
+ * Represents a Network Switch.
+ * @todo attributes should be private
+ */
 public class Switch extends SimEntity {
 
-	// switch level
+	/** The switch id */
 	public int id;
 
-	public int level;// three levels
+        /**
+         * The level (layer) of the switch in the network topology.
+         */
+	public int level;
 
+        /**
+         * The id of the datacenter where the switch is connected to.
+         * @todo It doesn't appear to be used
+         */
 	public int datacenterid;
 
+        /**
+         * Map of packets sent to switches on the uplink,
+         * where each key is a switch id and the corresponding
+         * value is the packets sent to that switch.
+         */
 	public Map<Integer, List<NetworkPacket>> uplinkswitchpktlist;
 
+        /**
+         * Map of packets sent to switches on the downlink,
+         * where each key is a switch id and the corresponding
+         * value is the packets sent to that switch.
+         */
 	public Map<Integer, List<NetworkPacket>> downlinkswitchpktlist;
 
+        /**
+         * Map of hosts connected to the switch, where each key is the host ID
+         * and the corresponding value is the host itself.
+         */
 	public Map<Integer, NetworkHost> hostlist;
 
+        /**
+         * List of uplink switches.
+         */
 	public List<Switch> uplinkswitches;
 
+        /**
+         * List of downlink switches.
+         */
 	public List<Switch> downlinkswitches;
 
+        /**
+         * Map of packets sent to hosts connected in the switch,
+         * where each key is a host id and the corresponding
+         * value is the packets sent to that host.
+         */
 	public Map<Integer, List<NetworkPacket>> packetTohost;
 
-	int type;// edge switch or aggregation switch
+        /**
+         * The switch type: edge switch or aggregation switch.
+         * @todo should be an enum
+         */
+	int type;
 
+        /**
+         * Bandwitdh of uplink.
+         */
 	public double uplinkbandwidth;
 
+        /**
+         * Bandwitdh of downlink.
+         */
 	public double downlinkbandwidth;
 
+        /**
+         * The latency of the network where the switch is connected to.
+         * @todo Its value is being defined by a constant, but not every subclass
+         * is setting the attribute accordingly.
+         * The constants should be used as default values, but the class
+         * should have a setter for this attribute.
+         */
 	public double latency;
 
 	public double numport;
 
+        /**
+         * The datacenter where the switch is connected to.
+         * @todo It doesn't appear to be used
+         */
 	public NetworkDatacenter dc;
 
-	// something is running on these hosts
+	/** Something is running on these hosts. 
+         * @todo The attribute is only used at the TestExample class. */
 	public SortedMap<Double, List<NetworkHost>> fintimelistHost = new TreeMap<Double, List<NetworkHost>>();
 
-	// something is running on these hosts
+	/** Something is running on these hosts. 
+         * @todo The attribute doesn't appear to be used */
 	public SortedMap<Double, List<NetworkVm>> fintimelistVM = new TreeMap<Double, List<NetworkVm>>();
 
+        /**
+         * List of  received packets.
+         */
 	public ArrayList<NetworkPacket> pktlist = new ArrayList<NetworkPacket>();
 
+	/** 
+         * @todo The attribute doesn't appear to be used */
 	public List<Vm> BagofTaskVm = new ArrayList<Vm>();
 
+        /**
+         * The time the switch spends to process a received packet.
+         * This time is considered constant no matter how many packets 
+         * the switch have to process.
+         * 
+         * @todo The value of this attribute is being defined by
+         * constants such as {@link NetworkConstants#SwitchingDelayRoot},
+         * but not all sub classes are setting a value to it.
+         * The constants should be used as default values, but the class
+         * should have a setter for this attribute.
+         */
 	public double switching_delay;
 
+        /**
+         * A map of VMs connected to this switch.
+         * @todo The list doesn't appear to be updated (VMs added to it) anywhere. 
+         */
 	public Map<Integer, NetworkVm> Vmlist = new HashMap<Integer, NetworkVm>();
 
 	public Switch(String name, int level, NetworkDatacenter dc) {
@@ -116,6 +195,10 @@ public class Switch extends SimEntity {
 		}
 	}
 
+        /**
+         * Process a packet sent to a host.
+         * @param ev The packet sent.
+         */
 	protected void processhostpacket(SimEvent ev) {
 		// Send packet to host
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
@@ -123,9 +206,14 @@ public class Switch extends SimEntity {
 		hs.packetrecieved.add(hspkt);
 	}
 
+	/**
+	 * Sends a packet to switches connected through a downlink port.
+	 * 
+	 * @param ev Event/packet to process
+	 */
 	protected void processpacket_down(SimEvent ev) {
-		// packet coming from up level router.
-		// has to send downward
+		// packet coming from up level router
+		// has to send downward.
 		// check which switch to forward to
 		// add packet in the switch list
 		// add packet in the host list
@@ -161,9 +249,14 @@ public class Switch extends SimEntity {
 
 	}
 
+	/**
+	 * Sends a packet to switches connected through a uplink port.
+	 * 
+	 * @param ev Event/packet to process
+	 */
 	protected void processpacket_up(SimEvent ev) {
 		// packet coming from down level router.
-		// has to send up
+		// has to be sent up.
 		// check which switch to forward to
 		// add packet in the switch list
 		//
@@ -258,12 +351,20 @@ public class Switch extends SimEntity {
 			}
 		}
 	}
-
+        
+        /**
+         * Register a host that is connected to the switch.
+         * @param ev 
+         */
 	private void registerHost(SimEvent ev) {
 		NetworkHost hs = (NetworkHost) ev.getData();
-		hostlist.put(hs.getId(), (NetworkHost) ev.getData());
+		hostlist.put(hs.getId(), hs);
 	}
 
+        /**
+         * Process a received packet.
+         * @param ev The packet received.
+         */
 	protected void processpacket(SimEvent ev) {
 		// send packet to itself with switching delay (discarding other)
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_UP));
@@ -274,13 +375,26 @@ public class Switch extends SimEntity {
 
 	}
 
+        /**
+	 * Process non-default received events that aren't processed by
+         * the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
+         * This method should be overridden by subclasses in other to process
+         * new defined events.
+         *  
+         * @todo the method should be protected to allow sub classes to override it,
+         * once it does nothing here.
+         */
 	private void processOtherEvent(SimEvent ev) {
 
 	}
 
+	/**
+	 * Sends a packet to hosts connected to the switch
+	 * 
+	 * @param ev Event/packet to process
+	 */
 	protected void processpacketforward(SimEvent ev) {
 		// search for the host and packets..send to them
-
 		if (downlinkswitchpktlist != null) {
 			for (Entry<Integer, List<NetworkPacket>> es : downlinkswitchpktlist.entrySet()) {
 				int tosend = es.getKey();
@@ -337,10 +451,11 @@ public class Switch extends SimEntity {
 
 	}
 
-	//
-	// R: We changed visibility of the below methods from private to protected.
-	//
-
+        /**
+         * Gets the host of a given VM.
+         * @param vmid The id of the VM
+         * @return the host of the VM
+         */
 	protected NetworkHost getHostwithVM(int vmid) {
 		for (Entry<Integer, NetworkHost> es : hostlist.entrySet()) {
 			Vm vm = VmList.getById(es.getValue().getVmList(), vmid);
@@ -351,6 +466,12 @@ public class Switch extends SimEntity {
 		return null;
 	}
 
+        /**
+         * Gets a list with a given number of free VMs.
+         * 
+         * @param numVMReq The number of free VMs to get.
+         * @return the list of free VMs.
+         */
 	protected List<NetworkVm> getfreeVmlist(int numVMReq) {
 		List<NetworkVm> freehostls = new ArrayList<NetworkVm>();
 		for (Entry<Integer, NetworkVm> et : Vmlist.entrySet()) {
@@ -365,6 +486,12 @@ public class Switch extends SimEntity {
 		return freehostls;
 	}
 
+        /**
+         * Gets a list with a given number of free hosts.
+         * 
+         * @param numhost The number of free hosts to get.
+         * @return the list of free hosts.
+         */
 	protected List<NetworkHost> getfreehostlist(int numhost) {
 		List<NetworkHost> freehostls = new ArrayList<NetworkHost>();
 		for (Entry<Integer, NetworkHost> et : hostlist.entrySet()) {

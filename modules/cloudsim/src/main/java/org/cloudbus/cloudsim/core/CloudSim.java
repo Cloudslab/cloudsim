@@ -316,7 +316,9 @@ public class CloudSim {
 	/** The deferred event queue. */
 	protected static DeferredQueue deferred;
 
-	/** The simulation clock. */
+	/** 
+         * The current simulation clock.
+         */
 	private static double clock;
 
 	/** Flag for checking if the simulation is running. */
@@ -505,6 +507,9 @@ public class CloudSim {
 	 * called in simulations.
 	 * 
 	 * @return true, if successful otherwise
+         * @todo If the method shouldn't be called by the user,
+         * it should be protected in any way, such as changing
+         * its visibility to package.
 	 */
 	public static boolean runClockTick() {
 		SimEntity ent;

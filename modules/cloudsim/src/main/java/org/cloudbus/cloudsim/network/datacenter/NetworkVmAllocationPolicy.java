@@ -20,7 +20,7 @@ import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * NetworkVmAllocationPolicy is an VmAllocationPolicy that chooses, as the host for a VM, the host
+ * NetworkVmAllocationPolicy is an {@link VmAllocationPolicy} that chooses, as the host for a VM, the host
  * with less PEs in use.
  * 
  * @author Rodrigo N. Calheiros
@@ -30,19 +30,21 @@ import org.cloudbus.cloudsim.core.CloudSim;
  */
 public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 
-	/** The vm table. */
+	/** The vm map where each key is a VM id and
+         * each value is the host where the VM is placed. */
 	private Map<String, Host> vmTable;
 
-	/** The used pes. */
+	/** The used PEs map, where each key is a VM id
+         * and each value is the number of required PEs the VM is using. */
 	private Map<String, Integer> usedPes;
 
 	/** The free pes. */
 	private List<Integer> freePes;
 
 	/**
-	 * Creates the new VmAllocationPolicySimple object.
+	 * Creates a new VmAllocationPolicySimple object.
 	 * 
-	 * @param list the list
+	 * @param list list Machines available in a {@link Datacenter}
 	 * 
 	 * @pre $none
 	 * @post $none
@@ -114,6 +116,12 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 		return result;
 	}
 
+        /**
+         * Gets the max utilization among the PEs of a given VM placed at a given host.
+         * @param host The host where the VM is placed
+         * @param vm The VM to get the max PEs utilization
+         * @return The max utilization among the PEs of the VM
+         */
 	protected double getMaxUtilizationAfterAllocation(NetworkHost host, Vm vm) {
 		List<Double> allocatedMipsForVm = null;
 		NetworkHost allocatedHost = (NetworkHost) vm.getHost();
@@ -157,11 +165,11 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	}
 
 	/**
-	 * Gets the host that is executing the given VM belonging to the given user.
+	 * Gets the host that is executing the given VM.
 	 * 
-	 * @param vm the vm
+	 * @param vm the vm to get its host
 	 * 
-	 * @return the Host with the given vmID and userID; $null if not found
+	 * @return the Host of the given vm; $null if not found
 	 * 
 	 * @pre $none
 	 * @post $none
@@ -177,7 +185,7 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	 * @param vmId the vm id
 	 * @param userId the user id
 	 * 
-	 * @return the Host with the given vmID and userID; $null if not found
+	 * @return the Host of the given vm and user; $null if not found
 	 * 
 	 * @pre $none
 	 * @post $none
@@ -241,21 +249,13 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 		this.freePes = freePes;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.VmAllocationPolicy#optimizeAllocation(double, cloudsim.VmList, double)
-	 */
 	@Override
 	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
-		// TODO Auto-generated method stub
+		/*@todo Auto-generated method stub.
+                The method is doing nothing.*/
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#allocateHostForVm(org.cloudbus.cloudsim.Vm,
-	 * org.cloudbus.cloudsim.Host)
-	 */
 	@Override
 	public boolean allocateHostForVm(Vm vm, Host host) {
 		if (host.vmCreate(vm)) { // if vm has been succesfully created in the host
