@@ -44,10 +44,11 @@ public abstract class PowerModelSpecPower implements PowerModel {
 	}
 
 	/**
-	 * Gets the power data.
+	 * Gets the power consumption for a given utilization percentage.
 	 * 
-	 * @param index the index
-	 * @return the power data
+	 * @param index the utilization percentage in the scale from [0 to 10], 
+         * where 10 means 100% of utilization.
+	 * @return the power consumption for the given utilization percentage
 	 */
 	protected abstract double getPowerData(int index);
 

@@ -10,7 +10,7 @@ package org.cloudbus.cloudsim.power.models;
 
 /**
  * The PowerModel interface needs to be implemented in order to provide a model of power consumption
- * depending on utilization for system components.
+ * of hosts, depending on utilization of a critical system component, such as CPU.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -28,13 +28,14 @@ package org.cloudbus.cloudsim.power.models;
  * @since CloudSim Toolkit 2.0
  */
 public interface PowerModel {
-
 	/**
-	 * Get power consumption by the utilization percentage according to the power model.
+	 * Gets power consumption of the Power Model, according to the utilization percentage
+         * of a critical resource, such as CPU.
 	 * 
-	 * @param utilization the utilization
-	 * @return power consumption
-	 * @throws IllegalArgumentException the illegal argument exception
+	 * @param utilization the utilization percentage (between [0 and 1]) of a resource that
+         * is critical for power consumption.
+	 * @return the power consumption
+	 * @throws IllegalArgumentException when the utilization percentage is not between [0 and 1]
 	 */
 	double getPower(double utilization) throws IllegalArgumentException;
 

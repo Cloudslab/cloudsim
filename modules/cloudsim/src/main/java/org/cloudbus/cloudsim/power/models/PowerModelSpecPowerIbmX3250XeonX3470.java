@@ -9,8 +9,9 @@
 package org.cloudbus.cloudsim.power.models;
 
 /**
- * The power model of an IBM server x3250 (1 x [Xeon X3470 2933 MHz, 4 cores], 8GB).
- * http://www.spec.org/power_ssj2008/results/res2009q4/power_ssj2008-20091104-00213.html
+ * The power model of an IBM server x3250 (1 x [Xeon X3470 2933 MHz, 4 cores], 8GB).<br/>
+ * <a href="http://www.spec.org/power_ssj2008/results/res2009q4/power_ssj2008-20091104-00213.html">
+ * http://www.spec.org/power_ssj2008/results/res2009q4/power_ssj2008-20091104-00213.html</a>
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -26,8 +27,10 @@ package org.cloudbus.cloudsim.power.models;
  * @since CloudSim Toolkit 3.0
  */
 public class PowerModelSpecPowerIbmX3250XeonX3470 extends PowerModelSpecPower {
-
-	/** The power. */
+	/** 
+         * The power consumption according to the utilization percentage. 
+         * @see #getPowerData(int) 
+         */
 	private final double[] power = { 41.6, 46.7, 52.3, 57.9, 65.4, 73, 80.7, 89.5, 99.6, 105, 113 };
 
 	@Override

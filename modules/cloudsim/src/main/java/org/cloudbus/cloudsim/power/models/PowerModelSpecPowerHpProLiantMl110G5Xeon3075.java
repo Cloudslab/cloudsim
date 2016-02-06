@@ -9,8 +9,9 @@
 package org.cloudbus.cloudsim.power.models;
 
 /**
- * The power model of an HP ProLiant ML110 G5 (1 x [Xeon 3075 2660 MHz, 2 cores], 4GB).
- * http://www.spec.org/power_ssj2008/results/res2011q1/power_ssj2008-20110124-00339.html
+ * The power model of an HP ProLiant ML110 G5 (1 x [Xeon 3075 2660 MHz, 2 cores], 4GB).<br/>
+ * <a href="http://www.spec.org/power_ssj2008/results/res2011q1/power_ssj2008-20110124-00339.html">
+ * http://www.spec.org/power_ssj2008/results/res2011q1/power_ssj2008-20110124-00339.html</a>
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -26,8 +27,10 @@ package org.cloudbus.cloudsim.power.models;
  * @since CloudSim Toolkit 3.0
  */
 public class PowerModelSpecPowerHpProLiantMl110G5Xeon3075 extends PowerModelSpecPower {
-
-	/** The power. */
+	/** 
+         * The power consumption according to the utilization percentage. 
+         * @see #getPowerData(int) 
+         */
 	private final double[] power = { 93.7, 97, 101, 105, 110, 116, 121, 125, 129, 133, 135 };
 
 	@Override

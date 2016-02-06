@@ -9,7 +9,7 @@
 package org.cloudbus.cloudsim.power.models;
 
 /**
- * The Class PowerModelLinear.
+ * Implements a power model where the power consumption is linear to resource usage.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -25,16 +25,22 @@ package org.cloudbus.cloudsim.power.models;
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
+ * @too the tree first attributes are being repeated among several classes.
+ * Thus, a better class hierarchy should be provided, such as an abstract class
+ * implementing the PowerModel interface.
  */
 public class PowerModelLinear implements PowerModel {
 
-	/** The max power. */
+	/** The max power that can be consumed. */
 	private double maxPower;
 
-	/** The constant. */
+	/** The constant that represents the power consumption
+         * for each fraction of resource used. */
 	private double constant;
 
-	/** The static power. */
+	/** The static power consumption that is not dependent of resource usage. 
+         * It is the amount of energy consumed even when the host is idle.
+         */
 	private double staticPower;
 
 	/**

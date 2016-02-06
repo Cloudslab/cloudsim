@@ -9,8 +9,9 @@
 package org.cloudbus.cloudsim.power.models;
 
 /**
- * The power model of an HP ProLiant ML110 G3 (1 x [Pentium D930 3000 MHz, 2 cores], 4GB).
- * http://www.spec.org/power_ssj2008/results/res2011q1/power_ssj2008-20110127-00342.html
+ * The power model of an HP ProLiant ML110 G3 (1 x [Pentium D930 3000 MHz, 2 cores], 4GB).<br/>
+ * <a href="http://www.spec.org/power_ssj2008/results/res2011q1/power_ssj2008-20110127-00342.html">
+ * http://www.spec.org/power_ssj2008/results/res2011q1/power_ssj2008-20110127-00342.html</a>
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -26,8 +27,10 @@ package org.cloudbus.cloudsim.power.models;
  * @since CloudSim Toolkit 3.0
  */
 public class PowerModelSpecPowerHpProLiantMl110G3PentiumD930 extends PowerModelSpecPower {
-
-	/** The power. */
+	/** 
+         * The power consumption according to the utilization percentage. 
+         * @see #getPowerData(int) 
+         */
 	private final double[] power = { 105, 112, 118, 125, 131, 137, 147, 153, 157, 164, 169 };
 
 	@Override
