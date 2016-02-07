@@ -13,7 +13,7 @@ import java.util.List;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * The Minimum Migration Time (MMT) VM selection policy.
+ * A VM selection policy that selects for migration the VM with Minimum Migration Time (MMT).
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>

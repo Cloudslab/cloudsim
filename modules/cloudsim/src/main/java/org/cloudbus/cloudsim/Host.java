@@ -65,7 +65,7 @@ public class Host {
 	 * @param ramProvisioner the ram provisioner
 	 * @param bwProvisioner the bw provisioner
 	 * @param storage the storage capacity
-	 * @param peList the pe list
+	 * @param peList the host's PEs list
 	 * @param vmScheduler the vm scheduler
 	 */
 	public Host(

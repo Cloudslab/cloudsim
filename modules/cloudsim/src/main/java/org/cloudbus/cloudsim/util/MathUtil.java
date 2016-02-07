@@ -232,10 +232,10 @@ public class MathUtil {
 	}
 
 	/**
-	 * Gets the loess parameter estimates.
+	 * Gets the Local Regression (Loess) parameter estimates.
 	 * 
 	 * @param y the y array
-	 * @return the loess parameter estimates
+	 * @return the Loess parameter estimates
 	 */
 	public static double[] getLoessParameterEstimates(final double[] y) {
 		int n = y.length;
@@ -268,8 +268,6 @@ public class MathUtil {
 		double[] xW = new double[x.length];
 		double[] yW = new double[y.length];
 
-		// As to Flanagan's documentation they perform weigthed regression if the
-		// number or non-zero weigths is more than 40%
 		int numZeroWeigths = 0;
 		for (int i = 0; i < weigths.length; i++) {
 			if (weigths[i] <= 0) {

@@ -14,7 +14,8 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * The Static Threshold (THR) VM allocation policy.
+ * A VM allocation policy that uses a Static CPU utilization Threshold (THR) to detect host over
+ * utilization.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -31,11 +32,13 @@ import org.cloudbus.cloudsim.Vm;
  */
 public class PowerVmAllocationPolicyMigrationStaticThreshold extends PowerVmAllocationPolicyMigrationAbstract {
 
-	/** The utilization threshold. */
+	/** The static host CPU utilization threshold to detect over utilization.
+         * It is a percentage value from 0 to 1
+         * that can be changed when creating an instance of the class. */
 	private double utilizationThreshold = 0.9;
 
 	/**
-	 * Instantiates a new power vm allocation policy migration mad.
+	 * Instantiates a new PowerVmAllocationPolicyMigrationStaticThreshold.
 	 * 
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
@@ -50,10 +53,10 @@ public class PowerVmAllocationPolicyMigrationStaticThreshold extends PowerVmAllo
 	}
 
 	/**
-	 * Checks if is host over utilized.
+	 * Checks if a host is over utilized, based on CPU usage.
 	 * 
-	 * @param _host the _host
-	 * @return true, if is host over utilized
+	 * @param host the host
+	 * @return true, if the host is over utilized; false otherwise
 	 */
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {

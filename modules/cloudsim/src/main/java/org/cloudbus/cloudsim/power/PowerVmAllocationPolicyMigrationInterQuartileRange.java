@@ -16,7 +16,8 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
- * The Inter Quartile Range (IQR) VM allocation policy.
+ * A VM allocation policy that uses Inter Quartile Range (IQR)  to compute
+ * a dynamic threshold in order to detect host over utilization.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -34,14 +35,29 @@ import org.cloudbus.cloudsim.util.MathUtil;
 public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 		PowerVmAllocationPolicyMigrationAbstract {
 
-	/** The safety parameter. */
+	/** The safety parameter in percentage (at scale from 0 to 1).
+         * It is a tuning parameter used by the allocation policy to 
+         * estimate host utilization (load). The host overload detection is based
+         * on this estimation.
+         * This parameter is used to tune the estimation
+         * to up or down. If the parameter is set as 1.2, for instance, 
+         * the estimated host utilization is increased in 20%, giving
+         * the host a safety margin of 20% to grow its usage in order to try
+         * avoiding SLA violations. As this parameter decreases, more
+         * aggressive will be the consolidation (packing) of VMs inside a host,
+         * what may lead to optimization of resource usage, but rising of SLA 
+         * violations. Thus, the parameter has to be set in order to balance
+         * such factors.
+         */
 	private double safetyParameter = 0;
 
-	/** The fallback vm allocation policy. */
+	/** The fallback VM allocation policy to be used when
+         * the IQR over utilization host detection doesn't have
+         * data to be computed. */
 	private PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy;
 
 	/**
-	 * Instantiates a new power vm allocation policy migration mad.
+	 * Instantiates a new PowerVmAllocationPolicyMigrationInterQuartileRange.
 	 * 
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
@@ -60,7 +76,7 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 	}
 
 	/**
-	 * Instantiates a new power vm allocation policy migration mad.
+	 * Instantiates a new PowerVmAllocationPolicyMigrationInterQuartileRange.
 	 * 
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
@@ -77,10 +93,10 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 	}
 
 	/**
-	 * Checks if is host over utilized.
+	 * Checks if the host is over utilized, based on CPU utilization.
 	 * 
-	 * @param _host the _host
-	 * @return true, if is host over utilized
+	 * @param host the host
+	 * @return true, if the host is over utilized; false otherwise
 	 */
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {
@@ -101,10 +117,10 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 	}
 
 	/**
-	 * Gets the host utilization iqr.
+	 * Gets the host CPU utilization percentage IQR.
 	 * 
 	 * @param host the host
-	 * @return the host utilization iqr
+	 * @return the host CPU utilization percentage IQR
 	 */
 	protected double getHostUtilizationIqr(PowerHostUtilizationHistory host) throws IllegalArgumentException {
 		double[] data = host.getUtilizationHistory();

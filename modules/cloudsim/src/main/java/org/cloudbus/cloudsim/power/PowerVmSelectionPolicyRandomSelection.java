@@ -14,7 +14,7 @@ import java.util.Random;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * The Random Selection (RS) VM selection policy.
+ * A VM selection policy that randomly select VMs to migrate from a host.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>

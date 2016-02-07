@@ -15,7 +15,7 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * This a simple class representing a simple VM allocation policy that does not perform any
+ * A class representing a simple VM allocation policy that does not perform any
  * optimization of the VM allocation.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
@@ -34,7 +34,7 @@ import org.cloudbus.cloudsim.Vm;
 public class PowerVmAllocationPolicySimple extends PowerVmAllocationPolicyAbstract {
 
 	/**
-	 * Instantiates a new power vm allocation policy simple.
+	 * Instantiates a new PowerVmAllocationPolicySimple.
 	 * 
 	 * @param list the list
 	 */
@@ -42,8 +42,15 @@ public class PowerVmAllocationPolicySimple extends PowerVmAllocationPolicyAbstra
 		super(list);
 	}
 
+        /**
+         * The method doesn't perform any VM allocation optimization
+         * and in fact has no effect.
+         * @param vmList
+         * @return 
+         */
 	@Override
 	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
+                //@todo It is better to return an empty map in order to avoid NullPointerException or extra null checks
 		// This policy does not optimize the VM allocation
 		return null;
 	}

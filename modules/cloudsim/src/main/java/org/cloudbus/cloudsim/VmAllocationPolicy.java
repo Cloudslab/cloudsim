@@ -13,8 +13,9 @@ import java.util.Map;
 
 /**
  * VmAllocationPolicy is an abstract class that represents the provisioning policy of hosts to
- * virtual machines in a Datacenter. It supports two-stage commit of reservation of hosts: first, we
- * reserve the host and, once commited by the user, it is effectivelly allocated to he/she
+ * virtual machines in a Datacenter. It allocates hosts for placing VMs. 
+ * It supports two-stage commit of reservation of hosts: first, we
+ * reserve the host and, once committed by the user, it is effectively allocated to he/she.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov

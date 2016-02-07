@@ -19,7 +19,7 @@ import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * The class of an abstract power-aware VM allocation policy.
+ * An abstract power-aware VM allocation policy.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -36,11 +36,12 @@ import org.cloudbus.cloudsim.core.CloudSim;
  */
 public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy {
 
-	/** The vm table. */
+	/** The map map where each key is a VM id and
+         * each value is the host where the VM is placed. */
 	private final Map<String, Host> vmTable = new HashMap<String, Host>();
 
 	/**
-	 * Instantiates a new power vm allocation policy abstract.
+	 * Instantiates a new PowerVmAllocationPolicyAbstract.
 	 * 
 	 * @param list the list
 	 */
@@ -73,10 +74,10 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 	}
 
 	/**
-	 * Find host for vm.
+	 * Finds the first host that has enough resources to host a given VM.
 	 * 
-	 * @param vm the vm
-	 * @return the power host
+	 * @param vm the vm to find a host for it
+	 * @return the first host found that can host the VM
 	 */
 	public PowerHost findHostForVm(Vm vm) {
 		for (PowerHost host : this.<PowerHost> getHostList()) {

@@ -14,7 +14,8 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
- * The Local Regression Robust (LRR) VM allocation policy.
+ * A VM allocation policy that uses Local Regression Robust (LRR) to predict host utilization (load)
+ * and define if a host is overloaded or not.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -33,7 +34,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegressionRobust extends
 		PowerVmAllocationPolicyMigrationLocalRegression {
 
 	/**
-	 * Instantiates a new power vm allocation policy migration local regression.
+	 * Instantiates a new PowerVmAllocationPolicyMigrationLocalRegressionRobust.
 	 * 
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
@@ -58,7 +59,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegressionRobust extends
 	}
 
 	/**
-	 * Instantiates a new power vm allocation policy migration local regression.
+	 * Instantiates a new PowerVmAllocationPolicyMigrationLocalRegressionRobust.
 	 * 
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
@@ -75,10 +76,10 @@ public class PowerVmAllocationPolicyMigrationLocalRegressionRobust extends
 	}
 
 	/**
-	 * Gets the parameter estimates.
+	 * Gets the utilization estimates.
 	 * 
 	 * @param utilizationHistoryReversed the utilization history reversed
-	 * @return the parameter estimates
+	 * @return the utilization estimates
 	 */
 	@Override
 	protected double[] getParameterEstimates(double[] utilizationHistoryReversed) {

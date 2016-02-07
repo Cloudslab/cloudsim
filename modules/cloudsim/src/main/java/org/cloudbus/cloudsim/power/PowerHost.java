@@ -35,17 +35,17 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
  */
 public class PowerHost extends HostDynamicWorkload {
 
-	/** The power model. */
+	/** The power model used by the host. */
 	private PowerModel powerModel;
 
 	/**
-	 * Instantiates a new host.
+	 * Instantiates a new PowerHost.
 	 * 
-	 * @param id the id
+	 * @param id the id of the host
 	 * @param ramProvisioner the ram provisioner
 	 * @param bwProvisioner the bw provisioner
-	 * @param storage the storage
-	 * @param peList the pe list
+	 * @param storage the storage capacity
+	 * @param peList the host's PEs list
 	 * @param vmScheduler the VM scheduler
 	 */
 	public PowerHost(
@@ -70,10 +70,11 @@ public class PowerHost extends HostDynamicWorkload {
 	}
 
 	/**
-	 * Gets the power. For this moment only consumed by all PEs.
+	 * Gets the current power consumption of the host. For this moment only consumed by all PEs.
 	 * 
-	 * @param utilization the utilization
-	 * @return the power
+	 * @param utilization the utilization percentage (between [0 and 1]) of a resource that
+         * is critical for power consumption
+	 * @return the power consumption
 	 */
 	protected double getPower(double utilization) {
 		double power = 0;
@@ -105,8 +106,8 @@ public class PowerHost extends HostDynamicWorkload {
 	/**
 	 * Gets the energy consumption using linear interpolation of the utilization change.
 	 * 
-	 * @param fromUtilization the from utilization
-	 * @param toUtilization the to utilization
+	 * @param fromUtilization the initial utilization percentage
+	 * @param toUtilization the final utilization percentage
 	 * @param time the time
 	 * @return the energy
 	 */

@@ -16,7 +16,8 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
- * The Median Absolute Deviation (MAD) VM allocation policy.
+ * A VM allocation policy that uses Median Absolute Deviation (MAD) to compute
+ * a dynamic threshold in order to detect host over utilization.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -57,15 +58,16 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
          * utilization threshold that may lead to lower SLA violations but higher
          * resource wastage. Thus this parameter has to be tuned in order to 
          * trade-off between SLA violation and resource wastage.
-
          */
 	private double safetyParameter = 0;
 
-	/** The fallback vm allocation policy. */
+	/** The fallback VM allocation policy to be used when
+         * the MAD over utilization host detection doesn't have
+         * data to be computed. */
 	private PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy;
 
 	/**
-	 * Instantiates a new power vm allocation policy migration mad.
+	 * Instantiates a new PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation.
 	 * 
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
@@ -84,7 +86,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	}
 
 	/**
-	 * Instantiates a new power vm allocation policy migration mad.
+	 * Instantiates a new PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation.
 	 * 
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
@@ -101,10 +103,10 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	}
 
 	/**
-	 * Checks if is host over utilized.
+	 * Checks if a host is over utilized.
 	 * 
-	 * @param _host the _host
-	 * @return true, if is host over utilized
+	 * @param host the host
+	 * @return true, if the host is over utilized; false otherwise
 	 */
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {
@@ -125,10 +127,10 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	}
 
 	/**
-	 * Gets the host utilization mad.
+	 * Gets the host utilization MAD.
 	 * 
 	 * @param host the host
-	 * @return the host utilization mad
+	 * @return the host utilization MAD
 	 */
 	protected double getHostUtilizationMad(PowerHostUtilizationHistory host) throws IllegalArgumentException {
 		double[] data = host.getUtilizationHistory();

@@ -48,8 +48,8 @@ public class ExecutionTimeMeasurer {
 	 * Finalizes measuring the execution time of a method/process.
 	 * 
 	 * @param name the name of the method/process being measured.
-         * @see #executionTimes
 	 * @return the time the method/process spent in execution (in seconds)
+         * @see #executionTimes
 	 */
 	public static double end(String name) {
 		double time = (System.currentTimeMillis() - getExecutionTimes().get(name)) / 1000.0;

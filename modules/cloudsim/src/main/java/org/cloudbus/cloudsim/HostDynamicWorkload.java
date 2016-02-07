@@ -18,7 +18,7 @@ import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
 /**
- * The class of a host supporting dynamic workloads and performance degradation.
+ * A host supporting dynamic workloads and performance degradation.
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
@@ -40,8 +40,8 @@ public class HostDynamicWorkload extends Host {
 	 * @param id the id
 	 * @param ramProvisioner the ram provisioner
 	 * @param bwProvisioner the bw provisioner
-	 * @param storage the storage
-	 * @param peList the pe list
+	 * @param storage the storage capacity
+	 * @param peList the host's PEs list
 	 * @param vmScheduler the VM scheduler
 	 */
 	public HostDynamicWorkload(

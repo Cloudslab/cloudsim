@@ -14,7 +14,8 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * The Minimum Utilization (MU) VM selection policy.
+ * A VM selection policy that selects for migration the VM with Minimum Utilization (MU)
+ * of CPU.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>

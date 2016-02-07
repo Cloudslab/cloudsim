@@ -14,7 +14,8 @@ import java.util.List;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * The class of an abstract VM selection policy.
+ * An abstract VM selection policy used to select VMs from a list of migratable VMs.
+ * The selection is defined by sub classes.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -32,18 +33,18 @@ import org.cloudbus.cloudsim.Vm;
 public abstract class PowerVmSelectionPolicy {
 
 	/**
-	 * Gets the vms to migrate.
+	 * Gets a VM to migrate from a given host.
 	 * 
 	 * @param host the host
-	 * @return the vms to migrate
+	 * @return the vm to migrate
 	 */
 	public abstract Vm getVmToMigrate(PowerHost host);
 
 	/**
-	 * Gets the migratable vms.
+	 * Gets the list of migratable VMs from a given host.
 	 * 
 	 * @param host the host
-	 * @return the migratable vms
+	 * @return the list of migratable VMs
 	 */
 	protected List<PowerVm> getMigratableVms(PowerHost host) {
 		List<PowerVm> migratableVms = new ArrayList<PowerVm>();

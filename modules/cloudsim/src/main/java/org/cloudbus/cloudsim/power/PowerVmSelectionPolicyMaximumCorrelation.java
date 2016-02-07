@@ -16,7 +16,8 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
- * The Maximum Correlation (MC) VM selection policy.
+ * A VM selection policy that selects for migration the VM with the Maximum Correlation Coefficient (MCC) among 
+ * a list of migratable VMs.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -33,11 +34,12 @@ import org.cloudbus.cloudsim.util.MathUtil;
  */
 public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPolicy {
 
-	/** The fallback policy. */
+	/** The fallback VM selection policy to be used when
+         * the  Maximum Correlation policy doesn't have data to be computed. */
 	private PowerVmSelectionPolicy fallbackPolicy;
 
 	/**
-	 * Instantiates a new power vm selection policy maximum correlation.
+	 * Instantiates a new PowerVmSelectionPolicyMaximumCorrelation.
 	 * 
 	 * @param fallbackPolicy the fallback policy
 	 */
@@ -71,13 +73,20 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 	}
 
 	/**
-	 * Gets the utilization matrix.
+	 * Gets the CPU utilization percentage matrix for a given list of VMs.
 	 * 
-	 * @param vmList the host
-	 * @return the utilization matrix
+	 * @param vmList the VM list
+	 * @return the CPU utilization percentage matrix, where each line i
+         * is a VM and each column j is a CPU utilization percentage history for that VM.
 	 */
 	protected double[][] getUtilizationMatrix(final List<PowerVm> vmList) {
 		int n = vmList.size();
+                /*@todo It gets the min size of the history among all VMs considering
+                that different VMs can have different history sizes.
+                However, the j loop is not using the m variable
+                but the size of the vm list. If a VM list has 
+                a size greater than m, it will thow an exception.
+                It as to be included a test case for that.*/
 		int m = getMinUtilizationHistorySize(vmList);
 		double[][] utilization = new double[n][m];
 		for (int i = 0; i < n; i++) {
@@ -90,10 +99,10 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 	}
 
 	/**
-	 * Gets the min utilization history size.
+	 * Gets the min CPU utilization percentage history size among a list of VMs.
 	 * 
-	 * @param vmList the vm list
-	 * @return the min utilization history size
+	 * @param vmList the VM list
+	 * @return the min CPU utilization percentage history size of the VM list
 	 */
 	protected int getMinUtilizationHistorySize(final List<PowerVm> vmList) {
 		int minSize = Integer.MAX_VALUE;

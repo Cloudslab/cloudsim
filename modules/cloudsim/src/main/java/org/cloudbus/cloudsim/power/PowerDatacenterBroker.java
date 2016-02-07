@@ -14,7 +14,7 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 
 /**
- * A broker for the power package.
+ * A power-aware {@link DatacenterBroker}.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -32,9 +32,9 @@ import org.cloudbus.cloudsim.core.SimEvent;
 public class PowerDatacenterBroker extends DatacenterBroker {
 
 	/**
-	 * Instantiates a new power datacenter broker.
+	 * Instantiates a new PowerDatacenterBroker.
 	 * 
-	 * @param name the name
+	 * @param name the name of the broker
 	 * @throws Exception the exception
 	 */
 	public PowerDatacenterBroker(String name) throws Exception {

@@ -18,7 +18,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
- * The class of a host that stores its CPU utilization history. The history is used by VM allocation
+ * A host that stores its CPU utilization percentage history. The history is used by VM allocation
  * and selection policies.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
@@ -37,15 +37,15 @@ import org.cloudbus.cloudsim.util.MathUtil;
 public class PowerHostUtilizationHistory extends PowerHost {
 
 	/**
-	 * Instantiates a new power host utilization history.
+	 * Instantiates a new PowerHostUtilizationHistory.
 	 * 
-	 * @param id the id
+	 * @param id the host id
 	 * @param ramProvisioner the ram provisioner
 	 * @param bwProvisioner the bw provisioner
-	 * @param storage the storage
-	 * @param peList the pe list
+	 * @param storage the storage capacity
+	 * @param peList the host's PEs list
 	 * @param vmScheduler the vm scheduler
-	 * @param powerModel the power model
+	 * @param powerModel the power consumption model
 	 */
 	public PowerHostUtilizationHistory(
 			int id,
@@ -59,9 +59,9 @@ public class PowerHostUtilizationHistory extends PowerHost {
 	}
 
 	/**
-	 * Gets the host utilization history.
+	 * Gets the host CPU utilization percentage history.
 	 * 
-	 * @return the host utilization history
+	 * @return the host CPU utilization percentage history
 	 */
 	protected double[] getUtilizationHistory() {
 		double[] utilizationHistory = new double[PowerVm.HISTORY_LENGTH];
