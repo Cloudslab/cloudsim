@@ -14,20 +14,20 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * This class implements the deferred event queue used by {@link Simulation}. The event queue uses a
- * linked list to store the events.
+ * This class implements the deferred event queue used by {@link CloudSim}. 
+ * The event queue uses a linked list to store the events.
  * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
- * @see Simulation
+ * @see CloudSim
  * @see SimEvent
  */
 public class DeferredQueue {
 
-	/** The list. */
+	/** The list of events. */
 	private final List<SimEvent> list = new LinkedList<SimEvent>();
 
-	/** The max time. */
+	/** The max time that an added event is scheduled. */
 	private double maxTime = -1;
 
 	/**

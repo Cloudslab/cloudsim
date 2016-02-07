@@ -25,15 +25,19 @@ import org.cloudbus.cloudsim.core.predicates.Predicate;
  * code would be placed.
  * </ul>
  * 
+ * @todo the list above is redundant once all mentioned methods are abstract.
+ * The documentation duplication may lead to have some of them
+ * out-of-date and future confusion.
+ * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
  */
 public abstract class SimEntity implements Cloneable {
 
-	/** The name. */
+	/** The entity name. */
 	private String name;
 
-	/** The id. */
+	/** The entity id. */
 	private int id;
 
 	/** The buffer for selected incoming events. */
@@ -45,7 +49,7 @@ public abstract class SimEntity implements Cloneable {
 	/**
 	 * Creates a new entity.
 	 * 
-	 * @param name the name to be associated with this entity
+	 * @param name the name to be associated with the entity
 	 */
 	public SimEntity(String name) {
 		if (name.indexOf(" ") != -1) {
@@ -58,7 +62,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Get the name of this entity.
+	 * Gets the name of this entity.
 	 * 
 	 * @return The entity's name
 	 */
@@ -67,7 +71,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Get the unique id number assigned to this entity.
+	 * Gets the unique id number assigned to this entity.
 	 * 
 	 * @return The id number
 	 */
@@ -78,7 +82,7 @@ public abstract class SimEntity implements Cloneable {
 	// The schedule functions
 
 	/**
-	 * Send an event to another entity by id number, with data. Note that the tag <code>9999</code>
+	 * Sends an event to another entity by id number, with data. Note that the tag <code>9999</code>
 	 * is reserved.
 	 * 
 	 * @param dest The unique id number of the destination entity
@@ -94,7 +98,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send an event to another entity by id number and with <b>no</b> data. Note that the tag
+	 * Sends an event to another entity by id number and with <b>no</b> data. Note that the tag
 	 * <code>9999</code> is reserved.
 	 * 
 	 * @param dest The unique id number of the destination entity
@@ -106,7 +110,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send an event to another entity through a port with a given name, with data. Note that the
+	 * Sends an event to another entity through a port with a given name, with data. Note that the
 	 * tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The name of the port to send the event through
@@ -119,7 +123,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send an event to another entity through a port with a given name, with <b>no</b> data. Note
+	 * Sends an event to another entity through a port with a given name, with <b>no</b> data. Note
 	 * that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The name of the port to send the event through
@@ -131,8 +135,8 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send an event to another entity by id number, with data. Note that the tag <code>9999</code>
-	 * is reserved.
+	 * Sends an event to another entity by id number, with data
+         * but no delay. Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The unique id number of the destination entity
 	 * @param tag An user-defined number representing the type of event.
@@ -143,8 +147,8 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send an event to another entity by id number and with <b>no</b> data. Note that the tag
-	 * <code>9999</code> is reserved.
+	 * Sends an event to another entity by id number and with <b>no</b> data
+         * and no delay. Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The unique id number of the destination entity
 	 * @param tag An user-defined number representing the type of event.
@@ -154,8 +158,8 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send an event to another entity through a port with a given name, with data. Note that the
-	 * tag <code>9999</code> is reserved.
+	 * Sends an event to another entity through a port with a given name, with data
+         * but no delay. Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The name of the port to send the event through
 	 * @param tag An user-defined number representing the type of event.
@@ -166,8 +170,9 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send an event to another entity through a port with a given name, with <b>no</b> data. Note
-	 * that the tag <code>9999</code> is reserved.
+	 * Send an event to another entity through a port with a given name, with <b>no</b> data
+         * and no delay. 
+         * Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The name of the port to send the event through
 	 * @param tag An user-defined number representing the type of event.
@@ -177,8 +182,8 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send a high priority event to another entity by id number, with data. Note that the tag
-	 * <code>9999</code> is reserved.
+	 * Sends a high priority event to another entity by id number, with data. 
+         * Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The unique id number of the destination entity
 	 * @param delay How long from the current simulation time the event should be sent
@@ -193,8 +198,8 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send a high priority event to another entity by id number and with <b>no</b> data. Note that
-	 * the tag <code>9999</code> is reserved.
+	 * Sends a high priority event to another entity by id number and with <b>no</b> data. 
+         * Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The unique id number of the destination entity
 	 * @param delay How long from the current simulation time the event should be sent
@@ -205,7 +210,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send a high priority event to another entity through a port with a given name, with data.
+	 * Sends a high priority event to another entity through a port with a given name, with data.
 	 * Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The name of the port to send the event through
@@ -218,7 +223,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send a high priority event to another entity through a port with a given name, with <b>no</b>
+	 * Sends a high priority event to another entity through a port with a given name, with <b>no</b>
 	 * data. Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The name of the port to send the event through
@@ -230,8 +235,9 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send a high priority event to another entity by id number, with data. Note that the tag
-	 * <code>9999</code> is reserved.
+	 * Sends a high priority event to another entity by id number, with data
+         * and no delay. 
+         * Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The unique id number of the destination entity
 	 * @param tag An user-defined number representing the type of event.
@@ -242,8 +248,9 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send a high priority event to another entity by id number and with <b>no</b> data. Note that
-	 * the tag <code>9999</code> is reserved.
+	 * Sends a high priority event to another entity by id number and with <b>no</b> data
+         * and no delay. 
+         * Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The unique id number of the destination entity
 	 * @param tag An user-defined number representing the type of event.
@@ -253,7 +260,8 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send a high priority event to another entity through a port with a given name, with data.
+	 * Sends a high priority event to another entity through a port with a given name, with data
+         * and no delay.
 	 * Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The name of the port to send the event through
@@ -265,8 +273,8 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Send a high priority event to another entity through a port with a given name, with <b>no</b>
-	 * data. Note that the tag <code>9999</code> is reserved.
+	 * Sends a high priority event to another entity through a port with a given name, with <b>no</b>
+	 * data and no delay. Note that the tag <code>9999</code> is reserved.
 	 * 
 	 * @param dest The name of the port to send the event through
 	 * @param tag An user-defined number representing the type of event.
@@ -276,7 +284,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Set the entity to be inactive for a time period.
+	 * Sets the entity to be inactive for a time period.
 	 * 
 	 * @param delay the time period for which the entity will be inactive
 	 */
@@ -291,7 +299,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Count how many events matching a predicate are waiting in the entity's deferred queue.
+	 * Counts how many events matching a predicate are waiting in the entity's deferred queue.
 	 * 
 	 * @param p The event selection predicate
 	 * @return The count of matching events
@@ -301,7 +309,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Count how many events are waiting in the entity's deferred queue.
+	 * Counts how many events are waiting in the entity's deferred queue.
 	 * 
 	 * @return The count of events
 	 */
@@ -310,7 +318,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Extract the first event matching a predicate waiting in the entity's deferred queue.
+	 * Extracts the first event matching a predicate waiting in the entity's deferred queue.
 	 * 
 	 * @param p The event selection predicate
 	 * @return the simulation event
@@ -324,7 +332,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Cancel the first event matching a predicate waiting in the entity's future queue.
+	 * Cancels the first event matching a predicate waiting in the entity's future queue.
 	 * 
 	 * @param p The event selection predicate
 	 * @return The number of events cancelled (0 or 1)
@@ -338,7 +346,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Get the first event matching a predicate from the deferred queue, or if none match, wait for
+	 * Gets the first event matching a predicate from the deferred queue, or if none match, wait for
 	 * a matching event to arrive.
 	 * 
 	 * @param p The predicate to match
@@ -355,7 +363,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Wait for an event matching a specific predicate. This method does not check the entity's
+	 * Waits for an event matching a specific predicate. This method does not check the entity's
 	 * deferred queue.
 	 * 
 	 * @param p The predicate to match
@@ -370,7 +378,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Get the first event waiting in the entity's deferred queue, or if there are none, wait for an
+	 * Gets the first event waiting in the entity's deferred queue, or if there are none, wait for an
 	 * event to arrive.
 	 * 
 	 * @return the simulation event
@@ -380,25 +388,37 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * This method is invoked by the {@link Simulation} class when the simulation is started. This
-	 * method should be responsible for starting the entity up.
+	 * This method is invoked by the {@link CloudSim} class when the simulation is started. 
+	 * It should be responsible for starting the entity up.
 	 */
 	public abstract void startEntity();
 
 	/**
-	 * This method is invoked by the {@link Simulation} class whenever there is an event in the
+	 * Processes events or services that are available for the entity.
+	 * This method is invoked by the {@link CloudSim} class whenever there is an event in the
 	 * deferred queue, which needs to be processed by the entity.
 	 * 
-	 * @param ev the event to be processed by the entity
+	 * @param ev information about the event just happened
+         * 
+	 * @pre ev != null
+	 * @post $none
 	 */
 	public abstract void processEvent(SimEvent ev);
 
 	/**
-	 * This method is invoked by the {@link Simulation} before the simulation finishes. If you want
+         * Shuts down the entity.
+	 * This method is invoked by the {@link CloudSim} before the simulation finishes. If you want
 	 * to save data in log files this is the method in which the corresponding code would be placed.
 	 */
 	public abstract void shutdownEntity();
 
+        /**
+         * The run loop to process events fired during the simulation.
+         * The events that will be processed are defined
+         * in the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
+         * 
+         * @see #processEvent(org.cloudbus.cloudsim.core.SimEvent) 
+         */
 	public void run() {
 		SimEvent ev = evbuf != null ? evbuf : getNextEvent();
 
@@ -415,13 +435,13 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Get a clone of the entity. This is used when independent replications have been specified as
+	 * Gets a clone of the entity. This is used when independent replications have been specified as
 	 * an output analysis method. Clones or backups of the entities are made in the beginning of the
 	 * simulation in order to reset the entities for each subsequent replication. This method should
 	 * not be called by the user.
 	 * 
 	 * @return A clone of the entity
-	 * @throws CloneNotSupportedException the clone not supported exception
+	 * @throws CloneNotSupportedException when the entity doesn't support cloning
 	 */
 	@Override
 	protected final Object clone() throws CloneNotSupportedException {
@@ -444,7 +464,7 @@ public abstract class SimEntity implements Cloneable {
 	// --------------- PACKAGE LEVEL METHODS ------------------
 
 	/**
-	 * Gets the state.
+	 * Gets the entity state.
 	 * 
 	 * @return the state
 	 */
@@ -462,6 +482,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	// The entity states
+        //@todo The states should be an enum.
 	/** The Constant RUNNABLE. */
 	public static final int RUNNABLE = 0;
 
@@ -475,7 +496,7 @@ public abstract class SimEntity implements Cloneable {
 	public static final int FINISHED = 3;
 
 	/**
-	 * Sets the state.
+	 * Sets the entity state.
 	 * 
 	 * @param state the new state
 	 */
@@ -484,7 +505,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Sets the id.
+	 * Sets the entity id.
 	 * 
 	 * @param id the new id
 	 */
@@ -537,7 +558,7 @@ public abstract class SimEntity implements Cloneable {
 		}
 
 		int srcId = getId();
-		if (entityId != srcId) {// does not delay self messages
+		if (entityId != srcId) {// only delay messages between different entities
 			delay += getNetworkDelay(srcId, entityId);
 		}
 
@@ -595,12 +616,9 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Sends an event/message to another entity by <tt>delaying</tt> the simulation time from the
-	 * current time, with a tag representing the event type.
+	 * Sends an event/message to another entity, with a tag representing the event type.
 	 * 
 	 * @param entityId the id number of the destination entity
-	 * @param delay how long from the current simulation time the event should be sent. If delay is
-	 *            a negative number, then it will be changed to 0
 	 * @param cloudSimTag an user-defined number representing the type of an event/message
 	 * @param data A reference to data to be sent with the event
 	 * @pre entityID > 0
@@ -613,12 +631,9 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Sends an event/message to another entity by <tt>delaying</tt> the simulation time from the
-	 * current time, with a tag representing the event type.
+	 * Sends an event/message to another entity, with a tag representing the event type.
 	 * 
 	 * @param entityId the id number of the destination entity
-	 * @param delay how long from the current simulation time the event should be sent. If delay is
-	 *            a negative number, then it will be changed to 0
 	 * @param cloudSimTag an user-defined number representing the type of an event/message
 	 * @pre entityID > 0
 	 * @pre delay >= 0.0
@@ -629,12 +644,9 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Sends an event/message to another entity by <tt>delaying</tt> the simulation time from the
-	 * current time, with a tag representing the event type.
+	 * Sends an event/message to another entity, with a tag representing the event type.
 	 * 
 	 * @param entityName the name of the destination entity
-	 * @param delay how long from the current simulation time the event should be sent. If delay is
-	 *            a negative number, then it will be changed to 0
 	 * @param cloudSimTag an user-defined number representing the type of an event/message
 	 * @param data A reference to data to be sent with the event
 	 * @pre entityName != null
@@ -647,12 +659,9 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	/**
-	 * Sends an event/message to another entity by <tt>delaying</tt> the simulation time from the
-	 * current time, with a tag representing the event type.
+	 * Sends an event/message to another entity, with a tag representing the event type.
 	 * 
 	 * @param entityName the name of the destination entity
-	 * @param delay how long from the current simulation time the event should be sent. If delay is
-	 *            a negative number, then it will be changed to 0
 	 * @param cloudSimTag an user-defined number representing the type of an event/message
 	 * @pre entityName != null
 	 * @pre delay >= 0.0

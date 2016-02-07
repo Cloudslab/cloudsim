@@ -11,8 +11,10 @@ package org.cloudbus.cloudsim.provisioners;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * BwProvisioner is an abstract class that represents the provisioning policy of bandwidth to
- * virtual machines inside a Host. When extending this class, care must be taken to guarantee that
+ * BwProvisioner is an abstract class that represents the provisioning policy used by a host
+ * to allocate bandwidth (bw) to virtual machines inside it. 
+ * Each host has to have its own instance of a BwProvisioner.
+ * When extending this class, care must be taken to guarantee that
  * the field availableBw will always contain the amount of free bandwidth available for future
  * allocations.
  * 
@@ -22,16 +24,16 @@ import org.cloudbus.cloudsim.Vm;
  */
 public abstract class BwProvisioner {
 
-	/** The bw. */
+	/** The total bandwidth capacity from the host that the provisioner can allocate to VMs. */
 	private long bw;
 
-	/** The available bw. */
+	/** The available bandwidth. */
 	private long availableBw;
 
 	/**
 	 * Creates the new BwProvisioner.
 	 * 
-	 * @param bw overall amount of bandwidth available in the host.
+	 * @param bw The total bandwidth capacity from the host that the provisioner can allocate to VMs.
 	 * 
 	 * @pre bw >= 0
 	 * @post $none
@@ -44,8 +46,8 @@ public abstract class BwProvisioner {
 	/**
 	 * Allocates BW for a given VM.
 	 * 
-	 * @param vm virtual machine for which the bw are being allocated
-	 * @param bw the bw
+	 * @param vm the virtual machine for which the bw are being allocated
+	 * @param bw the bw to be allocated to the VM
 	 * 
 	 * @return $true if the bw could be allocated; $false otherwise
 	 * 
@@ -74,7 +76,7 @@ public abstract class BwProvisioner {
 	public abstract void deallocateBwForVm(Vm vm);
 
 	/**
-	 * Releases BW used by a all VMs.
+	 * Releases BW used by all VMs.
 	 * 
 	 * @pre $none
 	 * @post none
@@ -84,28 +86,30 @@ public abstract class BwProvisioner {
 	}
 
 	/**
-	 * Checks if BW is suitable for vm.
+	 * Checks if it is possible to change the current allocated BW for the VM
+         * to a new amount, depending on the available BW.
 	 * 
-	 * @param vm the vm
-	 * @param bw the bw
+	 * @param vm the vm to check if there is enough available BW on the host to 
+         * change the VM allocated BW
+	 * @param bw the new total amount of BW for the VM.
 	 * 
-	 * @return true, if BW is suitable for vm
+	 * @return true, if is suitable for vm
 	 */
 	public abstract boolean isSuitableForVm(Vm vm, long bw);
 
 	/**
-	 * Gets the bw.
+	 * Gets the bw capacity.
 	 * 
-	 * @return the bw
+	 * @return the bw capacity
 	 */
 	public long getBw() {
 		return bw;
 	}
 
 	/**
-	 * Sets the bw.
+	 * Sets the bw capacity.
 	 * 
-	 * @param bw the new bw
+	 * @param bw the new bw capacity
 	 */
 	protected void setBw(long bw) {
 		this.bw = bw;

@@ -20,11 +20,11 @@ import org.cloudbus.cloudsim.core.SimEvent;
  */
 public class PredicateType extends Predicate {
 
-	/** The tags. */
+	/** Array of tags to verify if the tag of received events correspond to. */
 	private final int[] tags;
 
 	/**
-	 * Constructor used to select events with the tag value <code>t1</code>.
+	 * Constructor used to select events with the given tag value.
 	 * 
 	 * @param t1 an event tag value
 	 */
@@ -42,10 +42,11 @@ public class PredicateType extends Predicate {
 	}
 
 	/**
-	 * The match function called by <code>Sim_system</code>, not used directly by the user.
+	 * Matches any event that has one of the specified {@link #tags}.
 	 * 
-	 * @param ev the ev
-	 * @return true, if match
+	 * @param ev {@inheritDoc}
+	 * @return {@inheritDoc}
+         * @see #tags
 	 */
 	@Override
 	public boolean match(SimEvent ev) {

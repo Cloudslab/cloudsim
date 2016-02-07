@@ -14,24 +14,28 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * This class implements the future event queue used by {@link Simulation}. The event queue uses a
- * {@link TreeSet} in order to store the events.
+ * This class implements the future event queue used by {@link CloudSim}. 
+ * The event queue uses a {@link TreeSet} in order to store the events.
  * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
  * @see Simulation
  * @see java.util.TreeSet
+ * 
+ * @todo It would be used a common interface for queues
+ * such as this one and {@link DeferredQueue}
  */
 public class FutureQueue {
 
-	/** The sorted set. */
+	/** The sorted set of events. */
 	private final SortedSet<SimEvent> sortedSet = new TreeSet<SimEvent>();
 
-	/** The serial. */
+	/** A incremental number used for {@link SimEvent#serial} event attribute.
+         */
 	private long serial = 0;
 
 	/**
-	 * Add a new event to the queue. Adding a new event to the queue preserves the temporal order of
+	 * Adds a new event to the queue. Adding a new event to the queue preserves the temporal order of
 	 * the events in the queue.
 	 * 
 	 * @param newEvent The event to be put in the queue.
@@ -42,7 +46,7 @@ public class FutureQueue {
 	}
 
 	/**
-	 * Add a new event to the head of the queue.
+	 * Adds a new event to the head of the queue.
 	 * 
 	 * @param newEvent The event to be put in the queue.
 	 */

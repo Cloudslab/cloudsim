@@ -9,7 +9,7 @@
 package org.cloudbus.cloudsim.network;
 
 /**
- * Just represents an topological network node retrieves its information from an
+ * Represents an topological network node that retrieves its information from a
  * topological-generated file (eg. topology-generator)
  * 
  * @author Thomas Hohnstein
@@ -17,88 +17,96 @@ package org.cloudbus.cloudsim.network;
  */
 public class TopologicalNode {
 
-	/**
-	 * its the nodes-ID inside this network
-	 */
-	private int nodeID = 0;
+    /**
+     * The BRITE id of the node inside the network.
+     */
+    private int nodeID = 0;
 
-	/**
-	 * describes the nodes-name inside the network
-	 */
-	private String nodeName = null;
+    /**
+     * The name of the node inside the network.
+     */
+    private String nodeName = null;
 
-	/**
-	 * representing the x an y world-coordinates
-	 */
-	private int worldX = 0;
+    /**
+     * Represents the x world-coordinate.
+     */
+    private int worldX = 0;
 
-	private int worldY = 0;
+    /**
+     * Represents the y world-coordinate.
+     */
+    private int worldY = 0;
 
-	/**
-	 * constructs an new node
-	 */
-	public TopologicalNode(int nodeID) {
-		// lets initialize all private class attributes
-		this.nodeID = nodeID;
-		nodeName = String.valueOf(nodeID);
-	}
+    /**
+     * Constructs an new node.
+     * @param nodeID The BRITE id of the node inside the network
+     */
+    public TopologicalNode(int nodeID) {
+            this.nodeID = nodeID;
+            nodeName = String.valueOf(nodeID);
+    }
 
-	/**
-	 * constructs an new node including world-coordinates
-	 */
-	public TopologicalNode(int nodeID, int x, int y) {
-		// lets initialize all private class attributes
-		this.nodeID = nodeID;
-		nodeName = String.valueOf(nodeID);
-		worldX = x;
-		worldY = y;
-	}
+    /**
+     * Constructs an new node including world-coordinates.
+     * @param nodeID The BRITE id of the node inside the network
+     * @param x x world-coordinate
+     * @param y y world-coordinate
+     */
+    public TopologicalNode(int nodeID, int x, int y) {
+            this.nodeID = nodeID;
+            nodeName = String.valueOf(nodeID);
+            worldX = x;
+            worldY = y;
+    }
 
-	/**
-	 * constructs an new node including world-coordinates and the nodeName
-	 */
-	public TopologicalNode(int nodeID, String nodeName, int x, int y) {
-		// lets initialize all private class attributes
-		this.nodeID = nodeID;
-		this.nodeName = nodeName;
-		worldX = x;
-		worldY = y;
-	}
+    /**
+     * Constructs an new node including world-coordinates and the nodeName.
+     * @param nodeID The BRITE id of the node inside the network
+     * @param nodeName The name of the node inside the network
+     * @param x x world-coordinate
+     * @param y y world-coordinate
+     */
+    public TopologicalNode(int nodeID, String nodeName, int x, int y) {
+            this.nodeID = nodeID;
+            this.nodeName = nodeName;
+            worldX = x;
+            worldY = y;
+    }
 
-	/**
-	 * delivers the nodes id
-	 * 
-	 * @return just the nodeID
-	 */
-	public int getNodeID() {
-		return nodeID;
-	}
+    /**
+     * Gets the node BRITE id.
+     * 
+     * @return the nodeID
+     */
+    public int getNodeID() {
+            return nodeID;
+    }
 
-	/**
-	 * delivers the name of the node
-	 * 
-	 * @return name of the node
-	 */
-	public String getNodeLabel() {
-		return nodeName;
-	}
+    /**
+     * Gets the name of the node
+     * 
+     * @return name of the node
+     */
+    public String getNodeLabel() {
+            return nodeName;
+    }
 
-	/**
-	 * returns the x coordinate of this network-node
-	 * 
-	 * @return the x coordinate
-	 */
-	public int getCoordinateX() {
-		return worldX;
-	}
+    /**
+     * Gets the x world coordinate of this network-node.
+     * 
+     * @return the x world coordinate
+     */
+    public int getCoordinateX() {
+            return worldX;
+    }
 
-	/**
-	 * returns the y coordinate of this network-node
-	 * 
-	 * @return the y coordinate
-	 */
-	public int getCoordinateY() {
-		return worldY;
-	}
+    /**
+     * Gets the y world coordinate of this network-node
+     * 
+     * @return the y world coordinate
+     */
+    public int getCoordinateY() {
+            return worldY;
+    }
 
 }

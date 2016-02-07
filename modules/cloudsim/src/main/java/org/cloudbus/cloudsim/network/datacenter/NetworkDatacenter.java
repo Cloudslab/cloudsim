@@ -27,34 +27,62 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 
 /**
- * NetworkDatacenter class is a Datacenter whose hostList are virtualized and networked. It contains
- * all the information about internal network. For example, which VM is connected to Switch etc. It
+ * NetworkDatacenter class is a {@link Datacenter} whose hostList are virtualized and networked. It contains
+ * all the information about internal network. For example, which VM is connected to what switch etc. It
  * deals with processing of VM queries (i.e., handling of VMs) instead of processing
  * Cloudlet-related queries. So, even though an AllocPolicy will be instantiated (in the init()
  * method of the superclass, it will not be used, as processing of cloudlets are handled by the
  * CloudletScheduler and processing of VirtualMachines are handled by the VmAllocationPolicy.
  * 
- * Please refer to following publication for more details:
+ * @todo If an AllocPolicy is not being used, why it is being created. Perhaps 
+ * a better class hierarchy should be created, introducing some abstract class
+ * or interface.
  * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * <br/>Please refer to following publication for more details:<br/>
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1109/UCC.2011.24">Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
  * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
- * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.</a>
+ * </ul>
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
  */
 public class NetworkDatacenter extends Datacenter {
+        /**
+         * A map between VMs and Switches, where each key
+         * is a VM id and the corresponding value is the id of the switch where the VM is connected to.
+         */
+	public Map<Integer, Integer> VmToSwitchid = new HashMap<Integer, Integer>();
+
+        /**
+         * A map between hosts and Switches, where each key
+         * is a host id and the corresponding value is the id of the switch where the host is connected to.
+         */
+	public Map<Integer, Integer> HostToSwitchid;
+
+        /**
+         * A map of datacenter switches where each key is a switch id
+         * and the corresponding value is the switch itself.
+         */
+	public Map<Integer, Switch> Switchlist;
+
+        /**
+         * A map between VMs and Hosts, where each key
+         * is a VM id and the corresponding value is the id of the host where the VM is placed.
+         */
+	public Map<Integer, Integer> VmtoHostlist;
 
 	/**
-	 * Allocates a new NetworkDatacenter object.
+	 * Instantiates a new NetworkDatacenter object.
 	 * 
-	 * @param name the name to be associated with this entity (as required by Sim_entity class from
-	 *        simjava package)
-	 * @param characteristics an object of DatacenterCharacteristics
-	 * @param storageList a LinkedList of storage elements, for data simulation
+	 * @param name the name to be associated with this entity (as required by {@link org.cloudbus.cloudsim.core.SimEntity})
+	 * @param characteristics the datacenter characteristics
 	 * @param vmAllocationPolicy the vmAllocationPolicy
+	 * @param storageList a List of storage elements, for data simulation
+         * @param schedulingInterval the scheduling delay to process each datacenter received event
 	 * 
-	 * @throws Exception This happens when one of the following scenarios occur:
+	 * @throws Exception  when one of the following scenarios occur:
 	 *         <ul>
 	 *         <li>creating this entity before initializing CloudSim package
 	 *         <li>this entity name is <tt>null</tt> or empty
@@ -80,18 +108,12 @@ public class NetworkDatacenter extends Datacenter {
 		Switchlist = new HashMap<Integer, Switch>();
 	}
 
-	public Map<Integer, Integer> VmToSwitchid = new HashMap<Integer, Integer>();
-
-	public Map<Integer, Integer> HostToSwitchid;
-
-	public Map<Integer, Switch> Switchlist;
-
-	public Map<Integer, Integer> VmtoHostlist;
-
 	/**
-	 * Get list of all EdgeSwitches in the Datacenter network One can design similar functions for
-	 * other type of switches.
+	 * Gets a map of all EdgeSwitches in the Datacenter network. 
+         * One can design similar functions for other type of switches.
 	 * 
+         * @return a EdgeSwitches map, where each key is the switch id
+         * and each value it the switch itself.
 	 */
 	public Map<Integer, Switch> getEdgeSwitch() {
 		Map<Integer, Switch> edgeswitch = new HashMap<Integer, Switch>();
@@ -105,10 +127,11 @@ public class NetworkDatacenter extends Datacenter {
 	}
 
 	/**
-	 * Create the VM within the NetworkDatacenter. It can be directly accessed by Datacenter Broker
-	 * which manage allocation of Cloudlets.
+	 * Creates the given VM within the NetworkDatacenter. 
+         * It can be directly accessed by Datacenter Broker which manages allocation of Cloudlets.
 	 * 
-	 * 
+         * @param vm
+         * @return true if the VW was created successfully, false otherwise
 	 */
 	public boolean processVmCreateNetwork(Vm vm) {
 
@@ -127,15 +150,6 @@ public class NetworkDatacenter extends Datacenter {
 		return result;
 	}
 
-	/**
-	 * Processes a Cloudlet submission.
-	 * 
-	 * @param ev a SimEvent object
-	 * @param ack an acknowledgement
-	 * 
-	 * @pre ev != null
-	 * @post $none
-	 */
 	@Override
 	protected void processCloudletSubmit(SimEvent ev, boolean ack) {
 		updateCloudletProcessing();

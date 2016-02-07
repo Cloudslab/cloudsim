@@ -17,9 +17,10 @@ package org.cloudbus.cloudsim.distributions;
 public interface ContinuousDistribution {
 
 	/**
-	 * Sample the random number generator.
+	 * Generate a new pseudo random number.
 	 * 
-	 * @return The sample
+	 * @return the next pseudo random number in the sequence,
+         * following the implemented distribution.
 	 */
 	double sample();
 

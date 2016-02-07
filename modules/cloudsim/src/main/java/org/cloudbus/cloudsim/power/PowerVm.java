@@ -17,16 +17,18 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
- * The class of a VM that stores its CPU utilization history. The history is used by VM allocation
+ * A class of VM that stores its CPU utilization percentage history. The history is used by VM allocation
  * and selection policies.
  * 
- * If you are using any algorithms, policies or workload included in the power package please cite
- * the following paper:
+ * <br/>If you are using any algorithms, policies or workload included in the power package please cite
+ * the following paper:<br/>
  * 
- * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012
+ * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * </ul>
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
@@ -36,17 +38,18 @@ public class PowerVm extends Vm {
 	/** The Constant HISTORY_LENGTH. */
 	public static final int HISTORY_LENGTH = 30;
 
-	/** The utilization history. */
+	/** The CPU utilization percentage history. */
 	private final List<Double> utilizationHistory = new LinkedList<Double>();
 
-	/** The previous time. */
+	/** The previous time that cloudlets were processed. */
 	private double previousTime;
 
-	/** The scheduling interval. */
+	/** The scheduling interval to update the processing of cloudlets
+         * running in this VM. */
 	private double schedulingInterval;
 
 	/**
-	 * Instantiates a new power vm.
+	 * Instantiates a new PowerVm.
 	 * 
 	 * @param id the id
 	 * @param userId the user id
@@ -76,18 +79,6 @@ public class PowerVm extends Vm {
 		setSchedulingInterval(schedulingInterval);
 	}
 
-	/**
-	 * Updates the processing of cloudlets running on this VM.
-	 * 
-	 * @param currentTime current simulation time
-	 * @param mipsShare array with MIPS share of each Pe available to the scheduler
-	 * 
-	 * @return time predicted completion time of the earliest finishing cloudlet, or 0 if there is
-	 * 		no next events
-	 * 
-	 * @pre currentTime >= 0
-	 * @post $none
-	 */
 	@Override
 	public double updateVmProcessing(final double currentTime, final List<Double> mipsShare) {
 		double time = super.updateVmProcessing(currentTime, mipsShare);
@@ -104,7 +95,7 @@ public class PowerVm extends Vm {
 	/**
 	 * Gets the utilization MAD in MIPS.
 	 * 
-	 * @return the utilization mean in MIPS
+	 * @return the utilization MAD in MIPS
 	 */
 	public double getUtilizationMad() {
 		double mad = 0;
@@ -166,9 +157,9 @@ public class PowerVm extends Vm {
 	}
 
 	/**
-	 * Adds the utilization history value.
+	 * Adds a CPU utilization percentage history value.
 	 * 
-	 * @param utilization the utilization
+	 * @param utilization the CPU utilization percentage to add
 	 */
 	public void addUtilizationHistoryValue(final double utilization) {
 		getUtilizationHistory().add(0, utilization);
@@ -178,9 +169,9 @@ public class PowerVm extends Vm {
 	}
 
 	/**
-	 * Gets the utilization history.
+	 * Gets the CPU utilization percentage history.
 	 * 
-	 * @return the utilization history
+	 * @return the CPU utilization percentage history
 	 */
 	protected List<Double> getUtilizationHistory() {
 		return utilizationHistory;

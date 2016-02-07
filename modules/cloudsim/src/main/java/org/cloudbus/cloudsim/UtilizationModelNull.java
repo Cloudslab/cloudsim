@@ -10,17 +10,13 @@ package org.cloudbus.cloudsim;
 
 /**
  * The UtilizationModelNull class is a simple model, according to which a Cloudlet always require
- * zero capacity.
+ * zero capacity for a given resource all the time.
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
  */
 public class UtilizationModelNull implements UtilizationModel {
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.power.UtilizationModel#getUtilization(double)
-	 */
 	@Override
 	public double getUtilization(double time) {
 		return 0;

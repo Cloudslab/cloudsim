@@ -11,19 +11,20 @@ package org.cloudbus.cloudsim.distributions;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 
 /**
- * An exponential number generator.
+ * A pseudo random number generator following the 
+ * <a href="https://en.wikipedia.org/wiki/Exponential_distribution">Exponential distribution</a>.
  * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
  */
 public class ExponentialDistr implements ContinuousDistribution {
 
-	/** The num gen. */
+	/** The internal exponential number generator. */
 	private final ExponentialDistribution numGen;
 
 
 	/**
-	 * Creates a new exponential number generator.
+	 * Creates a new exponential pseudo random number generator.
 	 * 
 	 * @param seed the seed to be used.
 	 * @param mean the mean for the distribution.
@@ -34,7 +35,7 @@ public class ExponentialDistr implements ContinuousDistribution {
 	}
 
 	/**
-	 * Creates a new exponential number generator.
+	 * Creates a new exponential pseudo random number generator.
 	 * 
 	 * @param mean the mean for the distribution.
 	 */
@@ -42,11 +43,6 @@ public class ExponentialDistr implements ContinuousDistribution {
 		numGen = new ExponentialDistribution(mean);
 	}
 
-	/**
-	 * Generate a new random number.
-	 * 
-	 * @return the next random number in the sequence
-	 */
 	@Override
 	public double sample() {
 		return numGen.sample();

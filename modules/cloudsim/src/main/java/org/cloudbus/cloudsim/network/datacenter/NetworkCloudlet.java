@@ -16,20 +16,64 @@ import org.cloudbus.cloudsim.UtilizationModel;
 
 /**
  * NetworkCloudlet class extends Cloudlet to support simulation of complex applications. Each such
- * network Cloudlet represents a task of the application. Each task consists of several stages.
+ * a network Cloudlet represents a task of the application. Each task consists of several stages.
  * 
- * Please refer to following publication for more details:
- * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * <br/>Please refer to following publication for more details:<br/>
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1109/UCC.2011.24">Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
  * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
- * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.</a>
+ * </ul>
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 1.0
+ * @todo Attributes should be private
+ * @todo The different cloudlet classes should have a class hierarchy, by means
+ * of a super class and/or interface.
  */
 public class NetworkCloudlet extends Cloudlet implements Comparable<Object> {
+        /** Time when cloudlet will be submitted. */
+	public double submittime; 
 
+        /** Time when cloudlet finishes execution. */
+	public double finishtime; 
+
+        /** Execution time for cloudlet. */
+	public double exetime; 
+
+        /** Number of cloudlet's stages . */
+	public double numStage;
+
+        /** Current stage of cloudlet execution. */
+	public int currStagenum; 
+
+        /** Star time of the current stage. 
+         */
+	public double timetostartStage;
+
+        /** Time spent in the current stage. 
+         */
+	public double timespentInStage; 
+
+        /** 
+         * @todo It doesn't appear to be used. 
+        */
+	public Map<Double, HostPacket> timeCommunicate;
+
+        /** All stages which cloudlet execution. */
+	public ArrayList<TaskStage> stages; 
+        
+        /**
+         * Cloudlet's memory.
+         * @todo Required, allocated, used memory?
+         * It doesn't appear to be used.
+         */
 	long memory;
+
+        /**
+         * Cloudlet's start time.
+         */
+	public double starttime;
 
 	public NetworkCloudlet(
 			int cloudletId,
@@ -55,28 +99,6 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<Object> {
 		this.memory = memory;
 		stages = new ArrayList<TaskStage>();
 	}
-
-	public double submittime; // time when cloudlet will be submitted
-
-	public double finishtime; // time when cloudlet finish execution
-
-	public double exetime; // execution time for cloudlet
-
-	public double numStage;// number of stages in cloudlet
-
-	public int currStagenum; // current stage of cloudlet execution
-
-	public double timetostartStage;
-
-	public double timespentInStage; // how much time spent in particular stage
-
-	public Map<Double, HostPacket> timeCommunicate;
-
-	public ArrayList<TaskStage> stages; // all stages which cloudlet execution
-
-	// consists of.
-
-	public double starttime;
 
 	@Override
 	public int compareTo(Object arg0) {

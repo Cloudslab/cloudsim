@@ -11,7 +11,9 @@ package org.cloudbus.cloudsim.distributions;
 import java.util.Random;
 
 /**
- * The Class LomaxDistribution.
+ * A pseudo random number generator following the 
+ * <a href="https://en.wikipedia.org/wiki/Lomax_distribution">
+ * Lomax distribution</a>.
  * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
@@ -22,7 +24,7 @@ public class LomaxDistribution extends ParetoDistr implements ContinuousDistribu
 	private final double shift;
 
 	/**
-	 * Instantiates a new lomax distribution.
+	 * Instantiates a new lomax pseudo random number generator.
 	 * 
 	 * @param shape the shape
 	 * @param location the location
@@ -39,7 +41,7 @@ public class LomaxDistribution extends ParetoDistr implements ContinuousDistribu
 	}
 
 	/**
-	 * Instantiates a new lomax distribution.
+	 * Instantiates a new lomax pseudo random number generator.
 	 * 
 	 * @param seed the seed
 	 * @param shape the shape
@@ -56,10 +58,6 @@ public class LomaxDistribution extends ParetoDistr implements ContinuousDistribu
 		this.shift = shift;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.distributions.ParetoDistr#sample()
-	 */
 	@Override
 	public double sample() {
 		return super.sample() - shift;

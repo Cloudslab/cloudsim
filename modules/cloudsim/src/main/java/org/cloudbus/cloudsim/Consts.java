@@ -14,21 +14,21 @@ public final class Consts {
     }
 
     /** One million. */
-    public static int MILLION = 1000000;
+    public static final int MILLION = 1000000;
 
     // ================== Time constants ==================
     /** One minute time in seconds. */
-    public static int MINUTE = 60;
+    public static final int MINUTE = 60;
     /** One hour time in seconds. */
-    public static int HOUR = 60 * MINUTE;
+    public static final int HOUR = 60 * MINUTE;
     /** One day time in seconds. */
-    public static int DAY = 24 * HOUR;
+    public static final int DAY = 24 * HOUR;
     /** One week time in seconds. */
-    public static int WEEK = 24 * HOUR;
+    public static final int WEEK = 24 * HOUR;
 
     // ================== OS constants ==================
-    /** Constant for *nix OS-es. */
+    /** Constant for *nix Operating Systems. */
     public static final String NIX_OS = "Linux/Unix";
-    /** Constant for Windows OS-es. */
+    /** Constant for Windows Operating Systems. */
     public static final String WINDOWS = "Windows";
 }

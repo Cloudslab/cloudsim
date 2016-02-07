@@ -14,22 +14,23 @@ import java.util.Random;
 import org.apache.commons.math3.distribution.GammaDistribution;
 
 /**
- * The Class GammaDistr.
+ * A pseudo random number generator following the
+ * <a href="https://en.wikipedia.org/wiki/Gamma_distribution">Gamma</a> distribution.
  * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
  */
 public class GammaDistr implements ContinuousDistribution {
 
-	/** The num gen. */
+	/** The internal Gamma pseudo random number generator. */
 	private final GammaDistribution numGen;
 
 	/**
-	 * Instantiates a new gamma distr.
+	 * Instantiates a new Gamma pseudo random number generator.
 	 * 
 	 * @param seed the seed
-	 * @param alpha the alpha
-	 * @param beta the beta
+	 * @param shape the shape
+	 * @param scale the scale
 	 */
 	public GammaDistr(Random seed, int shape, double scale) {
 		this(shape, scale);
@@ -37,19 +38,15 @@ public class GammaDistr implements ContinuousDistribution {
 	}
 
 	/**
-	 * Instantiates a new gamma distr.
+	 * Instantiates a new Gamma pseudo random number generator.
 	 * 
-	 * @param alpha the alpha
-	 * @param beta the beta
+	 * @param shape the shape
+	 * @param scale the scale
 	 */
 	public GammaDistr(int shape, double scale) {
 		numGen = new GammaDistribution(shape, scale);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.distributions.ContinuousDistribution#sample()
-	 */
 	@Override
 	public double sample() {
 		return numGen.sample();

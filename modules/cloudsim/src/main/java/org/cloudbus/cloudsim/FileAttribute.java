@@ -13,40 +13,47 @@ import java.util.Date;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * A class for storing related information regarding to a {@link gridsim.datagrid.File} entity.
+ * Stores related information regarding to a {@link gridsim.datagrid.File} entity.
  * 
  * @author Uros Cibej
  * @author Anthony Sulistio
  * @since CloudSim Toolkit 1.0
+ * 
+ * @todo Some attributes of this class may be duplicated from the {@link File} class,
+ * such as name (logical file name), that is clearly related to the file.
+ * There would be a relation between File and FileAttribute. There is a lot of duplicated
+ * methods to, such as {@link #setMasterCopy(boolean)} or {@link #isReadOnly()}
  */
 public class FileAttribute {
 
-	private String name;           // logical file name
-
-	private String ownerName;      // owner name of this file
-
-	private int id;                // file ID given by a Replica Catalogue
-
-	private int type;              // file type, e.g. raw, reconstructed, etc
-
-	private int size;              // file size in byte
-
-	private int checksum;          // check sum
-
-	private double lastUpdateTime; // last updated time (sec) - relative
-
-	private long creationTime;     // creation time (ms) - abosulte/relative
-
-	private double cost;           // price of this file
-
-	private boolean masterCopy;    // false if it is a replica
-
-	private boolean readOnly;      // false if it can be rewritten
-
-	private int resourceId;        // resource ID storing this file
+        /** Logical file name. */
+	private String name;           
+        /** Owner name of this file. */
+	private String ownerName;      
+        /** File ID given by a Replica Catalogue. */
+	private int id;                
+        /** File type, for instance raw, reconstructed, etc. */
+	private int type;              
+        /** File size in byte. */
+	private int size;              
+        /** Check sum. */
+	private int checksum;          
+        /** Last updated time (sec) - relative. */
+	private double lastUpdateTime; 
+        /** Creation time (ms) - abosulte/relative. */
+	private long creationTime;     
+        /** Price of the file. */
+	private double cost;           
+        /** Indicates if the file is a master copy or not. 
+         * If the attribute is false, it means the file is a replica. */
+	private boolean masterCopy;    
+        /** Indicates if the file is read-only or not. */
+	private boolean readOnly;      
+        /** Resource ID storing this file. */
+	private int resourceId;        
 
 	/**
-	 * Allocates a new FileAttribute class.
+	 * Creates a new FileAttribute object.
 	 * 
 	 * @param fileName file name
 	 * @param fileSize size of this file (in bytes)
@@ -89,9 +96,9 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Copy the values of this object into another FileAttribute class
+	 * Copy the values of the object into a given FileAttribute instance.
 	 * 
-	 * @param attr a FileAttribute object (the destination)
+	 * @param attr the destination FileAttribute object to copy the current object to
 	 * @return <tt>true</tt> if the copy operation is successful, <tt>false</tt> otherwise
 	 */
 	public boolean copyValue(FileAttribute attr) {
@@ -116,7 +123,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the file creation time (in millisecond)
+	 * Sets the file creation time (in millisecond).
 	 * 
 	 * @param creationTime the file creation time (in millisecond)
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -131,7 +138,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the file creation time (in millisecond)
+	 * Gets the file creation time (in millisecond).
 	 * 
 	 * @return the file creation time (in millisecond)
 	 */
@@ -140,7 +147,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the resource ID that stores this file
+	 * Sets the resource ID that stores the file.
 	 * 
 	 * @param resourceID a resource ID
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -155,7 +162,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the resource ID that stores this file
+	 * Gets the resource ID that stores the file.
 	 * 
 	 * @return the resource ID
 	 */
@@ -164,7 +171,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the owner name of this file
+	 * Sets the owner name of the file.
 	 * 
 	 * @param name the owner name
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -179,7 +186,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the owner name of this file
+	 * Gets the owner name of the file.
 	 * 
 	 * @return the owner name or <tt>null</tt> if empty
 	 */
@@ -188,7 +195,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the size of this object (in byte).<br>
+	 * Gets the size of the object (in byte). <br/>
 	 * NOTE: This object size is NOT the actual file size. Moreover, this size is used for
 	 * transferring this object over a network.
 	 * 
@@ -208,7 +215,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the file size (in MBytes)
+	 * Sets the file size (in MBytes).
 	 * 
 	 * @param fileSize the file size (in MBytes)
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -223,7 +230,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the file size (in MBytes)
+	 * Gets the file size (in MBytes).
 	 * 
 	 * @return the file size (in MBytes)
 	 */
@@ -232,7 +239,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the file size (in bytes)
+	 * Gets the file size (in bytes).
 	 * 
 	 * @return the file size (in bytes)
 	 */
@@ -242,7 +249,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the last update time of this file (in seconds)<br>
+	 * Sets the last update time of the file (in seconds). <br/>
 	 * NOTE: This time is relative to the start time. Preferably use
 	 * {@link gridsim.CloudSim#clock()} method.
 	 * 
@@ -259,7 +266,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the last update time (in seconds)
+	 * Gets the last update time (in seconds).
 	 * 
 	 * @return the last update time (in seconds)
 	 */
@@ -268,7 +275,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the file registration ID (published by a Replica Catalogue entity)
+	 * Sets the file registration ID (published by a Replica Catalogue entity).
 	 * 
 	 * @param id registration ID
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -283,7 +290,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the file registration ID
+	 * Gets the file registration ID.
 	 * 
 	 * @return registration ID
 	 */
@@ -292,7 +299,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the file type (e.g. raw, tag, etc)
+	 * Sets the file type (for instance raw, tag, etc).
 	 * 
 	 * @param type a file type
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -307,7 +314,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets this file type
+	 * Gets the file type.
 	 * 
 	 * @return file type
 	 */
@@ -316,7 +323,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the checksum of this file
+	 * Sets the checksum of the file.
 	 * 
 	 * @param checksum the checksum of this file
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -331,7 +338,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the file checksum
+	 * Gets the file checksum.
 	 * 
 	 * @return file checksum
 	 */
@@ -340,7 +347,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the cost associated with this file
+	 * Sets the cost associated with the file.
 	 * 
 	 * @param cost cost of this file
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -355,7 +362,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the cost associated with this file
+	 * Gets the cost associated with the file.
 	 * 
 	 * @return the cost of this file
 	 */
@@ -364,7 +371,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Checks if this file already registered to a Replica Catalogue
+	 * Checks if the file is already registered to a Replica Catalogue.
 	 * 
 	 * @return <tt>true</tt> if it is registered, <tt>false</tt> otherwise
 	 */
@@ -378,7 +385,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Marks this file as a master copy or replica
+	 * Marks the file as a master copy or replica.
 	 * 
 	 * @param masterCopy a flag denotes <tt>true</tt> for master copy or <tt>false</tt> for a
 	 *            replica
@@ -388,7 +395,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Checks whether this file is a master copy or replica
+	 * Checks whether the file is a master copy or replica.
 	 * 
 	 * @return <tt>true</tt> if it is a master copy or <tt>false</tt> otherwise
 	 */
@@ -397,7 +404,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Marks this file as a read only or not
+	 * Marks this file as a read only or not.
 	 * 
 	 * @param readOnly a flag denotes <tt>true</tt> for read only or <tt>false</tt> for re-writeable
 	 */
@@ -406,7 +413,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Checks whether this file is a read only or not
+	 * Checks whether this file is a read only or not.
 	 * 
 	 * @return <tt>true</tt> if it is a read only or <tt>false</tt> otherwise
 	 */
@@ -415,7 +422,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Sets the file name
+	 * Sets the file name.
 	 * 
 	 * @param name the file name
 	 */
@@ -424,7 +431,7 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Returns the file name
+	 * Returns the file name.
 	 * 
 	 * @return the file name
 	 */

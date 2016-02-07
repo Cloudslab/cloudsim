@@ -16,13 +16,14 @@ import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
  * WorkflowApp is an example of AppCloudlet having three communicating tasks. Task A and B sends the
- * data (packet) while Task C receives them
+ * data (packet) while Task C receives them.
  * 
- * Please refer to following publication for more details:
- * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * <br/>Please refer to following publication for more details:<br/>
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1109/UCC.2011.24">Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
  * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
- * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.</a>
+ * </ul>
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 1.0
@@ -35,6 +36,17 @@ public class WorkflowApp extends AppCloudlet {
 		this.numbervm = 3;
 	}
 
+        /**
+         * If the method completely overrides the parent method,
+         * a interface or abstract class should be used.
+         * The method constant values for cloudlet attributes
+         * that have to be defined by the user.
+         * Thus, that class appears to be another example class,
+         * such as the {@link AppCloudlet}. If this is the intention,
+         * it would be inside the examples package.
+         * At the constructor, there are other hard-coded values.
+         * @param vmIdList 
+         */
 	@Override
 	public void createCloudletList(List<Integer> vmIdList) {
 		long fileSize = NetworkConstants.FILE_SIZE;

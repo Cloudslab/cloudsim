@@ -10,43 +10,69 @@ package org.cloudbus.cloudsim.network.datacenter;
 
 /**
  * NewtorkPacket represents the packet which travel from one server to another. Each packet contains
- * ids of the sender VM and receiver VM, time at which it is send and received, type and virtual ids
- * of tasks, which are communicating.
+ * IDs of the sender and receiver VM which are communicating, time at which it is sent and received, 
+ * type and virtual IDs of tasks.
  * 
- * Please refer to following publication for more details:
- * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * <br/>Please refer to following publication for more details:<br/>
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1109/UCC.2011.24">Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
  * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
- * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.</a>
+ * </ul>
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 1.0
+ * @todo Attributes should be private
  */
 public class NetworkPacket {
+    /**
+     * Information about the virtual send and receiver entities of the packet.
+     */
+    HostPacket pkt;
 
-	public NetworkPacket(int id, HostPacket pkt2, int vmid, int cloudletid) {
-		pkt = pkt2;
-		sendervmid = vmid;
-		this.cloudletid = cloudletid;
-		senderhostid = id;
-		stime = pkt.sendtime;
-		recievervmid = pkt2.reciever;
+    /**
+     * Id of the sender host.
+     */
+    int senderhostid;
 
-	}
+    /**
+     * Id of the receiver host.
+     */
+    int recieverhostid;
 
-	HostPacket pkt;
+    /**
+     * Id of the sender VM.
+     * @todo Isn't this data at {@link #pkt}?
+     */
+    int sendervmid;
 
-	int senderhostid;
+    /**
+     * Id of the receiver VM.
+     * @todo Isn't this data at {@link #pkt}?
+     */
+    int recievervmid;
 
-	int recieverhostid;
+    /**
+     * Id of the sender cloudlet.
+     * @todo This field is not needed, since its value is being
+     * get from a {@link HostPacket} instance at {@link NetworkHost#sendpackets()}.
+     * So, such a data can be got form the {@link #pkt} attribute.
+     */
+    int cloudletid;
 
-	int sendervmid;
+    /** Time when the packet was sent. */
+    double stime;
 
-	int recievervmid;
+    /** Time when the packet was received. */
+    double rtime;
 
-	int cloudletid;
+    public NetworkPacket(int id, HostPacket pkt2, int vmid, int cloudletid) {
+            pkt = pkt2;
+            sendervmid = vmid;
+            this.cloudletid = cloudletid;
+            senderhostid = id;
+            stime = pkt.sendtime;
+            recievervmid = pkt2.reciever;
 
-	double stime;// time when sent
-
-	double rtime;// time when received
+    }
 }

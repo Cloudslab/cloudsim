@@ -11,7 +11,7 @@ package org.cloudbus.cloudsim.core.predicates;
 import org.cloudbus.cloudsim.core.SimEvent;
 
 /**
- * A predicate which selects events from specific entities.<br>
+ * A predicate which selects events coming from specific entities.<br/>
  * The idea of simulation predicates was copied from SimJava 2.
  * 
  * @author Marcos Dias de Assuncao
@@ -21,7 +21,7 @@ import org.cloudbus.cloudsim.core.SimEvent;
  */
 public class PredicateFrom extends Predicate {
 
-	/** The ids. */
+	/** The IDs of source entities to check the reception of events from. */
 	private final int[] ids;
 
 	/**
@@ -43,14 +43,23 @@ public class PredicateFrom extends Predicate {
 	}
 
 	/**
-	 * The match function called by <code>Simulation</code>, not used directly by the user.
+	 * Matches any event received from the registered sources.
 	 * 
-	 * @param ev the event to check
-	 * @return <code>true</code> if the event matches the predicate, <code>false</code> otherwise
+	 * @param ev {@inheritDoc}
+	 * @return {@inheritDoc}
+         * @see #ids
 	 */
 	@Override
 	public boolean match(SimEvent ev) {
 		int src = ev.getSource();
+                /*
+                @todo Instead of using an array where each position stores
+                the id of an entity (that requires a loop over the array, it would be 
+                used a HashSet (Set interface) to reduce the time
+                to match the event. 
+                This should be applied to the other implementations
+                of the super class.
+                */
 		for (int id : ids) {
 			if (src == id) {
 				return true;

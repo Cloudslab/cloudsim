@@ -9,7 +9,7 @@
 package org.cloudbus.cloudsim;
 
 /**
- * The Class VmMipsAllocationHistoryEntry.
+ * Stores historic data about a VM.
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.1.2
@@ -29,7 +29,7 @@ public class VmStateHistoryEntry {
 	private boolean isInMigration;
 
 	/**
-	 * Instantiates a new vm mips allocation history entry.
+	 * Instantiates a new VmStateHistoryEntry
 	 * 
 	 * @param time the time
 	 * @param allocatedMips the allocated mips

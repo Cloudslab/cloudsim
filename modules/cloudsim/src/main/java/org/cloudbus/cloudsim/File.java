@@ -17,26 +17,34 @@ package org.cloudbus.cloudsim;
  */
 public class File {
 
-	private String name;           // logical file name
+        /**
+         * Logical file name.
+         */
+	private String name;           
 
-	private FileAttribute attribute;    // a file attribute
+        /**
+         * A file attribute.
+         */
+	private FileAttribute attribute;    
 
-	// a transaction time for adding / getting /deleting this file
+	/** A transaction time for adding, deleting or getting the file. 
+         * @see #setTransactionTime(double) 
+         */
 	private double transactionTime;
 
-	/** Denotes that this file has not been registered to a Replica Catalogue */
+	/** Denotes that this file has not been registered to a Replica Catalogue. */
 	public static final int NOT_REGISTERED = -1;
 
-	/** Denotes that the type of this file is unknown */
+	/** Denotes that the type of this file is unknown. */
 	public static final int TYPE_UNKOWN = 0;
 
-	/** Denotes that the type of this file is a raw data */
+	/** Denotes that the type of this file is a raw data. */
 	public static final int TYPE_RAW_DATA = 1;
 
-	/** Denotes that the type of this file is a reconstructed data */
+	/** Denotes that the type of this file is a reconstructed data. */
 	public static final int TYPE_RECONSTRUCTED_DATA = 2;
 
-	/** Denotes that the type of this file is a tag data */
+	/** Denotes that the type of this file is a tag data. */
 	public static final int TYPE_TAG_DATA = 3;
 
 	/**
@@ -44,7 +52,7 @@ public class File {
 	 * NOTE: By default, a newly-created file is set to a <b>master</b> copy.
 	 * 
 	 * @param fileName file name
-	 * @param fileSize file size is in MBytes
+	 * @param fileSize file size in MBytes
 	 * @throws ParameterException This happens when one of the following scenarios occur:
 	 *             <ul>
 	 *             <li>the file name is empty or <tt>null</tt>
@@ -66,10 +74,10 @@ public class File {
 	}
 
 	/**
-	 * Copy constructor, i.e. cloning from a source file into this object, but this object is set to
-	 * a <b>replica</b>
+	 * Copy constructor that creates a clone from a source file and set the given file
+         * as a <b>replica</b>.
 	 * 
-	 * @param file the source of a File object to copy
+	 * @param file the source file to create a copy and that will be set as a replica
 	 * @throws ParameterException This happens when the source file is <tt>null</tt>
 	 */
 	public File(File file) throws ParameterException {
@@ -84,18 +92,18 @@ public class File {
 	}
 
 	/**
-	 * Clone this file but the clone file is set to a <b>replica</b>
+	 * Clone the current file and set the cloned one as a <b>replica</b>.
 	 * 
-	 * @return a clone of this file (as a replica) or <tt>null</tt> if an error occurs
+	 * @return a clone of the current file (as a replica) or <tt>null</tt> if an error occurs
 	 */
 	public File makeReplica() {
 		return makeCopy();
 	}
 
 	/**
-	 * Clone this file and make the new file as a <b>master</b> copy as well
+	 * Clone the current file and make the new file as a <b>master</b> copy as well.
 	 * 
-	 * @return a clone of this file (as a master copy) or <tt>null</tt> if an error occurs
+	 * @return a clone of the current file (as a master copy) or <tt>null</tt> if an error occurs
 	 */
 	public File makeMasterCopy() {
 		File file = makeCopy();
@@ -107,9 +115,9 @@ public class File {
 	}
 
 	/**
-	 * Makes a copy of this file
+	 * Makes a copy of this file.
 	 * 
-	 * @return a clone of this file (as a replica) or <tt>null</tt> if an error occurs
+	 * @return a clone of the current file (as a replica) or <tt>null</tt> if an error occurs
 	 */
 	private File makeCopy() {
 		File file = null;
@@ -126,7 +134,7 @@ public class File {
 	}
 
 	/**
-	 * Gets an attribute of this file
+	 * Gets an attribute of this file.
 	 * 
 	 * @return a file attribute
 	 */
@@ -135,7 +143,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the size of this object (in byte).<br>
+	 * Gets the size of this object (in byte). <br/>
 	 * NOTE: This object size is NOT the actual file size. Moreover, this size is used for
 	 * transferring this object over a network.
 	 * 
@@ -146,7 +154,7 @@ public class File {
 	}
 
 	/**
-	 * Sets the resource ID that stores this file
+	 * Sets the resource ID that stores this file.
 	 * 
 	 * @param resourceID a resource ID
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -156,7 +164,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the resource ID that stores this file
+	 * Gets the resource ID that stores this file.
 	 * 
 	 * @return the resource ID
 	 */
@@ -165,7 +173,7 @@ public class File {
 	}
 
 	/**
-	 * Returns the file name
+	 * Gets the file name.
 	 * 
 	 * @return the file name
 	 */
@@ -174,7 +182,7 @@ public class File {
 	}
 
 	/**
-	 * Sets the file name
+	 * Sets the file name.
 	 * 
 	 * @param name the file name
 	 */
@@ -183,7 +191,7 @@ public class File {
 	}
 
 	/**
-	 * Sets the owner name of this file
+	 * Sets the owner name of this file.
 	 * 
 	 * @param name the owner name
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -193,7 +201,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the owner name of this file
+	 * Gets the owner name of this file.
 	 * 
 	 * @return the owner name or <tt>null</tt> if empty
 	 */
@@ -202,7 +210,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the file size (in MBytes)
+	 * Gets the file size (in MBytes).
 	 * 
 	 * @return the file size (in MBytes)
 	 */
@@ -211,7 +219,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the file size (in bytes)
+	 * Gets the file size (in bytes).
 	 * 
 	 * @return the file size (in bytes)
 	 */
@@ -220,7 +228,7 @@ public class File {
 	}
 
 	/**
-	 * Sets the file size (in MBytes)
+	 * Sets the file size (in MBytes).
 	 * 
 	 * @param fileSize the file size (in MBytes)
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -230,7 +238,7 @@ public class File {
 	}
 
 	/**
-	 * Sets the last update time of this file (in seconds)<br>
+	 * Sets the last update time of this file (in seconds). <br/>
 	 * NOTE: This time is relative to the start time. Preferably use
 	 * {@link gridsim.CloudSim#clock()} method.
 	 * 
@@ -242,7 +250,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the last update time (in seconds)
+	 * Gets the last update time (in seconds).
 	 * 
 	 * @return the last update time (in seconds)
 	 */
@@ -251,7 +259,7 @@ public class File {
 	}
 
 	/**
-	 * Sets the file registration ID (published by a Replica Catalogue entity)
+	 * Sets the file registration ID (published by a Replica Catalogue entity).
 	 * 
 	 * @param id registration ID
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -261,7 +269,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the file registration ID
+	 * Gets the file registration ID.
 	 * 
 	 * @return registration ID
 	 */
@@ -270,7 +278,7 @@ public class File {
 	}
 
 	/**
-	 * Sets the file type (e.g. raw, tag, etc)
+	 * Sets the file type (for instance, raw, tag, etc).
 	 * 
 	 * @param type a file type
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -280,7 +288,7 @@ public class File {
 	}
 
 	/**
-	 * Gets this file type
+	 * Gets the file type.
 	 * 
 	 * @return file type
 	 */
@@ -289,7 +297,7 @@ public class File {
 	}
 
 	/**
-	 * Sets the checksum of this file
+	 * Sets the checksum of the file.
 	 * 
 	 * @param checksum the checksum of this file
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -299,7 +307,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the file checksum
+	 * Gets the file checksum.
 	 * 
 	 * @return file checksum
 	 */
@@ -308,7 +316,7 @@ public class File {
 	}
 
 	/**
-	 * Sets the cost associated with this file
+	 * Sets the cost associated with the file.
 	 * 
 	 * @param cost cost of this file
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -318,7 +326,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the cost associated with this file
+	 * Gets the cost associated with the file.
 	 * 
 	 * @return the cost of this file
 	 */
@@ -327,7 +335,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the file creation time (in millisecond)
+	 * Gets the file creation time (in millisecond).
 	 * 
 	 * @return the file creation time (in millisecond)
 	 */
@@ -336,7 +344,7 @@ public class File {
 	}
 
 	/**
-	 * Checks if this file already registered to a Replica Catalogue
+	 * Checks if the file is already registered to a Replica Catalogue.
 	 * 
 	 * @return <tt>true</tt> if it is registered, <tt>false</tt> otherwise
 	 */
@@ -345,7 +353,7 @@ public class File {
 	}
 
 	/**
-	 * Marks this file as a master copy or replica
+	 * Marks the file as a master copy or replica.
 	 * 
 	 * @param masterCopy a flag denotes <tt>true</tt> for master copy or <tt>false</tt> for a
 	 *            replica
@@ -355,7 +363,7 @@ public class File {
 	}
 
 	/**
-	 * Checks whether this file is a master copy or replica
+	 * Checks whether the file is a master copy or replica.
 	 * 
 	 * @return <tt>true</tt> if it is a master copy or <tt>false</tt> otherwise
 	 */
@@ -364,7 +372,7 @@ public class File {
 	}
 
 	/**
-	 * Marks this file as a read only or not
+	 * Marks the file as read-only or not.
 	 * 
 	 * @param readOnly a flag denotes <tt>true</tt> for read only or <tt>false</tt> for re-writeable
 	 */
@@ -373,7 +381,7 @@ public class File {
 	}
 
 	/**
-	 * Checks whether this file is a read only or not
+	 * Checks whether the file is read-only or not.
 	 * 
 	 * @return <tt>true</tt> if it is a read only or <tt>false</tt> otherwise
 	 */
@@ -383,7 +391,7 @@ public class File {
 
 	/**
 	 * Sets the current transaction time (in second) of this file. This transaction time can be
-	 * related to the operation of adding / deleting / getting this file on a resource's storage.
+	 * related to the operation of adding, deleting or getting the file on a resource's storage.
 	 * 
 	 * @param time the transaction time (in second)
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
@@ -406,7 +414,7 @@ public class File {
 	}
 
 	/**
-	 * Gets the last transaction time of this file (in second).
+	 * Gets the last transaction time of the file (in second).
 	 * 
 	 * @return the transaction time (in second)
 	 */

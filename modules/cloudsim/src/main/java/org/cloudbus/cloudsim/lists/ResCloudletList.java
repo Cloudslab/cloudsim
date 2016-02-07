@@ -21,18 +21,19 @@ import org.cloudbus.cloudsim.ResCloudlet;
 public class ResCloudletList {
 
 	/**
-	 * Returns a given Cloudlet. This method needs a combination of Cloudlet Id and User Id because
-	 * each Cloud Users might have exactly same Cloudlet Ids.
+	 * Gets a {@link ResCloudlet} with a given id and owned by a given user.
+         * This method needs a combination of Cloudlet Id and User Id because
+	 * each Cloud User might have exactly the same Cloudlet Id.
 	 * 
 	 * @param cloudletId a Cloudlet Id
 	 * @param userId an User Id
-	 * @param list the list
-	 * @return the Cloudlet.
-	 * @throws IndexOutOfBoundsException - if a Cloudlet with specified Id and user id is not in the
-	 *             list.
-	 * @pre cloudletId >= 0
+	 * @param list the list of ResCloudlet
+	 * @return a Cloudlet or null if not found
+     * @pre cloudletId >= 0
 	 * @pre userId >= 0
 	 * @post $none
+     * 
+     * @todo The second phrase of the class documentation is not clear. 
 	 */
 	public static <T extends ResCloudlet> ResCloudlet getByIdAndUserId(
 			List<T> list,
@@ -47,14 +48,15 @@ public class ResCloudletList {
 	}
 
 	/**
-	 * Finds the index of a Cloudlet inside the list. This method needs a combination of Cloudlet Id
+	 * Finds the index of a ResCloudlet inside a list. 
+     * This method needs a combination of Cloudlet Id
 	 * and User Id because each Cloud User might have exactly the same Cloudlet Id.
 	 * 
 	 * @param cloudletId a Cloudlet Id
 	 * @param userId an User Id
-	 * @param list the list
+	 * @param list the list of ResCloudlets
 	 * @return the index in this list of the first occurrence of the specified Cloudlet, or
-	 *         <code>-1</code> if the list does not contain this Cloudlet.
+	 *         <code>-1</code> if the list does not contain the Cloudlet.
 	 * @pre cloudletId >= 0
 	 * @pre userId >= 0
 	 * @post $none
@@ -71,12 +73,12 @@ public class ResCloudletList {
 	}
 
 	/**
-	 * Move a ResCloudlet object from this linked-list into a specified one.
+	 * Moves a ResCloudlet object from a list to another.
 	 * 
-	 * @param listFrom the list from
-	 * @param listTo the list to
-	 * @param cloudlet the cloudlet
-	 * @return <b>true</b> if the moving operation successful, otherwise return <b>false</b>
+	 * @param listFrom the source list
+	 * @param listTo the destination list
+	 * @param cloudlet the cloudlet to be moved from the source to the destination list
+	 * @return <b>true</b> if the moving operation successful, <b>false</b> otherwise
 	 * @pre obj != null
 	 * @pre list != null
 	 * @post $result == true || $result == false
@@ -90,10 +92,11 @@ public class ResCloudletList {
 	}
 
 	/**
-	 * Returns the position of the cloudlet with that id, if it exists. Otherwise -1.
-	 * @param cloudletList - the list of cloudlets.
-	 * @param id - the id we search for.
-	 * @return - the position of the cloudlet with that id, or -1 otherwise.
+	 * Gets the position of a ResCloudlet with a given id.
+     * 
+	 * @param cloudletList the list of cloudlets.
+	 * @param id the cloudlet id
+	 * @return the position of the cloudlet with that id, or -1 if not found.
 	 */
 	public static <T extends ResCloudlet> int getPositionById(List<T> cloudletList, int id) {
 		int i = 0 ;

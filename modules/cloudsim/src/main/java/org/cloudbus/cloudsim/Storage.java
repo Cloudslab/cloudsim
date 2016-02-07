@@ -74,14 +74,14 @@ public interface Storage {
 	boolean isFull();
 
 	/**
-	 * Gets the number of files stored on this storage.
+	 * Gets the number of files stored on this device.
 	 * 
 	 * @return the number of stored files
 	 */
 	int getNumStoredFile();
 
 	/**
-	 * Makes a reservation of the space on the storage to store a file.
+	 * Makes reservation of space on the storage to store a file.
 	 * 
 	 * @param fileSize the size to be reserved in MB
 	 * @return <tt>true</tt> if reservation succeeded, <tt>false</tt> otherwise
@@ -91,7 +91,7 @@ public interface Storage {
 	/**
 	 * Adds a file for which the space has already been reserved. The time taken (in seconds) for
 	 * adding the specified file can also be found using
-	 * {@link gridsim.datagrid.File#getTransactionTime()}.
+	 * {@link org.cloudbus.cloudsim.File#getTransactionTime()}.
 	 * 
 	 * @param file the file to be added
 	 * @return the time (in seconds) required to add the file
@@ -108,7 +108,7 @@ public interface Storage {
 
 	/**
 	 * Gets the file with the specified name. The time taken (in seconds) for getting the specified
-	 * file can also be found using {@link gridsim.datagrid.File#getTransactionTime()}.
+	 * file can also be found using {@link org.cloudbus.cloudsim.File#getTransactionTime()}.
 	 * 
 	 * @param fileName the name of the needed file
 	 * @return the file with the specified filename
@@ -124,7 +124,7 @@ public interface Storage {
 
 	/**
 	 * Adds a file to the storage. The time taken (in seconds) for adding the specified file can
-	 * also be found using {@link gridsim.datagrid.File#getTransactionTime()}.
+	 * also be found using {@link org.cloudbus.cloudsim.File#getTransactionTime()}.
 	 * 
 	 * @param file the file to be added
 	 * @return the time taken (in seconds) for adding the specified file
@@ -154,7 +154,7 @@ public interface Storage {
 	 * can also be found using {@link gridsim.datagrid.File#getTransactionTime()}.
 	 * 
 	 * @param fileName the name of the file to be removed
-	 * @param file the file which is removed from the storage is returned through this parameter
+	 * @param file the file removed from the storage is returned through this parameter
 	 * @return the time taken (in seconds) for deleting the specified file
 	 */
 	double deleteFile(String fileName, File file);
@@ -163,13 +163,13 @@ public interface Storage {
 	 * Removes a file from the storage. The time taken (in seconds) for deleting the specified file
 	 * can also be found using {@link gridsim.datagrid.File#getTransactionTime()}.
 	 * 
-	 * @param file the file which is removed from the storage is returned through this parameter
+	 * @param file the file to be removed
 	 * @return the time taken (in seconds) for deleting the specified file
 	 */
 	double deleteFile(File file);
 
 	/**
-	 * Checks whether a file is stored in the storage or not.
+	 * Checks whether a file exists in the storage or not.
 	 * 
 	 * @param fileName the name of the file we are looking for
 	 * @return <tt>true</tt> if the file is in the storage, <tt>false</tt> otherwise
@@ -186,7 +186,7 @@ public interface Storage {
 
 	/**
 	 * Renames a file on the storage. The time taken (in seconds) for renaming the specified file
-	 * can also be found using {@link gridsim.datagrid.File#getTransactionTime()}.
+	 * can also be found using {@link org.cloudbus.cloudsim.File#getTransactionTime()}.
 	 * 
 	 * @param file the file we would like to rename
 	 * @param newName the new name of the file

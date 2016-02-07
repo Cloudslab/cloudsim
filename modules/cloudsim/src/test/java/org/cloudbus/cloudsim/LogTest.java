@@ -14,6 +14,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +28,8 @@ public class LogTest {
 
 	private static final ByteArrayOutputStream OUTPUT = new ByteArrayOutputStream();
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+        private static final DecimalFormatSymbols dfs = 
+            DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT));
 
 	@Before
 	public void setUp() throws Exception {
@@ -85,12 +89,13 @@ public class LogTest {
 		OUTPUT.reset();
 
 		Log.format("%.2f", 123.01);
-		assertEquals("123.01", OUTPUT.toString());
+		assertEquals("123"+dfs.getDecimalSeparator()+"01", OUTPUT.toString());
 		OUTPUT.reset();
 	}
 
 	@Test
 	public void testFormatLine() throws IOException {
+                OUTPUT.reset();
 		Log.formatLine("test %s test", "test");
 		assertEquals("test test test" + LINE_SEPARATOR, OUTPUT.toString());
 		OUTPUT.reset();
@@ -104,12 +109,13 @@ public class LogTest {
 		OUTPUT.reset();
 
 		Log.formatLine("%.2f", 123.01);
-		assertEquals("123.01" + LINE_SEPARATOR, OUTPUT.toString());
+		assertEquals("123"+dfs.getDecimalSeparator()+"01" + LINE_SEPARATOR, OUTPUT.toString());
 		OUTPUT.reset();
 	}
 
 	@Test
 	public void testDisable() throws IOException {
+		OUTPUT.reset();
 		assertFalse(Log.isDisabled());
 
 		Log.print("test test");

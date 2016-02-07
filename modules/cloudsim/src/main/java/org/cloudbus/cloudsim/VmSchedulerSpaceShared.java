@@ -15,9 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * VmSchedulerSpaceShared is a VMM allocation policy that allocates one or more Pe to a VM, and
- * doesn't allow sharing of PEs. If there is no free PEs to the VM, allocation fails. Free PEs are
- * not allocated to VMs
+ * VmSchedulerSpaceShared is a VMM allocation policy that allocates one or more PEs from a host to a 
+ * Virtual Machine Monitor (VMM), and doesn't allow sharing of PEs. 
+ * The allocated PEs will be used until the VM finishes running. 
+ * If there is no enough free PEs as required by a VM,
+ * or whether the available PEs doesn't have enough capacity, the allocation fails. 
+ * In the case of fail, no PE is allocated to the requesting VM.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
@@ -25,14 +28,15 @@ import java.util.Map;
  */
 public class VmSchedulerSpaceShared extends VmScheduler {
 
-	/** Map containing VM ID and a vector of PEs allocated to this VM. */
+	/** A map between each VM and its allocated PEs, where the key is a VM ID and
+         * the value a list of PEs allocated to VM. */
 	private Map<String, List<Pe>> peAllocationMap;
 
-	/** The free pes vector. */
+	/** The list of free PEs yet available in the host. */
 	private List<Pe> freePes;
 
 	/**
-	 * Instantiates a new vm scheduler space shared.
+	 * Instantiates a new vm space-shared scheduler.
 	 * 
 	 * @param pelist the pelist
 	 */
@@ -43,11 +47,6 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 		getFreePes().addAll(pelist);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.cloudbus.cloudsim.VmScheduler#allocatePesForVm(org.cloudbus.cloudsim.Vm,
-	 * java.util.List)
-	 */
 	@Override
 	public boolean allocatePesForVm(Vm vm, List<Double> mipsShare) {
 		// if there is no enough free PEs, fails
@@ -81,10 +80,6 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.cloudbus.cloudsim.VmScheduler#deallocatePesForVm(org.cloudbus.cloudsim.Vm)
-	 */
 	@Override
 	public void deallocatePesForVm(Vm vm) {
 		getFreePes().addAll(getPeAllocationMap().get(vm.getUid()));
@@ -118,18 +113,18 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 	}
 
 	/**
-	 * Sets the free pes vector.
+	 * Sets the free pes list.
 	 * 
-	 * @param freePes the new free pes vector
+	 * @param freePes the new free pes list
 	 */
 	protected void setFreePes(List<Pe> freePes) {
 		this.freePes = freePes;
 	}
 
 	/**
-	 * Gets the free pes vector.
+	 * Gets the free pes list.
 	 * 
-	 * @return the free pes vector
+	 * @return the free pes list
 	 */
 	protected List<Pe> getFreePes() {
 		return freePes;

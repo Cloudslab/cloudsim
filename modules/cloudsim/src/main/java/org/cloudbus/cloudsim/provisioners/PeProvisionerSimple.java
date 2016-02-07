@@ -16,20 +16,25 @@ import java.util.Map;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * The Class PeProvisionerSimple.
+ * PeProvisionerSimple is an extension of {@link PeProvisioner} which uses a best-effort policy to
+ * allocate virtual PEs to VMs: 
+ * if there is available mips on the physical PE, it allocates to a virtual PE; otherwise, it fails. 
+ * Each host's PE has to have its own instance of a PeProvisioner.
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
  */
 public class PeProvisionerSimple extends PeProvisioner {
 
-	/** The pe table. */
+	/** The PE map, where each key is a VM id and each value
+         * is the list of PEs (in terms of their amount of MIPS) 
+         * allocated to that VM. */
 	private Map<String, List<Double>> peTable;
 
 	/**
-	 * Creates the PeProvisionerSimple object.
+	 * Instantiates a new pe provisioner simple.
 	 * 
-	 * @param availableMips the available mips
+	 * @param availableMips The total mips capacity of the PE that the provisioner can allocate to VMs. 
 	 * 
 	 * @pre $none
 	 * @post $none
@@ -39,19 +44,11 @@ public class PeProvisionerSimple extends PeProvisioner {
 		setPeTable(new HashMap<String, ArrayList<Double>>());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.PeProvisioner#allocateMipsForVM(cloudsim.power.VM, int)
-	 */
 	@Override
 	public boolean allocateMipsForVm(Vm vm, double mips) {
 		return allocateMipsForVm(vm.getUid(), mips);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.PeProvisioner#allocateMipsForVm(java.lang.String, double)
-	 */
 	@Override
 	public boolean allocateMipsForVm(String vmUid, double mips) {
 		if (getAvailableMips() < mips) {
@@ -74,11 +71,6 @@ public class PeProvisionerSimple extends PeProvisioner {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.PeProvisioner#allocateMipsForVM(cloudsim.power.VM,
-	 * java.util.ArrayList)
-	 */
 	@Override
 	public boolean allocateMipsForVm(Vm vm, List<Double> mips) {
 		int totalMipsToAllocate = 0;
@@ -97,22 +89,12 @@ public class PeProvisionerSimple extends PeProvisioner {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.PeProvisioner#deallocateMipsForAllVms()
-	 */
 	@Override
 	public void deallocateMipsForAllVms() {
 		super.deallocateMipsForAllVms();
 		getPeTable().clear();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * cloudsim.provisioners.PeProvisioner#getAllocatedMipsForVMByVirtualPeId(cloudsim.power.VM,
-	 * int)
-	 */
 	@Override
 	public double getAllocatedMipsForVmByVirtualPeId(Vm vm, int peId) {
 		if (getPeTable().containsKey(vm.getUid())) {
@@ -124,10 +106,6 @@ public class PeProvisionerSimple extends PeProvisioner {
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.PeProvisioner#getAllocatedMipsForVM(cloudsim.power.VM)
-	 */
 	@Override
 	public List<Double> getAllocatedMipsForVm(Vm vm) {
 		if (getPeTable().containsKey(vm.getUid())) {
@@ -136,10 +114,6 @@ public class PeProvisionerSimple extends PeProvisioner {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.PeProvisioner#getTotalAllocatedMipsForVM(cloudsim.power.VM)
-	 */
 	@Override
 	public double getTotalAllocatedMipsForVm(Vm vm) {
 		if (getPeTable().containsKey(vm.getUid())) {
@@ -152,10 +126,6 @@ public class PeProvisionerSimple extends PeProvisioner {
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.PeProvisioner#deallocateMipsForVM(cloudsim.power.VM)
-	 */
 	@Override
 	public void deallocateMipsForVm(Vm vm) {
 		if (getPeTable().containsKey(vm.getUid())) {
@@ -167,16 +137,16 @@ public class PeProvisionerSimple extends PeProvisioner {
 	}
 
 	/**
-	 * Gets the pe table.
+	 * Gets the pe map.
 	 * 
-	 * @return the peTable
+	 * @return the pe map
 	 */
 	protected Map<String, List<Double>> getPeTable() {
 		return peTable;
 	}
 
 	/**
-	 * Sets the pe table.
+	 * Sets the pe map.
 	 * 
 	 * @param peTable the peTable to set
 	 */

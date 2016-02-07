@@ -65,9 +65,16 @@
 			</configuration>
 		</plugin>
 	</plugins>
-  </build>  
-
-  <reporting>
+  </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.4.1</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+    <reporting>
 	<plugins>
 	  <plugin>
 		<groupId>org.apache.maven.plugins</groupId>

@@ -13,7 +13,8 @@ import java.util.Random;
 import org.apache.commons.math3.distribution.LogNormalDistribution;
 
 /**
- * The Class LognormalDistr.
+ * A pseudo random number generator following the
+ * <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">Lognormal</a> distribution.
  * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
@@ -21,16 +22,16 @@ import org.apache.commons.math3.distribution.LogNormalDistribution;
 public class LognormalDistr implements ContinuousDistribution {
 
 	
-	/** The num gen. */
+	/** The internal Log-normal pseudo random number generator. */
 	private final LogNormalDistribution numGen;
 
 
 	/**
-	 * Instantiates a new lognormal distr.
+	 * Instantiates a new Log-normal pseudo random number generator.
 	 * 
 	 * @param seed the seed
-	 * @param mean the mean
-	 * @param dev the dev
+	 * @param shape the shape
+	 * @param scale the scale
 	 */
 	public LognormalDistr(Random seed, double shape, double scale) {
 		this(shape, scale);
@@ -38,19 +39,15 @@ public class LognormalDistr implements ContinuousDistribution {
 	}
 
 	/**
-	 * Instantiates a new lognormal distr.
+	 * Instantiates a new Log-normal pseudo random number generator.
 	 * 
-	 * @param mean the mean
-	 * @param dev the dev
+	 * @param shape the shape
+	 * @param scale the scale
 	 */
 	public LognormalDistr(double shape, double scale) {
 		numGen = new LogNormalDistribution(scale, shape);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.distributions.ContinuousDistribution#sample()
-	 */
 	@Override
 	public double sample() {
 		return numGen.sample();
