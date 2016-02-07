@@ -38,10 +38,9 @@ public abstract class VmAllocationPolicy {
 	}
 
 	/**
-	 * Allocates a host for a given VM. The host to be allocated is the one that was already
-	 * reserved.
+	 * Allocates a host for a given VM.
 	 * 
-	 * @param vm virtual machine which the host is reserved to
+	 * @param vm the VM to allocate a host to
 	 * @return $true if the host could be allocated; $false otherwise
 	 * @pre $none
 	 * @post $none
@@ -76,7 +75,7 @@ public abstract class VmAllocationPolicy {
 	/**
 	 * Releases the host used by a VM.
 	 * 
-	 * @param vm the vm
+	 * @param vm the vm to get its host released
 	 * @pre $none
 	 * @post $none
 	 */

@@ -29,7 +29,7 @@ public class PredicateAny extends Predicate {
 	 * Considers there is no criteria to match an event,
          * so any event received by the predicate will match.
 	 * 
-	 * @param ev the event received
+	 * @param ev {@inheritDoc}
 	 * @return always true to indicate that any received event is accepted
 	 */
 	@Override

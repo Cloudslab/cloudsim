@@ -15,8 +15,7 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * A class representing a simple VM allocation policy that does not perform any
- * optimization of the VM allocation.
+ * A simple VM allocation policy that does <b>not</b> perform any optimization on VM allocation.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>

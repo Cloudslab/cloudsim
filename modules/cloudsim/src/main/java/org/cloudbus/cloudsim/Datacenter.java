@@ -122,14 +122,6 @@ public class Datacenter extends SimEntity {
 		// empty. This should be override by a child class
 	}
 
-	/**
-	 * Processes events or services that are available for this Datacenter.
-	 * 
-	 * @param ev information about the event just happened
-         * 
-	 * @pre ev != null
-	 * @post $none
-	 */
 	@Override
 	public void processEvent(SimEvent ev) {
 		int srcId = -1;

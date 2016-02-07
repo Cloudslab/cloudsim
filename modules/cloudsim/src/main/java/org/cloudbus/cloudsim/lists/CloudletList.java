@@ -67,13 +67,13 @@ public class CloudletList {
 		Collections.sort(cloudletList, new Comparator<T>() {
 
 			/**
-			 * Compares two objects.
+			 * Compares two Cloudlets.
 			 * 
-			 * @param a the first Object to be compared
-			 * @param b the second Object to be compared
-			 * @return the value 0 if both Objects are numerically equal; a value less than 0 if the
-			 *         first Object is numerically less than the second Object; and a value greater
-			 *         than 0 if the first Object is numerically greater than the second Object.
+			 * @param a the first Cloudlet to be compared
+			 * @param b the second Cloudlet to be compared
+			 * @return the value 0 if both Cloudlets are numerically equal; a value less than 0 if the
+			 *         first Object is numerically less than the second Cloudlet; and a value greater
+			 *         than 0 if the first Cloudlet is numerically greater than the second Cloudlet.
 			 * @throws ClassCastException <tt>a</tt> and <tt>b</tt> are expected to be of type
 			 *             <tt>Cloudlet</tt>
 			 * @pre a != null

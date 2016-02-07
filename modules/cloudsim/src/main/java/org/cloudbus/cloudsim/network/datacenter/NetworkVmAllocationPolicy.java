@@ -20,8 +20,8 @@ import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * NetworkVmAllocationPolicy is an {@link VmAllocationPolicy} that chooses, as the host for a VM, the host
- * with less PEs in use.
+ * NetworkVmAllocationPolicy is an {@link VmAllocationPolicy} that chooses, 
+ * as the host for a VM, the host with less PEs in use.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
@@ -63,11 +63,11 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	}
 
 	/**
-	 * Allocates a host for a given VM.
+	 * Allocates the host with less PEs in use for a given VM.
 	 * 
-	 * @param vm VM specification
+	 * @param vm {@inheritDoc}
 	 * 
-	 * @return $true if the host could be allocated; $false otherwise
+	 * @return {@inheritDoc}
 	 * 
 	 * @pre $none
 	 * @post $none
@@ -145,14 +145,6 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 		return maxUtilization;
 	}
 
-	/**
-	 * Releases the host used by a VM.
-	 * 
-	 * @param vm the vm
-	 * 
-	 * @pre $none
-	 * @post none
-	 */
 	@Override
 	public void deallocateHostForVm(Vm vm) {
 		Host host = getVmTable().remove(vm.getUid());
@@ -164,32 +156,11 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 		}
 	}
 
-	/**
-	 * Gets the host that is executing the given VM.
-	 * 
-	 * @param vm the vm to get its host
-	 * 
-	 * @return the Host of the given vm; $null if not found
-	 * 
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public Host getHost(Vm vm) {
 		return getVmTable().get(vm.getUid());
 	}
 
-	/**
-	 * Gets the host that is executing the given VM belonging to the given user.
-	 * 
-	 * @param vmId the vm id
-	 * @param userId the user id
-	 * 
-	 * @return the Host of the given vm and user; $null if not found
-	 * 
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public Host getHost(int vmId, int userId) {
 		return getVmTable().get(Vm.getUid(userId, vmId));

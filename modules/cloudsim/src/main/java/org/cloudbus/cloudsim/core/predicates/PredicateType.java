@@ -44,8 +44,8 @@ public class PredicateType extends Predicate {
 	/**
 	 * Matches any event that has one of the specified {@link #tags}.
 	 * 
-	 * @param ev the event to check
-	 * @return <code>true</code> if the event matches the predicate, <code>false</code> otherwise
+	 * @param ev {@inheritDoc}
+	 * @return {@inheritDoc}
          * @see #tags
 	 */
 	@Override

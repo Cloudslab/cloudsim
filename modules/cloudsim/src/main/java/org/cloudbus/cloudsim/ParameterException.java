@@ -55,13 +55,6 @@ public class ParameterException extends Exception {
 		this.message = message;
 	}
 
-	/**
-	 * Returns an error message of this object.
-	 * 
-	 * @return an error message
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public String toString() {
 		return message;

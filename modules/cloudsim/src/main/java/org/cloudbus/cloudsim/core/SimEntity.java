@@ -394,14 +394,19 @@ public abstract class SimEntity implements Cloneable {
 	public abstract void startEntity();
 
 	/**
+	 * Processes events or services that are available for the entity.
 	 * This method is invoked by the {@link CloudSim} class whenever there is an event in the
 	 * deferred queue, which needs to be processed by the entity.
 	 * 
-	 * @param ev the event to be processed by the entity
+	 * @param ev information about the event just happened
+         * 
+	 * @pre ev != null
+	 * @post $none
 	 */
 	public abstract void processEvent(SimEvent ev);
 
 	/**
+         * Shuts down the entity.
 	 * This method is invoked by the {@link CloudSim} before the simulation finishes. If you want
 	 * to save data in log files this is the method in which the corresponding code would be placed.
 	 */

@@ -146,13 +146,6 @@ public class DatacenterBroker extends SimEntity {
 		CloudletList.getById(getCloudletList(), cloudletId).setVmId(vmId);
 	}
 
-	/**
-	 * Processes events available for this Broker.
-	 * 
-	 * @param ev a SimEvent object
-	 * @pre ev != null
-	 * @post $none
-	 */
 	@Override
 	public void processEvent(SimEvent ev) {
 		switch (ev.getTag()) {

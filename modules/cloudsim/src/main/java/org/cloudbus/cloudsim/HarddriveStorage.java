@@ -111,21 +111,11 @@ public class HarddriveStorage implements Storage {
 		maxTransferRate = 133; // in MB/sec
 	}
 
-	/**
-	 * Gets the available space on this storage in MB.
-	 * 
-	 * @return the available space in MB
-	 */
 	@Override
 	public double getAvailableSpace() {
 		return capacity - currentSize;
 	}
 
-	/**
-	 * Checks if the storage is full or not.
-	 * 
-	 * @return <tt>true</tt> if the storage is full, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean isFull() {
 		if (Math.abs(currentSize - capacity) < .0000001) { // currentSize == capacity
@@ -134,22 +124,11 @@ public class HarddriveStorage implements Storage {
 		return false;
 	}
 
-	/**
-	 * Gets the number of files stored on this hard drive.
-	 * 
-	 * @return the number of stored files
-	 */
 	@Override
 	public int getNumStoredFile() {
 		return fileList.size();
 	}
 
-	/**
-	 * Reserves space on the hard drive to store a file.
-	 * 
-	 * @param fileSize the size to be reserved in MB
-	 * @return <tt>true</tt> if reservation succeeded, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean reserveSpace(int fileSize) {
 		if (fileSize <= 0) {
@@ -164,13 +143,6 @@ public class HarddriveStorage implements Storage {
 		return true;
 	}
 
-	/**
-	 * Adds a file for which the space has already been reserved. The time taken (in seconds) for
-	 * adding the file can also be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param file the file to be added
-	 * @return the time (in seconds) required to add the file
-	 */
 	@Override
 	public double addReservedFile(File file) {
 		if (file == null) {
@@ -188,12 +160,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Checks whether there is enough space on the hard drive for a certain file.
-	 * 
-	 * @param fileSize a FileAttribute object to compare to
-	 * @return <tt>true</tt> if enough space available, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean hasPotentialAvailableSpace(int fileSize) {
 		if (fileSize <= 0) {
@@ -227,31 +193,16 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Gets the total capacity of the storage in MB.
-	 * 
-	 * @return the capacity of the storage in MB
-	 */
 	@Override
 	public double getCapacity() {
 		return capacity;
 	}
 
-	/**
-	 * Gets the current size of the stored files in MB.
-	 * 
-	 * @return the current size of the stored files in MB
-	 */
 	@Override
 	public double getCurrentSize() {
 		return currentSize;
 	}
 
-	/**
-	 * Gets the name of the storage.
-	 * 
-	 * @return the name of this storage
-	 */
 	@Override
 	public String getName() {
 		return name;
@@ -281,12 +232,6 @@ public class HarddriveStorage implements Storage {
 		return latency;
 	}
 
-	/**
-	 * Sets the maximum transfer rate of this storage system in MB/sec.
-	 * 
-	 * @param rate the maximum transfer rate in MB/sec
-	 * @return <tt>true</tt> if the setting succeeded, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean setMaxTransferRate(int rate) {
 		if (rate <= 0) {
@@ -297,11 +242,6 @@ public class HarddriveStorage implements Storage {
 		return true;
 	}
 
-	/**
-	 * Gets the maximum transfer rate of the storage in MB/sec.
-	 * 
-	 * @return the maximum transfer rate in MB/sec
-	 */
 	@Override
 	public double getMaxTransferRate() {
 		return maxTransferRate;
@@ -344,13 +284,6 @@ public class HarddriveStorage implements Storage {
 		return avgSeekTime;
 	}
 
-	/**
-	 * Gets the file with the specified name. The time taken (in seconds) for getting the file can
-	 * also be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param fileName the name of the needed file
-	 * @return the file with the specified filename
-	 */
 	@Override
 	public File getFile(String fileName) {
 		// check first whether file name is valid or not
@@ -392,11 +325,6 @@ public class HarddriveStorage implements Storage {
 		return obj;
 	}
 
-	/**
-	 * Gets the list of file names located on this storage.
-	 * 
-	 * @return a List of file names
-	 */
 	@Override
 	public List<String> getFileNameList() {
 		return nameList;
@@ -464,13 +392,13 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Adds a file to the storage. First, the method checks if there is enough space on the storage,
-	 * then it checks if the file with the same name is already taken to avoid duplicate filenames. <br>
-	 * The time taken (in seconds) for adding the file can also be found using
-	 * {@link gridsim.datagrid.File#getTransactionTime()}.
+	 * {@inheritDoc}
+         * 
+         * <p/>First, the method checks if there is enough space on the storage,
+	 * then it checks if the file with the same name is already taken to avoid duplicate filenames. 
 	 * 
-	 * @param file the file to be added
-	 * @return the time taken (in seconds) for adding the specified file
+	 * @param file {@inheritDoc}
+	 * @return {@inheritDoc}
 	 */
 	@Override
 	public double addFile(File file) {
@@ -500,14 +428,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Adds a set of files to the storage. Runs through the list of files and save all of them. The
-	 * time taken (in seconds) for adding each file can also be found using
-	 * {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param list the files to be added
-	 * @return the time taken (in seconds) for adding the specified files
-	 */
 	@Override
 	public double addFile(List<File> list) {
 		double result = 0.0;
@@ -525,13 +445,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Removes a file from the storage. The time taken (in seconds) for deleting the file can also
-	 * be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param fileName the name of the file to be removed
-	 * @return the deleted file
-	 */
 	@Override
 	public File deleteFile(String fileName) {
 		if (fileName == null || fileName.length() == 0) {
@@ -556,26 +469,11 @@ public class HarddriveStorage implements Storage {
 		return file;
 	}
 
-	/**
-	 * Removes a file from the storage. The time taken (in seconds) for deleting the file can also
-	 * be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param fileName the name of the file to be removed
-	 * @param file the file which is removed from the storage is returned through this parameter
-	 * @return the time taken (in seconds) for deleting the specified file
-	 */
 	@Override
 	public double deleteFile(String fileName, File file) {
 		return deleteFile(file);
 	}
 
-	/**
-	 * Removes a file from the storage. The time taken (in seconds) for deleting the file can also
-	 * be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param file the file which is removed from the storage is returned through this parameter
-	 * @return the time taken (in seconds) for deleting the specified file
-	 */
 	@Override
 	public double deleteFile(File file) {
 		double result = 0.0;
@@ -597,12 +495,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Checks whether a certain file is on the storage or not.
-	 * 
-	 * @param fileName the name of the file we are looking for
-	 * @return <tt>true</tt> if the file is in the storage, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean contains(String fileName) {
 		boolean result = false;
@@ -622,12 +514,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Checks whether a certain file is on the storage or not.
-	 * 
-	 * @param file the file we are looking for
-	 * @return <tt>true</tt> if the file is in the storage, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean contains(File file) {
 		boolean result = false;
@@ -639,14 +525,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Renames a file on the storage. The time taken (in seconds) for renaming the file can also be
-	 * found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param file the file we would like to rename
-	 * @param newName the new name of the file
-	 * @return <tt>true</tt> if the renaming succeeded, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean renameFile(File file, String newName) {
 		// check whether the new filename is conflicting with existing ones

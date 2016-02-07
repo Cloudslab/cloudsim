@@ -392,11 +392,12 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	}
 
 	/**
-	 * Returns the first cloudlet to migrate to another vm.
+	 * Returns the first cloudlet to migrate to another VM.
 	 * 
 	 * @return the first running cloudlet
 	 * @pre $none
 	 * @post $none
+         * 
          * @todo it doesn't check if the list is empty
 	 */
 	@Override

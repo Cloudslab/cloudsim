@@ -26,12 +26,11 @@ public class PredicateNone extends Predicate {
 	/**
 	 * Considers that no event received by the predicate matches.
 	 * 
-	 * @param ev the event received
+	 * @param ev {@inheritDoc}
 	 * @return always false to indicate that no event is accepted
 	 */
 	@Override
 	public boolean match(SimEvent ev) {
 		return false;
 	}
-
 }

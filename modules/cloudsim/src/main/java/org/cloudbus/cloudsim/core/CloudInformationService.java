@@ -76,12 +76,6 @@ public class CloudInformationService extends SimEntity {
 	public void startEntity() {
 	}
 
-	/**
-	 * Processes events scheduled for the CIS.
-	 * 
-	 * @param ev the event to be handled.
-	 * @see SimEntity#processEvent(SimEvent)
-	 */
 	@Override
 	public void processEvent(SimEvent ev) {
 		int id = -1;  // requester id
@@ -138,9 +132,6 @@ public class CloudInformationService extends SimEntity {
 		}
 	}
 
-	/**
-	 * Shutdowns the CloudInformationService.
-	 */
 	@Override
 	public void shutdownEntity() {
 		notifyAllEntity();

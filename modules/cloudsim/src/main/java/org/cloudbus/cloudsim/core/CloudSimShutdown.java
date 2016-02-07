@@ -81,7 +81,7 @@ public class CloudSimShutdown extends SimEntity {
 	public void startEntity() {
 		// do nothing
 	}
-
+        
         /**
          * The method has no effect at the current class.
          */
@@ -89,5 +89,4 @@ public class CloudSimShutdown extends SimEntity {
 	public void shutdownEntity() {
 		// do nothing
 	}
-
 }

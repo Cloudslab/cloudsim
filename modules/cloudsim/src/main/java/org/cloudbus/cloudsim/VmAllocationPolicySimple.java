@@ -58,10 +58,10 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 	}
 
 	/**
-	 * Allocates a host for a given VM.
+	 * Allocates the host with less PEs in use for a given VM.
 	 * 
-	 * @param vm the VM to allocate a host to
-	 * @return $true if the host could be allocated; $false otherwise
+	 * @param vm {@inheritDoc}
+	 * @return {@inheritDoc}
 	 * @pre $none
 	 * @post $none
 	 */
@@ -108,13 +108,6 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		return result;
 	}
 
-	/**
-	 * Releases the host used by a VM.
-	 * 
-	 * @param vm the vm to get its host released
-	 * @pre $none
-	 * @post none
-	 */
 	@Override
 	public void deallocateHostForVm(Vm vm) {
 		Host host = getVmTable().remove(vm.getUid());

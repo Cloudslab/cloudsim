@@ -215,11 +215,6 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 		return data;
 	}
 
-	/**
-	 * Create an exact copy of this event.
-	 * 
-	 * @return The event's copy
-	 */
 	@Override
 	public Object clone() {
 		return new SimEvent(etype, time, entSrc, entDst, tag, data);
