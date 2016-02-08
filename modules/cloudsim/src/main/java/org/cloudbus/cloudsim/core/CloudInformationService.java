@@ -30,23 +30,37 @@ import org.cloudbus.cloudsim.Log;
  */
 public class CloudInformationService extends SimEntity {
 
-	/** For all types of hostList. */
+	/** A list containing the id of all entities that are registered at the 
+         * Cloud Information Service (CIS). 
+         * @todo It is not clear if this list is a list of host id's or datacenter id's.
+         * The previous attribute documentation just said "For all types of hostList".
+         * It can be seen at the method {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)}
+         * that the list is updated when a CloudSimTags.REGISTER_RESOURCE event
+         * is received. However, only the Datacenter class sends and event
+         * of this type, including its id as parameter.
+         * 
+         */
 	private final List<Integer> resList;
 
-	/** Only for AR hostList. */
+	/** A list containing only the id of entities with Advanced Reservation feature
+         * that are registered at the CIS. */
 	private final List<Integer> arList;
 
-	/** List of all regional GIS. */
+	/** List of all regional CIS. */
 	private final List<Integer> gisList;
 
 	/**
-	 * Allocates a new CloudInformationService object.
+	 * Instantiates a new CloudInformationService object.
 	 * 
-	 * @param name the name to be associated with this entity (as required by SimEntity class)
-	 * @throws Exception This happens when creating this entity before initialising CloudSim package
+	 * @param name the name to be associated with this entity (as required by {@link SimEntity} class)
+	 * @throws Exception when creating this entity before initialising CloudSim package
 	 *             or this entity name is <tt>null</tt> or empty
 	 * @pre name != null
 	 * @post $none
+         * 
+         * @todo The use of Exception is not recommended. Specific exceptions
+         * would be thrown (such as {@link IllegalArgumentException})
+         * or {@link RuntimeException}
 	 */
 	public CloudInformationService(String name) throws Exception {
 		super(name);
@@ -55,29 +69,23 @@ public class CloudInformationService extends SimEntity {
 		gisList = new LinkedList<Integer>();
 	}
 
-	/**
-	 * Starts the CloudInformationService entity.
-	 */
+        /**
+         * The method has no effect at the current class.
+         */
 	@Override
 	public void startEntity() {
 	}
 
-	/**
-	 * Processes events scheduled for this entity.
-	 * 
-	 * @param ev the event to be handled.
-	 * @see SimEntity#processEvent(SimEvent)
-	 */
 	@Override
 	public void processEvent(SimEvent ev) {
 		int id = -1;  // requester id
 		switch (ev.getTag()) {
-		// storing regional GIS id
+		// storing regional CIS id
 			case CloudSimTags.REGISTER_REGIONAL_GIS:
 				gisList.add((Integer) ev.getData());
 				break;
 
-			// request for all regional GIS list
+			// request for all regional CIS list
 			case CloudSimTags.REQUEST_REGIONAL_GIS:
 
 				// Get ID of an entity that send this event
@@ -124,9 +132,6 @@ public class CloudInformationService extends SimEntity {
 		}
 	}
 
-	/**
-	 * Shutdowns the CloudInformationService.
-	 */
 	@Override
 	public void shutdownEntity() {
 		notifyAllEntity();
@@ -135,7 +140,7 @@ public class CloudInformationService extends SimEntity {
 	/**
 	 * Gets the list of all CloudResource IDs, including hostList that support Advance Reservation.
 	 * 
-	 * @return LinkedList containing resource IDs. Each ID is represented by an Integer object.
+	 * @return list containing resource IDs. Each ID is represented by an Integer object.
 	 * @pre $none
 	 * @post $none
 	 */
@@ -146,7 +151,7 @@ public class CloudInformationService extends SimEntity {
 	/**
 	 * Gets the list of CloudResource IDs that <b>only</b> support Advanced Reservation.
 	 * 
-	 * @return LinkedList containing resource IDs. Each ID is represented by an Integer object.
+	 * @return list containing resource IDs. Each ID is represented by an Integer object.
 	 * @pre $none
 	 * @post $none
 	 */
@@ -228,10 +233,12 @@ public class CloudInformationService extends SimEntity {
 	// //////////////////////// PROTECTED METHODS ////////////////////////////
 
 	/**
-	 * This method needs to override by a child class for processing other events. These events are
-	 * based on tags that are not mentioned in {@link #body()} method.
+	 * Process non-default received events that aren't processed by
+         * the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
+         * This method should be overridden by subclasses in other to process
+         * new defined events.
 	 * 
-	 * @param ev a Sim_event object
+	 * @param ev a SimEvent object
 	 * @pre ev != null
 	 * @post $none
 	 */
@@ -248,7 +255,7 @@ public class CloudInformationService extends SimEntity {
 
 	/**
 	 * Notifies the registered entities about the end of simulation. This method should be
-	 * overridden by the child class
+	 * overridden by child classes.
 	 */
 	protected void processEndSimulation() {
 		// this should be overridden by the child class
@@ -257,10 +264,10 @@ public class CloudInformationService extends SimEntity {
 	// ////////////////// End of PROTECTED METHODS ///////////////////////////
 
 	/**
-	 * Checks for a list for a particular resource id.
+	 * Checks whether a list contains a particular resource id.
 	 * 
-	 * @param list list of hostList
-	 * @param id a resource ID
+	 * @param list list of resource id
+	 * @param id a resource ID to find
 	 * @return true if a resource is in the list, otherwise false
 	 * @pre list != null
 	 * @pre id > 0
@@ -288,7 +295,7 @@ public class CloudInformationService extends SimEntity {
 	}
 
 	/**
-	 * Tells all registered entities the end of simulation.
+	 * Tells all registered entities about the end of simulation.
 	 * 
 	 * @pre $none
 	 * @post $none
@@ -305,7 +312,8 @@ public class CloudInformationService extends SimEntity {
 	}
 
 	/**
-	 * Sends a signal to all entity IDs mentioned in the given list.
+	 * Sends a {@link CloudSimTags#END_OF_SIMULATION} signal to all entity IDs 
+         * mentioned in the given list.
 	 * 
 	 * @param list List storing entity IDs
 	 * @pre list != null

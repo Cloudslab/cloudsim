@@ -14,15 +14,18 @@ import java.util.List;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * The class of an abstract VM selection policy.
+ * An abstract VM selection policy used to select VMs from a list of migratable VMs.
+ * The selection is defined by sub classes.
  * 
- * If you are using any algorithms, policies or workload included in the power package, please cite
- * the following paper:
+ * <br/>If you are using any algorithms, policies or workload included in the power package please cite
+ * the following paper:<br/>
  * 
- * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012
+ * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * </ul>
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
@@ -30,18 +33,18 @@ import org.cloudbus.cloudsim.Vm;
 public abstract class PowerVmSelectionPolicy {
 
 	/**
-	 * Gets the vms to migrate.
+	 * Gets a VM to migrate from a given host.
 	 * 
 	 * @param host the host
-	 * @return the vms to migrate
+	 * @return the vm to migrate
 	 */
 	public abstract Vm getVmToMigrate(PowerHost host);
 
 	/**
-	 * Gets the migratable vms.
+	 * Gets the list of migratable VMs from a given host.
 	 * 
 	 * @param host the host
-	 * @return the migratable vms
+	 * @return the list of migratable VMs
 	 */
 	protected List<PowerVm> getMigratableVms(PowerHost host) {
 		List<PowerVm> migratableVms = new ArrayList<PowerVm>();

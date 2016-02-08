@@ -14,18 +14,19 @@ import java.util.Random;
 import org.apache.commons.math3.distribution.WeibullDistribution;
 
 /**
- * The Class WeibullDistr.
+ * A pseudo random number generator following the 
+ * <a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull distribution</a>.
  * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
  */
 public class WeibullDistr implements ContinuousDistribution {
 
-	/** The num gen. */
+	/** The internal Weibull pseudo random number generator. */
 	private final WeibullDistribution numGen;
 
 	/**
-	 * Instantiates a new weibull distr.
+	 * Instantiates a new Weibull pseudo random number generator.
 	 * 
 	 * @param seed the seed
 	 * @param alpha the alpha
@@ -37,7 +38,7 @@ public class WeibullDistr implements ContinuousDistribution {
 	}
 
 	/**
-	 * Instantiates a new weibull distr.
+	 * Instantiates a new Weibull pseudo random number generator.
 	 * 
 	 * @param alpha the alpha
 	 * @param beta the beta
@@ -46,10 +47,6 @@ public class WeibullDistr implements ContinuousDistribution {
 		numGen = new WeibullDistribution(alpha, beta);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.distributions.ContinuousDistribution#sample()
-	 */
 	@Override
 	public double sample() {
 		return numGen.sample();

@@ -175,7 +175,7 @@ public class CloudSim {
 	 * <p>
 	 * <b>Note</b>: This method should be called after all the entities have been setup and added.
 	 * 
-	 * @return the double
+	 * @return the last clock time
 	 * @throws NullPointerException This happens when creating this entity before initialising
 	 *             CloudSim package or this entity name is <tt>null</tt> or empty.
 	 * @see gridsim.CloudSim#init(int, Calendar, boolean)
@@ -289,7 +289,7 @@ public class CloudSim {
 	}
 
 	/**
-	 * Sends a request to Cloud Information Service (GIS) entity to get the list of all Cloud
+	 * Sends a request to Cloud Information Service (CIS) entity to get the list of all Cloud
 	 * hostList.
 	 * 
 	 * @return A List containing CloudResource ID (as an Integer object) or if a CIS entity hasn't
@@ -316,7 +316,9 @@ public class CloudSim {
 	/** The deferred event queue. */
 	protected static DeferredQueue deferred;
 
-	/** The simulation clock. */
+	/** 
+         * The current simulation clock.
+         */
 	private static double clock;
 
 	/** Flag for checking if the simulation is running. */
@@ -505,6 +507,9 @@ public class CloudSim {
 	 * called in simulations.
 	 * 
 	 * @return true, if successful otherwise
+         * @todo If the method shouldn't be called by the user,
+         * it should be protected in any way, such as changing
+         * its visibility to package.
 	 */
 	public static boolean runClockTick() {
 		SimEntity ent;
@@ -872,7 +877,7 @@ public class CloudSim {
 	 * Start the simulation running. This should be called after all the entities have been setup
 	 * and added, and their ports linked.
 	 * 
-	 * @return the double last clock value
+	 * @return the last clock value
 	 */
 	public static double run() {
 		if (!running) {

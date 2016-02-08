@@ -15,13 +15,13 @@ import java.util.List;
 import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
 
 /**
- * An implementation of a storage system. It simulates the behaviour of a typical harddrive storage.
- * The default values for this storage are those of a Maxtor DiamonMax 10 ATA harddisk with the
+ * An implementation of a storage system. It simulates the behavior of a typical hard drive storage.
+ * The default values for this storage are those of a "Maxtor DiamonMax 10 ATA" hard disk with the
  * following parameters:
  * <ul>
- * <li>latency = 4.17 ms
- * <li>avg seek time = 9 ms
- * <li>max transfer rate = 133 MB/sec
+ *   <li>latency = 4.17 ms</li>
+ *   <li>avg seek time = 9 m/s</li>
+ *   <li>max transfer rate = 133 MB/sec</li>
  * </ul>
  * 
  * @author Uros Cibej
@@ -30,37 +30,37 @@ import org.cloudbus.cloudsim.distributions.ContinuousDistribution;
  */
 public class HarddriveStorage implements Storage {
 
-	/** a list storing the names of all the files on the harddrive. */
+	/** A list storing the names of all files on the hard drive. */
 	private List<String> nameList;
 
-	/** a list storing all the files stored on the harddrive. */
+	/** A list storing all files stored on the hard drive. */
 	private List<File> fileList;
 
-	/** the name of the harddrive. */
+	/** The name of the hard drive. */
 	private final String name;
 
-	/** a generator required to randomize the seek time. */
+	/** A generator required to randomize the seek time. */
 	private ContinuousDistribution gen;
 
-	/** the current size of files on the harddrive. */
+	/** The current size of files on the hard drive. */
 	private double currentSize;
 
-	/** the total capacity of the harddrive in MB. */
+	/** The total capacity of the hard drive in MB. */
 	private final double capacity;
 
-	/** the maximum transfer rate in MB/sec. */
+	/** The maximum transfer rate in MB/sec. */
 	private double maxTransferRate;
 
-	/** the latency of the harddrive in seconds. */
+	/** The latency of the hard drive in seconds. */
 	private double latency;
 
-	/** the average seek time in seconds. */
+	/** The average seek time in seconds. */
 	private double avgSeekTime;
 
 	/**
-	 * Creates a new harddrive storage with a given name and capacity.
+	 * Creates a new hard drive storage with a given name and capacity.
 	 * 
-	 * @param name the name of the new harddrive storage
+	 * @param name the name of the new hard drive storage
 	 * @param capacity the capacity in MByte
 	 * @throws ParameterException when the name and the capacity are not valid
 	 */
@@ -79,7 +79,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Creates a new harddrive storage with a given capacity. In this case the name of the storage
+	 * Creates a new hard drive storage with a given capacity. In this case the name of the storage
 	 * is a default name.
 	 * 
 	 * @param capacity the capacity in MByte
@@ -95,9 +95,9 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * The initialization of the harddrive is done in this method. The most common parameters, such
+	 * The initialization of the hard drive is done in this method. The most common parameters, such
 	 * as latency, average seek time and maximum transfer rate are set. The default values are set
-	 * to simulate the Maxtor DiamonMax 10 ATA harddisk. Furthermore, the necessary lists are
+	 * to simulate the "Maxtor DiamonMax 10 ATA" hard disk. Furthermore, the necessary lists are
 	 * created.
 	 */
 	private void init() {
@@ -111,21 +111,11 @@ public class HarddriveStorage implements Storage {
 		maxTransferRate = 133; // in MB/sec
 	}
 
-	/**
-	 * Gets the available space on this storage in MB.
-	 * 
-	 * @return the available space in MB
-	 */
 	@Override
 	public double getAvailableSpace() {
 		return capacity - currentSize;
 	}
 
-	/**
-	 * Checks if the storage is full or not.
-	 * 
-	 * @return <tt>true</tt> if the storage is full, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean isFull() {
 		if (Math.abs(currentSize - capacity) < .0000001) { // currentSize == capacity
@@ -134,22 +124,11 @@ public class HarddriveStorage implements Storage {
 		return false;
 	}
 
-	/**
-	 * Gets the number of files stored on this storage.
-	 * 
-	 * @return the number of stored files
-	 */
 	@Override
 	public int getNumStoredFile() {
 		return fileList.size();
 	}
 
-	/**
-	 * Makes a reservation of the space on the storage to store a file.
-	 * 
-	 * @param fileSize the size to be reserved in MB
-	 * @return <tt>true</tt> if reservation succeeded, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean reserveSpace(int fileSize) {
 		if (fileSize <= 0) {
@@ -164,13 +143,6 @@ public class HarddriveStorage implements Storage {
 		return true;
 	}
 
-	/**
-	 * Adds a file for which the space has already been reserved. The time taken (in seconds) for
-	 * adding the file can also be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param file the file to be added
-	 * @return the time (in seconds) required to add the file
-	 */
 	@Override
 	public double addReservedFile(File file) {
 		if (file == null) {
@@ -188,12 +160,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Checks whether there is enough space on the storage for a certain file.
-	 * 
-	 * @param fileSize a FileAttribute object to compare to
-	 * @return <tt>true</tt> if enough space available, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean hasPotentialAvailableSpace(int fileSize) {
 		if (fileSize <= 0) {
@@ -227,38 +193,23 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Gets the total capacity of the storage in MB.
-	 * 
-	 * @return the capacity of the storage in MB
-	 */
 	@Override
 	public double getCapacity() {
 		return capacity;
 	}
 
-	/**
-	 * Gets the current size of the stored files in MB.
-	 * 
-	 * @return the current size of the stored files in MB
-	 */
 	@Override
 	public double getCurrentSize() {
 		return currentSize;
 	}
 
-	/**
-	 * Gets the name of the storage.
-	 * 
-	 * @return the name of this storage
-	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Sets the latency of this harddrive in seconds.
+	 * Sets the latency of this hard drive in seconds.
 	 * 
 	 * @param latency the new latency in seconds
 	 * @return <tt>true</tt> if the setting succeeded, <tt>false</tt> otherwise
@@ -273,7 +224,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Gets the latency of this harddrive in seconds.
+	 * Gets the latency of this hard drive in seconds.
 	 * 
 	 * @return the latency in seconds
 	 */
@@ -281,12 +232,6 @@ public class HarddriveStorage implements Storage {
 		return latency;
 	}
 
-	/**
-	 * Sets the maximum transfer rate of this storage system in MB/sec.
-	 * 
-	 * @param rate the maximum transfer rate in MB/sec
-	 * @return <tt>true</tt> if the setting succeeded, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean setMaxTransferRate(int rate) {
 		if (rate <= 0) {
@@ -297,11 +242,6 @@ public class HarddriveStorage implements Storage {
 		return true;
 	}
 
-	/**
-	 * Gets the maximum transfer rate of the storage in MB/sec.
-	 * 
-	 * @return the maximum transfer rate in MB/sec
-	 */
 	@Override
 	public double getMaxTransferRate() {
 		return maxTransferRate;
@@ -336,7 +276,7 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Gets the average seek time of the harddrive in seconds.
+	 * Gets the average seek time of the hard drive in seconds.
 	 * 
 	 * @return the average seek time in seconds
 	 */
@@ -344,13 +284,6 @@ public class HarddriveStorage implements Storage {
 		return avgSeekTime;
 	}
 
-	/**
-	 * Gets the file with the specified name. The time taken (in seconds) for getting the file can
-	 * also be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param fileName the name of the needed file
-	 * @return the file with the specified filename
-	 */
 	@Override
 	public File getFile(String fileName) {
 		// check first whether file name is valid or not
@@ -392,11 +325,6 @@ public class HarddriveStorage implements Storage {
 		return obj;
 	}
 
-	/**
-	 * Gets the list of file names located on this storage.
-	 * 
-	 * @return a List of file names
-	 */
 	@Override
 	public List<String> getFileNameList() {
 		return nameList;
@@ -441,7 +369,7 @@ public class HarddriveStorage implements Storage {
 	/**
 	 * Check if the file is valid or not. This method checks whether the given file or the file name
 	 * of the file is valid. The method name parameter is used for debugging purposes, to output in
-	 * which method an error has occured.
+	 * which method an error has occurred.
 	 * 
 	 * @param file the file to be checked for validity
 	 * @param methodName the name of the method in which we check for validity of the file
@@ -464,13 +392,13 @@ public class HarddriveStorage implements Storage {
 	}
 
 	/**
-	 * Adds a file to the storage. First, the method checks if there is enough space on the storage,
-	 * then it checks if the file with the same name is already taken to avoid duplicate filenames. <br>
-	 * The time taken (in seconds) for adding the file can also be found using
-	 * {@link gridsim.datagrid.File#getTransactionTime()}.
+	 * {@inheritDoc}
+         * 
+         * <p/>First, the method checks if there is enough space on the storage,
+	 * then it checks if the file with the same name is already taken to avoid duplicate filenames. 
 	 * 
-	 * @param file the file to be added
-	 * @return the time taken (in seconds) for adding the specified file
+	 * @param file {@inheritDoc}
+	 * @return {@inheritDoc}
 	 */
 	@Override
 	public double addFile(File file) {
@@ -500,14 +428,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Adds a set of files to the storage. Runs through the list of files and save all of them. The
-	 * time taken (in seconds) for adding each file can also be found using
-	 * {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param list the files to be added
-	 * @return the time taken (in seconds) for adding the specified files
-	 */
 	@Override
 	public double addFile(List<File> list) {
 		double result = 0.0;
@@ -525,13 +445,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Removes a file from the storage. The time taken (in seconds) for deleting the file can also
-	 * be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param fileName the name of the file to be removed
-	 * @return the deleted file
-	 */
 	@Override
 	public File deleteFile(String fileName) {
 		if (fileName == null || fileName.length() == 0) {
@@ -556,26 +469,11 @@ public class HarddriveStorage implements Storage {
 		return file;
 	}
 
-	/**
-	 * Removes a file from the storage. The time taken (in seconds) for deleting the file can also
-	 * be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param fileName the name of the file to be removed
-	 * @param file the file which is removed from the storage is returned through this parameter
-	 * @return the time taken (in seconds) for deleting the specified file
-	 */
 	@Override
 	public double deleteFile(String fileName, File file) {
 		return deleteFile(file);
 	}
 
-	/**
-	 * Removes a file from the storage. The time taken (in seconds) for deleting the file can also
-	 * be found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param file the file which is removed from the storage is returned through this parameter
-	 * @return the time taken (in seconds) for deleting the specified file
-	 */
 	@Override
 	public double deleteFile(File file) {
 		double result = 0.0;
@@ -597,12 +495,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Checks whether a certain file is on the storage or not.
-	 * 
-	 * @param fileName the name of the file we are looking for
-	 * @return <tt>true</tt> if the file is in the storage, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean contains(String fileName) {
 		boolean result = false;
@@ -622,12 +514,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Checks whether a certain file is on the storage or not.
-	 * 
-	 * @param file the file we are looking for
-	 * @return <tt>true</tt> if the file is in the storage, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean contains(File file) {
 		boolean result = false;
@@ -639,14 +525,6 @@ public class HarddriveStorage implements Storage {
 		return result;
 	}
 
-	/**
-	 * Renames a file on the storage. The time taken (in seconds) for renaming the file can also be
-	 * found using {@link gridsim.datagrid.File#getTransactionTime()}.
-	 * 
-	 * @param file the file we would like to rename
-	 * @param newName the new name of the file
-	 * @return <tt>true</tt> if the renaming succeeded, <tt>false</tt> otherwise
-	 */
 	@Override
 	public boolean renameFile(File file, String newName) {
 		// check whether the new filename is conflicting with existing ones

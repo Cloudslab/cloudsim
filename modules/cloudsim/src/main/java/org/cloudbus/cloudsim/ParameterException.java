@@ -22,6 +22,7 @@ package org.cloudbus.cloudsim;
  * @author Gokul Poduval
  * @author Chen-Khong Tham, National University of Singapore
  * @since CloudSim Toolkit 1.0
+ * @todo It would be used the native class InvalidArgumentException instead of this new one.
  */
 public class ParameterException extends Exception {
 
@@ -54,13 +55,6 @@ public class ParameterException extends Exception {
 		this.message = message;
 	}
 
-	/**
-	 * Returns an error message of this object.
-	 * 
-	 * @return an error message
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public String toString() {
 		return message;

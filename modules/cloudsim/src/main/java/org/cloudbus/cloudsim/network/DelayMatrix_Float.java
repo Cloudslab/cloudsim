@@ -11,7 +11,8 @@ package org.cloudbus.cloudsim.network;
 import java.util.Iterator;
 
 /**
- * This class represents an delay-topology storing every distance between connected nodes
+ * This class represents a delay matrix between every pair or nodes
+ * inside a network topology, storing every distance between connected nodes.
  * 
  * @author Thomas Hohnstein
  * @since CloudSim Toolkit 1.0
@@ -19,27 +20,27 @@ import java.util.Iterator;
 public class DelayMatrix_Float {
 
 	/**
-	 * matrix holding delay information between any two nodes
+	 * Matrix holding delay information between any two nodes.
 	 */
 	protected float[][] mDelayMatrix = null;
 
 	/**
-	 * number of nodes in the distance-aware-topology
+	 * Number of nodes in the distance-aware-topology.
 	 */
 	protected int mTotalNodeNum = 0;
 
 	/**
-	 * private constructor to ensure that only an correct initialized delay-matrix could be created
+	 * Private constructor to ensure that only an correct initialized delay-matrix could be created.
 	 */
 	@SuppressWarnings("unused")
 	private DelayMatrix_Float() {
-	};
+	}
 
 	/**
-	 * this constructor creates an correct initialized Float-Delay-Matrix
+	 * Creates an correctly initialized Float-Delay-Matrix.
 	 * 
-	 * @param graph the topological graph as source-information
-	 * @param directed true if an directed matrix should be computed, false otherwise
+	 * @param graph the network topological graph
+	 * @param directed indicates if an directed matrix should be computed (true) or not (false)
 	 */
 	public DelayMatrix_Float(TopologicalGraph graph, boolean directed) {
 
@@ -51,9 +52,11 @@ public class DelayMatrix_Float {
 	}
 
 	/**
-	 * @param srcID the id of the source-node
-	 * @param destID the id of the destination-node
-	 * @return the delay-count between the given two nodes
+         * Gets the delay between two nodes.
+         * 
+	 * @param srcID the id of the source node
+	 * @param destID the id of the destination node
+	 * @return the delay between the given two nodes
 	 */
 	public float getDelay(int srcID, int destID) {
 		// check the nodeIDs against internal array-boundarys
@@ -65,12 +68,12 @@ public class DelayMatrix_Float {
 	}
 
 	/**
-	 * creates all internal necessary network-distance structures from the given graph for
-	 * similarity we assume all kommunikation-distances are symmetrical thus leads to an undirected
-	 * network
+	 * Creates all internal necessary network-distance structures from the given graph. 
+         * For similarity, we assume all communication-distances are symmetrical, 
+         * thus leading to an undirected network.
 	 * 
-	 * @param graph this graph contains all node and link information
-	 * @param directed defines to preinitialize an directed or undirected Delay-Matrix!
+	 * @param graph the network topological graph
+	 * @param directed indicates if an directed matrix should be computed (true) or not (false)
 	 */
 	private void createDelayMatrix(TopologicalGraph graph, boolean directed) {
 
@@ -95,7 +98,7 @@ public class DelayMatrix_Float {
 			mDelayMatrix[edge.getSrcNodeID()][edge.getDestNodeID()] = edge.getLinkDelay();
 
 			if (!directed) {
-				// according to aproximity of symmetry to all kommunication-paths
+				// according to aproximity of symmetry to all communication-paths
 				mDelayMatrix[edge.getDestNodeID()][edge.getSrcNodeID()] = edge.getLinkDelay();
 			}
 
@@ -103,7 +106,7 @@ public class DelayMatrix_Float {
 	}
 
 	/**
-	 * just calculates all pairs shortest paths
+	 * Calculates the shortest path between all pairs of nodes.
 	 */
 	private void calculateShortestPath() {
 		FloydWarshall_Float floyd = new FloydWarshall_Float();
@@ -112,10 +115,6 @@ public class DelayMatrix_Float {
 		mDelayMatrix = floyd.allPairsShortestPaths(mDelayMatrix);
 	}
 
-	/**
-	 * this method just creates an string-output from the internal structures... eg. printsout the
-	 * delay-matrix...
-	 */
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();

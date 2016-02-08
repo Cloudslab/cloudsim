@@ -18,7 +18,7 @@ import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
 /**
- * The class of a host supporting dynamic workloads and performance degradation.
+ * A host supporting dynamic workloads and performance degradation.
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
@@ -31,7 +31,7 @@ public class HostDynamicWorkload extends Host {
 	/** The previous utilization mips. */
 	private double previousUtilizationMips;
 
-	/** The state history. */
+	/** The host utilization state history. */
 	private final List<HostStateHistoryEntry> stateHistory = new LinkedList<HostStateHistoryEntry>();
 
 	/**
@@ -40,8 +40,8 @@ public class HostDynamicWorkload extends Host {
 	 * @param id the id
 	 * @param ramProvisioner the ram provisioner
 	 * @param bwProvisioner the bw provisioner
-	 * @param storage the storage
-	 * @param peList the pe list
+	 * @param storage the storage capacity
+	 * @param peList the host's PEs list
 	 * @param vmScheduler the VM scheduler
 	 */
 	public HostDynamicWorkload(
@@ -56,10 +56,6 @@ public class HostDynamicWorkload extends Host {
 		setPreviousUtilizationMips(0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.Host#updateVmsProcessing(double)
-	 */
 	@Override
 	public double updateVmsProcessing(double currentTime) {
 		double smallerTime = super.updateVmsProcessing(currentTime);
@@ -140,7 +136,7 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	/**
-	 * Gets the completed vms.
+	 * Gets the list of completed vms.
 	 * 
 	 * @return the completed vms
 	 */
@@ -158,26 +154,26 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	/**
-	 * Gets the max utilization among by all PEs.
+	 * Gets the max utilization percentage among by all PEs.
 	 * 
-	 * @return the utilization
+	 * @return the maximum utilization percentage
 	 */
 	public double getMaxUtilization() {
 		return PeList.getMaxUtilization(getPeList());
 	}
 
 	/**
-	 * Gets the max utilization among by all PEs allocated to the VM.
+	 * Gets the max utilization percentage among by all PEs allocated to a VM.
 	 * 
 	 * @param vm the vm
-	 * @return the utilization
+	 * @return the max utilization percentage of the VM
 	 */
 	public double getMaxUtilizationAmongVmsPes(Vm vm) {
 		return PeList.getMaxUtilizationAmongVmsPes(getPeList(), vm);
 	}
 
 	/**
-	 * Gets the utilization of memory.
+	 * Gets the utilization of memory (in absolute values).
 	 * 
 	 * @return the utilization of memory
 	 */
@@ -186,7 +182,7 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	/**
-	 * Gets the utilization of bw.
+	 * Gets the utilization of bw (in absolute values).
 	 * 
 	 * @return the utilization of bw
 	 */
@@ -210,7 +206,7 @@ public class HostDynamicWorkload extends Host {
 	/**
 	 * Gets the previous utilization of CPU in percentage.
 	 * 
-	 * @return the previous utilization of cpu
+	 * @return the previous utilization of cpu in percents
 	 */
 	public double getPreviousUtilizationOfCpu() {
 		double utilization = getPreviousUtilizationMips() / getTotalMips();
@@ -224,15 +220,17 @@ public class HostDynamicWorkload extends Host {
 	 * Get current utilization of CPU in MIPS.
 	 * 
 	 * @return current utilization of CPU in MIPS
+         * @todo This method only calls the  {@link #getUtilizationMips()}.
+         * getUtilizationMips may be deprecated and its code copied here.
 	 */
 	public double getUtilizationOfCpuMips() {
 		return getUtilizationMips();
 	}
 
 	/**
-	 * Gets the utilization mips.
+	 * Gets the utilization of CPU in MIPS.
 	 * 
-	 * @return the utilization mips
+	 * @return current utilization of CPU in MIPS
 	 */
 	public double getUtilizationMips() {
 		return utilizationMips;
@@ -248,25 +246,25 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	/**
-	 * Gets the previous utilization mips.
+	 * Gets the previous utilization of CPU in mips.
 	 * 
-	 * @return the previous utilization mips
+	 * @return the previous utilization of CPU in mips
 	 */
 	public double getPreviousUtilizationMips() {
 		return previousUtilizationMips;
 	}
 
 	/**
-	 * Sets the previous utilization mips.
+	 * Sets the previous utilization of CPU in mips.
 	 * 
-	 * @param previousUtilizationMips the new previous utilization mips
+	 * @param previousUtilizationMips the new previous utilization of CPU in mips
 	 */
 	protected void setPreviousUtilizationMips(double previousUtilizationMips) {
 		this.previousUtilizationMips = previousUtilizationMips;
 	}
 
 	/**
-	 * Gets the state history.
+	 * Gets the host state history.
 	 * 
 	 * @return the state history
 	 */
@@ -275,7 +273,7 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	/**
-	 * Adds the state history entry.
+	 * Adds a host state history entry.
 	 * 
 	 * @param time the time
 	 * @param allocatedMips the allocated mips

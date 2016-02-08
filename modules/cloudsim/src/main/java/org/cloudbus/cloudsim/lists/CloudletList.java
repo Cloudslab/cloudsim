@@ -23,11 +23,11 @@ import org.cloudbus.cloudsim.Cloudlet;
 public class CloudletList {
 
 	/**
-	 * Gets the by id.
+	 * Gets a {@link Cloudlet} with a given id.
 	 * 
-	 * @param cloudletList the cloudlet list
-	 * @param id the id
-	 * @return the by id
+	 * @param cloudletList the list of existing Cloudlets
+	 * @param id the Cloudlet id
+	 * @return a Cloudlet with the given ID or $null if not found
 	 */
 	public static <T extends Cloudlet> T getById(List<T> cloudletList, int id) {
 		for (T cloudlet : cloudletList) {
@@ -39,10 +39,11 @@ public class CloudletList {
 	}
 
 	/**
-	 * Returns the position of the cloudlet with that id, if it exists. Otherwise -1.
-	 * @param cloudletList - the list of cloudlets.
-	 * @param id - the id we search for.
-	 * @return - the position of the cloudlet with that id, or -1 otherwise.
+	 * Gets the position of a cloudlet with a given id.
+         * 
+	 * @param cloudletList the list of existing cloudlets
+	 * @param id the cloudlet id
+	 * @return the position of the cloudlet with the given id or -1 if not found
 	 */
 	public static <T extends Cloudlet> int getPositionById(List<T> cloudletList, int id) {
 		int i = 0 ;
@@ -66,13 +67,13 @@ public class CloudletList {
 		Collections.sort(cloudletList, new Comparator<T>() {
 
 			/**
-			 * Compares two objects.
+			 * Compares two Cloudlets.
 			 * 
-			 * @param a the first Object to be compared
-			 * @param b the second Object to be compared
-			 * @return the value 0 if both Objects are numerically equal; a value less than 0 if the
-			 *         first Object is numerically less than the second Object; and a value greater
-			 *         than 0 if the first Object is numerically greater than the second Object.
+			 * @param a the first Cloudlet to be compared
+			 * @param b the second Cloudlet to be compared
+			 * @return the value 0 if both Cloudlets are numerically equal; a value less than 0 if the
+			 *         first Object is numerically less than the second Cloudlet; and a value greater
+			 *         than 0 if the first Cloudlet is numerically greater than the second Cloudlet.
 			 * @throws ClassCastException <tt>a</tt> and <tt>b</tt> are expected to be of type
 			 *             <tt>Cloudlet</tt>
 			 * @pre a != null

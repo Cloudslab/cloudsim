@@ -25,38 +25,39 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
 /**
  * PowerDatacenter is a class that enables simulation of power-aware data centers.
  * 
- * If you are using any algorithms, policies or workload included in the power package please cite
- * the following paper:
+ * <br/>If you are using any algorithms, policies or workload included in the power package please cite
+ * the following paper:<br/>
  * 
- * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012
+ * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * </ul>
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
  */
 public class PowerDatacenter extends Datacenter {
 
-	/** The power. */
+	/** The datacenter consumed power. */
 	private double power;
 
-	/** The disable migrations. */
+	/** Indicates if migrations are disabled or not. */
 	private boolean disableMigrations;
 
-	/** The cloudlet submited. */
+	/** The last time submitted cloudlets were processed. */
 	private double cloudletSubmitted;
 
-	/** The migration count. */
+	/** The VM migration count. */
 	private int migrationCount;
 
 	/**
-	 * Instantiates a new datacenter.
+	 * Instantiates a new PowerDatacenter.
 	 * 
-	 * @param name the name
-	 * @param characteristics the res config
+	 * @param name the datacenter name
+	 * @param characteristics the datacenter characteristics
 	 * @param schedulingInterval the scheduling interval
-	 * @param utilizationBound the utilization bound
 	 * @param vmAllocationPolicy the vm provisioner
 	 * @param storageList the storage list
 	 * @throws Exception the exception
@@ -75,14 +76,6 @@ public class PowerDatacenter extends Datacenter {
 		setMigrationCount(0);
 	}
 
-	/**
-	 * Updates processing of each cloudlet running in this PowerDatacenter. It is necessary because
-	 * Hosts and VirtualMachines are simple objects, not entities. So, they don't receive events and
-	 * updating cloudlets inside them must be called from the outside.
-	 * 
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	protected void updateCloudletProcessing() {
 		if (getCloudletSubmitted() == -1 || getCloudletSubmitted() == CloudSim.clock()) {
@@ -153,6 +146,12 @@ public class PowerDatacenter extends Datacenter {
 	 * Update cloudet processing without scheduling future events.
 	 * 
 	 * @return the double
+         * @see #updateCloudetProcessingWithoutSchedulingFutureEventsForce() 
+         * @todo There is an inconsistence in the return value of this
+         * method with return value of similar methods
+         * such as {@link #updateCloudetProcessingWithoutSchedulingFutureEventsForce()},
+         * that returns {@link Double#MAX_VALUE} by default.
+         * The current method returns 0 by default.
 	 */
 	protected double updateCloudetProcessingWithoutSchedulingFutureEvents() {
 		if (CloudSim.clock() > getLastProcessTime()) {
@@ -164,7 +163,8 @@ public class PowerDatacenter extends Datacenter {
 	/**
 	 * Update cloudet processing without scheduling future events.
 	 * 
-	 * @return the double
+	 * @return expected time of completion of the next cloudlet in all VMs of all hosts or
+	 *         {@link Double#MAX_VALUE} if there is no future events expected in this host
 	 */
 	protected double updateCloudetProcessingWithoutSchedulingFutureEventsForce() {
 		double currentTime = CloudSim.clock();
@@ -245,11 +245,6 @@ public class PowerDatacenter extends Datacenter {
 		return minTime;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.cloudbus.cloudsim.Datacenter#processVmMigrate(org.cloudbus.cloudsim.core.SimEvent,
-	 * boolean)
-	 */
 	@Override
 	protected void processVmMigrate(SimEvent ev, boolean ack) {
 		updateCloudetProcessingWithoutSchedulingFutureEvents();
@@ -260,10 +255,6 @@ public class PowerDatacenter extends Datacenter {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.Datacenter#processCloudletSubmit(cloudsim.core.SimEvent, boolean)
-	 */
 	@Override
 	protected void processCloudletSubmit(SimEvent ev, boolean ack) {
 		super.processCloudletSubmit(ev, ack);
@@ -291,7 +282,7 @@ public class PowerDatacenter extends Datacenter {
 	/**
 	 * Checks if PowerDatacenter is in migration.
 	 * 
-	 * @return true, if PowerDatacenter is in migration
+	 * @return true, if PowerDatacenter is in migration; false otherwise
 	 */
 	protected boolean isInMigration() {
 		boolean result = false;
@@ -305,18 +296,18 @@ public class PowerDatacenter extends Datacenter {
 	}
 
 	/**
-	 * Checks if is disable migrations.
+	 * Checks if migrations are disabled.
 	 * 
-	 * @return true, if is disable migrations
+	 * @return true, if  migrations are disable; false otherwise
 	 */
 	public boolean isDisableMigrations() {
 		return disableMigrations;
 	}
 
 	/**
-	 * Sets the disable migrations.
+	 * Disable or enable migrations.
 	 * 
-	 * @param disableMigrations the new disable migrations
+	 * @param disableMigrations true to disable migrations; false to enable
 	 */
 	public void setDisableMigrations(boolean disableMigrations) {
 		this.disableMigrations = disableMigrations;
@@ -332,7 +323,7 @@ public class PowerDatacenter extends Datacenter {
 	}
 
 	/**
-	 * Sets the cloudlet submited.
+	 * Sets the cloudlet submitted.
 	 * 
 	 * @param cloudletSubmitted the new cloudlet submited
 	 */

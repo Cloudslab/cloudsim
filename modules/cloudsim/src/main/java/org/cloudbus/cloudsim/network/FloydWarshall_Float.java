@@ -9,7 +9,8 @@
 package org.cloudbus.cloudsim.network;
 
 /**
- * FloydWarshall algorithm to calculate all pairs delay and predecessor matrix.
+ * FloydWarshall algorithm to calculate the predecessor matrix 
+ * and the delay between all pairs of nodes.
  * 
  * @author Rahul Simha
  * @author Weishuai Yang
@@ -19,32 +20,30 @@ package org.cloudbus.cloudsim.network;
 public class FloydWarshall_Float {
 
 	/**
-	 * Number of vertices (when initialized)
+	 * Number of vertices (nodes).
 	 */
 	private int numVertices;
 
-	// /**
-	// * The adjacency matrix (given as input),
-	// * here I use float rather than double to save memory,
-	// * since there won't be a lot of spilting for delay,
-	// * and float is accurate enough.
-	// */
-	// private float[][] adjMatrix;
-
 	/**
-	 * Matrices used in dynamic programming
+	 * Matrices used in dynamic programming.
 	 */
 	private float[][] Dk, Dk_minus_one;
 
 	/**
-	 * Matrices used in dynamic programming
+	 * The predecessor matrix. Matrix used by dynamic programming.
 	 */
-	private int[][] Pk, Pk_minus_one;
+	private int[][] Pk;
+        
+        /**
+         * Matrix used by dynamic programming.
+         */
+        private int[][] Pk_minus_one;
 
 	/**
-	 * initialization matrix
+	 * Initialization the matrix.
 	 * 
 	 * @param numVertices number of nodes
+         * @todo The class doesn't have a constructor. This should be the constructor.
 	 */
 	public void initialize(int numVertices) {
 		this.numVertices = numVertices;
@@ -68,10 +67,10 @@ public class FloydWarshall_Float {
 	}
 
 	/**
-	 * calculates all pairs delay
+	 * Calculates the delay between all pairs of nodes.
 	 * 
 	 * @param adjMatrix original delay matrix
-	 * @return all pairs delay matrix
+	 * @return the delay matrix
 	 */
 	public float[][] allPairsShortestPaths(float[][] adjMatrix) {
 		// Dk_minus_one = weights when k = -1
@@ -128,66 +127,11 @@ public class FloydWarshall_Float {
 	}
 
 	/**
-	 * gets predecessor matrix
+	 * Gets predecessor matrix.
 	 * 
 	 * @return predecessor matrix
 	 */
 	public int[][] getPK() {
 		return Pk;
 	}
-
-
-/*
-  public static void main (String[] argv)
-  {
-    // A test case.
-     *
-      double[][] adjMatrix = {
-        {0, 1, 0, 0, 1},
-        {1, 0, 1, 3, 0},
-        {0, 1, 0, 2, 0},
-        {0, 3, 2, 0, 1},
-        {1, 0, 0, 1, 0},
-      };
-
-
-      int n = adjMatrix.length;
-      FloydWarshall fwAlg = new FloydWarshall ();
-      fwAlg.initialize (n);
-      adjMatrix=fwAlg.allPairsShortestPaths (adjMatrix);
-
-	    //debug begin
-	    StringBuffer s0=new StringBuffer("Delay Information before floydwarshall:\n");
-	    for(int i=0;i<n;i++){
-	    	s0.append("Node "+i+" to others:");
-	    	for(int j=0;j<n;j++){
-	    			s0.append(LogFormatter.sprintf(" % 6.1f     ", adjMatrix[i][j]));
-
-	    	}
-	    	s0.append("\n");
-	    }
-	    Log.printLine(""+s0);
-
-
-	    int[][] Pk=fwAlg.getPK();
-
-
-	    Log.printLine("Path information");
-	    for(int i=0;i<n;i++){
-	    	for(int j=0;j<n;j++){
-	    		Log.print("From "+i+" to "+j+": ");
-		    	int pre=Pk[i][j];
-		    	while((pre!=-1)&&(pre!=i)){
-		    		Log.print(" <-  "+ pre);
-		    		pre=Pk[i][pre];
-		    		if((pre==-1)||(pre==i))
-		    			Log.print(" <-  "+ pre);
-		    	}
-				Log.printLine("\n");
-		    }
-	    }
-
-  }
-
-*/
 }

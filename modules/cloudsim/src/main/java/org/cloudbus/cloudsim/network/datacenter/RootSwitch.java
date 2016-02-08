@@ -18,14 +18,15 @@ import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 
 /**
- * This class allows to simulate Root switch which connects Datacenter to external network. It
- * interacts with other switches in order to exchange packets.
+ * This class allows to simulate Root switch which connects Datacenters to external network. 
+ * It interacts with other switches in order to exchange packets.
  * 
- * Please refer to following publication for more details:
- * 
- * Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * <br/>Please refer to following publication for more details:<br/>
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1109/UCC.2011.24">Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
  * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
- * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.</a>
+ * </ul>
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
@@ -33,12 +34,12 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
 public class RootSwitch extends Switch {
 
 	/**
-	 * Constructor for Root Switch We have to specify switches that are connected to its downlink
-	 * ports, and corresponding bandwidths
+	 * Instantiates a Root Switch specifying what other switches are connected to its downlink
+	 * ports, and corresponding bandwidths.
 	 * 
-	 * @param name Name of the switch
-	 * @param level At which level switch is with respect to hosts.
-	 * @param dc Pointer to Datacenter
+	 * @param name Name of the root switch
+	 * @param level At which level the switch is with respect to hosts.
+	 * @param dc The Datacenter where the switch is connected to
 	 */
 	public RootSwitch(String name, int level, NetworkDatacenter dc) {
 		super(name, level, dc);
@@ -50,11 +51,6 @@ public class RootSwitch extends Switch {
 		numport = NetworkConstants.RootSwitchPort;
 	}
 
-	/**
-	 * Send Packet to switch connected through a downlink port
-	 * 
-	 * @param ev Event/packet to process
-	 */
 	@Override
 	protected void processpacket_up(SimEvent ev) {
 

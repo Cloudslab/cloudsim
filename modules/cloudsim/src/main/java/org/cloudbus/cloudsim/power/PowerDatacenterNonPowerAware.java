@@ -21,16 +21,18 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 
 /**
- * PowerDatacenterNonPowerAware is a class that represents a non-power aware data center in the
+ * PowerDatacenterNonPowerAware is a class that represents a <b>non-power</b> aware data center in the
  * context of power-aware simulations.
  * 
- * If you are using any algorithms, policies or workload included in the power package please cite
- * the following paper:
+ * <br/>If you are using any algorithms, policies or workload included in the power package please cite
+ * the following paper:<br/>
  * 
- * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012
+ * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * </ul>
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
@@ -40,10 +42,9 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 	/**
 	 * Instantiates a new datacenter.
 	 * 
-	 * @param name the name
-	 * @param characteristics the res config
+	 * @param name the datacenter name
+	 * @param characteristics the datacenter characteristics
 	 * @param schedulingInterval the scheduling interval
-	 * @param utilizationBound the utilization bound
 	 * @param vmAllocationPolicy the vm provisioner
 	 * @param storageList the storage list
 	 * 
@@ -58,14 +59,6 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
 	}
 
-	/**
-	 * Updates processing of each cloudlet running in this PowerDatacenter. It is necessary because
-	 * Hosts and VirtualMachines are simple objects, not entities. So, they don't receive events and
-	 * updating cloudlets inside them must be called from the outside.
-	 * 
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	protected void updateCloudletProcessing() {
 		if (getCloudletSubmitted() == -1 || getCloudletSubmitted() == CloudSim.clock()) {

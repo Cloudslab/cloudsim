@@ -13,16 +13,19 @@ import java.util.List;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * CloudletSchedulerTimeShared implements a policy of scheduling performed by a virtual machine.
- * Cloudlets execute time-shared in VM.
+ * CloudletSchedulerTimeShared implements a policy of scheduling performed by a virtual machine
+ * to run its {@link Cloudlet Cloudlets}.
+ * Cloudlets execute in time-shared manner in VM.
+ * Each VM has to have its own instance of a CloudletScheduler.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
  */
 public class CloudletSchedulerTimeShared extends CloudletScheduler {
-
-	/** The current cp us. */
+	/** The number of PEs currently available for the VM using the scheduler,
+         * according to the mips share provided to it by
+         * {@link #updateVmProcessing(double, java.util.List)} method. */
 	protected int currentCPUs;
 
 	/**
@@ -37,16 +40,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		currentCPUs = 0;
 	}
 
-	/**
-	 * Updates the processing of cloudlets running under management of this scheduler.
-	 * 
-	 * @param currentTime current simulation time
-	 * @param mipsShare array with MIPS share of each processor available to the scheduler
-	 * @return time predicted completion time of the earliest finishing cloudlet, or 0 if there is
-	 *         no next events
-	 * @pre currentTime >= 0
-	 * @post $none
-	 */
 	@Override
 	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
 		setCurrentMipsShare(mipsShare);
@@ -92,10 +85,11 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	}
 
 	/**
-	 * Gets the capacity.
+	 * Gets the individual MIPS capacity available for each PE available for the scheduler,
+         * considering that all PEs have the same capacity.
 	 * 
-	 * @param mipsShare the mips share
-	 * @return the capacity
+	 * @param mipsShare list with MIPS share of each PE available to the scheduler
+	 * @return the capacity of each PE
 	 */
 	protected double getCapacity(List<Double> mipsShare) {
 		double capacity = 0.0;
@@ -121,14 +115,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return capacity;
 	}
 
-	/**
-	 * Cancels execution of a cloudlet.
-	 * 
-	 * @param cloudletId ID of the cloudlet being cancealed
-	 * @return the canceled cloudlet, $null if not found
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public Cloudlet cloudletCancel(int cloudletId) {
 		boolean found = false;
@@ -187,14 +173,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return null;
 	}
 
-	/**
-	 * Pauses execution of a cloudlet.
-	 * 
-	 * @param cloudletId ID of the cloudlet being paused
-	 * @return $true if cloudlet paused, $false otherwise
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public boolean cloudletPause(int cloudletId) {
 		boolean found = false;
@@ -222,13 +200,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return false;
 	}
 
-	/**
-	 * Processes a finished cloudlet.
-	 * 
-	 * @param rcl finished cloudlet
-	 * @pre rgl != $null
-	 * @post $none
-	 */
 	@Override
 	public void cloudletFinish(ResCloudlet rcl) {
 		rcl.setCloudletStatus(Cloudlet.SUCCESS);
@@ -236,14 +207,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		getCloudletFinishedList().add(rcl);
 	}
 
-	/**
-	 * Resumes execution of a paused cloudlet.
-	 * 
-	 * @param cloudletId ID of the cloudlet being resumed
-	 * @return expected finish time of the cloudlet, 0.0 if queued
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public double cloudletResume(int cloudletId) {
 		boolean found = false;
@@ -276,15 +239,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return 0.0;
 	}
 
-	/**
-	 * Receives an cloudlet to be executed in the VM managed by this scheduler.
-	 * 
-	 * @param cloudlet the submited cloudlet
-	 * @param fileTransferTime time required to move the required files from the SAN to the VM
-	 * @return expected finish time of this cloudlet
-	 * @pre gl != null
-	 * @post $none
-	 */
 	@Override
 	public double cloudletSubmit(Cloudlet cloudlet, double fileTransferTime) {
 		ResCloudlet rcl = new ResCloudlet(cloudlet);
@@ -304,23 +258,11 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return cloudlet.getCloudletLength() / getCapacity(getCurrentMipsShare());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.CloudletScheduler#cloudletSubmit(cloudsim.Cloudlet)
-	 */
 	@Override
 	public double cloudletSubmit(Cloudlet cloudlet) {
 		return cloudletSubmit(cloudlet, 0.0);
 	}
 
-	/**
-	 * Gets the status of a cloudlet.
-	 * 
-	 * @param cloudletId ID of the cloudlet
-	 * @return status of the cloudlet, -1 if cloudlet not found
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public int getCloudletStatus(int cloudletId) {
 		for (ResCloudlet rcl : getCloudletExecList()) {
@@ -336,14 +278,11 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return -1;
 	}
 
-	/**
-	 * Get utilization created by all cloudlets.
-	 * 
-	 * @param time the time
-	 * @return total utilization
-	 */
 	@Override
 	public double getTotalUtilizationOfCpu(double time) {
+                /*
+                 * @todo 
+                 */
 		double totalUtilization = 0;
 		for (ResCloudlet gl : getCloudletExecList()) {
 			totalUtilization += gl.getCloudlet().getUtilizationOfCpu(time);
@@ -351,25 +290,11 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return totalUtilization;
 	}
 
-	/**
-	 * Informs about completion of some cloudlet in the VM managed by this scheduler.
-	 * 
-	 * @return $true if there is at least one finished cloudlet; $false otherwise
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public boolean isFinishedCloudlets() {
 		return getCloudletFinishedList().size() > 0;
 	}
 
-	/**
-	 * Returns the next cloudlet in the finished list, $null if this list is empty.
-	 * 
-	 * @return a finished cloudlet
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public Cloudlet getNextFinishedCloudlet() {
 		if (getCloudletFinishedList().size() > 0) {
@@ -378,25 +303,11 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return null;
 	}
 
-	/**
-	 * Returns the number of cloudlets runnning in the virtual machine.
-	 * 
-	 * @return number of cloudlets runnning
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public int runningCloudlets() {
 		return getCloudletExecList().size();
 	}
 
-	/**
-	 * Returns one cloudlet to migrate to another vm.
-	 * 
-	 * @return one running cloudlet
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public Cloudlet migrateCloudlet() {
 		ResCloudlet rgl = getCloudletExecList().remove(0);
@@ -404,44 +315,27 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return rgl.getCloudlet();
 	}
 
-
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.CloudletScheduler#getCurrentRequestedMips()
-	 */
 	@Override
 	public List<Double> getCurrentRequestedMips() {
 		List<Double> mipsShare = new ArrayList<Double>();
 		return mipsShare;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.CloudletScheduler#getTotalCurrentAvailableMipsForCloudlet(cloudsim.ResCloudlet,
-	 * java.util.List)
-	 */
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
-		return getCapacity(getCurrentMipsShare());
+            /*@todo It isn't being used any the the given parameters.*/
+            return getCapacity(getCurrentMipsShare());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.CloudletScheduler#getTotalCurrentAllocatedMipsForCloudlet(cloudsim.ResCloudlet,
-	 * double)
-	 */
 	@Override
 	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
+                //@todo The method is not implemented, in fact
 		return 0.0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.CloudletScheduler#getTotalCurrentRequestedMipsForCloudlet(cloudsim.ResCloudlet,
-	 * double)
-	 */
 	@Override
 	public double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time) {
+                //@todo The method is not implemented, in fact
 		// TODO Auto-generated method stub
 		return 0.0;
 	}

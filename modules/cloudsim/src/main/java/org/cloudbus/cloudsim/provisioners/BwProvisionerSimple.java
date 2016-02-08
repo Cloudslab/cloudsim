@@ -14,8 +14,10 @@ import java.util.Map;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * BwProvisionerSimple is a class that implements a simple best effort allocation policy: if there
- * is bw available to request, it allocates; otherwise, it fails.
+ * BwProvisionerSimple is an extension of {@link BwProvisioner} which uses a best-effort policy to
+ * allocate bandwidth (bw) to VMs: 
+ * if there is available bw on the host, it allocates; otherwise, it fails. 
+ * Each host has to have its own instance of a RamProvisioner.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
@@ -23,23 +25,20 @@ import org.cloudbus.cloudsim.Vm;
  */
 public class BwProvisionerSimple extends BwProvisioner {
 
-	/** The bw table. */
+	/** The BW map, where each key is a VM id and each value
+         * is the amount of BW allocated to that VM. */
 	private Map<String, Long> bwTable;
 
 	/**
 	 * Instantiates a new bw provisioner simple.
 	 * 
-	 * @param bw the bw
+	 * @param bw The total bw capacity from the host that the provisioner can allocate to VMs. 
 	 */
 	public BwProvisionerSimple(long bw) {
 		super(bw);
 		setBwTable(new HashMap<String, Long>());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.BwProvisioner#allocateBwForVm(cloudsim.Vm, long)
-	 */
 	@Override
 	public boolean allocateBwForVm(Vm vm, long bw) {
 		deallocateBwForVm(vm);
@@ -55,10 +54,6 @@ public class BwProvisionerSimple extends BwProvisioner {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.BwProvisioner#getAllocatedBwForVm(cloudsim.Vm)
-	 */
 	@Override
 	public long getAllocatedBwForVm(Vm vm) {
 		if (getBwTable().containsKey(vm.getUid())) {
@@ -67,10 +62,6 @@ public class BwProvisionerSimple extends BwProvisioner {
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.BwProvisioner#deallocateBwForVm(cloudsim.Vm)
-	 */
 	@Override
 	public void deallocateBwForVm(Vm vm) {
 		if (getBwTable().containsKey(vm.getUid())) {
@@ -80,22 +71,12 @@ public class BwProvisionerSimple extends BwProvisioner {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.provisioners.BwProvisioner#deallocateBwForVm(cloudsim.Vm)
-	 */
 	@Override
 	public void deallocateBwForAllVms() {
 		super.deallocateBwForAllVms();
 		getBwTable().clear();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * gridsim.virtualization.power.provisioners.BWProvisioner#isSuitableForVm(gridsim.virtualization
-	 * .power.VM, long)
-	 */
 	@Override
 	public boolean isSuitableForVm(Vm vm, long bw) {
 		long allocatedBw = getAllocatedBwForVm(vm);
@@ -108,18 +89,18 @@ public class BwProvisionerSimple extends BwProvisioner {
 	}
 
 	/**
-	 * Gets the bw table.
+	 * Gets the map between VMs and allocated bw.
 	 * 
-	 * @return the bw table
+	 * @return the bw map
 	 */
 	protected Map<String, Long> getBwTable() {
 		return bwTable;
 	}
 
 	/**
-	 * Sets the bw table.
+	 * Sets the map between VMs and allocated bw.
 	 * 
-	 * @param bwTable the bw table
+	 * @param bwTable the bw map
 	 */
 	protected void setBwTable(Map<String, Long> bwTable) {
 		this.bwTable = bwTable;

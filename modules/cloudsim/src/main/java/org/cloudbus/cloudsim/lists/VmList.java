@@ -21,13 +21,30 @@ import org.cloudbus.cloudsim.Vm;
 public class VmList {
 
 	/**
-	 * Return a reference to a Vm object from its ID.
+	 * Gets a {@link Vm} with a given id.
 	 * 
 	 * @param id ID of required VM
-	 * @param vmList the vm list
-	 * @return Vm with the given ID, $null if not found
+	 * @param vmList list of existing VMs
+	 * @return a Vm with the given ID or $null if not found
 	 * @pre $none
 	 * @post $none
+         * 
+         * @todo It may be considered the use of a HashMap in order to improve 
+         * VM search, instead of a List. The map key can be the vm id
+         * and the value the VM itself. However, it has to be assessed
+         * the feasibility to have VMs with the same ID and the need
+         * to find VMs by its id and user id, as in the method
+         * {@link #getByIdAndUserId(java.util.List, int, int)}.
+         * The first concern could be dealt by ensuring that all
+         * VMs have different ID (in fact, I don't know if 
+         * VM id uniqueness is a CloudSim requirement)
+         * and creating a map by VM id.
+         * The second concern could be dealt by creating 
+         * a HashMap<UserID, List<VmIDs>>.
+         * The third concern is, that changing 
+         * the class of these lists may have a potential
+         * effect on the entire project and in the creation of simulations
+         * that has to be priorly assessed.
 	 */
 	public static <T extends Vm> T getById(List<T> vmList, int id) {
 		for (T vm : vmList) {
@@ -39,11 +56,11 @@ public class VmList {
 	}
 
 	/**
-	 * Return a reference to a Vm object from its ID and user ID.
+	 * Gets a {@link Vm} with a given id and owned by a given user.
 	 * 
+	 * @param vmList list of existing VMs
 	 * @param id ID of required VM
-	 * @param userId the user ID
-	 * @param vmList the vm list
+	 * @param userId the user ID of the VM's owner
 	 * @return Vm with the given ID, $null if not found
 	 * @pre $none
 	 * @post $none

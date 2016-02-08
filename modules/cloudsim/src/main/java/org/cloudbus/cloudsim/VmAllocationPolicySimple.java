@@ -17,7 +17,8 @@ import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
  * VmAllocationPolicySimple is an VmAllocationPolicy that chooses, as the host for a VM, the host
- * with less PEs in use.
+ * with less PEs in use. It is therefore a Worst Fit policy, allocating VMs into the 
+ * host with most available PE.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
@@ -25,19 +26,21 @@ import org.cloudbus.cloudsim.core.CloudSim;
  */
 public class VmAllocationPolicySimple extends VmAllocationPolicy {
 
-	/** The vm table. */
+	/** The map between each VM and its allocated host.
+         * The map key is a VM UID and the value is the allocated host for that VM. */
 	private Map<String, Host> vmTable;
 
-	/** The used pes. */
+	/** The map between each VM and the number of Pes used. 
+         * The map key is a VM UID and the value is the number of used Pes for that VM. */
 	private Map<String, Integer> usedPes;
 
-	/** The free pes. */
+	/** The number of free Pes for each host from {@link #getHostList() }. */
 	private List<Integer> freePes;
 
 	/**
-	 * Creates the new VmAllocationPolicySimple object.
+	 * Creates a new VmAllocationPolicySimple object.
 	 * 
-	 * @param list the list
+	 * @param list the list of hosts
 	 * @pre $none
 	 * @post $none
 	 */
@@ -55,10 +58,10 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 	}
 
 	/**
-	 * Allocates a host for a given VM.
+	 * Allocates the host with less PEs in use for a given VM.
 	 * 
-	 * @param vm VM specification
-	 * @return $true if the host could be allocated; $false otherwise
+	 * @param vm {@inheritDoc}
+	 * @return {@inheritDoc}
 	 * @pre $none
 	 * @post $none
 	 */
@@ -105,13 +108,6 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		return result;
 	}
 
-	/**
-	 * Releases the host used by a VM.
-	 * 
-	 * @param vm the vm
-	 * @pre $none
-	 * @post none
-	 */
 	@Override
 	public void deallocateHostForVm(Vm vm) {
 		Host host = getVmTable().remove(vm.getUid());
@@ -123,28 +119,11 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		}
 	}
 
-	/**
-	 * Gets the host that is executing the given VM belonging to the given user.
-	 * 
-	 * @param vm the vm
-	 * @return the Host with the given vmID and userID; $null if not found
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public Host getHost(Vm vm) {
 		return getVmTable().get(vm.getUid());
 	}
 
-	/**
-	 * Gets the host that is executing the given VM belonging to the given user.
-	 * 
-	 * @param vmId the vm id
-	 * @param userId the user id
-	 * @return the Host with the given vmID and userID; $null if not found
-	 * @pre $none
-	 * @post $none
-	 */
 	@Override
 	public Host getHost(int vmId, int userId) {
 		return getVmTable().get(Vm.getUid(userId, vmId));
@@ -204,21 +183,12 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		this.freePes = freePes;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see cloudsim.VmAllocationPolicy#optimizeAllocation(double, cloudsim.VmList, double)
-	 */
 	@Override
 	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.cloudbus.cloudsim.VmAllocationPolicy#allocateHostForVm(org.cloudbus.cloudsim.Vm,
-	 * org.cloudbus.cloudsim.Host)
-	 */
 	@Override
 	public boolean allocateHostForVm(Vm vm, Host host) {
 		if (host.vmCreate(vm)) { // if vm has been succesfully created in the host

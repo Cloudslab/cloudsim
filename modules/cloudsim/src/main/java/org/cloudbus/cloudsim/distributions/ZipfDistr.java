@@ -12,14 +12,15 @@ package org.cloudbus.cloudsim.distributions;
 import java.util.Random;
 
 /**
- * The Class ZipfDistr.
+ * A pseudo random number generator following the
+ * <a href="http://en.wikipedia.org/wiki/Zipf's_law">Zipf</a> distribution.
  * 
  * @author Marcos Dias de Assuncao
  * @since CloudSim Toolkit 1.0
  */
 public class ZipfDistr implements ContinuousDistribution {
 
-	/** The num gen. */
+	/** The internal random number generator. */
 	private final Random numGen;
 
 	/** The shape. */
@@ -29,7 +30,7 @@ public class ZipfDistr implements ContinuousDistribution {
 	private double den;
 
 	/**
-	 * Instantiates a new zipf distr.
+	 * Instantiates a new Zipf pseudo random number generator.
 	 * 
 	 * @param seed the seed
 	 * @param shape the shape
@@ -46,7 +47,7 @@ public class ZipfDistr implements ContinuousDistribution {
 	}
 
 	/**
-	 * Instantiates a new zipf distr.
+	 * Instantiates a new Zipf pseudo random number generator.
 	 * 
 	 * @param shape the shape
 	 * @param population the population
@@ -60,11 +61,6 @@ public class ZipfDistr implements ContinuousDistribution {
 		computeDen(shape, population);
 	}
 
-	/**
-	 * Generate a new random number.
-	 * 
-	 * @return the next random number in the sequence
-	 */
 	@Override
 	public double sample() {
 		double variate = numGen.nextDouble();
@@ -82,7 +78,7 @@ public class ZipfDistr implements ContinuousDistribution {
 	}
 
 	/**
-	 * Compute den.
+	 * Compute the den.
 	 * 
 	 * @param shape the shape
 	 * @param population the population

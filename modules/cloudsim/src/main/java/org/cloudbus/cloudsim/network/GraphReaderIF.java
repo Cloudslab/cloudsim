@@ -11,7 +11,7 @@ package org.cloudbus.cloudsim.network;
 import java.io.IOException;
 
 /**
- * This interface abstracts an reader for different graph-file-formats
+ * An interface to abstract a reader for different graph file formats.
  * 
  * @author Thomas Hohnstein
  * @since CloudSim Toolkit 1.0
@@ -19,11 +19,11 @@ import java.io.IOException;
 public interface GraphReaderIF {
 
 	/**
-	 * this method just reads the file and creates an TopologicalGraph object
+	 * Reads a file and creates an {@link TopologicalGraph} object.
 	 * 
-	 * @param filename name of the file to read
-	 * @return created TopologicalGraph
-	 * @throws IOException
+	 * @param filename Name of the file to read
+	 * @return The created TopologicalGraph
+	 * @throws IOException when the file cannot be accessed
 	 */
 	TopologicalGraph readGraphFile(String filename) throws IOException;
 

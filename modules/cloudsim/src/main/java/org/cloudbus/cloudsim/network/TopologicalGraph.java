@@ -13,21 +13,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * This class represents an graph containing nodes and edges, used for input with an network-layer
- * Graphical-Output Restricions! EdgeColors: GraphicalProperties.getColorEdge NodeColors:
- * GraphicalProperties.getColorNode
+ * This class represents a graph containing vertices (nodes) and edges (links), 
+ * used for input with a network-layer.
+ * Graphical-Output Restricions! <br/>
+ * <ul>
+ *   <li>EdgeColors: GraphicalProperties.getColorEdge 
+ *   <li>NodeColors: GraphicalProperties.getColorNode
+ * </ul>
  * 
  * @author Thomas Hohnstein
  * @since CloudSim Toolkit 1.0
  */
 public class TopologicalGraph {
-
+        /**
+         * The list of links of the network graph.
+         */
 	private List<TopologicalLink> linkList = null;
 
+        /**
+         * The list of nodes of the network graph.
+         */
 	private List<TopologicalNode> nodeList = null;
 
 	/**
-	 * just the constructor to create an empty graph-object
+	 * Creates an empty graph-object.
 	 */
 	public TopologicalGraph() {
 		linkList = new LinkedList<TopologicalLink>();
@@ -35,7 +44,7 @@ public class TopologicalGraph {
 	}
 
 	/**
-	 * adds an link between two topological nodes
+	 * Adds an link between two topological nodes.
 	 * 
 	 * @param edge the topological link
 	 */
@@ -44,7 +53,7 @@ public class TopologicalGraph {
 	}
 
 	/**
-	 * adds an Topological Node to this graph
+	 * Adds an Topological Node to this graph.
 	 * 
 	 * @param node the topological node to add
 	 */
@@ -53,7 +62,7 @@ public class TopologicalGraph {
 	}
 
 	/**
-	 * returns the number of nodes contained inside the topological-graph
+	 * Gets the number of nodes contained inside the topological-graph.
 	 * 
 	 * @return number of nodes
 	 */
@@ -62,7 +71,7 @@ public class TopologicalGraph {
 	}
 
 	/**
-	 * returns the number of links contained inside the topological-graph
+	 * Gets the number of links contained inside the topological-graph.
 	 * 
 	 * @return number of links
 	 */
@@ -71,7 +80,7 @@ public class TopologicalGraph {
 	}
 
 	/**
-	 * return an iterator through all network-graph links
+	 * Gets an iterator through all network-graph links.
 	 * 
 	 * @return the iterator throug all links
 	 */
@@ -80,7 +89,7 @@ public class TopologicalGraph {
 	}
 
 	/**
-	 * returns an iterator through all network-graph nodes
+	 * Gets an iterator through all network-graph nodes.
 	 * 
 	 * @return the iterator through all nodes
 	 */
@@ -88,9 +97,6 @@ public class TopologicalGraph {
 		return nodeList.iterator();
 	}
 
-	/**
-	 * prints out all internal node and link information
-	 */
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
