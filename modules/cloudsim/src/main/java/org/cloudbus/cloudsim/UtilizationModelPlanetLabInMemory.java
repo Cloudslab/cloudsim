@@ -94,4 +94,8 @@ public class UtilizationModelPlanetLabInMemory implements UtilizationModel {
 	public double getSchedulingInterval() {
 		return schedulingInterval;
 	}
+	
+	public double[] getData(){
+		return data;
+	}
 }

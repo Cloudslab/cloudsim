@@ -644,7 +644,7 @@ public class Datacenter extends SimEntity {
 			failed = true;
 		} else {
 			// has the cloudlet already finished?
-			if (cl.getCloudletStatus() == Cloudlet.SUCCESS) {// if yes, send it back to user
+			if (cl.getCloudletStatusString() == "Success") {// if yes, send it back to user
 				int[] data = new int[3];
 				data[0] = getId();
 				data[1] = cloudletId;

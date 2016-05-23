@@ -8,8 +8,6 @@
 
 package org.cloudbus.cloudsim.core;
 
-import java.security.InvalidParameterException;
-
 /**
  * CloudimShutdown waits for termination of all CloudSim user entities to determine the end of
  * simulation. This class will be created by CloudSim upon initialisation of the simulation, i.e.
