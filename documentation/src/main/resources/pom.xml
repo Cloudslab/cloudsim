@@ -37,7 +37,7 @@ Acknowledgement:
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.cloudbus.cloudsim</groupId>
 	<artifactId>cloudsim-toolkit</artifactId>
-	<version>2.1</version>
+	<version>4.0</version>
 	<packaging>bundle</packaging>
 	<name>cloudsim-toolkit</name>
 	<description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
