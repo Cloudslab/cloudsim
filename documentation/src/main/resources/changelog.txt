@@ -1,4 +1,15 @@
 -------------------------------------------
+Changes from CloudSim 3.0.3 to CloudSim 4.0
+-------------------------------------------
+
+WHAT'S NEW
+----------
+
+- Added support for Container virtualization
+- Lots of bugfixes
+
+
+-------------------------------------------
 Changes from CloudSim 3.0.2 to CloudSim 3.0.3
 -------------------------------------------
 
