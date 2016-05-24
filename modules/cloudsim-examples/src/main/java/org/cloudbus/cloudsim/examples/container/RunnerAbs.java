@@ -1,5 +1,6 @@
 package org.cloudbus.cloudsim.examples.container;
 
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.container.containerPlacementPolicies.*;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyCor;
@@ -9,13 +10,19 @@ import org.cloudbus.cloudsim.container.hostSelectionPolicies.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMC;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized;
-import org.cloudbus.cloudsim.container.resourceAllocators.*;
+import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
+import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicyRS;
+import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
+import org.cloudbus.cloudsim.container.resourceAllocators.PowerContainerAllocationPolicySimple;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
-import java.io.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -164,7 +171,10 @@ public abstract class RunnerAbs {
         System.out.println("Starting " + experimentName);
 
         try {
-            PowerContainerDatacenter e = (PowerContainerDatacenter) HelperEx.createDatacenter("datacenter", PowerContainerDatacenterCM.class, hostList, vmAllocationPolicy, containerAllocationPolicy, getExperimentName(), getLogAddress());
+            PowerContainerDatacenter e = (PowerContainerDatacenter) HelperEx.createDatacenter("datacenter",
+                    PowerContainerDatacenterCM.class, hostList, vmAllocationPolicy, containerAllocationPolicy,
+                    getExperimentName(), ConstantsExamples.SCHEDULING_INTERVAL, getLogAddress(),
+                    ConstantsExamples.VM_STARTTUP_DELAY, ConstantsExamples.CONTAINER_STARTTUP_DELAY);
 //            PowerContainerDatacenter e = (PowerContainerDatacenter) HelperEx.createDatacenter("Datacenter", PowerContainerDatacenter.class, hostList, vmAllocationPolicy, containerAllocationPolicy);
             vmAllocationPolicy.setDatacenter(e);
             e.setDisableVmMigrations(false);

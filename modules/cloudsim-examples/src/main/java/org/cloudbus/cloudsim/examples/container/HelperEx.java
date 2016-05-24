@@ -1,5 +1,7 @@
 package org.cloudbus.cloudsim.examples.container;
 
+import com.opencsv.CSVWriter;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
@@ -16,8 +18,6 @@ import org.cloudbus.cloudsim.container.schedulers.ContainerCloudletSchedulerDyna
 import org.cloudbus.cloudsim.container.schedulers.ContainerSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.schedulers.ContainerVmSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.utils.IDs;
-import com.opencsv.CSVWriter;
-import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 import java.io.*;
@@ -178,7 +178,63 @@ public class HelperEx {
 //        return datacenter;
 //    }
     // Data Center
-    public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass, List<ContainerHost> hostList, ContainerVmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy, String experimentName, String logAddress) throws Exception {
+//    public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass, List<ContainerHost> hostList, ContainerVmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy, String experimentName, String logAddress) throws Exception {
+//        String arch = "x86";
+//        String os = "Linux";
+//        String vmm = "Xen";
+//        double time_zone = 10.0D;
+//        double cost = 3.0D;
+//        double costPerMem = 0.05D;
+//        double costPerStorage = 0.001D;
+//        double costPerBw = 0.0D;
+//        ContainerDatacenterCharacteristics characteristics = new ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
+//        ContainerDatacenter datacenter = null;
+//        try {
+//            datacenter = datacenterClass.getConstructor(
+//                    String.class,
+//                    ContainerDatacenterCharacteristics.class,
+//                    ContainerVmAllocationPolicy.class,
+//                    ContainerAllocationPolicy.class,
+//                    List.class,
+//                    Double.TYPE, String.class, String.class
+//            ).newInstance(
+//                    name,
+//                    characteristics,
+//                    vmAllocationPolicy,
+//                    containerAllocationPolicy,
+//                    new LinkedList<Storage>(),
+//                    ConstantsExamples.SCHEDULING_INTERVAL, experimentName, logAddress);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.exit(0);
+//        }
+////        datacenter = new PowerContainerDatacenter(name,characteristics, vmAllocationPolicy, containerAllocationPolicy , new LinkedList(),Double.valueOf(300.0D));
+////        datacenter = new PowerContainerDatacenterCM(name,characteristics, vmAllocationPolicy, containerAllocationPolicy , new LinkedList(),Double.valueOf(300.0D));
+//
+//        return datacenter;
+//    }
+
+
+    /**
+     * Create the data center
+     *
+     * @param name
+     * @param datacenterClass
+     * @param hostList
+     * @param vmAllocationPolicy
+     * @param containerAllocationPolicy
+     * @param experimentName
+     * @param logAddress
+     * @return
+     * @throws Exception
+     */
+
+    public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass,
+                                                       List<ContainerHost> hostList,
+                                                       ContainerVmAllocationPolicy vmAllocationPolicy,
+                                                       ContainerAllocationPolicy containerAllocationPolicy,
+                                                       String experimentName, double schedulingInterval, String logAddress, double VMStartupDelay,
+                                                       double ContainerStartupDelay) throws Exception {
         String arch = "x86";
         String os = "Linux";
         String vmm = "Xen";
@@ -187,34 +243,15 @@ public class HelperEx {
         double costPerMem = 0.05D;
         double costPerStorage = 0.001D;
         double costPerBw = 0.0D;
-        ContainerDatacenterCharacteristics characteristics = new ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
-        ContainerDatacenter datacenter = null;
-        try {
-            datacenter = datacenterClass.getConstructor(
-                    String.class,
-                    ContainerDatacenterCharacteristics.class,
-                    ContainerVmAllocationPolicy.class,
-                    ContainerAllocationPolicy.class,
-                    List.class,
-                    Double.TYPE, String.class, String.class
-            ).newInstance(
-                    name,
-                    characteristics,
-                    vmAllocationPolicy,
-                    containerAllocationPolicy,
-                    new LinkedList<Storage>(),
-                    ConstantsExamples.SCHEDULING_INTERVAL, experimentName, logAddress);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
-//        datacenter = new PowerContainerDatacenter(name,characteristics, vmAllocationPolicy, containerAllocationPolicy , new LinkedList(),Double.valueOf(300.0D));
-//        datacenter = new PowerContainerDatacenterCM(name,characteristics, vmAllocationPolicy, containerAllocationPolicy , new LinkedList(),Double.valueOf(300.0D));
+        ContainerDatacenterCharacteristics characteristics = new
+                ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage,
+                costPerBw);
+        ContainerDatacenter datacenter = new PowerContainerDatacenterCM(name, characteristics, vmAllocationPolicy,
+                containerAllocationPolicy, new LinkedList<Storage>(), schedulingInterval, experimentName, logAddress,
+                VMStartupDelay, ContainerStartupDelay);
 
         return datacenter;
     }
-
-
     /**
      * Prints the results.
      *
