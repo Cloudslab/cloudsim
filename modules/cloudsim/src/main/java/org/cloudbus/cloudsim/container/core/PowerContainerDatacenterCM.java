@@ -1,17 +1,20 @@
 package org.cloudbus.cloudsim.container.core;
 
+import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sareh on 3/08/15.
@@ -25,15 +28,15 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
     private CostumeCSVWriter newlyCreatedVmWriter;
     private int newlyCreatedVms;
     private List<Integer> newlyCreatedVmsList;
-    private int vmStartupDelay;
-    private int containerStartupDelay;
+    private double vmStartupDelay;
+    private double containerStartupDelay;
 
 
     public PowerContainerDatacenterCM(String name, ContainerDatacenterCharacteristics characteristics,
                                       ContainerVmAllocationPolicy vmAllocationPolicy,
                                       ContainerAllocationPolicy containerAllocationPolicy, List<Storage> storageList,
                                       double schedulingInterval, String experimentName, String logAddress,
-                                      int vmStartupDelay, int containerStartupDelay) throws Exception {
+                                      double vmStartupDelay, double containerStartupDelay) throws Exception {
         super(name, characteristics, vmAllocationPolicy, containerAllocationPolicy, storageList, schedulingInterval, experimentName, logAddress);
         String newlyCreatedVmsAddress;
         int index = getExperimentName().lastIndexOf("_");
@@ -69,7 +72,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                 int previousContainerMigrationCount = getContainerMigrationCount();
                 int previousVmMigrationCount = getVmMigrationCount();
                 if (migrationMap != null) {
-                    List<ContainerVm> vmList = new ArrayList<>();
+                    List<ContainerVm> vmList = new ArrayList<ContainerVm>();
                     for (Map<String, Object> migrate : migrationMap) {
                         if (migrate.containsKey("container")) {
                             Container container = (Container) migrate.get("container");
@@ -240,7 +243,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 //                containerVm.addMigratingInContainer((Container) map.get("container"));
             ack = true;
             if (ack) {
-                Map<String, Object> data = new HashMap<>();
+                Map<String, Object> data = new HashMap<String, Object>();
                 data.put("vm", containerVm);
                 data.put("result", containerVm);
                 data.put("datacenterID", getId());

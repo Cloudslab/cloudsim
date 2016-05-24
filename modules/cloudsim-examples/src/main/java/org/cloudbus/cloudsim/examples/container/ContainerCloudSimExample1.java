@@ -11,6 +11,10 @@ package org.cloudbus.cloudsim.examples.container;
  */
 
 
+import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.Storage;
+import org.cloudbus.cloudsim.UtilizationModelNull;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
@@ -32,10 +36,9 @@ import org.cloudbus.cloudsim.container.schedulers.ContainerVmSchedulerTimeShared
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
-import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 
-import java.io.*;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -132,9 +135,9 @@ public class ContainerCloudSimExample1 {
              * 6- The host list is created considering the number of hosts, and host types which are specified
              * in the {@link ConstantsExamples}.
              */
-            hostList = new ArrayList<>();
+            hostList = new ArrayList<ContainerHost>();
             hostList = createHostList(ConstantsExamples.NUMBER_HOSTS);
-            cloudletList = new ArrayList<>();
+            cloudletList = new ArrayList<ContainerCloudlet>();
             vmList = new ArrayList<ContainerVm>();
             /**
              * 7- The container allocation policy  which defines the allocation of VMs to containers.
@@ -163,7 +166,9 @@ public class ContainerCloudSimExample1 {
             @SuppressWarnings("unused")
 			PowerContainerDatacenter e = (PowerContainerDatacenter) createDatacenter("datacenter",
                     PowerContainerDatacenterCM.class, hostList, vmAllocationPolicy, containerAllocationPolicy,
-                    getExperimentName("ContainerCloudSimExample-1", String.valueOf(overBookingFactor)), logAddress);
+                    getExperimentName("ContainerCloudSimExample-1", String.valueOf(overBookingFactor)),
+                    ConstantsExamples.SCHEDULING_INTERVAL, logAddress,
+                    ConstantsExamples.VM_STARTTUP_DELAY, ConstantsExamples.CONTAINER_STARTTUP_DELAY);
 
 
             /**
@@ -351,7 +356,8 @@ public class ContainerCloudSimExample1 {
                                                        List<ContainerHost> hostList,
                                                        ContainerVmAllocationPolicy vmAllocationPolicy,
                                                        ContainerAllocationPolicy containerAllocationPolicy,
-                                                       String experimentName, String logAddress) throws Exception {
+                                                       String experimentName, double schedulingInterval, String logAddress, double VMStartupDelay,
+                                                       double ContainerStartupDelay) throws Exception {
         String arch = "x86";
         String os = "Linux";
         String vmm = "Xen";
@@ -361,27 +367,11 @@ public class ContainerCloudSimExample1 {
         double costPerStorage = 0.001D;
         double costPerBw = 0.0D;
         ContainerDatacenterCharacteristics characteristics = new
-                ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
-        ContainerDatacenter datacenter = null;
-        try {
-            datacenter = datacenterClass.getConstructor(
-                    String.class,
-                    ContainerDatacenterCharacteristics.class,
-                    ContainerVmAllocationPolicy.class,
-                    ContainerAllocationPolicy.class,
-                    List.class,
-                    Double.TYPE, String.class, String.class
-            ).newInstance(
-                    name,
-                    characteristics,
-                    vmAllocationPolicy,
-                    containerAllocationPolicy,
-                    new LinkedList<Storage>(),
-                    ConstantsExamples.SCHEDULING_INTERVAL, experimentName, logAddress);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
+                ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage,
+                costPerBw);
+        ContainerDatacenter datacenter = new PowerContainerDatacenterCM(name, characteristics, vmAllocationPolicy,
+                containerAllocationPolicy, new LinkedList<Storage>(), schedulingInterval, experimentName, logAddress,
+                VMStartupDelay, ContainerStartupDelay);
 
         return datacenter;
     }
