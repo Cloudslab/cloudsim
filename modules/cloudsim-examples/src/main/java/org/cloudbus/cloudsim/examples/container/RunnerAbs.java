@@ -220,11 +220,17 @@ public abstract class RunnerAbs {
 
         if (vmAllocationPolicyName.startsWith("MSThreshold-Over_")) {
             double overUtilizationThreshold = Double.parseDouble(vmAllocationPolicyName.substring(18));
-            vmAllocationPolicy = new PowerContainerVmAllocationPolicyMigrationStaticThresholdMC(hostList, vmSelectionPolicy, containerSelectionPolicy, hostSelectionPolicy, overUtilizationThreshold);
+            vmAllocationPolicy = new PowerContainerVmAllocationPolicyMigrationStaticThresholdMC(hostList, vmSelectionPolicy,
+                    containerSelectionPolicy, hostSelectionPolicy, overUtilizationThreshold,
+                    ConstantsExamples.VM_TYPES,ConstantsExamples.VM_PES, ConstantsExamples.VM_RAM, ConstantsExamples.VM_BW,
+                    ConstantsExamples.VM_SIZE, ConstantsExamples.VM_MIPS);
         } else if (vmAllocationPolicyName.startsWith("MSThreshold-Under_")) {
             double overUtilizationThreshold = Double.parseDouble(vmAllocationPolicyName.substring(18, 22));
             double underUtilizationThreshold = Double.parseDouble(vmAllocationPolicyName.substring(24));
-            vmAllocationPolicy = new PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized(hostList, vmSelectionPolicy, containerSelectionPolicy, hostSelectionPolicy, overUtilizationThreshold, underUtilizationThreshold);
+            vmAllocationPolicy = new PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized(hostList,
+                    vmSelectionPolicy, containerSelectionPolicy, hostSelectionPolicy, overUtilizationThreshold,
+                    underUtilizationThreshold,ConstantsExamples.VM_TYPES,ConstantsExamples.VM_PES, ConstantsExamples.VM_RAM, ConstantsExamples.VM_BW,
+                    ConstantsExamples.VM_SIZE, ConstantsExamples.VM_MIPS );
 
         } else if (vmAllocationPolicyName.startsWith("VMThreshold-Under_")) {
 
@@ -282,10 +288,7 @@ public abstract class RunnerAbs {
 
     protected HostSelectionPolicy getHostSelectionPolicy(String hostSelectionPolicyName) {
         Object hostSelectionPolicy = null;
-        if (hostSelectionPolicyName.startsWith("CorThreshold")) {
-            double threshold = Double.parseDouble(hostSelectionPolicyName.substring(13));
-            hostSelectionPolicy = new HostSelectionPolicyCorrelationThreshold(new HostSelectionPolicyRandomSelection(), threshold);
-        } else if (hostSelectionPolicyName == "FirstFit") {
+        if (hostSelectionPolicyName == "FirstFit") {
 
             hostSelectionPolicy = new HostSelectionPolicyFirstFit();
 
