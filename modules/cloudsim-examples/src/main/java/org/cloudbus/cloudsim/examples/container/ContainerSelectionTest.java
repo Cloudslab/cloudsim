@@ -2,14 +2,13 @@ package org.cloudbus.cloudsim.examples.container;
 
 
 import java.io.IOException;
-
 /**
  * This Example is following the format for {@link org.cloudbus.cloudsim.examples.power.planetlab.Dvfs}
- * It specifically studies the initial placement of containers.
+ * It specifically studies the placement of containers.
  *
  * @author Sareh Fotuhi Piraghaj
  */
-public class containerInitialPlacementTest {
+public class ContainerSelectionTest {
 
 
     /**
@@ -25,13 +24,13 @@ public class containerInitialPlacementTest {
          */
         int runTime = Integer.parseInt(args[0]);
         int repeat = Integer.parseInt(args[1]);
-        for (int i = runTime; i < repeat; ++i) {
+        for (int i = runTime ; i < repeat; ++i) {
             boolean enableOutput = true;
             boolean outputToFile = true;
             /**
              * Getting the path of the planet lab workload that is included in the cloudSim Package
              */
-            String inputFolder = containerOverbooking.class.getClassLoader().getResource("workload/planetlab").getPath();
+            String inputFolder = ContainerOverbooking.class.getClassLoader().getResource("workload/planetlab").getPath();
             /**
              * The output folder for the logs. The log files would be located in this folder.
              */
@@ -39,15 +38,19 @@ public class containerInitialPlacementTest {
             /**
              * The allocation policy for VMs.
              */
-            String vmAllocationPolicy = "MSThreshold-Under_0.80_0.70";
+            String vmAllocationPolicy = "MSThreshold-Under_0.80_0.70"; // DVFS policy without VM migrations
             /**
              * The selection policy for containers where a container migration is triggered.
              */
-            String containerSelectionPolicy = "MaxUsage";
+//           String containerSelectionPolicy = "MaxUsage";
+            String containerSelectionPolicy = "Cor";
             /**
              * The allocation policy used for allocating containers to VMs.
              */
-            String containerAllocationPolicy = "MostFull";
+
+//          String containerAllocationPolicy= "MostFull";
+
+            String containerAllocationPolicy= "FirstFit";
             /**
              * The host selection policy determines which hosts should be selected as the migration destination.
              */
@@ -64,7 +67,6 @@ public class containerInitialPlacementTest {
 
             int OverBookingFactor = 80;
 
-
             new RunnerInitiator(
                     enableOutput,
                     outputToFile,
@@ -76,7 +78,6 @@ public class containerInitialPlacementTest {
                     containerSelectionPolicy,
                     hostSelectionPolicy,
                     OverBookingFactor, Integer.toString(i), outputFolder);
-
         }
 
     }
