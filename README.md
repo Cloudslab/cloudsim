@@ -9,8 +9,6 @@ CloudSim is developed in [the Cloud Computing and Distributed Systems (CLOUDS) L
 More information can be found on the [CloudSim's web site](http://cloudbus.org/cloudsim/).
 
 
-CloudSim is powered by [jProfiler](http://www.ej-technologies.com/products/jprofiler/overview.html).
-
 # Main features #
 
   * support for modeling and simulation of large scale Cloud computing data centers
