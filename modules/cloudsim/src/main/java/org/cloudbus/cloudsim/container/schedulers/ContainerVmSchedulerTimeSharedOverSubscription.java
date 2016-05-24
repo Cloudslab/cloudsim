@@ -22,7 +22,7 @@ public class ContainerVmSchedulerTimeSharedOverSubscription extends  ContainerVm
 
         // if the requested mips is bigger than the capacity of a single PE, we cap
         // the request to the PE's capacity
-        List<Double> mipsShareRequestedCapped = new ArrayList<>();
+        List<Double> mipsShareRequestedCapped = new ArrayList<Double>();
         double peMips = getPeCapacity();
         for (Double mips : mipsShareRequested) {
             if (mips > peMips) {
