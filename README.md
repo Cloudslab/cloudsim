@@ -15,6 +15,7 @@ CloudSim is powered by [jProfiler](http://www.ej-technologies.com/products/jprof
 
   * support for modeling and simulation of large scale Cloud computing data centers
   * support for modeling and simulation of virtualized server hosts, with customizable policies for provisioning host resources to virtual machines
+  * support for modeling and simulation of application containers
   * support for modeling and simulation of energy-aware computational resources
   * support for modeling and simulation of data center network topologies and message-passing applications
   * support for modeling and simulation of federated clouds
