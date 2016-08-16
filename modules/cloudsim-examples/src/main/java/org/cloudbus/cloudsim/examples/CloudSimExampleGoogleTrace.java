@@ -28,8 +28,6 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.UtilizationModel;
-import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -56,6 +54,7 @@ public class CloudSimExampleGoogleTrace {
 	 */
 	public static void main(String[] args) {
 		Log.printLine("Starting CloudSimExample Google Trace ...");
+		Log.printLine("Starting Time " + System.currentTimeMillis());
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -126,17 +125,18 @@ public class CloudSimExampleGoogleTrace {
 ////			new Thread(monitor).start();
 ////			Thread.sleep(1000);
 ////
-			// Fifth step: Starts the simulation
-			CloudSim.startSimulation();
+//			// Fifth step: Starts the simulation
+//			CloudSim.startSimulation();
+//
+//			// Final step: Print results when simulation is over
+//			List<Cloudlet> newList = broker.getCloudletReceivedList();
+//
+//			CloudSim.stopSimulation();
+//
+//			printCloudletList(newList);
 
-			// Final step: Print results when simulation is over
-			List<Cloudlet> newList = broker.getCloudletReceivedList();
-
-			CloudSim.stopSimulation();
-
-			printCloudletList(newList);
-
-			Log.printLine("CloudSimExample7 finished!");
+			Log.printLine("End Time " + System.currentTimeMillis());
+			Log.printLine("CloudSimExample finished!");
 		}
 		catch (Exception e)
 		{
@@ -155,39 +155,46 @@ public class CloudSimExampleGoogleTrace {
 		if (conn != null) {
 			Log.printLine("Connected to the database");
 			Statement statement = conn.createStatement();
-//			ResultSet results = statement
-//					.executeQuery("SELECT * FROM tasks WHERE submitTime > '0' LIMIT 10000" );
-			
 			ResultSet results = statement
-					.executeQuery("SELECT * FROM tasks LIMIT 1000000" );
+					.executeQuery("SELECT * FROM tasks WHERE submitTime > '0' LIMIT 100" );
+			
+//			int fiveMinutes = 5 * 60 * 1000;
+//			int oneHour = 1 * 60 * 60 * 1000;
+//			System.out.println("5 minutes = " + fiveMinutes);
+//			ResultSet results = statement
+//					.executeQuery("SELECT COUNT(*) FROM tasks WHERE submitTime > '" +  oneHour + "' AND submitTime < '" + 1000000000 * fiveMinutes + "'" );
+			
+//			ResultSet results = statement
+//					.executeQuery("SELECT * FROM tasks LIMIT 500000" );
+			
+//			ResultSet results = statement
+//					.executeQuery("SELECT * FROM tasks LIMIT 10" );
+			
 			
 			int count = 0;
 			while (results.next()) {
 				count++;
-//				System.out.println(results.getDouble("submitTime"));// + ", "
-////						+ results.getDouble("jid") + ", "
-////						+ results.getInt("tid") + ", "
-////						+ results.getString("user") + ", "
-////						+ results.getInt("schedulingClass") + ", "
-////						+ results.getInt("priority") + ", "
-//						+ results.getDouble("runtime") + "," 
-////						+ results.getDouble("endTime") + ", "
-//						+ results.getDouble("cpuReq") + ", "
-//						+ results.getDouble("memReq") + ", "
-//						+ results.getString("userClass"));
-
-				int pesNumber = 1; // number of cpus
+//				System.out.println(results.getInt("COUNT(*)"));
+//				System.out.println(results.getDouble("submitTime") < fiveMinutes);
+				System.out.println((results.getDouble("submitTime") / 1000) + ", "
+//						+ results.getDouble("jid") + ", "
+//						+ results.getInt("tid") + ", "
+//						+ results.getString("user") + ", "
+//						+ results.getInt("schedulingClass") + ", "
+//						+ results.getInt("priority") + ", "
+						+ (results.getDouble("runtime") / 1000) + "," 
+//						+ results.getDouble("endTime") + ", "
+						+ results.getDouble("cpuReq") + ", "
+						+ results.getDouble("memReq") + ", "
+						+ results.getString("userClass"));
 							
 				//runtime in miliseconds
 				long length = (long) ((results.getDouble("runtime") / 1000) * results.getDouble("cpuReq"));
-//				System.out.println("Lenght: " + length);
-				long fileSize = 0;
-				long outputSize = 0;
-				UtilizationModel utilizationModel = new UtilizationModelFull();
-
-				GoogleCloudlet cloudlet = new GoogleCloudlet(count, length, pesNumber,
-						fileSize, outputSize, utilizationModel,
-						utilizationModel, utilizationModel, results.getDouble("cpuReq"), results.getDouble("memReq"), results.getDouble("submitTime"));
+				GoogleCloudlet cloudlet = new GoogleCloudlet(count, length,
+						results.getDouble("submitTime"),
+						results.getDouble("cpuReq"),
+						results.getDouble("memReq"));
+				
 				// setting the owner of these Cloudlets
 				cloudlet.setUserId(userId);
 				cloudletList.add(cloudlet);				

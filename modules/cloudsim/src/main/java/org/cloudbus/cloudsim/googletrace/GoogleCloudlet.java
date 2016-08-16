@@ -1,23 +1,19 @@
 package org.cloudbus.cloudsim.googletrace;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.UtilizationModelFull;
 
 public class GoogleCloudlet extends Cloudlet {
 
 	private double memReq, delay, cpuReq;
-	
-	public GoogleCloudlet(int cloudletId, long cloudletLength, int pesNumber,
-			long cloudletFileSize, long cloudletOutputSize,
-			UtilizationModel utilizationModelCpu,
-			UtilizationModel utilizationModelRam,
-			UtilizationModel utilizationModelBw, double cpuReq, double memReq, double delay) {
-		super(cloudletId, cloudletLength, pesNumber, cloudletFileSize,
-				cloudletOutputSize, utilizationModelCpu, utilizationModelRam,
-				utilizationModelBw);
+
+	public GoogleCloudlet(int cloudletId, long length, double submitTime,
+			double cpuReq, double memReq) {
+		super(cloudletId, length, 1, 0, 0, new UtilizationModelFull(), new UtilizationModelFull(),
+				new UtilizationModelFull());
 		setMemReq(memReq);
 		setCpuReq(cpuReq);
-		setDelay(delay);
+		setDelay(submitTime);
 	}
 
 	public double getMemReq() {
