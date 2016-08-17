@@ -125,15 +125,15 @@ public class CloudSimExampleGoogleTrace {
 ////			new Thread(monitor).start();
 ////			Thread.sleep(1000);
 ////
-//			// Fifth step: Starts the simulation
-//			CloudSim.startSimulation();
-//
-//			// Final step: Print results when simulation is over
-//			List<Cloudlet> newList = broker.getCloudletReceivedList();
-//
-//			CloudSim.stopSimulation();
-//
-//			printCloudletList(newList);
+			// Fifth step: Starts the simulation
+			CloudSim.startSimulation();
+
+			// Final step: Print results when simulation is over
+			List<Cloudlet> newList = broker.getCloudletReceivedList();
+
+			CloudSim.stopSimulation();
+
+			printCloudletList(newList);
 
 			Log.printLine("End Time " + System.currentTimeMillis());
 			Log.printLine("CloudSimExample finished!");
@@ -155,8 +155,12 @@ public class CloudSimExampleGoogleTrace {
 		if (conn != null) {
 			Log.printLine("Connected to the database");
 			Statement statement = conn.createStatement();
+//			ResultSet results = statement
+//					.executeQuery("SELECT * FROM tasks WHERE submitTime > '0' LIMIT 100" );
+
 			ResultSet results = statement
-					.executeQuery("SELECT * FROM tasks WHERE submitTime > '0' LIMIT 100" );
+					.executeQuery("SELECT submitTime, runtime, cpuReq, memReq FROM tasks WHERE submitTime > '0' LIMIT 100" );
+
 			
 //			int fiveMinutes = 5 * 60 * 1000;
 //			int oneHour = 1 * 60 * 60 * 1000;
@@ -185,8 +189,8 @@ public class CloudSimExampleGoogleTrace {
 						+ (results.getDouble("runtime") / 1000) + "," 
 //						+ results.getDouble("endTime") + ", "
 						+ results.getDouble("cpuReq") + ", "
-						+ results.getDouble("memReq") + ", "
-						+ results.getString("userClass"));
+						+ results.getDouble("memReq"));// + ", "
+//						+ results.getString("userClass"));
 							
 				//runtime in miliseconds
 				long length = (long) ((results.getDouble("runtime") / 1000) * results.getDouble("cpuReq"));

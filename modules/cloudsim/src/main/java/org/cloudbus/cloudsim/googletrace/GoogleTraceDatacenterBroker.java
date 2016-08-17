@@ -27,20 +27,17 @@ import org.cloudbus.cloudsim.lists.CloudletList;
 import org.cloudbus.cloudsim.lists.VmList;
 
 /**
- * DatacentreBroker represents a broker acting on behalf of a user. It hides VM management, as vm
- * creation, submission of cloudlets to VMs and destruction of VMs.
+ * DatacentreBroker represents a broker acting on behalf of a user.
  * 
- * @author Rodrigo N. Calheiros
- * @author Anton Beloglazov
- * @since CloudSim Toolkit 1.0
+ * @author Giovanni Farias
+ * 
  */
 public class GoogleTraceDatacenterBroker extends SimEntity {
 
-	/** The list of VMs submitted to be managed by the broker. */
-	protected List<? extends Vm> vmList;
+	protected List<? extends Vm> vmRequestedList = new ArrayList<Vm>();
 
 	/** The list of VMs created by the broker. */
-	protected List<? extends Vm> vmsCreatedList;
+	protected List<? extends Vm> vmsCreatedList = new ArrayList<Vm>();
 
 	/** The list of cloudlet submitted to the broker. 
          * @see #submitCloudletList(java.util.List) 
@@ -56,25 +53,8 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	/** The number of submitted cloudlets. */
 	protected int cloudletsSubmitted;
 
-	/** The number of requests to create VM. */
-	protected int vmsRequested;
-
-	/** The number of acknowledges (ACKs) sent in response to
-         * VM creation requests. */
-	protected int vmsAcks;
-
-	/** The number of destroyed VMs. */
-	protected int vmsDestroyed;
-
 	/** The id's list of available datacenters. */
 	protected List<Integer> datacenterIdsList;
-
-	/** The list of datacenters where was requested to place VMs. */
-	protected List<Integer> datacenterRequestedIdsList;
-
-	/** The vms to datacenters map, where each key is a VM id
-         * and each value is the datacenter id whwere the VM is placed. */
-	protected Map<Integer, Integer> vmsToDatacentersMap;
 
 	/** The datacenter characteristics map where each key
          * is a datacenter id and each value is its characteristics.. */
@@ -91,33 +71,14 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	public GoogleTraceDatacenterBroker(String name) throws Exception {
 		super(name);
 
-		setVmList(new ArrayList<Vm>());
-		setVmsCreatedList(new ArrayList<Vm>());
 		setCloudletList(new ArrayList<Cloudlet>());
 		setCloudletSubmittedList(new ArrayList<Cloudlet>());
 		setCloudletReceivedList(new ArrayList<Cloudlet>());
 
 		cloudletsSubmitted = 0;
-		setVmsRequested(0);
-		setVmsAcks(0);
-		setVmsDestroyed(0);
 
 		setDatacenterIdsList(new LinkedList<Integer>());
-		setDatacenterRequestedIdsList(new ArrayList<Integer>());
-		setVmsToDatacentersMap(new HashMap<Integer, Integer>());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
-	}
-
-	/**
-	 * This method is used to send to the broker the list with virtual machines that must be
-	 * created.
-	 * 
-	 * @param list the list
-	 * @pre list !=null
-	 * @post $none
-	 */
-	public void submitVmList(List<? extends Vm> list) {
-		getVmList().addAll(list);
 	}
 
 	/**
@@ -136,19 +97,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	 */
 	public void submitCloudletList(List<? extends Cloudlet> list) {
 		getCloudletList().addAll(list);
-	}
-
-	/**
-	 * Specifies that a given cloudlet must run in a specific virtual machine.
-	 * 
-	 * @param cloudletId ID of the cloudlet being bount to a vm
-	 * @param vmId the vm id
-	 * @pre cloudletId > 0
-	 * @pre id > 0
-	 * @post $none
-	 */
-	public void bindCloudletToVm(int cloudletId, int vmId) {
-		CloudletList.getById(getCloudletList(), cloudletId).setVmId(vmId);
 	}
 
 	@Override
@@ -193,7 +141,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
 
 		if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
-			setDatacenterRequestedIdsList(new ArrayList<Integer>());
 			submitCloudlets();
 		}
 	}
@@ -232,10 +179,10 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 
 		// if VM was created
 		if (result == CloudSimTags.TRUE) {
-			getVmsToDatacentersMap().put(vmId, datacenterId);
-
-			Vm createdVm = VmList.getById(getVmList(), vmId);
-			getVmsCreatedList().add(createdVm);
+			Vm createdVm = VmList.getById(getVmRequestedList(), vmId);			
+			getVmsCreatedList().add(createdVm); // adding VM to created list
+			getVmRequestedList().remove(createdVm); // removing from requested list
+			
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #",
 					vmId, " has been created in Datacenter #", datacenterId,
 					", Host #", createdVm.getHost().getId());
@@ -246,18 +193,29 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 					": Sending cloudlet ", cloudlet.getCloudletId(),
 					" to VM #", vmId);
 
-			sendNow(getVmsToDatacentersMap().get(vmId),
+			sendNow(getDatacenterId(),
 					CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
 			cloudletsSubmitted++;
 
-			getCloudletSubmittedList().add(cloudlet);
-			getCloudletList().remove(cloudlet);
+			getCloudletSubmittedList().add(cloudlet); // adding to submitted cloudlet list
+			getCloudletList().remove(cloudlet); // removing from cloudlet list
 
 		} else {
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
 					": Creation of VM #", vmId, " failed in Datacenter #",
 					datacenterId);
-
+			
+			Cloudlet cloudlet = CloudletList.getById(getCloudletList(), vmId);
+			try {
+				// Setting the cloudlet status to failed due to resource unavailability 
+				cloudlet.setCloudletStatus(Cloudlet.FAILED_RESOURCE_UNAVAILABLE);
+				getCloudletReceivedList().add(cloudlet); // adding to received cloudlet list
+				getCloudletList().remove(cloudlet); // removing from cloudlet list
+			} catch (Exception e) {	
+				Log.print(e);
+				Log.printLine("There was an error while setting cloudlet status to FAILED_RESOURCE_UNAVAILABLE.");
+			}
+			
 			/*
 			 * TODO Do we really need to do it? Once a VM was not created,
 			 * should we try to create it again? Firstly there isn't problem
@@ -269,18 +227,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			 * datacenter.
 			 */
 
-			getDatacenterRequestedIdsList().add(datacenterId);
-
-			for (int nextDatacenterId : getDatacenterIdsList()) {
-				if (!getDatacenterRequestedIdsList().contains(nextDatacenterId)) {
-					createVmInDatacenter(VmList.getById(getVmList(), vmId),
-							nextDatacenterId, 0);
-					break;
-				}
-			}
 		}
-
-		incrementVmsAcks();
 	}
 
 	/**
@@ -292,7 +239,8 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	 */
 	protected void processCloudletReturn(SimEvent ev) {
 		Cloudlet cloudlet = (Cloudlet) ev.getData();
-		getCloudletReceivedList().add(cloudlet);
+		getCloudletReceivedList().add(cloudlet); // adding to received list
+		getCloudletSubmittedList().remove(cloudlet); // removing from submitted list
 		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloudlet ",
 				cloudlet.getCloudletId(), " received");
 		cloudletsSubmitted--;
@@ -300,11 +248,16 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		// destroying VM binded to returned cloudlet
 		destroyBindedVm(cloudlet);
 
+		/*
+		 * TODO We can think about to put checkpoint here (when a cloudlet
+		 * returns we could serialize it). Other possibility is to create a new
+		 * event to serialize the current results.
+		 */
+		
 		// all cloudlets executed
 		if (getCloudletList().size() == 0 && cloudletsSubmitted == 0) { 
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
 					": All Cloudlets executed. Finishing...");
-			clearDatacenters();
 			finishExecution();
 		} else {
 			// There are cloudlets running yet
@@ -313,9 +266,10 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 
 	private void destroyBindedVm(Cloudlet cloudlet) {
 		Vm vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
+		getVmsCreatedList().remove(vm); // removing from created list
 		Log.printConcatLine(CloudSim.clock(), ": " + getName(),
 				": Destroying VM #", vm.getId());
-		sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.VM_DESTROY, vm);
+		sendNow(getDatacenterId(), CloudSimTags.VM_DESTROY, vm);
 	}
 
 	/**
@@ -357,56 +311,36 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		GoogleCloudlet gCloudlet = (GoogleCloudlet) cloudlet;
 		long size = 0; // image size (MB)
 		double mips = gCloudlet.getCpuReq();
-		System.out.println("VM Mips: " + mips);
 		long bw = 0;
 		int pesNumber = 1; // number of cpus
 		String vmm = "Xen"; // VMM name
-		
-		Vm vm = new Vm(gCloudlet.getCloudletId(), gCloudlet.getUserId(), mips,
+
+		Vm vmForRequest = new Vm(gCloudlet.getCloudletId(), gCloudlet.getUserId(), mips,
 				pesNumber, (int) gCloudlet.getMemReq(), bw, size, vmm,
 				new CloudletSchedulerTimeShared());
-		getVmList().add(vm);
-		
-		cloudlet.setVmId(vm.getId());
-				
-		for (int nextDatacenterId : getDatacenterIdsList()) {
-			if (!getDatacenterRequestedIdsList().contains(nextDatacenterId)) {
-				createVmInDatacenter(vm, nextDatacenterId, gCloudlet.getDelay());	
-				break;
-			}
-		}		
+		getVmRequestedList().add(vmForRequest);
+		cloudlet.setVmId(vmForRequest.getId());
+
+		int datacenterId = getDatacenterId();
+		scheduleVmCreationInDatacenter(vmForRequest, datacenterId, gCloudlet.getDelay());
 	}
 
-	private void createVmInDatacenter(Vm vm, int datacenterId, double delay) {
-		//TODO Think better and check requestedVms local and global variables
-		int requestedVms = 0;
-		String datacenterName = CloudSim.getEntityName(datacenterId);
-		if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
-			Log.printLine(CloudSim.clock() + ": " + getName()
-					+ ": Trying to Create VM #" + vm.getId() + " in "
-					+ datacenterName);
-			send(datacenterId, delay, CloudSimTags.VM_CREATE_ACK, vm);
-			requestedVms++;
-		}
-
-		setVmsRequested(requestedVms);
-		setVmsAcks(0);
-	}
-
-	/**
-	 * Destroy all virtual machines running in datacenters.
-	 * 
-	 * @pre $none
-	 * @post $none
+	/*
+	 * TODO This method is returning always the first element because our
+	 * simulation has only one datacenter. In the future, if we would like to
+	 * simulate more than one datacenter, we can implement a policy to choose
+	 * the best datacenter
 	 */
-	protected void clearDatacenters() {
-		//TODO check it
-//		for (Vm vm : getVmsCreatedList()) {
-//			Log.printConcatLine(CloudSim.clock(), ": " + getName(), ": Destroying VM #", vm.getId());
-//			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.VM_DESTROY, vm);
-//		}
+	private int getDatacenterId() {
+		return getDatacenterIdsList().get(0);
+	}
 
-		getVmsCreatedList().clear();
+	private void scheduleVmCreationInDatacenter(Vm vm, int datacenterId, double delay) {
+		String datacenterName = CloudSim.getEntityName(datacenterId);
+		Log.printLine(CloudSim.clock() + ": " + getName()
+				+ ": Trying to Create VM #" + vm.getId() + " in "
+				+ datacenterName);
+		send(datacenterId, delay, CloudSimTags.VM_CREATE_ACK, vm);
 	}
 
 	/**
@@ -437,18 +371,8 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	 * @return the vm list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Vm> List<T> getVmList() {
-		return (List<T>) vmList;
-	}
-
-	/**
-	 * Sets the vm list.
-	 * 
-	 * @param <T> the generic type
-	 * @param vmList the new vm list
-	 */
-	protected <T extends Vm> void setVmList(List<T> vmList) {
-		this.vmList = vmList;
+	public <T extends Vm> List<T> getVmRequestedList() {
+		return (List<T>) vmRequestedList;
 	}
 
 	/**
@@ -526,78 +450,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	}
 
 	/**
-	 * Sets the vm list.
-	 * 
-	 * @param <T> the generic type
-	 * @param vmsCreatedList the vms created list
-	 */
-	protected <T extends Vm> void setVmsCreatedList(List<T> vmsCreatedList) {
-		this.vmsCreatedList = vmsCreatedList;
-	}
-
-	/**
-	 * Gets the vms requested.
-	 * 
-	 * @return the vms requested
-	 */
-	protected int getVmsRequested() {
-		return vmsRequested;
-	}
-
-	/**
-	 * Sets the vms requested.
-	 * 
-	 * @param vmsRequested the new vms requested
-	 */
-	protected void setVmsRequested(int vmsRequested) {
-		this.vmsRequested = vmsRequested;
-	}
-
-	/**
-	 * Gets the vms acks.
-	 * 
-	 * @return the vms acks
-	 */
-	protected int getVmsAcks() {
-		return vmsAcks;
-	}
-
-	/**
-	 * Sets the vms acks.
-	 * 
-	 * @param vmsAcks the new vms acks
-	 */
-	protected void setVmsAcks(int vmsAcks) {
-		this.vmsAcks = vmsAcks;
-	}
-
-	/**
-	 * Increment the number of acknowledges (ACKs) sent in response
-         * to requests of VM creation.
-	 */
-	protected void incrementVmsAcks() {
-		vmsAcks++;
-	}
-
-	/**
-	 * Gets the vms destroyed.
-	 * 
-	 * @return the vms destroyed
-	 */
-	protected int getVmsDestroyed() {
-		return vmsDestroyed;
-	}
-
-	/**
-	 * Sets the vms destroyed.
-	 * 
-	 * @param vmsDestroyed the new vms destroyed
-	 */
-	protected void setVmsDestroyed(int vmsDestroyed) {
-		this.vmsDestroyed = vmsDestroyed;
-	}
-
-	/**
 	 * Gets the datacenter ids list.
 	 * 
 	 * @return the datacenter ids list
@@ -613,24 +465,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	 */
 	protected void setDatacenterIdsList(List<Integer> datacenterIdsList) {
 		this.datacenterIdsList = datacenterIdsList;
-	}
-
-	/**
-	 * Gets the vms to datacenters map.
-	 * 
-	 * @return the vms to datacenters map
-	 */
-	protected Map<Integer, Integer> getVmsToDatacentersMap() {
-		return vmsToDatacentersMap;
-	}
-
-	/**
-	 * Sets the vms to datacenters map.
-	 * 
-	 * @param vmsToDatacentersMap the vms to datacenters map
-	 */
-	protected void setVmsToDatacentersMap(Map<Integer, Integer> vmsToDatacentersMap) {
-		this.vmsToDatacentersMap = vmsToDatacentersMap;
 	}
 
 	/**
@@ -651,23 +485,4 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList) {
 		this.datacenterCharacteristicsList = datacenterCharacteristicsList;
 	}
-
-	/**
-	 * Gets the datacenter requested ids list.
-	 * 
-	 * @return the datacenter requested ids list
-	 */
-	protected List<Integer> getDatacenterRequestedIdsList() {
-		return datacenterRequestedIdsList;
-	}
-
-	/**
-	 * Sets the datacenter requested ids list.
-	 * 
-	 * @param datacenterRequestedIdsList the new datacenter requested ids list
-	 */
-	protected void setDatacenterRequestedIdsList(List<Integer> datacenterRequestedIdsList) {
-		this.datacenterRequestedIdsList = datacenterRequestedIdsList;
-	}
-
 }
