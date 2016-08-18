@@ -32,6 +32,7 @@ import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.googletrace.GoogleCloudlet;
+import org.cloudbus.cloudsim.googletrace.GoogleCloudletState;
 import org.cloudbus.cloudsim.googletrace.GoogleTraceDatacenterBroker;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -129,11 +130,12 @@ public class CloudSimExampleGoogleTrace {
 			CloudSim.startSimulation();
 
 			// Final step: Print results when simulation is over
-			List<Cloudlet> newList = broker.getCloudletReceivedList();
+//			List<Cloudlet> newList = broker.getCloudletReceivedList();
+			List<GoogleCloudletState> newList = broker.getReceivedCloudlets();
 
 			CloudSim.stopSimulation();
 
-			printCloudletList(newList);
+			printCloudletStates(newList);
 
 			Log.printLine("End Time " + System.currentTimeMillis());
 			Log.printLine("CloudSimExample finished!");
@@ -159,7 +161,7 @@ public class CloudSimExampleGoogleTrace {
 //					.executeQuery("SELECT * FROM tasks WHERE submitTime > '0' LIMIT 100" );
 
 			ResultSet results = statement
-					.executeQuery("SELECT submitTime, runtime, cpuReq, memReq FROM tasks WHERE submitTime > '0' LIMIT 100" );
+					.executeQuery("SELECT submitTime, runtime, cpuReq, memReq FROM tasks LIMIT 100000" );
 
 			
 //			int fiveMinutes = 5 * 60 * 1000;
@@ -193,6 +195,7 @@ public class CloudSimExampleGoogleTrace {
 //						+ results.getString("userClass"));
 							
 				//runtime in miliseconds
+				//TODO lenght não pode ser long, precisa ser double
 				long length = (long) ((results.getDouble("runtime") / 1000) * results.getDouble("cpuReq"));
 				GoogleCloudlet cloudlet = new GoogleCloudlet(count, length,
 						results.getDouble("submitTime"),
@@ -272,7 +275,7 @@ public class CloudSimExampleGoogleTrace {
 
 		GoogleTraceDatacenterBroker broker = null;
 		try {
-			broker = new GoogleTraceDatacenterBroker(name);
+			broker = new GoogleTraceDatacenterBroker(name, "jdbc:sqlite:/tmp/receivedCloudlets.sqlite3");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -282,11 +285,11 @@ public class CloudSimExampleGoogleTrace {
 
 	/**
 	 * Prints the Cloudlet objects
-	 * @param list  list of Cloudlets
+	 * @param newList  list of Cloudlets
 	 */
-	private static void printCloudletList(List<Cloudlet> list) {
-		int size = list.size();
-		Cloudlet cloudlet;
+	private static void printCloudletStates(List<GoogleCloudletState> newList) {
+		int size = newList.size();
+		GoogleCloudletState cloudlet;
 
 		String indent = "    ";
 		Log.printLine();
@@ -296,15 +299,15 @@ public class CloudSimExampleGoogleTrace {
 
 		DecimalFormat dft = new DecimalFormat("###.##");
 		for (int i = 0; i < size; i++) {
-			cloudlet = list.get(i);
+			cloudlet = newList.get(i);
 			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS){
+			if (cloudlet.getStatus() == Cloudlet.SUCCESS){
 				Log.print("SUCCESS");
 
-				Log.printLine( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
-						indent + indent + indent + dft.format(cloudlet.getActualCPUTime()) +
-						indent + indent + dft.format(cloudlet.getExecStartTime())+ indent + indent + indent + dft.format(cloudlet.getFinishTime()));
+				Log.printLine( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getCloudletId() +
+						indent + indent + indent + dft.format(cloudlet.getRuntime()) +
+						indent + indent + dft.format(cloudlet.getStartTime())+ indent + indent + indent + dft.format(cloudlet.getFinishTime()));
 			}
 		}
 

@@ -47,9 +47,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	/** The list of submitted cloudlets. */
 	protected List<? extends Cloudlet> cloudletSubmittedList;
 
-	/** The list of received cloudlet. */
-	protected List<? extends Cloudlet> cloudletReceivedList;
-
 	/** The number of submitted cloudlets. */
 	protected int cloudletsSubmitted;
 
@@ -59,6 +56,10 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	/** The datacenter characteristics map where each key
          * is a datacenter id and each value is its characteristics.. */
 	protected Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList;
+	
+	private GoogleCloudletDataStore cloudletDataStore;
+	
+	
 
 	/**
 	 * Created a new DatacenterBroker object.
@@ -68,17 +69,17 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	 * @pre name != null
 	 * @post $none
 	 */
-	public GoogleTraceDatacenterBroker(String name) throws Exception {
+	public GoogleTraceDatacenterBroker(String name, String receivedCloudletsDatabaseURL) throws Exception {
 		super(name);
 
 		setCloudletList(new ArrayList<Cloudlet>());
 		setCloudletSubmittedList(new ArrayList<Cloudlet>());
-		setCloudletReceivedList(new ArrayList<Cloudlet>());
 
 		cloudletsSubmitted = 0;
 
 		setDatacenterIdsList(new LinkedList<Integer>());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
+		cloudletDataStore = new GoogleCloudletDataStore(receivedCloudletsDatabaseURL);		
 	}
 
 	/**
@@ -205,11 +206,12 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 					": Creation of VM #", vmId, " failed in Datacenter #",
 					datacenterId);
 			
-			Cloudlet cloudlet = CloudletList.getById(getCloudletList(), vmId);
+			GoogleCloudlet cloudlet = (GoogleCloudlet) CloudletList.getById(getCloudletList(), vmId);
 			try {
 				// Setting the cloudlet status to failed due to resource unavailability 
 				cloudlet.setCloudletStatus(Cloudlet.FAILED_RESOURCE_UNAVAILABLE);
-				getCloudletReceivedList().add(cloudlet); // adding to received cloudlet list
+				cloudletDataStore.addCloudlet(cloudlet);
+				
 				getCloudletList().remove(cloudlet); // removing from cloudlet list
 			} catch (Exception e) {	
 				Log.print(e);
@@ -238,8 +240,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	 * @post $none
 	 */
 	protected void processCloudletReturn(SimEvent ev) {
-		Cloudlet cloudlet = (Cloudlet) ev.getData();
-		getCloudletReceivedList().add(cloudlet); // adding to received list
+		GoogleCloudlet cloudlet = (GoogleCloudlet) ev.getData();
 		getCloudletSubmittedList().remove(cloudlet); // removing from submitted list
 		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloudlet ",
 				cloudlet.getCloudletId(), " received");
@@ -249,10 +250,10 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		destroyBindedVm(cloudlet);
 
 		/*
-		 * TODO We can think about to put checkpoint here (when a cloudlet
-		 * returns we could serialize it). Other possibility is to create a new
-		 * event to serialize the current results.
+		 * TODO Maybe to create a new event to serialize over time is more
+		 * efficient than do it every cloudlet return.
 		 */
+		cloudletDataStore.addCloudlet(cloudlet);		
 		
 		// all cloudlets executed
 		if (getCloudletList().size() == 0 && cloudletsSubmitted == 0) { 
@@ -418,27 +419,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	}
 
 	/**
-	 * Gets the cloudlet received list.
-	 * 
-	 * @param <T> the generic type
-	 * @return the cloudlet received list
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends Cloudlet> List<T> getCloudletReceivedList() {
-		return (List<T>) cloudletReceivedList;
-	}
-
-	/**
-	 * Sets the cloudlet received list.
-	 * 
-	 * @param <T> the generic type
-	 * @param cloudletReceivedList the new cloudlet received list
-	 */
-	protected <T extends Cloudlet> void setCloudletReceivedList(List<T> cloudletReceivedList) {
-		this.cloudletReceivedList = cloudletReceivedList;
-	}
-
-	/**
 	 * Gets the vm list.
 	 * 
 	 * @param <T> the generic type
@@ -485,4 +465,9 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList) {
 		this.datacenterCharacteristicsList = datacenterCharacteristicsList;
 	}
+
+	public List<GoogleCloudletState> getReceivedCloudlets() {
+		return cloudletDataStore.getAllCloudlets();
+	}
+
 }

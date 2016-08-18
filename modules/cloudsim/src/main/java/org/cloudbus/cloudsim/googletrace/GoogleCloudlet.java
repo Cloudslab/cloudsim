@@ -7,9 +7,9 @@ public class GoogleCloudlet extends Cloudlet {
 
 	private double memReq, delay, cpuReq;
 
-	public GoogleCloudlet(int cloudletId, long length, double submitTime,
+	public GoogleCloudlet(int cloudletId, double length, double submitTime,
 			double cpuReq, double memReq) {
-		super(cloudletId, length, 1, 0, 0, new UtilizationModelFull(), new UtilizationModelFull(),
+		super(cloudletId, (long) length, 1, 0, 0, new UtilizationModelFull(), new UtilizationModelFull(),
 				new UtilizationModelFull());
 		setMemReq(memReq);
 		setCpuReq(cpuReq);
