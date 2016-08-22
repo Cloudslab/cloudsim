@@ -123,10 +123,44 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			case CloudSimTags.END_OF_SIMULATION:
 				shutdownEntity();
 				break;
+			case CloudSimTags.VM_DESTROY_ACK:
+				processVmDestroyAck(ev);
+				break;			
 			// other unknown tags are processed by this method
 			default:
 				processOtherEvent(ev);
 				break;
+		}
+	}
+
+	private void processVmDestroyAck(SimEvent ev) {
+		int[] data = (int[]) ev.getData();
+		int datacenterId = data[0];
+		int vmId = data[1];
+		int result = data[2];
+		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #",
+				vmId, " is being destroyed now.");
+		
+		if (result == CloudSimTags.TRUE) {
+			GoogleCloudlet cloudlet = (GoogleCloudlet) CloudletList.getById(getCloudletList(), vmId);
+			
+			double now = CloudSim.clock();
+			double startTime = cloudlet.getExecStartTime();
+			GoogleCloudletState cloudletState = new GoogleCloudletState(vmId, 2, cloudlet.getCpuReq(), cloudlet.getDelay(), startTime, now,
+					now - startTime, Cloudlet.SUCCESS);
+			cloudletDataStore.addCloudlet(cloudletState);
+			
+			getCloudletList().remove(cloudlet); // removing cloudlet
+			Vm vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
+			getVmsCreatedList().remove(vm); // removing from created list
+			
+			if (getCloudletList().size() == 0) { 
+				Log.printConcatLine(CloudSim.clock(), ": ", getName(),
+						": All Cloudlets executed. Finishing...");
+				finishExecution();
+			}			
+		} else {
+			System.out.println("Error while destroying VM #"+ vmId);
 		}
 	}
 
@@ -188,18 +222,25 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 					vmId, " has been created in Datacenter #", datacenterId,
 					", Host #", createdVm.getHost().getId());
 
-			Cloudlet cloudlet = CloudletList.getById(getCloudletList(), vmId);
-
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
-					": Sending cloudlet ", cloudlet.getCloudletId(),
-					" to VM #", vmId);
-
-			sendNow(getDatacenterId(),
-					CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+			GoogleCloudlet cloudlet = (GoogleCloudlet) CloudletList.getById(getCloudletList(), vmId);
+			cloudlet.setExecStartTime(CloudSim.clock());
+			
+//			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
+//					": Sending cloudlet ", cloudlet.getCloudletId(),
+//					" to VM #", vmId);
+//
+//			sendNow(getDatacenterId(),
+//					CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+			Vm vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
+//			getVmsCreatedList().remove(vm); // removing from created list
+//			Log.printConcatLine(CloudSim.clock(), ": " + getName(),
+//					": Scheduling destroy of VM #", vm.getId());
+			send(getDatacenterId(), CloudSim.clock() + cloudlet.getRuntime(), CloudSimTags.VM_DESTROY_ACK, vm);
+			
 			cloudletsSubmitted++;
 
-			getCloudletSubmittedList().add(cloudlet); // adding to submitted cloudlet list
-			getCloudletList().remove(cloudlet); // removing from cloudlet list
+//			getCloudletSubmittedList().add(cloudlet); // adding to submitted cloudlet list
+//			getCloudletList().remove(cloudlet); // removing from cloudlet list
 
 		} else {
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(),

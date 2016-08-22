@@ -55,7 +55,7 @@ public class CloudSimExampleGoogleTrace {
 	 */
 	public static void main(String[] args) {
 		Log.printLine("Starting CloudSimExample Google Trace ...");
-		Log.printLine("Starting Time " + System.currentTimeMillis());
+		long now = System.currentTimeMillis();
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -126,7 +126,7 @@ public class CloudSimExampleGoogleTrace {
 ////			new Thread(monitor).start();
 ////			Thread.sleep(1000);
 ////
-			// Fifth step: Starts the simulation
+//			 Fifth step: Starts the simulation
 			CloudSim.startSimulation();
 
 			// Final step: Print results when simulation is over
@@ -137,7 +137,7 @@ public class CloudSimExampleGoogleTrace {
 
 			printCloudletStates(newList);
 
-			Log.printLine("End Time " + System.currentTimeMillis());
+			Log.printLine("Execution Time " + (((System.currentTimeMillis() - now)/1000)/60) + " minutes");
 			Log.printLine("CloudSimExample finished!");
 		}
 		catch (Exception e)
@@ -160,21 +160,44 @@ public class CloudSimExampleGoogleTrace {
 //			ResultSet results = statement
 //					.executeQuery("SELECT * FROM tasks WHERE submitTime > '0' LIMIT 100" );
 
-			ResultSet results = statement
-					.executeQuery("SELECT submitTime, runtime, cpuReq, memReq FROM tasks LIMIT 100000" );
+//			ResultSet results = statement
+//					.executeQuery("SELECT submitTime, runtime, cpuReq, memReq FROM tasks LIMIT 100000" );
 
 			
-//			int fiveMinutes = 5 * 60 * 1000;
+			int fiveMinutes = 5 * 60 * 1000;
 //			int oneHour = 1 * 60 * 60 * 1000;
 //			System.out.println("5 minutes = " + fiveMinutes);
 //			ResultSet results = statement
 //					.executeQuery("SELECT COUNT(*) FROM tasks WHERE submitTime > '" +  oneHour + "' AND submitTime < '" + 1000000000 * fiveMinutes + "'" );
 			
-//			ResultSet results = statement
-//					.executeQuery("SELECT * FROM tasks LIMIT 500000" );
+			ResultSet results = statement
+					.executeQuery("SELECT * FROM tasks WHERE cpuReq > '0' AND memReq > '0' LIMIT 200000" );
 			
 //			ResultSet results = statement
 //					.executeQuery("SELECT * FROM tasks LIMIT 10" );
+			
+//			int count = 0;
+//			int sum = 0;
+//			while (sum < 20000000) {
+////				ResultSet results = statement
+////						.executeQuery("SELECT COUNT(*) FROM tasks WHERE submitTime >= '" +  (i * oneHour) + "' AND submitTime < '" + ((i+1) * oneHour )+ "'" );
+//												
+//				ResultSet results = statement
+//						.executeQuery("SELECT COUNT(*) FROM tasks WHERE cpuReq > '0' AND memReq > '0' AND submitTime >= '" +  (count * fiveMinutes) + "' AND submitTime < '" + ((count+1) * fiveMinutes) + "'");
+//				
+//				while (results.next()) {					
+////					System.out.println(i + " - number of requests: " + results.getInt("COUNT(*)"));
+//					int requests = results.getInt("COUNT(*)");
+//					System.out.println(count +" - Number of request: " + requests);
+//					sum += requests;
+//				}
+//								
+//				count++;
+//				
+//			}
+//			System.out.println("Sum " + sum);
+//			COUNT: 25834519
+//			COUNT: 24776760
 			
 			
 			int count = 0;
@@ -182,13 +205,13 @@ public class CloudSimExampleGoogleTrace {
 				count++;
 //				System.out.println(results.getInt("COUNT(*)"));
 //				System.out.println(results.getDouble("submitTime") < fiveMinutes);
-				System.out.println((results.getDouble("submitTime") / 1000) + ", "
+				System.out.println(results.getDouble("submitTime") + ", "
 //						+ results.getDouble("jid") + ", "
 //						+ results.getInt("tid") + ", "
 //						+ results.getString("user") + ", "
 //						+ results.getInt("schedulingClass") + ", "
 //						+ results.getInt("priority") + ", "
-						+ (results.getDouble("runtime") / 1000) + "," 
+						+ (results.getDouble("runtime"))  + "," 
 //						+ results.getDouble("endTime") + ", "
 						+ results.getDouble("cpuReq") + ", "
 						+ results.getDouble("memReq"));// + ", "
@@ -198,7 +221,7 @@ public class CloudSimExampleGoogleTrace {
 				//TODO lenght não pode ser long, precisa ser double
 				long length = (long) ((results.getDouble("runtime") / 1000) * results.getDouble("cpuReq"));
 				GoogleCloudlet cloudlet = new GoogleCloudlet(count, length,
-						results.getDouble("submitTime"),
+						results.getDouble("submitTime"), results.getDouble("runtime"),
 						results.getDouble("cpuReq"),
 						results.getDouble("memReq"));
 				
@@ -306,8 +329,8 @@ public class CloudSimExampleGoogleTrace {
 				Log.print("SUCCESS");
 
 				Log.printLine( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getCloudletId() +
-						indent + indent + indent + dft.format(cloudlet.getRuntime()) +
-						indent + indent + dft.format(cloudlet.getStartTime())+ indent + indent + indent + dft.format(cloudlet.getFinishTime()));
+						indent + indent + indent + cloudlet.getRuntime() +
+						indent + indent + cloudlet.getStartTime()+ indent + indent + indent + cloudlet.getFinishTime());
 			}
 		}
 

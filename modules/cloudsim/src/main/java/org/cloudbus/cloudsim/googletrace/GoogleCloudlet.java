@@ -5,15 +5,24 @@ import org.cloudbus.cloudsim.UtilizationModelFull;
 
 public class GoogleCloudlet extends Cloudlet {
 
-	private double memReq, delay, cpuReq;
+	private double memReq, delay, cpuReq, runtime;
 
-	public GoogleCloudlet(int cloudletId, double length, double submitTime,
+	public GoogleCloudlet(int cloudletId, double length, double submitTime, double runtime,
 			double cpuReq, double memReq) {
 		super(cloudletId, (long) length, 1, 0, 0, new UtilizationModelFull(), new UtilizationModelFull(),
 				new UtilizationModelFull());
 		setMemReq(memReq);
 		setCpuReq(cpuReq);
 		setDelay(submitTime);
+		setRuntime(runtime);
+	}
+
+	public double getRuntime() {
+		return runtime;
+	}
+	
+	public void setRuntime(double runtime) {
+		this.runtime = runtime;
 	}
 
 	public double getMemReq() {

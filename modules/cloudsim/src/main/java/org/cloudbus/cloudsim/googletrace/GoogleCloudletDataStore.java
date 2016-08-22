@@ -162,5 +162,40 @@ public class GoogleCloudletDataStore {
 	protected void setDatabaseURL(String databaseURL) {
 		this.databaseURL = databaseURL;
 	}
+
+	public void addCloudlet(GoogleCloudletState cloudlet) {
+		if (cloudlet == null) {
+			Log.printLine("Cloudlet must no be null.");
+			return;
+		}
+		
+		Log.printLine("Adding vm #" + cloudlet.getCloudletId() + " into database.");
+		
+		PreparedStatement insertMemberStatement = null;
+		
+		Connection connection = null;
+				
+
+		try {
+			connection = getConnection();			
+			insertMemberStatement = connection.prepareStatement(INSERT_CLOUDLET_SQL);		
+			insertMemberStatement.setInt(1, cloudlet.getCloudletId());
+			insertMemberStatement.setInt(2, cloudlet.getResourceId());
+			insertMemberStatement.setDouble(3, cloudlet.getCpuReq());
+			insertMemberStatement.setDouble(4, cloudlet.getSubmitTime());
+			insertMemberStatement.setDouble(5, cloudlet.getStartTime());
+			insertMemberStatement.setDouble(6, cloudlet.getFinishTime());
+			insertMemberStatement.setDouble(7, cloudlet.getRuntime());
+			insertMemberStatement.setInt(8, cloudlet.getStatus());
+			insertMemberStatement.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Log.printLine("Couldn't add cloudlet into database.");			
+		} finally {
+			close(insertMemberStatement, connection);
+		}
+		
+	}
 	
 }
