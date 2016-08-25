@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Log;
 
 public class GoogleCloudletDataStore {
@@ -54,13 +55,13 @@ public class GoogleCloudletDataStore {
 	private static final String INSERT_CLOUDLET_SQL = "INSERT INTO " + CLOUDLET_TABLE_NAME
 			+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
-	public void addCloudlet(GoogleCloudlet cloudlet) {
+	public void addCloudlet(GoogleTask cloudlet) {
 		if (cloudlet == null) {
 			Log.printLine("Cloudlet must no be null.");
 			return;
 		}
 		
-		Log.printLine("Adding cloudlet #" + cloudlet.getCloudletId() + " into database.");
+		Log.printLine("Adding cloudlet #" + cloudlet.getId() + " into database.");
 		
 		PreparedStatement insertMemberStatement = null;
 		
@@ -70,14 +71,17 @@ public class GoogleCloudletDataStore {
 		try {
 			connection = getConnection();			
 			insertMemberStatement = connection.prepareStatement(INSERT_CLOUDLET_SQL);		
-			insertMemberStatement.setInt(1, cloudlet.getCloudletId());
-			insertMemberStatement.setInt(2, cloudlet.getResourceId());
+			insertMemberStatement.setInt(1, cloudlet.getId());
+			insertMemberStatement.setInt(2, -1);
+//			insertMemberStatement.setInt(2, cloudlet.getResourceId());
 			insertMemberStatement.setDouble(3, cloudlet.getCpuReq());
-			insertMemberStatement.setDouble(4, cloudlet.getDelay());
-			insertMemberStatement.setDouble(5, cloudlet.getExecStartTime());
+			insertMemberStatement.setDouble(4, cloudlet.getSubmitTime());
+			insertMemberStatement.setDouble(5, cloudlet.getStartTime());
 			insertMemberStatement.setDouble(6, cloudlet.getFinishTime());
-			insertMemberStatement.setDouble(7, cloudlet.getActualCPUTime());
-			insertMemberStatement.setInt(8, cloudlet.getStatus());
+//			insertMemberStatement.setDouble(7, cloudlet.getActualCPUTime());
+			insertMemberStatement.setDouble(7, -1);
+//			insertMemberStatement.setInt(8, cloudlet.getStatus());
+			insertMemberStatement.setInt(8, Cloudlet.SUCCESS);
 			insertMemberStatement.execute();
 
 		} catch (SQLException e) {

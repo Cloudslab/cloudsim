@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
@@ -31,8 +30,9 @@ import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.googletrace.GoogleCloudlet;
 import org.cloudbus.cloudsim.googletrace.GoogleCloudletState;
+import org.cloudbus.cloudsim.googletrace.GoogleDatacenter;
+import org.cloudbus.cloudsim.googletrace.GoogleTask;
 import org.cloudbus.cloudsim.googletrace.GoogleTraceDatacenterBroker;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -45,8 +45,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  */
 public class CloudSimExampleGoogleTrace {
 
-	/** The cloudlet list. */
-	private static List<Cloudlet> cloudletList;
+	private static List<GoogleTask> googleTasks;
 
 	////////////////////////// STATIC METHODS ///////////////////////
 
@@ -70,62 +69,17 @@ public class CloudSimExampleGoogleTrace {
 			// Second step: Create Datacenters
 			//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
 			@SuppressWarnings("unused")
-			Datacenter datacenter0 = createDatacenter("cloud-0");
+			GoogleDatacenter datacenter0 = createDatacenter("cloud-0");
 
 			//Third step: Create Broker
 			GoogleTraceDatacenterBroker broker = createBroker("Google_Broker_0");
 			int brokerId = broker.getId();
 			
 			String databaseURL = "jdbc:sqlite:/home/giovanni/doutorado/cloud-simulator/cloudrm-sim/data/gtrace_data.sqlite3";
-			createCloudlet(databaseURL, brokerId);
+			createGoogleTasks(databaseURL, brokerId);
 
-			//Fourth step: Create VMs and Cloudlets and send them to broker			
-//			vmlist = createVM(brokerId, 5, 0); //creating 5 vms
-//			cloudletList = createCloudlet(brokerId, 10, 0); // creating 10 cloudlets
-			
-			broker.submitCloudletList(cloudletList);
-//
-////			// A thread that will create a new broker at 200 clock time
-////			Runnable monitor = new Runnable() {
-////				@Override
-////				public void run() {
-////					CloudSim.pauseSimulation(200);
-////					while (true) {
-////						if (CloudSim.isPaused()) {
-////							break;
-////						}
-////						try {
-////							Thread.sleep(100);
-////						} catch (InterruptedException e) {
-////							e.printStackTrace();
-////						}
-////					}
-////
-////					Log.printLine("\n\n\n" + CloudSim.clock() + ": The simulation is paused for 5 sec \n\n");
-////
-////					try {
-////						Thread.sleep(5000);
-////					} catch (InterruptedException e) {
-////						e.printStackTrace();
-////					}
-////
-////					DatacenterBroker broker = createBroker("Broker_1");
-////					int brokerId = broker.getId();
-////
-////					//Create VMs and Cloudlets and send them to broker
-////					vmlist = createVM(brokerId, 5, 100); //creating 5 vms
-////					cloudletList = createCloudlet(brokerId, 10, 100); // creating 10 cloudlets
-////
-////					broker.submitVmList(vmlist);
-////					broker.submitCloudletList(cloudletList);
-////
-////					CloudSim.resumeSimulation();
-////				}
-////			};
-////
-////			new Thread(monitor).start();
-////			Thread.sleep(1000);
-////
+			broker.submitTasks(googleTasks);
+
 //			 Fifth step: Starts the simulation
 			CloudSim.startSimulation();
 
@@ -147,12 +101,12 @@ public class CloudSimExampleGoogleTrace {
 		}
 	}
 
-	private static void createCloudlet(String databaseURL, int userId) throws SQLException {
+	private static void createGoogleTasks(String databaseURL, int userId) throws SQLException {
 		// reading traceFile
 		Log.printLine("Reading trace from URL ...");
 		Connection conn = DriverManager.getConnection(databaseURL);
 
-		cloudletList = new ArrayList<Cloudlet>();
+		googleTasks = new ArrayList<GoogleTask>();
 
 		if (conn != null) {
 			Log.printLine("Connected to the database");
@@ -171,7 +125,7 @@ public class CloudSimExampleGoogleTrace {
 //					.executeQuery("SELECT COUNT(*) FROM tasks WHERE submitTime > '" +  oneHour + "' AND submitTime < '" + 1000000000 * fiveMinutes + "'" );
 			
 			ResultSet results = statement
-					.executeQuery("SELECT * FROM tasks WHERE cpuReq > '0' AND memReq > '0' LIMIT 200000" );
+					.executeQuery("SELECT * FROM tasks WHERE cpuReq > '0' AND memReq > '0' LIMIT 100" );
 			
 //			ResultSet results = statement
 //					.executeQuery("SELECT * FROM tasks LIMIT 10" );
@@ -217,23 +171,21 @@ public class CloudSimExampleGoogleTrace {
 						+ results.getDouble("memReq"));// + ", "
 //						+ results.getString("userClass"));
 							
-				//runtime in miliseconds
-				//TODO lenght não pode ser long, precisa ser double
-				long length = (long) ((results.getDouble("runtime") / 1000) * results.getDouble("cpuReq"));
-				GoogleCloudlet cloudlet = new GoogleCloudlet(count, length,
-						results.getDouble("submitTime"), results.getDouble("runtime"),
+
+				GoogleTask task = new GoogleTask(count, results.getDouble("submitTime"), results.getDouble("runtime"),
 						results.getDouble("cpuReq"),
 						results.getDouble("memReq"));
 				
 				// setting the owner of these Cloudlets
-				cloudlet.setUserId(userId);
-				cloudletList.add(cloudlet);				
+				googleTasks.add(task);
+//				cloudlet.setUserId(userId);
+//				cloudletList.add(cloudlet);				
 			}
 		}
 	}
 
 
-	private static Datacenter createDatacenter(String name){
+	private static GoogleDatacenter createDatacenter(String name){
 
 		// Here are the steps needed to create a PowerDatacenter:
 		// 1. We need to create a list to store one or more
@@ -282,9 +234,9 @@ public class CloudSimExampleGoogleTrace {
                 arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
 
 		// 6. Finally, we need to create a PowerDatacenter object.
-		Datacenter datacenter = null;
+		GoogleDatacenter datacenter = null;
 		try {
-			datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(hostList), storageList, 0);
+			datacenter = new GoogleDatacenter(name, characteristics, new VmAllocationPolicySimple(hostList), storageList, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

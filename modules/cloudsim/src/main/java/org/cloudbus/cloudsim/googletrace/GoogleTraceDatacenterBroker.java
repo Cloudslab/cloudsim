@@ -23,7 +23,6 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
-import org.cloudbus.cloudsim.lists.CloudletList;
 import org.cloudbus.cloudsim.lists.VmList;
 
 /**
@@ -39,17 +38,9 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	/** The list of VMs created by the broker. */
 	protected List<? extends Vm> vmsCreatedList = new ArrayList<Vm>();
 
-	/** The list of cloudlet submitted to the broker. 
-         * @see #submitCloudletList(java.util.List) 
-         */
-	protected List<? extends Cloudlet> cloudletList;
 
-	/** The list of submitted cloudlets. */
-	protected List<? extends Cloudlet> cloudletSubmittedList;
-
-	/** The number of submitted cloudlets. */
-	protected int cloudletsSubmitted;
-
+	protected List<GoogleTask> createdTasks;
+	
 	/** The id's list of available datacenters. */
 	protected List<Integer> datacenterIdsList;
 
@@ -72,32 +63,11 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	public GoogleTraceDatacenterBroker(String name, String receivedCloudletsDatabaseURL) throws Exception {
 		super(name);
 
-		setCloudletList(new ArrayList<Cloudlet>());
-		setCloudletSubmittedList(new ArrayList<Cloudlet>());
-
-		cloudletsSubmitted = 0;
+		setCreatedTasks(new ArrayList<GoogleTask>());
 
 		setDatacenterIdsList(new LinkedList<Integer>());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
 		cloudletDataStore = new GoogleCloudletDataStore(receivedCloudletsDatabaseURL);		
-	}
-
-	/**
-	 * This method is used to send to the broker the list of cloudlets.
-	 * 
-	 * @param list the list
-	 * @pre list !=null
-	 * @post $none
-         * 
-         * @todo The name of the method is confused with the {@link #submitCloudlets()},
-         * that in fact submit cloudlets to VMs. The term "submit" is being used
-         * ambiguously. The method {@link #submitCloudlets()} would be named "sendCloudletsToVMs"
-         * 
-         * The method {@link #submitVmList(java.util.List)} may have
-         * be checked too.
-	 */
-	public void submitCloudletList(List<? extends Cloudlet> list) {
-		getCloudletList().addAll(list);
 	}
 
 	@Override
@@ -114,10 +84,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			// VM Creation answer
 			case CloudSimTags.VM_CREATE_ACK:
 				processVmCreate(ev);
-				break;
-			// A finished cloudlet returned
-			case CloudSimTags.CLOUDLET_RETURN:
-				processCloudletReturn(ev);
 				break;
 			// if the simulation finishes
 			case CloudSimTags.END_OF_SIMULATION:
@@ -142,26 +108,36 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 				vmId, " is being destroyed now.");
 		
 		if (result == CloudSimTags.TRUE) {
-			GoogleCloudlet cloudlet = (GoogleCloudlet) CloudletList.getById(getCloudletList(), vmId);
+			GoogleTask task = getTaskById(getCreatedTasks(), vmId);
 			
 			double now = CloudSim.clock();
-			double startTime = cloudlet.getExecStartTime();
-			GoogleCloudletState cloudletState = new GoogleCloudletState(vmId, 2, cloudlet.getCpuReq(), cloudlet.getDelay(), startTime, now,
+			double startTime = task.getStartTime();
+			//TODO check and change the hard values
+			GoogleCloudletState cloudletState = new GoogleCloudletState(vmId, 2, task.getCpuReq(), task.getSubmitTime(), startTime, now,
 					now - startTime, Cloudlet.SUCCESS);
 			cloudletDataStore.addCloudlet(cloudletState);
 			
-			getCloudletList().remove(cloudlet); // removing cloudlet
-			Vm vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
+			getCreatedTasks().remove(task); // removing cloudlet
+			Vm vm = VmList.getById(getVmsCreatedList(), task.getId());
 			getVmsCreatedList().remove(vm); // removing from created list
 			
-			if (getCloudletList().size() == 0) { 
+			if (getCreatedTasks().size() == 0) { 
 				Log.printConcatLine(CloudSim.clock(), ": ", getName(),
 						": All Cloudlets executed. Finishing...");
 				finishExecution();
-			}			
+			}
 		} else {
 			System.out.println("Error while destroying VM #"+ vmId);
 		}
+	}
+
+	private GoogleTask getTaskById(List<GoogleTask> tasks, int id) {
+		for (GoogleTask task : tasks) {
+			if (task.getId() == id) {
+				return task;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -176,7 +152,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
 
 		if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
-			submitCloudlets();
+			submitTasks();
 		}
 	}
 
@@ -212,9 +188,9 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		int vmId = data[1];
 		int result = data[2];
 
-		// if VM was created
+		// if VM was created successfully
 		if (result == CloudSimTags.TRUE) {
-			Vm createdVm = VmList.getById(getVmRequestedList(), vmId);			
+			Vm createdVm = VmList.getById(getVmRequestedList(), vmId);
 			getVmsCreatedList().add(createdVm); // adding VM to created list
 			getVmRequestedList().remove(createdVm); // removing from requested list
 			
@@ -222,38 +198,24 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 					vmId, " has been created in Datacenter #", datacenterId,
 					", Host #", createdVm.getHost().getId());
 
-			GoogleCloudlet cloudlet = (GoogleCloudlet) CloudletList.getById(getCloudletList(), vmId);
-			cloudlet.setExecStartTime(CloudSim.clock());
+			GoogleTask task = getTaskById(getCreatedTasks(), vmId);
+			task.setStartTime(CloudSim.clock());
 			
-//			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
-//					": Sending cloudlet ", cloudlet.getCloudletId(),
-//					" to VM #", vmId);
-//
-//			sendNow(getDatacenterId(),
-//					CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
-			Vm vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
-//			getVmsCreatedList().remove(vm); // removing from created list
-//			Log.printConcatLine(CloudSim.clock(), ": " + getName(),
-//					": Scheduling destroy of VM #", vm.getId());
-			send(getDatacenterId(), CloudSim.clock() + cloudlet.getRuntime(), CloudSimTags.VM_DESTROY_ACK, vm);
-			
-			cloudletsSubmitted++;
+			Vm vm = VmList.getById(getVmsCreatedList(), task.getId());
 
-//			getCloudletSubmittedList().add(cloudlet); // adding to submitted cloudlet list
-//			getCloudletList().remove(cloudlet); // removing from cloudlet list
+			send(getDatacenterId(), CloudSim.clock() + task.getRuntime(), CloudSimTags.VM_DESTROY_ACK, vm);
 
-		} else {
+		} else { //This situation should not happen
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
 					": Creation of VM #", vmId, " failed in Datacenter #",
 					datacenterId);
 			
-			GoogleCloudlet cloudlet = (GoogleCloudlet) CloudletList.getById(getCloudletList(), vmId);
+			GoogleTask cloudlet = getTaskById(getCreatedTasks(), vmId);
 			try {
-				// Setting the cloudlet status to failed due to resource unavailability 
-				cloudlet.setCloudletStatus(Cloudlet.FAILED_RESOURCE_UNAVAILABLE);
+
 				cloudletDataStore.addCloudlet(cloudlet);
 				
-				getCloudletList().remove(cloudlet); // removing from cloudlet list
+				getCreatedTasks().remove(cloudlet); // removing from cloudlet list
 			} catch (Exception e) {	
 				Log.print(e);
 				Log.printLine("There was an error while setting cloudlet status to FAILED_RESOURCE_UNAVAILABLE.");
@@ -271,47 +233,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			 */
 
 		}
-	}
-
-	/**
-	 * Process a cloudlet return event.
-	 * 
-	 * @param ev a SimEvent object
-	 * @pre ev != $null
-	 * @post $none
-	 */
-	protected void processCloudletReturn(SimEvent ev) {
-		GoogleCloudlet cloudlet = (GoogleCloudlet) ev.getData();
-		getCloudletSubmittedList().remove(cloudlet); // removing from submitted list
-		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloudlet ",
-				cloudlet.getCloudletId(), " received");
-		cloudletsSubmitted--;
-
-		// destroying VM binded to returned cloudlet
-		destroyBindedVm(cloudlet);
-
-		/*
-		 * TODO Maybe to create a new event to serialize over time is more
-		 * efficient than do it every cloudlet return.
-		 */
-		cloudletDataStore.addCloudlet(cloudlet);		
-		
-		// all cloudlets executed
-		if (getCloudletList().size() == 0 && cloudletsSubmitted == 0) { 
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
-					": All Cloudlets executed. Finishing...");
-			finishExecution();
-		} else {
-			// There are cloudlets running yet
-		}
-	}
-
-	private void destroyBindedVm(Cloudlet cloudlet) {
-		Vm vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
-		getVmsCreatedList().remove(vm); // removing from created list
-		Log.printConcatLine(CloudSim.clock(), ": " + getName(),
-				": Destroying VM #", vm.getId());
-		sendNow(getDatacenterId(), CloudSimTags.VM_DESTROY, vm);
 	}
 
 	/**
@@ -342,29 +263,31 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	 * @post $none
          * @see #submitCloudletList(java.util.List) 
 	 */
-	protected void submitCloudlets() {
+	protected void submitTasks() {
 		Log.printConcatLine("Scheduling the creation of VMs.");
-		for (Cloudlet cloudlet : getCloudletList()) {
-			scheduleRequestsForVm(cloudlet);
+		for (GoogleTask task : getCreatedTasks()) {
+			scheduleRequestsForVm(task);
 		}
 	}
 
-	private void scheduleRequestsForVm(Cloudlet cloudlet) {
-		GoogleCloudlet gCloudlet = (GoogleCloudlet) cloudlet;
+	private void scheduleRequestsForVm(GoogleTask task) {
 		long size = 0; // image size (MB)
-		double mips = gCloudlet.getCpuReq();
+		double mips = task.getCpuReq();
 		long bw = 0;
 		int pesNumber = 1; // number of cpus
 		String vmm = "Xen"; // VMM name
 
-		Vm vmForRequest = new Vm(gCloudlet.getCloudletId(), gCloudlet.getUserId(), mips,
-				pesNumber, (int) gCloudlet.getMemReq(), bw, size, vmm,
+		Vm vmForRequest = new Vm(task.getId(), getId(), mips,
+				pesNumber, (int) task.getMemReq(), bw, size, vmm,
 				new CloudletSchedulerTimeShared());
 		getVmRequestedList().add(vmForRequest);
-		cloudlet.setVmId(vmForRequest.getId());
 
 		int datacenterId = getDatacenterId();
-		scheduleVmCreationInDatacenter(vmForRequest, datacenterId, gCloudlet.getDelay());
+		/*
+		 *  TODO check if the delay is passed correctly. 
+		 *  (delay = submitTime - clock) in the case where tasks are submitted in timestamp different of 0. 
+		 */
+		scheduleVmCreationInDatacenter(vmForRequest, datacenterId, task.getSubmitTime() - CloudSim.clock());
 	}
 
 	/*
@@ -417,46 +340,12 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		return (List<T>) vmRequestedList;
 	}
 
-	/**
-	 * Gets the cloudlet list.
-	 * 
-	 * @param <T> the generic type
-	 * @return the cloudlet list
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends Cloudlet> List<T> getCloudletList() {
-		return (List<T>) cloudletList;
+	public List<GoogleTask> getCreatedTasks() {
+		return createdTasks;
 	}
 
-	/**
-	 * Sets the cloudlet list.
-	 * 
-	 * @param <T> the generic type
-	 * @param cloudletList the new cloudlet list
-	 */
-	protected <T extends Cloudlet> void setCloudletList(List<T> cloudletList) {
-		this.cloudletList = cloudletList;
-	}
-
-	/**
-	 * Gets the cloudlet submitted list.
-	 * 
-	 * @param <T> the generic type
-	 * @return the cloudlet submitted list
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends Cloudlet> List<T> getCloudletSubmittedList() {
-		return (List<T>) cloudletSubmittedList;
-	}
-
-	/**
-	 * Sets the cloudlet submitted list.
-	 * 
-	 * @param <T> the generic type
-	 * @param cloudletSubmittedList the new cloudlet submitted list
-	 */
-	protected <T extends Cloudlet> void setCloudletSubmittedList(List<T> cloudletSubmittedList) {
-		this.cloudletSubmittedList = cloudletSubmittedList;
+	protected void setCreatedTasks(List<GoogleTask> createdTasks) {
+		this.createdTasks = createdTasks;
 	}
 
 	/**
@@ -509,6 +398,10 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 
 	public List<GoogleCloudletState> getReceivedCloudlets() {
 		return cloudletDataStore.getAllCloudlets();
+	}
+
+	public void submitTasks(List<GoogleTask> taskList) {
+		getCreatedTasks().addAll(taskList);
 	}
 
 }
