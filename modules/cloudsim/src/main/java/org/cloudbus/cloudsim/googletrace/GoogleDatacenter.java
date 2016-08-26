@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
+import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
@@ -27,7 +28,7 @@ import org.cloudbus.cloudsim.core.SimEvent;
  */
 public class GoogleDatacenter extends Datacenter {
 
-	List<Vm> requestedVms = new ArrayList<Vm>();
+	List<Vm> vmsNotFulfilled = new ArrayList<Vm>();
 	
 	public GoogleDatacenter(
 			String name,
@@ -60,8 +61,8 @@ public class GoogleDatacenter extends Datacenter {
 	private void allocateHostForVm(boolean ack, Vm vm) {
 		boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
 
-		if (!result && !requestedVms.contains(vm)) {
-			requestedVms.add(vm);
+		if (!result && !vmsNotFulfilled.contains(vm)) {
+			vmsNotFulfilled.add(vm);
 			return;
 		}
 		
@@ -88,14 +89,15 @@ public class GoogleDatacenter extends Datacenter {
 			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
 					.getAllocatedMipsForVm(vm));
 			
-			requestedVms.remove(vm);
+			vmsNotFulfilled.remove(vm);
 		}
 	}
 	
 	@Override
 	protected void processVmDestroy(SimEvent ev, boolean ack) {
 		Vm vm = (Vm) ev.getData();
-		getVmAllocationPolicy().deallocateHostForVm(vm);
+		Host host = vm.getHost();
+		getVmAllocationPolicy().deallocateHostForVm(vm);		
 		
 		if (ack) {
 			int[] data = new int[3];
@@ -108,10 +110,22 @@ public class GoogleDatacenter extends Datacenter {
 
 		getVmList().remove(vm);
 		
-		if (!requestedVms.isEmpty()) {
+		if (!vmsNotFulfilled.isEmpty()) {
+			double availableMips = host.getAvailableMips();
+			double requestedMipsNow = 0;
+			List<Vm> vmsToRequestNow = new ArrayList<Vm>();
 			
-			for (Vm requestedVm : new ArrayList<Vm>(requestedVms)) {
-				allocateHostForVm(true, requestedVm);
+			// choosing the vms to request now
+			for (Vm currentVm : new ArrayList<Vm>(vmsNotFulfilled)) {
+				if (requestedMipsNow + currentVm.getMips() <= availableMips) {
+					requestedMipsNow += currentVm.getMips();
+					vmsToRequestNow.add(currentVm);
+				}
+			}
+			
+			// trying to allocate Host
+			for (Vm requestedVm : vmsToRequestNow) {
+				allocateHostForVm(true, requestedVm);				
 			}
 		}
 	}
