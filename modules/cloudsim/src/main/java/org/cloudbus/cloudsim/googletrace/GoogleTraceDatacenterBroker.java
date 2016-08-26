@@ -198,39 +198,18 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 					vmId, " has been created in Datacenter #", datacenterId,
 					", Host #", createdVm.getHost().getId());
 
-			GoogleTask task = getTaskById(getCreatedTasks(), vmId);
+			GoogleTask task = getTaskById(getCreatedTasks(), vmId);		
+			System.out.println("Task is null? " +( task == null));
 			task.setStartTime(CloudSim.clock());
 			
 			Vm vm = VmList.getById(getVmsCreatedList(), task.getId());
 
-			send(getDatacenterId(), CloudSim.clock() + task.getRuntime(), CloudSimTags.VM_DESTROY_ACK, vm);
+			send(getDatacenterId(), task.getRuntime(), CloudSimTags.VM_DESTROY_ACK, vm);
 
 		} else { //This situation should not happen
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
 					": Creation of VM #", vmId, " failed in Datacenter #",
 					datacenterId);
-			
-			GoogleTask cloudlet = getTaskById(getCreatedTasks(), vmId);
-			try {
-
-				cloudletDataStore.addCloudlet(cloudlet);
-				
-				getCreatedTasks().remove(cloudlet); // removing from cloudlet list
-			} catch (Exception e) {	
-				Log.print(e);
-				Log.printLine("There was an error while setting cloudlet status to FAILED_RESOURCE_UNAVAILABLE.");
-			}
-			
-			/*
-			 * TODO Do we really need to do it? Once a VM was not created,
-			 * should we try to create it again? Firstly there isn't problem
-			 * because we are considering only one datacenter for our cloud (so
-			 * the code won't try to create again), but if exist other
-			 * datacenter, should the code tires?
-			 * 
-			 * If think so, but we can think better about how to chosse the
-			 * datacenter.
-			 */
 
 		}
 	}

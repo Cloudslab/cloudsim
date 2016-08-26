@@ -7,6 +7,7 @@
 
 package org.cloudbus.cloudsim.googletrace;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Datacenter;
@@ -26,6 +27,8 @@ import org.cloudbus.cloudsim.core.SimEvent;
  */
 public class GoogleDatacenter extends Datacenter {
 
+	List<Vm> requestedVms = new ArrayList<Vm>();
+	
 	public GoogleDatacenter(
 			String name,
 			DatacenterCharacteristics characteristics,
@@ -51,8 +54,17 @@ public class GoogleDatacenter extends Datacenter {
 	protected void processVmCreate(SimEvent ev, boolean ack) {
 		Vm vm = (Vm) ev.getData();
 
+		allocateHostForVm(ack, vm);
+	}
+
+	private void allocateHostForVm(boolean ack, Vm vm) {
 		boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
 
+		if (!result && !requestedVms.contains(vm)) {
+			requestedVms.add(vm);
+			return;
+		}
+		
 		if (ack) {
 			int[] data = new int[3];
 			data[0] = getId();
@@ -75,6 +87,32 @@ public class GoogleDatacenter extends Datacenter {
 
 			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
 					.getAllocatedMipsForVm(vm));
+			
+			requestedVms.remove(vm);
+		}
+	}
+	
+	@Override
+	protected void processVmDestroy(SimEvent ev, boolean ack) {
+		Vm vm = (Vm) ev.getData();
+		getVmAllocationPolicy().deallocateHostForVm(vm);
+		
+		if (ack) {
+			int[] data = new int[3];
+			data[0] = getId();
+			data[1] = vm.getId();
+			data[2] = CloudSimTags.TRUE;
+
+			sendNow(vm.getUserId(), CloudSimTags.VM_DESTROY_ACK, data);
+		}
+
+		getVmList().remove(vm);
+		
+		if (!requestedVms.isEmpty()) {
+			
+			for (Vm requestedVm : new ArrayList<Vm>(requestedVms)) {
+				allocateHostForVm(true, requestedVm);
+			}
 		}
 	}
 }
