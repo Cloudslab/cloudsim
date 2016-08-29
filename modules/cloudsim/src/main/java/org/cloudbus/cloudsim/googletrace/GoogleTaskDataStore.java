@@ -1,7 +1,6 @@
 package org.cloudbus.cloudsim.googletrace;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,28 +11,24 @@ import java.util.List;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Log;
 
-public class GoogleCloudletDataStore {
+public class GoogleTaskDataStore extends GoogleDataStore {
 
-	public static final String ACCOUNTING_DATASTORE_SQLITE_DRIVER = "org.sqlite.JDBC";
-
-	private static final String CLOUDLET_TABLE_NAME = "cloudlet";
+	private static final String CLOUDLET_TABLE_NAME = "googletask";
 			
-	private String databaseURL;
-	
-	public GoogleCloudletDataStore(String databaseURL) {
-		setDatabaseURL(databaseURL);
+	public GoogleTaskDataStore(String databaseURL) {
+		super(databaseURL);
 
 		Statement statement = null;
 		Connection connection = null;
 		try {
 			Log.printLine("Cloudlet database URL received is " + databaseURL);
 
-			Class.forName(ACCOUNTING_DATASTORE_SQLITE_DRIVER);
+			Class.forName(DATASTORE_SQLITE_DRIVER);
 
 			connection = getConnection();
 			statement = connection.createStatement();
 			statement
-					.execute("CREATE TABLE IF NOT EXISTS cloudlet("
+					.execute("CREATE TABLE IF NOT EXISTS googletask("
 							+ "cloudlet_id INTEGER NOT NULL, "
 							+ "resource_id INTEGER, "
 							+ "cpu_req REAL, "
@@ -45,8 +40,8 @@ public class GoogleCloudletDataStore {
 							+ "PRIMARY KEY (cloudlet_id)"
 							+ ")");
 		} catch (Exception e) {
-			Log.print(e);
-			Log.printLine("Error while initializing the Cloudlet database store.");
+			e.printStackTrace();
+			Log.printLine("Error while initializing the GoogleTask database store.");
 		} finally {
 			close(statement, connection);
 		}
@@ -121,52 +116,6 @@ public class GoogleCloudletDataStore {
 		}
 	}
 	
-	/**
-	 * @return the connection
-	 * @throws SQLException
-	 */
-	public Connection getConnection() throws SQLException {
-		try {
-			return DriverManager.getConnection(getDatabaseURL());
-		} catch (SQLException e) {
-			Log.print(e);
-			Log.printLine("Error while getting a connection to " + getDatabaseURL());
-			throw e;
-		}
-	}
-	
-	private void close(Statement statement, Connection conn) {
-		if (statement != null) {
-			try {
-				if (!statement.isClosed()) {
-					statement.close();
-				}
-			} catch (SQLException e) {
-				Log.print(e);
-				Log.printLine("Couldn't close statement.");
-			}
-		}
-
-		if (conn != null) {
-			try {
-				if (!conn.isClosed()) {
-					conn.close();
-				}
-			} catch (SQLException e) {
-				Log.print(e);
-				Log.printLine("Couldn't close connection.");
-			}
-		}
-	}
-
-	protected String getDatabaseURL() {
-		return databaseURL;
-	}
-
-	protected void setDatabaseURL(String databaseURL) {
-		this.databaseURL = databaseURL;
-	}
-
 	public void addCloudlet(GoogleCloudletState cloudlet) {
 		if (cloudlet == null) {
 			Log.printLine("Cloudlet must no be null.");
@@ -199,7 +148,5 @@ public class GoogleCloudletDataStore {
 		} finally {
 			close(insertMemberStatement, connection);
 		}
-		
 	}
-	
 }

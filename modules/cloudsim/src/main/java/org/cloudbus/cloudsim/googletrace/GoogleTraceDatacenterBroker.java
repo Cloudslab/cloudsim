@@ -38,7 +38,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	/** The list of VMs created by the broker. */
 	protected List<? extends Vm> vmsCreatedList = new ArrayList<Vm>();
 
-
 	protected List<GoogleTask> createdTasks;
 	
 	/** The id's list of available datacenters. */
@@ -48,26 +47,25 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
          * is a datacenter id and each value is its characteristics.. */
 	protected Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList;
 	
-	private GoogleCloudletDataStore cloudletDataStore;
+	private int intervalIndex;
+	private int intervalSize; // in minutes
 	
+	private GoogleInputTraceDataStore inputTraceDataStore;
 	
-
-	/**
-	 * Created a new DatacenterBroker object.
-	 * 
-	 * @param name name to be associated with this entity (as required by {@link SimEntity} class)
-	 * @throws Exception the exception
-	 * @pre name != null
-	 * @post $none
-	 */
-	public GoogleTraceDatacenterBroker(String name, String receivedCloudletsDatabaseURL) throws Exception {
+	private GoogleTaskDataStore taskDataStore;
+	
+	public GoogleTraceDatacenterBroker(String name, String inputTraceDatabaseURL, String resultsDatabaseURL, int intervalSize) throws Exception {
 		super(name);
 
 		setCreatedTasks(new ArrayList<GoogleTask>());
-
+		
+		setIntervalIndex(0);
+		setSubmitInterval(intervalSize);		
 		setDatacenterIdsList(new LinkedList<Integer>());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
-		cloudletDataStore = new GoogleCloudletDataStore(receivedCloudletsDatabaseURL);		
+		
+		inputTraceDataStore = new GoogleInputTraceDataStore(inputTraceDatabaseURL);
+		taskDataStore = new GoogleTaskDataStore(resultsDatabaseURL);		
 	}
 
 	@Override
@@ -91,7 +89,11 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 				break;
 			case CloudSimTags.VM_DESTROY_ACK:
 				processVmDestroyAck(ev);
-				break;			
+				break;
+			// load next google tasks from trace file
+			case CloudSimTags.VM_BROKER_EVENT:
+				loadNextGoogleTasks();
+				break;	
 			// other unknown tags are processed by this method
 			default:
 				processOtherEvent(ev);
@@ -115,7 +117,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			//TODO check and change the hard values
 			GoogleCloudletState cloudletState = new GoogleCloudletState(vmId, 2, task.getCpuReq(), task.getSubmitTime(), startTime, now,
 					now - startTime, Cloudlet.SUCCESS);
-			cloudletDataStore.addCloudlet(cloudletState);
+			taskDataStore.addCloudlet(cloudletState);
 			
 			getCreatedTasks().remove(task); // removing cloudlet
 			Vm vm = VmList.getById(getVmsCreatedList(), task.getId());
@@ -127,7 +129,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 				finishExecution();
 			}
 		} else {
-			System.out.println("Error while destroying VM #"+ vmId);
+			Log.printLine("Error while destroying VM #"+ vmId);
 		}
 	}
 
@@ -152,8 +154,29 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
 
 		if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
-			submitTasks();
+			loadNextGoogleTasks();
+		
 		}
+	}
+
+	private void loadNextGoogleTasks() {
+		Log.printLine("Loading next google tasks. Interval index " + getIntervalIndex());
+
+		List<GoogleTask> nextGoogleTasks = inputTraceDataStore
+				.getGoogleTaskInterval(getIntervalIndex(), getIntervalSize());
+
+		// if nextGoogleTasks == null there are not more tasks 
+		if (nextGoogleTasks != null ) {
+			getCreatedTasks().addAll(nextGoogleTasks);
+			submitTasks();
+			setIntervalIndex(++intervalIndex);
+
+			send(getId(), getIntervalSizeInMicro(), CloudSimTags.VM_BROKER_EVENT);
+		}
+	}
+
+	private double getIntervalSizeInMicro() {
+		return getIntervalSize() * 60 * 1000000;
 	}
 
 	/**
@@ -199,7 +222,8 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 					", Host #", createdVm.getHost().getId());
 
 			GoogleTask task = getTaskById(getCreatedTasks(), vmId);		
-			System.out.println("Task is null? " +( task == null));
+			
+			Log.printLine("Task is null? " +( task == null));
 			task.setStartTime(CloudSim.clock());
 			
 			Vm vm = VmList.getById(getVmsCreatedList(), task.getId());
@@ -376,11 +400,26 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	}
 
 	public List<GoogleCloudletState> getReceivedCloudlets() {
-		return cloudletDataStore.getAllCloudlets();
+		return taskDataStore.getAllCloudlets();
 	}
 
 	public void submitTasks(List<GoogleTask> taskList) {
 		getCreatedTasks().addAll(taskList);
 	}
 
+	public int getIntervalIndex() {
+		return intervalIndex;
+	}
+
+	private void setIntervalIndex(int intervalIndex) {
+		this.intervalIndex = intervalIndex;
+	}
+
+	public int getIntervalSize() {
+		return intervalSize;
+	}
+
+	private void setSubmitInterval(int intervalSize) {
+		this.intervalSize = intervalSize;
+	}
 }
