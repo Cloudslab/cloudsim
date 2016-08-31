@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
@@ -31,7 +32,9 @@ import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.googletrace.GoogleCloudletState;
 import org.cloudbus.cloudsim.googletrace.GoogleDatacenter;
+import org.cloudbus.cloudsim.googletrace.GoogleInputTraceDataStore;
 import org.cloudbus.cloudsim.googletrace.GoogleTask;
+import org.cloudbus.cloudsim.googletrace.GoogleOutputTaskDataStore;
 import org.cloudbus.cloudsim.googletrace.GoogleTraceDatacenterBroker;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -267,9 +270,13 @@ public class CloudSimExampleGoogleTrace {
 			String traceDabaseURL) {
 
 		GoogleTraceDatacenterBroker broker = null;
+		Properties properties = new Properties();
+		properties.setProperty(GoogleInputTraceDataStore.DATABASE_URL_PROP, traceDabaseURL);
+		properties.setProperty(GoogleOutputTaskDataStore.DATABASE_URL_PROP, "jdbc:sqlite:/tmp/googletasks.sqlite3");
+		properties.setProperty("interval_size", "5");
+		
 		try {
-			broker = new GoogleTraceDatacenterBroker(name, traceDabaseURL,
-					"jdbc:sqlite:/tmp/googletasks.sqlite3", 5);
+			broker = new GoogleTraceDatacenterBroker(name, properties);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

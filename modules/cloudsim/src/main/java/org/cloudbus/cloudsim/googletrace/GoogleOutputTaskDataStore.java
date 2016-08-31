@@ -7,21 +7,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Log;
 
-public class GoogleTaskDataStore extends GoogleDataStore {
+public class GoogleOutputTaskDataStore extends GoogleDataStore {
 
+	public static final String DATABASE_URL_PROP = "output_tasks_database_url";
+	
 	private static final String CLOUDLET_TABLE_NAME = "googletask";
 			
-	public GoogleTaskDataStore(String databaseURL) {
-		super(databaseURL);
+	public GoogleOutputTaskDataStore(Properties properties) {
+		super(properties.getProperty(DATABASE_URL_PROP));
 
 		Statement statement = null;
 		Connection connection = null;
 		try {
-			Log.printLine("Cloudlet database URL received is " + databaseURL);
+			Log.printLine("output_tasks_database_url=" + getDatabaseURL());
 
 			Class.forName(DATASTORE_SQLITE_DRIVER);
 

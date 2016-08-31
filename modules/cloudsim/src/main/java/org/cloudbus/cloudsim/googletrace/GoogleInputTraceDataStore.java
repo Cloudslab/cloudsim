@@ -2,26 +2,45 @@ package org.cloudbus.cloudsim.googletrace;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 public class GoogleInputTraceDataStore extends GoogleDataStore {
 
-	double maximunSubmitTime;
+	public static String DATABASE_URL_PROP = "input_trace_database_url";
+	public static String MIN_INTERESTED_TIME_PROP = "minimum_interested_time";
+	public static String MAX_INTERESTED_TIME_PROP = "maximum_interested_time";
+	
+	private int nextTaskId = 0;
+	
+	private double minInterestedTime;
+	private double maxInterestedTime;
 
-	public GoogleInputTraceDataStore(String inputTraceDatabaseURL) {
-		super(inputTraceDatabaseURL);
+	public GoogleInputTraceDataStore(Properties properties)
+			throws ClassNotFoundException, SQLException {
+		super(properties.getProperty(DATABASE_URL_PROP));
 
+		minInterestedTime = properties.getProperty(MIN_INTERESTED_TIME_PROP) != null ? Double
+				.parseDouble(properties.getProperty(MIN_INTERESTED_TIME_PROP)) : 0;
+
+		maxInterestedTime = properties.getProperty(MAX_INTERESTED_TIME_PROP) != null ? Double
+				.parseDouble(properties.getProperty(MAX_INTERESTED_TIME_PROP)) : getMaxTraceTime() + 1;
+
+	}
+
+	protected double getMaxTraceTime() throws ClassNotFoundException,
+			SQLException {
 		Statement statement = null;
 		Connection connection = null;
 
 		try {
 			Class.forName(DATASTORE_SQLITE_DRIVER);
-
 			connection = getConnection();
 
 			if (connection != null) {
@@ -34,34 +53,32 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 						.executeQuery("SELECT MAX(submitTime) FROM tasks WHERE cpuReq > '0' AND memReq > '0'");
 
 				while (results.next()) {
-					maximunSubmitTime = results.getDouble("MAX(submitTime)");
-					Log.printLine("The maximum submitTime of trace is " + getMaximunSubmitTime());
-					break;
+					return results.getDouble("MAX(submitTime)");
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			Log.printLine("Error while initializing the Input Trace database store.");
 		} finally {
 			close(statement, connection);
 		}
-	}
-
-	public double getMaximunSubmitTime() {
-		return maximunSubmitTime;
+		// It should never return this value.
+		return -1;
 	}
 
 	public List<GoogleTask> getGoogleTaskInterval(int intervalIndex,
-			int intervalSize) {
+			double intervalSize) {
 			
-		double intervalSizeInMicro = intervalSize * 60 * 1000000; 
-		double minTime = intervalIndex * intervalSizeInMicro;
-		double maxTime = (intervalSize + 1) * intervalSizeInMicro;		
-		
-		if (minTime > getMaximunSubmitTime()) {
+		double intervalMinTime = intervalIndex * intervalSize;
+		double intervalMaxTime = (intervalIndex + 1) * intervalSize;
+
+		Log.printLine(CloudSim.clock() + ": Interval index is " + intervalIndex
+				+ ", minTime=" + intervalMinTime + " and maxTime=" + intervalMaxTime);
+			
+		if (intervalIndex < 0 || intervalMinTime > getMaxInterestedTime()) {
 			return null;
 		}
 		
+		double minTime = Math.max(getMinInterestedTime(), intervalMinTime);
+		double maxTime = Math.min(getMaxInterestedTime(), intervalMaxTime);
+
 		List<GoogleTask> googleTasks = new ArrayList<GoogleTask>();
 
 		Statement statement = null;
@@ -70,40 +87,21 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 			connection = getConnection();
 
 			if (connection != null) {
-				Log.printLine("Connected to the database");
 				statement = connection.createStatement();
 
-				ResultSet results = statement
-						.executeQuery("SELECT submitTime, runtime, cpuReq, memReq FROM tasks WHERE cpuReq > '0' AND memReq > '0' AND submitTime >= '"
-								+ minTime
-								+ "' AND submitTime < '"
-								+ maxTime
-								+ "'");
+				String sql = "SELECT submitTime, runtime, cpuReq, memReq FROM tasks WHERE cpuReq > '0' AND memReq > '0' AND submitTime >= '"
+						+ minTime + "' AND submitTime < '" + maxTime + "'";
 
-//				ResultSet results = statement
-//						.executeQuery("SELECT submitTime, runtime, cpuReq, memReq FROM tasks WHERE cpuReq > '0' AND memReq > '0' AND submitTime > '"
-//								+ minTime
-//								+ "' AND submitTime <= '"
-//								+ maxTime
-//								+ "'");
-				
-				int count = 0;
+				ResultSet results = statement.executeQuery(sql);
+
 				while (results.next()) {
-					count++;
-//					System.out.println(results.getDouble("submitTime")
-//							+ ", "
-//							// + results.getDouble("jid") + ", "
-//							// + results.getInt("tid") + ", "
-//							// + results.getString("user") + ", "
-//							// + results.getInt("schedulingClass") + ", "
-//							// + results.getInt("priority") + ", "
-//							+ (results.getDouble("runtime")) + ","
-//							// + results.getDouble("endTime") + ", "
-//							+ results.getDouble("cpuReq") + ", "
-//							+ results.getDouble("memReq"));// + ", "
-//					// + results.getString("userClass"));
-
-					GoogleTask task = new GoogleTask(count,
+					/* 
+					 * TODO We need to check if this nextTaskId variable is considered for post processing.
+					 * If we execute part of the trace more than one time, the same task can be have different 
+					 * taskId (depending of the interval size).  
+					 */
+					nextTaskId++;
+					GoogleTask task = new GoogleTask(nextTaskId,
 							results.getDouble("submitTime"),
 							results.getDouble("runtime"),
 							results.getDouble("cpuReq"),
@@ -112,14 +110,20 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 					googleTasks.add(task);
 				}
 				
-				System.out.println(CloudSim.clock() + " - Interval " + intervalIndex + " and number of tasks is " + googleTasks.size());
+				Log.printLine(CloudSim.clock() + ": Interval index is " + intervalIndex + " and number of tasks is " + googleTasks.size());
 			}			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return googleTasks;
 	}
-	
+
+	public double getMinInterestedTime() {
+		return minInterestedTime;
+	}
+
+	public double getMaxInterestedTime() {
+		return maxInterestedTime;
+	}
 }

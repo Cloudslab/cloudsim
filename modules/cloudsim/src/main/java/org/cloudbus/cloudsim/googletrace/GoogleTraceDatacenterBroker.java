@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
@@ -52,20 +53,20 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	
 	private GoogleInputTraceDataStore inputTraceDataStore;
 	
-	private GoogleTaskDataStore taskDataStore;
+	private GoogleOutputTaskDataStore taskDataStore;
 	
-	public GoogleTraceDatacenterBroker(String name, String inputTraceDatabaseURL, String resultsDatabaseURL, int intervalSize) throws Exception {
+	public GoogleTraceDatacenterBroker(String name, Properties properties) throws Exception {
 		super(name);
 
 		setCreatedTasks(new ArrayList<GoogleTask>());
 		
 		setIntervalIndex(0);
-		setSubmitInterval(intervalSize);		
+		setSubmitInterval(Integer.parseInt(properties.getProperty("interval_size")));		
 		setDatacenterIdsList(new LinkedList<Integer>());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
 		
-		inputTraceDataStore = new GoogleInputTraceDataStore(inputTraceDatabaseURL);
-		taskDataStore = new GoogleTaskDataStore(resultsDatabaseURL);		
+		inputTraceDataStore = new GoogleInputTraceDataStore(properties);
+		taskDataStore = new GoogleOutputTaskDataStore(properties);		
 	}
 
 	@Override
@@ -163,7 +164,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		Log.printLine("Loading next google tasks. Interval index " + getIntervalIndex());
 
 		List<GoogleTask> nextGoogleTasks = inputTraceDataStore
-				.getGoogleTaskInterval(getIntervalIndex(), getIntervalSize());
+				.getGoogleTaskInterval(getIntervalIndex(), getIntervalSizeInMicro());
 
 		// if nextGoogleTasks == null there are not more tasks 
 		if (nextGoogleTasks != null ) {
