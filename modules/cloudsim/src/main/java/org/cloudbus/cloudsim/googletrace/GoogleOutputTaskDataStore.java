@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Log;
 
 public class GoogleOutputTaskDataStore extends GoogleDataStore {
 
 	public static final String DATABASE_URL_PROP = "output_tasks_database_url";
 	
-	private static final String CLOUDLET_TABLE_NAME = "googletask";
+	private static final String GOOGLE_TASK_TABLE_NAME = "googletask";
 			
 	public GoogleOutputTaskDataStore(Properties properties) {
 		super(properties.getProperty(DATABASE_URL_PROP));
@@ -50,38 +49,34 @@ public class GoogleOutputTaskDataStore extends GoogleDataStore {
 		}
 	}
 	
-	private static final String INSERT_CLOUDLET_SQL = "INSERT INTO " + CLOUDLET_TABLE_NAME
+	private static final String INSERT_TASK_SQL = "INSERT INTO " + GOOGLE_TASK_TABLE_NAME
 			+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-
-	public void addCloudlet(GoogleTask cloudlet) {
-		if (cloudlet == null) {
+	
+	public void addTask(GoogleTaskState taskState) {
+		if (taskState == null) {
 			Log.printLine("Cloudlet must no be null.");
 			return;
 		}
 		
-		Log.printLine("Adding cloudlet #" + cloudlet.getId() + " into database.");
+		Log.printLine("Adding vm #" + taskState.getTaskId() + " into database.");
 		
 		PreparedStatement insertMemberStatement = null;
 		
 		Connection connection = null;
-				
-
+		
 		try {
 			connection = getConnection();			
-			insertMemberStatement = connection.prepareStatement(INSERT_CLOUDLET_SQL);		
-			insertMemberStatement.setInt(1, cloudlet.getId());
-			insertMemberStatement.setInt(2, -1);
-//			insertMemberStatement.setInt(2, cloudlet.getResourceId());
-			insertMemberStatement.setDouble(3, cloudlet.getCpuReq());
-			insertMemberStatement.setDouble(4, cloudlet.getSubmitTime());
-			insertMemberStatement.setDouble(5, cloudlet.getStartTime());
-			insertMemberStatement.setDouble(6, cloudlet.getFinishTime());
-//			insertMemberStatement.setDouble(7, cloudlet.getActualCPUTime());
-			insertMemberStatement.setDouble(7, -1);
-//			insertMemberStatement.setInt(8, cloudlet.getStatus());
-			insertMemberStatement.setInt(8, Cloudlet.SUCCESS);
+			insertMemberStatement = connection.prepareStatement(INSERT_TASK_SQL);		
+			insertMemberStatement.setInt(1, taskState.getTaskId());
+			insertMemberStatement.setInt(2, taskState.getResourceId());
+			insertMemberStatement.setDouble(3, taskState.getCpuReq());
+			insertMemberStatement.setDouble(4, taskState.getSubmitTime());
+			insertMemberStatement.setDouble(5, taskState.getStartTime());
+			insertMemberStatement.setDouble(6, taskState.getFinishTime());
+			insertMemberStatement.setDouble(7, taskState.getRuntime());
+			insertMemberStatement.setInt(8, taskState.getStatus());
 			insertMemberStatement.execute();
-
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Log.printLine("Couldn't add cloudlet into database.");			
@@ -90,66 +85,32 @@ public class GoogleOutputTaskDataStore extends GoogleDataStore {
 		}
 	}
 	
-	private static final String SELECT_ALL_CLOUDLETS_SQL = "SELECT * FROM " + CLOUDLET_TABLE_NAME;
+	private static final String SELECT_ALL_TASKS_SQL = "SELECT * FROM " + GOOGLE_TASK_TABLE_NAME;
 
-	public List<GoogleCloudletState> getAllCloudlets() {
+	public List<GoogleTaskState> getAllTasks() {
 		Statement statement = null;
 		Connection conn = null;
-		List<GoogleCloudletState> cloudletStates = new ArrayList<GoogleCloudletState>();
+		List<GoogleTaskState> taskStates = new ArrayList<GoogleTaskState>();
 		
 		try {
 			conn = getConnection();
 			statement = conn.createStatement();
 
-			statement.execute(SELECT_ALL_CLOUDLETS_SQL);
+			statement.execute(SELECT_ALL_TASKS_SQL);
 			ResultSet rs = statement.getResultSet();
 
 			while (rs.next()) {
-				cloudletStates.add(new GoogleCloudletState(rs
+				taskStates.add(new GoogleTaskState(rs
 						.getInt("cloudlet_id"), rs.getInt("resource_id"), rs
 						.getDouble("cpu_req"), rs.getDouble("submit_time"), rs
 						.getDouble("start_time"), rs.getDouble("finish_time"),
 						rs.getDouble("runtime"), rs.getInt("status")));
 			}
-			return cloudletStates;
+			return taskStates;
 		} catch (SQLException e) {
 			Log.print(e);
 			Log.printLine("Couldn't get cloudlets from DB.");
 			return null;
-		}
-	}
-	
-	public void addCloudlet(GoogleCloudletState cloudlet) {
-		if (cloudlet == null) {
-			Log.printLine("Cloudlet must no be null.");
-			return;
-		}
-		
-		Log.printLine("Adding vm #" + cloudlet.getCloudletId() + " into database.");
-		
-		PreparedStatement insertMemberStatement = null;
-		
-		Connection connection = null;
-				
-
-		try {
-			connection = getConnection();			
-			insertMemberStatement = connection.prepareStatement(INSERT_CLOUDLET_SQL);		
-			insertMemberStatement.setInt(1, cloudlet.getCloudletId());
-			insertMemberStatement.setInt(2, cloudlet.getResourceId());
-			insertMemberStatement.setDouble(3, cloudlet.getCpuReq());
-			insertMemberStatement.setDouble(4, cloudlet.getSubmitTime());
-			insertMemberStatement.setDouble(5, cloudlet.getStartTime());
-			insertMemberStatement.setDouble(6, cloudlet.getFinishTime());
-			insertMemberStatement.setDouble(7, cloudlet.getRuntime());
-			insertMemberStatement.setInt(8, cloudlet.getStatus());
-			insertMemberStatement.execute();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			Log.printLine("Couldn't add cloudlet into database.");			
-		} finally {
-			close(insertMemberStatement, connection);
 		}
 	}
 }
