@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.googletrace;
 
-public class GoogleCloudletState {
+public class GoogleTaskState {
 
-	private int cloudletId;
+	private int taskId;
 	private int resourceId;
 	private double cpuReq;
 	private double startTime;
@@ -11,10 +11,10 @@ public class GoogleCloudletState {
 	private int status;
 	private double finishTime;
 
-	public GoogleCloudletState(int cloudletId, int resourceId, double cpuReq,
+	public GoogleTaskState(int taskId, int resourceId, double cpuReq,
 			double submitTime, double startTime, double finishTime, double runtime,
 			int status) {
-		this.cloudletId = cloudletId;
+		this.taskId = taskId;
 		this.resourceId = resourceId;
 		this.cpuReq = cpuReq;
 		this.submitTime = submitTime;
@@ -24,8 +24,8 @@ public class GoogleCloudletState {
 		this.status = status;
 	}
 
-	public int getCloudletId() {
-		return cloudletId;
+	public int getTaskId() {
+		return taskId;
 	}
 
 	public int getResourceId() {
