@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.googletrace;
+package org.cloudbus.cloudsim.googletrace.datastore;
 
 import java.io.File;
 import java.sql.Connection;
@@ -10,6 +10,8 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.cloudbus.cloudsim.googletrace.datastore.GoogleDataStore;
+import org.cloudbus.cloudsim.googletrace.datastore.GoogleInputTraceDataStore;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;

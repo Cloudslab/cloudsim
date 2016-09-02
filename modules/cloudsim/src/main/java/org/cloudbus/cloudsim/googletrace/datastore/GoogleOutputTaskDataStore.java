@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.googletrace;
+package org.cloudbus.cloudsim.googletrace.datastore;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.googletrace.GoogleTaskState;
 
 public class GoogleOutputTaskDataStore extends GoogleDataStore {
 

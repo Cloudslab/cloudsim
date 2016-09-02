@@ -23,6 +23,8 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.googletrace.datastore.GoogleInputTraceDataStore;
+import org.cloudbus.cloudsim.googletrace.datastore.GoogleOutputTaskDataStore;
 import org.cloudbus.cloudsim.lists.VmList;
 
 /**

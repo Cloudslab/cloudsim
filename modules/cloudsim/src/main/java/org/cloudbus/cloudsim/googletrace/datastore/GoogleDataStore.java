@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.googletrace;
+package org.cloudbus.cloudsim.googletrace.datastore;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
