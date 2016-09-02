@@ -41,7 +41,7 @@ public class VmSchedulerMipsBased extends VmScheduler{
         }
 
         //test if the host support the vm
-        if (totalRequestedMips < getAvailableMips()) {
+        if (totalRequestedMips <= getAvailableMips()) {
 
             getMipsMap().put(vm.getUid(), mipsShare);
             setAvailableMips(getAvailableMips() - totalRequestedMips);
