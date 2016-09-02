@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
@@ -281,15 +280,9 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	}
 
 	private void scheduleRequestsForVm(GoogleTask task) {
-		long size = 0; // image size (MB)
-		double mips = task.getCpuReq();
-		long bw = 0;
-		int pesNumber = 1; // number of cpus
-		String vmm = "Xen"; // VMM name
 
-		Vm vmForRequest = new Vm(task.getId(), getId(), mips,
-				pesNumber, (int) task.getMemReq(), bw, size, vmm,
-				new CloudletSchedulerTimeShared());
+		GoogleVm vmForRequest = new GoogleVm(task.getId(), getId(), task.getCpuReq(),
+				task.getMemReq(), task.getSubmitTime(), task.getSchedulingClass());
 		getVmRequestedList().add(vmForRequest);
 
 		int datacenterId = getDatacenterId();
