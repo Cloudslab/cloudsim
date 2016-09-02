@@ -89,7 +89,7 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 			if (connection != null) {
 				statement = connection.createStatement();
 
-				String sql = "SELECT submitTime, runtime, cpuReq, memReq FROM tasks WHERE cpuReq > '0' AND memReq > '0' AND submitTime >= '"
+				String sql = "SELECT submitTime, runtime, cpuReq, memReq, priority FROM tasks WHERE cpuReq > '0' AND memReq > '0' AND submitTime >= '"
 						+ minTime + "' AND submitTime < '" + maxTime + "'";
 
 				ResultSet results = statement.executeQuery(sql);
@@ -105,8 +105,9 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 							results.getDouble("submitTime"),
 							results.getDouble("runtime"),
 							results.getDouble("cpuReq"),
-							results.getDouble("memReq"));
-
+							results.getDouble("memReq"),
+							convertPriorityToPriorityClass(results.getInt("priority")));
+					
 					googleTasks.add(task);
 				}
 				
@@ -117,6 +118,16 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 		}
 		
 		return googleTasks;
+	}
+
+	private int convertPriorityToPriorityClass(int priority) {
+		if(priority <= 1) {
+			return 2;
+		} else if (priority <= 8) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 
 	public double getMinInterestedTime() {

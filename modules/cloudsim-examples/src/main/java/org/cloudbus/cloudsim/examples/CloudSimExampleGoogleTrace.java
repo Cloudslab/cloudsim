@@ -147,12 +147,12 @@ public class CloudSimExampleGoogleTrace {
 						+ results.getDouble("memReq"));// + ", "
 				// + results.getString("userClass"));
 
-				GoogleTask task = new GoogleTask(count,
-						results.getDouble("submitTime"),
-						results.getDouble("runtime"),
-						results.getDouble("cpuReq"),
-						results.getDouble("memReq"));
-				googleTasks.add(task);
+//				GoogleTask task = new GoogleTask(count,
+//						results.getDouble("submitTime"),
+//						results.getDouble("runtime"),
+//						results.getDouble("cpuReq"),
+//						results.getDouble("memReq"));
+//				googleTasks.add(task);
 			}
 		}
 	}

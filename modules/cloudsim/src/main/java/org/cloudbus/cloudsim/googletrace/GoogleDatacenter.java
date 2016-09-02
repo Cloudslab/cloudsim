@@ -9,6 +9,8 @@ package org.cloudbus.cloudsim.googletrace;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
@@ -16,7 +18,6 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
-import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 
@@ -28,7 +29,8 @@ import org.cloudbus.cloudsim.core.SimEvent;
  */
 public class GoogleDatacenter extends Datacenter {
 
-	List<Vm> vmsNotFulfilled = new ArrayList<Vm>();
+	private SortedSet<Vm> vmsRunning = new TreeSet<Vm>();
+	private SortedSet<Vm> vmsForScheduling = new TreeSet<Vm>();	
 	
 	public GoogleDatacenter(
 			String name,
@@ -61,8 +63,8 @@ public class GoogleDatacenter extends Datacenter {
 	private void allocateHostForVm(boolean ack, Vm vm) {
 		boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
 
-		if (!result && !vmsNotFulfilled.contains(vm)) {
-			vmsNotFulfilled.add(vm);
+		if (!result && !getVmsForScheduling().contains(vm)) {
+			getVmsForScheduling().add(vm);
 			return;
 		}
 		
@@ -80,16 +82,18 @@ public class GoogleDatacenter extends Datacenter {
 		}
 
 		if (result) {
-			getVmList().add(vm);
+//			getVmList().add(vm);
+			getVmsRunning().add(vm);
 
 			if (vm.isBeingInstantiated()) {
 				vm.setBeingInstantiated(false);
 			}
 
-			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
-					.getAllocatedMipsForVm(vm));
+			// We don't need to update the vm processing because there aren't cloudlets running in the vm
+//			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
+//					.getAllocatedMipsForVm(vm));
 			
-			vmsNotFulfilled.remove(vm);
+			getVmsForScheduling().remove(vm);
 		}
 	}
 	
@@ -108,17 +112,18 @@ public class GoogleDatacenter extends Datacenter {
 			sendNow(vm.getUserId(), CloudSimTags.VM_DESTROY_ACK, data);
 		}
 
-		getVmList().remove(vm);
+//		getVmList().remove(vm);
+		getVmsRunning().remove(vm);
 		
-		if (!vmsNotFulfilled.isEmpty()) {
+		if (!getVmsForScheduling().isEmpty()) {
 			double availableMips = host.getAvailableMips();
-			double requestedMipsNow = 0;
+			double mipsForRequestingNow = 0;
 			List<Vm> vmsToRequestNow = new ArrayList<Vm>();
 			
 			// choosing the vms to request now
-			for (Vm currentVm : new ArrayList<Vm>(vmsNotFulfilled)) {
-				if (requestedMipsNow + currentVm.getMips() <= availableMips) {
-					requestedMipsNow += currentVm.getMips();
+			for (Vm currentVm : new ArrayList<Vm>(getVmsForScheduling())) {
+				if (mipsForRequestingNow + currentVm.getMips() <= availableMips) {
+					mipsForRequestingNow += currentVm.getMips();
 					vmsToRequestNow.add(currentVm);
 				}
 			}
@@ -129,4 +134,14 @@ public class GoogleDatacenter extends Datacenter {
 			}
 		}
 	}
+
+	public SortedSet<Vm> getVmsRunning() {
+		return vmsRunning;
+	}
+
+	public SortedSet<Vm> getVmsForScheduling() {
+		return vmsForScheduling;
+	}
+	
+	
 }
