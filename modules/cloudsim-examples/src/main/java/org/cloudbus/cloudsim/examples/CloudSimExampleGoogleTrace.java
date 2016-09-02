@@ -35,6 +35,7 @@ import org.cloudbus.cloudsim.googletrace.GoogleDatacenter;
 import org.cloudbus.cloudsim.googletrace.GoogleTask;
 import org.cloudbus.cloudsim.googletrace.GoogleTaskState;
 import org.cloudbus.cloudsim.googletrace.GoogleTraceDatacenterBroker;
+import org.cloudbus.cloudsim.googletrace.VmSchedulerMipsBased;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -215,7 +216,7 @@ public class CloudSimExampleGoogleTrace {
 
 			Host host = new Host(hostId, new RamProvisionerSimple(ram),
 					new BwProvisionerSimple(bw), storage, peList1,
-					new VmSchedulerTimeShared(peList1));
+					new VmSchedulerMipsBased(peList1));
 
 			hostList.add(host);
 		}

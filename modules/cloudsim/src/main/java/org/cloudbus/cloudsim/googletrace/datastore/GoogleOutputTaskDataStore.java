@@ -114,4 +114,63 @@ public class GoogleOutputTaskDataStore extends GoogleDataStore {
 			return null;
 		}
 	}
+
+	public boolean addTaskList(List<GoogleTaskState> taskStates) {
+		if (taskStates == null) {
+			Log.printLine("taskStates must no be null.");
+			return false;
+		}		
+		Log.printLine("Adding " + taskStates.size() + " VMs into database.");
+		
+		PreparedStatement insertMemberStatement = null;
+		
+		Connection connection = null;
+
+		try {
+			connection = getConnection();
+			connection.setAutoCommit(false);
+
+			insertMemberStatement = connection.prepareStatement(INSERT_TASK_SQL);
+			insertMemberStatement = connection
+					.prepareStatement(INSERT_TASK_SQL);
+		
+			for (GoogleTaskState taskState : taskStates) {
+				insertMemberStatement.setInt(1, taskState.getTaskId());
+				insertMemberStatement.setInt(2, taskState.getResourceId());
+				insertMemberStatement.setDouble(3, taskState.getCpuReq());
+				insertMemberStatement.setDouble(4, taskState.getSubmitTime());
+				insertMemberStatement.setDouble(5, taskState.getStartTime());
+				insertMemberStatement.setDouble(6, taskState.getFinishTime());
+				insertMemberStatement.setDouble(7, taskState.getRuntime());
+				insertMemberStatement.setInt(8, taskState.getStatus());
+				insertMemberStatement.addBatch();
+			}
+			
+			int[] executeBatch = insertMemberStatement.executeBatch();
+			for (int i : executeBatch) {
+				if (i == PreparedStatement.EXECUTE_FAILED) {
+					Log.printLine("Rollback will be executed.");
+					connection.rollback();
+					return false;
+				}
+			}
+
+			connection.commit();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Log.printLine("Couldn't add tasks.");
+			try {
+				if (connection != null) {
+					connection.rollback();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				Log.printLine("Couldn't rollback transaction.");
+			}
+			return false;
+		} finally {
+			close(insertMemberStatement, connection);
+		}
+	}
 }

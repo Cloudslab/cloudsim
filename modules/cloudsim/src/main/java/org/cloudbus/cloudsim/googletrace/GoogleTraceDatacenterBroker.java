@@ -34,6 +34,8 @@ import org.cloudbus.cloudsim.lists.VmList;
  * 
  */
 public class GoogleTraceDatacenterBroker extends SimEntity {
+	
+	protected static final int STORE_FINISHED_TASKS = CloudSimTags.VM_BROKER_EVENT + 500;
 
 	protected List<? extends Vm> vmRequestedList = new ArrayList<Vm>();
 
@@ -43,6 +45,8 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	protected List<GoogleTask> createdTasks;
 	
 	protected List<GoogleTask> submittedTasks;
+	
+	protected List<GoogleTaskState> finishedTasks;
 	
 	/** The id's list of available datacenters. */
 	protected List<Integer> datacenterIdsList;
@@ -63,9 +67,11 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 
 		setCreatedTasks(new ArrayList<GoogleTask>());
 		setSubmittedTasks(new ArrayList<GoogleTask>());
+		setFinishedTasks(new ArrayList<GoogleTaskState>());
 		
 		setIntervalIndex(0);
-		setSubmitInterval(Integer.parseInt(properties.getProperty("interval_size")));		
+		setSubmitInterval(Integer.parseInt(properties.getProperty("interval_size")));
+		
 		setDatacenterIdsList(new LinkedList<Integer>());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
 		
@@ -98,11 +104,29 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			// load next google tasks from trace file
 			case CloudSimTags.VM_BROKER_EVENT:
 				loadNextGoogleTasks();
-				break;	
+				break;
+			// store already finished tasks
+			case STORE_FINISHED_TASKS:
+				storeFinishedTasks();
+				break;
 			// other unknown tags are processed by this method
 			default:
 				processOtherEvent(ev);
 				break;
+		}
+	}
+
+	private void storeFinishedTasks() {
+		List<GoogleTaskState> toStore = new ArrayList<GoogleTaskState>(getFinishedTasks());
+		if (toStore != null && !toStore.isEmpty() && taskDataStore.addTaskList(toStore)) {
+			Log.printConcatLine(CloudSim.clock(), ": ", toStore.size(), " VMs stored now.");
+			getFinishedTasks().removeAll(toStore);
+		}
+		
+		System.out.println("tasks size: " + taskDataStore.getAllTasks().size());
+		
+		if (inputTraceDataStore.hasMoreEvents(getIntervalIndex(), getIntervalSizeInMicro())) {
+			send(getId(), getIntervalSizeInMicro(), STORE_FINISHED_TASKS);
 		}
 	}
 
@@ -129,7 +153,8 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			GoogleTaskState taskState = new GoogleTaskState(vmId, 2,
 					task.getCpuReq(), task.getSubmitTime(), startTime, now,
 					task.getRuntime(), Cloudlet.SUCCESS);
-			taskDataStore.addTask(taskState);
+//			taskDataStore.addTask(taskState);
+			finishedTasks.add(taskState);
 			
 			if (getCreatedTasks().size() == 0 && getSubmittedTasks().size() == 0) { 
 				Log.printConcatLine(CloudSim.clock(), ": ", getName(),
@@ -164,7 +189,10 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
 			loadNextGoogleTasks();
 		
+			// creating the first store event
+			send(getId(), getIntervalSizeInMicro(), STORE_FINISHED_TASKS);
 		}
+		
 	}
 
 	private void loadNextGoogleTasks() {
@@ -325,6 +353,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	 * @post $none
 	 */
 	protected void finishExecution() {
+		storeFinishedTasks();
 		sendNow(getId(), CloudSimTags.END_OF_SIMULATION);
 	}
 
@@ -415,6 +444,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	}
 
 	public List<GoogleTaskState> getReceivedCloudlets() {
+//		return finishedTasks;
 		return taskDataStore.getAllTasks();
 	}
 
@@ -436,5 +466,13 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 
 	private void setSubmitInterval(int intervalSize) {
 		this.intervalSize = intervalSize;
+	}
+
+	public List<GoogleTaskState> getFinishedTasks() {
+		return finishedTasks;
+	}
+
+	public void setFinishedTasks(List<GoogleTaskState> finishedTasks) {
+		this.finishedTasks = finishedTasks;
 	}
 }
