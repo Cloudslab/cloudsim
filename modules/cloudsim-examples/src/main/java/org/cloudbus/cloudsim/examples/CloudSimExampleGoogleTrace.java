@@ -89,7 +89,7 @@ public class CloudSimExampleGoogleTrace {
 
 			CloudSim.startSimulation();
 
-			List<GoogleTaskState> newList = broker.getReceivedCloudlets();
+			List<GoogleTaskState> newList = broker.getStoredTasks();
 
 			CloudSim.stopSimulation();
 

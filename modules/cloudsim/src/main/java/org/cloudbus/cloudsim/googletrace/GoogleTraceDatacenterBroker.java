@@ -35,7 +35,12 @@ import org.cloudbus.cloudsim.lists.VmList;
  */
 public class GoogleTraceDatacenterBroker extends SimEntity {
 	
-	protected static final int STORE_FINISHED_TASKS = CloudSimTags.VM_BROKER_EVENT + 500;
+	private static final int BROKER_BASE = 500;
+	protected static final int LOAD_NEXT_TASKS_EVENT = BROKER_BASE + 1;
+	protected static final int STORE_FINISHED_TASKS_EVENT = BROKER_BASE + 2;
+
+	private static final int DEFAULT_LOADING_INTERVAL_SIZE = 5;
+	private static final int DEFAULT_STORING_INTERVAL_SIZE = 5;
 
 	protected List<? extends Vm> vmRequestedList = new ArrayList<Vm>();
 
@@ -56,7 +61,8 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	protected Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList;
 	
 	private int intervalIndex;
-	private int intervalSize; // in minutes
+	private int loadingIntervalSize; // in minutes
+	private int storingIntervalSize; // in minutes
 	
 	private GoogleInputTraceDataStore inputTraceDataStore;
 	
@@ -69,8 +75,17 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		setSubmittedTasks(new ArrayList<GoogleTask>());
 		setFinishedTasks(new ArrayList<GoogleTaskState>());
 		
+		int loadingIntervalSize = properties
+				.getProperty("loading_interval_size") == null ? DEFAULT_LOADING_INTERVAL_SIZE
+				: Integer.parseInt(properties.getProperty("loading_interval_size"));
+		
+		int storingIntervalSize = properties
+				.getProperty("storing_interval_size") == null ? DEFAULT_STORING_INTERVAL_SIZE
+				: Integer.parseInt(properties.getProperty("storing_interval_size"));
+		
 		setIntervalIndex(0);
-		setSubmitInterval(Integer.parseInt(properties.getProperty("interval_size")));
+		setLoadingIntervalSize(loadingIntervalSize);
+		setStoringIntervalSize(storingIntervalSize);
 		
 		setDatacenterIdsList(new LinkedList<Integer>());
 		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
@@ -102,11 +117,11 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 				processVmDestroyAck(ev);
 				break;
 			// load next google tasks from trace file
-			case CloudSimTags.VM_BROKER_EVENT:
+			case LOAD_NEXT_TASKS_EVENT:
 				loadNextGoogleTasks();
 				break;
 			// store already finished tasks
-			case STORE_FINISHED_TASKS:
+			case STORE_FINISHED_TASKS_EVENT:
 				storeFinishedTasks();
 				break;
 			// other unknown tags are processed by this method
@@ -118,21 +133,26 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 
 	private void storeFinishedTasks() {
 		List<GoogleTaskState> toStore = new ArrayList<GoogleTaskState>(getFinishedTasks());
-		if (toStore != null && !toStore.isEmpty() && taskDataStore.addTaskList(toStore)) {
-			Log.printConcatLine(CloudSim.clock(), ": ", toStore.size(), " VMs stored now.");
+		if (toStore != null && !toStore.isEmpty()
+				&& taskDataStore.addTaskList(toStore)) {
+			Log.printConcatLine(CloudSim.clock(), ": ", toStore.size(),
+					" VMs stored now.");
 			getFinishedTasks().removeAll(toStore);
 		}
-		
-		System.out.println("tasks size: " + taskDataStore.getAllTasks().size());
-		
-		if (inputTraceDataStore.hasMoreEvents(getIntervalIndex(), getIntervalSizeInMicro())) {
-			send(getId(), getIntervalSizeInMicro(), STORE_FINISHED_TASKS);
+
+		Log.printConcatLine(CloudSim.clock(), ": Currently there are "
+				+ taskDataStore.getAllTasks().size()
+				+ " tasks stored in the database.");
+
+		// creating next event if the are more events to be treated 
+		if (inputTraceDataStore.hasMoreEvents(getIntervalIndex(),
+				getIntervalSizeInMicro(getStoringIntervalSize()))) {
+			send(getId(), getIntervalSizeInMicro(getStoringIntervalSize()), STORE_FINISHED_TASKS_EVENT);
 		}
 	}
 
 	private void processVmDestroyAck(SimEvent ev) {
 		int[] data = (int[]) ev.getData();
-		int datacenterId = data[0];
 		int vmId = data[1];
 		int result = data[2];
 		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #",
@@ -153,7 +173,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			GoogleTaskState taskState = new GoogleTaskState(vmId, 2,
 					task.getCpuReq(), task.getSubmitTime(), startTime, now,
 					task.getRuntime(), Cloudlet.SUCCESS);
-//			taskDataStore.addTask(taskState);
 			finishedTasks.add(taskState);
 			
 			if (getCreatedTasks().size() == 0 && getSubmittedTasks().size() == 0) { 
@@ -190,7 +209,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			loadNextGoogleTasks();
 		
 			// creating the first store event
-			send(getId(), getIntervalSizeInMicro(), STORE_FINISHED_TASKS);
+			send(getId(), getIntervalSizeInMicro(getStoringIntervalSize()), STORE_FINISHED_TASKS_EVENT);
 		}
 		
 	}
@@ -199,20 +218,20 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		Log.printLine("Loading next google tasks. Interval index " + getIntervalIndex());
 
 		List<GoogleTask> nextGoogleTasks = inputTraceDataStore
-				.getGoogleTaskInterval(getIntervalIndex(), getIntervalSizeInMicro());
+				.getGoogleTaskInterval(getIntervalIndex(), getIntervalSizeInMicro(getLoadingIntervalSize()));
 
 		// if nextGoogleTasks == null there are not more tasks 
-		if (nextGoogleTasks != null ) {
+		if (nextGoogleTasks != null) {
 			getCreatedTasks().addAll(nextGoogleTasks);
 			submitTasks();
 			setIntervalIndex(++intervalIndex);
 
-			send(getId(), getIntervalSizeInMicro(), CloudSimTags.VM_BROKER_EVENT);
+			send(getId(), getIntervalSizeInMicro(getLoadingIntervalSize()), LOAD_NEXT_TASKS_EVENT);
 		}
 	}
 
-	private double getIntervalSizeInMicro() {
-		return getIntervalSize() * 60 * 1000000;
+	private double getIntervalSizeInMicro(double intervalSize) {
+		return intervalSize * 60 * 1000000;
 	}
 
 	/**
@@ -443,8 +462,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		this.datacenterCharacteristicsList = datacenterCharacteristicsList;
 	}
 
-	public List<GoogleTaskState> getReceivedCloudlets() {
-//		return finishedTasks;
+	public List<GoogleTaskState> getStoredTasks() {
 		return taskDataStore.getAllTasks();
 	}
 
@@ -460,12 +478,20 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		this.intervalIndex = intervalIndex;
 	}
 
-	public int getIntervalSize() {
-		return intervalSize;
+	public int getLoadingIntervalSize() {
+		return loadingIntervalSize;
 	}
 
-	private void setSubmitInterval(int intervalSize) {
-		this.intervalSize = intervalSize;
+	private void setLoadingIntervalSize(int intervalSize) {
+		this.loadingIntervalSize = intervalSize;
+	}
+	
+	public int getStoringIntervalSize() {
+		return storingIntervalSize;
+	}
+
+	private void setStoringIntervalSize(int storingIntervalSize) {
+		this.storingIntervalSize = storingIntervalSize;
 	}
 
 	public List<GoogleTaskState> getFinishedTasks() {

@@ -15,9 +15,11 @@ import java.util.TreeSet;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 
@@ -64,6 +66,9 @@ public class GoogleDatacenter extends Datacenter {
 		boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
 
 		if (!result && !getVmsForScheduling().contains(vm)) {
+			Log.printConcatLine(CloudSim.clock(),
+					": There is not resource to allocate VM #" + vm.getId()
+							+ " now, it will be tryed in the future.");
 			getVmsForScheduling().add(vm);
 			return;
 		}
@@ -82,7 +87,6 @@ public class GoogleDatacenter extends Datacenter {
 		}
 
 		if (result) {
-//			getVmList().add(vm);
 			getVmsRunning().add(vm);
 
 			if (vm.isBeingInstantiated()) {
@@ -112,7 +116,6 @@ public class GoogleDatacenter extends Datacenter {
 			sendNow(vm.getUserId(), CloudSimTags.VM_DESTROY_ACK, data);
 		}
 
-//		getVmList().remove(vm);
 		getVmsRunning().remove(vm);
 		
 		if (!getVmsForScheduling().isEmpty()) {
@@ -127,6 +130,9 @@ public class GoogleDatacenter extends Datacenter {
 					vmsToRequestNow.add(currentVm);
 				}
 			}
+			
+			Log.printConcatLine(CloudSim.clock(), "Trying to Allocate "
+					+ vmsToRequestNow.size() + " VMs now.");
 			
 			// trying to allocate Host
 			for (Vm requestedVm : vmsToRequestNow) {

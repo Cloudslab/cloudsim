@@ -67,19 +67,19 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 	public List<GoogleTask> getGoogleTaskInterval(int intervalIndex,
 			double intervalSize) {
 			
-		double intervalMinTime = intervalIndex * intervalSize;
-		double intervalMaxTime = (intervalIndex + 1) * intervalSize;
-
-		Log.printLine(CloudSim.clock() + ": Interval index is " + intervalIndex
-				+ ", minTime=" + intervalMinTime + " and maxTime=" + intervalMaxTime);
-			
-		if (intervalIndex < 0 || intervalMinTime > getMaxInterestedTime()) {
+		if (!hasMoreEvents(intervalIndex, intervalSize)) {
+			Log.printLine(CloudSim.clock() + ": The Interval index is "
+					+ intervalIndex
+					+ " and there are not more events to be treated.");
 			return null;
 		}
-		
-		double minTime = Math.max(getMinInterestedTime(), intervalMinTime);
-		double maxTime = Math.min(getMaxInterestedTime(), intervalMaxTime);
 
+		double minTime = Math.max(getMinInterestedTime(), (intervalIndex * intervalSize));
+		double maxTime = Math.min(getMaxInterestedTime(), ((intervalIndex + 1) * intervalSize));
+
+		Log.printLine(CloudSim.clock() + ": Interval index is " + intervalIndex
+				+ ", minTime=" + minTime + " and maxTime=" + maxTime);
+		
 		List<GoogleTask> googleTasks = new ArrayList<GoogleTask>();
 
 		Statement statement = null;
