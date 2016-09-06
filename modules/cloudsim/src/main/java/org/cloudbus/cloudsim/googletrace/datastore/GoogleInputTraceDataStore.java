@@ -141,6 +141,6 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 
 	public boolean hasMoreEvents(int intervalIndex,
 			double intervalSize) {
-		return !(intervalIndex < 0 || (intervalIndex * intervalSize) > getMaxInterestedTime());
+		return (intervalIndex >= 0 && (intervalIndex * intervalSize) <= getMaxInterestedTime());
 	}
 }
