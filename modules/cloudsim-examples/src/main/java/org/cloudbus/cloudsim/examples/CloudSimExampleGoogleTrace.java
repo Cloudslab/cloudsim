@@ -29,9 +29,9 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
-import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.googletrace.GoogleDatacenter;
+import org.cloudbus.cloudsim.googletrace.GoogleHost;
 import org.cloudbus.cloudsim.googletrace.GoogleTask;
 import org.cloudbus.cloudsim.googletrace.GoogleTaskState;
 import org.cloudbus.cloudsim.googletrace.GoogleTraceDatacenterBroker;
@@ -201,11 +201,6 @@ public class CloudSimExampleGoogleTrace {
 		Log.printLine("Creating a datacenter with " + totalMipsCapacity
 				+ " total capacity and " + numberOfHosts
 				+ " hosts, each one with " + mipsPerHost + " mips.");
-		
-		// Firstly we are concerned only with mips
-		int ram = Integer.MAX_VALUE;
-		long storage = Long.MAX_VALUE;
-		int bw = Integer.MAX_VALUE;
 
 		List<Host> hostList = new ArrayList<Host>();
 
@@ -214,8 +209,7 @@ public class CloudSimExampleGoogleTrace {
 
 			peList1.add(new Pe(0, new PeProvisionerSimple(mipsPerHost)));
 
-			Host host = new Host(hostId, new RamProvisionerSimple(ram),
-					new BwProvisionerSimple(bw), storage, peList1,
+			GoogleHost host = new GoogleHost(hostId, peList1,
 					new VmSchedulerMipsBased(peList1));
 
 			hostList.add(host);

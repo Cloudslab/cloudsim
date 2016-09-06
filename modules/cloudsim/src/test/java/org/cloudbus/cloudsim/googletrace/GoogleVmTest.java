@@ -75,7 +75,7 @@ public class GoogleVmTest {
 	}
 	
 	@Test
-	public void testOrdering() {
+	public void testSorting() {
 		int submitTime = 10;
 		int priority = 0;
 		
@@ -91,7 +91,7 @@ public class GoogleVmTest {
 		Assert.assertEquals(1, vm3.compareTo(vm2));
 		Assert.assertEquals(0, vm3.compareTo(vm3));
 				
-		// test ordering
+		// test sorting
 		SortedSet<Vm> sortedVms = new TreeSet<Vm>();		
 		Assert.assertTrue(sortedVms.isEmpty());
 		
@@ -99,7 +99,7 @@ public class GoogleVmTest {
 		sortedVms.add(vm1);
 		sortedVms.add(vm2);
 
-		// checking ordering
+		// checking sorting
 		Assert.assertEquals(3, sortedVms.size());
 		Assert.assertTrue(sortedVms.contains(vm1));
 		Assert.assertTrue(sortedVms.contains(vm2));
@@ -127,7 +127,7 @@ public class GoogleVmTest {
 		sortedVms.add(vm5);
 		sortedVms.add(vm4);
 		
-		// checking ordering
+		// checking sorting
 		Assert.assertEquals(5, sortedVms.size());
 		Assert.assertTrue(sortedVms.contains(vm1));
 		Assert.assertTrue(sortedVms.contains(vm2));
@@ -138,5 +138,4 @@ public class GoogleVmTest {
 		Assert.assertEquals(vm1, sortedVms.first());
 		Assert.assertEquals(vm5, sortedVms.last());
 	}
-
 }
