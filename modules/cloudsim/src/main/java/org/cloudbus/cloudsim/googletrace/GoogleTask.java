@@ -54,5 +54,43 @@ public class GoogleTask {
 	public int getSchedulingClass() {
 		return schedulingClass;
 	}
-		
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		GoogleTask that = (GoogleTask) o;
+
+		if (id != that.id) return false;
+		if (schedulingClass != that.schedulingClass) return false;
+		if (Double.compare(that.submitTime, submitTime) != 0) return false;
+		if (Double.compare(that.runtime, runtime) != 0) return false;
+		if (Double.compare(that.cpuReq, cpuReq) != 0) return false;
+		if (Double.compare(that.memReq, memReq) != 0) return false;
+		if (Double.compare(that.startTime, startTime) != 0) return false;
+		return Double.compare(that.finishTime, finishTime) == 0;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = id;
+		result = 31 * result + schedulingClass;
+		temp = Double.doubleToLongBits(submitTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(runtime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(cpuReq);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(memReq);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(startTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(finishTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
 }
