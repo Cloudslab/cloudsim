@@ -194,19 +194,44 @@ public class GoogleInputTraceDataStoreTest {
 		Assert.assertEquals(NUMBER_OF_TASKS/2,
 				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
 
-		// remember to test with min value negative
 		
 	}
 
 	@Test
 	public void testGetGTaskIntervalWithMaxValue() throws Exception {
-		double max = getTimeInMicro(51);
+		double max = getTimeInMicro(NUMBER_OF_TASKS/2) + 1;
 		properties.setProperty(GoogleInputTraceDataStore.MAX_INTERESTED_TIME_PROP, String.valueOf(max));
 		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
 				properties);
 
-		// test the number of tasks between time 0 and 51 (At time 0, it doesn't have tasks)
+		// test the number of tasks between time 0 and 50 (although the Interval size is greater than maxSubmitTime)
 		Assert.assertEquals(NUMBER_OF_TASKS/2,
+				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
+
+
+	}
+
+	@Test
+	public void testGetGTaskIntervalWithMinValueNegative() throws Exception{
+		double min = getTimeInMicro(-1);
+		properties.setProperty(GoogleInputTraceDataStore.MIN_INTERESTED_TIME_PROP, String.valueOf(min));
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		// test the number of tasks between time 0 and 100 (because -1 is not considered)
+		Assert.assertEquals(NUMBER_OF_TASKS,
+				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
+	}
+
+	@Test
+	public void testGetGTaskIntervalWithMaxValueGreaterThanMaxSubmitTime() throws Exception {
+		double max = getTimeInMicro(NUMBER_OF_TASKS + 1);
+		properties.setProperty(GoogleInputTraceDataStore.MAX_INTERESTED_TIME_PROP, String.valueOf(max));
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		// test the number of tasks between time 0 and 100 (Because 101 is not considered)
+		Assert.assertEquals(NUMBER_OF_TASKS,
 				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
 
 		// remember to test with max time greater than max submit time
@@ -226,7 +251,66 @@ public class GoogleInputTraceDataStoreTest {
 				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
 
 		// remember to test limit values (eg. -1 and 0, 100 and 101, 0 and 0, 100 and 100)
-		
+
+		// testing limit values
+		min = getTimeInMicro(-1);
+		max = getTimeInMicro(0);
+		properties.setProperty(GoogleInputTraceDataStore.MIN_INTERESTED_TIME_PROP, String.valueOf(min));
+		properties.setProperty(GoogleInputTraceDataStore.MAX_INTERESTED_TIME_PROP, String.valueOf(max));
+		inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		Assert.assertEquals(0,
+				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
+
+		min = getTimeInMicro(NUMBER_OF_TASKS);
+		max = getTimeInMicro(NUMBER_OF_TASKS + 1); // adding 1 minute
+		properties.setProperty(GoogleInputTraceDataStore.MIN_INTERESTED_TIME_PROP, String.valueOf(min));
+		properties.setProperty(GoogleInputTraceDataStore.MAX_INTERESTED_TIME_PROP, String.valueOf(max));
+		inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		Assert.assertEquals(1,
+				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
+
+
+		min = getTimeInMicro(0);
+		max = getTimeInMicro(0);
+		properties.setProperty(GoogleInputTraceDataStore.MIN_INTERESTED_TIME_PROP, String.valueOf(min));
+		properties.setProperty(GoogleInputTraceDataStore.MAX_INTERESTED_TIME_PROP, String.valueOf(max));
+		inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		Assert.assertEquals(0,
+				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
+
+
+		min = getTimeInMicro(NUMBER_OF_TASKS);
+		max = getTimeInMicro(NUMBER_OF_TASKS) + 1; // adding 1 microsecond
+		properties.setProperty(GoogleInputTraceDataStore.MIN_INTERESTED_TIME_PROP, String.valueOf(min));
+		properties.setProperty(GoogleInputTraceDataStore.MAX_INTERESTED_TIME_PROP, String.valueOf(max));
+		inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		Assert.assertEquals(1,
+				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
+
+	}
+
+	@Test
+	public void testHasMoreEvents() throws Exception{
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		for (int i = -2; i <= NUMBER_OF_TASKS + 1; i++) {
+
+			if (i >= 101 || i < 0){
+				Assert.assertFalse(inputTrace.hasMoreEvents(i, getTimeInMicro(1)));
+			} else {
+				Assert.assertTrue(inputTrace.hasMoreEvents(i, getTimeInMicro(1)));
+			}
+		}
+
 	}
 
 	@Test
