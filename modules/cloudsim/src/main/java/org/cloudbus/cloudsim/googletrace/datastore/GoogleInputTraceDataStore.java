@@ -27,12 +27,26 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 			throws ClassNotFoundException, SQLException {
 		super(properties.getProperty(DATABASE_URL_PROP));
 
-		minInterestedTime = properties.getProperty(MIN_INTERESTED_TIME_PROP) != null ? Double
+		if (isPropertySet(properties, MIN_INTERESTED_TIME_PROP) &&
+				Double.parseDouble(properties.getProperty(MIN_INTERESTED_TIME_PROP)) < 0) {
+			throw new IllegalArgumentException(MIN_INTERESTED_TIME_PROP + " must not be negative.");
+		}
+
+		if (isPropertySet(properties, MAX_INTERESTED_TIME_PROP) &&
+				Double.parseDouble(properties.getProperty(MAX_INTERESTED_TIME_PROP)) < 0) {
+			throw new IllegalArgumentException(MAX_INTERESTED_TIME_PROP + " must not be negative.");
+		}
+
+		minInterestedTime = isPropertySet(properties, MIN_INTERESTED_TIME_PROP) ? Double
 				.parseDouble(properties.getProperty(MIN_INTERESTED_TIME_PROP)) : 0;
 
-		maxInterestedTime = properties.getProperty(MAX_INTERESTED_TIME_PROP) != null ? Double
+		maxInterestedTime = isPropertySet(properties, MAX_INTERESTED_TIME_PROP)? Double
 				.parseDouble(properties.getProperty(MAX_INTERESTED_TIME_PROP)) : getMaxTraceTime() + 1;
 
+	}
+
+	private boolean isPropertySet(Properties properties, String propKey) {
+		return properties.getProperty(propKey) != null;
 	}
 
 	protected double getMaxTraceTime() throws ClassNotFoundException,
@@ -66,7 +80,15 @@ public class GoogleInputTraceDataStore extends GoogleDataStore {
 
 	public List<GoogleTask> getGoogleTaskInterval(int intervalIndex,
 			double intervalSize) {
-			
+
+		if (intervalIndex < 0){
+			throw new IllegalArgumentException("Interval index must be not negative");
+		}
+
+		if (intervalSize <= 0){
+			throw new IllegalArgumentException("Interval size must be positive");
+		}
+
 		if (!hasMoreEvents(intervalIndex, intervalSize)) {
 			Log.printLine(CloudSim.clock() + ": The Interval index is "
 					+ intervalIndex
