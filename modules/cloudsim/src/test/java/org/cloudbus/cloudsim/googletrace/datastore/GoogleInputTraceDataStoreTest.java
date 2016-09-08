@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -100,8 +101,6 @@ public class GoogleInputTraceDataStoreTest {
 		Assert.assertEquals(getTimeInMicro(NUMBER_OF_TASKS), inputTrace.getMaxTraceTime(), ACCEPTABLE_DIFFERENCE); // test default maxTraceTime
 		Assert.assertEquals(getTimeInMicro(NUMBER_OF_TASKS) + 1, inputTrace.getMaxInterestedTime(), ACCEPTABLE_DIFFERENCE);// test default maxInterestTime
 		// maxTraceTime = 6.0E9
-//		System.out.println(6.0E9/60000000);
-//		System.out.println(getTimeInMicro(100));
 
 	}
 
@@ -170,18 +169,14 @@ public class GoogleInputTraceDataStoreTest {
 		Assert.assertNull(inputTrace.getGoogleTaskInterval(NUMBER_OF_TASKS + 1,
 				getTimeInMicro(1)));
 	}
-
-	@Test
-	public void testSizeListofGetGTaskInterval() throws Exception{
-		// test limit values in intervals index (0, 100 and variations)
-	}
 	
 	@Test
+			(expected = IllegalArgumentException.class)
 	public void testGetGTaskInvalidInterval2() throws Exception {
 		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
 				properties);
-		Assert.assertNull(inputTrace.getGoogleTaskInterval(-1,
-				getTimeInMicro(1)));
+		inputTrace.getGoogleTaskInterval(-1,
+				getTimeInMicro(1));
 	}
 	
 	@Test
@@ -213,16 +208,67 @@ public class GoogleInputTraceDataStoreTest {
 	}
 
 	@Test
-	public void testGetGTaskIntervalWithMinValueNegative() throws Exception{
+			(expected = IllegalArgumentException.class)
+	public void testConstructorWithMinValueNegative() throws Exception{
 		double min = getTimeInMicro(-1);
 		properties.setProperty(GoogleInputTraceDataStore.MIN_INTERESTED_TIME_PROP, String.valueOf(min));
 		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
 				properties);
-
-		// test the number of tasks between time 0 and 100 (because -1 is not considered)
-		Assert.assertEquals(NUMBER_OF_TASKS,
-				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
 	}
+
+	@Test
+			(expected = IllegalArgumentException.class)
+	public void testConstructorWithMaxValueNegative() throws Exception{
+		double max = getTimeInMicro(-1);
+		properties.setProperty(GoogleInputTraceDataStore.MAX_INTERESTED_TIME_PROP, String.valueOf(max));
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+	}
+
+	@Test
+	public void testConstructorWithMaxValueEqualsNull2() throws Exception{
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+		Assert.assertEquals(inputTrace.getMaxInterestedTime(), inputTrace.getMaxTraceTime() + 1, ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(inputTrace.getMinInterestedTime(), 0, ACCEPTABLE_DIFFERENCE);
+	}
+
+	@Test
+	public void testConstructorWithMinValueEqualsNull2() throws Exception{
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+		Assert.assertEquals(inputTrace.getMaxInterestedTime(), inputTrace.getMaxTraceTime() + 1, ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(inputTrace.getMinInterestedTime(), 0, ACCEPTABLE_DIFFERENCE);
+	}
+
+	@Test
+			(expected = IllegalArgumentException.class)
+	public void testGetGTaskIntervalWithNegativeIntervalIndex() throws Exception{
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		inputTrace.getGoogleTaskInterval(-1, 5);
+	}
+
+	@Test
+			(expected = IllegalArgumentException.class)
+	public void testGetGTaskIntervalWithNegativeIntervalSize() throws Exception{
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		inputTrace.getGoogleTaskInterval(0, -1);
+	}
+
+	@Test
+			(expected = IllegalArgumentException.class)
+	public void testGetGTaskIntervalWithIntervalSizeEquals0() throws Exception{
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		inputTrace.getGoogleTaskInterval(0, 0);
+	}
+
+
 
 	@Test
 	public void testGetGTaskIntervalWithMaxValueGreaterThanMaxSubmitTime() throws Exception {
@@ -251,18 +297,7 @@ public class GoogleInputTraceDataStoreTest {
 		Assert.assertEquals(80 - 20,
 				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
 
-		// remember to test limit values (eg. -1 and 0, 100 and 101, 0 and 0, 100 and 100)
-
-		// testing limit values
-		min = getTimeInMicro(-1);
-		max = getTimeInMicro(0);
-		properties.setProperty(GoogleInputTraceDataStore.MIN_INTERESTED_TIME_PROP, String.valueOf(min));
-		properties.setProperty(GoogleInputTraceDataStore.MAX_INTERESTED_TIME_PROP, String.valueOf(max));
-		inputTrace = new GoogleInputTraceDataStore(
-				properties);
-
-		Assert.assertEquals(0,
-				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
+		// remember to test limit values (eg. 100 and 101, 0 and 0, 100 and 100)
 
 		min = getTimeInMicro(NUMBER_OF_TASKS);
 		max = getTimeInMicro(NUMBER_OF_TASKS + 1); // adding 1 minute
@@ -318,49 +353,37 @@ public class GoogleInputTraceDataStoreTest {
 	@Test
 	public void testLimitsGetTaskIntervalEqualsList() throws Exception {
 
-		//testing if the return of getGoogleTaskInterval is equals to list expected
+		//tests if the return of getGoogleTaskInterval is equals to list expected
 
 		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
 				properties);
 
-		//testing interval 1 with one element on the list
+		//tests first interval with one element on the list
 		Assert.assertEquals(generateListOfGoogleTasks(1, 1), inputTrace.getGoogleTaskInterval(1, getTimeInMicro(1)));
 
-		// testing empty list in interval 0
+		// tests empty list in interval 0
 		Assert.assertEquals(generateListOfGoogleTasks(1, 0), inputTrace.getGoogleTaskInterval(0, getTimeInMicro(1)));
 
 	}
 
-//	@Test
-//	public void testGetTaskIntervalEqualsList() throws Exception {
-//
-//		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
-//				properties);
-//
-//		// testing
-//
-//		System.out.println("--------------");
-//		// because the submitTime started from 1 instead of 0
-//		System.out.println(inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS / 2)).get(0) + "\n" + generateListOfGoogleTasks(1, (NUMBER_OF_TASKS / 2) - 1).get(0) + "\n"
-//		);
-//		System.out.println("--------------");
-//
-//
-//		List<GoogleTask> list1 = generateListOfGoogleTasks(1, (NUMBER_OF_TASKS / 2) - 1);
-//		List<GoogleTask> list2 = inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS / 2));
-//
-//		Assert.assertEquals(generateListOfGoogleTasks(1, (NUMBER_OF_TASKS / 2) - 1),
-//				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS / 2)));
-//
-//		Assert.assertEquals(generateListOfGoogleTasks(NUMBER_OF_TASKS / 2, NUMBER_OF_TASKS - 1),
-//				inputTrace.getGoogleTaskInterval(1, getTimeInMicro(NUMBER_OF_TASKS / 2)));
-//
-//		// because the minTime of this interval is exactly the maximum time of the fake trace
-//		Assert.assertEquals(generateListOfGoogleTasks(NUMBER_OF_TASKS, NUMBER_OF_TASKS),
-//				inputTrace.getGoogleTaskInterval(2, getTimeInMicro(NUMBER_OF_TASKS / 2)));
-//
-//
-//	}
+	@Test
+	public void testGetTaskIntervalEqualsList() throws Exception {
+
+		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
+				properties);
+
+		Assert.assertEquals(generateListOfGoogleTasks(1, (NUMBER_OF_TASKS / 2) - 1),
+				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS / 2)));
+
+
+		Assert.assertEquals(generateListOfGoogleTasks(NUMBER_OF_TASKS / 2, NUMBER_OF_TASKS - 1),
+				inputTrace.getGoogleTaskInterval(1, getTimeInMicro(NUMBER_OF_TASKS / 2)));
+
+		// because the minTime of this interval is exactly the maximum time of the fake trace
+		Assert.assertEquals(generateListOfGoogleTasks(NUMBER_OF_TASKS, NUMBER_OF_TASKS),
+				inputTrace.getGoogleTaskInterval(2, getTimeInMicro(NUMBER_OF_TASKS / 2)));
+
+	}
 
 	@Test
 	public void testGetGTaskMicroInterval2() throws Exception {
@@ -371,22 +394,6 @@ public class GoogleInputTraceDataStoreTest {
 		Connection connection = DriverManager.getConnection(databaseURL);
 
 		if (connection != null) {
-			// Creating the database
-			Statement statement = connection.createStatement();
-			statement.execute("CREATE TABLE IF NOT EXISTS tasks("
-					+ "submitTime REAL, "
-					+ "jid REAL, "
-					+ "tid INTEGER, "
-					+ "user TEXT, "
-					+ "schedulingClass INTEGER, "
-					+ "priority INTEGER, "
-					+ "runtime REAL, "
-					+ "endTime REAL, "
-					+ "cpuReq REAL, "
-					+ "memReq REAL, "
-					+ "userClass TEXT" + ")");
-			statement.close();
-
 			String INSERT_CLOUDLET_SQL = "INSERT INTO tasks"
 					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -412,18 +419,24 @@ public class GoogleInputTraceDataStoreTest {
 		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
 				properties);
 
-		// testing if  has 0 task in time 0
+		// tests if we have 0 task at time 0
 		Assert.assertEquals(0,
 				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(1)).size());
 
-		// testing if has 2 tasks in time 1
+		// tests if we have 2 tasks at time 1
 
 		Assert.assertEquals(2,
 				inputTrace.getGoogleTaskInterval(1, getTimeInMicro(1)).size());
 
-		//testing if has 1 task in time 2
-		Assert.assertEquals(1,
-				inputTrace.getGoogleTaskInterval(2, getTimeInMicro(1)).size());
+		for (int i = 2; i <= NUMBER_OF_TASKS; i++) {
+			Assert.assertEquals(1,
+					inputTrace.getGoogleTaskInterval(i, getTimeInMicro(1)).size());
+		}
+
+
+		// tests if we have 101 tasks in total now
+		Assert.assertEquals(101,
+				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
 
 	}
 
@@ -438,16 +451,10 @@ public class GoogleInputTraceDataStoreTest {
 		for (int i = startIndex; i <= endIndex; i++) {
 
 			double submitTime =  getTimeInMicro(i); // submit time
-			double jid = -1; // jid is not important for now
-			int tid = -1; // tid is not important for now
-			String user = "user"; // user is not important for now
 			int scheduler = 2; // scheduling class is not important for now
-			int priority = -1; // priority is not important for now
 			double runtime = DEFAULT_RUNTIME; // runtime
-			double endtime = i + DEFAULT_RUNTIME; // endtime
 			double cpuReq =  1; // cpuReq is not important for now
 			double memReq = 1; // memReq is not important for now
-			String userClass = "userClass"; // userClass is not important for now
 
 			GoogleTask task = new GoogleTask(i, submitTime, runtime, cpuReq, memReq, scheduler);
 			listOfTasks.add(task);
