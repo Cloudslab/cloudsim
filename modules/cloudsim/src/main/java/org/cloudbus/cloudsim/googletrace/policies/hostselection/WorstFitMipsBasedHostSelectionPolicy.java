@@ -5,6 +5,7 @@ import java.util.SortedSet;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.googletrace.GoogleHost;
 
 /**
  * TODO
