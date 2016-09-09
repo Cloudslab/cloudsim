@@ -10,5 +10,5 @@ import org.cloudbus.cloudsim.Vm;
  */
 public interface Preemptable {
 
-	public void preempt(Vm vm);
+	public boolean preempt(Vm vm);
 }

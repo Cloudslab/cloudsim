@@ -83,6 +83,11 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.8.11.2</version>
 		</dependency>
+		<dependency>
+    		<groupId>org.mockito</groupId>
+      		<artifactId>mockito-all</artifactId>
+      		<version>1.8.4</version>
+    	</dependency>
     </dependencies>
     <reporting>
 	<plugins>
