@@ -24,8 +24,8 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
 
     public final double ACCEPTABLE_DIFFERENCE = 0.1;
 
-    public GoogleHost host1;
-    public GoogleHost host2;
+    public Host host1;
+    public Host host2;
     public Host host3;
     public Host host4;
     public Host host5;
@@ -57,11 +57,8 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
         host1 = new GoogleHost(1, peList, new VmSchedulerMipsBased(peList));
         hostList.add(host1);
 
-
         host2 = new GoogleHost(2, peList, new VmSchedulerMipsBased(peList));
-        System.out.println(hostList.contains(host2));
-        System.out.println(hostList.add(host2));
-        System.out.println(host1.equals(host2));
+        hostList.add(host2);
 
         host3 = new GoogleHost(3, peList, new VmSchedulerMipsBased(peList));
         hostList.add(host3);
@@ -130,7 +127,8 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
         Assert.assertNull(selectionPolicy.select(hostList2, vm500));
 
         // try allocate a vm if mips equals zero
-        Assert.assertNotNull(selectionPolicy.select(hostList2, vm0)); // decides how to deal with this case later
+        Assert.assertNotNull(selectionPolicy.select(hostList2, vm0));
+
     }
 
     @Test
@@ -138,48 +136,53 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
 
         GoogleHost host = (GoogleHost) selectionPolicy.select(hostList, vm62);
 
-        System.out.println(host.getId());
-        System.out.println(host.getMaxAvailableMips());
-        System.out.println(hostList.last().getId());
-        System.out.println(hostList.last().getMaxAvailableMips());
-
-        for (Host host2 : hostList
-                ) {
-
-            System.out.println(host2.getId());
-
-        }
-
-
+        // test if the selected host is equals the first inserted
         Assert.assertEquals(host1.getId(), host.getId());
+
+        //allocate Vm in the selected host
         hostList.remove(host);
         host.vmCreate(vm62);
         hostList.add(host);
 
+        // test if the last Host in the list is the host1 now
         Assert.assertEquals(host.getId(), (hostList.last()).getId());
         Assert.assertEquals(host1.getId(), (hostList.last()).getId());
 
-        System.out.println(hostList.first().getId());
-        System.out.println(hostList.first().getMaxAvailableMips());
-        System.out.println(hostList.last().getId());
-        System.out.println(hostList.last().getMaxAvailableMips());
-
+        //test if the host1 suffer mips changes
         Assert.assertEquals((hostList.last()).getAvailableMips(), 937.5, ACCEPTABLE_DIFFERENCE);
 
-        System.out.println((selectionPolicy.select(hostList, vm250)).getId());
-        System.out.println((selectionPolicy.select(hostList, vm250)).getMaxAvailableMips());
-
+        // test if host2 is the new selected
         Assert.assertEquals(host2.getId(), (selectionPolicy.select(hostList, vm250)).getId());
     }
 
-    // test if the vm is allocated on the first host
+    @Test
+    public void TestAllocatingMultiplesHosts(){
 
-    // test if the hostList is suffer modifying after insert a VM
+        for (int i = 0; i < 6; i++){
+            Host otherHost = selectionPolicy.select(hostList, vm1000);
+            hostList.remove(otherHost);
+            otherHost.vmCreate(vm1000);
+            hostList.add(otherHost);
+        }
 
-    // test if the host is full
+        Host otherHost = selectionPolicy.select(hostList, vm1000);
+        Assert.assertNull(otherHost);
 
-    // test if all hosts is full
+        otherHost = selectionPolicy.select(hostList, vm500);
+        Assert.assertNull(otherHost);
 
-    // test multiples insert and remove operations to check order
+        otherHost = selectionPolicy.select(hostList, vm250);
+        Assert.assertNull(otherHost);
 
+        otherHost = selectionPolicy.select(hostList, vm125);
+        Assert.assertNull(otherHost);
+
+        otherHost = selectionPolicy.select(hostList, vm62);
+        Assert.assertNull(otherHost);
+
+        otherHost = selectionPolicy.select(hostList, vm0);
+        Assert.assertEquals(otherHost.getId(), host1.getId());
+
+
+    }
 }
