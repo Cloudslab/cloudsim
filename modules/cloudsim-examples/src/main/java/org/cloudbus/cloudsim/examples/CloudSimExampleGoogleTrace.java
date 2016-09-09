@@ -54,7 +54,10 @@ public class CloudSimExampleGoogleTrace {
 	 * Creates main() to run this example
 	 */
 	public static void main(String[] args) {
+		Log.disable();
 		Log.printLine("Starting CloudSimExample Google Trace ...");
+		System.out.println("Starting CloudSimExample Google Trace ...");
+
 		long now = System.currentTimeMillis();
 		
 		try {
@@ -99,6 +102,10 @@ public class CloudSimExampleGoogleTrace {
 					+ (((System.currentTimeMillis() - now) / 1000) / 60)
 					+ " minutes");
 			Log.printLine("CloudSimExample finished!");
+
+			System.out.println("Execution Time "
+					+ (((System.currentTimeMillis() - now) / 1000) / 60)
+					+ " minutes");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.printLine("The simulation has been terminated due to an unexpected error");

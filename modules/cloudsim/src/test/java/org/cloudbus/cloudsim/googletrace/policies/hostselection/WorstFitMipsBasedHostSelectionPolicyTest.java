@@ -45,11 +45,14 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
 
     @Before
     public void setUp() {
-
+        // creating object under test
         selectionPolicy = new WorstFitMipsBasedHostSelectionPolicy();
+
+        //creating lists of hosts
         hostList = new TreeSet<>();
         hostList2 = new TreeSet<>();
 
+        // populating host list
         List<Pe> peList = new ArrayList<Pe>();
         int mips = 1000;
         peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
@@ -72,6 +75,8 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
         host6 = new GoogleHost(6, peList, new VmSchedulerMipsBased(peList));
         hostList.add(host6);
 
+
+        // creating Vm's
         vm1000 = new GoogleVm(1, 1, 1000, 0, 0, 0);
         vm500 = new GoogleVm(2, 1, 500, 0, 0, 0);
         vm250 = new GoogleVm(3, 1, 250, 0, 0, 0);
@@ -165,6 +170,8 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
             hostList.add(otherHost);
         }
 
+
+        // once all hosts are fully occupied test allocation of vm's
         Host otherHost = selectionPolicy.select(hostList, vm1000);
         Assert.assertNull(otherHost);
 
@@ -182,7 +189,5 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
 
         otherHost = selectionPolicy.select(hostList, vm0);
         Assert.assertEquals(otherHost.getId(), host1.getId());
-
-
     }
 }
