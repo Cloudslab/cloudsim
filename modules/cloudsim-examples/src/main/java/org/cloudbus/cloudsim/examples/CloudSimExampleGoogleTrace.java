@@ -36,6 +36,8 @@ import org.cloudbus.cloudsim.googletrace.GoogleTask;
 import org.cloudbus.cloudsim.googletrace.GoogleTaskState;
 import org.cloudbus.cloudsim.googletrace.GoogleTraceDatacenterBroker;
 import org.cloudbus.cloudsim.googletrace.VmSchedulerMipsBased;
+import org.cloudbus.cloudsim.googletrace.policies.hostselection.WorstFitMipsBasedHostSelectionPolicy;
+import org.cloudbus.cloudsim.googletrace.policies.vmallocation.PreemptableVmAllocationPolicy;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -54,7 +56,7 @@ public class CloudSimExampleGoogleTrace {
 	 * Creates main() to run this example
 	 */
 	public static void main(String[] args) {
-		Log.disable();
+//		Log.disable();
 		Log.printLine("Starting CloudSimExample Google Trace ...");
 		System.out.println("Starting CloudSimExample Google Trace ...");
 
@@ -101,11 +103,12 @@ public class CloudSimExampleGoogleTrace {
 			Log.printLine("Execution Time "
 					+ (((System.currentTimeMillis() - now) / 1000) / 60)
 					+ " minutes");
-			Log.printLine("CloudSimExample finished!");
-
+			
 			System.out.println("Execution Time "
 					+ (((System.currentTimeMillis() - now) / 1000) / 60)
 					+ " minutes");
+			
+			Log.printLine("CloudSimExample finished!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.printLine("The simulation has been terminated due to an unexpected error");
@@ -217,7 +220,7 @@ public class CloudSimExampleGoogleTrace {
 			peList1.add(new Pe(0, new PeProvisionerSimple(mipsPerHost)));
 
 			GoogleHost host = new GoogleHost(hostId, peList1,
-					new VmSchedulerMipsBased(peList1));
+					new VmSchedulerMipsBased(peList1), 3);
 
 			hostList.add(host);
 		}
@@ -241,8 +244,12 @@ public class CloudSimExampleGoogleTrace {
 
 		GoogleDatacenter datacenter = null;
 		try {
+//			datacenter = new GoogleDatacenter(name, characteristics,
+//					new VmAllocationPolicySimple(hostList), storageList, 0);
 			datacenter = new GoogleDatacenter(name, characteristics,
-					new VmAllocationPolicySimple(hostList), storageList, 0);
+					new PreemptableVmAllocationPolicy(hostList,
+							new WorstFitMipsBasedHostSelectionPolicy()),
+					storageList, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -281,6 +288,7 @@ public class CloudSimExampleGoogleTrace {
 				+ "Time" + indent + "Start Time" + indent + "Finish Time" + indent + indent + "Availability");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
+		double totalVmAvailability = 0;
 		for (int i = 0; i < size; i++) {
 			googleTask = newList.get(i);
 			Log.print(indent + googleTask.getTaskId() + indent + indent);
@@ -289,6 +297,7 @@ public class CloudSimExampleGoogleTrace {
 				Log.print("SUCCESS");
 				
 				double vmAvailabilty = googleTask.getRuntime() / (googleTask.getFinishTime() - googleTask.getSubmitTime());
+				totalVmAvailability += vmAvailabilty;
 
 				Log.printLine(indent + indent + googleTask.getResourceId()
 						+ indent + indent + indent + googleTask.getTaskId()
@@ -298,6 +307,8 @@ public class CloudSimExampleGoogleTrace {
 						+ indent + indent + dft.format(vmAvailabilty));
 			}
 		}
+		
+		Log.printLine("========== MEAN VM AVAILABILITY is " + dft.format((totalVmAvailability/size)) + " =========");
 
 	}
 }

@@ -32,12 +32,12 @@ public class PreemptableVmAllocationTest {
 		List<Pe> peList1 = new ArrayList<Pe>();
 		peList1.add(new Pe(0, new PeProvisionerSimple(100)));
 		host1 = new GoogleHost(1, peList1,
-				new VmSchedulerMipsBased(peList1));
+				new VmSchedulerMipsBased(peList1), 1);
 		
 		List<Pe> peList2 = new ArrayList<Pe>();
 		peList2.add(new Pe(0, new PeProvisionerSimple(500)));
 		host2 = new GoogleHost(2, peList2,
-				new VmSchedulerMipsBased(peList2));
+				new VmSchedulerMipsBased(peList2), 1);
 		
 		List<Host> hosts = new ArrayList<Host>();
 		hosts.add(host1);

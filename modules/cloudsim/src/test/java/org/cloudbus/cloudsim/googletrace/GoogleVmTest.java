@@ -30,8 +30,9 @@ public class GoogleVmTest {
 		GoogleVm vm1 = new GoogleVm(1, 1, 1.0, 1.0, submitTime, priority);		
 		GoogleVm vm2 = new GoogleVm(2, 1, 1.0, 1.0, submitTime, priority);
 		
-		Assert.assertEquals(0, vm1.compareTo(vm2));
-		Assert.assertEquals(0, vm2.compareTo(vm1));
+		// The vms are not considered equal because of the id
+		Assert.assertEquals(-1, vm1.compareTo(vm2));
+		Assert.assertEquals(1, vm2.compareTo(vm1));
 		
 	}
 

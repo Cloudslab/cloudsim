@@ -24,7 +24,7 @@ public class GoogleVm extends Vm implements Comparable<GoogleVm> {
 		} else if (getSubmitTime() < otherVm.getSubmitTime()) {
 			return -1;
 		} else if (getSubmitTime() == otherVm.getSubmitTime()) {
-			return 0;
+			return new Integer(getId()).compareTo(new Integer(otherVm.getId()));
 		}
 		return 1;
 	}

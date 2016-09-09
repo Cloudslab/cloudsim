@@ -22,6 +22,7 @@ import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.googletrace.policies.vmallocation.PreemptableVmAllocationPolicy;
 
 /**
  * TODO
@@ -31,13 +32,15 @@ import org.cloudbus.cloudsim.core.SimEvent;
  */
 public class GoogleDatacenter extends Datacenter {
 
+	PreemptableVmAllocationPolicy vmAllocationPolicy;
+	
 	private SortedSet<Vm> vmsRunning = new TreeSet<Vm>();
 	private SortedSet<Vm> vmsForScheduling = new TreeSet<Vm>();	
 	
 	public GoogleDatacenter(
 			String name,
 			DatacenterCharacteristics characteristics,
-			VmAllocationPolicy vmAllocationPolicy,
+			PreemptableVmAllocationPolicy vmAllocationPolicy,
 			List<Storage> storageList,
 			double schedulingInterval) throws Exception {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
@@ -63,15 +66,49 @@ public class GoogleDatacenter extends Datacenter {
 	}
 
 	private void allocateHostForVm(boolean ack, Vm vm) {
-		boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
-
-		if (!result && !getVmsForScheduling().contains(vm)) {
+		GoogleHost host = (GoogleHost) getVmAllocationPolicy().selectHost(vm);	
+		
+		if (host == null && !getVmsForScheduling().contains(vm)) {
 			Log.printConcatLine(CloudSim.clock(),
 					": There is not resource to allocate VM #" + vm.getId()
 							+ " now, it will be tryed in the future.");
 			getVmsForScheduling().add(vm);
 			return;
 		}
+		
+		// trying to allocate
+		boolean result = getVmAllocationPolicy().allocateHostForVm(vm, host);
+
+		if (!result) {
+			Log.printConcatLine(CloudSim.clock(),
+					": There is not resource to allocate VM #" + vm.getUid()
+							+ " right now.");
+			
+			Vm vmToPreempt = host.nextVmForPreempting();
+			if (vmToPreempt != null) {
+				Log.printConcatLine(CloudSim.clock(),
+						": Trying to preempt VM #" + vmToPreempt.getUid()
+								+ " to allocate VM #" + vm.getUid());
+				getVmAllocationPolicy().preempt(vmToPreempt);
+				getVmsForScheduling().add(vmToPreempt);
+				getVmsRunning().remove(vmToPreempt);
+				allocateHostForVm(ack, vm);
+			} else if (!getVmsForScheduling().contains(vm)) {
+				Log.printConcatLine(CloudSim.clock(),
+						": There are not VMs to preempt. VM #" + vm.getUid()
+								+ " will be scheduled in the future.");
+				getVmsForScheduling().add(vm);
+			}
+			return;
+		}
+		
+//		if (!result && !getVmsForScheduling().contains(vm)) {
+//			Log.printConcatLine(CloudSim.clock(),
+//					": There is not resource to allocate VM #" + vm.getId()
+//							+ " now, it will be tryed in the future.");
+//			getVmsForScheduling().add(vm);
+//			return;
+//		}
 		
 		if (ack) {
 			int[] data = new int[3];
@@ -149,5 +186,14 @@ public class GoogleDatacenter extends Datacenter {
 		return vmsForScheduling;
 	}
 	
+	@Override
+	public PreemptableVmAllocationPolicy getVmAllocationPolicy() {
+		return vmAllocationPolicy;
+	}
+	
+	@Override
+	protected void setVmAllocationPolicy(VmAllocationPolicy vmAllocationPolicy) {
+		this.vmAllocationPolicy = (PreemptableVmAllocationPolicy) vmAllocationPolicy;
+	}
 	
 }

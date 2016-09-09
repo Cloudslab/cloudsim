@@ -39,7 +39,6 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
     public Vm vm0;
     public Vm vm1200;
     public SortedSet<Host> hostList;
-    public SortedSet<Host> hostList2;
     public WorstFitMipsBasedHostSelectionPolicy selectionPolicy;
 
 
@@ -50,29 +49,28 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
 
         //creating lists of hosts
         hostList = new TreeSet<>();
-        hostList2 = new TreeSet<>();
-
+        
         // populating host list
         List<Pe> peList = new ArrayList<Pe>();
         int mips = 1000;
         peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
 
-        host1 = new GoogleHost(1, peList, new VmSchedulerMipsBased(peList));
+        host1 = new GoogleHost(1, peList, new VmSchedulerMipsBased(peList), 1);
         hostList.add(host1);
 
-        host2 = new GoogleHost(2, peList, new VmSchedulerMipsBased(peList));
+        host2 = new GoogleHost(2, peList, new VmSchedulerMipsBased(peList), 1);
         hostList.add(host2);
 
-        host3 = new GoogleHost(3, peList, new VmSchedulerMipsBased(peList));
+        host3 = new GoogleHost(3, peList, new VmSchedulerMipsBased(peList), 1);
         hostList.add(host3);
 
-        host4 = new GoogleHost(4, peList, new VmSchedulerMipsBased(peList));
+        host4 = new GoogleHost(4, peList, new VmSchedulerMipsBased(peList), 1);
         hostList.add(host4);
 
-        host5 = new GoogleHost(5, peList, new VmSchedulerMipsBased(peList));
+        host5 = new GoogleHost(5, peList, new VmSchedulerMipsBased(peList), 1);
         hostList.add(host5);
 
-        host6 = new GoogleHost(6, peList, new VmSchedulerMipsBased(peList));
+        host6 = new GoogleHost(6, peList, new VmSchedulerMipsBased(peList), 1);
         hostList.add(host6);
 
 
@@ -86,22 +84,21 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
         vm1200 = new GoogleVm(7, 1, 1200, 0, 0, 0);
     }
 
-    @Test
-            (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void TestVmEqualsNull() {
-
+    	SortedSet<Host> hostList2 = new TreeSet<>();
         selectionPolicy.select(hostList, null);
         selectionPolicy.select(hostList2, null);
     }
 
-    @Test
-            (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void TestHostListEqualsNull() {
         selectionPolicy.select(null, vm1000);
     }
 
     @Test
     public void TestHostListEmpty() {
+    	SortedSet<Host> hostList2 = new TreeSet<>();
         Assert.assertNull(selectionPolicy.select(hostList2, vm1000));
     }
 
@@ -119,7 +116,7 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
 
     @Test
     public void TestHostIsFull() {
-
+    	SortedSet<Host> hostList2 = new TreeSet<>();
         // adding a single host in the list
         hostList2.add(host1);
         GoogleHost host = (GoogleHost) selectionPolicy.select(hostList2, vm1000);

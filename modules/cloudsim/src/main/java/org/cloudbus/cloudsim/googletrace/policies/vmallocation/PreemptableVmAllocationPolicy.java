@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.googletrace.GoogleHost;
 import org.cloudbus.cloudsim.googletrace.policies.hostselection.HostSelectionPolicy;
 
 /**
@@ -124,5 +125,9 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 
 	protected void setSortedHosts(SortedSet<Host> sortedHosts) {
 		this.sortedHosts = sortedHosts;
+	}
+
+	public Host selectHost(Vm vm) {
+		return getHostSelector().select(getSortedHosts(), vm);
 	}
 }
