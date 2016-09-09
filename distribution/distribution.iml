@@ -12,10 +12,11 @@
     <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.4.1" level="project" />
     <orderEntry type="library" name="Maven: com.opencsv:opencsv:3.7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.8.11.2" level="project" />
+    <orderEntry type="library" name="Maven: org.mockito:mockito-all:1.8.4" level="project" />
     <orderEntry type="module" module-name="cloudsim" />
     <orderEntry type="module" module-name="cloudsim" />
     <orderEntry type="module" module-name="cloudsim-examples" />
-    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.8.11.2" level="project" />
     <orderEntry type="module" module-name="cloudsim-examples" />
     <orderEntry type="module" module-name="documentation" />
   </component>
