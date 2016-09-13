@@ -25,7 +25,6 @@ import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.googletrace.datastore.GoogleInputTraceDataStore;
 import org.cloudbus.cloudsim.googletrace.datastore.GoogleOutputTaskDataStore;
-import org.cloudbus.cloudsim.lists.VmList;
 
 /**
  * DatacentreBroker represents a broker acting on behalf of a user.
@@ -41,11 +40,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 
 	private static final int DEFAULT_LOADING_INTERVAL_SIZE = 5;
 	private static final int DEFAULT_STORING_INTERVAL_SIZE = 5;
-
-	protected List<? extends Vm> vmRequestedList = new ArrayList<Vm>();
-
-	/** The list of VMs created by the broker. */
-	protected List<? extends Vm> vmsCreatedList = new ArrayList<Vm>();
 
 	protected List<GoogleTask> createdTasks;
 	
@@ -105,10 +99,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 			case CloudSimTags.RESOURCE_CHARACTERISTICS:
 				processResourceCharacteristics(ev);
 				break;
-			// VM Creation answer
-			case CloudSimTags.VM_CREATE_ACK:
-				processVmCreate(ev);
-				break;
 			// if the simulation finishes
 			case CloudSimTags.END_OF_SIMULATION:
 				shutdownEntity();
@@ -152,36 +142,26 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	}
 
 	private void processVmDestroyAck(SimEvent ev) {
-		int[] data = (int[]) ev.getData();
-		int vmId = data[1];
-		int result = data[2];
+		GoogleVm vm = (GoogleVm) ev.getData();
+
 		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #",
-				vmId, " is being destroyed now.");
-		
-		if (result == CloudSimTags.TRUE) {
-			GoogleTask task = getTaskById(getSubmittedTasks(), vmId);
-			
-			double now = CloudSim.clock();
-			double startTime = task.getStartTime();
-			
-			getSubmittedTasks().remove(task); // removing task
-			Vm vm = VmList.getById(getVmsCreatedList(), task.getId());
-			getVmsCreatedList().remove(vm); // removing from created list
+				vm.getId(), " is being destroyed now.");
 
-//			int hostId = vm.getHost().getId();
+		GoogleTask task = getTaskById(getSubmittedTasks(), vm.getId());
 
-			GoogleTaskState taskState = new GoogleTaskState(vmId, 2,
-					task.getCpuReq(), task.getSubmitTime(), startTime, now,
-					task.getRuntime(), Cloudlet.SUCCESS);
-			finishedTasks.add(taskState);
-			
-			if (getCreatedTasks().size() == 0 && getSubmittedTasks().size() == 0) { 
-				Log.printConcatLine(CloudSim.clock(), ": ", getName(),
-						": All Tasks executed. Finishing...");
-				finishExecution();
-			}
-		} else {
-			Log.printLine("Error while destroying VM #"+ vmId);
+		double now = CloudSim.clock();
+
+		getSubmittedTasks().remove(task); // removing task
+
+		GoogleTaskState taskState = new GoogleTaskState(vm.getId(), 2,
+				task.getCpuReq(), task.getSubmitTime(), vm.getStartExec(), now,
+				task.getRuntime(), Cloudlet.SUCCESS, task.getPriority());
+		finishedTasks.add(taskState);
+
+		if (getCreatedTasks().size() == 0 && getSubmittedTasks().size() == 0) {
+			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
+					": All Tasks executed. Finishing...");
+			finishExecution();
 		}
 	}
 
@@ -254,46 +234,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	}
 
 	/**
-	 * Process the ack received due to a request for VM creation.
-	 * 
-	 * @param ev a SimEvent object
-	 * @pre ev != null
-	 * @post $none
-	 */
-	protected void processVmCreate(SimEvent ev) {
-		int[] data = (int[]) ev.getData();
-		int datacenterId = data[0];
-		int vmId = data[1];
-		int result = data[2];
-
-		// if VM was created successfully
-		if (result == CloudSimTags.TRUE) {
-			Vm createdVm = VmList.getById(getVmRequestedList(), vmId);
-			getVmsCreatedList().add(createdVm); // adding VM to created list
-			getVmRequestedList().remove(createdVm); // removing from requested list
-			
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #",
-					vmId, " has been created in Datacenter #", datacenterId,
-					", Host #", createdVm.getHost().getId());
-
-			GoogleTask task = getTaskById(getSubmittedTasks(), vmId);		
-			
-			Log.printLine("Task is null? " +( task == null));
-			task.setStartTime(CloudSim.clock());
-			
-			Vm vm = VmList.getById(getVmsCreatedList(), task.getId());
-
-			send(getDatacenterId(), task.getRuntime(), CloudSimTags.VM_DESTROY_ACK, vm);
-
-		} else { //This situation should not happen
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(),
-					": Creation of VM #", vmId, " failed in Datacenter #",
-					datacenterId);
-
-		}
-	}
-
-	/**
 	 * Process non-default received events that aren't processed by
          * the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
          * This method should be overridden by subclasses in other to process
@@ -331,14 +271,10 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	private void scheduleRequestsForVm(GoogleTask task) {
 
 		GoogleVm vmForRequest = new GoogleVm(task.getId(), getId(), task.getCpuReq(),
-				task.getMemReq(), task.getSubmitTime(), task.getSchedulingClass());
-		getVmRequestedList().add(vmForRequest);
+				task.getMemReq(), task.getSubmitTime(), task.getPriority(), task.getRuntime());
 
 		int datacenterId = getDatacenterId();
-		/*
-		 *  TODO check if the delay is passed correctly. 
-		 *  (delay = submitTime - clock) in the case where tasks are submitted in timestamp different of 0. 
-		 */
+
 		scheduleVmCreationInDatacenter(vmForRequest, datacenterId, task.getSubmitTime() - CloudSim.clock());
 	}
 
@@ -362,7 +298,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		getCreatedTasks().remove(task);
 		getSubmittedTasks().add(task);
 		
-		send(datacenterId, delay, CloudSimTags.VM_CREATE_ACK, vm);
+		send(datacenterId, delay, CloudSimTags.VM_CREATE, vm);
 	}
 
 	/**
@@ -387,17 +323,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 		schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST);
 	}
 
-	/**
-	 * Gets the vm list.
-	 * 
-	 * @param <T> the generic type
-	 * @return the vm list
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends Vm> List<T> getVmRequestedList() {
-		return (List<T>) vmRequestedList;
-	}
-
 	public List<GoogleTask> getCreatedTasks() {
 		return createdTasks;
 	}
@@ -412,17 +337,6 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
 	
 	protected void setCreatedTasks(List<GoogleTask> createdTasks) {
 		this.createdTasks = createdTasks;
-	}
-
-	/**
-	 * Gets the vm list.
-	 * 
-	 * @param <T> the generic type
-	 * @return the vm list
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends Vm> List<T> getVmsCreatedList() {
-		return (List<T>) vmsCreatedList;
 	}
 
 	/**

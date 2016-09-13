@@ -10,7 +10,8 @@ import java.util.TreeSet;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
-import org.cloudbus.cloudsim.googletrace.GoogleHost;
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.googletrace.GoogleVm;
 import org.cloudbus.cloudsim.googletrace.policies.hostselection.HostSelectionPolicy;
 
 /**
@@ -38,18 +39,19 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 	}
 
 	@Override
-	public boolean preempt(Vm vm) {
+	public boolean preempt(GoogleVm vm) {
 		Host host = getVmTable().remove(vm.getUid());
 		if (host == null) {
 			return false;
 		}
+		vm.preempt(CloudSim.clock());
 		host.vmDestroy(vm);
 		return true;
 	}
 
 	@Override
 	public boolean allocateHostForVm(Vm vm) {
-		Host host = getHostSelector().select(getSortedHosts(), vm);
+		Host host = selectHost(vm);
 		if (host == null) {
 			return false;
 		}

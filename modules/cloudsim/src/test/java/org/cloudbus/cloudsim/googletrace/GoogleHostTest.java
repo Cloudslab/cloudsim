@@ -111,14 +111,14 @@ public class GoogleHostTest {
 		double cpuReq = 1.0;
 		
 		//priority 0
-		GoogleVm vm0 = new GoogleVm(1, 1, cpuReq, 1.0, 0, 0);
+		GoogleVm vm0 = new GoogleVm(1, 1, cpuReq, 1.0, 0, 0, 0);
 		priorityToMipsInUse.put(0, cpuReq);
 		SortedSet<Vm> priority0Vms = new TreeSet<Vm>();
 		priority0Vms.add(vm0);
 		priorityToVms.put(0, priority0Vms);
 		
 		// priority 1
-		GoogleVm vm1 = new GoogleVm(1, 1, cpuReq, 1.0, 0, 1);
+		GoogleVm vm1 = new GoogleVm(1, 1, cpuReq, 1.0, 0, 1, 0);
 		priorityToMipsInUse.put(1, cpuReq);
 		SortedSet<Vm> priority1Vms = new TreeSet<Vm>();
 		priority1Vms.add(vm1);
@@ -180,7 +180,7 @@ public class GoogleHostTest {
 		Assert.assertEquals(0, host1.getPriorityToVms().get(1).size());
 		
 		// creating vm0 (priority 0)
-		GoogleVm vm0 = new GoogleVm(1, 1, cpuReq, 1.0, 0, 0);
+		GoogleVm vm0 = new GoogleVm(1, 1, cpuReq, 1.0, 0, 0, 0);
 		
 		Assert.assertTrue(host1.vmCreate(vm0));
 
@@ -196,7 +196,7 @@ public class GoogleHostTest {
 		Assert.assertEquals(100 - cpuReq, host1.getAvailableMips(),ACCEPTABLE_DIFFERENCE);
 		
 		// creating vm1 (priority 1)
-		GoogleVm vm1 = new GoogleVm(2, 1, cpuReq, 1.0, 0, 1);
+		GoogleVm vm1 = new GoogleVm(2, 1, cpuReq, 1.0, 0, 1, 0);
 		
 		Assert.assertTrue(host1.vmCreate(vm1));
 
@@ -222,8 +222,8 @@ public class GoogleHostTest {
 
 		double cpuReq = 1.0;
 		
-		GoogleVm vm0 = new GoogleVm(1, 1, cpuReq, 1.0, 0, 0);
-		GoogleVm vm1 = new GoogleVm(2, 1, cpuReq, 1.0, 0, 1);
+		GoogleVm vm0 = new GoogleVm(1, 1, cpuReq, 1.0, 0, 0, 0);
+		GoogleVm vm1 = new GoogleVm(2, 1, cpuReq, 1.0, 0, 1, 0);
 
 		Assert.assertTrue(host1.vmCreate(vm0));
 		Assert.assertTrue(host1.vmCreate(vm1));
@@ -282,9 +282,9 @@ public class GoogleHostTest {
 
 		for (int id = 0; id < totalVms; id++) {
 			if (id % 2 == 0) {
-				host1.vmCreate(new GoogleVm(id, 1, cpuReq, 1.0, 0, 0));
+				host1.vmCreate(new GoogleVm(id, 1, cpuReq, 1.0, 0, 0, 0));
 			} else {
-				host1.vmCreate(new GoogleVm(id, 1, cpuReq, 1.0, 0, 1));
+				host1.vmCreate(new GoogleVm(id, 1, cpuReq, 1.0, 0, 1, 0));
 			}
 		}
 
@@ -302,19 +302,19 @@ public class GoogleHostTest {
 		
 		// checking if is suitable for priority 1
 		for (int requiredMips = 1; requiredMips <= freeCapacity; requiredMips++) {
-			Assert.assertTrue(host1.isSuitableForVm(new GoogleVm(100, 1, requiredMips, 1.0, 0, 1)));
+			Assert.assertTrue(host1.isSuitableForVm(new GoogleVm(100, 1, requiredMips, 1.0, 0, 1, 0)));
 		}
 
-		Assert.assertFalse(host1.isSuitableForVm(new GoogleVm(100, 1, freeCapacity + 1, 1.0, 0, 1)));
+		Assert.assertFalse(host1.isSuitableForVm(new GoogleVm(100, 1, freeCapacity + 1, 1.0, 0, 1, 0)));
 
 		// checking if is suitable for priority 0
 		for (int requiredMips = 1; requiredMips <= freeCapacity
 				+ (totalVms / 2); requiredMips++) {
-			Assert.assertTrue(host1.isSuitableForVm(new GoogleVm(100, 1, requiredMips, 1.0, 0, 0)));
+			Assert.assertTrue(host1.isSuitableForVm(new GoogleVm(100, 1, requiredMips, 1.0, 0, 0, 0)));
 		}
 
 		Assert.assertFalse(host1.isSuitableForVm(new GoogleVm(100, 1,
-				freeCapacity + (totalVms / 2) + 1, 1.0, 0, 0)));
+				freeCapacity + (totalVms / 2) + 1, 1.0, 0, 0, 0)));
 	}
 	
 	@Test
@@ -329,9 +329,9 @@ public class GoogleHostTest {
 
 		for (int id = 0; id < 20; id++) {
 			if (id % 2 == 0) {
-				priority0Vms.add(new GoogleVm(id, 1, cpuReq, 1.0, 0, 0));
+				priority0Vms.add(new GoogleVm(id, 1, cpuReq, 1.0, 0, 0, 0));
 			} else {
-				priority1Vms.add(new GoogleVm(id, 1, cpuReq, 1.0, 0, 1));
+				priority1Vms.add(new GoogleVm(id, 1, cpuReq, 1.0, 0, 1, 0));
 			}			
 		}
 		

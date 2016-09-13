@@ -10,10 +10,11 @@ public class GoogleTaskState {
 	private double submitTime;
 	private int status;
 	private double finishTime;
+	private int priority;
 
 	public GoogleTaskState(int taskId, int resourceId, double cpuReq,
 			double submitTime, double startTime, double finishTime, double runtime,
-			int status) {
+			int status, int priority) {
 		this.taskId = taskId;
 		this.resourceId = resourceId;
 		this.cpuReq = cpuReq;
@@ -22,6 +23,7 @@ public class GoogleTaskState {
 		this.finishTime = finishTime;
 		this.runtime = runtime;
 		this.status = status;
+		this.priority = priority;
 	}
 
 	public int getTaskId() {
@@ -55,5 +57,9 @@ public class GoogleTaskState {
 	public double getFinishTime() {
 		return finishTime;
 	}
-	
+
+	public int getPriority() {
+		return priority;
+	}
+		
 }

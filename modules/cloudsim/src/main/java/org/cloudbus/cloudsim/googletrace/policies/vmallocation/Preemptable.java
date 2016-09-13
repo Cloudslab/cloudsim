@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.googletrace.policies.vmallocation;
 
-import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.googletrace.GoogleVm;
 
 /**
  * TODO
@@ -10,5 +10,5 @@ import org.cloudbus.cloudsim.Vm;
  */
 public interface Preemptable {
 
-	public boolean preempt(Vm vm);
+	public boolean preempt(GoogleVm vm);
 }

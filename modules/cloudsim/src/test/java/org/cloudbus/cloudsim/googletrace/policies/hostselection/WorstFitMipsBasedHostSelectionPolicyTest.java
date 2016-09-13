@@ -75,13 +75,13 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
 
 
         // creating Vm's
-        vm1000 = new GoogleVm(1, 1, 1000, 0, 0, 0);
-        vm500 = new GoogleVm(2, 1, 500, 0, 0, 0);
-        vm250 = new GoogleVm(3, 1, 250, 0, 0, 0);
-        vm125 = new GoogleVm(4, 1, 125, 0, 0, 0);
-        vm62 = new GoogleVm(5, 1, 62.5, 0, 0, 0);
-        vm0 = new GoogleVm(6, 1, 0, 0, 0, 0);
-        vm1200 = new GoogleVm(7, 1, 1200, 0, 0, 0);
+        vm1000 = new GoogleVm(1, 1, 1000, 0, 0, 0, 0);
+        vm500 = new GoogleVm(2, 1, 500, 0, 0, 0, 0);
+        vm250 = new GoogleVm(3, 1, 250, 0, 0, 0, 0);
+        vm125 = new GoogleVm(4, 1, 125, 0, 0, 0, 0);
+        vm62 = new GoogleVm(5, 1, 62.5, 0, 0, 0, 0);
+        vm0 = new GoogleVm(6, 1, 0, 0, 0, 0, 0);
+        vm1200 = new GoogleVm(7, 1, 1200, 0, 0, 0, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)

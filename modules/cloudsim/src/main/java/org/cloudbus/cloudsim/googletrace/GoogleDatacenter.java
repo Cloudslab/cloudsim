@@ -17,7 +17,6 @@ import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
@@ -34,8 +33,8 @@ public class GoogleDatacenter extends Datacenter {
 
 	PreemptableVmAllocationPolicy vmAllocationPolicy;
 	
-	private SortedSet<Vm> vmsRunning = new TreeSet<Vm>();
-	private SortedSet<Vm> vmsForScheduling = new TreeSet<Vm>();	
+	private SortedSet<GoogleVm> vmsRunning = new TreeSet<GoogleVm>();
+	private SortedSet<GoogleVm> vmsForScheduling = new TreeSet<GoogleVm>();	
 	
 	public GoogleDatacenter(
 			String name,
@@ -60,20 +59,51 @@ public class GoogleDatacenter extends Datacenter {
 	 */
 	@Override
 	protected void processVmCreate(SimEvent ev, boolean ack) {
-		Vm vm = (Vm) ev.getData();
+		GoogleVm vm = (GoogleVm) ev.getData();
 
 		allocateHostForVm(ack, vm);
 	}
 
-	private void allocateHostForVm(boolean ack, Vm vm) {
+	private void allocateHostForVm(boolean ack, GoogleVm vm) {
 		GoogleHost host = (GoogleHost) getVmAllocationPolicy().selectHost(vm);	
 		
+		boolean result = tryingAllocateOnHost(vm, host);
+
+		if (ack) {
+			sendingAck(vm, result);
+		}
+		
+		if (result) {
+			getVmsRunning().add(vm);
+			vm.setStartExec(CloudSim.clock());
+			
+			if (vm.isBeingInstantiated()) {
+				vm.setBeingInstantiated(false);
+			}
+			
+			// We don't need to update the vm processing because there aren't cloudlets running in the vm
+//			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
+//					.getAllocatedMipsForVm(vm));
+			
+			getVmsForScheduling().remove(vm);
+			
+			double remainingTime = vm.getRuntime() - vm.getActualRuntime(CloudSim.clock());
+			Log.printConcatLine(CloudSim.clock(), ": Trying to destroy the VM #",
+					vm.getId(), " in ", remainingTime, " microseconds.");
+			send(getId(), remainingTime, CloudSimTags.VM_DESTROY_ACK, vm);			
+			
+		}
+		
+
+	}
+
+	private boolean tryingAllocateOnHost(GoogleVm vm, GoogleHost host) {
 		if (host == null && !getVmsForScheduling().contains(vm)) {
 			Log.printConcatLine(CloudSim.clock(),
 					": There is not resource to allocate VM #" + vm.getId()
 							+ " now, it will be tryed in the future.");
 			getVmsForScheduling().add(vm);
-			return;
+			return false;
 		}
 		
 		// trying to allocate
@@ -81,108 +111,99 @@ public class GoogleDatacenter extends Datacenter {
 
 		if (!result) {
 			Log.printConcatLine(CloudSim.clock(),
-					": There is not resource to allocate VM #" + vm.getUid()
+					": There is not resource to allocate VM #" + vm.getId()
 							+ " right now.");
 			
-			Vm vmToPreempt = host.nextVmForPreempting();
+			GoogleVm vmToPreempt = (GoogleVm) host.nextVmForPreempting();
 			if (vmToPreempt != null) {
 				Log.printConcatLine(CloudSim.clock(),
-						": Trying to preempt VM #" + vmToPreempt.getUid()
-								+ " to allocate VM #" + vm.getUid());
+						": Trying to preempt VM #" + vmToPreempt.getId()
+								+ " (priority " + vmToPreempt.getPriority()
+								+ ") to allocate VM #" + vm.getId()
+								+ " (priority " + vm.getPriority() + ")");
 				getVmAllocationPolicy().preempt(vmToPreempt);
-				getVmsForScheduling().add(vmToPreempt);
 				getVmsRunning().remove(vmToPreempt);
-				allocateHostForVm(ack, vm);
+				getVmsForScheduling().add(vmToPreempt);
+				return tryingAllocateOnHost(vm, host);
 			} else if (!getVmsForScheduling().contains(vm)) {
 				Log.printConcatLine(CloudSim.clock(),
-						": There are not VMs to preempt. VM #" + vm.getUid()
+						": There are not VMs to preempt. VM #" + vm.getId()
 								+ " will be scheduled in the future.");
 				getVmsForScheduling().add(vm);
 			}
-			return;
 		}
-		
-//		if (!result && !getVmsForScheduling().contains(vm)) {
-//			Log.printConcatLine(CloudSim.clock(),
-//					": There is not resource to allocate VM #" + vm.getId()
-//							+ " now, it will be tryed in the future.");
-//			getVmsForScheduling().add(vm);
-//			return;
-//		}
-		
-		if (ack) {
-			int[] data = new int[3];
-			data[0] = getId();
-			data[1] = vm.getId();
+		return result;
+	}
 
-			if (result) {
-				data[2] = CloudSimTags.TRUE;
-			} else {
-				data[2] = CloudSimTags.FALSE;
-			}
-			send(vm.getUserId(), 0, CloudSimTags.VM_CREATE_ACK, data);
-		}
+	private void sendingAck(GoogleVm vm, boolean result) {
+		int[] data = new int[3];
+		data[0] = getId();
+		data[1] = vm.getId();
 
 		if (result) {
-			getVmsRunning().add(vm);
-
-			if (vm.isBeingInstantiated()) {
-				vm.setBeingInstantiated(false);
-			}
-
-			// We don't need to update the vm processing because there aren't cloudlets running in the vm
-//			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
-//					.getAllocatedMipsForVm(vm));
-			
-			getVmsForScheduling().remove(vm);
+			data[2] = CloudSimTags.TRUE;
+		} else {
+			data[2] = CloudSimTags.FALSE;
 		}
+		send(vm.getUserId(), 0, CloudSimTags.VM_CREATE_ACK, data);
 	}
 	
 	@Override
 	protected void processVmDestroy(SimEvent ev, boolean ack) {
-		Vm vm = (Vm) ev.getData();
-		Host host = vm.getHost();
-		getVmAllocationPolicy().deallocateHostForVm(vm);		
+		GoogleVm vm = (GoogleVm) ev.getData();
 		
-		if (ack) {
-			int[] data = new int[3];
-			data[0] = getId();
-			data[1] = vm.getId();
-			data[2] = CloudSimTags.TRUE;
-
-			sendNow(vm.getUserId(), CloudSimTags.VM_DESTROY_ACK, data);
-		}
-
-		getVmsRunning().remove(vm);
-		
-		if (!getVmsForScheduling().isEmpty()) {
-			double availableMips = host.getAvailableMips();
-			double mipsForRequestingNow = 0;
-			List<Vm> vmsToRequestNow = new ArrayList<Vm>();
-			
-			// choosing the vms to request now
-			for (Vm currentVm : new ArrayList<Vm>(getVmsForScheduling())) {
-				if (mipsForRequestingNow + currentVm.getMips() <= availableMips) {
-					mipsForRequestingNow += currentVm.getMips();
-					vmsToRequestNow.add(currentVm);
+		if (vm.achievedRuntime(CloudSim.clock())) {
+			if (getVmsRunning().remove(vm)) {		
+				Log.printConcatLine(CloudSim.clock(), ": VM #",
+						vm.getId(), " will be terminated.");
+				
+				Host host = vm.getHost();
+				getVmAllocationPolicy().deallocateHostForVm(vm);
+				
+				if (ack) {
+					sendNow(vm.getUserId(), CloudSimTags.VM_DESTROY_ACK, vm);
 				}
+							
+				if (!getVmsForScheduling().isEmpty()) {
+					tryingToAllocateVms(host);
+				}
+			} else {
+				Log.printConcatLine(CloudSim.clock(), ": VM #",
+						vm.getId(), " was terminated previously.");
 			}
-			
-			Log.printConcatLine(CloudSim.clock(), "Trying to Allocate "
-					+ vmsToRequestNow.size() + " VMs now.");
-			
-			// trying to allocate Host
-			for (Vm requestedVm : vmsToRequestNow) {
-				allocateHostForVm(true, requestedVm);				
+		} else {
+			Log.printConcatLine(CloudSim.clock(), ": VM #",
+					vm.getId(), " doesn't achieve the runtime yet.");
+		}		
+	}
+
+	private void tryingToAllocateVms(Host host) {
+		double availableMips = host.getAvailableMips();
+		double mipsForRequestingNow = 0;
+		List<GoogleVm> vmsToRequestNow = new ArrayList<GoogleVm>();
+		
+		// choosing the vms to request now
+		for (GoogleVm currentVm : new ArrayList<GoogleVm>(getVmsForScheduling())) {
+			if (mipsForRequestingNow + currentVm.getMips() <= availableMips) {
+				mipsForRequestingNow += currentVm.getMips();
+				vmsToRequestNow.add(currentVm);
 			}
+		}
+		
+		Log.printConcatLine(CloudSim.clock(), ": Trying to Allocate "
+				+ vmsToRequestNow.size() + " VMs now.");
+		
+		// trying to allocate Host
+		for (GoogleVm requestedVm : vmsToRequestNow) {
+			allocateHostForVm(false, requestedVm);				
 		}
 	}
 
-	public SortedSet<Vm> getVmsRunning() {
+	public SortedSet<GoogleVm> getVmsRunning() {
 		return vmsRunning;
 	}
 
-	public SortedSet<Vm> getVmsForScheduling() {
+	public SortedSet<GoogleVm> getVmsForScheduling() {
 		return vmsForScheduling;
 	}
 	

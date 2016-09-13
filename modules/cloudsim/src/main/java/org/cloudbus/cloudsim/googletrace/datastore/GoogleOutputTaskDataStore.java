@@ -39,7 +39,8 @@ public class GoogleOutputTaskDataStore extends GoogleDataStore {
 							+ "start_time REAL, "
 							+ "finish_time REAL, "
 							+ "runtime REAL, "
-							+ "status INTEGER, "							
+							+ "status INTEGER, "
+							+ "priority INTEGER, "
 							+ "PRIMARY KEY (cloudlet_id)"
 							+ ")");
 		} catch (Exception e) {
@@ -51,7 +52,7 @@ public class GoogleOutputTaskDataStore extends GoogleDataStore {
 	}
 	
 	private static final String INSERT_TASK_SQL = "INSERT INTO " + GOOGLE_TASK_TABLE_NAME
-			+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+			+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	public boolean addTaskList(List<GoogleTaskState> taskStates) {
 		if (taskStates == null) {
@@ -123,6 +124,7 @@ public class GoogleOutputTaskDataStore extends GoogleDataStore {
 		insertMemberStatement.setDouble(6, taskState.getFinishTime());
 		insertMemberStatement.setDouble(7, taskState.getRuntime());
 		insertMemberStatement.setInt(8, taskState.getStatus());
+		insertMemberStatement.setInt(9, taskState.getPriority());
 		insertMemberStatement.addBatch();
 	}
 	
@@ -145,7 +147,7 @@ public class GoogleOutputTaskDataStore extends GoogleDataStore {
 						.getInt("cloudlet_id"), rs.getInt("resource_id"), rs
 						.getDouble("cpu_req"), rs.getDouble("submit_time"), rs
 						.getDouble("start_time"), rs.getDouble("finish_time"),
-						rs.getDouble("runtime"), rs.getInt("status")));
+						rs.getDouble("runtime"), rs.getInt("status"), rs.getInt("priority")));
 			}
 			return taskStates;
 		} catch (SQLException e) {

@@ -2,17 +2,17 @@ package org.cloudbus.cloudsim.googletrace;
 
 public class GoogleTask {
 
-	private int id, schedulingClass;
+	private int id, priority;
 	private double submitTime, runtime, cpuReq, memReq, startTime, finishTime;
 	
 	public GoogleTask(int id, double submitTime, double runTime,
-			double cpuReq, double memReq, int schedulingClass) {
+			double cpuReq, double memReq, int priority) {
 		this.id= id;
 		this.submitTime = submitTime;
 		this.runtime = runTime;
 		this.cpuReq = cpuReq;
 		this.memReq = memReq;
-		this.schedulingClass = schedulingClass;
+		this.priority = priority;
 	}
 
 	public int getId() {
@@ -51,8 +51,8 @@ public class GoogleTask {
 		this.finishTime = finishTime;
 	}
 
-	public int getSchedulingClass() {
-		return schedulingClass;
+	public int getPriority() {
+		return priority;
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class GoogleTask {
 		GoogleTask that = (GoogleTask) o;
 
 		if (id != that.id) return false;
-		if (schedulingClass != that.schedulingClass) return false;
+		if (priority != that.priority) return false;
 		if (Double.compare(that.submitTime, submitTime) != 0) return false;
 		if (Double.compare(that.runtime, runtime) != 0) return false;
 		if (Double.compare(that.cpuReq, cpuReq) != 0) return false;
@@ -78,7 +78,7 @@ public class GoogleTask {
 		int result;
 		long temp;
 		result = id;
-		result = 31 * result + schedulingClass;
+		result = 31 * result + priority;
 		temp = Double.doubleToLongBits(submitTime);
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(runtime);
