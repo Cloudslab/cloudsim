@@ -287,6 +287,8 @@ public class PreemptableVmAllocationTest {
 		// deallocating VM1
 		preemptablePolicy.deallocateHostForVm(vm1);
 		Assert.assertNull(vm1.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm1), vm1.getHost());
+		Assert.assertNull(preemptablePolicy.getHost(vm1));
 		Assert.assertEquals(host1, vm2.getHost());
 		Assert.assertEquals(1, host1.getVmList().size());
 		Assert.assertEquals(0, host2.getVmList().size());
@@ -294,6 +296,8 @@ public class PreemptableVmAllocationTest {
 
 		// deallocationg VM2
 		preemptablePolicy.deallocateHostForVm(vm2);
+		Assert.assertEquals(preemptablePolicy.getHost(vm2), vm2.getHost());
+		Assert.assertNull(preemptablePolicy.getHost(vm2));
 		Assert.assertNull(vm2.getHost());
 		Assert.assertTrue(host1.getVmList().isEmpty());
 		Assert.assertEquals(0, preemptablePolicy.getVmTable().size());
@@ -334,15 +338,20 @@ public class PreemptableVmAllocationTest {
 
 		// checking
 		Assert.assertNull(vm1.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm1), vm1.getHost());
+		Assert.assertNull(preemptablePolicy.getHost(vm1));
 		Assert.assertEquals(0, host1.getVmList().size());
-		
-		Assert.assertEquals(host2, vm2.getHost());
+
+
 		Assert.assertEquals(1, host2.getVmList().size());
 		
 		Assert.assertEquals(1, preemptablePolicy.getVmTable().size());
 
 		// preempting
 		Assert.assertTrue(preemptablePolicy.preempt(vm2));
+		Assert.assertNull(vm2.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm2), vm2.getHost());
+		Assert.assertNull(preemptablePolicy.getHost(vm2));
 
 		// checking
 		Assert.assertNull(vm1.getHost());
@@ -466,10 +475,106 @@ public class PreemptableVmAllocationTest {
 		// trying preempt two Vms again
 		Assert.assertFalse(preemptablePolicy.preempt(vm1));
 		Assert.assertFalse(preemptablePolicy.preempt(vm2));
+	}
+
+	// *NEW*
+	@Test
+	public void testAllocateVMAtNullHost(){
+		GoogleVm vm1 = new GoogleVm(1, 1, 1.0, 1.0, 0, 0);
+
+		// mocking host selector
+		Mockito.when(hostSelector.select(sortedHosts, vm1)).thenReturn(null);
+
+		// checking
+		Assert.assertFalse(preemptablePolicy.allocateHostForVm(vm1));
+		Assert.assertNull(vm1.getHost());
+		Assert.assertEquals(0, host1.getVmList().size());
+		Assert.assertEquals(0, preemptablePolicy.getVmTable().size());
 
 
+	}
+
+	// *NEW//
+	@Test
+	public void testAllocateAtSpecificHost(){
+		GoogleVm vm1 = new GoogleVm(1, 1, 1.0, 1.0, 0, 0);
+		GoogleVm vm2 = new GoogleVm(2, 1, 1.0, 1.0, 0, 0);
+		GoogleVm vm3 = new GoogleVm(3, 1, 1.0, 1.0, 0, 0);
+		GoogleVm vm4 = new GoogleVm(4, 1, 1.0, 1.0, 0, 0);
+
+		// checking vm1 allocation at null host
+		Assert.assertFalse(preemptablePolicy.allocateHostForVm(vm1, null));
+		Assert.assertNull(vm1.getHost());
+		Assert.assertNull(preemptablePolicy.getHost(vm1));
+		Assert.assertEquals(0, host1.getVmList().size());
+		Assert.assertEquals(0, preemptablePolicy.getVmTable().size());
 
 
+		// checking vm1 allocation
+		Assert.assertTrue(preemptablePolicy.allocateHostForVm(vm1, host1));
+		Assert.assertEquals(host1, vm1.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm1), vm1.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm1), host1);
+		Assert.assertEquals(1, host1.getVmList().size());
+		Assert.assertEquals(1, preemptablePolicy.getVmTable().size());
+		Assert.assertEquals(host1, preemptablePolicy.getVmTable().get(vm1.getUid()));
+
+		// checking vm2 allocation
+		Assert.assertTrue(preemptablePolicy.allocateHostForVm(vm2, host1));
+		Assert.assertEquals(host1, vm2.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm2), vm2.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm2), host1);
+		Assert.assertEquals(2, host1.getVmList().size());
+		Assert.assertEquals(2, preemptablePolicy.getVmTable().size());
+		Assert.assertEquals(host1, preemptablePolicy.getVmTable().get(vm1.getUid()));
+		Assert.assertEquals(host1, preemptablePolicy.getVmTable().get(vm2.getUid()));
+
+		// checking vm3 allocation
+		Assert.assertTrue(preemptablePolicy.allocateHostForVm(vm3, host1));
+		Assert.assertEquals(host1, vm3.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm3), vm3.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm3), host1);
+		Assert.assertEquals(3, host1.getVmList().size());
+		Assert.assertEquals(0, host2.getVmList().size());
+		Assert.assertEquals(3, preemptablePolicy.getVmTable().size());
+		Assert.assertEquals(host1, preemptablePolicy.getVmTable().get(vm1.getUid()));
+		Assert.assertEquals(host1, preemptablePolicy.getVmTable().get(vm2.getUid()));
+		Assert.assertEquals(host1, preemptablePolicy.getVmTable().get(vm3.getUid()));
+
+
+		// checking vm4 allocation
+		Assert.assertTrue(preemptablePolicy.allocateHostForVm(vm4, host2));
+		Assert.assertEquals(host2, vm4.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm4), vm4.getHost());
+		Assert.assertEquals(preemptablePolicy.getHost(vm4), host2);
+		Assert.assertEquals(3, host1.getVmList().size());
+		Assert.assertEquals(1, host2.getVmList().size());
+		Assert.assertEquals(4, preemptablePolicy.getVmTable().size());
+		Assert.assertEquals(host1, preemptablePolicy.getVmTable().get(vm1.getUid()));
+		Assert.assertEquals(host1, preemptablePolicy.getVmTable().get(vm2.getUid()));
+		Assert.assertEquals(host1, preemptablePolicy.getVmTable().get(vm3.getUid()));
+		Assert.assertEquals(host2, preemptablePolicy.getVmTable().get(vm4.getUid()));
+	}
+
+	// *NEW*
+	@Test
+	public void testGetHostByUserId(){
+		GoogleVm vm1 = new GoogleVm(1, 1, 1.0, 1.0, 0, 0);
+		GoogleVm vm2 = new GoogleVm(2, 1, 1.0, 1.0, 0, 0);
+		GoogleVm vm3 = new GoogleVm(3, 2, 1.0, 1.0, 0, 0);
+		GoogleVm vm4 = new GoogleVm(4, 3, 1.0, 1.0, 0, 0);
+
+		preemptablePolicy.allocateHostForVm(vm1, host1);
+		preemptablePolicy.allocateHostForVm(vm2, host1);
+		preemptablePolicy.allocateHostForVm(vm3, host1);
+		preemptablePolicy.allocateHostForVm(vm4, host2);
+
+		Assert.assertEquals(host1, preemptablePolicy.getHost(1, 1));
+		Assert.assertEquals(host1, preemptablePolicy.getHost(2, 1));
+		Assert.assertEquals(host1, preemptablePolicy.getHost(3, 2));
+		Assert.assertEquals(host2, preemptablePolicy.getHost(4, 3));
+		Assert.assertNull(preemptablePolicy.getHost(5, 3));
+		Assert.assertNull(preemptablePolicy.getHost(2, 4));
 
 	}
 
