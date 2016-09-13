@@ -45,7 +45,10 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 			return false;
 		}
 		vm.preempt(CloudSim.clock());
+		// just to update the sorted set
+		getSortedHosts().remove(host);
 		host.vmDestroy(vm);
+		getSortedHosts().add(host);
 		return true;
 	}
 
@@ -56,7 +59,11 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 			return false;
 		}
 		
+		// just to update the sorted set
+		getSortedHosts().remove(host);
 		boolean result = host.vmCreate(vm);
+		getSortedHosts().add(host);
+		
 		if (result) {
 			getVmTable().put(vm.getUid(), host);
 		}
@@ -68,7 +75,11 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 		if (host == null) {
 			return false;
 		}
+		// just to update the sorted set
+		getSortedHosts().remove(host);
 		boolean result = host.vmCreate(vm);
+		getSortedHosts().add(host);
+		
 		if (result) {
 			getVmTable().put(vm.getUid(), host);
 		}
@@ -87,6 +98,9 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 		Host host = getVmTable().remove(vm.getUid());
 		if (host != null) {
 			host.vmDestroy(vm);
+			// just to update the sorted set
+			getSortedHosts().remove(host);
+			getSortedHosts().add(host);
 		}
 	}
 

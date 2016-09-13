@@ -1,5 +1,6 @@
 package org.cloudbus.cloudsim.googletrace;
 
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmScheduler;
@@ -23,6 +24,11 @@ public class VmSchedulerMipsBased extends VmScheduler{
      */
     public VmSchedulerMipsBased(List<? extends Pe> pelist) {
         super(pelist);
+        double availableMips = 0;
+        for (Pe pe : pelist) {
+			availableMips += pe.getPeProvisioner().getMips();
+		}
+        setAvailableMips(availableMips);
         setTotalMips(getAvailableMips());
     }
 
@@ -55,6 +61,15 @@ public class VmSchedulerMipsBased extends VmScheduler{
         }
 
     }
+    
+    @Override
+	public double getPeCapacity() {
+		if (getPeList() == null) {
+			Log.printLine("Pe list is empty");
+			return 0;
+		}
+		return getPeList().get(0).getPeProvisioner().getMips();
+	}
 
     @Override
     public void deallocatePesForVm(Vm vm) {

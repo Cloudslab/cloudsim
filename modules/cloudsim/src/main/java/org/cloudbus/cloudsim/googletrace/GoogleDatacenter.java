@@ -98,11 +98,13 @@ public class GoogleDatacenter extends Datacenter {
 	}
 
 	private boolean tryingAllocateOnHost(GoogleVm vm, GoogleHost host) {
-		if (host == null && !getVmsForScheduling().contains(vm)) {
+		if (host == null) {
 			Log.printConcatLine(CloudSim.clock(),
 					": There is not resource to allocate VM #" + vm.getId()
 							+ " now, it will be tryed in the future.");
-			getVmsForScheduling().add(vm);
+			if (!getVmsForScheduling().contains(vm)) {
+				getVmsForScheduling().add(vm);
+			}
 			return false;
 		}
 		
