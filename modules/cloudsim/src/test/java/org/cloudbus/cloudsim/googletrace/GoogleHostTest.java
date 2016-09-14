@@ -109,7 +109,7 @@ public class GoogleHostTest {
 		Map<Integer, Double> priorityToMipsInUse = new HashMap<Integer, Double>();
 		Map<Integer, SortedSet<Vm>> priorityToVms = new HashMap<Integer, SortedSet<Vm>>();
 		double cpuReq = 1.0;
-		
+
 		//priority 0
 		GoogleVm vm0 = new GoogleVm(1, 1, cpuReq, 1.0, 0, 0, 0);
 		priorityToMipsInUse.put(0, cpuReq);
@@ -128,7 +128,10 @@ public class GoogleHostTest {
 		peList1.add(new Pe(0, new PeProvisionerSimple(100)));
 		GoogleHost host1 = new GoogleHost(1, peList1,
 				new VmSchedulerMipsBased(peList1), 2);
-		
+
+		//host is empty
+		Assert.assertNull(host1.nextVmForPreempting());
+
 		host1.setPriorityToInUseMips(priorityToMipsInUse);
 		host1.setPriorityToVms(priorityToVms);
 		
@@ -161,6 +164,13 @@ public class GoogleHostTest {
 
 		// preempting
 		Assert.assertEquals(vm0, host1.nextVmForPreempting());
+
+		// removing all vms
+		host1.vmDestroy(vm0);
+		host1.vmDestroy(vm1);
+
+		//host is empty
+		Assert.assertNull(host1.nextVmForPreempting());
 	}
 	
 	@Test
@@ -316,7 +326,59 @@ public class GoogleHostTest {
 		Assert.assertFalse(host1.isSuitableForVm(new GoogleVm(100, 1,
 				freeCapacity + (totalVms / 2) + 1, 1.0, 0, 0, 0)));
 	}
-	
+
+	@Test
+	public void testIsSuitableFor2(){
+
+		//testing with double
+		double cpuReq = 1.0;
+
+		int totalVms = 20;
+		double freeCapacity = 0.5;
+
+		List<Pe> peList1 = new ArrayList<Pe>();
+		peList1.add(new Pe(0, new PeProvisionerSimple(totalVms + freeCapacity)));
+		GoogleHost host1 = new GoogleHost(1, peList1, new VmSchedulerMipsBased(
+				peList1), 2);
+
+		for (int id = 0; id < totalVms; id++) {
+			if (id % 2 == 0) {
+				host1.vmCreate(new GoogleVm(id, 1, cpuReq, 1.0, 0, 0, 0));
+			} else {
+				host1.vmCreate(new GoogleVm(id, 1, cpuReq, 1.0, 0, 1, 0));
+			}
+		}
+
+		// checking
+		Assert.assertEquals(2, host1.getPriorityToInUseMips().size());
+		Assert.assertEquals(10 * cpuReq, host1.getPriorityToInUseMips().get(0),
+				ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(10 * cpuReq, host1.getPriorityToInUseMips().get(1),
+				ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(2, host1.getPriorityToVms().size());
+		Assert.assertEquals(10, host1.getPriorityToVms().get(0).size());
+		Assert.assertEquals(10, host1.getPriorityToVms().get(1).size());
+
+		Assert.assertEquals(freeCapacity, host1.getAvailableMips(), ACCEPTABLE_DIFFERENCE);
+
+		// checking if is suitable for priority 1
+		for (int requiredMips = 1; requiredMips <= freeCapacity; requiredMips++) {
+			Assert.assertTrue(host1.isSuitableForVm(new GoogleVm(100, 1, requiredMips, 1.0, 0, 1, 0)));
+		}
+
+		Assert.assertFalse(host1.isSuitableForVm(new GoogleVm(100, 1, freeCapacity + 1, 1.0, 0, 1, 0)));
+
+		// checking if is suitable for priority 0
+		for (int requiredMips = 1; requiredMips <= freeCapacity
+				+ (totalVms / 2); requiredMips++) {
+			Assert.assertTrue(host1.isSuitableForVm(new GoogleVm(100, 1, requiredMips, 1.0, 0, 0, 0)));
+		}
+
+		Assert.assertFalse(host1.isSuitableForVm(new GoogleVm(100, 1,
+				freeCapacity + (totalVms / 2) + 1, 1.0, 0, 0, 0)));
+
+	}
+
 	@Test
 	public void testGetMipsInUseByLessPriorityVms() {
 		// setting environment
@@ -362,5 +424,25 @@ public class GoogleHostTest {
 		// checking
 		Assert.assertEquals(0, host1.getMipsInUseByLessPriorityVms(1), ACCEPTABLE_DIFFERENCE);
 		Assert.assertEquals(10 * cpuReq, host1.getMipsInUseByLessPriorityVms(0), ACCEPTABLE_DIFFERENCE);
+	}
+
+	@Test
+	public void testHashCode(){
+
+		// creating hosts
+		List<Pe> peList1 = new ArrayList<Pe>();
+		peList1.add(new Pe(0, new PeProvisionerSimple(100)));
+		GoogleHost host1 = new GoogleHost(1, peList1, new VmSchedulerMipsBased(
+				peList1), 2);
+
+		GoogleHost host2 = new GoogleHost(2, peList1, new VmSchedulerMipsBased(
+				peList1), 2);
+
+		// assert expected hashcode
+		Assert.assertEquals(1, host1.hashCode());
+		Assert.assertEquals(2, host2.hashCode());
+
+		// comparing hashcode of different hosts
+		Assert.assertFalse(host1.hashCode() == host2.hashCode());
 	}
 }
