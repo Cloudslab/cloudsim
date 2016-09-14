@@ -50,6 +50,7 @@ public class GoogleVmTest {
 		Assert.assertEquals(1, vm2.compareTo(vm1));
 		
 	}
+
 	
 	@Test
 	public void testCompareTo4() {
@@ -76,6 +77,32 @@ public class GoogleVmTest {
 		Assert.assertEquals(1, vm2.compareTo(vm1));
 		
 	}
+
+	@Test
+	public void testCompareTo6() {
+		int submitTime = 0;
+		int priority = 0;
+
+		GoogleVm vm1 = new GoogleVm(1, 1, 1.0, 1.0, submitTime, priority + 1, 0);
+		GoogleVm vm2 = new GoogleVm(2, 1, 1.0, 1.0, submitTime, priority, 0);
+
+		Assert.assertEquals(1, vm1.compareTo(vm2));
+		Assert.assertEquals(-1, vm2.compareTo(vm1));
+
+	}
+
+	@Test
+	public void testCompareTo7() {
+		int submitTime = 0;
+		int priority = 0;
+
+		GoogleVm vm1 = new GoogleVm(1, 1, 1.0, 1.0, submitTime + 1, priority, 0);
+		GoogleVm vm2 = new GoogleVm(2, 1, 1.0, 1.0, submitTime, priority, 0);
+
+		Assert.assertEquals(1, vm1.compareTo(vm2));
+		Assert.assertEquals(-1, vm2.compareTo(vm1));
+	}
+
 	
 	@Test
 	public void testActualRuntime() {
@@ -180,16 +207,22 @@ public class GoogleVmTest {
 		// starting execution
 		vm1.setStartExec(time);
 		
-		// checking 
+		// checking (starting at time = 0 to time = 9)
 		for (int i = 0; i < runtime; i++) {
 			Assert.assertEquals(time, vm1.getActualRuntime(time), ACCEPTABLE_DIFFERENCE);
-			Assert.assertFalse(vm1.achievedRuntime(time));			
+			Assert.assertFalse(vm1.achievedRuntime(time));
+			time++;
 		}
+
+		// checking time 10
+		Assert.assertEquals(runtime, vm1.getActualRuntime(time), ACCEPTABLE_DIFFERENCE);
+		Assert.assertTrue(vm1.achievedRuntime(time));
 		
 		Assert.assertEquals(runtime, vm1.getActualRuntime(runtime), ACCEPTABLE_DIFFERENCE);
 		Assert.assertTrue(vm1.achievedRuntime(runtime));
 	}
 
+	@Test
 	public void testAchievedRuntimeWithPreemption() {
 		int submitTime = 0;
 		int priority = 0;
@@ -214,7 +247,7 @@ public class GoogleVmTest {
 			expectedActualRuntime++;
 		}
 		
-		// preempting
+		// preempting at time 10
 		vm1.preempt(time);
 	
 		// checking
@@ -223,14 +256,14 @@ public class GoogleVmTest {
 		Assert.assertFalse(vm1.achievedRuntime(time));
 			
 		// passing the time
-		time += 10;
+		time += 10; // time = 20
 		
-		// starting execution
+		// starting execution at time = 20
 		vm1.setStartExec(time);
 
 		// checking
 		Assert.assertEquals(time, vm1.getStartExec(), ACCEPTABLE_DIFFERENCE);
-		Assert.assertEquals(expectedActualRuntime, vm1.getActualRuntime(time), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(expectedActualRuntime, vm1.getActualRuntime(time), ACCEPTABLE_DIFFERENCE); // 20
 		Assert.assertFalse(vm1.achievedRuntime(time));
 
 		// passing the time and checking 
@@ -241,7 +274,10 @@ public class GoogleVmTest {
 			time++;
 		}
 		
-		Assert.assertEquals(runtime, vm1.getActualRuntime(time + 1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(runtime, vm1.getActualRuntime(time), ACCEPTABLE_DIFFERENCE);
+		Assert.assertTrue(vm1.achievedRuntime(time));
+
+		// asserting that Vm achieved runtime at current time + 1 too
 		Assert.assertTrue(vm1.achievedRuntime(time + 1));
 	}
 

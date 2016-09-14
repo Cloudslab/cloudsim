@@ -21,6 +21,7 @@ import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -31,6 +32,8 @@ import org.junit.Test;
 public class VmSchedulerMipsBasedTest {
 
     private static final double MIPS = 1000;
+
+    private static final double ACCEPTABLE_DIFERENCE = 0.00001;
 
     private VmSchedulerMipsBased vmScheduler;
 
@@ -240,43 +243,17 @@ public class VmSchedulerMipsBasedTest {
                 0);
         assertEquals(MIPS / 2 + MIPS / 8, vmScheduler.getTotalAllocatedMipsForVm(vm2), 0);
 
-        // List<Double> mipsShare3 = new ArrayList<Double>();
-        // mipsShare3.add(MIPS);
-        // mipsShare3.add(MIPS);
-        //
-        // assertTrue(vmScheduler.allocatePesForVm(vm3, mipsShare3));
-        //
-        // assertEquals(0, vmScheduler.getAvailableMips(), 0);
-        // assertEquals(0, vmScheduler.getMaxAvailableMips(), 0);
-        // assertEquals(MIPS / 4 - (MIPS / 4 + MIPS / 2 + MIPS / 8 + MIPS + MIPS - MIPS * 2) / 5,
-        // vmScheduler.getTotalAllocatedMipsForVm(vm1), 0);
-        // assertEquals(MIPS / 2 + MIPS / 8 - (MIPS / 4 + MIPS / 2 + MIPS / 8 + MIPS + MIPS - MIPS *
-        // 2) * 2 / 5, vmScheduler.getTotalAllocatedMipsForVm(vm2), 0);
-        // assertEquals(MIPS * 2 - (MIPS / 4 + MIPS / 2 + MIPS / 8 + MIPS + MIPS - MIPS * 2) * 2 /
-        // 5, vmScheduler.getTotalAllocatedMipsForVm(vm3), 0);
-        //
-        // vmScheduler.deallocatePesForVm(vm1);
-        //
-        // assertEquals(0, vmScheduler.getAvailableMips(), 0);
-        // assertEquals(0, vmScheduler.getMaxAvailableMips(), 0);
-        // assertEquals(MIPS / 2 + MIPS / 8 - (MIPS / 2 + MIPS / 8 + MIPS + MIPS - MIPS * 2) * 2 /
-        // 4, vmScheduler.getTotalAllocatedMipsForVm(vm2), 0);
-        // assertEquals(MIPS * 2 - (MIPS / 2 + MIPS / 8 + MIPS + MIPS - MIPS * 2) * 2 / 4,
-        // vmScheduler.getTotalAllocatedMipsForVm(vm3), 0);
-        //
-        // vmScheduler.deallocatePesForVm(vm3);
-        //
-        // assertEquals(MIPS * 2 - MIPS / 2 - MIPS / 8, vmScheduler.getAvailableMips(), 0);
-        // assertEquals(MIPS * 2 - MIPS / 2 - MIPS / 8, vmScheduler.getMaxAvailableMips(), 0);
-        // assertEquals(0, vmScheduler.getTotalAllocatedMipsForVm(vm3), 0);
-        //
-        // vmScheduler.deallocatePesForVm(vm2);
-
         vmScheduler.deallocatePesForAllVms();
 
         assertEquals(PeList.getTotalMips(peList), vmScheduler.getAvailableMips(), 0);
         assertEquals(PeList.getTotalMips(peList), vmScheduler.getMaxAvailableMips(), 0);
         assertEquals(0, vmScheduler.getTotalAllocatedMipsForVm(vm2), 0);
+    }
+
+    @Test
+    public void testMipsOfVMGreaterThanTotalPECapacity(){
+        Vm vm9 = new Vm(8, 0, MIPS+1, 1, 0, 0, 0, "", new CloudletSchedulerTimeShared());
+        Assert.assertFalse(googleVMScheduler.allocatePesForVm(vm9, vm9.getCurrentRequestedMips()));
     }
 
 }
