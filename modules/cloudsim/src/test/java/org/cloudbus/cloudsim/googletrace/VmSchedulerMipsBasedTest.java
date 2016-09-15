@@ -27,6 +27,7 @@ import org.junit.Test;
 public class VmSchedulerMipsBasedTest {
 
     private static final double MIPS = 1000;
+    private static final double ACCEPTABLE_DIFFERENCE = 0.00000001;
 
     private VmSchedulerMipsBased vmScheduler;
 
@@ -204,6 +205,7 @@ public class VmSchedulerMipsBasedTest {
         assertEquals(1000, googleVMScheduler.getTotalMips(), 0);
         assertEquals(0, googleVMScheduler.getMipsInUse(), 0);
         assertEquals(1000, googleVMScheduler.getAvailableMips(), 0);
+
     }
 
     @Test
@@ -271,5 +273,38 @@ public class VmSchedulerMipsBasedTest {
         assertEquals(PeList.getTotalMips(peList), vmScheduler.getAvailableMips(), 0);
         assertEquals(PeList.getTotalMips(peList), vmScheduler.getMaxAvailableMips(), 0);
         assertEquals(0, vmScheduler.getTotalAllocatedMipsForVm(vm2), 0);
+
+        // test allocate Vm with requested mips is bigger than capacity
+        Vm vm9 = new Vm(9, 0, MIPS + 0.1, 1, 0, 0, 0, "", new CloudletSchedulerTimeShared());
+
+        Assert.assertFalse(vmScheduler.allocatePesForVm(vm9, vm9.getCurrentRequestedMips()));
+        assertEquals(PeList.getTotalMips(peList), vmScheduler.getAvailableMips(), 0);
+        assertEquals(PeList.getTotalMips(peList), vmScheduler.getMaxAvailableMips(), 0);
+
+        Assert.assertFalse(googleVMScheduler.allocatePesForVm(vm9, vm9.getCurrentRequestedMips()));
+        assertEquals(PeList.getTotalMips(googlePeList), googleVMScheduler.getAvailableMips(), 0);
+        assertEquals(PeList.getTotalMips(googlePeList), googleVMScheduler.getMaxAvailableMips(), 0);
+
+
+        // test allocate vms in limit of capacity
+        Vm vm10 = new Vm(10, 0, 0.1, 1, 0, 0, 0, "", new CloudletSchedulerTimeShared());
+        Vm vm11 = new Vm(11, 0, MIPS - 0.1, 1, 0, 0, 0, "", new CloudletSchedulerTimeShared());
+
+        Assert.assertTrue(googleVMScheduler.allocatePesForVm(vm11, vm11.getCurrentRequestedMips()));
+        Assert.assertEquals(MIPS - (MIPS - 0.1), googleVMScheduler.getMaxAvailableMips(), ACCEPTABLE_DIFFERENCE);
+        Assert.assertEquals(MIPS - (MIPS - 0.1), googleVMScheduler.getAvailableMips(), ACCEPTABLE_DIFFERENCE);
+
+        Assert.assertTrue(googleVMScheduler.allocatePesForVm(vm10, vm10.getCurrentRequestedMips()));
+        assertEquals(0, googleVMScheduler.getAvailableMips(), ACCEPTABLE_DIFFERENCE);
+        assertEquals(0, googleVMScheduler.getMaxAvailableMips(), ACCEPTABLE_DIFFERENCE);
+
+    }
+
+    @Test
+    public void testGetPeCapacity(){
+
+       Assert.assertEquals(1000, vmScheduler.getPeCapacity(), ACCEPTABLE_DIFFERENCE);
+       Assert.assertEquals(1000, googleVMScheduler.getPeCapacity(), ACCEPTABLE_DIFFERENCE);
+
     }
 }
