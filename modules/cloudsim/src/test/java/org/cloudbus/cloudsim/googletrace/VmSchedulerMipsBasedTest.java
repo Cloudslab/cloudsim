@@ -26,8 +26,7 @@ import org.junit.Test;
 
 
 /**
- * @author Anton Beloglazov
- * @since CloudSim Toolkit 2.0
+ * @author Alessandro Lia Fook and João Victor Mafra
  */
 public class VmSchedulerMipsBasedTest {
 

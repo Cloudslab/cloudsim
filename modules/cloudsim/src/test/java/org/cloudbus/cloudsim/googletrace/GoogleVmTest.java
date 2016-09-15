@@ -345,5 +345,18 @@ public class GoogleVmTest {
 
 		Assert.assertEquals(vm1, sortedVms.first());
 		Assert.assertEquals(vm5, sortedVms.last());
+
+		// changing the first element
+		GoogleVm vm6 = new GoogleVm(4, 1, 1.0, 1.0, submitTime - 1, priority, 0);
+		sortedVms.add(vm6);
+		Assert.assertEquals(6, sortedVms.size());
+		Assert.assertTrue(sortedVms.contains(vm1));
+		Assert.assertTrue(sortedVms.contains(vm2));
+		Assert.assertTrue(sortedVms.contains(vm3));
+		Assert.assertTrue(sortedVms.contains(vm4));
+		Assert.assertTrue(sortedVms.contains(vm5));
+		Assert.assertTrue(sortedVms.contains(vm6));
+		Assert.assertEquals(vm6, sortedVms.first());
+		Assert.assertEquals(vm5, sortedVms.last());
 	}
 }

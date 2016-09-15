@@ -16,10 +16,11 @@ import junit.framework.Assert;
 import org.cloudbus.cloudsim.googletrace.GoogleTask;
 import org.cloudbus.cloudsim.googletrace.datastore.GoogleDataStore;
 import org.cloudbus.cloudsim.googletrace.datastore.GoogleInputTraceDataStore;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+
+/**
+ * @author Alessandro Lia Fook and João Victor Mafra
+ */
 
 public class GoogleInputTraceDataStoreTest {
 
@@ -29,8 +30,14 @@ public class GoogleInputTraceDataStoreTest {
 	private static String databaseFile = "inputTraceTest.sqlite3";
     private static String databaseURL = "jdbc:sqlite:" + databaseFile;
 
+	private static String databaseFile2 = "inputTraceTest_2.sqlite3";
+	private static String databaseURL2 = "jdbc:sqlite:" + databaseFile2;
+
+
+
 	private static double DEFAULT_RUNTIME = 1000;
 	private static Properties properties;
+	private static Properties properties2;
 	
 	@BeforeClass
 	public static void setUp() throws ClassNotFoundException, SQLException {
@@ -41,7 +48,9 @@ public class GoogleInputTraceDataStoreTest {
 	public void init() {
 		properties = new Properties();
 		properties.setProperty(GoogleInputTraceDataStore.DATABASE_URL_PROP, databaseURL);
-		
+
+		properties2 = new Properties();
+		properties2.setProperty(GoogleInputTraceDataStore.DATABASE_URL_PROP, databaseURL2);
 	}
 		
 	private static void createAndPopulateTestDatabase() throws ClassNotFoundException, SQLException {
@@ -92,7 +101,10 @@ public class GoogleInputTraceDataStoreTest {
 	@AfterClass
 	public static void tearDown() {
 		new File(databaseFile).delete();
+		new File(databaseFile2).delete();
 	}
+
+
 	
 	@Test
 	public void testGetMaxSubmitTime() throws Exception {
@@ -391,33 +403,51 @@ public class GoogleInputTraceDataStoreTest {
 		// inserting a second google task in time 1
 
 		Class.forName(GoogleDataStore.DATASTORE_SQLITE_DRIVER);
-		Connection connection = DriverManager.getConnection(databaseURL);
+		Connection connection2 = DriverManager.getConnection(databaseURL2);
 
-		if (connection != null) {
+		if (connection2 != null) {
+			// Creating the database
+			Statement statement = connection2.createStatement();
+			statement.execute("CREATE TABLE IF NOT EXISTS tasks("
+					+ "submitTime REAL, "
+					+ "jid REAL, "
+					+ "tid INTEGER, "
+					+ "user TEXT, "
+					+ "schedulingClass INTEGER, "
+					+ "priority INTEGER, "
+					+ "runtime REAL, "
+					+ "endTime REAL, "
+					+ "cpuReq REAL, "
+					+ "memReq REAL, "
+					+ "userClass TEXT" + ")");
+			statement.close();
+
 			String INSERT_CLOUDLET_SQL = "INSERT INTO tasks"
 					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			// populating the database
-			PreparedStatement insertMemberStatement = connection
-					.prepareStatement(INSERT_CLOUDLET_SQL);
-			insertMemberStatement.setDouble(1, getTimeInMicro(1)); // submit time
-			insertMemberStatement.setDouble(2, -1); // jid is not important for now
-			insertMemberStatement.setInt(3, -1); // tid is not important for now
-			insertMemberStatement.setNString(4, "user"); // user is not important for now
-			insertMemberStatement.setInt(5, -1); // scheduling class is not important for now
-			insertMemberStatement.setInt(6, -1); // priority is not important for now
-			insertMemberStatement.setDouble(7, DEFAULT_RUNTIME); // runtime
-			insertMemberStatement.setDouble(8, 1 + DEFAULT_RUNTIME); // endtime
-			insertMemberStatement.setDouble(9, 1); // cpuReq is not important for now
-			insertMemberStatement.setDouble(10, 1); // memReq is not important for now
-			insertMemberStatement.setNString(11, "userClass"); // userClass is not important for now
-			insertMemberStatement.execute();
-			connection.close();
+			for (int i = 8; i <= 9; i++) {
+				PreparedStatement insertMemberStatement = connection2
+						.prepareStatement(INSERT_CLOUDLET_SQL);
+				insertMemberStatement.setDouble(1, getTimeInMicro(1)); // submit time
+				insertMemberStatement.setDouble(2, -1); // jid is not important for now
+				insertMemberStatement.setInt(3, -1); // tid is not important for now
+				insertMemberStatement.setNString(4, "user"); // user is not important for now
+				insertMemberStatement.setInt(5, -1); // scheduling class is not important for now
+				insertMemberStatement.setInt(6, i); // priority equals 7 and 8 will be converted to priority 1 and 2, respectively
+				insertMemberStatement.setDouble(7, DEFAULT_RUNTIME); // runtime
+				insertMemberStatement.setDouble(8, i + DEFAULT_RUNTIME); // endtime
+				insertMemberStatement.setDouble(9, 1); // cpuReq is not important for now
+				insertMemberStatement.setDouble(10, 1); // memReq is not important for now
+				insertMemberStatement.setNString(11, "userClass"); // userClass is not important for now
+				insertMemberStatement.execute();
+			}
+			connection2.close();
 		}
 
 
 		GoogleInputTraceDataStore inputTrace = new GoogleInputTraceDataStore(
-				properties);
+				properties2);
 
 		// tests if we have 0 task at time 0
 		Assert.assertEquals(0,
@@ -428,15 +458,16 @@ public class GoogleInputTraceDataStoreTest {
 		Assert.assertEquals(2,
 				inputTrace.getGoogleTaskInterval(1, getTimeInMicro(1)).size());
 
-		for (int i = 2; i <= NUMBER_OF_TASKS; i++) {
-			Assert.assertEquals(1,
-					inputTrace.getGoogleTaskInterval(i, getTimeInMicro(1)).size());
-		}
 
 
-		// tests if we have 101 tasks in total now
-		Assert.assertEquals(101,
+		// tests if we have 2 tasks in total
+		Assert.assertEquals(2,
 				inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1)).size());
+
+		// testing priority
+		List<GoogleTask> lista = inputTrace.getGoogleTaskInterval(0, getTimeInMicro(NUMBER_OF_TASKS + 1));
+		Assert.assertEquals(1, lista.get(0).getPriority());
+		Assert.assertEquals(0, lista.get(1).getPriority());
 
 	}
 
