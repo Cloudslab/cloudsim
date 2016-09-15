@@ -27,9 +27,12 @@ public class WorstFitMipsBasedHostSelectionPolicy implements HostSelectionPolicy
 		 * to smaller available capacity
 		 */
 		if (!hosts.isEmpty()) {
-			Host firstHost = hosts.first();
-			if (firstHost.isSuitableForVm(vm)) {
-				return firstHost;
+			for (Host firstHost : hosts) {
+//				Host firstHost = hosts.first();
+				if (firstHost.isSuitableForVm(vm)) {
+					return firstHost;
+				}
+				
 			}
 		}
 		return null;

@@ -85,37 +85,37 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void TestVmEqualsNull() {
+    public void testVmEqualsNull() {
     	SortedSet<Host> hostList2 = new TreeSet<>();
         selectionPolicy.select(hostList, null);
         selectionPolicy.select(hostList2, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void TestHostListEqualsNull() {
+    public void testHostListEqualsNull() {
         selectionPolicy.select(null, vm1000);
     }
 
     @Test
-    public void TestHostListEmpty() {
+    public void testHostListEmpty() {
     	SortedSet<Host> hostList2 = new TreeSet<>();
         Assert.assertNull(selectionPolicy.select(hostList2, vm1000));
     }
 
 
     @Test
-    public void TestVmBiggerThanFirstHost() {
+    public void testVmBiggerThanFirstHost() {
         Assert.assertNull(selectionPolicy.select(hostList, vm1200));
     }
 
     @Test
-    public void TestVmMipsEqualsZero() {
+    public void testVmMipsEqualsZero() {
         Assert.assertEquals(host1.getId(), (selectionPolicy.select(hostList, vm0)).getId());
         Assert.assertEquals(host1.getId(), hostList.first().getId());
     }
 
     @Test
-    public void TestHostIsFull() {
+    public void testHostIsFull() {
     	SortedSet<Host> hostList2 = new TreeSet<>();
         // adding a single host in the list
         hostList2.add(host1);
@@ -134,7 +134,7 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
     }
 
     @Test
-    public void TestAllocatingModifyingFirstHost() {
+    public void testAllocatingModifyingFirstHost() {
 
         GoogleHost host = (GoogleHost) selectionPolicy.select(hostList, vm62);
 
@@ -158,7 +158,7 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
     }
 
     @Test
-    public void TestAllocatingMultiplesHosts(){
+    public void testAllocatingMultiplesHosts(){
 
         for (int i = 0; i < 6; i++){
             Host otherHost = selectionPolicy.select(hostList, vm1000);
@@ -186,5 +186,66 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
 
         otherHost = selectionPolicy.select(hostList, vm0);
         Assert.assertEquals(otherHost.getId(), host1.getId());
+    }
+    
+    @Test
+    public void testAllocatingVMsWhereFirstHostIsNotSuitable(){
+    	
+        //creating hosts
+        SortedSet<Host> hosts = new TreeSet<Host>();
+        
+        List<Pe> peList = new ArrayList<Pe>();
+        int mips = 1000;
+        peList.add(new Pe(0, new PeProvisionerSimple(mips))); 
+
+        Host host1 = new GoogleHost(1, peList, new VmSchedulerMipsBased(peList), 3);
+        hosts.add(host1);
+
+        Host host2 = new GoogleHost(2, peList, new VmSchedulerMipsBased(peList), 3);
+        hosts.add(host2);
+        
+        // creating a VM with priority 0
+        GoogleVm vm500P0 = new GoogleVm(1, 1, 500, 0, 0, 0, 0);
+        
+        Assert.assertEquals(host1, selectionPolicy.select(hosts, vm500P0));
+
+        // creating vm and updating host1
+        hosts.remove(host1);
+        host1.vmCreate(vm500P0);
+        hosts.add(host1);
+    	
+        // creating a VM with priority 2
+        GoogleVm vm700P2 = new GoogleVm(2, 1, 700, 0, 0, 2, 0);
+        
+        Assert.assertEquals(host2, selectionPolicy.select(hosts, vm700P2));
+
+        // creating vm and updating host2
+        hosts.remove(host2);
+        host2.vmCreate(vm700P2);
+        hosts.add(host2);
+
+        // creating a VM with priority 1
+        GoogleVm vm700P1 = new GoogleVm(3, 1, 700, 0, 0, 1, 0);
+        
+		/*
+		 * besides host1 is that with more available mips, only host2 is
+		 * suitable for vm with priority 1
+		 */
+        Assert.assertEquals(500, host1.getAvailableMips(), 0.0001);
+        Assert.assertEquals(300, host2.getAvailableMips(), 0.0001);
+        
+        Assert.assertEquals(host2, selectionPolicy.select(hosts, vm700P1));
+        
+        // creating a smaller VM with priority 1
+        GoogleVm vm300P1 = new GoogleVm(3, 1, 300, 0, 0, 1, 0);
+        
+		/*
+		 * In this case, host1 has enough resource to allocate the new VM and
+		 * will be return by the selector
+		 */
+        Assert.assertEquals(500, host1.getAvailableMips(), 0.0001);
+        Assert.assertEquals(300, host2.getAvailableMips(), 0.0001);
+        
+        Assert.assertEquals(host1, selectionPolicy.select(hosts, vm300P1));
     }
 }
