@@ -681,7 +681,7 @@ public abstract class SimEntity implements Cloneable {
 	 * @pre src >= 0
 	 * @pre dst >= 0
 	 */
-	private double getNetworkDelay(int src, int dst) {
+	protected double getNetworkDelay(int src, int dst) {
 		if (NetworkTopology.isNetworkEnabled()) {
 			return NetworkTopology.getDelay(src, dst);
 		}

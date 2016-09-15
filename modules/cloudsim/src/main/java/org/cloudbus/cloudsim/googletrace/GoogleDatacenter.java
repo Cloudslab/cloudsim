@@ -18,7 +18,6 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
-import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.googletrace.policies.vmallocation.PreemptableVmAllocationPolicy;
@@ -92,11 +91,39 @@ public class GoogleDatacenter extends Datacenter {
 			double remainingTime = vm.getRuntime() - vm.getActualRuntime(simulationTimeUtil.clock());
 			Log.printConcatLine(simulationTimeUtil.clock(), ": Trying to destroy the VM #",
 					vm.getId(), " in ", remainingTime, " microseconds.");
-			send(getId(), remainingTime, CloudSimTags.VM_DESTROY_ACK, vm);			
+			sendFirst(getId(), remainingTime, CloudSimTags.VM_DESTROY_ACK, vm);			
 			
 		}
-		
+	}
 
+	protected void sendFirst(int entityId, double delay, int cloudSimTag, Object data) {
+		if (entityId < 0) {
+			return;
+		}
+
+		// if delay is -ve, then it doesn't make sense. So resets to 0.0
+		if (delay < 0) {
+			delay = 0;
+		}
+
+		if (Double.isInfinite(delay)) {
+			throw new IllegalArgumentException(
+					"The specified delay is infinite value");
+		}
+
+		if (entityId < 0) {
+			Log.printConcatLine(getName(), ".send(): Error - "
+					+ "invalid entity id ", entityId);
+			return;
+		}
+
+		int srcId = getId();
+		if (entityId != srcId) {// only delay messages between different
+								// entities
+			delay += getNetworkDelay(srcId, entityId);
+		}
+
+		scheduleFirst(entityId, delay, cloudSimTag, data);
 	}
 
 	private boolean tryingAllocateOnHost(GoogleVm vm, GoogleHost host) {
