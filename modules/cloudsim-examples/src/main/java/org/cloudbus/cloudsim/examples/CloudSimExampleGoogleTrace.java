@@ -56,7 +56,7 @@ public class CloudSimExampleGoogleTrace {
 	 * Creates main() to run this example
 	 */
 	public static void main(String[] args) {
-//		Log.disable();
+		Log.disable();
 		Log.printLine("Starting CloudSimExample Google Trace ...");
 		System.out.println("Starting CloudSimExample Google Trace ...");
 
@@ -212,7 +212,7 @@ public class CloudSimExampleGoogleTrace {
 				+ " total capacity and " + numberOfHosts
 				+ " hosts, each one with " + mipsPerHost + " mips.");
 
-		List<Host> hostList = new ArrayList<Host>();
+		List<GoogleHost> hostList = new ArrayList<GoogleHost>();
 
 		for (int hostId = 0; hostId < numberOfHosts; hostId++) {
 			List<Pe> peList1 = new ArrayList<Pe>();
@@ -281,34 +281,54 @@ public class CloudSimExampleGoogleTrace {
 		GoogleTaskState googleTask;
 
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
+		System.out.println();
+		System.out.println("========== OUTPUT ==========");
+		System.out.println("Cloudlet ID" + indent + "STATUS" + indent
 				+ "Data center ID" + indent + "VM ID" + indent + indent
-				+ "Time" + indent + "Start Time" + indent + "Finish Time" + indent + indent + "Availability");
+				+ "Time" + indent + "Start Time" + indent + "Finish Time"+ indent + indent + "Priority" + indent + indent + "Availability");
 
-		DecimalFormat dft = new DecimalFormat("###.##");
-		double totalVmAvailability = 0;
+		DecimalFormat dft = new DecimalFormat("###.####");
+		double totalVm0Availability = 0;
+		int count0 =0;
+		double totalVm1Availability = 0;
+		int count1 =0;
+		double totalVm2Availability = 0;
+		int count2 =0;
+		
 		for (int i = 0; i < size; i++) {
 			googleTask = newList.get(i);
-			Log.print(indent + googleTask.getTaskId() + indent + indent);
+			System.out.println(indent + googleTask.getTaskId() + indent + indent);
 
 			if (googleTask.getStatus() == Cloudlet.SUCCESS) {
-				Log.print("SUCCESS");
+				System.out.println("SUCCESS");
 				
 				double vmAvailabilty = googleTask.getRuntime() / (googleTask.getFinishTime() - googleTask.getSubmitTime());
-				totalVmAvailability += vmAvailabilty;
+				if (googleTask.getPriority() == 0) {
+					totalVm0Availability += vmAvailabilty;
+					count0++;
+				} else if (googleTask.getPriority() == 1) {
+					totalVm1Availability += vmAvailabilty;
+					count1++;
+				} else {
+					totalVm2Availability += vmAvailabilty;
+					count2++;
+				}
 
-				Log.printLine(indent + indent + googleTask.getResourceId()
+				System.out.println(indent + indent + googleTask.getResourceId()
 						+ indent + indent + indent + googleTask.getTaskId()
 						+ indent + indent + indent + googleTask.getRuntime()
 						+ indent + indent + googleTask.getStartTime() + indent
 						+ indent + indent + googleTask.getFinishTime() + indent
+						+ indent + indent + googleTask.getPriority() + indent
 						+ indent + indent + dft.format(vmAvailabilty));
 			}
 		}
 		
-		Log.printLine("========== MEAN VM AVAILABILITY is " + dft.format((totalVmAvailability/size)) + " =========");
+		System.out.println("========== MEAN VM AVAILABILITY (priority 0) is " + dft.format((totalVm0Availability/count0)) + " =========");
+		System.out.println("========== MEAN VM AVAILABILITY (priority 1) is " + dft.format((totalVm1Availability/count1)) + " =========");
+		System.out.println("========== MEAN VM AVAILABILITY (priority 2) is " + dft.format((totalVm2Availability/count2)) + " =========");
+		
+		System.out.println("========== MEAN VM AVAILABILITY is " + dft.format(((totalVm0Availability + totalVm1Availability + totalVm2Availability)/size)) + " =========");
 
 	}
 }

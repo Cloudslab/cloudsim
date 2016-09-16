@@ -127,11 +127,7 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
                     " VMs stored now.");
             getFinishedTasks().removeAll(toStore);
         }
-
-        Log.printConcatLine(CloudSim.clock(), ": Currently there are "
-                + taskDataStore.getAllTasks().size()
-                + " tasks stored in the database.");
-
+        
         // creating next event if the are more events to be treated
         if (inputTraceDataStore.hasMoreEvents(getIntervalIndex(),
                 getIntervalSizeInMicro(getStoringIntervalSize()))) {

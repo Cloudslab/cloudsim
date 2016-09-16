@@ -2,8 +2,8 @@ package org.cloudbus.cloudsim.googletrace.policies.hostselection;
 
 import java.util.SortedSet;
 
-import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.googletrace.PriorityHostSkin;
 
 /**
  * TODO
@@ -13,7 +13,7 @@ import org.cloudbus.cloudsim.Vm;
 public class WorstFitMipsBasedHostSelectionPolicy implements HostSelectionPolicy {
 
 	@Override
-	public Host select(SortedSet<Host> hosts, Vm vm) {
+	public PriorityHostSkin select(SortedSet<PriorityHostSkin> hosts, Vm vm) {
 
 		if (hosts == null)
 			throw new IllegalArgumentException(
@@ -27,13 +27,13 @@ public class WorstFitMipsBasedHostSelectionPolicy implements HostSelectionPolicy
 		 * to smaller available capacity
 		 */
 		if (!hosts.isEmpty()) {
-			for (Host firstHost : hosts) {
-//				Host firstHost = hosts.first();
-				if (firstHost.isSuitableForVm(vm)) {
+//			for (PriorityHostSkin firstHost : hosts) {
+				PriorityHostSkin firstHost = hosts.first();
+				if (firstHost.getHost().isSuitableForVm(vm)) {
 					return firstHost;
 				}
 				
-			}
+//			}
 		}
 		return null;
 	}

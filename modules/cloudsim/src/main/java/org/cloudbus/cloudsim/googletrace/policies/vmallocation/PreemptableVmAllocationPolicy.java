@@ -11,7 +11,9 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.googletrace.GoogleHost;
 import org.cloudbus.cloudsim.googletrace.GoogleVm;
+import org.cloudbus.cloudsim.googletrace.PriorityHostSkin;
 import org.cloudbus.cloudsim.googletrace.policies.hostselection.HostSelectionPolicy;
 
 /**
@@ -29,12 +31,26 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 	private Map<String, Host> vmTable;
 
 	private HostSelectionPolicy hostSelector;
-	private SortedSet<Host> sortedHosts;
+	private Map<Integer, SortedSet<PriorityHostSkin>> priorityToSortedHostSkins;
 
-	public PreemptableVmAllocationPolicy(List<? extends Host> hosts, HostSelectionPolicy hostSelector) {
+	public PreemptableVmAllocationPolicy(List<GoogleHost> hosts, HostSelectionPolicy hostSelector) {
 		super(new ArrayList<Host>(0));
 		setHostSelector(hostSelector);
-		setSortedHosts(new TreeSet<Host>(hosts));
+		
+		priorityToSortedHostSkins = new HashMap<Integer, SortedSet<PriorityHostSkin>>();
+		int numberOfPriorities = hosts.get(0).getNumberOfPriorities();
+		for (int priority = 0; priority < numberOfPriorities; priority++) {
+			getPriorityToSortedHostSkins().put(priority, new TreeSet<PriorityHostSkin>());
+		}
+		
+		// creating priority host skins
+		for (GoogleHost host : hosts) {
+			for (int priority = 0; priority < numberOfPriorities; priority++) {
+				getPriorityToSortedHostSkins().get(priority).add(
+						new PriorityHostSkin(host, priority));
+			}
+		}
+		
 		setVmTable(new HashMap<String, Host>());
 	}
 
@@ -46,10 +62,26 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 		}
 		vm.preempt(CloudSim.clock());
 		// just to update the sorted set
-		getSortedHosts().remove(host);
+		removePrioritySkins(host);
 		host.vmDestroy(vm);
-		getSortedHosts().add(host);
+		addPrioritySkins(host);
 		return true;
+	}
+
+	private void addPrioritySkins(Host host) {
+		GoogleHost gHost = (GoogleHost) host;
+		for (int prioriry = 0; prioriry < gHost.getNumberOfPriorities(); prioriry++) {
+			PriorityHostSkin skin = new PriorityHostSkin(gHost, prioriry);			
+			getPriorityToSortedHostSkins().get(prioriry).add(skin);
+		}
+	}
+
+	private void removePrioritySkins(Host host) {
+		GoogleHost gHost = (GoogleHost) host;
+		for (int prioriry = 0; prioriry < gHost.getNumberOfPriorities(); prioriry++) {
+			PriorityHostSkin skin = new PriorityHostSkin(gHost, prioriry);			
+			getPriorityToSortedHostSkins().get(prioriry).remove(skin);
+		}
 	}
 
 	@Override
@@ -60,9 +92,9 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 		}
 		
 		// just to update the sorted set
-		getSortedHosts().remove(host);
+		removePrioritySkins(host);
 		boolean result = host.vmCreate(vm);
-		getSortedHosts().add(host);
+		addPrioritySkins(host);
 		
 		if (result) {
 			getVmTable().put(vm.getUid(), host);
@@ -76,9 +108,9 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 			return false;
 		}
 		// just to update the sorted set
-		getSortedHosts().remove(host);
+		removePrioritySkins(host);
 		boolean result = host.vmCreate(vm);
-		getSortedHosts().add(host);
+		addPrioritySkins(host);
 		
 		if (result) {
 			getVmTable().put(vm.getUid(), host);
@@ -97,10 +129,10 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 	public void deallocateHostForVm(Vm vm) {
 		Host host = getVmTable().remove(vm.getUid());
 		if (host != null) {
-			host.vmDestroy(vm);
 			// just to update the sorted set
-			getSortedHosts().remove(host);
-			getSortedHosts().add(host);
+			removePrioritySkins(host);
+			host.vmDestroy(vm);
+			addPrioritySkins(host);
 		}
 	}
 
@@ -116,7 +148,11 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 
 	@Override
 	public List<Host> getHostList() {
-		return new ArrayList<Host>(sortedHosts);
+		List<Host> hostList = new ArrayList<Host>();
+		for (PriorityHostSkin prioritySkin : getPriorityToSortedHostSkins().get(0)) {
+			hostList.add(prioritySkin.getHost());
+		}
+		return hostList;
 	}
 	
 	public HostSelectionPolicy getHostSelector() {
@@ -127,10 +163,6 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 		this.hostSelector = hostSelector;
 	}
 
-	public SortedSet<Host> getSortedHosts() {
-		return sortedHosts;
-	}
-
 	public Map<String, Host> getVmTable() {
 		return vmTable;
 	}
@@ -139,11 +171,24 @@ public class PreemptableVmAllocationPolicy extends VmAllocationPolicy implements
 		this.vmTable = vmTable;
 	}
 
-	protected void setSortedHosts(SortedSet<Host> sortedHosts) {
-		this.sortedHosts = sortedHosts;
+	public Map<Integer, SortedSet<PriorityHostSkin>> getPriorityToSortedHostSkins() {
+		return priorityToSortedHostSkins;
+	}
+	
+	public void setPriorityToSortedHostSkins(
+			Map<Integer, SortedSet<PriorityHostSkin>> priorityToSortedHostSkins) {
+		this.priorityToSortedHostSkins = priorityToSortedHostSkins;
 	}
 
 	public Host selectHost(Vm vm) {
-		return getHostSelector().select(getSortedHosts(), vm);
+		GoogleVm gVm = (GoogleVm) vm;
+		if (getPriorityToSortedHostSkins().containsKey(gVm.getPriority())) {
+			PriorityHostSkin hostSkin = getHostSelector().select(getPriorityToSortedHostSkins().get(gVm.getPriority()), vm);
+			if (hostSkin != null) {
+				return hostSkin.getHost();
+			}
+		}
+		return null;
 	}
 }
+

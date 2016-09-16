@@ -2,8 +2,8 @@ package org.cloudbus.cloudsim.googletrace.policies.hostselection;
 
 import java.util.SortedSet;
 
-import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.googletrace.PriorityHostSkin;
 
 /**
  * TODO 
@@ -13,6 +13,6 @@ import org.cloudbus.cloudsim.Vm;
  */
 public interface HostSelectionPolicy {
 
-	public Host select(SortedSet<Host> hosts, Vm vm);
+	public PriorityHostSkin select(SortedSet<PriorityHostSkin> hosts, Vm vm);
 	
 }

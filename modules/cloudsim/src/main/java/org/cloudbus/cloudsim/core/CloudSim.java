@@ -767,14 +767,14 @@ public class CloudSim {
 		clock = e.eventTime();
 		
 		// TODO remove
-		if (lastClock != clock) {
-			Date date = new Date(System.currentTimeMillis());
-			System.out.println(lastClock + ":" +  new SimpleDateFormat("d MMM yyyy HH:mm:ss:SSS").format(date) + ":" + numberOfEventsPerClock);
-			lastClock = clock;
-			numberOfEventsPerClock = 1;
-		} else {
-			numberOfEventsPerClock++;
-		}
+//		if (lastClock != clock) {
+//			Date date = new Date(System.currentTimeMillis());
+//			System.out.println(lastClock + ":" +  new SimpleDateFormat("d MMM yyyy HH:mm:ss:SSS").format(date) + ":" + numberOfEventsPerClock);
+//			lastClock = clock;
+//			numberOfEventsPerClock = 1;
+//		} else {
+//			numberOfEventsPerClock++;
+//		}
 
 		// Ok now process it
 		switch (e.getType()) {

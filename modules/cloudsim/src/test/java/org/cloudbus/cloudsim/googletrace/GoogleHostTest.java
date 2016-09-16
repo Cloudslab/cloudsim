@@ -445,4 +445,40 @@ public class GoogleHostTest {
 		// comparing hashcode of different hosts
 		Assert.assertFalse(host1.hashCode() == host2.hashCode());
 	}
+	
+	@Test
+	public void testGetAvailableMipsByPriority(){
+		// creating hosts
+		List<Pe> peList1 = new ArrayList<Pe>();
+		peList1.add(new Pe(0, new PeProvisionerSimple(100)));
+		GoogleHost host1 = new GoogleHost(1, peList1, new VmSchedulerMipsBased(
+				peList1), 3);
+		
+		//priority 0
+		GoogleVm vm0 = new GoogleVm(0, 1, 50, 1.0, 0, 0, 0);
+				
+		Assert.assertTrue(host1.vmCreate(vm0));
+		
+		Assert.assertEquals(50, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(50, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(50, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+	
+		//priority 1
+		GoogleVm vm1 = new GoogleVm(1, 1, 20, 1.0, 0, 1, 0);
+
+		Assert.assertTrue(host1.vmCreate(vm1)); 
+		
+		Assert.assertEquals(50, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+		
+		//priority 1
+		GoogleVm vm2 = new GoogleVm(2, 1, 20, 1.0, 0, 1, 0);
+
+		Assert.assertTrue(host1.vmCreate(vm2)); 
+		
+		Assert.assertEquals(50, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(10, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(10, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+	}
 }
