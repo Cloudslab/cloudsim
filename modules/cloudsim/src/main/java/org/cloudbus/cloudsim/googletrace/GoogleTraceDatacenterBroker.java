@@ -141,11 +141,9 @@ public class GoogleTraceDatacenterBroker extends SimEntity {
         Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #",
                 vm.getId(), " is being destroyed now.");
 
-        GoogleTask task = getSubmittedTasks().get(vm.getId());
+        GoogleTask task = getSubmittedTasks().remove(vm.getId());
 
         double now = CloudSim.clock();
-
-        getSubmittedTasks().remove(task); // removing task
 
         GoogleTaskState taskState = new GoogleTaskState(vm.getId(), 2,
                 task.getCpuReq(), task.getSubmitTime(), vm.getStartExec(), now,
