@@ -450,7 +450,7 @@ public class GoogleHostTest {
 	public void testGetAvailableMipsByPriority(){
 		// creating hosts
 		List<Pe> peList1 = new ArrayList<Pe>();
-		peList1.add(new Pe(0, new PeProvisionerSimple(100)));
+		peList1.add(new Pe(0, new PeProvisionerSimple(100.5)));
 		GoogleHost host1 = new GoogleHost(1, peList1, new VmSchedulerMipsBased(
 				peList1), 3);
 		
@@ -459,26 +459,86 @@ public class GoogleHostTest {
 				
 		Assert.assertTrue(host1.vmCreate(vm0));
 		
-		Assert.assertEquals(50, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
-		Assert.assertEquals(50, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
-		Assert.assertEquals(50, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(50.5, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(50.5, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(50.5, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
 	
 		//priority 1
 		GoogleVm vm1 = new GoogleVm(1, 1, 20, 1.0, 0, 1, 0);
 
 		Assert.assertTrue(host1.vmCreate(vm1)); 
 		
-		Assert.assertEquals(50, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
-		Assert.assertEquals(30, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
-		Assert.assertEquals(30, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(50.5, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30.5, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30.5, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
 		
 		//priority 1
 		GoogleVm vm2 = new GoogleVm(2, 1, 20, 1.0, 0, 1, 0);
 
 		Assert.assertTrue(host1.vmCreate(vm2)); 
 		
-		Assert.assertEquals(50, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
-		Assert.assertEquals(10, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
-		Assert.assertEquals(10, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(50.5, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(10.5, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(10.5, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+
+		// destroying vm1
+		host1.vmDestroy(vm1);
+		Assert.assertEquals(50.5, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30.5, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30.5, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+
+		//priority 2
+		GoogleVm vm3 = new GoogleVm(3, 1, 20, 1.0, 0, 2, 0);
+
+		Assert.assertTrue(host1.vmCreate(vm3));
+
+		Assert.assertEquals(50.5, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30.5, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(10.5, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+
+		// creating vm4 with less than 1 mips, with priority 0
+		GoogleVm vm4 = new GoogleVm(4, 1, 0.01, 1.0, 0, 0, 0);
+		Assert.assertTrue(host1.vmCreate(vm4));
+
+		Assert.assertEquals(50.49, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30.49, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(10.49, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+
+		// creating vm5 with less than 1 mips, with priority 1
+		GoogleVm vm5 = new GoogleVm(5, 1, 0.01, 1.0, 0, 1, 0);
+		Assert.assertTrue(host1.vmCreate(vm5));
+
+		Assert.assertEquals(50.49, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30.48, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(10.48, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+
+		// creating vm6 with less than 1 mips, with priority 2
+		GoogleVm vm6 = new GoogleVm(6, 1, 0.01, 1.0, 0, 2, 0);
+		Assert.assertTrue(host1.vmCreate(vm6));
+		Assert.assertEquals(50.49, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(30.48, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(10.47, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+
+		// destroying vm0
+		host1.vmDestroy(vm0);
+		Assert.assertEquals(100.49, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(80.48, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(60.47, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+
+		// creating vm7
+		GoogleVm vm7 = new GoogleVm(7, 1, 60.47, 1.0, 0, 0, 0);
+		Assert.assertTrue(host1.vmCreate(vm7));
+		Assert.assertEquals(40.02, host1.getAvailableMipsByPriority(0), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(20.01, host1.getAvailableMipsByPriority(1), ACCEPTABLE_DIFFERENCE);
+		Assert.assertEquals(0, host1.getAvailableMipsByPriority(2), ACCEPTABLE_DIFFERENCE);
+
+		// asserting that is not possible create vm8 because vmCreate method is not responsible by preempt Vms with low priority
+		GoogleVm vm8 = new GoogleVm(7, 1, 40.02, 1.0, 0, 0, 0);
+		Assert.assertFalse(host1.vmCreate(vm8));
+
+
+
+
+
 	}
 }

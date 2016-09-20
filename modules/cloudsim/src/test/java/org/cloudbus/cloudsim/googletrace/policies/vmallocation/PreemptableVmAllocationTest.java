@@ -582,4 +582,9 @@ public class PreemptableVmAllocationTest {
 		Assert.assertNull(preemptablePolicy.getHost(5, 3));
 		Assert.assertNull(preemptablePolicy.getHost(2, 4));
 	}
+
+	@Test
+	public void testPriorityToSortedHostSkinsMap(){
+
+	}
 }

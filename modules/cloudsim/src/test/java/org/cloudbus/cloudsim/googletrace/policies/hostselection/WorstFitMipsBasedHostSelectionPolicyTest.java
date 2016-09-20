@@ -23,7 +23,7 @@ import org.junit.Test;
 
 public class WorstFitMipsBasedHostSelectionPolicyTest {
 
-    public final double ACCEPTABLE_DIFFERENCE = 0.1;
+    public final double ACCEPTABLE_DIFFERENCE = 0.00001;
 
     public GoogleHost host1;
     public GoogleHost host2;
@@ -177,8 +177,8 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
         GoogleHost otherHost = selectionPolicy.select(hostList, vm0).getHost();
         Assert.assertEquals(otherHost.getId(), host1.getId());
     }
-    
-    @Ignore
+
+
     @Test
     public void testAllocatingVMsWhereFirstHostIsNotSuitable(){
     	
@@ -193,12 +193,12 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
         hosts.add(new PriorityHostSkin(host1, 0));
 
         GoogleHost host2 = new GoogleHost(2, peList, new VmSchedulerMipsBased(peList), 3);
-        hosts.add(new PriorityHostSkin(host1, 0));
+        hosts.add(new PriorityHostSkin(host2, 0));
         
         // creating a VM with priority 0
         GoogleVm vm500P0 = new GoogleVm(1, 1, 500, 0, 0, 0, 0);
         
-        Assert.assertEquals(host1, selectionPolicy.select(hosts, vm500P0));
+        Assert.assertEquals(host1, selectionPolicy.select(hosts, vm500P0).getHost());
 
         // creating vm and updating host1
         hosts.remove(new PriorityHostSkin(host1, 0));
@@ -208,7 +208,7 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
         // creating a VM with priority 2
         GoogleVm vm700P2 = new GoogleVm(2, 1, 700, 0, 0, 2, 0);
         
-        Assert.assertEquals(host2, selectionPolicy.select(hosts, vm700P2));
+        Assert.assertEquals(host2, selectionPolicy.select(hosts, vm700P2).getHost());
 
         // creating vm and updating host2
         hosts.remove(new PriorityHostSkin(host2, 0));
@@ -222,21 +222,59 @@ public class WorstFitMipsBasedHostSelectionPolicyTest {
 		 * besides host1 is that with more available mips, only host2 is
 		 * suitable for vm with priority 1
 		 */
-        Assert.assertEquals(500, host1.getAvailableMips(), 0.0001);
-        Assert.assertEquals(300, host2.getAvailableMips(), 0.0001);
+        Assert.assertEquals(500, host1.getAvailableMips(), ACCEPTABLE_DIFFERENCE);
+        Assert.assertEquals(300, host2.getAvailableMips(), ACCEPTABLE_DIFFERENCE);
         
-        Assert.assertEquals(host2, selectionPolicy.select(hosts, vm700P1));
-        
-        // creating a smaller VM with priority 1
-        GoogleVm vm300P1 = new GoogleVm(3, 1, 300, 0, 0, 1, 0);
-        
-		/*
-		 * In this case, host1 has enough resource to allocate the new VM and
-		 * will be return by the selector
-		 */
-        Assert.assertEquals(500, host1.getAvailableMips(), 0.0001);
-        Assert.assertEquals(300, host2.getAvailableMips(), 0.0001);
-        
-        Assert.assertEquals(host1, selectionPolicy.select(hosts, vm300P1));
+        Assert.assertEquals(host2, selectionPolicy.select(hosts, vm700P1).getHost());
+
+    }
+
+    @Test
+    public void testDoubleValues(){
+        hostList.clear();
+
+        // create host1 with capacity 62.501
+        List<Pe> peList = new ArrayList<Pe>();
+        double mips = 62.501;
+        peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
+
+        host1 = new GoogleHost(1, peList, new VmSchedulerMipsBased(peList), 1);
+        hostList.add(new PriorityHostSkin(host1, 0));
+
+
+        // create host2 with capacity 62.5
+        List<Pe> peList2 = new ArrayList<Pe>();
+        double mips2 = 62.5;
+        peList2.add(new Pe(1, new PeProvisionerSimple(mips2))); // need to store Pe id and MIPS Rating
+
+        host2 = new GoogleHost(2, peList2, new VmSchedulerMipsBased(peList2), 1);
+        hostList.add(new PriorityHostSkin(host2, 0));
+
+        // create host3 with capacity 62.49
+        List<Pe> peList3 = new ArrayList<Pe>();
+        double mips3 = 62.49;
+        peList3.add(new Pe(2, new PeProvisionerSimple(mips3))); // need to store Pe id and MIPS Rating
+
+        host3 = new GoogleHost(3, peList3, new VmSchedulerMipsBased(peList3), 1);
+        hostList.add(new PriorityHostSkin(host3, 0));
+
+        // test if is possible allocate vm62 (with 62.5 mips required) at host1 (its capacity is 62.501)
+        Assert.assertEquals(host1, selectionPolicy.select(hostList, vm62).getHost());
+        hostList.remove(new PriorityHostSkin(host1, 0));
+        host1.vmCreate(vm62);
+        hostList.add(new PriorityHostSkin(host1, 0));
+        Assert.assertEquals(0.001, host1.getAvailableMips(), ACCEPTABLE_DIFFERENCE);
+
+        // test if is possible allocate vm62 (with 62.5 mips required) at host2 (its capacity is 62.5)
+        Assert.assertEquals(host2, selectionPolicy.select(hostList, vm62).getHost());
+        hostList.remove(new PriorityHostSkin(host2, 0));
+        host2.vmCreate(vm62);
+        hostList.add(new PriorityHostSkin(host2, 0));
+        Assert.assertEquals(0, host2.getAvailableMips(), ACCEPTABLE_DIFFERENCE);
+
+        // test if is not possible allocate vm62 (with 62.5 mips required) at host1 (its capacity is 62.49)
+        Assert.assertNull(selectionPolicy.select(hostList, vm62));
+        Assert.assertEquals(62.49, host3.getAvailableMips(), ACCEPTABLE_DIFFERENCE);
+
     }
 }
