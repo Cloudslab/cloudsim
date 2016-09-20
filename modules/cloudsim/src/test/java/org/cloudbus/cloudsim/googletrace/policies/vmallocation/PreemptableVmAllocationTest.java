@@ -12,9 +12,9 @@ import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.googletrace.GoogleHost;
 import org.cloudbus.cloudsim.googletrace.GoogleVm;
-import org.cloudbus.cloudsim.googletrace.PriorityHostSkin;
 import org.cloudbus.cloudsim.googletrace.VmSchedulerMipsBased;
 import org.cloudbus.cloudsim.googletrace.policies.hostselection.HostSelectionPolicy;
+import org.cloudbus.cloudsim.googletrace.util.PriorityHostComparator;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +23,7 @@ import org.mockito.Mockito;
 
 public class PreemptableVmAllocationTest {
 
-	SortedSet<PriorityHostSkin> sortedHostSkins;	
+	SortedSet<GoogleHost> sortedHosts;
 	HostSelectionPolicy hostSelector;
 	GoogleHost host1, host2;
 	PreemptableVmAllocationPolicy preemptablePolicy;
@@ -44,19 +44,19 @@ public class PreemptableVmAllocationTest {
 		hosts.add(host1);
 		hosts.add(host2);
 		
-		sortedHostSkins = new TreeSet<PriorityHostSkin>();
+		sortedHosts = new TreeSet<GoogleHost>(new PriorityHostComparator(0));
 		
 		for (GoogleHost googleHost : hosts) {
-			sortedHostSkins.add(new PriorityHostSkin(googleHost, 0));
+			sortedHosts.add(googleHost);
 		}		
 
 		hostSelector = Mockito.mock(HostSelectionPolicy.class);
 
 		preemptablePolicy = new PreemptableVmAllocationPolicy(hosts, hostSelector);
 		
-		Map<Integer, SortedSet<PriorityHostSkin>> priorityToSortesHostSkins = new HashMap<Integer, SortedSet<PriorityHostSkin>>();
-		priorityToSortesHostSkins.put(0, sortedHostSkins);
-		preemptablePolicy.setPriorityToSortedHostSkins(priorityToSortesHostSkins);
+		Map<Integer, SortedSet<GoogleHost>> priorityToSortesHosts = new HashMap<Integer, SortedSet<GoogleHost>>();
+		priorityToSortesHosts.put(0, sortedHosts);
+		preemptablePolicy.setPriorityToSortedHost(priorityToSortesHosts);
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class PreemptableVmAllocationTest {
 		GoogleVm vm1 = new GoogleVm(1, 1, 1.0, 1.0, 0, 0, 0);
 
 		// mocking host selector
-		Mockito.when(hostSelector.select(sortedHostSkins, vm1)).thenReturn(new PriorityHostSkin(host1, 0));
+		Mockito.when(hostSelector.select(sortedHosts, vm1)).thenReturn(host1);
 
 		// checking
 		Assert.assertTrue(preemptablePolicy.allocateHostForVm(vm1));
@@ -82,8 +82,8 @@ public class PreemptableVmAllocationTest {
 		GoogleVm vm2 = new GoogleVm(2, 1, 1.0, 1.0, 0, 0, 0);
 
 		// mocking host selector
-		Mockito.when(hostSelector.select(sortedHostSkins, vm1)).thenReturn(new PriorityHostSkin(host1, 0));
-		Mockito.when(hostSelector.select(sortedHostSkins, vm2)).thenReturn(new PriorityHostSkin(host2, 0));
+		Mockito.when(hostSelector.select(sortedHosts, vm1)).thenReturn(host1);
+		Mockito.when(hostSelector.select(sortedHosts, vm2)).thenReturn(host2);
 
 		// checking
 		Assert.assertTrue(preemptablePolicy.allocateHostForVm(vm1));
@@ -118,10 +118,10 @@ public class PreemptableVmAllocationTest {
 		GoogleVm vm4 = new GoogleVm(4, 1, 1.0, 1.0, 0, 0, 0);
 
 		// mocking host selector
-		Mockito.when(hostSelector.select(sortedHostSkins, vm1)).thenReturn(new PriorityHostSkin(host1, 0));
-		Mockito.when(hostSelector.select(sortedHostSkins, vm2)).thenReturn(new PriorityHostSkin(host1, 0));
-		Mockito.when(hostSelector.select(sortedHostSkins, vm3)).thenReturn(new PriorityHostSkin(host1, 0));
-		Mockito.when(hostSelector.select(sortedHostSkins, vm4)).thenReturn(new PriorityHostSkin(host2, 0));
+		Mockito.when(hostSelector.select(sortedHosts, vm1)).thenReturn(host1);
+		Mockito.when(hostSelector.select(sortedHosts, vm2)).thenReturn(host1);
+		Mockito.when(hostSelector.select(sortedHosts, vm3)).thenReturn(host1);
+		Mockito.when(hostSelector.select(sortedHosts, vm4)).thenReturn(host2);
 
 		// checking vm1 allocation
 		Assert.assertTrue(preemptablePolicy.allocateHostForVm(vm1));
@@ -249,7 +249,7 @@ public class PreemptableVmAllocationTest {
 		GoogleVm vm1 = new GoogleVm(1, 1, 1.0, 1.0, 0, 0, 0);
 
 		// mocking host selector
-		Mockito.when(hostSelector.select(sortedHostSkins, vm1)).thenReturn(new PriorityHostSkin(host1, 0));
+		Mockito.when(hostSelector.select(sortedHosts, vm1)).thenReturn(host1);
 
 		// checking
 		Assert.assertTrue(preemptablePolicy.getVmTable().isEmpty());
@@ -489,7 +489,7 @@ public class PreemptableVmAllocationTest {
 		GoogleVm vm1 = new GoogleVm(1, 1, 1.0, 1.0, 0, 0, 0);
 
 		// mocking host selector
-		Mockito.when(hostSelector.select(sortedHostSkins, vm1)).thenReturn(null);
+		Mockito.when(hostSelector.select(sortedHosts, vm1)).thenReturn(null);
 
 		// checking
 		Assert.assertFalse(preemptablePolicy.allocateHostForVm(vm1));

@@ -2,12 +2,9 @@ package org.cloudbus.cloudsim.googletrace;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
@@ -60,7 +57,7 @@ public class GoogleDatacenterTest {
 		Mockito.when(timeUtil.clock()).thenReturn(0d);
 		
 		hostSelector = Mockito.mock(HostSelectionPolicy.class);
-		Mockito.when(hostSelector.select(Mockito.any(SortedSet.class), Mockito.any(Vm.class))).thenReturn(new PriorityHostSkin(host, 0));
+		Mockito.when(hostSelector.select(Mockito.any(SortedSet.class), Mockito.any(Vm.class))).thenReturn(host);
 		
 		List<GoogleHost> googleHostList = new ArrayList<GoogleHost>();
 		for (Host host : hostList) {
@@ -149,7 +146,7 @@ public class GoogleDatacenterTest {
 		
 		// checking and simulating host selector
 		Assert.assertFalse(host.isSuitableForVm(vm2));
-		Mockito.when(hostSelector.select(preemptableVmAllocationPolicy.getPriorityToSortedHostSkins().get(priority), vm2)).thenReturn(null);
+		Mockito.when(hostSelector.select(preemptableVmAllocationPolicy.getPriorityToSortedHost().get(priority), vm2)).thenReturn(null);
 		
 		// allocating third vm
 		datacenter.allocateHostForVm(false, vm2);
@@ -192,7 +189,7 @@ public class GoogleDatacenterTest {
 		
 		// checking and simulating host selector
 		Assert.assertFalse(host.isSuitableForVm(vm2));
-		Mockito.when(hostSelector.select(preemptableVmAllocationPolicy.getPriorityToSortedHostSkins().get(priority), vm2)).thenReturn(null);
+		Mockito.when(hostSelector.select(preemptableVmAllocationPolicy.getPriorityToSortedHost().get(priority), vm2)).thenReturn(null);
 		
 		// allocating third vm
 		datacenter.allocateHostForVm(false, vm2);
