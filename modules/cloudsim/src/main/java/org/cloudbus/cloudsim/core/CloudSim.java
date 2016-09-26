@@ -8,8 +8,10 @@
 
 package org.cloudbus.cloudsim.core;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -747,6 +749,9 @@ public class CloudSim {
 	// Private internal methods
 	//
 
+	private static int numberOfEventsPerClock = 0;
+	private static double lastClock = -1;
+	
 	/**
 	 * Processes an event.
 	 * 
@@ -760,6 +765,16 @@ public class CloudSim {
 			throw new IllegalArgumentException("Past event detected.");
 		}
 		clock = e.eventTime();
+		
+		// TODO remove
+//		if (lastClock != clock) {
+//			Date date = new Date(System.currentTimeMillis());
+//			System.out.println(lastClock + ":" +  new SimpleDateFormat("d MMM yyyy HH:mm:ss:SSS").format(date) + ":" + numberOfEventsPerClock);
+//			lastClock = clock;
+//			numberOfEventsPerClock = 1;
+//		} else {
+//			numberOfEventsPerClock++;
+//		}
 
 		// Ok now process it
 		switch (e.getType()) {
