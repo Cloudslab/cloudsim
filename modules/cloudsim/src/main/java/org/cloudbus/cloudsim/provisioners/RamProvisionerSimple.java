@@ -53,7 +53,7 @@ public class RamProvisionerSimple extends RamProvisioner {
 		if (getAvailableRam() >= ram) {
 			setAvailableRam(getAvailableRam() - ram);
 			getRamTable().put(vm.getUid(), ram);
-			vm.setCurrentAllocatedRam(getAllocatedRamForVm(vm));
+			vm.setCurrentAllocatedRam(ram);
 			return true;
 		}
 
