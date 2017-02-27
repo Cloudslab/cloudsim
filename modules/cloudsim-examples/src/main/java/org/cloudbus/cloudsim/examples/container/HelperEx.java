@@ -1086,7 +1086,9 @@ public class HelperEx {
 //            CSVWriter writer1 = new CSVWriter(new FileWriter(fileAddress, true), ',',CSVWriter.NO_QUOTE_CHARACTER);
             writer.writeNext(msg);
         }
-        writer.writeNext(new String[]{data.toString()});
+        String[] entries = data.toString().split(",");
+//        writer.writeNext(new String[]{data.toString()});
+        writer.writeNext(entries);
         writer.flush();
         writer.close();
 

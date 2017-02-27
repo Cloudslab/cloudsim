@@ -58,6 +58,8 @@ public class RunnerInitiator extends RunnerAbs {
     @Override
     protected void init(String inputFolder, double overBookingFactor) {
         try {
+            Log.printLine("Initializing Simulation");
+
             CloudSim.init(1, Calendar.getInstance(), false);
 //            setOverBookingFactor(overBookingFactor);
             broker = HelperEx.createBroker(overBookingFactor);
