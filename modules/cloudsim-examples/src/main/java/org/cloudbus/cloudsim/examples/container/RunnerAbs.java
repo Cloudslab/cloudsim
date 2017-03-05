@@ -273,26 +273,36 @@ public abstract class RunnerAbs {
     }
 
     protected ContainerPlacementPolicy getContainerPlacementPolicy(String name) {
-        ContainerPlacementPolicy placementPolicy;
-        switch (name) {
-            case "LeastFull":
-                placementPolicy = new ContainerPlacementPolicyLeastFull();
-                break;
-            case "MostFull":
-                placementPolicy = new ContainerPlacementPolicyMostFull();
-                break;
+        ContainerPlacementPolicy placementPolicy = null;
+        ClassLoader classLoader = RunnerAbs.class.getClassLoader();
 
-            case "FirstFit":
-                placementPolicy = new ContainerPlacementPolicyFirstFit();
-                break;
-            case "Random":
-                placementPolicy = new ContainerPlacementPolicyRandomSelection();
-                break;
-            default:
-                placementPolicy = null;
-                System.out.println("The container placement policy is not defined");
-                break;
+        try {
+            Class reflectionClass = classLoader.loadClass("org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicy" + name);
+            placementPolicy = (ContainerPlacementPolicy) reflectionClass.newInstance();
+        } catch (Exception e) {
+            placementPolicy = null;
+            System.out.println("The container placement policy is not defined");
         }
+
+//        switch (name) {
+//            case "LeastFull":
+//                placementPolicy = new ContainerPlacementPolicyLeastFull();
+//                break;
+//            case "MostFull":
+//                placementPolicy = new ContainerPlacementPolicyMostFull();
+//                break;
+//
+//            case "FirstFit":
+//                placementPolicy = new ContainerPlacementPolicyFirstFit();
+//                break;
+//            case "Random":
+//                placementPolicy = new ContainerPlacementPolicyRandomSelection();
+//                break;
+//            default:
+//                placementPolicy = null;
+//                System.out.println("The container placement policy is not defined");
+//                break;
+//        }
         return placementPolicy;
     }
 
