@@ -44,10 +44,12 @@ public class HelperEx {
         long outputSize = 300L;
         UtilizationModelNull utilizationModelNull = new UtilizationModelNull();
         File inputFolder1 = new File(inputFolderName);
-        File[] files1 = inputFolder1.listFiles();
+        File[] directories = inputFolder1.listFiles();
         int createdCloudlets = 0;
-        for (File aFiles1 : files1) {
-            File inputFolder = new File(aFiles1.toString());
+        for (File directory : directories) {
+            if (!directory.isDirectory()) // Make sure to check it's a directory.
+                continue;
+            File inputFolder = new File(directory.toString());
             File[] files = inputFolder.listFiles();
             for (int i = 0; i < files.length; ++i) {
                 if (createdCloudlets < numberOfCloudlets) {
@@ -866,6 +868,7 @@ public class HelperEx {
                                        boolean outputInCsv,
                                        String outputFolder) throws IOException {
         List<ContainerVm> vms = broker.getVmsCreatedList();
+        boolean writeHeader = false;
         List<Container>  containers = broker.getContainersCreatedList();
         Log.enable();
         List<ContainerHost> hosts = datacenter.getHostList();
@@ -986,7 +989,7 @@ public class HelperEx {
 
         double energy = datacenter.getPower() / (3600 * 1000);
 
-   //Now we create the log we need
+        // Now we create the log we need
         StringBuilder data = new StringBuilder();
         String delimeter = ",";
 
@@ -1071,35 +1074,35 @@ public class HelperEx {
 
 
         File f = new File(fileAddress);
+        if(!f.exists()) {
+            f.createNewFile();
+            writeHeader = true;
+        }
         CSVWriter writer = new CSVWriter(new FileWriter(fileAddress, true), ',',CSVWriter.NO_QUOTE_CHARACTER);
         File parent = f.getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
             throw new IllegalStateException("Couldn't create dir: " + parent);
         }
 
-        if(!f.exists()) {
-            f.createNewFile();
-//            writer.writeNext("\n")
-        }
         int temp = index;
-        if(experimentName.substring(index).startsWith("_1") && experimentName.length()-2 == temp){
-//            CSVWriter writer1 = new CSVWriter(new FileWriter(fileAddress, true), ',',CSVWriter.NO_QUOTE_CHARACTER);
+        // It's assumed that runTime number at the end indicates the need to write the header file
+        // instead if the file did not exist that should indicate that the file already exist and add the header
+        // NOTE: This can result into having multiple entries with the same experiment name, however, at least the
+        // header does not get duplicated.
+//        if(experimentName.substring(index).startsWith("_1") && experimentName.length()-2 == temp)
+        if (writeHeader) {
             writer.writeNext(msg);
         }
+
+
         String[] entries = data.toString().split(",");
 //        writer.writeNext(new String[]{data.toString()});
         writer.writeNext(entries);
         writer.flush();
         writer.close();
 
-
-
-
         writeDataColumn(timeBeforeHostShutdown, beforShutDown+"/"+ experimentName + "_time_before_host_shutdown.csv");
         writeDataColumn(timeBeforeContainerMigration, beforeMigrate+"/"+experimentName+ "_time_before_vm_migration.csv");
-
-
-
 
     }
 
