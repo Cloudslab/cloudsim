@@ -1,5 +1,6 @@
 package org.cloudbus.cloudsim.examples.container;
 
+import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.container.containerPlacementPolicies.*;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
@@ -24,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The RunnerAbs Class is the modified version of {@link org.cloudbus.cloudsim.examples.power.RunnerAbstract}
@@ -33,6 +35,7 @@ public abstract class RunnerAbs {
     private static boolean enableOutput;
 
     protected static ContainerDatacenterBroker broker;
+//    protected static DatacenterBroker broker;
     /**
      * The vm list.
      */
@@ -181,7 +184,7 @@ public abstract class RunnerAbs {
             broker.submitVmList(vmList);
             broker.submitContainerList(containerList);
             broker.submitCloudletList(cloudletList.subList(0, containerList.size()));
-            ;
+
             CloudSim.terminateSimulation(86400.0D);
             double lastClock = CloudSim.startSimulation();
             List newList = broker.getCloudletReceivedList();
@@ -259,7 +262,7 @@ public abstract class RunnerAbs {
 
     protected ContainerAllocationPolicy getContainerAllocationPolicy(String containerAllocationPolicyName) {
         ContainerAllocationPolicy containerAllocationPolicy;
-        if (containerAllocationPolicyName == "Simple") {
+        if (Objects.equals(containerAllocationPolicyName, "Simple")) {
 
             containerAllocationPolicy = new PowerContainerAllocationPolicySimple(); // DVFS policy without VM migrations
         } else {
@@ -308,17 +311,17 @@ public abstract class RunnerAbs {
 
     protected HostSelectionPolicy getHostSelectionPolicy(String hostSelectionPolicyName) {
         Object hostSelectionPolicy = null;
-        if (hostSelectionPolicyName == "FirstFit") {
+        if (Objects.equals(hostSelectionPolicyName, "FirstFit")) {
 
             hostSelectionPolicy = new HostSelectionPolicyFirstFit();
 
 
-        } else if (hostSelectionPolicyName == "LeastFull") {
+        } else if (Objects.equals(hostSelectionPolicyName, "LeastFull")) {
 
             hostSelectionPolicy = new HostSelectionPolicyLeastFull();
 
 
-        } else if (hostSelectionPolicyName == "MostFull") {
+        } else if (Objects.equals(hostSelectionPolicyName, "MostFull")) {
 
             hostSelectionPolicy = new HostSelectionPolicyMostFull();
 
@@ -330,7 +333,7 @@ public abstract class RunnerAbs {
 
 
 //        }
-    else if (hostSelectionPolicyName == "RandomSelection") {
+    else if (Objects.equals(hostSelectionPolicyName, "RandomSelection")) {
 
             hostSelectionPolicy = new HostSelectionPolicyRandomSelection();
 

@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.examples.container;
 
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.examples.power.Helper;
 
 import java.util.Calendar;
 
@@ -63,10 +64,12 @@ public class RunnerInitiator extends RunnerAbs {
             CloudSim.init(1, Calendar.getInstance(), false);
 //            setOverBookingFactor(overBookingFactor);
             broker = HelperEx.createBroker(overBookingFactor);
+
+//            broker = HelperEx.createAuctionBroker(overBookingFactor);
             int brokerId = broker.getId();
             cloudletList = HelperEx.createContainerCloudletList(brokerId, inputFolder, ConstantsExamples.NUMBER_CLOUDLETS);
             containerList = HelperEx.createContainerList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
-            vmList = HelperEx.createVmList(brokerId, ConstantsExamples.NUMBER_VMS);
+            vmList = HelperEx.createVmList(brokerId, ConstantsExamples.NUMBER_VMS, ConstantsExamples.CONTAINER_VM_TYPE);
             hostList = HelperEx.createHostList(ConstantsExamples.NUMBER_HOSTS);
 
         } catch (Exception e) {

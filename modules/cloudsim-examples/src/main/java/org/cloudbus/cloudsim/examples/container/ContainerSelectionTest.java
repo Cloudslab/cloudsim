@@ -24,8 +24,8 @@ public class ContainerSelectionTest {
          * The experiments can be repeated for (repeat - runtime +1) times.
          * Please set these values as the arguments of the main function or set them bellow:
          */
-        int runTime = 1;
-        int repeat = 100;
+        int runTime = 2;
+        int repeat = 2;
         if (args.length > 2)  {
             runTime = Integer.parseInt(args[0]);
             repeat = Integer.parseInt(args[1]);

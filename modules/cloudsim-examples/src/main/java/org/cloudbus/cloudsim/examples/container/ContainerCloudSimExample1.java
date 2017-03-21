@@ -155,7 +155,8 @@ public class ContainerCloudSimExample1 {
             /**
              * 9- Creating the cloudlet, container and VM lists for submitting to the broker.
              */
-            cloudletList = createContainerCloudletList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
+//            cloudletList = createContainerCloudletList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
+            cloudletList = HelperEx.createContainerCloudletList(brokerId, ContainerCloudSimExample1.class.getClassLoader().getResource("workload/planetlab").getPath(), ConstantsExamples.NUMBER_CLOUDLETS);
             containerList = createContainerList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
             vmList = createVmList(brokerId, ConstantsExamples.NUMBER_VMS);
             /**
@@ -193,7 +194,8 @@ public class ContainerCloudSimExample1 {
              * 15- Printing the results when the simulation is finished.
              */
             List<ContainerCloudlet> newList = broker.getCloudletReceivedList();
-            printCloudletList(newList);
+//            List<ContainerCloudlet> newList = broker.getCloudletList();
+            HelperEx.printCloudletList(newList);
 
             Log.printLine("ContainerCloudSimExample1 finished!");
         } catch (Exception e) {
@@ -242,41 +244,6 @@ public class ContainerCloudSimExample1 {
         }
 
         return broker;
-    }
-
-    /**
-     * Prints the Cloudlet objects.
-     *
-     * @param list list of Cloudlets
-     */
-    private static void printCloudletList(List<ContainerCloudlet> list) {
-        int size = list.size();
-        Cloudlet cloudlet;
-
-        String indent = "    ";
-        Log.printLine();
-        Log.printLine("========== OUTPUT ==========");
-        Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
-                + "Data center ID" + indent + "VM ID" + indent + "Time" + indent
-                + "Start Time" + indent + "Finish Time");
-
-        DecimalFormat dft = new DecimalFormat("###.##");
-        for (int i = 0; i < size; i++) {
-            cloudlet = list.get(i);
-            Log.print(indent + cloudlet.getCloudletId() + indent + indent);
-
-            if (cloudlet.getCloudletStatusString() == "Success") {
-                Log.print("SUCCESS");
-
-                Log.printLine(indent + indent + cloudlet.getResourceId()
-                        + indent + indent + indent + cloudlet.getVmId()
-                        + indent + indent
-                        + dft.format(cloudlet.getActualCPUTime()) + indent
-                        + indent + dft.format(cloudlet.getExecStartTime())
-                        + indent + indent
-                        + dft.format(cloudlet.getFinishTime()));
-            }
-        }
     }
 
     /**

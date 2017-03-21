@@ -143,7 +143,7 @@ public class ContainerVm {
     private ContainerBwProvisioner containerBwProvisioner;
 
     /**
-     * The vm list.
+     * The container list.
      */
     private final List<? extends Container> containerList = new ArrayList<>();
 
@@ -1226,7 +1226,7 @@ public class ContainerVm {
     public int getNumberOfContainers() {
         int c =0;
         for(Container container:getContainerList()){
-            if(!getContainersMigratingIn().contains(container)){
+                if(!getContainersMigratingIn().contains(container)){
                 c++;
             }
         }

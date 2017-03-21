@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.examples.container;
 
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * This Example is following the format for {@link org.cloudbus.cloudsim.examples.power.planetlab.Dvfs}
@@ -35,7 +36,7 @@ public class ContainerInitialPlacementTest {
             /**
              * The output folder for the logs. The log files would be located in this folder.
              */
-            String outputFolder = "~/Results";
+            String outputFolder = Paths.get(".").toAbsolutePath().normalize().toString() + "/Results";
             /**
              * The allocation policy for VMs.
              */

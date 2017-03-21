@@ -71,10 +71,12 @@ public class ConstantsExamples {
      * population.
      */
 
+    public static final int NUMBER_HOSTS = 2;
+    public static final int NUMBER_VMS = 5;
+    public static final int NUMBER_CLOUDLETS = 2;
 
-    public static final int NUMBER_HOSTS = 20;
-    public static final int NUMBER_VMS = 25;
-    public static final int NUMBER_CLOUDLETS = 50;
+//    public static final String CONTAINER_VM_TYPE = "PowerContainerVm";
+    public static final String CONTAINER_VM_TYPE = "BidderContainerVM";
 
 //-----------------------The Addresses
 

@@ -2,10 +2,7 @@ package org.cloudbus.cloudsim.examples.container;
 
 import com.opencsv.CSVWriter;
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.CotainerPeProvisionerSimple;
+import org.cloudbus.cloudsim.container.containerProvisioners.*;
 import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPe;
 import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPeProvisionerSimple;
@@ -15,13 +12,17 @@ import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerCo
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.container.schedulers.ContainerCloudletSchedulerDynamicWorkload;
+import org.cloudbus.cloudsim.container.schedulers.ContainerScheduler;
 import org.cloudbus.cloudsim.container.schedulers.ContainerSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.schedulers.ContainerVmSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.util.MathUtil;
+import org.cloudbus.cloudsim.auction.bidder.BidderDatacenterBroker;
+import org.cloudbus.cloudsim.auction.bidder.BidderContainerVM;
 
 import java.io.*;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -36,7 +37,15 @@ public class HelperEx {
 
     }
 
-
+    /**
+     * Creating the cloudlet list that are going to run on containers
+     *
+     * @param brokerId
+     * @param numberOfCloudlets
+     * @param inputFolderName
+     * @return
+     * @throws FileNotFoundException
+     */
     public static List<ContainerCloudlet> createContainerCloudletList(int brokerId, String inputFolderName, int numberOfCloudlets)
             throws FileNotFoundException {
         ArrayList cloudletList = new ArrayList();
@@ -56,9 +65,18 @@ public class HelperEx {
                     ContainerCloudlet cloudlet = null;
 
                     try {
-                        cloudlet = new ContainerCloudlet(IDs.pollId(ContainerCloudlet.class), 216000000L * 1000, 1, fileSize, outputSize,
+                        cloudlet = new ContainerCloudlet(IDs.pollId(ContainerCloudlet.class), ConstantsExamples.CLOUDLET_LENGTH, 1,
+                                fileSize, outputSize,
                                 new UtilizationModelPlanetLabInMemoryExtended(files[i].getAbsolutePath(), 300.0D),
                                 utilizationModelNull, utilizationModelNull);
+
+                        // QUESTION: Is this cloudlenght so high because of overbooking????
+
+//                        cloudlet = new ContainerCloudlet(IDs.pollId(ContainerCloudlet.class), 216000000L * 1000, 1,
+//                                fileSize, outputSize,
+//                                new UtilizationModelPlanetLabInMemoryExtended(files[i].getAbsolutePath(), 300.0D),
+//                                utilizationModelNull, utilizationModelNull);
+
                     } catch (Exception var13) {
                         var13.printStackTrace();
                         System.exit(0);
@@ -97,7 +115,7 @@ public class HelperEx {
     }
 
     // create the containers for hosting the cloudlets and binding them together.
-    public static List<ContainerVm> createVmList(int brokerId, int containerVmsNumber) {
+    public static List<ContainerVm> createVmList(int brokerId, int containerVmsNumber, String containerType) {
         ArrayList containerVms = new ArrayList();
 
         for (int i = 0; i < containerVmsNumber; ++i) {
@@ -112,10 +130,31 @@ public class HelperEx {
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
                 peList.add(new ContainerPe(j, new CotainerPeProvisionerSimple((double) ConstantsExamples.VM_MIPS[vmType])));
             }
-            containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (float) ConstantsExamples.VM_RAM[vmType],
-                    ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen", new ContainerSchedulerTimeSharedOverSubscription(peList),
-                    new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
-                    new ContainerBwProvisionerSimple(ConstantsExamples.VM_BW), peList, ConstantsExamples.SCHEDULING_INTERVAL));
+            ContainerVm cVM = null;
+            switch (containerType) {
+                case "PowerContainerVm" :
+                    cVM = new PowerContainerVm(IDs.pollId(ContainerVm.class),
+                            brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (float) ConstantsExamples.VM_RAM[vmType],
+                            ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen",
+                            new ContainerSchedulerTimeSharedOverSubscription(peList),
+                            new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
+                            new ContainerBwProvisionerSimple(ConstantsExamples.VM_BW), peList,
+                            ConstantsExamples.SCHEDULING_INTERVAL);
+
+                    break;
+                case "BidderContainerVM" :
+                    cVM = new BidderContainerVM(IDs.pollId(ContainerVm.class),
+                            brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (float) ConstantsExamples.VM_RAM[vmType],
+                            ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen",
+                            new ContainerSchedulerTimeSharedOverSubscription(peList),
+                            new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
+                            new ContainerBwProvisionerSimple(ConstantsExamples.VM_BW), peList,
+                            ConstantsExamples.SCHEDULING_INTERVAL);
+
+
+                    break;
+            }
+            containerVms.add(cVM);
 
 
         }
@@ -161,6 +200,20 @@ public class HelperEx {
 
         return broker;
     }
+
+    public static BidderDatacenterBroker createAuctionBroker(double overBookingFactor) {
+        BidderDatacenterBroker broker = null;
+
+        try {
+            broker = new BidderDatacenterBroker("Broker");
+        } catch (Exception var2) {
+            var2.printStackTrace();
+            System.exit(0);
+        }
+
+        return broker;
+    }
+
 
     //    // Data Center
 //    public static PowerContainerDatacenter createDatacenter(String name, List<ContainerHost> hostList, ContainerVmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy) throws Exception {
@@ -870,6 +923,8 @@ public class HelperEx {
         List<ContainerVm> vms = broker.getVmsCreatedList();
         boolean writeHeader = false;
         List<Container>  containers = broker.getContainersCreatedList();
+        List<ContainerCloudlet> cloudlets = broker.getCloudletReceivedList();
+
         Log.enable();
         List<ContainerHost> hosts = datacenter.getHostList();
         Map<String, Double> slaMetrics = getSlaMetrics(vms);
@@ -904,9 +959,10 @@ public class HelperEx {
                 "numberOfOverUtilization",
                 "energy",
                 "CreatedContainers",
-                "CreatedVms"
-
-
+                "CreatedVms",
+                "meanTimeCloudletFinishTime",
+                "stDevTimeCloudletFinishTime",
+                "medTimeCloudletFinishTime",
         };
 
         int numberOfHosts = hosts.size();
@@ -989,6 +1045,18 @@ public class HelperEx {
 
         double energy = datacenter.getPower() / (3600 * 1000);
 
+        // Calculate the Successfull returned finishtimes for cloudlets
+        List<Double> cloudletFinishTimes = getCloudletFinishTimes(cloudlets);
+        double meanTimeCloudletFinishTime = Double.NaN;
+        double stDevCloudletFinishTime = Double.NaN;
+        double medCloudletFinishTime = Double.NaN;
+        if (!cloudletFinishTimes.isEmpty()) {
+            meanTimeCloudletFinishTime = MathUtil.mean(cloudletFinishTimes);
+            stDevCloudletFinishTime = MathUtil.stDev(cloudletFinishTimes);
+            medCloudletFinishTime = MathUtil.median(cloudletFinishTimes);
+        }
+
+
         // Now we create the log we need
         StringBuilder data = new StringBuilder();
         String delimeter = ",";
@@ -1026,6 +1094,9 @@ public class HelperEx {
         data.append(String.format("%.5f", energy) + delimeter);
         data.append(String.format("%d", broker.getContainersCreated()) + delimeter);
         data.append(String.format("%d", broker.getNumberOfCreatedVMs()) + delimeter);
+        data.append(String.format("%.10f", meanTimeCloudletFinishTime) + delimeter);
+        data.append(String.format("%.10f", stDevCloudletFinishTime) + delimeter);
+        data.append(String.format("%.10f", medCloudletFinishTime) + delimeter);
 
 //        data.append(String.format("%.10f", sla) + delimeter);
 //        data.append(String.format("%.10f", slaDegradationDueToMigration) + delimeter);
@@ -1041,8 +1112,8 @@ public class HelperEx {
         if (!folder1.exists()) {
             folder1.mkdir();
         }
-        String beforShutDown = outputFolder + "/time_before_host_shutdown/"+experimentName.substring(0,index);
-        File folder2 = new File(beforShutDown);
+        String beforeShutDown = outputFolder + "/time_before_host_shutdown/"+experimentName.substring(0,index);
+        File folder2 = new File(beforeShutDown);
         File parent2 = folder2.getParentFile();
         if(!parent2.exists() && !parent2.mkdirs()){
             throw new IllegalStateException("Couldn't create dir: " + parent2);
@@ -1101,8 +1172,11 @@ public class HelperEx {
         writer.flush();
         writer.close();
 
-        writeDataColumn(timeBeforeHostShutdown, beforShutDown+"/"+ experimentName + "_time_before_host_shutdown.csv");
+        writeDataColumn(timeBeforeHostShutdown, beforeShutDown+"/"+ experimentName + "_time_before_host_shutdown.csv");
         writeDataColumn(timeBeforeContainerMigration, beforeMigrate+"/"+experimentName+ "_time_before_vm_migration.csv");
+
+        printCloudletList(cloudlets);
+
 
     }
 
@@ -1132,6 +1206,53 @@ public class HelperEx {
 
     }
 
+    /**
+     * Prints the Cloudlet objects.
+     *
+     * @param list list of Cloudlets
+     */
+    public static void printCloudletList(List<ContainerCloudlet> list) {
+        int size = list.size();
 
+        String indent = "    ";
+        Log.printLine();
+        Log.printLine("========== OUTPUT ==========");
+        Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
+                + "Data center ID" + indent + "VM ID" + indent + "Time" + indent
+                + "Start Time" + indent + "Finish Time");
+
+        DecimalFormat dft = new DecimalFormat("###.##");
+
+        list.forEach(cloudlet->{
+            Log.print(indent + cloudlet.getCloudletId() + indent + indent);
+
+            if (cloudlet.getCloudletStatusString() == "Success") {
+                Log.print("SUCCESS");
+
+                Log.printLine(indent + indent + cloudlet.getResourceId()
+                        + indent + indent + indent + cloudlet.getVmId()
+                        + indent + indent
+                        + dft.format(cloudlet.getActualCPUTime()) + indent
+                        + indent + dft.format(cloudlet.getExecStartTime())
+                        + indent + indent
+                        + dft.format(cloudlet.getFinishTime()));
+            }
+        });
+
+    }
+
+
+    public static List<Double> getCloudletFinishTimes(List<ContainerCloudlet> list) {
+        int size = list.size();
+        List<Double> result = new ArrayList<>();;
+
+        // Iterate through each and build a list of successfull finish times.
+        list.forEach(cloudlet->{
+            if (cloudlet.getCloudletStatusString() == "Success")
+                result.add(cloudlet.getFinishTime());
+        });
+
+        return result;
+    }
 
 }
