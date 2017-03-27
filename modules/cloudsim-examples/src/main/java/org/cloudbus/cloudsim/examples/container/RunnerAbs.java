@@ -66,8 +66,41 @@ public abstract class RunnerAbs {
 
     private String runTime;
 
+    public void setRc(RunConfig rc) {
+        this.rc = rc;
+    }
+
+    RunConfig rc;
+
+
+    public RunnerAbs () {
+
+    }
 
     public RunnerAbs(boolean enableOutput, boolean outputToFile, String inputFolder, String outputFolder, String vmAllocationPolicy, String containerAllocationPolicy, String vmSelectionPolicy, String containerSelectionPolicy, String hostSelectionPolicy, double overBookingFactor, String runTime, String logAddress) {
+
+        initializeAndStart( enableOutput,  outputToFile,  inputFolder,  outputFolder,  vmAllocationPolicy,  containerAllocationPolicy,  vmSelectionPolicy,  containerSelectionPolicy,  hostSelectionPolicy,  overBookingFactor,  runTime,  logAddress);
+
+    }
+
+    public void initializeAndStart(double overBookingFactor) {
+        if (rc != null) {
+            initializeAndStart(
+                    rc.isEnableOutput(),
+                    rc.isOutputToFile(),
+                    rc.getInputFolder(),
+                    rc.getOutputFolder(),
+                    rc.getVmAllocationPolicy(),
+                    rc.getContainerAllocationPolicy(),
+                    rc.getVmSelectionPolicy(),
+                    rc.getContainerSelectionPolicy(),
+                    rc.getHostSelectionPolicy(),
+                    overBookingFactor, Integer.toString(rc.getRunTime()), rc.getOutputFolder()
+            );
+        }
+    }
+
+    public void initializeAndStart(boolean enableOutput, boolean outputToFile, String inputFolder, String outputFolder, String vmAllocationPolicy, String containerAllocationPolicy, String vmSelectionPolicy, String containerSelectionPolicy, String hostSelectionPolicy, double overBookingFactor, String runTime, String logAddress) {
         setOverBookingFactor(overBookingFactor);
         setRunTime(runTime);
         setLogAddress(logAddress);

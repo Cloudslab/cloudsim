@@ -74,6 +74,7 @@ public class ContainerSelectionTest {
             int OverBookingFactor = 80;
 
             new RunnerInitiator(
+
                     enableOutput,
                     outputToFile,
                     inputFolder,

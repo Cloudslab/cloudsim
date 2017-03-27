@@ -13,7 +13,6 @@ import java.util.Calendar;
 
 public class RunnerInitiator extends RunnerAbs {
 
-
     /**
      * Instantiates a new runner.
      *
@@ -37,7 +36,6 @@ public class RunnerInitiator extends RunnerAbs {
             String hostSelectionPolicy,
             double overBookingFactor, String runTime, String logAddress) {
 
-
         super(enableOutput,
                 outputToFile,
                 inputFolder,
@@ -50,6 +48,33 @@ public class RunnerInitiator extends RunnerAbs {
                 overBookingFactor, runTime, logAddress);
 
     }
+
+    public RunnerInitiator() {
+
+    }
+
+//    public RunnerInitiator(
+//            RunConfig rc,
+//            double overBookingFactor) {
+//
+//        this.rc = rc;
+//
+//        initializeAndStart(
+//                rc.isEnableOutput(),
+//                rc.isOutputToFile(),
+//                rc.getInputFolder(),
+//                rc.getOutputFolder(),
+//                rc.getVmAllocationPolicy(),
+//                rc.getContainerAllocationPolicy(),
+//                rc.getVmSelectionPolicy(),
+//                rc.getContainerSelectionPolicy(),
+//                rc.getHostSelectionPolicy(),
+//                overBookingFactor, Integer.toString(rc.getRunTime()), rc.getOutputFolder()
+//        );
+//
+//
+//
+//    }
 
     /*
      * (non-Javadoc)
@@ -67,10 +92,14 @@ public class RunnerInitiator extends RunnerAbs {
 
 //            broker = HelperEx.createAuctionBroker(overBookingFactor);
             int brokerId = broker.getId();
-            cloudletList = HelperEx.createContainerCloudletList(brokerId, inputFolder, ConstantsExamples.NUMBER_CLOUDLETS);
-            containerList = HelperEx.createContainerList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
-            vmList = HelperEx.createVmList(brokerId, ConstantsExamples.NUMBER_VMS, ConstantsExamples.CONTAINER_VM_TYPE);
-            hostList = HelperEx.createHostList(ConstantsExamples.NUMBER_HOSTS);
+//            cloudletList = HelperEx.createContainerCloudletList(brokerId, inputFolder, ConstantsExamples.NUMBER_CLOUDLETS);
+            cloudletList = HelperEx.createContainerCloudletList(brokerId, inputFolder, rc.getNumberCloudlets());
+//            containerList = HelperEx.createContainerList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
+            containerList = HelperEx.createContainerList(brokerId, rc.getNumberCloudlets());
+//            vmList = HelperEx.createVmList(brokerId, ConstantsExamples.NUMBER_VMS, ConstantsExamples.CONTAINER_VM_TYPE);
+            vmList = HelperEx.createVmList(brokerId, ConstantsExamples.NUMBER_VMS, rc.getContainerType());
+//            hostList = HelperEx.createHostList(ConstantsExamples.NUMBER_HOSTS);
+            hostList = HelperEx.createHostList(rc.getNumberHosts());
 
         } catch (Exception e) {
             e.printStackTrace();
