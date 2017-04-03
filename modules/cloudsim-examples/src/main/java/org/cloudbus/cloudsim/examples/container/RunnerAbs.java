@@ -218,7 +218,7 @@ public abstract class RunnerAbs {
             broker.submitContainerList(containerList);
             broker.submitCloudletList(cloudletList.subList(0, containerList.size()));
 
-            CloudSim.terminateSimulation(86400.0D);
+            CloudSim.terminateSimulation(ConstantsExamples.SIMULATION_LIMIT);
             double lastClock = CloudSim.startSimulation();
             List newList = broker.getCloudletReceivedList();
             Log.printLine("Received " + newList.size() + " cloudlets");

@@ -17,7 +17,7 @@ public class ConstantsExamples {
     public static final boolean ENABLE_OUTPUT = true;
     public static final boolean OUTPUT_CSV = false;
     public static final double SCHEDULING_INTERVAL = 300.0D;
-    public static final double SIMULATION_LIMIT = 87400.0D;
+    public static final double SIMULATION_LIMIT = 86400.0D;
     /**
      * Cloudlet specs
      */

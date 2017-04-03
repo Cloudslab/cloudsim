@@ -97,7 +97,7 @@ public class RunnerInitiator extends RunnerAbs {
 //            containerList = HelperEx.createContainerList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
             containerList = HelperEx.createContainerList(brokerId, rc.getNumberCloudlets());
 //            vmList = HelperEx.createVmList(brokerId, ConstantsExamples.NUMBER_VMS, ConstantsExamples.CONTAINER_VM_TYPE);
-            vmList = HelperEx.createVmList(brokerId, ConstantsExamples.NUMBER_VMS, rc.getContainerType());
+            vmList = HelperEx.createVmList(brokerId, rc.getNumberVms(), rc.getContainerType());
 //            hostList = HelperEx.createHostList(ConstantsExamples.NUMBER_HOSTS);
             hostList = HelperEx.createHostList(rc.getNumberHosts());
 

@@ -135,7 +135,7 @@ public class HelperEx {
                 case "PowerContainerVm" :
                     cVM = new PowerContainerVm(IDs.pollId(ContainerVm.class),
                             brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (float) ConstantsExamples.VM_RAM[vmType],
-                            ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen",
+                            ConstantsExamples.VM_BW, ConstantfsExamples.VM_SIZE, "Xen",
                             new ContainerSchedulerTimeSharedOverSubscription(peList),
                             new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
                             new ContainerBwProvisionerSimple(ConstantsExamples.VM_BW), peList,
@@ -329,6 +329,7 @@ public class HelperEx {
 
         int numberOfHosts = hosts.size();
         int numberOfVms = vms.size();
+        int numberOfContainers = containers.size();
 
         double totalSimulationTime = lastClock;
         double energy = datacenter.getPower() / (3600 * 1000);
@@ -404,6 +405,7 @@ public class HelperEx {
             data.append(parseExperimentName(experimentName));
             data.append(String.format("%d", numberOfHosts) + delimeter);
             data.append(String.format("%d", numberOfVms) + delimeter);
+            data.append(String.format("%d", numberOfContainers) + delimeter);
             data.append(String.format("%.2f", totalSimulationTime) + delimeter);
             data.append(String.format("%.5f", energy) + delimeter);
 //            data.append(String.format("%d", numberOfMigrations) + delimeter);
@@ -469,6 +471,7 @@ public class HelperEx {
             Log.printLine(String.format("Experiment name: " + experimentName));
             Log.printLine(String.format("Number of hosts: " + numberOfHosts));
             Log.printLine(String.format("Number of VMs: " + numberOfVms));
+            Log.printLine(String.format("Number of Containers: " + numberOfContainers));
             Log.printLine(String.format("Total simulation time: %.2f sec", totalSimulationTime));
             Log.printLine(String.format("Energy consumption: %.2f kWh", energy));
 //            Log.printLine(String.format("Number of VM migrations: %d", numberOfMigrations));
@@ -931,6 +934,7 @@ public class HelperEx {
         String[] msg = { "ExperimentName","hostSelectionPolicy","vmAllocationPolicy", "OLThreshold","ULThreshold",  "VMSPolicy","ContainerSpolicy","ContainerPlacement","Percentile",
                 "numberOfHosts",
                 "numberOfVms",
+                "numberOfContainers",
                 "totalSimulationTime",
                 "slaOverall",
                 "slaAverage",
@@ -967,6 +971,8 @@ public class HelperEx {
 
         int numberOfHosts = hosts.size();
         int numberOfVms = vms.size();
+        int numberOfContainers = containers.size();
+
         double totalSimulationTime = lastClock;
         double slaOverall = slaMetrics.get("overall");
         double slaAverage = slaMetrics.get("average");
@@ -1065,6 +1071,7 @@ public class HelperEx {
         data.append(parseExperimentName(experimentName));
         data.append(String.format("%d", numberOfHosts) + delimeter);
         data.append(String.format("%d", numberOfVms) + delimeter);
+        data.append(String.format("%d", numberOfContainers) + delimeter);
         data.append(String.format("%.2f", totalSimulationTime) + delimeter);
         data.append(String.format("%.10f", slaOverall) + delimeter);
         data.append(String.format("%.10f", slaAverage) + delimeter);
