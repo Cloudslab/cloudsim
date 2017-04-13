@@ -133,7 +133,7 @@ public abstract class RunnerAbs {
         this.runTime = runTime;
     }
 
-    protected void initLogOutput(boolean enableOutput, boolean outputToFile, String outputFolder, String vmAllocationPolicy, String vmSelectionPolicy, String containerSelectionPolicy, String hostSelectionPolicy) throws IOException, FileNotFoundException {
+    protected void  initLogOutput(boolean enableOutput, boolean outputToFile, String outputFolder, String vmAllocationPolicy, String vmSelectionPolicy, String containerSelectionPolicy, String hostSelectionPolicy) throws IOException, FileNotFoundException {
         this.setEnableOutput(enableOutput);
         Log.setDisabled(!this.isEnableOutput());
 //        OutputStream out = new FileOutputStream("/home/sareh/Dropbox/programming/Results/log.txt");
