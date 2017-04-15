@@ -214,6 +214,7 @@ public abstract class RunnerAbs {
 //            PowerContainerDatacenter e = (PowerContainerDatacenter) HelperEx.createDatacenter("Datacenter", PowerContainerDatacenter.class, hostList, vmAllocationPolicy, containerAllocationPolicy);
             vmAllocationPolicy.setDatacenter(e);
             e.setDisableVmMigrations(false);
+
             broker.submitVmList(vmList);
             broker.submitContainerList(containerList);
             broker.submitCloudletList(cloudletList.subList(0, containerList.size()));
@@ -221,11 +222,17 @@ public abstract class RunnerAbs {
             CloudSim.terminateSimulation(ConstantsExamples.SIMULATION_LIMIT);
             double lastClock = CloudSim.startSimulation();
             List newList = broker.getCloudletReceivedList();
+            List submitList = broker.getCloudletSubmittedList();
+
+            Log.printLine("Requested " + cloudletList.size() + " cloudlets");
             Log.printLine("Received " + newList.size() + " cloudlets");
+            Log.printLine("Submitted " + submitList.size() + " cloudlets");
             CloudSim.stopSimulation();
 
 //            HelperEx.printResults(e, broker.getVmsCreatedList(),broker.getContainersCreatedList() ,lastClock, experimentName, true, outputFolder);
-            HelperEx.printResultsNew(e, broker, lastClock, experimentName, true, outputFolder);
+
+            HelperEx.printResults(e, broker, lastClock, experimentName, true, outputFolder, containerList.size());
+
         } catch (Exception var8) {
             var8.printStackTrace();
             Log.printLine("The simulation has been terminated due to an unexpected error");

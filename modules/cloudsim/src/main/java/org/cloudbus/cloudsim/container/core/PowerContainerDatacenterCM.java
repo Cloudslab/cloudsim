@@ -326,6 +326,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
     }
 
     public int getNewlyCreatedVms() {
+        newlyCreatedVms = newlyCreatedVmsList.size();
         return newlyCreatedVms;
     }
 
