@@ -44,7 +44,7 @@ public class ContainerPlacementPolicyAuction extends ContainerPlacementPolicy {
                     bid, totalMips, totalMemory);
 
             // Select the VM with the max score
-            if (Double.compare(lowestBid, bid) > 0) {
+            if (Double.compax   re(lowestBid, bid) > 0) {
                 lowestBid = bid;
                 selectedVm = containerVm1;
             }
