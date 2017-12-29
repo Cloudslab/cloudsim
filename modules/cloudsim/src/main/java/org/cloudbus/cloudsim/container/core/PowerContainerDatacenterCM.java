@@ -117,7 +117,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                     send(
                                             getId(),
                                             containerStartupDelay + vmStartupDelay
-                                            , containerCloudSimTags.CONTAINER_MIGRATE,
+                                            , ContainerCloudSimTags.CONTAINER_MIGRATE,
                                             migrate);
 
                                 } else {
@@ -131,7 +131,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                     send(
                                             getId(),
                                             containerStartupDelay + vmStartupDelay
-                                            , containerCloudSimTags.CONTAINER_MIGRATE,
+                                            , ContainerCloudSimTags.CONTAINER_MIGRATE,
                                             migrate);
 
 
@@ -142,7 +142,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                 send(
                                         getId(),
                                         containerStartupDelay,
-                                        containerCloudSimTags.CONTAINER_MIGRATE,
+                                        ContainerCloudSimTags.CONTAINER_MIGRATE,
                                         migrate);
 
 
@@ -253,7 +253,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                 } else {
                     data.put("result", CloudSimTags.FALSE);
                 }
-                send(2, CloudSim.getMinTimeBetweenEvents(), containerCloudSimTags.VM_NEW_CREATE, data);
+                send(2, CloudSim.getMinTimeBetweenEvents(), ContainerCloudSimTags.VM_NEW_CREATE, data);
             }
 
             if (result) {

@@ -223,7 +223,7 @@ public class ContainerDatacenterBroker extends SimEntity {
                 processVmCreate(ev);
                 break;
             // New VM Creation answer
-            case containerCloudSimTags.VM_NEW_CREATE:
+            case ContainerCloudSimTags.VM_NEW_CREATE:
                 processNewVmCreate(ev);
                 break;
             // A finished cloudlet returned
@@ -234,7 +234,7 @@ public class ContainerDatacenterBroker extends SimEntity {
             case CloudSimTags.END_OF_SIMULATION:
                 shutdownEntity();
                 break;
-            case containerCloudSimTags.CONTAINER_CREATE_ACK:
+            case ContainerCloudSimTags.CONTAINER_CREATE_ACK:
                 processContainerCreate(ev);
                 break;
             // other unknown tags are processed by this method
@@ -606,7 +606,7 @@ public class ContainerDatacenterBroker extends SimEntity {
             successfullySubmitted.add(container);
 
         }
-        sendNow(getDatacenterIdsList().get(0), containerCloudSimTags.CONTAINER_SUBMIT, successfullySubmitted);
+        sendNow(getDatacenterIdsList().get(0), ContainerCloudSimTags.CONTAINER_SUBMIT, successfullySubmitted);
 
 //        List<Container> successfullySubmitted = new ArrayList<>();
 //        for (Container container : getContainerList()) {
