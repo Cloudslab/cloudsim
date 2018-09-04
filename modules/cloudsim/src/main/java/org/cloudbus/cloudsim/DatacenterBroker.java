@@ -286,7 +286,7 @@ public class DatacenterBroker extends SimEntity {
 				// all the cloudlets sent finished. It means that some bount
 				// cloudlet is waiting its VM be created
 				clearDatacenters();
-				createVmsInDatacenter(0);
+				createVmsInDatacenter(getDatacenterIdsList().get(0));
 			}
 
 		}
