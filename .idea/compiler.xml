@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cloudsim" />
+        <module name="cloudsim-examples" />
+        <module name="documentation" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cloudsim" target="1.8" />
+      <module name="cloudsim-examples" target="1.8" />
+      <module name="cloudsim-package" target="1.5" />
+      <module name="distribution" target="1.5" />
+      <module name="documentation" target="1.8" />
+      <module name="modules" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

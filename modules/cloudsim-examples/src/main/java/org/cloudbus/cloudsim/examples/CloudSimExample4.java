@@ -39,6 +39,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * A simple example showing how to create
  * two datacenters with one host each and
  * run two cloudlets on them.
+ * 创建两个数据中心：一个主机和两个任务，两个任务加到一个代理上，在上面运行两个云任务
  */
 public class CloudSimExample4 {
 
@@ -71,6 +72,9 @@ public class CloudSimExample4 {
 			Datacenter datacenter0 = createDatacenter("Datacenter_0");
 			@SuppressWarnings("unused")
 			Datacenter datacenter1 = createDatacenter("Datacenter_1");
+			@SuppressWarnings("unused")
+			//Datacenter datacenter9 = createDatacenter("Datacenter_9");
+
 
 			//Third step: Create Broker
 			DatacenterBroker broker = createBroker();

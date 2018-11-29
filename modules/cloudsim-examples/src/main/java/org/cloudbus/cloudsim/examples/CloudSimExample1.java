@@ -36,6 +36,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 /**
  * A simple example showing how to create a data center with one host and run one cloudlet on it.
+ * 创建一个数据中心：一个任务和一个主机
  */
 public class CloudSimExample1 {
 	/** The cloudlet list. */
@@ -140,6 +141,7 @@ public class CloudSimExample1 {
 			//Final step: Print results when simulation is over
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
+			datacenter0.printDebts();
 
 			Log.printLine("CloudSimExample1 finished!");
 		} catch (Exception e) {

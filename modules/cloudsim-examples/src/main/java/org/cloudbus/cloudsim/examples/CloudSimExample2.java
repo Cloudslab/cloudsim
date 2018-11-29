@@ -43,6 +43,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * VMs with the same MIPS requirements.
  * The cloudlets will take the same time to
  * complete the execution.
+ * 一个主机和两个数据中心
  */
 public class CloudSimExample2 {
 
@@ -145,6 +146,8 @@ public class CloudSimExample2 {
 	            	CloudSim.stopSimulation();
 
 	            	printCloudletList(newList);
+
+	            	datacenter0.printDebts();
 
 	            	Log.printLine("CloudSimExample2 finished!");
 	        }

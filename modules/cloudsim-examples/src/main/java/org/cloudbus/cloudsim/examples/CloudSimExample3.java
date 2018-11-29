@@ -43,6 +43,8 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * The cloudlets will take different time
  * to complete the execution depending on
  * the requested VM performance.
+ *
+ * 创建一个数据中心：两个主机和两个任务
  */
 public class CloudSimExample3 {
 

@@ -39,6 +39,8 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * A simple example showing how to create
  * two datacenters with one host each and
  * run cloudlets of two users on them.
+ * 两个数据中心，每个数据中心有一个主机
+ * 两个代理和两个任务，每个代理上运行一个任务
  */
 public class CloudSimExample5 {
 
