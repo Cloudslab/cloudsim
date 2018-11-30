@@ -135,7 +135,7 @@ public class NetworkExample3 {
 
 			//Sixth step: configure network
 			//load the network topology file
-			NetworkTopology.buildNetworkTopology("topology.brite");
+			NetworkTopology.buildNetworkTopology("/Users/beddingearly/studio/cloudsim/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/network/topology.brite");
 
 			//maps CloudSim entities to BRITE entities
 			//Datacenter0 will correspond to BRITE node 0
@@ -154,6 +154,9 @@ public class NetworkExample3 {
 			briteNode=4;
 			NetworkTopology.mapNode(broker2.getId(),briteNode);
 
+			NetworkTopology.printMap();
+			//NetworkTopology.
+
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();
 
@@ -168,6 +171,9 @@ public class NetworkExample3 {
 
 			Log.print("=============> User "+brokerId2+"    ");
 			printCloudletList(newList2);
+
+			datacenter0.printDebts();
+			datacenter1.printDebts();
 
 			Log.printLine("NetworkExample3 finished!");
 		}

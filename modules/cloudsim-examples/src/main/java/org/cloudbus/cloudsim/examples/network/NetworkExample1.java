@@ -116,7 +116,17 @@ public class NetworkExample1 {
 
 			//Sixth step: configure network
 			//load the network topology file
-			NetworkTopology.buildNetworkTopology("topology.brite");
+			/*
+			* Nodes: (NodeID, xpos, ypos), indegree, outdegree, ASid, type(router/AS)
+			* 但只读前3项，其中AS是自治系统的意思
+			*
+			* Edges: (EdgeID, fromNode, toNode), euclideanLength, (linkDelay, linkBandwith), AS_from, AS_to, type
+			* 只读前6项，且euclideanLength项不读
+			*
+			* 仿真结果显示：云任务ID为0，云任务状态为SUCCESS，数据中心ID为2，VM ID为0，云任务0运行时间为400，开始时间为0.1，结束时间为400.1
+			*
+			 * */
+			NetworkTopology.buildNetworkTopology("/Users/beddingearly/studio/cloudsim/modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/network/topology.brite");
 
 			//maps CloudSim entities to BRITE entities
 			//PowerDatacenter will correspond to BRITE node 0

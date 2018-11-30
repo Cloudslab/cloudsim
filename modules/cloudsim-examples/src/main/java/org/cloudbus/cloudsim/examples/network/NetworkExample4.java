@@ -70,10 +70,15 @@ public class NetworkExample4 {
 			// Second step: Create Datacenters
 			//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
 			Datacenter datacenter0 = createDatacenter("Datacenter_0");
+			Datacenter datacenter1 = createDatacenter("Datacenter_1");
 
 			//Third step: Create Broker
 			DatacenterBroker broker = createBroker();
 			int brokerId = broker.getId();
+
+//			System.out.println(datacenter0.getId());
+//			System.out.println(brokerId);
+
 
 			//Fourth step: Create one virtual machine
 			vmlist = new ArrayList<Vm>();
@@ -119,8 +124,17 @@ public class NetworkExample4 {
 			//Sixth step: configure network
 
 			//maps CloudSim entities to BRITE entities
-			NetworkTopology.addLink(datacenter0.getId(), broker.getId(),10.0,10);
-                        
+			NetworkTopology.addLink(datacenter0.getId(), broker.getId(),10.0,100);
+
+			NetworkTopology.addLink(datacenter0.getId(), datacenter1.getId(),10.0,100);
+
+			System.out.println("datacenter0: " + datacenter0.getId());
+			System.out.println("datacenter1: " + datacenter1.getId());
+			System.out.println("broker: " + broker.getId());
+
+			//NetworkTopology.addLink(0, 1,10.0,100);
+			NetworkTopology.printMap();
+
 			// Seventh step: Starts the simulation
 			CloudSim.startSimulation();
 
