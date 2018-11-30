@@ -129,6 +129,8 @@ public class CloudSimExample6 {
 			int brokerId = broker.getId();
 
 			//Fourth step: Create VMs and Cloudlets and send them to broker
+
+			//创建20个虚拟机和40个云任务
 			vmlist = createVM(brokerId,20); //creating 20 vms
 			cloudletList = createCloudlet(brokerId,40); // creating 40 cloudlets
 

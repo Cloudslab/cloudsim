@@ -41,6 +41,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * An example showing how to create simulation entities
  * (a DatacenterBroker in this example) in run-time using
  * a globar manager entity (GlobalBroker).
+ * 运行时通过全局代理来创建 数据中心代理
  */
 public class CloudSimExample8 {
 
@@ -116,6 +117,7 @@ public class CloudSimExample8 {
 			// Initialize the CloudSim library
 			CloudSim.init(num_user, calendar, trace_flag);
 
+			//全局代理
 			GlobalBroker globalBroker = new GlobalBroker("GlobalBroker");
 
 			// Second step: Create Datacenters

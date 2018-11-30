@@ -39,6 +39,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * An example showing how to pause and resume the simulation,
  * and create simulation entities (a DatacenterBroker in this example)
  * dynamically.
+ * 怎样创暂停重启仿真，以及动态创建数据中心代理
  */
 public class CloudSimExample7 {
 
@@ -133,12 +134,13 @@ public class CloudSimExample7 {
 			broker.submitCloudletList(cloudletList);
 
 			// A thread that will create a new broker at 200 clock time
+			//0.2s后创建一个新代理，
 			Runnable monitor = new Runnable() {
 				@Override
 				public void run() {
 					CloudSim.pauseSimulation(200);
 					while (true) {
-						if (CloudSim.isPaused()) {
+						if (CloudSim.isPaused()) {// > 200
 							break;
 						}
 						try {
@@ -151,7 +153,7 @@ public class CloudSimExample7 {
 					Log.printLine("\n\n\n" + CloudSim.clock() + ": The simulation is paused for 5 sec \n\n");
 
 					try {
-						Thread.sleep(5000);
+						Thread.sleep(5000);// 仿真暂停5s
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

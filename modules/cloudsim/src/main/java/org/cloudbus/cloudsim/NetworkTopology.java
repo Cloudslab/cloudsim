@@ -64,8 +64,7 @@ public class NetworkTopology {
 
 	/**
          * The map between CloudSim entities and BRITE entities.
-         * Each key is a CloudSim entity ID and each value the corresponding
-         * BRITE entity ID.
+         * Each key is a CloudSim entity ID and each value the corresponding BRITE entity ID.
          */
         protected static Map<Integer, Integer> map = null;
 
@@ -87,6 +86,13 @@ public class NetworkTopology {
 			graph = reader.readGraphFile(fileName);
 			map = new HashMap<Integer, Integer>();
 			generateMatrices();
+			System.out.println("Print graph:");
+			System.out.println(graph.toString());
+//			System.out.println("Print map:");
+//			for (Map.Entry<Integer, Integer> entry: map.entrySet()){
+//				System.out.println(entry.getKey());
+//				System.out.println(entry.getValue());
+//			}
 		} catch (IOException e) {
 			// problem with the file. Does not simulate network
 			Log.printLine("Problem in processing BRITE file. Network simulation is disabled. Error: "
@@ -148,7 +154,8 @@ public class NetworkTopology {
 		graph.addLink(new TopologicalLink(map.get(srcId), map.get(destId), (float) lat, (float) bw));
 
 		generateMatrices();
-
+		System.out.println(graph.toString());
+		System.out.println();
 	}
 
 	/**
@@ -212,6 +219,17 @@ public class NetworkTopology {
 						" not mapped to BRITE node ", briteID, ".");
 			}
 		}
+	}
+
+	/**
+	 * Print map that mapped CloudSim entity to a BRITE node in the network topology.
+	 */
+	public static void printMap(){
+		System.out.println("Print map:");
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()){
+			System.out.println("Key: "+entry.getKey().toString()+"--> Value: "+entry.getValue().toString());
+		}
+		System.out.println();
 	}
 
 	/**
