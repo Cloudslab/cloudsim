@@ -1,9 +1,9 @@
 package org.cloudbus.cloudsim.geoweb.web.workload.brokers;
 
-import org.cloudbus.cloudsim.plus.disk.HddVm;
+import org.cloudbus.cloudsim.VMPlus.disk.HddVm;
 import org.cloudbus.cloudsim.geoweb.geolocation.IGeolocationService;
-import org.cloudbus.cloudsim.plus.util.CustomLog;
-import org.cloudbus.cloudsim.plus.vm.VMStatus;
+import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
+import org.cloudbus.cloudsim.VMPlus.vm.VMStatus;
 import org.cloudbus.cloudsim.geoweb.web.ILoadBalancer;
 import org.cloudbus.cloudsim.geoweb.web.WebSession;
 

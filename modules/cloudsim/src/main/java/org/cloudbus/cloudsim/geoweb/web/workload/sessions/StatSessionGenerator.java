@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.geoweb.web.workload.sessions;
 
-import org.cloudbus.cloudsim.plus.disk.DataItem;
+import org.cloudbus.cloudsim.VMPlus.disk.DataItem;
 import org.cloudbus.cloudsim.geoweb.web.*;
 
 import java.util.*;

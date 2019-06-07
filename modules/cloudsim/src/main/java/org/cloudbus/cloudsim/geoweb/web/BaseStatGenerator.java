@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.geoweb.web;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.plus.disk.DataItem;
-import org.cloudbus.cloudsim.plus.util.CustomLog;
+import org.cloudbus.cloudsim.VMPlus.disk.DataItem;
+import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
 import org.uncommons.maths.number.NumberGenerator;
 
 import java.util.LinkedList;

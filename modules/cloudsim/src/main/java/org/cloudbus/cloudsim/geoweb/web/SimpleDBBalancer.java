@@ -4,10 +4,10 @@
 package org.cloudbus.cloudsim.geoweb.web;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.plus.disk.HddCloudlet;
-import org.cloudbus.cloudsim.plus.disk.HddPe;
-import org.cloudbus.cloudsim.plus.disk.HddVm;
-import org.cloudbus.cloudsim.plus.util.CustomLog;
+import org.cloudbus.cloudsim.VMPlus.disk.HddCloudlet;
+import org.cloudbus.cloudsim.VMPlus.disk.HddPe;
+import org.cloudbus.cloudsim.VMPlus.disk.HddVm;
+import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
 
 import java.util.Arrays;
 import java.util.List;

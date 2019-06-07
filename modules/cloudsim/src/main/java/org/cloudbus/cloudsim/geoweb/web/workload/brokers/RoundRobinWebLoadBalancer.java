@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.geoweb.web.workload.brokers;
 
-import org.cloudbus.cloudsim.plus.disk.HddVm;
+import org.cloudbus.cloudsim.VMPlus.disk.HddVm;
 import org.cloudbus.cloudsim.geoweb.web.IDBBalancer;
 import org.cloudbus.cloudsim.geoweb.web.SimpleWebLoadBalancer;
 

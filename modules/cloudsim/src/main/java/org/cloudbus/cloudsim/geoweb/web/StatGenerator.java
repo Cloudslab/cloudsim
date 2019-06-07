@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.geoweb.web;
 
-import org.cloudbus.cloudsim.plus.disk.DataItem;
+import org.cloudbus.cloudsim.VMPlus.disk.DataItem;
 import org.uncommons.maths.number.NumberGenerator;
 
 import java.util.Map;

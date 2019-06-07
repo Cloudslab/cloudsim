@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.geoweb.web;
 
-import org.cloudbus.cloudsim.plus.disk.HddVm;
+import org.cloudbus.cloudsim.VMPlus.disk.HddVm;
 
 import java.util.List;
 
