@@ -8,7 +8,7 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import org.cloudbus.cloudsim.network.datacenter.NetworkCloudletSpaceSharedScheduler;
 
@@ -56,11 +56,11 @@ public abstract class CloudletScheduler {
 	 */
 	public CloudletScheduler() {
 		setPreviousTime(0.0);
-		cloudletWaitingList = new ArrayList<ResCloudlet>();
-		cloudletExecList = new ArrayList<ResCloudlet>();
-		cloudletPausedList = new ArrayList<ResCloudlet>();
-		cloudletFinishedList = new ArrayList<ResCloudlet>();
-		cloudletFailedList = new ArrayList<ResCloudlet>();
+		cloudletWaitingList = new LinkedList<ResCloudlet>();
+		cloudletExecList = new LinkedList<ResCloudlet>();
+		cloudletPausedList = new LinkedList<ResCloudlet>();
+		cloudletFinishedList = new LinkedList<ResCloudlet>();
+		cloudletFailedList = new LinkedList<ResCloudlet>();
 	}
 
 	/**
