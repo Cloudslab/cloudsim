@@ -112,7 +112,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	@Override
 	public String toString() {
-		return "Event tag = " + tag + " source = " + CloudSim.getEntity(entSrc).getName() + " destination = "
+		return "Time ="+this.time+", Event tag = " + tag + " source = " + CloudSim.getEntity(entSrc).getName() + " destination = "
 				+ CloudSim.getEntity(entDst).getName();
 	}
 
