@@ -100,9 +100,13 @@ public class Datacenter extends SimEntity {
 		}
 
 		// If this resource doesn't have any PEs then no useful at all
-		if (getCharacteristics().getNumberOfPes() == 0) {
+		if (getCharacteristics().getNumberOfPes() == 0 && getCharacteristics().getHostList().size() != 0) {
                     throw new Exception(super.getName()
                         + " : Error - this entity has no PEs. Therefore, can't process any Cloudlets.");
+		}
+		
+		if(getCharacteristics().getNumberOfPes()==0 && getCharacteristics().getHostList().size() == 0) {
+			Log.printLine(name+": inter-cloud networking topology created...");
 		}
 
 		// stores id of this class
@@ -518,7 +522,8 @@ public class Datacenter extends SimEntity {
 
 		Vm vm = (Vm) migrate.get("vm");
 		Host host = (Host) migrate.get("host");
-
+		
+		//destroy VM in src host
 		getVmAllocationPolicy().deallocateHostForVm(vm);
 		host.removeMigratingInVm(vm);
 		boolean result = getVmAllocationPolicy().allocateHostForVm(vm, host);
@@ -893,7 +898,7 @@ public class Datacenter extends SimEntity {
 		// if some time passed since last processing
 		// R: for term is to allow loop at simulation start. Otherwise, one initial
 		// simulation step is skipped and schedulers are not properly initialized
-		if (CloudSim.clock() < 0.111 || CloudSim.clock() > getLastProcessTime() + CloudSim.getMinTimeBetweenEvents()) {
+		if (CloudSim.clock() < 0.111 || CloudSim.clock() >= getLastProcessTime() + CloudSim.getMinTimeBetweenEvents()) {
 			List<? extends Host> list = getVmAllocationPolicy().getHostList();
 			double smallerTime = Double.MAX_VALUE;
 			// for each host...

@@ -57,7 +57,10 @@ public class Vm {
 
 	/** Indicates if the VM is in migration process. */
 	private boolean inMigration;
-
+	
+	/** NEW Indicates if the VM is in Pause State (e.g. Stop & copy phase)*/
+	private boolean inPause;
+	
 	/** The current allocated storage size. */
 	private long currentAllocatedSize;
 
@@ -128,6 +131,7 @@ public class Vm {
 		setCloudletScheduler(cloudletScheduler);
 
 		setInMigration(false);
+		setInPause(false);
 		setBeingInstantiated(true);
 
 		setCurrentAllocatedBw(0);
@@ -613,6 +617,14 @@ public class Vm {
 			}
 		}
 		getStateHistory().add(newState);
+	}
+
+	public boolean isInPause() {
+		return inPause;
+	}
+
+	public void setInPause(boolean inPause) {
+		this.inPause = inPause;
 	}
 
 }
