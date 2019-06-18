@@ -63,7 +63,7 @@ public class CloudSim {
 	private static double terminateAt = -1;
 
 	/** The minimal time between events. Events within shorter periods after the last event are discarded. */
-	private static double minTimeBetweenEvents = 0.1;
+	private static double minTimeBetweenEvents = 0.01;
 	
 	/**
 	 * Initialises all the common attributes.
@@ -553,7 +553,7 @@ public class CloudSim {
 		} else {
 			queue_empty = true;
 			running = false;
-			printMessage("Simulation: No more future events");
+			printMessage(CloudSim.clock()+": Simulation: No more future events");
 		}
 
 		return queue_empty;
@@ -602,6 +602,9 @@ public class CloudSim {
 	public static void send(int src, int dest, double delay, int tag, Object data) {
 		if (delay < 0) {
 			throw new IllegalArgumentException("Send delay can't be negative.");
+		}
+		if(delay >= Double.MAX_VALUE) {
+			throw new RuntimeException("Send delay can't be infinite.");
 		}
 
 		SimEvent e = new SimEvent(SimEvent.SEND, clock + delay, src, dest, tag, data);

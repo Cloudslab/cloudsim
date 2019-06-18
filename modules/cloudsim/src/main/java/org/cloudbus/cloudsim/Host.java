@@ -115,7 +115,7 @@ public class Host {
 	}
 
 	/**
-	 * Adds a VM migrating into the current host.
+	 * Adds a VM migrating into the current (dstHost) host.
 	 * 
 	 * @param vm the vm
 	 */
