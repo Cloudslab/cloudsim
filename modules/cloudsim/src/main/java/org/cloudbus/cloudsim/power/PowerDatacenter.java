@@ -90,6 +90,8 @@ public class PowerDatacenter extends Datacenter {
 			return;
 		}
 		double currentTime = CloudSim.clock();
+		double Pm = 4.5; // Unit of energy communication between Vms
+                double sum = 0;
 
 		// if some time passed since last processing
 		if (currentTime > getLastProcessTime()) {
