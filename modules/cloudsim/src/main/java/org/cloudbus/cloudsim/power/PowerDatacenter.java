@@ -51,6 +51,12 @@ public class PowerDatacenter extends Datacenter {
 
 	/** The VM migration count. */
 	private int migrationCount;
+	
+	      // Migration Time
+        public double Tmigr = 0;
+        
+        // Migration Energy
+        public double Emigr;
 
 	/**
 	 * Instantiates a new PowerDatacenter.
@@ -100,6 +106,13 @@ public class PowerDatacenter extends Datacenter {
 						Vm vm = (Vm) migrate.get("vm");
 						PowerHost targetHost = (PowerHost) migrate.get("host");
 						PowerHost oldHost = (PowerHost) vm.getHost();
+						
+						// Calculates migration time and energy
+                                                double Cj = vm.getRam();
+                                                double BWj = vm.getBw();
+                                                Tmigr = Tmigr + Cj/BWj;
+                                                sum = sum + Pm*(Cj/BWj);
+                                                Emigr = 4*sum;
 
 						if (oldHost == null) {
 							Log.formatLine(
@@ -140,6 +153,8 @@ public class PowerDatacenter extends Datacenter {
 
 			setLastProcessTime(currentTime);
 		}
+		    setMigrationTime(Tmigr); // Update Total Migration Time
+                setMigrationEnergy(Emigr); // Update Total Migration Energy
 	}
 
 	/**
@@ -355,5 +370,22 @@ public class PowerDatacenter extends Datacenter {
 	protected void incrementMigrationCount() {
 		setMigrationCount(getMigrationCount() + 1);
 	}
+	
+	     // sets migration time
+     public void setMigrationTime(double Tm){
+         Tmigr = Tm;
+     }
+     //gets migration time
+     public double getMigrationTime(){
+         return Tmigr;
+     }
+     //sets migration Energy
+     public void setMigrationEnergy(double Em){
+         Emigr = Em;
+     }
+     //gets total migration energy
+     public double getMigrationEnergy(){
+         return Emigr;
+     }
 
 }
