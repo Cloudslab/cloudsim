@@ -1,7 +1,9 @@
 # CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services #
 
-Modified version of CloudSim, By Sabir Mohammedi Taieb, 
-Added new power vm selection and allocation policies,
+Modified version of CloudSim, By Sabir Mohammedi Taieb,
+
+Added new power vm selection and allocation policies
+
 Added new simulation metrics: Migraiton Time, Migration Energy.
 
 Cloud computing is the leading approach for delivering reliable, secure, fault-tolerant, sustainable, and scalable computational services. Hence timely, repeatable, and controllable methodologies for performance evaluation of new cloud applications and policies before their actual development are reqruied. Because utilization of real testbeds limits the experiments to the scale of the testbed and makes the reproduction of results an extremely difficult undertaking, simulation may be used.
