@@ -1,0 +1,14 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+-fx-background-color: linear-gradient(#136f94 50%,#8b00ff 100%);
+}
+
+.button{
+    -fx-background-color : black;
+}
+.button:hover{
+    -fx-background-color: linear-gradient(#440979 50%,#8b00ff 100%);
+}

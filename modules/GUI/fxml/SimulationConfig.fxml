@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" minHeight="600.0" minWidth="800.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.cloudsimgui.SimulationConfigController">
+    <stylesheets>
+        <URL value="@simulationconfig.css" />
+    </stylesheets>
+   <children>
+      <Label layoutX="221.0" layoutY="14.0" text="Simulation Configuration" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+         <effect>
+            <Bloom />
+         </effect>
+      </Label>
+      <TextField fx:id="numVmsField" layoutX="158.0" layoutY="105.0" prefHeight="31.0" prefWidth="60.0" />
+      <Label layoutX="31.0" layoutY="110.0" text="Number of Vms :" textFill="WHITE" />
+      <Label layoutX="247.0" layoutY="110.0" text="Number of Servers :" textFill="WHITE" />
+      <TextField fx:id="numPmField" layoutX="400.0" layoutY="105.0" prefHeight="31.0" prefWidth="60.0" />
+      <Button id="startSimulation" fx:id="startSimulation" layoutX="655.0" layoutY="105.0" mnemonicParsing="false" onAction="#StartSimulation" text="Start Simulation" textFill="WHITE" />
+      <Label layoutX="31.0" layoutY="183.0" text="Approach :" textFill="WHITE" />
+      <TableView fx:id="simulationTable" layoutX="29.0" layoutY="247.0" prefHeight="321.0" prefWidth="742.0">
+        <columns>
+          <TableColumn fx:id="name" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="Vm" prefWidth="75.0" text="Vm" />
+            <TableColumn fx:id="Pm" prefWidth="75.0" text="Pm" />
+            <TableColumn fx:id="energy" prefWidth="75.0" text="Energy" />
+            <TableColumn fx:id="Time" prefWidth="75.0" text="Time" />
+            <TableColumn fx:id="oslav" prefWidth="75.0" text="OSLAV" />
+            <TableColumn fx:id="nbMigr" prefWidth="75.0" text="Nb Migr" />
+            <TableColumn fx:id="Emigr" prefWidth="124.0" text="Emigr" />
+            <TableColumn fx:id="Tmigr" prefWidth="92.0" text="Tmigr" />
+        </columns>
+      </TableView>
+      <ChoiceBox fx:id="Approach" layoutX="143.0" layoutY="178.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>
