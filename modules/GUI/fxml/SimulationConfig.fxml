@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -24,10 +23,7 @@
             <Bloom />
          </effect>
       </Label>
-      <TextField fx:id="numVmsField" layoutX="158.0" layoutY="105.0" prefHeight="31.0" prefWidth="60.0" />
-      <Label layoutX="31.0" layoutY="110.0" text="Number of Vms :" textFill="WHITE" />
-      <Label layoutX="247.0" layoutY="110.0" text="Number of Servers :" textFill="WHITE" />
-      <TextField fx:id="numPmField" layoutX="400.0" layoutY="105.0" prefHeight="31.0" prefWidth="60.0" />
+      <Label layoutX="14.0" layoutY="110.0" text="Number Vm/Pm :" textFill="WHITE" />
       <Button id="startSimulation" fx:id="startSimulation" layoutX="655.0" layoutY="105.0" mnemonicParsing="false" onAction="#StartSimulation" text="Start Simulation" textFill="WHITE" />
       <Label layoutX="31.0" layoutY="183.0" text="Approach :" textFill="WHITE" />
       <TableView fx:id="simulationTable" layoutX="29.0" layoutY="247.0" prefHeight="321.0" prefWidth="742.0">
@@ -44,5 +40,8 @@
         </columns>
       </TableView>
       <ChoiceBox fx:id="Approach" layoutX="143.0" layoutY="178.0" prefWidth="150.0" />
+      <Button fx:id="SeeChart" layoutX="652.0" layoutY="147.0" mnemonicParsing="false" onAction="#goToChart" text="See Energy Chart" textFill="WHITE" />
+      <Button fx:id="SeeOslavBarChart" layoutX="652.0" layoutY="189.0" mnemonicParsing="false" onAction="#goToOslavBarChart" prefHeight="0.0" prefWidth="133.0" text="See OSLAV Chart" textFill="WHITE" />
+      <ChoiceBox fx:id="VmPmChoiceBox" layoutX="175.0" layoutY="105.0" prefHeight="31.0" prefWidth="87.0" />
    </children>
 </AnchorPane>

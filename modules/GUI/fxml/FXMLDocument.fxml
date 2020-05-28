@@ -32,7 +32,7 @@
          <font>
             <Font size="31.0" />
          </font></Button>
-      <Button layoutX="463.0" layoutY="386.0" mnemonicParsing="false" text="About Us" textFill="WHITE">
+      <Button fx:id="aboutUsBtn" layoutX="463.0" layoutY="386.0" mnemonicParsing="false" onAction="#goToAbout" text="About Us" textFill="WHITE">
          <font>
             <Font size="31.0" />
          </font>

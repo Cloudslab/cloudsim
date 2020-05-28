@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -31,7 +30,24 @@ public class FXMLDocumentController implements Initializable {
         window.setTitle("Simulation Configuration");
         window.getIcons().add(new Image("/GUI/icons/MainIcon.png"));
         window.setResizable(false);
-        window.show();
+        window.show();   
+    }
+    
+    @FXML
+    private void goToAbout() throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/AboutUs.fxml"));
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        window.setScene(scene);
+        window.setTitle("About Us");
+        window.getIcons().add(new Image("/GUI/icons/MainIcon.png"));
+        window.setResizable(false);
+        window.show();   
+    }
+    
+    
+    @FXML
+    private void goToApproach() throws IOException{
         
     }
     
