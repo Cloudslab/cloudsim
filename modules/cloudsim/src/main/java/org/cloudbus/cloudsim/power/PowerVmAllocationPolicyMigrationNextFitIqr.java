@@ -1,4 +1,3 @@
-
 package org.cloudbus.cloudsim.power;
 
 import java.util.HashMap;
@@ -118,37 +117,41 @@ public class PowerVmAllocationPolicyMigrationNextFitIqr extends PowerVmAllocatio
                     }
                 } catch (Exception e) {
                 }
-            }else{
+            }//else{
                 //position = ((position+1) % finalPosition);
-            }
+            //}
+             if(i > finalPosition){
+            position = 0;
+               }
         }
         return allocatedHost;
     }
     
       @Override
     protected PowerHost getUnderUtilizedHost(Set<? extends Host> excludedHosts) {
-        double maxP2Nratio = Double.MIN_VALUE;
-        double minUtilization = 1;
+        //double maxP2Nratio = Double.MIN_VALUE;
         PowerHost underloadedHost = null;
         for(PowerHost host: this.<PowerHost> getHostList()){
             if(excludedHosts.contains(host)){
                 continue;
             }
+            double minUtilization = getDynamicLowerThr(host);
             double utilization = host.getUtilizationOfCpu();
             if (utilization > 0 && utilization < minUtilization
 					&& !areAllVmsMigratingOutOrAnyVmMigratingIn(host)){
-                double power = host.getPower();
-                int num_VMs = host.getVmList().size();
-                double P2Nratio = power/(double)num_VMs;
-                minUtilization = utilization;
-                if(P2Nratio>maxP2Nratio){
+                //double power = host.getPower();
+                //int num_VMs = host.getVmList().size();
+                //double P2Nratio = power/(double)num_VMs;
+                
+               // if(P2Nratio>maxP2Nratio){
                     underloadedHost = host;
-                    maxP2Nratio = P2Nratio;
+                   // maxP2Nratio = P2Nratio;
             }
-        }
         }
         return underloadedHost;
     }
+    
+    
    
 
 	/**
