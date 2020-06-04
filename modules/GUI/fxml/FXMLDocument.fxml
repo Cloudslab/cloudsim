@@ -37,7 +37,7 @@
             <Font size="31.0" />
          </font>
       </Button>
-      <Button fx:id="approach" layoutX="460.0" layoutY="301.0" mnemonicParsing="false" text="Approach" textFill="WHITE">
+      <Button fx:id="approach" layoutX="460.0" layoutY="301.0" mnemonicParsing="false" onAction="#goToApproach" text="Approach" textFill="WHITE">
          <font>
             <Font size="31.0" />
          </font>

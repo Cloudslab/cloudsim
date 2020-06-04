@@ -5,9 +5,9 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="435.0" prefWidth="836.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.cloudsimgui.OslavBarChartController">
+<AnchorPane id="AnchorPane" prefHeight="529.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.cloudsimgui.OslavBarChartController">
    <children>
-      <BarChart fx:id="oslavBarChart" layoutX="3.0" prefHeight="400.0" prefWidth="831.0" title="OslavBarChart">
+      <BarChart fx:id="oslavBarChart" prefHeight="478.0" prefWidth="948.0" title="OslavBarChart">
          <xAxis>
             <CategoryAxis fx:id="oslavX" label="Vm/Pm" side="BOTTOM" />
          </xAxis>

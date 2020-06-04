@@ -19,8 +19,11 @@ public class SimulationLine {
     private int numberMigration;
     private double migrationEnergy;
     private double migrationTime;
+    private double esv;
+
+
     
-    public SimulationLine(String n,int vm,int pm,double E,double time,double oslav,int nMigr,double Em,double Tm){
+    public SimulationLine(String n,int vm,int pm,double E,double time,double oslav,double esv,int nMigr,double Em,double Tm){
         approachName = n;
         this.vm = vm;
         this.pm = pm;
@@ -30,6 +33,7 @@ public class SimulationLine {
         numberMigration = nMigr;
         migrationEnergy = Em;
         migrationTime = Tm;
+        this.esv = esv;
     }
         
     public int getPm() {
@@ -104,5 +108,12 @@ public class SimulationLine {
     public double getMigrationTime() {
         return migrationTime;
     }
-   
+    
+       public double getEsv() {
+        return esv;
+    }
+
+    public void setEsv(double esv) {
+        this.esv = esv;
+    }
 }

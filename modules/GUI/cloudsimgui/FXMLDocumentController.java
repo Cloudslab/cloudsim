@@ -48,7 +48,15 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void goToApproach() throws IOException{
-        
+        Parent root = FXMLLoader.load(getClass().getResource("/GUI/fxml/Approach.fxml"));
+        Stage window = new Stage();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/GUI/CSS/simulationconfig.css");
+        window.setScene(scene);
+        window.setTitle("Approach");
+        window.getIcons().add(new Image("/GUI/icons/MainIcon.png"));
+        window.setResizable(false);
+        window.show();
     }
     
     @Override

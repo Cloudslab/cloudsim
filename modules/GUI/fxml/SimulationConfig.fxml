@@ -24,24 +24,26 @@
          </effect>
       </Label>
       <Label layoutX="14.0" layoutY="110.0" text="Number Vm/Pm :" textFill="WHITE" />
-      <Button id="startSimulation" fx:id="startSimulation" layoutX="655.0" layoutY="105.0" mnemonicParsing="false" onAction="#StartSimulation" text="Start Simulation" textFill="WHITE" />
+      <Button id="startSimulation" fx:id="startSimulation" layoutX="638.0" layoutY="79.0" mnemonicParsing="false" onAction="#StartSimulation" prefHeight="31.0" prefWidth="133.0" text="Start Simulation" textFill="WHITE" />
       <Label layoutX="31.0" layoutY="183.0" text="Approach :" textFill="WHITE" />
       <TableView fx:id="simulationTable" layoutX="29.0" layoutY="247.0" prefHeight="321.0" prefWidth="742.0">
         <columns>
-          <TableColumn fx:id="name" prefWidth="75.0" text="Name" />
-          <TableColumn fx:id="Vm" prefWidth="75.0" text="Vm" />
-            <TableColumn fx:id="Pm" prefWidth="75.0" text="Pm" />
-            <TableColumn fx:id="energy" prefWidth="75.0" text="Energy" />
-            <TableColumn fx:id="Time" prefWidth="75.0" text="Time" />
+          <TableColumn fx:id="name" prefWidth="96.0" text="Name" />
+          <TableColumn fx:id="Vm" prefWidth="50.0" text="Vm" />
+            <TableColumn fx:id="Pm" prefWidth="48.0" text="Pm" />
+            <TableColumn fx:id="energy" prefWidth="77.0" text="Energy" />
+            <TableColumn fx:id="Time" prefWidth="104.0" text="Time" />
             <TableColumn fx:id="oslav" prefWidth="75.0" text="OSLAV" />
+            <TableColumn fx:id="ESVcolumn" prefWidth="75.0" text="ESV" />
             <TableColumn fx:id="nbMigr" prefWidth="75.0" text="Nb Migr" />
-            <TableColumn fx:id="Emigr" prefWidth="124.0" text="Emigr" />
-            <TableColumn fx:id="Tmigr" prefWidth="92.0" text="Tmigr" />
+            <TableColumn fx:id="Emigr" prefWidth="75.0" text="Emigr" />
+            <TableColumn fx:id="Tmigr" prefWidth="66.0" text="Tmigr" />
         </columns>
       </TableView>
       <ChoiceBox fx:id="Approach" layoutX="143.0" layoutY="178.0" prefWidth="150.0" />
-      <Button fx:id="SeeChart" layoutX="652.0" layoutY="147.0" mnemonicParsing="false" onAction="#goToChart" text="See Energy Chart" textFill="WHITE" />
-      <Button fx:id="SeeOslavBarChart" layoutX="652.0" layoutY="189.0" mnemonicParsing="false" onAction="#goToOslavBarChart" prefHeight="0.0" prefWidth="133.0" text="See OSLAV Chart" textFill="WHITE" />
+      <Button fx:id="SeeChart" layoutX="638.0" layoutY="119.0" mnemonicParsing="false" onAction="#goToChart" text="See Energy Chart" textFill="WHITE" />
+      <Button fx:id="SeeOslavBarChart" layoutX="638.0" layoutY="161.0" mnemonicParsing="false" onAction="#goToOslavBarChart" prefHeight="0.0" prefWidth="133.0" text="See OSLAV Chart" textFill="WHITE" />
       <ChoiceBox fx:id="VmPmChoiceBox" layoutX="175.0" layoutY="105.0" prefHeight="31.0" prefWidth="87.0" />
+      <Button fx:id="EsvChartBtn" layoutX="638.0" layoutY="203.0" mnemonicParsing="false" onAction="#gotoEsvChart" prefHeight="31.0" prefWidth="133.0" text="See ESV Chart" textFill="WHITE" />
    </children>
 </AnchorPane>
