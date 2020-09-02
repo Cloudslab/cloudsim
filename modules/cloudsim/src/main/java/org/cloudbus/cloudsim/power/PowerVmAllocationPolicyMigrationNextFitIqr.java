@@ -20,6 +20,7 @@ public class PowerVmAllocationPolicyMigrationNextFitIqr extends PowerVmAllocatio
     /** The safety parameter. */
 	private double safetyParameter = 0;
       
+        private int position;
 
 	/** The fallback vm allocation policy. */
 	private PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy;
@@ -126,6 +127,32 @@ public class PowerVmAllocationPolicyMigrationNextFitIqr extends PowerVmAllocatio
         }
         return allocatedHost;
     }
+
+    @Override
+    protected List<Map<String, Object>> getNewVmPlacement(List<? extends Vm> vmsToMigrate, Set<? extends Host> excludedHosts) {
+        	
+		List<Map<String, Object>> migrationMap = new LinkedList<Map<String, Object>>();
+		PowerVmList.sortByCpuUtilization(vmsToMigrate);
+                int finalPosition = getHostList().size();
+               position =0;
+		for (Vm vm : vmsToMigrate) {
+			PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
+			if (allocatedHost != null) {
+				allocatedHost.vmCreate(vm);
+				Log.printLine("VM #" + vm.getId() + " allocated to host #" + allocatedHost.getId());
+
+				Map<String, Object> migrate = new HashMap<String, Object>();
+				migrate.put("vm", vm);
+				migrate.put("host", allocatedHost);
+				migrationMap.add(migrate);
+                                position++;
+			}
+		}
+		return migrationMap;
+    }
+    
+    
+    
     
       @Override
     protected PowerHost getUnderUtilizedHost(Set<? extends Host> excludedHosts) {
