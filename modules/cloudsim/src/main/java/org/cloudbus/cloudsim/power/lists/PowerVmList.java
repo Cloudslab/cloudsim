@@ -49,14 +49,10 @@ public class PowerVmList extends VmList {
 	 * @param vmList the vm list to be sorted
 	 */
 	public static <T extends Vm> void sortByCpuUtilization(List<T> vmList) {
-		Collections.sort(vmList, new Comparator<T>() {
-
-			@Override
-			public int compare(T a, T b) throws ClassCastException {
-				Double aUtilization = a.getTotalUtilizationOfCpuMips(CloudSim.clock());
-				Double bUtilization = b.getTotalUtilizationOfCpuMips(CloudSim.clock());
-				return bUtilization.compareTo(aUtilization);
-			}
+		vmList.sort((a, b) -> {
+			Double aUtilization = a.getTotalUtilizationOfCpuMips(CloudSim.clock());
+			Double bUtilization = b.getTotalUtilizationOfCpuMips(CloudSim.clock());
+			return bUtilization.compareTo(aUtilization);
 		});
 	}
 

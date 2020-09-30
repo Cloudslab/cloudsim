@@ -28,7 +28,7 @@ import org.cloudbus.cloudsim.Vm;
  * @since CloudSim Toolkit 3.0
  * @todo Attributes should be private
  */
-public class NetworkVm extends Vm implements Comparable<Object> {
+public class NetworkVm extends Vm implements Comparable<NetworkVm> {
         /**
          * List of {@link NetworkCloudlet} of the VM.
          */
@@ -71,7 +71,7 @@ public class NetworkVm extends Vm implements Comparable<Object> {
 			CloudletScheduler cloudletScheduler) {
 		super(id, userId, mips, pesNumber, ram, bw, size, vmm, cloudletScheduler);
 
-		cloudletlist = new ArrayList<NetworkCloudlet>();
+		cloudletlist = new ArrayList<>();
 	}
 
 	public boolean isFree() {
@@ -79,14 +79,8 @@ public class NetworkVm extends Vm implements Comparable<Object> {
 	}
 
 	@Override
-	public int compareTo(Object arg0) {
+	public int compareTo(NetworkVm arg0) {
 		NetworkVm hs = (NetworkVm) arg0;
-		if (hs.finishtime > finishtime) {
-			return -1;
-		}
-		if (hs.finishtime < finishtime) {
-			return 1;
-		}
-		return 0;
+		return Double.compare(finishtime, hs.finishtime);
 	}
 }

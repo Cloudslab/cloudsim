@@ -75,7 +75,7 @@ public class CloudletTest {
 	@Test
 	public void testCloudletAlternativeConstructor1() {
 		cloudlet = new Cloudlet(0, CLOUDLET_LENGTH, PES_NUMBER, CLOUDLET_FILE_SIZE, CLOUDLET_OUTPUT_SIZE,
-				utilizationModelCpu, utilizationModelRam, utilizationModelBw, true, new LinkedList<String>());
+				utilizationModelCpu, utilizationModelRam, utilizationModelBw, true, new LinkedList<>());
 		testCloudlet();
 		testGetUtilizationOfCpu();
 		testGetUtilizationOfRam();
@@ -85,7 +85,7 @@ public class CloudletTest {
 	@Test
 	public void testCloudletAlternativeConstructor2() {
 		cloudlet = new Cloudlet(0, CLOUDLET_LENGTH, PES_NUMBER, CLOUDLET_FILE_SIZE, CLOUDLET_OUTPUT_SIZE,
-				utilizationModelCpu, utilizationModelRam, utilizationModelBw, new LinkedList<String>());
+				utilizationModelCpu, utilizationModelRam, utilizationModelBw, new LinkedList<>());
 		testCloudlet();
 		testGetUtilizationOfCpu();
 		testGetUtilizationOfRam();

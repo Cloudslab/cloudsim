@@ -54,14 +54,14 @@ public class MathUtilTest {
 
 	@Test
 	public void testSum() {
-		List<Double> data1 = new ArrayList<Double>();
+		List<Double> data1 = new ArrayList<>();
 		for (Double number : DATA1) {
 			data1.add(number);
 		}
 
 		assertEquals(SUM1, MathUtil.sum(data1), 0);
 
-		List<Double> data2 = new ArrayList<Double>();
+		List<Double> data2 = new ArrayList<>();
 		for (Double number : DATA1) {
 			data2.add(number / 10);
 		}

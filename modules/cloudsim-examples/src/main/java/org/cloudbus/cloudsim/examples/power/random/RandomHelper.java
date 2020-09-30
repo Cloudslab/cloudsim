@@ -37,7 +37,7 @@ public class RandomHelper {
 	 * @return the list< cloudlet>
 	 */
 	public static List<Cloudlet> createCloudletList(int brokerId, int cloudletsNumber) {
-		List<Cloudlet> list = new ArrayList<Cloudlet>();
+		List<Cloudlet> list = new ArrayList<>();
 
 		long fileSize = 300;
 		long outputSize = 300;

@@ -42,7 +42,7 @@ public final class ResourceUtil {
         try {
             return new FileInputStream(file);
         } catch (FileNotFoundException e) {
-            String msg = "Invalid file: " + Objects.toString(file) + " Error details:" + e.getMessage();
+            String msg = "Invalid file: " + file + " Error details:" + e.getMessage();
             CustomLog.logError(Level.SEVERE, msg, e);
             throw new IllegalArgumentException(msg, e);
         }

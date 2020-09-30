@@ -117,7 +117,7 @@ public class StatWorkloadGenerator implements IWorkloadGenerator {
             for (int i = 0; i < numberOfSessions; i++) {
                 double sessionTime = startTime + i * timeStep;
                 if (!timesToSessions.containsKey(sessionTime)) {
-                    timesToSessions.put(sessionTime, new ArrayList<WebSession>());
+                    timesToSessions.put(sessionTime, new ArrayList<>());
                 }
 
                 timesToSessions.get(sessionTime).add(sessGen.generateSessionAt(sessionTime));

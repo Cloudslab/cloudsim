@@ -56,7 +56,7 @@ public class BwProvisionerSimpleTest {
 
 		assertTrue(bwProvisioner.isSuitableForVm(vm2, BW / 4));
 		assertTrue(bwProvisioner.allocateBwForVm(vm2, BW / 4));
-		assertEquals(BW * 1 / 4, bwProvisioner.getAvailableBw());
+		assertEquals(BW / 4, bwProvisioner.getAvailableBw());
 
 		assertTrue(bwProvisioner.isSuitableForVm(vm2, BW / 2));
 		assertTrue(bwProvisioner.allocateBwForVm(vm2, BW / 2));

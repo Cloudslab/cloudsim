@@ -284,7 +284,7 @@ public class ResCloudlet {
 	 */
 	public boolean setCloudletStatus(int status) {
 		// gets Cloudlet's previous status
-		int prevStatus = cloudlet.getCloudletStatus();
+		int prevStatus = cloudlet.getStatus();
 
 		// if the status of a Cloudlet is the same as last time, then ignore
 		if (prevStatus == status) {
@@ -466,7 +466,7 @@ public class ResCloudlet {
 
 		long finished = 0;
 		//if (cloudlet.getCloudletTotalLength() * Consts.MILLION < cloudletFinishedSoFar) {
-		if (cloudlet.getCloudletStatus()==Cloudlet.SUCCESS) {
+		if (cloudlet.getStatus() ==Cloudlet.SUCCESS) {
 			finished = cloudlet.getCloudletLength();
 		} else {
 			finished = cloudletFinishedSoFar / Consts.MILLION;
@@ -547,7 +547,7 @@ public class ResCloudlet {
 	 * @post $none
 	 */
 	public int getCloudletStatus() {
-		return cloudlet.getCloudletStatus();
+		return cloudlet.getStatus();
 	}
 
 	/**

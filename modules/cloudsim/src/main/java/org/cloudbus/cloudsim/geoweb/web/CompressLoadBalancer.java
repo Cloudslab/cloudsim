@@ -54,12 +54,7 @@ public class CompressLoadBalancer extends BaseWebLoadBalancer implements ILoadBa
     public void assignToServers(final WebSession... sessions) {
         // Filter all sessions without an assigned application server
         List<WebSession> noAppServSessions = new ArrayList<>(Arrays.asList(sessions));
-        for (ListIterator<WebSession> iter = noAppServSessions.listIterator(); iter.hasNext();) {
-            WebSession sess = iter.next();
-            if (sess.getAppVmId() != null) {
-                iter.remove();
-            }
-        }
+        noAppServSessions.removeIf(sess -> sess.getAppVmId() != null);
 
         updateNumberOfSessions(noAppServSessions, (int) CloudSim.clock());
 
@@ -83,7 +78,7 @@ public class CompressLoadBalancer extends BaseWebLoadBalancer implements ILoadBa
                 List<HddVm> vms = new ArrayList<>(runingVMs);
                 Map<Integer, Integer> usedASServers = this.broker.getASServersToNumSessions();
                 cpuUtilReverseComparator.setUsedASServers(usedASServers.keySet());
-                Collections.sort(vms, cpuUtilReverseComparator);
+                vms.sort(cpuUtilReverseComparator);
 
                 // For debug purposes:
                 debugSB.setLength(0);
@@ -91,7 +86,7 @@ public class CompressLoadBalancer extends BaseWebLoadBalancer implements ILoadBa
                     debugSB.append(String.format("%s[%s] cpu(%.2f), ram(%.2f), cdlts(%d), sess(%d); ", vm,
                             (usedASServers.containsKey(vm.getId()) ? "" : "FREE, ") + vm.getStatus(), vm.getCPUUtil(),
                             vm.getRAMUtil(), vm.getCloudletScheduler().getCloudletExecList().size(),
-                            !usedASServers.containsKey(vm.getId()) ? 0 : usedASServers.get(vm.getId())));
+                            usedASServers.getOrDefault(vm.getId(), 0)));
                 }
 
                 HddVm hostVM = vms.get(vms.size() - 1);
@@ -107,7 +102,7 @@ public class CompressLoadBalancer extends BaseWebLoadBalancer implements ILoadBa
                         .printf("[Load Balancer](%s): Assigning sesssion %d to %s[%s] cpu(%.2f), ram(%.2f), cdlts(%d), sess(%d);",
                                 broker, session.getSessionId(), hostVM, hostVM.getStatus(), hostVM.getCPUUtil(),
                                 hostVM.getRAMUtil(), hostVM.getCloudletScheduler().getCloudletExecList().size(),
-                                !usedASServers.containsKey(hostVM.getId()) ? 0 : usedASServers.get(hostVM.getId()));
+                                usedASServers.getOrDefault(hostVM.getId(), 0));
                 CustomLog.printf("[Load Balancer](%s), Candidate VMs: %s", broker, debugSB);
 
                 // Log the state of the DB servers
@@ -133,7 +128,7 @@ public class CompressLoadBalancer extends BaseWebLoadBalancer implements ILoadBa
         int secsToKeep = 60;
         if (noAppServSessions == null || !noAppServSessions.isEmpty()) {
             secsToArrivals.put(time,
-                    !secsToArrivals.containsKey(time) ? 0 : secsToArrivals.get(time));
+                    secsToArrivals.getOrDefault(time, 0));
         }
         for (Iterator<Integer> iter = secsToArrivals.keySet().iterator(); iter.hasNext();) {
             int recorededTime = iter.next();

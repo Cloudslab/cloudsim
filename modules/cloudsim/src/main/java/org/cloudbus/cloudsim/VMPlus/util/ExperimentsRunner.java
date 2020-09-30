@@ -32,7 +32,7 @@ import java.util.concurrent.Future;
  */
 public class ExperimentsRunner {
 
-    private static final List<Process> PROCESSES = Collections.synchronizedList(new ArrayList<Process>());
+    private static final List<Process> PROCESSES = Collections.synchronizedList(new ArrayList<>());
     private static Thread shutdownHook = null;
 
     /**
@@ -70,22 +70,19 @@ public class ExperimentsRunner {
             int coresToUse = cores <= numFreeCPUs ? 1 : cores - numFreeCPUs;
 
             ExecutorService pool = Executors.newFixedThreadPool(coresToUse);
-            Collection<Future<?>> futures = new ArrayList<Future<?>>();
+            Collection<Future<?>> futures = new ArrayList<>();
 
             for (final ExperimentDefinition def : experimentsDefs) {
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        int resultStatus;
-                        try {
-                            resultStatus = exec(def);
-                        } catch (IOException | InterruptedException e) {
-                            resultStatus = 1;
-                        }
-                        if (resultStatus != 0) {
-                            System.err.println("!!! Experiment " + def.getMainClass().getCanonicalName()
-                                    + " has failed!!!");
-                        }
+                Runnable runnable = () -> {
+                    int resultStatus;
+                    try {
+                        resultStatus = exec(def);
+                    } catch (IOException | InterruptedException e) {
+                        resultStatus = 1;
+                    }
+                    if (resultStatus != 0) {
+                        System.err.println("!!! Experiment " + def.getMainClass().getCanonicalName()
+                                + " has failed!!!");
                     }
                 };
                 futures.add(pool.submit(runnable));
@@ -102,7 +99,6 @@ public class ExperimentsRunner {
         System.err.println("All experiments are finished");
     }
 
-    @SuppressWarnings("unused")
     private static int[] getHeapArgs() {
         RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
         List<String> arguments = runtimeMxBean.getInputArguments();
@@ -135,16 +131,13 @@ public class ExperimentsRunner {
 
     private synchronized static void addHookToKillProcesses() {
         if (shutdownHook == null) {
-            shutdownHook = new Thread() {
-                @Override
-                public void run() {
-                    System.err.println("Killing subprocesses...");
-                    for (Process p : PROCESSES) {
-                        p.destroy();
-                    }
-                    System.err.println("All subprocesses are killed. Shutting down.");
+            shutdownHook = new Thread(() -> {
+                System.err.println("Killing subprocesses...");
+                for (Process p : PROCESSES) {
+                    p.destroy();
                 }
-            };
+                System.err.println("All subprocesses are killed. Shutting down.");
+            });
             Runtime.getRuntime().addShutdownHook(shutdownHook);
         }
     }

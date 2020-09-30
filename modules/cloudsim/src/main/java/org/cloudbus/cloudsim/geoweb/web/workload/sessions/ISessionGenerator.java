@@ -18,5 +18,5 @@ public interface ISessionGenerator {
      *            simulation time.
      * @return the generated session.
      */
-    public WebSession generateSessionAt(final double time);
+    WebSession generateSessionAt(final double time);
 }

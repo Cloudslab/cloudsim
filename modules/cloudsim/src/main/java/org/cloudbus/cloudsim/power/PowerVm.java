@@ -39,7 +39,7 @@ public class PowerVm extends Vm {
 	public static final int HISTORY_LENGTH = 30;
 
 	/** The CPU utilization percentage history. */
-	private final List<Double> utilizationHistory = new LinkedList<Double>();
+	private final List<Double> utilizationHistory = new LinkedList<>();
 
 	/** The previous time that cloudlets were processed. */
 	private double previousTime;

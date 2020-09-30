@@ -29,7 +29,7 @@ public class ContainerBwProvisionerSimple extends ContainerBwProvisioner {
      */
     public ContainerBwProvisionerSimple(long containerBw) {
         super(containerBw);
-        setContainerBwTable(new HashMap<String, Long>());
+        setContainerBwTable(new HashMap<>());
     }
 
     /**

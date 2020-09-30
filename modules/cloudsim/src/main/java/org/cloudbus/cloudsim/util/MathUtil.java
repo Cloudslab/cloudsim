@@ -103,9 +103,9 @@ public class MathUtil {
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 
 		// Add the data from the array
-		for (int i = 0; i < list.length; i++) {
-			stats.addValue(list[i]);
-		}
+        for (double v : list) {
+            stats.addValue(v);
+        }
 		return stats;
 	}
 
@@ -269,11 +269,11 @@ public class MathUtil {
 		double[] yW = new double[y.length];
 
 		int numZeroWeigths = 0;
-		for (int i = 0; i < weigths.length; i++) {
-			if (weigths[i] <= 0) {
-				numZeroWeigths++;
-			}
-		}
+        for (double weigth : weigths) {
+            if (weigth <= 0) {
+                numZeroWeigths++;
+            }
+        }
 
 		for (int i = 0; i < x.length; i++) {
 			if (numZeroWeigths >= 0.4 * weigths.length) {

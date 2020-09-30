@@ -84,7 +84,7 @@ public class Vm {
          * time, he/she doesn't have to iterate over the entire list
          * to find the desired entry.
          */
-	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<VmStateHistoryEntry>();
+	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
 
 	/**
 	 * Creates a new Vm object.
@@ -165,7 +165,7 @@ public class Vm {
 	public List<Double> getCurrentRequestedMips() {
 		List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
 		if (isBeingInstantiated()) {
-			currentRequestedMips = new ArrayList<Double>();
+			currentRequestedMips = new ArrayList<>();
 			for (int i = 0; i < getNumberOfPes(); i++) {
 				currentRequestedMips.add(getMips());
 			}

@@ -1,7 +1,8 @@
 package org.cloudbus.cloudsim.geoweb.geolocation;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Represents common metadata extracted from an IP address - e.g. geolocation,
@@ -69,7 +70,7 @@ public class IPMetadata {
 
     @Override
     public String toString() {
-        ToStringHelper helper = Objects.toStringHelper(IPMetadata.class);
+        ToStringHelper helper = MoreObjects.toStringHelper(IPMetadata.class);
         helper.add("Continent", continentName);
         helper.add("Continent Code", continentCode);
         helper.add("Country", countryName);

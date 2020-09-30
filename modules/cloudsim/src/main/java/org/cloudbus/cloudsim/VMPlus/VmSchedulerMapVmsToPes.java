@@ -35,7 +35,7 @@ public abstract class VmSchedulerMapVmsToPes<P extends Pe> extends VmSchedulerWi
         if (vmsToPes.containsKey(vmid)) {
             vmsToPes.get(vmid).add(peid);
         } else {
-            vmsToPes.put(vmid, new ArrayList<Integer>());
+            vmsToPes.put(vmid, new ArrayList<>());
             vmsToPes.get(vmid).add(peid);
         }
     }

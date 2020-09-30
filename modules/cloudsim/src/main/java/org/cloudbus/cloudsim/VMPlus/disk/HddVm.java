@@ -202,7 +202,7 @@ public class HddVm extends MonitoredVMex {
 
             List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
             if (isBeingInstantiated()) {
-                currentRequestedMips = new ArrayList<Double>();
+                currentRequestedMips = new ArrayList<>();
                 for (Pe pe : getHost().getPeList()) {
                     if (scheduler.doesVmUse(this, pe)) {
                         currentRequestedMips.add(getMips());
@@ -230,7 +230,7 @@ public class HddVm extends MonitoredVMex {
     public List<Double> getCurrentRequestedIOMips() {
         List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedIOMips();
         if (isBeingInstantiated()) {
-            currentRequestedMips = new ArrayList<Double>();
+            currentRequestedMips = new ArrayList<>();
 
             // Put zeros for the harddisks we don't have access to from this VM
             for (HddPe hdd : getHost().getHddList()) {

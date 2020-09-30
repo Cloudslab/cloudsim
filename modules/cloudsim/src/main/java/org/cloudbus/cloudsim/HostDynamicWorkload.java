@@ -32,7 +32,7 @@ public class HostDynamicWorkload extends Host {
 	private double previousUtilizationMips;
 
 	/** The host utilization state history. */
-	private final List<HostStateHistoryEntry> stateHistory = new LinkedList<HostStateHistoryEntry>();
+	private final List<HostStateHistoryEntry> stateHistory = new LinkedList<>();
 
 	/**
 	 * Instantiates a new host.
@@ -141,7 +141,7 @@ public class HostDynamicWorkload extends Host {
 	 * @return the completed vms
 	 */
 	public List<Vm> getCompletedVms() {
-		List<Vm> vmsToRemove = new ArrayList<Vm>();
+		List<Vm> vmsToRemove = new ArrayList<>();
 		for (Vm vm : getVmList()) {
 			if (vm.isInMigration()) {
 				continue;

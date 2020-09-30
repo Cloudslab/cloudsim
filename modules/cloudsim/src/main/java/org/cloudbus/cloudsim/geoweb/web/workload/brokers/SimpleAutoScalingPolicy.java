@@ -65,7 +65,7 @@ public class SimpleAutoScalingPolicy implements IAutoscalingPolicy {
                 count++;
                 candidateToStop = vm;
                 debugSB.append(vm);
-                debugSB.append("[" + vm.getStatus().name() + "] ");
+                debugSB.append("[").append(vm.getStatus().name()).append("] ");
                 debugSB.append(String.format("cpu(%.2f) ram(%.2f) cdlts(%d);\t", vm.getCPUUtil(), vm.getRAMUtil(), vm
                         .getCloudletScheduler().getCloudletExecList().size()));
             }

@@ -32,7 +32,6 @@ public class DelayMatrix_Float {
 	/**
 	 * Private constructor to ensure that only an correct initialized delay-matrix could be created.
 	 */
-	@SuppressWarnings("unused")
 	private DelayMatrix_Float() {
 	}
 
@@ -117,23 +116,23 @@ public class DelayMatrix_Float {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("just a simple printout of the distance-aware-topology-class\n");
 		buffer.append("delay-matrix is:\n");
 
 		for (int column = 0; column < mTotalNodeNum; ++column) {
-			buffer.append("\t" + column);
+			buffer.append("\t").append(column);
 		}
 
 		for (int row = 0; row < mTotalNodeNum; ++row) {
-			buffer.append("\n" + row);
+			buffer.append("\n").append(row);
 
 			for (int col = 0; col < mTotalNodeNum; ++col) {
 				if (mDelayMatrix[row][col] == Float.MAX_VALUE) {
 					buffer.append("\t" + "-");
 				} else {
-					buffer.append("\t" + mDelayMatrix[row][col]);
+					buffer.append("\t").append(mDelayMatrix[row][col]);
 				}
 			}
 		}

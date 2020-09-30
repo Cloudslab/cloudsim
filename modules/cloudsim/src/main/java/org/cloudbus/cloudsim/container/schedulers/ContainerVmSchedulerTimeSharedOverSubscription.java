@@ -22,7 +22,7 @@ public class ContainerVmSchedulerTimeSharedOverSubscription extends  ContainerVm
 
         // if the requested mips is bigger than the capacity of a single PE, we cap
         // the request to the PE's capacity
-        List<Double> mipsShareRequestedCapped = new ArrayList<Double>();
+        List<Double> mipsShareRequestedCapped = new ArrayList<>();
         double peMips = getPeCapacity();
         for (Double mips : mipsShareRequested) {
             if (mips > peMips) {
@@ -74,7 +74,7 @@ public class ContainerVmSchedulerTimeSharedOverSubscription extends  ContainerVm
         // proportionally
         double totalRequiredMipsByAllVms = 0;
 
-        Map<String, List<Double>> mipsMapCapped = new HashMap<String, List<Double>>();
+        Map<String, List<Double>> mipsMapCapped = new HashMap<>();
         for (Map.Entry<String, List<Double>> entry : getMipsMapRequested().entrySet()) {
 
             double requiredMipsByThisVm = 0.0;

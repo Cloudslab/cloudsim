@@ -116,21 +116,21 @@ public class NetDatacenterBroker extends SimEntity {
 
 		setVmList(new ArrayList<NetworkVm>());
 		setVmsCreatedList(new ArrayList<NetworkVm>());
-		setCloudletList(new ArrayList<NetworkCloudlet>());
-		setAppCloudletList(new ArrayList<AppCloudlet>());
-		setCloudletSubmittedList(new ArrayList<Cloudlet>());
-		setCloudletReceivedList(new ArrayList<Cloudlet>());
-		appCloudletRecieved = new HashMap<Integer, Integer>();
+		setCloudletList(new ArrayList<>());
+		setAppCloudletList(new ArrayList<>());
+		setCloudletSubmittedList(new ArrayList<>());
+		setCloudletReceivedList(new ArrayList<>());
+		appCloudletRecieved = new HashMap<>();
 
 		cloudletsSubmitted = 0;
 		setVmsRequested(0);
 		setVmsAcks(0);
 		setVmsDestroyed(0);
 
-		setDatacenterIdsList(new LinkedList<Integer>());
-		setDatacenterRequestedIdsList(new ArrayList<Integer>());
-		setVmsToDatacentersMap(new HashMap<Integer, Integer>());
-		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
+		setDatacenterIdsList(new LinkedList<>());
+		setDatacenterRequestedIdsList(new ArrayList<>());
+		setVmsToDatacentersMap(new HashMap<>());
+		setDatacenterCharacteristicsList(new HashMap<>());
 
 	}
 
@@ -218,7 +218,7 @@ public class NetDatacenterBroker extends SimEntity {
 		getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
 
 		if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
-			setDatacenterRequestedIdsList(new ArrayList<Integer>());
+			setDatacenterRequestedIdsList(new ArrayList<>());
 			createVmsInDatacenterBase(getDatacenterIdsList().get(0));
 		}
 	}
@@ -234,7 +234,7 @@ public class NetDatacenterBroker extends SimEntity {
 
 	protected void processResourceCharacteristicsRequest(SimEvent ev) {
 		setDatacenterIdsList(CloudSim.getCloudResourceList());
-		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
+		setDatacenterCharacteristicsList(new HashMap<>());
 
 		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloud Resource List received with ",
 				getDatacenterIdsList().size(), " resource(s)");
@@ -333,7 +333,7 @@ public class NetDatacenterBroker extends SimEntity {
 		// schedule the application on VMs
 		for (AppCloudlet app : this.getAppCloudletList()) {
 
-			List<Integer> vmids = new ArrayList<Integer>();
+			List<Integer> vmids = new ArrayList<>();
 			int numVms = linkDC.getVmList().size();
 			UniformDistr ufrnd = new UniformDistr(0, numVms, 5);
 			for (int i = 0; i < app.numbervm; i++) {
@@ -364,7 +364,7 @@ public class NetDatacenterBroker extends SimEntity {
 			}
 
 		}
-		setAppCloudletList(new ArrayList<AppCloudlet>());
+		setAppCloudletList(new ArrayList<>());
 		if (NetworkConstants.iteration < 10) {
 
 			NetworkConstants.iteration++;

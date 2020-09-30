@@ -67,7 +67,7 @@ public class CloudSimWebExample {
             WebBroker broker = new WebBroker("Broker", 5, 10000, datacenter0.getId());
 
             // Step 4: Create virtual machines
-            List<Vm> vmlist = new ArrayList<Vm>();
+            List<Vm> vmlist = new ArrayList<>();
 
             // VM description
             int mips = 250;
@@ -137,7 +137,7 @@ public class CloudSimWebExample {
         generators.put(StatGenerator.CLOUDLET_IO, ioGen);
         generators.put(StatGenerator.CLOUDLET_MODIFIES_DATA, modifiesDataGen);
         IGenerator<WebCloudlet> asGenerator = new StatGenerator(generators, data);
-        IGenerator<Collection<WebCloudlet>> dbGenerator = new CompositeGenerator<WebCloudlet>(new StatGenerator(
+        IGenerator<Collection<WebCloudlet>> dbGenerator = new CompositeGenerator<>(new StatGenerator(
                 generators, data));
 
         List<WebSession> sessions = new ArrayList<>();
@@ -153,7 +153,7 @@ public class CloudSimWebExample {
         // Here are the steps needed to create a PowerDatacenter:
         // 1. We need to create a list to store
         // our machine
-        List<Host> hostList = new ArrayList<Host>();
+        List<Host> hostList = new ArrayList<>();
 
         // 2. A Machine contains one or more PEs or CPUs/Cores.
         // In this example, it will have only one plus.
@@ -193,7 +193,7 @@ public class CloudSimWebExample {
         double costPerStorage = 0.001; // the cost of using storage in this
         // resource
         double costPerBw = 0.0; // the cost of using bw in this resource
-        LinkedList<Storage> storageList = new LinkedList<Storage>();
+        LinkedList<Storage> storageList = new LinkedList<>();
 
         DatacenterCharacteristics characteristics = new DatacenterCharacteristics(arch, os, vmm, hostList, time_zone,
                 cost, costPerMem, costPerStorage, costPerBw);
@@ -225,8 +225,8 @@ public class CloudSimWebExample {
         CustomLog.printLine(TextUtil.getCaptionLine(WebCloudlet.class));
 
         // Print details for each cloudlet
-        for (int i = 0; i < size; i++) {
-            cloudlet = list.get(i);
+        for (Cloudlet value : list) {
+            cloudlet = value;
             CustomLog.print(TextUtil.getTxtLine(cloudlet));
         }
     }

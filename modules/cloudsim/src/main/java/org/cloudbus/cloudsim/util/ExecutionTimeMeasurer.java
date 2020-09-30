@@ -30,7 +30,7 @@ public class ExecutionTimeMeasurer {
          * It in fact stores the method/process start time,
          * no the time it spent executing.
          */
-	private final static Map<String, Long> executionTimes = new HashMap<String, Long>();
+	private final static Map<String, Long> executionTimes = new HashMap<>();
 
 	/**
 	 * Start measuring the execution time of a method/process.

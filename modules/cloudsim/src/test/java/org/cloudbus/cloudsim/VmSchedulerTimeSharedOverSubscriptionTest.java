@@ -39,7 +39,7 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 
 	@Before
 	public void setUp() throws Exception {
-		peList = new ArrayList<Pe>();
+		peList = new ArrayList<>();
 		peList.add(new Pe(0, new PeProvisionerSimple(MIPS)));
 		peList.add(new Pe(1, new PeProvisionerSimple(MIPS)));
 		vmScheduler = new VmSchedulerTimeSharedOverSubscription(peList);
@@ -58,7 +58,7 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 
 	@Test
 	public void testAllocatePesForVm() {
-		List<Double> mipsShare1 = new ArrayList<Double>();
+		List<Double> mipsShare1 = new ArrayList<>();
 		mipsShare1.add(MIPS / 4);
 
 		assertTrue(vmScheduler.allocatePesForVm(vm1, mipsShare1));
@@ -67,7 +67,7 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 		assertEquals(PeList.getTotalMips(peList) - MIPS / 4, vmScheduler.getMaxAvailableMips(), 0);
 		assertEquals(MIPS / 4, vmScheduler.getTotalAllocatedMipsForVm(vm1), 0);
 
-		List<Double> mipsShare2 = new ArrayList<Double>();
+		List<Double> mipsShare2 = new ArrayList<>();
 		mipsShare2.add(MIPS / 2);
 		mipsShare2.add(MIPS / 8);
 
@@ -127,7 +127,7 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 		vm1.setInMigration(true);
 		vm2.setInMigration(true);
 
-		List<Double> mipsShare1 = new ArrayList<Double>();
+		List<Double> mipsShare1 = new ArrayList<>();
 		mipsShare1.add(MIPS / 4);
 
 		assertTrue(vmScheduler.allocatePesForVm(vm1, mipsShare1));
@@ -136,7 +136,7 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 		assertEquals(PeList.getTotalMips(peList) - MIPS / 4, vmScheduler.getMaxAvailableMips(), 0);
 		assertEquals(0.9 * MIPS / 4, vmScheduler.getTotalAllocatedMipsForVm(vm1), 0);
 
-		List<Double> mipsShare2 = new ArrayList<Double>();
+		List<Double> mipsShare2 = new ArrayList<>();
 		mipsShare2.add(MIPS / 2);
 		mipsShare2.add(MIPS / 8);
 
@@ -161,7 +161,7 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 
 	@Test
 	public void testAllocatePesForVmShortageEqualsToAllocatedMips() {
-		List<Pe> peList = new ArrayList<Pe>();
+		List<Pe> peList = new ArrayList<>();
 		peList.add(new Pe(0, new PeProvisionerSimple(3500)));
 		VmScheduler vmScheduler = new VmSchedulerTimeSharedOverSubscription(peList);
 		Vm vm1 = new Vm(0, 0, 170, 1, 0, 0, 0, "", null);
@@ -169,16 +169,16 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 		Vm vm3 = new Vm(2, 0, 10, 1, 0, 0, 0, "", null);
 		Vm vm4 = new Vm(3, 0, 2000, 1, 0, 0, 0, "", null);
 
-		List<Double> mipsShare1 = new ArrayList<Double>();
+		List<Double> mipsShare1 = new ArrayList<>();
 		mipsShare1.add(170.0);
 
-		List<Double> mipsShare2 = new ArrayList<Double>();
+		List<Double> mipsShare2 = new ArrayList<>();
 		mipsShare2.add(2000.0);
 
-		List<Double> mipsShare3 = new ArrayList<Double>();
+		List<Double> mipsShare3 = new ArrayList<>();
 		mipsShare3.add(10.0);
 
-		List<Double> mipsShare4 = new ArrayList<Double>();
+		List<Double> mipsShare4 = new ArrayList<>();
 		mipsShare4.add(2000.0);
 
 		assertTrue(vmScheduler.allocatePesForVm(vm1, mipsShare1));
@@ -205,20 +205,20 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 	
 	@Test
 	public void testAllocatePesForSameSizedVmsOversubscribed() {
-		List<Pe> peList = new ArrayList<Pe>();
+		List<Pe> peList = new ArrayList<>();
 		peList.add(new Pe(0, new PeProvisionerSimple(1000)));
 		VmScheduler vmScheduler = new VmSchedulerTimeSharedOverSubscription(peList);
 		Vm vm1 = new Vm(0, 0, 1500, 1, 0, 0, 0, "", null);
 		Vm vm2 = new Vm(1, 0, 1000, 1, 0, 0, 0, "", null);
 		Vm vm3 = new Vm(2, 0, 1000, 1, 0, 0, 0, "", null);
 
-		List<Double> mipsShare1 = new ArrayList<Double>();
+		List<Double> mipsShare1 = new ArrayList<>();
 		mipsShare1.add(1500.0);
 
-		List<Double> mipsShare2 = new ArrayList<Double>();
+		List<Double> mipsShare2 = new ArrayList<>();
 		mipsShare2.add(1000.0);
 
-		List<Double> mipsShare3 = new ArrayList<Double>();
+		List<Double> mipsShare3 = new ArrayList<>();
 		mipsShare3.add(1000.0);
 
 		assertTrue(vmScheduler.allocatePesForVm(vm1, mipsShare1));

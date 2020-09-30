@@ -43,8 +43,8 @@ public class RootSwitch extends Switch {
 	 */
 	public RootSwitch(String name, int level, NetworkDatacenter dc) {
 		super(name, level, dc);
-		downlinkswitchpktlist = new HashMap<Integer, List<NetworkPacket>>();
-		downlinkswitches = new ArrayList<Switch>();
+		downlinkswitchpktlist = new HashMap<>();
+		downlinkswitches = new ArrayList<>();
 
 		downlinkbandwidth = NetworkConstants.BandWidthAggRoot;
 		latency = NetworkConstants.SwitchingDelayRoot;
@@ -69,7 +69,6 @@ public class RootSwitch extends Switch {
 			int edgeswitchid = dc.VmToSwitchid.get(recvVMid);
 			// search which aggregate switch has it
 			int aggSwtichid = -1;
-			;
 			for (Switch sw : downlinkswitches) {
 				for (Switch edge : sw.downlinkswitches) {
 					if (edge.getId() == edgeswitchid) {
@@ -81,11 +80,7 @@ public class RootSwitch extends Switch {
 			if (aggSwtichid < 0) {
 				System.out.println(" No destination for this packet");
 			} else {
-				List<NetworkPacket> pktlist = downlinkswitchpktlist.get(aggSwtichid);
-				if (pktlist == null) {
-					pktlist = new ArrayList<NetworkPacket>();
-					downlinkswitchpktlist.put(aggSwtichid, pktlist);
-				}
+				List<NetworkPacket> pktlist = downlinkswitchpktlist.computeIfAbsent(aggSwtichid, k -> new ArrayList<>());
 				pktlist.add(hspkt);
 			}
 		}

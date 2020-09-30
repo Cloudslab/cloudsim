@@ -105,7 +105,7 @@ public class CompositeValuedSet {
 
     @Override
     public String toString() {
-        StringBuffer buff = new StringBuffer();
+        StringBuilder buff = new StringBuilder();
         for (FiniteValuedInterval interval : subIntervals) {
             buff.append(interval.toString());
         }

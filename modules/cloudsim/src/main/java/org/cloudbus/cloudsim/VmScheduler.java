@@ -64,11 +64,11 @@ public abstract class VmScheduler {
 	 */
 	public VmScheduler(List<? extends Pe> pelist) {
 		setPeList(pelist);
-		setPeMap(new HashMap<String, List<Pe>>());
-		setMipsMap(new HashMap<String, List<Double>>());
+		setPeMap(new HashMap<>());
+		setMipsMap(new HashMap<>());
 		setAvailableMips(PeList.getTotalMips(getPeList()));
-		setVmsMigratingIn(new ArrayList<String>());
-		setVmsMigratingOut(new ArrayList<String>());
+		setVmsMigratingIn(new ArrayList<>());
+		setVmsMigratingOut(new ArrayList<>());
 	}
 
 	/**

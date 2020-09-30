@@ -130,10 +130,10 @@ public class InfoPacket implements Packet {
 		pingSize = size;
 
 		if (name != null) {
-			entities = new Vector<Integer>();
-			entryTimes = new Vector<Double>();
-			exitTimes = new Vector<Double>();
-			baudRates = new Vector<Double>();
+			entities = new Vector<>();
+			entryTimes = new Vector<>();
+			exitTimes = new Vector<>();
+			baudRates = new Vector<>();
 			num = new DecimalFormat("#0.000#"); // 4 decimal spaces
 		}
 	}
@@ -186,27 +186,27 @@ public class InfoPacket implements Packet {
 		}
 
 		int SIZE = 1000;   // number of chars
-		StringBuffer sb = new StringBuffer(SIZE);
-		sb.append("Ping information for " + name + "\n");
+		StringBuilder sb = new StringBuilder(SIZE);
+		sb.append("Ping information for ").append(name).append("\n");
 		sb.append("Entity Name\tEntry Time\tExit Time\t Bandwidth\n");
 		sb.append("----------------------------------------------------------\n");
 
 		String tab = "    ";  // 4 spaces
 		for (int i = 0; i < entities.size(); i++) {
-			int resID = entities.get(i).intValue();
-			sb.append(CloudSim.getEntityName(resID) + "\t\t");
+			int resID = entities.get(i);
+			sb.append(CloudSim.getEntityName(resID)).append("\t\t");
 
 			String entry = getData(entryTimes, i);
 			String exit = getData(exitTimes, i);
 			String bw = getData(baudRates, i);
 
-			sb.append(entry + tab + tab + exit + tab + tab + bw + "\n");
+			sb.append(entry).append(tab).append(tab).append(exit).append(tab).append(tab).append(bw).append("\n");
 		}
 
-		sb.append("\nRound Trip Time : " + num.format(getTotalResponseTime()));
+		sb.append("\nRound Trip Time : ").append(num.format(getTotalResponseTime()));
 		sb.append(" seconds");
-		sb.append("\nNumber of Hops  : " + getNumHop());
-		sb.append("\nBottleneck Bandwidth : " + bandwidth + " bits/s");
+		sb.append("\nNumber of Hops  : ").append(getNumHop());
+		sb.append("\nBottleneck Bandwidth : ").append(bandwidth).append(" bits/s");
 		return sb.toString();
 	}
 
@@ -223,7 +223,7 @@ public class InfoPacket implements Packet {
 		String result;
 		try {
 			Double obj = v.get(index);
-			double id = obj.doubleValue();
+			double id = obj;
 			result = num.format(id);
 		} catch (Exception e) {
 			result = "    N/A";
@@ -317,8 +317,8 @@ public class InfoPacket implements Packet {
 
 		double time = 0;
 		try {
-			double startTime = exitTimes.firstElement().doubleValue();
-			double receiveTime = entryTimes.lastElement().doubleValue();
+			double startTime = exitTimes.firstElement();
+			double receiveTime = entryTimes.lastElement();
 			time = receiveTime - startTime;
 		} catch (Exception e) {
 			time = 0;
@@ -353,7 +353,7 @@ public class InfoPacket implements Packet {
 		}
 
 		hopsNumber++;
-		entities.add(Integer.valueOf(id));
+		entities.add(id);
 	}
 
 	/**
@@ -375,7 +375,7 @@ public class InfoPacket implements Packet {
 			time = 0.0;
 		}
 
-		entryTimes.add(Double.valueOf(time));
+		entryTimes.add(time);
 	}
 
 	/**
@@ -396,7 +396,7 @@ public class InfoPacket implements Packet {
 			time = 0.0;
 		}
 
-		exitTimes.add(Double.valueOf(time));
+		exitTimes.add(time);
 	}
 
 	/**
@@ -414,7 +414,7 @@ public class InfoPacket implements Packet {
 			return;
 		}
 
-		baudRates.add(new Double(baudRate));
+		baudRates.add(baudRate);
 		if (bandwidth < 0 || baudRate < bandwidth) {
 			bandwidth = baudRate;
 		}

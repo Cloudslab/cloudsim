@@ -22,7 +22,7 @@ public enum VMStatus {
 
     private final Set<VMStatus> validPrevStates = new HashSet<>();
 
-    private VMStatus(final VMStatus... statuses) {
+    VMStatus(final VMStatus... statuses) {
         validPrevStates.addAll(Arrays.asList(statuses));
     }
 

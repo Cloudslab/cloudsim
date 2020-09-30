@@ -98,8 +98,8 @@ public class ContainerDatacenter extends SimEntity {
         setContainerAllocationPolicy(containerAllocationPolicy);
         setLastProcessTime(0.0);
         setStorageList(storageList);
-        setContainerVmList(new ArrayList<ContainerVm>());
-        setContainerList(new ArrayList<Container>());
+        setContainerVmList(new ArrayList<>());
+        setContainerList(new ArrayList<>());
         setSchedulingInterval(schedulingInterval);
         setExperimentName(experimentName);
         setLogAddress(logAddress);
@@ -143,24 +143,24 @@ public class ContainerDatacenter extends SimEntity {
         switch (ev.getTag()) {
             // Resource characteristics inquiry
             case CloudSimTags.RESOURCE_CHARACTERISTICS:
-                srcId = ((Integer) ev.getData()).intValue();
+                srcId = (Integer) ev.getData();
                 sendNow(srcId, ev.getTag(), getCharacteristics());
                 break;
 
             // Resource dynamic info inquiry
             case CloudSimTags.RESOURCE_DYNAMICS:
-                srcId = ((Integer) ev.getData()).intValue();
+                srcId = (Integer) ev.getData();
                 sendNow(srcId, ev.getTag(), 0);
                 break;
 
             case CloudSimTags.RESOURCE_NUM_PE:
-                srcId = ((Integer) ev.getData()).intValue();
+                srcId = (Integer) ev.getData();
                 int numPE = getCharacteristics().getNumberOfPes();
                 sendNow(srcId, ev.getTag(), numPE);
                 break;
 
             case CloudSimTags.RESOURCE_NUM_FREE_PE:
-                srcId = ((Integer) ev.getData()).intValue();
+                srcId = (Integer) ev.getData();
                 int freePesNumber = getCharacteristics().getNumberOfFreePes();
                 sendNow(srcId, ev.getTag(), freePesNumber);
                 break;
@@ -337,7 +337,7 @@ public class ContainerDatacenter extends SimEntity {
         }
 
         String filename = (String) data[0];
-        int req_source = ((Integer) data[1]).intValue();
+        int req_source = (Integer) data[1];
         int tag = -1;
 
         // check if this file can be deleted (do not delete is right now)
@@ -350,9 +350,9 @@ public class ContainerDatacenter extends SimEntity {
 
         if (ack) {
             // send back to sender
-            Object pack[] = new Object[2];
+            Object[] pack = new Object[2];
             pack[0] = filename;
-            pack[1] = Integer.valueOf(msg);
+            pack[1] = msg;
 
             sendNow(req_source, tag, pack);
         }
@@ -376,7 +376,7 @@ public class ContainerDatacenter extends SimEntity {
 
         File file = (File) pack[0]; // get the file
         file.setMasterCopy(true); // set the file into a master copy
-        int sentFrom = ((Integer) pack[1]).intValue(); // get sender ID
+        int sentFrom = (Integer) pack[1]; // get sender ID
 
         /******
          * // DEBUG Log.printLine(super.get_name() + ".addMasterFile(): " + file.getName() +
@@ -389,8 +389,8 @@ public class ContainerDatacenter extends SimEntity {
         int msg = addFile(file); // add the file
 
         if (ack) {
-            data[1] = Integer.valueOf(-1); // no sender id
-            data[2] = Integer.valueOf(msg); // the result of adding a master file
+            data[1] = -1; // no sender id
+            data[2] = msg; // the result of adding a master file
             sendNow(sentFrom, DataCloudTags.FILE_ADD_MASTER_RESULT, data);
         }
     }
@@ -428,7 +428,7 @@ public class ContainerDatacenter extends SimEntity {
 
         try {
             // if a sender using cloudletXXX() methods
-            int data[] = (int[]) ev.getData();
+            int[] data = (int[]) ev.getData();
             cloudletId = data[0];
             userId = data[1];
             vmId = data[2];
@@ -668,7 +668,7 @@ public class ContainerDatacenter extends SimEntity {
         int containerId = 0;
 
         try { // if the sender using cloudletXXX() methods
-            int data[] = (int[]) ev.getData();
+            int[] data = (int[]) ev.getData();
             cloudletId = data[0];
             userId = data[1];
             vmId = data[2];
@@ -994,8 +994,7 @@ public class ContainerDatacenter extends SimEntity {
             List<? extends ContainerHost> list = getVmAllocationPolicy().getContainerHostList();
             double smallerTime = Double.MAX_VALUE;
             // for each host...
-            for (int i = 0; i < list.size(); i++) {
-                ContainerHost host = list.get(i);
+            for (ContainerHost host : list) {
                 // inform VMs to update processing
                 double time = host.updateContainerVmsProcessing(CloudSim.clock());
                 // what time do we expect that the next cloudlet will finish?
@@ -1023,8 +1022,7 @@ public class ContainerDatacenter extends SimEntity {
      */
     protected void checkCloudletCompletion() {
         List<? extends ContainerHost> list = getVmAllocationPolicy().getContainerHostList();
-        for (int i = 0; i < list.size(); i++) {
-            ContainerHost host = list.get(i);
+        for (ContainerHost host : list) {
             for (ContainerVm vm : host.getVmList()) {
                 for (Container container : vm.getContainerList()) {
                     while (container.getContainerCloudletScheduler().isFinishedCloudlets()) {

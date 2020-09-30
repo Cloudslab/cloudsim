@@ -76,10 +76,7 @@ public class SanStorage extends HarddriveStorage {
 
 		// the max transfer rate is the minimum between
 		// the network bandwidth and the disk rate
-		if (diskRate < bandwidth) {
-			return diskRate;
-		}
-		return bandwidth;
+		return Math.min(diskRate, bandwidth);
 	}
 
 	@Override

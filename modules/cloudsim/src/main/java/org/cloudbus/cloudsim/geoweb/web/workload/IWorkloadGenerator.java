@@ -23,6 +23,6 @@ public interface IWorkloadGenerator {
      *            - the length of the period.
      * @return a map between session start times and sessions.
      */
-    public Map<Double, List<WebSession>> generateSessions(final double startTime, final double periodLen);
+    Map<Double, List<WebSession>> generateSessions(final double startTime, final double periodLen);
 
 }

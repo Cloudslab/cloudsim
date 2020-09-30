@@ -21,7 +21,7 @@ public class IterableGenerator<T> implements IGenerator<T> {
      * 
      * @param collection
      */
-    public IterableGenerator(@SuppressWarnings("unchecked") T... collection) {
+    public IterableGenerator(T... collection) {
         this(Arrays.asList(collection));
     }
 

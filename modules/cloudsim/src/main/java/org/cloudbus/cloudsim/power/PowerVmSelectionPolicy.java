@@ -47,7 +47,7 @@ public abstract class PowerVmSelectionPolicy {
 	 * @return the list of migratable VMs
 	 */
 	protected List<PowerVm> getMigratableVms(PowerHost host) {
-		List<PowerVm> migratableVms = new ArrayList<PowerVm>();
+		List<PowerVm> migratableVms = new ArrayList<>();
 		for (PowerVm vm : host.<PowerVm> getVmList()) {
 			if (!vm.isInMigration()) {
 				migratableVms.add(vm);

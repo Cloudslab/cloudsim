@@ -244,7 +244,7 @@ public class WebBroker extends MonitoringBorkerEX {
      */
     public void addLoadBalancer(final ILoadBalancer balancer) {
         appsToLoadBalancers.put(balancer.getAppId(), balancer);
-        appsToGenerators.put(balancer.getAppId(), new ArrayList<IWorkloadGenerator>());
+        appsToGenerators.put(balancer.getAppId(), new ArrayList<>());
     }
 
     /**
@@ -402,7 +402,7 @@ public class WebBroker extends MonitoringBorkerEX {
                     wc.getCloudletId(),
                     wc.getVmId() == sess.getAppVmId() ? "AS" : "DB",
                     wc.getVmId(),
-                    wc.getCloudletStatusString() == null ? String.valueOf(wc.getCloudletStatus()) : wc
+                    wc.getCloudletStatusString() == null ? String.valueOf(wc.getStatus()) : wc
                             .getCloudletStatusString()));
         }
 
@@ -444,7 +444,7 @@ public class WebBroker extends MonitoringBorkerEX {
     @Override
     protected void processResourceCharacteristicsRequest(final SimEvent ev) {
         setDatacenterIdsList(ev.getData() == null ? CloudSim.getCloudResourceList() : (List<Integer>) ev.getData());
-        setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
+        setDatacenterCharacteristicsList(new HashMap<>());
 
         for (Integer datacenterId : getDatacenterIdsList()) {
             sendNow(datacenterId, CloudSimTags.RESOURCE_CHARACTERISTICS, getId());

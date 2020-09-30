@@ -43,7 +43,7 @@ public class Host {
 	private VmScheduler vmScheduler;
 
 	/** The list of VMs assigned to the host. */
-	private final List<? extends Vm> vmList = new ArrayList<Vm>();
+	private final List<? extends Vm> vmList = new ArrayList<>();
 
 	/** The Processing Elements (PEs) of the host, that
          * represent the CPU cores of it, and thus, its processing capacity. */
@@ -53,7 +53,7 @@ public class Host {
 	private boolean failed;
 
 	/** The VMs migrating in. */
-	private final List<Vm> vmsMigratingIn = new ArrayList<Vm>();
+	private final List<Vm> vmsMigratingIn = new ArrayList<>();
 
 	/** The datacenter where the host is placed. */
 	private Datacenter datacenter;

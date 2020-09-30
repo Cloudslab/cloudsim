@@ -28,7 +28,7 @@ import java.util.TreeSet;
 public class FutureQueue {
 
 	/** The sorted set of events. */
-	private final SortedSet<SimEvent> sortedSet = new TreeSet<SimEvent>();
+	private final SortedSet<SimEvent> sortedSet = new TreeSet<>();
 
 	/** A incremental number used for {@link SimEvent#serial} event attribute.
          */

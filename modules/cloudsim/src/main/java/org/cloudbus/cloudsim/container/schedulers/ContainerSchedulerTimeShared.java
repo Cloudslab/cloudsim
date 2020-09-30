@@ -29,7 +29,7 @@ public class ContainerSchedulerTimeShared extends ContainerScheduler {
      */
     public ContainerSchedulerTimeShared(List<? extends ContainerPe> pelist) {
         super(pelist);
-        setMipsMapRequested(new HashMap<String, List<Double>>());
+        setMipsMapRequested(new HashMap<>());
     }
 
 
@@ -70,7 +70,7 @@ public class ContainerSchedulerTimeShared extends ContainerScheduler {
 
         for (Map.Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
             String containerUid = entry.getKey();
-            getPeMap().put(containerUid, new LinkedList<ContainerPe>());
+            getPeMap().put(containerUid, new LinkedList<>());
 
             for (double mips : entry.getValue()) {
                 while (mips >= 0.1) {
@@ -135,7 +135,7 @@ public class ContainerSchedulerTimeShared extends ContainerScheduler {
 //            totalRequestedMips *= 0.1;
         }
 
-        List<Double> mipsShareAllocated = new ArrayList<Double>();
+        List<Double> mipsShareAllocated = new ArrayList<>();
         for (Double mipsRequested : mipsShareRequested) {
 //            if (getContainersMigratingOut().contains(containerUid)) {
 //                // It should handle the container load fully

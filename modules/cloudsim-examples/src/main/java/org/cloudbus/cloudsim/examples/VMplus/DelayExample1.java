@@ -46,7 +46,6 @@ public class DelayExample1 {
         // Step 2: Create Datacenter
         // Datacenters are the resource providers in CloudSim. We need at
         // list one of them to run a CloudSim simulation
-        @SuppressWarnings("unused")
         Datacenter datacenter0 = createDatacenter("Datacenter_0");
 
         // Step 3: Create Broker
@@ -103,11 +102,11 @@ public class DelayExample1 {
         // Here are the steps needed to create a PowerDatacenter:
         // 1. We need to create a list to store
         // our machine
-        List<Host> hostList = new ArrayList<Host>();
+        List<Host> hostList = new ArrayList<>();
 
         // 2. A Machine contains one or more PEs or CPUs/Cores.
         // In this example, it will have only one plus.
-        List<Pe> peList = new ArrayList<Pe>();
+        List<Pe> peList = new ArrayList<>();
 
         int mips = 1000;
 
@@ -147,7 +146,7 @@ public class DelayExample1 {
         double costPerStorage = 0.001; // the cost of using storage in this
         // resource
         double costPerBw = 0.0; // the cost of using bw in this resource
-        LinkedList<Storage> storageList = new LinkedList<Storage>(); // we are
+        LinkedList<Storage> storageList = new LinkedList<>(); // we are
         // not
         // adding
         // SAN

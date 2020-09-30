@@ -360,11 +360,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
             }
         }
 
-        if (pesInUse > cpus) {
-            capacity /= pesInUse;
-        } else {
-            capacity /= cpus;
-        }
+        capacity /= Math.max(pesInUse, cpus);
         return capacity;
     }
 
@@ -670,7 +666,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
      */
     @Override
     public List<Double> getCurrentRequestedMips() {
-        List<Double> mipsShare = new ArrayList<Double>();
+        List<Double> mipsShare = new ArrayList<>();
         return mipsShare;
     }
 

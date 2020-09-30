@@ -19,7 +19,7 @@ public class ContainerRamProvisionerSimple extends ContainerRamProvisioner {
      */
     public ContainerRamProvisionerSimple(float availableRam) {
         super(availableRam);
-        setContainerRamTable(new HashMap<String, Float>());
+        setContainerRamTable(new HashMap<>());
     }
 
     /**

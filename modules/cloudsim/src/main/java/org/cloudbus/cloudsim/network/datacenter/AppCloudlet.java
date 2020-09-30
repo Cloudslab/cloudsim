@@ -93,7 +93,7 @@ public class AppCloudlet {
 		this.deadline = deadline;
 		this.numbervm = numbervm;
 		this.userId = userId;
-		clist = new ArrayList<NetworkCloudlet>();
+		clist = new ArrayList<>();
 	}
 
 	/**

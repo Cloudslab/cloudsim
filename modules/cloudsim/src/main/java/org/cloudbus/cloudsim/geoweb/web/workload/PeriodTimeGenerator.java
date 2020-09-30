@@ -41,7 +41,7 @@ public class PeriodTimeGenerator implements IWorkloadGenerator {
 
     @Override
     public Map<Double, List<WebSession>> generateSessions(double startTime, double periodLen) {
-        Map<Double, List<WebSession>> result = new HashMap<Double, List<WebSession>>();
+        Map<Double, List<WebSession>> result = new HashMap<>();
         if (count != null && count > 0) {
             double time = 0;
             for (int i = 0; i * period - leftOver < periodLen && count > 0; i++) {

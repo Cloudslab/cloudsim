@@ -85,7 +85,7 @@ public class NetworkTopology {
 
 		try {
 			graph = reader.readGraphFile(fileName);
-			map = new HashMap<Integer, Integer>();
+			map = new HashMap<>();
 			generateMatrices();
 		} catch (IOException e) {
 			// problem with the file. Does not simulate network
@@ -128,7 +128,7 @@ public class NetworkTopology {
 		}
 
 		if (map == null) {
-			map = new HashMap<Integer, Integer>();
+			map = new HashMap<>();
 		}
 
 		// maybe add the nodes

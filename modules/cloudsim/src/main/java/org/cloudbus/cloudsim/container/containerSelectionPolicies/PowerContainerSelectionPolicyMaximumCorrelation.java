@@ -104,7 +104,7 @@ public class PowerContainerSelectionPolicyMaximumCorrelation extends PowerContai
     protected List<Double> getCorrelationCoefficients(final double[][] data) {
         int n = data.length;
         int m = data[0].length;
-        List<Double> correlationCoefficients = new LinkedList<Double>();
+        List<Double> correlationCoefficients = new LinkedList<>();
         for (int i = 0; i < n; i++) {
             double[][] x = new double[n - 1][m];
             int k = 0;

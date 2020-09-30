@@ -38,7 +38,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	/** The map map where each key is a VM id and
          * each value is the host where the VM is placed. */
-	private final Map<String, Host> vmTable = new HashMap<String, Host>();
+	private final Map<String, Host> vmTable = new HashMap<>();
 
 	/**
 	 * Instantiates a new PowerVmAllocationPolicyAbstract.

@@ -90,9 +90,9 @@ public class Log {
 	public static void printConcat(Object... messages) {
 		if (!isDisabled()) {
 			buffer.setLength(0); // Clear the buffer		    
-			for(int i = 0 ; i < messages.length ; i ++) {
-				buffer.append(String.valueOf(messages[i]));
-			}
+            for (Object message : messages) {
+                buffer.append(message);
+            }
 			print(buffer);
 		}
 	}
@@ -105,9 +105,9 @@ public class Log {
 	public static void printConcatLine(Object... messages) {
 		if (!isDisabled()) {
 			buffer.setLength(0); // Clear the buffer		    
-			for(int i = 0 ; i < messages.length ; i ++) {
-				buffer.append(String.valueOf(messages[i]));
-			}
+            for (Object message : messages) {
+                buffer.append(message);
+            }
 			printLine(buffer);
 		}
 	}

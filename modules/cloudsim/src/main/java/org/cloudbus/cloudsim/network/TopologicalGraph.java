@@ -39,8 +39,8 @@ public class TopologicalGraph {
 	 * Creates an empty graph-object.
 	 */
 	public TopologicalGraph() {
-		linkList = new LinkedList<TopologicalLink>();
-		nodeList = new LinkedList<TopologicalNode>();
+		linkList = new LinkedList<>();
+		nodeList = new LinkedList<>();
 	}
 
 	/**
@@ -99,19 +99,17 @@ public class TopologicalGraph {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("topological-node-information: \n");
 
 		for (TopologicalNode node : nodeList) {
-			buffer.append(node.getNodeID() + " | x is: " + node.getCoordinateX() + " y is: "
-					+ node.getCoordinateY() + "\n");
+			buffer.append(node.getNodeID()).append(" | x is: ").append(node.getCoordinateX()).append(" y is: ").append(node.getCoordinateY()).append("\n");
 		}
 
 		buffer.append("\n\n node-link-information:\n");
 
 		for (TopologicalLink link : linkList) {
-			buffer.append("from: " + link.getSrcNodeID() + " to: " + link.getDestNodeID() + " delay: "
-					+ link.getLinkDelay() + "\n");
+			buffer.append("from: ").append(link.getSrcNodeID()).append(" to: ").append(link.getDestNodeID()).append(" delay: ").append(link.getLinkDelay()).append("\n");
 		}
 		return buffer.toString();
 	}

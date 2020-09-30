@@ -55,12 +55,12 @@ public class EntryPoint extends BaseEntryPoint implements IEntryPoint {
         super.dispatchSessions(webSessions);
 
         costComparator.prepareToCompare();
-        Collections.sort(getBrokers(), costComparator);
+        getBrokers().sort(costComparator);
 
         // A table of assignments of web sessions to brokers/clouds.
         Map<WebBroker, List<WebSession>> assignments = new HashMap<>();
         for (WebBroker broker : getBrokers()) {
-            assignments.put(broker, new ArrayList<WebSession>());
+            assignments.put(broker, new ArrayList<>());
         }
 
         // Decide which broker/cloud will serve each session - populate the

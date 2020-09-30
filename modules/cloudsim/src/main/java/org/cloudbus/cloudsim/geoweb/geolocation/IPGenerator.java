@@ -17,7 +17,7 @@ public interface IPGenerator {
      * @return the ISO codes of the countries for which this generator generates
      *         IPs.
      */
-    public abstract Set<String> getCountryCodes();
+    Set<String> getCountryCodes();
 
     /**
      * Creates a random IP from the specified countries. This may be either IPv4
@@ -27,7 +27,7 @@ public interface IPGenerator {
      * @return a random IP from the specified countries or null, if no value
      *         could be generated.
      */
-    public abstract String pollRandomIP();
+    String pollRandomIP();
 
     /**
      * Creates a random IP from the specified countries. Sometimes the origins
@@ -47,6 +47,6 @@ public interface IPGenerator {
      * @return a random IP from the specified countries, according to the
      *         specified service, or null, if no value could be generated.
      */
-    public String pollRandomIP(IGeolocationService service, int attempts);
+    String pollRandomIP(IGeolocationService service, int attempts);
 
 }

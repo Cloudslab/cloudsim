@@ -106,7 +106,7 @@ public class Container {
     /**
      * The mips allocation history.
      */
-    private final List<VmStateHistoryEntry> stateHistory = new LinkedList<VmStateHistoryEntry>();
+    private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
 
 //    added from the power Vm
     /**
@@ -117,7 +117,7 @@ public class Container {
     /**
      * The utilization history.
      */
-    private final List<Double> utilizationHistory = new LinkedList<Double>();
+    private final List<Double> utilizationHistory = new LinkedList<>();
 
     /**
      * The previous time.

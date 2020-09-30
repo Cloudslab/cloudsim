@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.cloudbus.cloudsim.CloudletScheduler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -237,13 +238,13 @@ public class MonitoredVMex extends VMex {
             double[] util = getPooledArray(cpuUtil, ramUtil, diskUtil);
             MutableDouble pooledTime = getPooledDouble(time);
             if (empty) {
-                data.add(startIdx, new MutablePair<MutableDouble, double[]>(pooledTime, util));
+                data.add(startIdx, new MutablePair<>(pooledTime, util));
                 endIdx = startIdx;
 
                 // If startIdx is in the beginning of the list and endIdx is in
                 // the end...
             } else if (data.isEmpty() || (startIdx == 0 && endIdx == data.size() - 1)) {
-                data.add(new MutablePair<MutableDouble, double[]>(pooledTime, util));
+                data.add(new MutablePair<>(pooledTime, util));
                 endIdx = data.size() - 1;
 
                 // If endIdx is not at the end or just before startIdx
@@ -298,9 +299,7 @@ public class MonitoredVMex extends VMex {
             }
 
             if (startIdx == endIdx && data.get(startIdx).getLeft().doubleValue() < currTime - summaryPeriodLength) {
-                for (int i = 0; i < measurementsSums.length; i++) {
-                    measurementsSums[i] = 0;
-                }
+                Arrays.fill(measurementsSums, 0);
                 measurementsCount = 0;
 
                 // Pool the objects, so we can reuse them.

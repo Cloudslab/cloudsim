@@ -91,12 +91,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="cloudsim" target="1.8" />
-      <module name="cloudsim-examples" target="1.8" />
+      <module name="cloudsim" target="${jdk.release}" />
+      <module name="cloudsim-examples" target="${jdk.release}" />
       <module name="cloudsim-package" target="1.5" />
       <module name="distribution" target="1.5" />
       <module name="documentation" target="11" />
-      <module name="modules" target="1.8" />
+      <module name="modules" target="${jdk.release}" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

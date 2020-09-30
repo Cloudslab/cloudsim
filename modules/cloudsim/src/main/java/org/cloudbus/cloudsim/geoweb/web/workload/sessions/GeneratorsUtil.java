@@ -49,7 +49,7 @@ public class GeneratorsUtil {
 	        }
         }
 
-        Map<String, List<Double>> values = new HashMap<String, List<Double>>();
+        Map<String, List<Double>> values = new HashMap<>();
 
         while ((line = br.readLine()) != null) {
             List<Double> lineValues = new ArrayList<>();
@@ -58,7 +58,7 @@ public class GeneratorsUtil {
             }
             for (int i = 0; i < headers.size(); i++) {
                 if (!values.containsKey(headers.get(i))) {
-                    values.put(headers.get(i), new ArrayList<Double>());
+                    values.put(headers.get(i), new ArrayList<>());
                 }
                 values.get(headers.get(i)).add(lineValues.get(i));
             }
@@ -67,7 +67,7 @@ public class GeneratorsUtil {
     }
 
     public static Map<String, List<Double>> cloneDefs(Map<String, List<Double>> defs) {
-        Map<String, List<Double>> values = new HashMap<String, List<Double>>();
+        Map<String, List<Double>> values = new HashMap<>();
         for (Map.Entry<String, List<Double>> e : defs.entrySet()) {
             values.put(e.getKey(), new ArrayList<>(e.getValue()));
         }

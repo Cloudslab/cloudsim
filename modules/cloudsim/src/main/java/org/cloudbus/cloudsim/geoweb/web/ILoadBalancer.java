@@ -18,7 +18,7 @@ public interface ILoadBalancer {
      * 
      * @return - the id of the load balancer.
      */
-    public long getId();
+    long getId();
 
     /**
      * Assigns the specified sessions to an application and a DB servers.
@@ -27,7 +27,7 @@ public interface ILoadBalancer {
      *            - the sessions to assign. If the session is already assigned
      *            to servers, this operation does nothing.
      */
-    public void assignToServers(final WebSession... sessions);
+    void assignToServers(final WebSession... sessions);
 
     /**
      * Registers a new application server with this load balancer.
@@ -35,14 +35,14 @@ public interface ILoadBalancer {
      * @param vm
      *            - the new app server.
      */
-    public void registerAppServer(final HddVm vm);
+    void registerAppServer(final HddVm vm);
 
     /**
      * Returns the list of all app servers managed by this load balancer.
      * 
      * @return the list of all app servers managed by this load balancer.
      */
-    public List<HddVm> getAppServers();
+    List<HddVm> getAppServers();
 
     /**
      * Returns the list of all currently running app servers managed by this
@@ -58,20 +58,20 @@ public interface ILoadBalancer {
      * 
      * @return the balancer which manages cloudlets to DB server mapping.
      */
-    public IDBBalancer getDbBalancer();
+    IDBBalancer getDbBalancer();
 
     /**
      * Returns the id of the application served by this load balancer.
      * 
      * @return the id of the application served by this load balancer.
      */
-    public long getAppId();
+    long getAppId();
 
     /**
      * Returns the IP address of this load balancer.
      * 
      * @return the IP address of this load balancer.
      */
-    public String getIp();
+    String getIp();
 
 }

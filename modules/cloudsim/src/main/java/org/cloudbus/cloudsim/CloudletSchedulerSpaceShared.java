@@ -77,7 +77,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 		// update each cloudlet
 		int finished = 0;
-		List<ResCloudlet> toRemove = new ArrayList<ResCloudlet>();
+		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			// finished anyway, rounding issue...
 			if (rcl.getRemainingCloudletLength() == 0) {
@@ -411,11 +411,9 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 	@Override
 	public List<Double> getCurrentRequestedMips() {
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		if (getCurrentMipsShare() != null) {
-			for (Double mips : getCurrentMipsShare()) {
-				mipsShare.add(mips);
-			}
+			mipsShare.addAll(getCurrentMipsShare());
 		}
 		return mipsShare;
 	}

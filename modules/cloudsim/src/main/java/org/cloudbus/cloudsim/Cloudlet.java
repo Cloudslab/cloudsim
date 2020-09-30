@@ -289,7 +289,7 @@ public class Cloudlet {
         vmId = -1;        
         accumulatedBwCost = 0;
         costPerBw = 0;
-        requiredFiles = new LinkedList<String>();
+        requiredFiles = new LinkedList<>();
     }
 
     /**
@@ -445,7 +445,7 @@ public class Cloudlet {
 		// Normally, a Cloudlet is only executed on a resource without being
         // migrated to others. Hence, to reduce memory consumption, set the
         // size of this ArrayList to be less than the default one.
-        resList = new ArrayList<Resource>(2);
+        resList = new ArrayList<>(2);
         index = -1;
         this.record = record;
 
@@ -453,7 +453,7 @@ public class Cloudlet {
         accumulatedBwCost = 0.0;
         costPerBw = 0.0;
 
-        requiredFiles = new LinkedList<String>();
+        requiredFiles = new LinkedList<>();
 
         setUtilizationModelCpu(utilizationModelCpu);
         setUtilizationModelRam(utilizationModelRam);
@@ -725,11 +725,8 @@ public class Cloudlet {
         }
 
         final long finish = resList.get(index).finishedSoFar;
-        if (finish > cloudletLength) {
-            return cloudletLength;
-        }
+        return Math.min(finish, cloudletLength);
 
-        return finish;
     }
 
     /**
@@ -1353,17 +1350,17 @@ public class Cloudlet {
             history = new StringBuffer(1000);
             history.append("Time below denotes the simulation time.");
             history.append(System.getProperty("line.separator"));
-            history.append("Time (sec)       Description Cloudlet #" + cloudletId);
+            history.append("Time (sec)       Description Cloudlet #").append(cloudletId);
             history.append(System.getProperty("line.separator"));
             history.append("------------------------------------------");
             history.append(System.getProperty("line.separator"));
             history.append(num.format(CloudSim.clock()));
-            history.append("   Creates Cloudlet ID #" + cloudletId);
+            history.append("   Creates Cloudlet ID #").append(cloudletId);
             history.append(System.getProperty("line.separator"));
         }
 
         history.append(num.format(CloudSim.clock()));
-        history.append("   " + str + newline);
+        history.append("   ").append(str).append(newline);
     }
 
     /**
@@ -1490,7 +1487,7 @@ public class Cloudlet {
     public boolean addRequiredFile(final String fileName) {
         // if the list is empty
         if (getRequiredFiles() == null) {
-            setRequiredFiles(new LinkedList<String>());
+            setRequiredFiles(new LinkedList<>());
         }
 
         // then check whether filename already exists or not

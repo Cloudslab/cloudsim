@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.cloudbus.cloudsim</groupId>
   <artifactId>cloudsim-package</artifactId>
-  <version>4.0</version>
+  <version>5.0</version>
   <packaging>pom</packaging>
   <name>cloudsim-package</name>
   <description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
@@ -45,6 +45,40 @@
 					</annotationProcessorPaths>
   				</configuration>
   			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.3.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<maxmemory>2048</maxmemory>
+					<additionalparam>-Xdoclint:none</additionalparam>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M3</version>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>3.1.0</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
   		</plugins>
   	</pluginManagement>
   </build>  
@@ -88,19 +122,19 @@
   		<dependency>
   			<groupId>junit</groupId>
   			<artifactId>junit</artifactId>
-  			<version>4.12</version>
+  			<version>4.13</version>
   			<scope>test</scope>
   		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
-			<version>3.1</version>
+			<version>4.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymockclassextension</artifactId>
-			<version>3.1</version>
+			<version>3.2</version>
 			<scope>test</scope>
 		</dependency>  		  		
   	</dependencies>

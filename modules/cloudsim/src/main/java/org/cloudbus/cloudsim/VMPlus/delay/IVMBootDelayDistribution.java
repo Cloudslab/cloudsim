@@ -17,6 +17,6 @@ public interface IVMBootDelayDistribution {
      *            - the VM to check for. Must not be null.
      * @return the time
      */
-    public double getDelay(final Vm vm);
+    double getDelay(final Vm vm);
 
 }

@@ -72,7 +72,7 @@ public class CloudSimWorkloadWebExample {
 	    WebBroker broker = new WebBroker("Broker", refreshTime, 24 * 3600, datacenter0.getId());
 
 	    // Step 4: Create virtual machines
-	    List<Vm> vmlist = new ArrayList<Vm>();
+	    List<Vm> vmlist = new ArrayList<>();
 
 	    // VM description
 	    int mips = 250;
@@ -147,7 +147,7 @@ public class CloudSimWorkloadWebExample {
 	double periodLength = 3600 * 24;
 	double nullPoint = 0;
 
-	double h0 = 0 * 3600;
+	double h0 = 0;
 	double h10 = 10 * 3600;
 	double h13 = 13 * 3600;
 	double h14 = 14 * 3600;
@@ -173,7 +173,7 @@ public class CloudSimWorkloadWebExample {
 	// Here are the steps needed to create a PowerDatacenter:
 	// 1. We need to create a list to store
 	// our machine
-	List<Host> hostList = new ArrayList<Host>();
+	List<Host> hostList = new ArrayList<>();
 
 	// 2. A Machine contains one or more PEs or CPUs/Cores.
 	// In this example, it will have only one plus.
@@ -215,7 +215,7 @@ public class CloudSimWorkloadWebExample {
 	double costPerStorage = 0.001; // the cost of using storage in this
 	// resource
 	double costPerBw = 0.0; // the cost of using bw in this resource
-	LinkedList<Storage> storageList = new LinkedList<Storage>();
+	LinkedList<Storage> storageList = new LinkedList<>();
 
 	DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
 		arch, os, vmm, hostList, time_zone, cost, costPerMem,
@@ -247,9 +247,9 @@ public class CloudSimWorkloadWebExample {
 	CustomLog.printLine(TextUtil.getCaptionLine(WebCloudlet.class));
 
 	// Print details for each cloudlet
-	for (int i = 0; i < size; i++) {
-	    cloudlet = list.get(i);
-	    CustomLog.print(TextUtil.getTxtLine(cloudlet));
-	}
+        for (Cloudlet value : list) {
+            cloudlet = value;
+            CustomLog.print(TextUtil.getTxtLine(cloudlet));
+        }
     }
 }

@@ -37,7 +37,7 @@ public class PlanetLabHelper {
 	 */
 	public static List<Cloudlet> createCloudletListPlanetLab(int brokerId, String inputFolderName)
 			throws FileNotFoundException {
-		List<Cloudlet> list = new ArrayList<Cloudlet>();
+		List<Cloudlet> list = new ArrayList<>();
 
 		long fileSize = 300;
 		long outputSize = 300;

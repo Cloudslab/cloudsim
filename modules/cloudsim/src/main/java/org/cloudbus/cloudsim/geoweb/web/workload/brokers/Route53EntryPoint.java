@@ -32,7 +32,7 @@ public class Route53EntryPoint extends BaseEntryPoint implements IEntryPoint {
         // A table of assignments of web sessions to brokers/clouds.
         Map<WebBroker, List<WebSession>> assignments = new HashMap<>();
         for (WebBroker broker : getBrokers()) {
-            assignments.put(broker, new ArrayList<WebSession>());
+            assignments.put(broker, new ArrayList<>());
         }
 
         for (WebSession sess : webSessions) {

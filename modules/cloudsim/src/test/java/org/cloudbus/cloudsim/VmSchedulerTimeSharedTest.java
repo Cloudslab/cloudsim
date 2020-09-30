@@ -39,7 +39,7 @@ public class VmSchedulerTimeSharedTest {
 
 	@Before
 	public void setUp() throws Exception {
-		peList = new ArrayList<Pe>();
+		peList = new ArrayList<>();
 		peList.add(new Pe(0, new PeProvisionerSimple(MIPS)));
 		peList.add(new Pe(1, new PeProvisionerSimple(MIPS)));
 		vmScheduler = new VmSchedulerTimeShared(peList);
@@ -58,7 +58,7 @@ public class VmSchedulerTimeSharedTest {
 
 	@Test
 	public void testAllocatePesForVm() {
-		List<Double> mipsShare1 = new ArrayList<Double>();
+		List<Double> mipsShare1 = new ArrayList<>();
 		mipsShare1.add(MIPS / 4);
 
 		assertTrue(vmScheduler.allocatePesForVm(vm1, mipsShare1));
@@ -67,7 +67,7 @@ public class VmSchedulerTimeSharedTest {
 		assertEquals(PeList.getTotalMips(peList) - MIPS / 4, vmScheduler.getMaxAvailableMips(), 0);
 		assertEquals(MIPS / 4, vmScheduler.getTotalAllocatedMipsForVm(vm1), 0);
 
-		List<Double> mipsShare2 = new ArrayList<Double>();
+		List<Double> mipsShare2 = new ArrayList<>();
 		mipsShare2.add(MIPS / 2);
 		mipsShare2.add(MIPS / 8);
 
@@ -127,7 +127,7 @@ public class VmSchedulerTimeSharedTest {
 		vm1.setInMigration(true);
 		vm2.setInMigration(true);
 
-		List<Double> mipsShare1 = new ArrayList<Double>();
+		List<Double> mipsShare1 = new ArrayList<>();
 		mipsShare1.add(MIPS / 4);
 
 		assertTrue(vmScheduler.allocatePesForVm(vm1, mipsShare1));
@@ -136,7 +136,7 @@ public class VmSchedulerTimeSharedTest {
 		assertEquals(PeList.getTotalMips(peList) - MIPS / 4, vmScheduler.getMaxAvailableMips(), 0);
 		assertEquals(0.9 * MIPS / 4, vmScheduler.getTotalAllocatedMipsForVm(vm1), 0);
 
-		List<Double> mipsShare2 = new ArrayList<Double>();
+		List<Double> mipsShare2 = new ArrayList<>();
 		mipsShare2.add(MIPS / 2);
 		mipsShare2.add(MIPS / 8);
 

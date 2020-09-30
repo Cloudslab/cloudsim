@@ -101,7 +101,7 @@ public class CompressedAutoscalingPolicy implements IAutoscalingPolicy {
                 }
 
                 List<HddVm> toStop = new ArrayList<>();
-                Collections.sort(freeVms, new CloudPriceComparator(webBroker.getVMBillingPolicy()));
+                freeVms.sort(new CloudPriceComparator(webBroker.getVMBillingPolicy()));
                 for (int i = 0; i < numVmsToStop; i++) {
                     double billTime = webBroker.getVMBillingPolicy().nexChargeTime(freeVms.get(i));
                     if (freeVms.get(i).getStatus() == VMStatus.RUNNING && billTime - CloudSim.clock() < delta

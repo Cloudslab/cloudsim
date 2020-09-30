@@ -24,7 +24,7 @@ public interface IEntryPoint {
      * @param broker
      *            - the broker to register. Must not be null.
      */
-    public abstract void registerBroker(WebBroker broker);
+    void registerBroker(WebBroker broker);
 
     /**
      * Deregisters the broker/cloud from this entry point. Subsequent workload
@@ -33,14 +33,14 @@ public interface IEntryPoint {
      * @param webBroker
      *            - the broker to deregister/remove. Must not be null.
      */
-    public abstract void deregisterBroker(WebBroker webBroker);
+    void deregisterBroker(WebBroker webBroker);
 
     /**
      * Returns the id of the application, which this entry point is a part of.
      * 
      * @return - the Id of the application, which this entry point is a part of.
      */
-    public abstract long getAppId();
+    long getAppId();
 
     /**
      * Dispatches the sessions to the appropriate brokers/clouds.
@@ -48,13 +48,13 @@ public interface IEntryPoint {
      * @param webSessions
      *            - the web sessions to dispatch. Must not be null.
      */
-    public abstract void dispatchSessions(List<WebSession> webSessions);
+    void dispatchSessions(List<WebSession> webSessions);
 
     /**
      * Returns how many sessions have been dispatched by this entry point.
      * 
      * @return how many sessions have been dispatched by this entry point.
      */
-    public long getSessionsDispatched();
+    long getSessionsDispatched();
 
 }

@@ -74,7 +74,7 @@ public class NetworkExample1 {
 			int brokerId = broker.getId();
 
 			//Fourth step: Create one virtual machine
-			vmlist = new ArrayList<Vm>();
+			vmlist = new ArrayList<>();
 
 			//VM description
 			int vmid = 0;
@@ -96,7 +96,7 @@ public class NetworkExample1 {
 
 
 			//Fifth step: Create one Cloudlet
-			cloudletList = new ArrayList<Cloudlet>();
+			cloudletList = new ArrayList<>();
 
 			//Cloudlet properties
 			int id = 0;
@@ -152,11 +152,11 @@ public class NetworkExample1 {
 		// Here are the steps needed to create a PowerDatacenter:
 		// 1. We need to create a list to store
 		//    our machine
-		List<Host> hostList = new ArrayList<Host>();
+		List<Host> hostList = new ArrayList<>();
 
 		// 2. A Machine contains one or more PEs or CPUs/Cores.
 		// In this example, it will have only one core.
-		List<Pe> peList = new ArrayList<Pe>();
+		List<Pe> peList = new ArrayList<>();
 
 		int mips = 1000;
 
@@ -192,7 +192,7 @@ public class NetworkExample1 {
 		double costPerMem = 0.05;		// the cost of using memory in this resource
 		double costPerStorage = 0.001;	// the cost of using storage in this resource
 		double costPerBw = 0.0;			// the cost of using bw in this resource
-		LinkedList<Storage> storageList = new LinkedList<Storage>();	//we are not adding SAN devices by now
+		LinkedList<Storage> storageList = new LinkedList<>();	//we are not adding SAN devices by now
 
 		DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
 				arch, os, vmm, hostList, time_zone, cost, costPerMem,
@@ -238,19 +238,19 @@ public class NetworkExample1 {
 		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent +
 				"Data center ID" + indent + "VM ID" + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
-		for (int i = 0; i < size; i++) {
-			cloudlet = list.get(i);
-			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
+        for (Cloudlet value : list) {
+            cloudlet = value;
+            Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS){
-				Log.print("SUCCESS");
+            if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
+                Log.print("SUCCESS");
 
-				DecimalFormat dft = new DecimalFormat("###.##");
-				Log.printLine( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
-						indent + indent + dft.format(cloudlet.getActualCPUTime()) + indent + indent + dft.format(cloudlet.getExecStartTime())+
-						indent + indent + dft.format(cloudlet.getFinishTime()));
-			}
-		}
+                DecimalFormat dft = new DecimalFormat("###.##");
+                Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
+                        indent + indent + dft.format(cloudlet.getActualCPUTime()) + indent + indent + dft.format(cloudlet.getExecStartTime()) +
+                        indent + indent + dft.format(cloudlet.getFinishTime()));
+            }
+        }
 
 	}
 }

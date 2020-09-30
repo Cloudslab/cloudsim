@@ -31,7 +31,7 @@ import org.cloudbus.cloudsim.UtilizationModel;
  * @todo The different cloudlet classes should have a class hierarchy, by means
  * of a super class and/or interface.
  */
-public class NetworkCloudlet extends Cloudlet implements Comparable<Object> {
+public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloudlet> {
         /** Time when cloudlet will be submitted. */
 	public double submittime; 
 
@@ -97,11 +97,11 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<Object> {
 
 		currStagenum = -1;
 		this.memory = memory;
-		stages = new ArrayList<TaskStage>();
+		stages = new ArrayList<>();
 	}
 
 	@Override
-	public int compareTo(Object arg0) {
+	public int compareTo(NetworkCloudlet arg0) {
 		return 0;
 	}
 

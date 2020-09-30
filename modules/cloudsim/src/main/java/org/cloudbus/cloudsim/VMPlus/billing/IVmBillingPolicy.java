@@ -22,7 +22,7 @@ public interface IVmBillingPolicy {
      *            - the vms to bill. Must not be empty
      * @return the cost for the specified vms.
      */
-    public BigDecimal bill(final List<? extends Vm> vms);
+    BigDecimal bill(final List<? extends Vm> vms);
 
     /**
      * Returns the cost for the specified vms before a specified moment in time.
@@ -31,7 +31,7 @@ public interface IVmBillingPolicy {
      * @param before
      * @return
      */
-    public BigDecimal bill(final List<? extends Vm> vms, double before);
+    BigDecimal bill(final List<? extends Vm> vms, double before);
 
     /**
      * Returns the next charging time.
@@ -41,7 +41,7 @@ public interface IVmBillingPolicy {
      * @return the next charging time or -1 if the charge time could not be
      *         estimated.
      */
-    public double nexChargeTime(final Vm vm);
+    double nexChargeTime(final Vm vm);
 
     /**
      * Returns a normalised cost of the VM for 1 minute. This operation is
@@ -51,6 +51,6 @@ public interface IVmBillingPolicy {
      *            - the VM to check for. Must not be null;
      * @return a normalised cost of the VM for 1 minute.
      */
-    public BigDecimal normalisedCostPerMinute(final Vm vm);
+    BigDecimal normalisedCostPerMinute(final Vm vm);
 
 }

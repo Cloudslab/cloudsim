@@ -3,7 +3,7 @@
   <parent>
     <artifactId>cloudsim-package</artifactId>
     <groupId>org.cloudbus.cloudsim</groupId>
-    <version>4.0</version>
+    <version>5.0</version>
   </parent>
   <artifactId>distribution</artifactId>
   <packaging>pom</packaging>
@@ -16,6 +16,7 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-assembly-plugin</artifactId>
+			<version>3.3.0</version>
 			<executions>
 				<execution>
 					<phase>install</phase>

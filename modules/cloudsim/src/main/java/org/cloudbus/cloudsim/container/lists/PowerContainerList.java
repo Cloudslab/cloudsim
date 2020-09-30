@@ -19,14 +19,10 @@ public class PowerContainerList {
      * @param containerList the vm list
      */
     public static <T extends Container> void sortByCpuUtilization(List<T> containerList) {
-        Collections.sort(containerList, new Comparator<T>() {
-
-            @Override
-            public int compare(T a, T b) throws ClassCastException {
-                Double aUtilization = a.getTotalUtilizationOfCpuMips(CloudSim.clock());
-                Double bUtilization = b.getTotalUtilizationOfCpuMips(CloudSim.clock());
-                return bUtilization.compareTo(aUtilization);
-            }
+        containerList.sort((a, b) -> {
+            Double aUtilization = a.getTotalUtilizationOfCpuMips(CloudSim.clock());
+            Double bUtilization = b.getTotalUtilizationOfCpuMips(CloudSim.clock());
+            return bUtilization.compareTo(aUtilization);
         });
     }
 

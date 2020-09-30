@@ -39,9 +39,8 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
      */
     public PowerContainerHost findHostForVm(ContainerVm vm, Set<? extends ContainerHost> excludedHosts) {
         PowerContainerHost allocatedHost = null;
-        Boolean find = false;
-        Set<ContainerHost> excludedHost1 = new HashSet<>();
-        excludedHost1.addAll(excludedHosts);
+        boolean find = false;
+        Set<ContainerHost> excludedHost1 = new HashSet<>(excludedHosts);
         while (!find) {
             ContainerHost host = getHostSelectionPolicy().getHost(getContainerHostList(), vm, excludedHost1);
             if (host == null) {

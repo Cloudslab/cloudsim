@@ -50,14 +50,8 @@ public class SimpleWebLoadBalancer extends BaseWebLoadBalancer implements ILoadB
     @Override
     public void assignToServers(final WebSession... sessions) {
         // Filter all sessions without an assigned application server
-        List<WebSession> noAppServSessions = new ArrayList<>();
-        noAppServSessions.addAll(Arrays.asList(sessions));
-        for (ListIterator<WebSession> iter = noAppServSessions.listIterator(); iter.hasNext();) {
-            WebSession sess = iter.next();
-            if (sess.getAppVmId() != null) {
-                iter.remove();
-            }
-        }
+        List<WebSession> noAppServSessions = new ArrayList<>(Arrays.asList(sessions));
+        noAppServSessions.removeIf(sess -> sess.getAppVmId() != null);
 
         List<HddVm> runingVMs = getRunningAppServers();
         // No running AS servers - log an error
@@ -97,7 +91,7 @@ public class SimpleWebLoadBalancer extends BaseWebLoadBalancer implements ILoadB
 
                 debugSB.append(String.format("%s[%s] cpu(%.2f), ram(%.2f), cdlts(%d), sess(%d); ", vm, vm.getStatus(),
                         vm.getCPUUtil(), vm.getRAMUtil(), vm.getCloudletScheduler().getCloudletExecList().size(),
-                        !usedASServers.containsKey(vm.getId()) ? 0 : usedASServers.get(vm.getId())));
+                        usedASServers.getOrDefault(vm.getId(), 0)));
             }
 
             // Distribute the sessions among the best VMs
@@ -113,7 +107,7 @@ public class SimpleWebLoadBalancer extends BaseWebLoadBalancer implements ILoadB
                                     broker == null ? "N/A" : broker, session.getSessionId(), hostVM,
                                     hostVM.getStatus(), hostVM.getCPUUtil(), hostVM.getRAMUtil(), hostVM
                                             .getCloudletScheduler().getCloudletExecList().size(),
-                                    !usedASServers.containsKey(hostVM.getId()) ? 0 : usedASServers.get(hostVM.getId()));
+                                    usedASServers.getOrDefault(hostVM.getId(), 0));
                     CustomLog.printf("[Simple Load Balancer(%s), Candidate VMs: %s", broker == null ? "N/A" : broker,
                             debugSB);
 

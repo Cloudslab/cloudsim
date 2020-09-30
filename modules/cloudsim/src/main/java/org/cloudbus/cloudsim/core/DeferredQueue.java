@@ -25,7 +25,7 @@ import java.util.ListIterator;
 public class DeferredQueue {
 
 	/** The list of events. */
-	private final List<SimEvent> list = new LinkedList<SimEvent>();
+	private final List<SimEvent> list = new LinkedList<>();
 
 	/** The max time that an added event is scheduled. */
 	private double maxTime = -1;

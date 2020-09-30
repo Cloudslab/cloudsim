@@ -50,7 +50,7 @@ public class GeolocationServiceWithOverrides extends BaseGeolocationService impl
         Preconditions.checkNotNull(rules);
         Preconditions.checkArgument(!rules.isEmpty());
         this.nested = nested;
-        this.rules = Collections.unmodifiableSet(new LinkedHashSet<OverrideRule>(rules));
+        this.rules = Collections.unmodifiableSet(new LinkedHashSet<>(rules));
     }
     
     private OverrideRule getRule(final String ip) {

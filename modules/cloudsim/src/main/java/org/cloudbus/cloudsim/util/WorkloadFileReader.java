@@ -89,7 +89,7 @@ public class WorkloadFileReader implements WorkloadModel {
     /**
      * Field index of job number.
      */
-    private int JOB_NUM = 1 - 1; 
+    private int JOB_NUM = 0;
 
     /**
      * Field index of submit time of a job.
@@ -190,7 +190,7 @@ public class WorkloadFileReader implements WorkloadModel {
     @Override
     public ArrayList<Cloudlet> generateWorkload() {
             if (jobs == null) {
-                    jobs = new ArrayList<Cloudlet>();
+                    jobs = new ArrayList<>();
 
                     // create a temp array
                     fieldArray = new String[MAX_FIELD];
@@ -207,7 +207,6 @@ public class WorkloadFileReader implements WorkloadModel {
                             } else {
                                     readFile(file);
                             }
-                    } catch (final FileNotFoundException e) {
                     } catch (final IOException e) {
                     }
             }
@@ -368,25 +367,25 @@ public class WorkloadFileReader implements WorkloadModel {
                     if (JOB_NUM == IRRELEVANT) {
                             id = jobs.size() + 1;
                     } else {
-                            obj = new Integer(array[JOB_NUM].trim());
-                            id = obj.intValue();
+                            obj = Integer.valueOf(array[JOB_NUM].trim());
+                            id = obj;
                     }
 
                     // get the submit time
-                    final Long l = new Long(array[SUBMIT_TIME].trim());
+                    final Long l = Long.valueOf(array[SUBMIT_TIME].trim());
                     final long submitTime = l.intValue();
 
                     // get the user estimated run time
-                    obj = new Integer(array[REQ_RUN_TIME].trim());
-                    final int reqRunTime = obj.intValue();
+                    obj = Integer.valueOf(array[REQ_RUN_TIME].trim());
+                    final int reqRunTime = obj;
 
                     // if the required run time field is ignored, then use
                     // the actual run time
-                    obj = new Integer(array[RUN_TIME].trim());
-                    int runTime = obj.intValue();
+                    obj = Integer.valueOf(array[RUN_TIME].trim());
+                    int runTime = obj;
 
-                    final int userID = new Integer(array[USER_ID].trim()).intValue();
-                    final int groupID = new Integer(array[GROUP_ID].trim()).intValue();
+                    final int userID = Integer;
+                    final int groupID = Integer;
 
                     // according to the SWF manual, runtime of 0 is possible due
                     // to rounding down. E.g. runtime is 0.4 seconds -> runtime = 0
@@ -395,14 +394,14 @@ public class WorkloadFileReader implements WorkloadModel {
                     }
 
                     // get the number of allocated processors
-                    obj = new Integer(array[REQ_NUM_PROC].trim());
-                    int numProc = obj.intValue();
+                    obj = Integer.valueOf(array[REQ_NUM_PROC].trim());
+                    int numProc = obj;
 
                     // if the required num of allocated processors field is ignored
                     // or zero, then use the actual field
                     if (numProc == IRRELEVANT || numProc == 0) {
-                            obj = new Integer(array[NUM_PROC].trim());
-                            numProc = obj.intValue();
+                            obj = Integer.valueOf(array[NUM_PROC].trim());
+                            numProc = obj;
                     }
 
                     // finally, check if the num of PEs required is valid or not
@@ -463,25 +462,19 @@ public class WorkloadFileReader implements WorkloadModel {
      */
     private boolean readFile(final File fl) throws IOException, FileNotFoundException {
             boolean success = false;
-            BufferedReader reader = null;
-            try {
-                    reader = new BufferedReader(new InputStreamReader(new FileInputStream(fl)));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fl)))) {
 
-                    // read one line at the time
-                    int line = 1;
-                    String readLine = null;
-                    while (reader.ready() && (readLine = reader.readLine()) != null) {
-                            parseValue(readLine, line);
-                            line++;
-                    }
-
-                    reader.close();
-                    success = true;
-            } finally {
-                    if (reader != null) {
-                            reader.close();
-                    }
+            // read one line at the time
+            int line = 1;
+            String readLine = null;
+            while (reader.ready() && (readLine = reader.readLine()) != null) {
+                parseValue(readLine, line);
+                line++;
             }
+
+            reader.close();
+            success = true;
+        }
 
             return success;
     }
@@ -496,25 +489,19 @@ public class WorkloadFileReader implements WorkloadModel {
      */
     private boolean readGZIPFile(final File fl) throws IOException, FileNotFoundException {
             boolean success = false;
-            BufferedReader reader = null;
-            try {
-                    reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(fl))));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(fl))))) {
 
-                    // read one line at the time
-                    int line = 1;                       
-                    String readLine = null;
-                    while (reader.ready() && (readLine = reader.readLine()) != null) {
-                            parseValue(readLine, line);
-                            line++;
-                    }
-
-                    reader.close();
-                    success = true;
-            } finally {
-                    if (reader != null) {
-                            reader.close();
-                    }
+            // read one line at the time
+            int line = 1;
+            String readLine = null;
+            while (reader.ready() && (readLine = reader.readLine()) != null) {
+                parseValue(readLine, line);
+                line++;
             }
+
+            reader.close();
+            success = true;
+        }
 
             return success;
     }

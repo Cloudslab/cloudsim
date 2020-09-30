@@ -72,7 +72,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
                 the total mips will be wrong. Just the getTotalMips is enough,
                 and it have to compute there the total, instead of storing into an attribute.*/
 		setTotalMips(getNumberOfPes() * getMips());
-		setUnderAllocatedMips(new HashMap<String, Double>());
+		setUnderAllocatedMips(new HashMap<>());
 		setCachePreviousTime(-1);
 	}
 
@@ -82,7 +82,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 
 		double timeSpan = currentTime - getPreviousTime();
 		double nextEvent = Double.MAX_VALUE;
-		List<ResCloudlet> cloudletsToFinish = new ArrayList<ResCloudlet>();
+		List<ResCloudlet> cloudletsToFinish = new ArrayList<>();
 
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			rcl.updateCloudletFinishedSoFar((long) (timeSpan
@@ -155,7 +155,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 		if (getCachePreviousTime() == getPreviousTime()) {
 			return getCacheCurrentRequestedMips();
 		}
-		List<Double> currentMips = new ArrayList<Double>();
+		List<Double> currentMips = new ArrayList<>();
 		double totalMips = getTotalUtilizationOfCpu(getPreviousTime()) * getTotalMips();
 		double mipsForPe = totalMips / getNumberOfPes();
 
@@ -194,10 +194,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
 		double totalCurrentRequestedMips = getTotalCurrentRequestedMipsForCloudlet(rcl, time);
 		double totalCurrentAvailableMips = getTotalCurrentAvailableMipsForCloudlet(rcl, getCurrentMipsShare());
-		if (totalCurrentRequestedMips > totalCurrentAvailableMips) {
-			return totalCurrentAvailableMips;
-		}
-		return totalCurrentRequestedMips;
+		return Math.min(totalCurrentRequestedMips, totalCurrentAvailableMips);
 	}
 
 	/**

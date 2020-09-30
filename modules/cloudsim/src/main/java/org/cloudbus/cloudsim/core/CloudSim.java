@@ -34,6 +34,7 @@ import org.cloudbus.cloudsim.core.predicates.PredicateNone;
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
  */
+@SuppressWarnings("BusyWait")
 public class CloudSim {
 
 	/** The Constant CLOUDSIM_VERSION_STRING. */
@@ -43,7 +44,6 @@ public class CloudSim {
 	private static int cisId = -1;
 
 	/** The id of CloudSimShutdown entity. */
-	@SuppressWarnings("unused")
 	private static int shutdownId = -1;
 
 	/** The CIS object. */
@@ -53,7 +53,6 @@ public class CloudSim {
 	private static final int NOT_FOUND = -1;
 
 	/** The trace flag. */
-	@SuppressWarnings("unused")
 	private static boolean traceFlag = false;
 
 	/** The calendar. */
@@ -125,12 +124,9 @@ public class CloudSim {
 
 			// set all the above entity IDs
 			cisId = cis.getId();
-		} catch (IllegalArgumentException s) {
+		} catch (Exception s) {
 			Log.printLine("CloudSim.init(): The simulation has been terminated due to an unexpected error");
 			Log.printLine(s.getMessage());
-		} catch (Exception e) {
-			Log.printLine("CloudSim.init(): The simulation has been terminated due to an unexpected error");
-			Log.printLine(e.getMessage());
 		}
 	}
 
@@ -346,11 +342,11 @@ public class CloudSim {
 	 */
 	protected static void initialize() {
 		Log.printLine("Initialising...");
-		entities = new ArrayList<SimEntity>();
-		entitiesByName = new LinkedHashMap<String, SimEntity>();
+		entities = new ArrayList<>();
+		entitiesByName = new LinkedHashMap<>();
 		future = new FutureQueue();
 		deferred = new DeferredQueue();
-		waitPredicates = new HashMap<Integer, Predicate>();
+		waitPredicates = new HashMap<>();
 		clock = 0;
 		running = false;
 	}
@@ -429,8 +425,6 @@ public class CloudSim {
 	public static String getEntityName(int entityID) {
 		try {
 			return getEntity(entityID).getName();
-		} catch (IllegalArgumentException e) {
-			return null;
 		} catch (Exception e) {
 			return null;
 		}
@@ -459,8 +453,7 @@ public class CloudSim {
 	public static List<SimEntity> getEntityList() {
 		// create a new list to prevent the user from changing
 		// the list of entities used by Simulation
-		List<SimEntity> list = new LinkedList<SimEntity>();
-		list.addAll(entities);
+		List<SimEntity> list = new LinkedList<SimEntity>(entities);
 		return list;
 	}
 
@@ -517,8 +510,8 @@ public class CloudSim {
 		
 		int entities_size = entities.size();
 
-		for (int i = 0; i < entities_size; i++) {
-			ent = entities.get(i);
+		for (SimEntity entity : entities) {
+			ent = entity;
 			if (ent.getState() == SimEntity.RUNNABLE) {
 				ent.run();
 			}
@@ -526,7 +519,7 @@ public class CloudSim {
 				
 		// If there are more future events then deal with them
 		if (future.size() > 0) {
-			List<SimEvent> toRemove = new ArrayList<SimEvent>();
+			List<SimEvent> toRemove = new ArrayList<>();
 			Iterator<SimEvent> fit = future.iterator();
 			queue_empty = false;
 			SimEvent first = fit.next();
@@ -783,7 +776,7 @@ public class CloudSim {
 					int tag = e.getTag();
 					dest_ent = entities.get(dest);
 					if (dest_ent.getState() == SimEntity.WAITING) {
-						Integer destObj = Integer.valueOf(dest);
+						Integer destObj = dest;
 						Predicate p = waitPredicates.get(destObj);
 						if ((p == null) || (tag == 9999) || (p.match(e))) {
 							dest_ent.setEventBuffer((SimEvent) e.clone());

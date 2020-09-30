@@ -101,7 +101,7 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
 
             parsePingER(pingErRTT, pingerMonitoringSites);
         } catch (IOException e) {
-            String msg = "Invalid file: " + Objects.toString(geoIP2DB) + " Error details:" + e.getMessage();
+            String msg = "Invalid file: " + geoIP2DB + " Error details:" + e.getMessage();
             CustomLog.logError(Level.SEVERE, msg, e);
             throw new IllegalArgumentException(msg, e);
         }
@@ -196,8 +196,8 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
 
                 Matcher matcher = COORD_PATTERN.matcher(location);
                 if (matcher.find()) {
-                    Double lat = Double.parseDouble(matcher.group(1));
-                    Double lon = Double.parseDouble(matcher.group(3));
+                    double lat = Double.parseDouble(matcher.group(1));
+                    double lon = Double.parseDouble(matcher.group(3));
                     nodesTable.put(node, new double[] { lat, lon });
                 } else {
                     nodesTable.clear();
@@ -234,16 +234,16 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
                 location = reader.city(InetAddress.getByName(ip)).getLocation();
                 result = new double[] { location.getLatitude(), location.getLongitude() };
             } catch (UnknownHostException e) {
-                String msg = "Invalid IP: " + Objects.toString(ip);
+                String msg = "Invalid IP: " + ip;
                 CustomLog.logError(Level.SEVERE, msg, e);
                 throw new IllegalArgumentException("Invalid IP", e);
             } catch (IOException e) {
-                String msg = "Could not locate IP: " + Objects.toString(ip) + ", " + "because of I/O error:"
+                String msg = "Could not locate IP: " + ip + ", " + "because of I/O error:"
                         + e.getMessage();
                 CustomLog.logError(Level.SEVERE, msg, e);
                 throw new IllegalStateException(e);
             } catch (GeoIp2Exception e) {
-                String msg = "Could not locate IP: " + Objects.toString(ip) + ", because " + e.getMessage();
+                String msg = "Could not locate IP: " + ip + ", because " + e.getMessage();
                 CustomLog.logError(Level.FINER, msg, e);
                 result = new double[] { Double.NaN, Double.NaN };
             }
@@ -261,11 +261,11 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
                     .getName(), city.getCountry().getIsoCode(), city.getCity().getName(), city.getPostal().getCode(),
                     city.getLocation().getLatitude(), city.getLocation().getLongitude());
         } catch (UnknownHostException e) {
-            String msg = "Invalid IP: " + Objects.toString(ip);
+            String msg = "Invalid IP: " + ip;
             CustomLog.logError(Level.INFO, msg, e);
             throw new IllegalArgumentException("Invalid IP", e);
         } catch (IOException | GeoIp2Exception e) {
-            String msg = "Could not locate IP: " + Objects.toString(ip) + ", because: " + e.getMessage();
+            String msg = "Could not locate IP: " + ip + ", because: " + e.getMessage();
             CustomLog.logError(Level.FINER, msg, e);
             return null;
         }

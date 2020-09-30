@@ -16,5 +16,5 @@ public interface IAutoscalingPolicy {
      * @param broker
      *            - the broker managing the resources.
      */
-    public void scale(final MonitoringBorkerEX broker);
+    void scale(final MonitoringBorkerEX broker);
 }

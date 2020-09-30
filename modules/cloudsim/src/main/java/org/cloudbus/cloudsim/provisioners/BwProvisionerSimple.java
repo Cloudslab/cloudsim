@@ -36,7 +36,7 @@ public class BwProvisionerSimple extends BwProvisioner {
 	 */
 	public BwProvisionerSimple(long bw) {
 		super(bw);
-		setBwTable(new HashMap<String, Long>());
+		setBwTable(new HashMap<>());
 	}
 
 	@Override

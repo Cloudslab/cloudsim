@@ -51,7 +51,7 @@ public class GraphReaderBrite implements GraphReaderIF {
 
 		String lineSep = System.getProperty("line.separator");
 		String nextLine = null;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		while ((nextLine = br.readLine()) != null) {
 			sb.append(nextLine);
@@ -129,16 +129,16 @@ public class GraphReaderBrite implements GraphReaderIF {
 			switch (actualParam) {
 				case 0:	// Log.printLine("nodeID: "+token);
 						// Log.printLine("nodeLabel: "+token);
-					nodeID = Integer.valueOf(token);
+					nodeID = Integer.parseInt(token);
 					nodeLabel = Integer.toString(nodeID);
 					break;
 
 				case 1:	// Log.printLine("x-Pos: "+token);
-					xPos = Integer.valueOf(token);
+					xPos = Integer.parseInt(token);
 					break;
 
 				case 2:	// Log.printLine("y-Pos: "+token);
-					yPos = Integer.valueOf(token);
+					yPos = Integer.parseInt(token);
 					break;
 			}
 		}
@@ -184,11 +184,11 @@ public class GraphReaderBrite implements GraphReaderIF {
 					break;
 
 				case 1:	// Log.printLine("fromNode: "+token);
-					fromNode = Integer.valueOf(token);
+					fromNode = Integer.parseInt(token);
 					break;
 
 				case 2:	// Log.printLine("toNode: "+token);
-					toNode = Integer.valueOf(token);
+					toNode = Integer.parseInt(token);
 					break;
 
 				case 3:	// Log.printLine("euclideanLength: "+token);
@@ -196,7 +196,7 @@ public class GraphReaderBrite implements GraphReaderIF {
 					break;
 
 				case 4:	// Log.printLine("linkDelay: "+token);
-					linkDelay = Float.valueOf(token);
+					linkDelay = Float.parseFloat(token);
 					break;
 
 				case 5:	// Log.printLine("linkBandwith: "+token);

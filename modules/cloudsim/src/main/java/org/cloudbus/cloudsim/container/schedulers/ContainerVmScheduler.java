@@ -70,11 +70,11 @@ public abstract class ContainerVmScheduler {
      */
     public ContainerVmScheduler(List<? extends ContainerVmPe> pelist) {
         setPeList(pelist);
-        setPeMap(new HashMap<String, List<ContainerVmPe>>());
-        setMipsMap(new HashMap<String, List<Double>>());
+        setPeMap(new HashMap<>());
+        setMipsMap(new HashMap<>());
         setAvailableMips(ContainerVmPeList.getTotalMips(getPeList()));
-        setVmsMigratingIn(new ArrayList<String>());
-        setVmsMigratingOut(new ArrayList<String>());
+        setVmsMigratingIn(new ArrayList<>());
+        setVmsMigratingOut(new ArrayList<>());
     }
 
     /**

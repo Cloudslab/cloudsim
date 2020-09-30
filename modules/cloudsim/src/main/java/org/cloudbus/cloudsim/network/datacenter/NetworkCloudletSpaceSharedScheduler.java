@@ -63,14 +63,14 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 	 */
 	public NetworkCloudletSpaceSharedScheduler() {
 		super();
-		cloudletWaitingList = new ArrayList<ResCloudlet>();
-		cloudletExecList = new ArrayList<ResCloudlet>();
-		cloudletPausedList = new ArrayList<ResCloudlet>();
-		cloudletFinishedList = new ArrayList<ResCloudlet>();
+		cloudletWaitingList = new ArrayList<>();
+		cloudletExecList = new ArrayList<>();
+		cloudletPausedList = new ArrayList<>();
+		cloudletFinishedList = new ArrayList<>();
 		usedPes = 0;
 		currentCpus = 0;
-		pkttosend = new HashMap<Integer, List<HostPacket>>();
-		pktrecv = new HashMap<Integer, List<HostPacket>>();
+		pkttosend = new HashMap<>();
+		pktrecv = new HashMap<>();
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 				}
 				if (st.type == NetworkConstants.WAIT_RECV) {
 					List<HostPacket> pktlist = pktrecv.get(st.peer);
-					List<HostPacket> pkttoremove = new ArrayList<HostPacket>();
+					List<HostPacket> pkttoremove = new ArrayList<>();
 					if (pktlist != null) {
 						Iterator<HostPacket> it = pktlist.iterator();
 						HostPacket pkt = null;
@@ -166,7 +166,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 
 		// update each cloudlet
 		int finished = 0;
-		List<ResCloudlet> toRemove = new ArrayList<ResCloudlet>();
+		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			// rounding issue...
 			if (((NetworkCloudlet) (rcl.getCloudlet())).currStagenum == NetworkConstants.FINISH) {
@@ -243,7 +243,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 							cl.stages.get(i).vpeer);
 					List<HostPacket> pktlist = pkttosend.get(cl.getVmId());
 					if (pktlist == null) {
-						pktlist = new ArrayList<HostPacket>();
+						pktlist = new ArrayList<>();
 					}
 					pktlist.add(pkt);
 					pkttosend.put(cl.getVmId(), pktlist);
@@ -554,11 +554,9 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 
 	@Override
 	public List<Double> getCurrentRequestedMips() {
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		if (getCurrentMipsShare() != null) {
-			for (Double mips : getCurrentMipsShare()) {
-				mipsShare.add(mips);
-			}
+			mipsShare.addAll(getCurrentMipsShare());
 		}
 		return mipsShare;
 	}

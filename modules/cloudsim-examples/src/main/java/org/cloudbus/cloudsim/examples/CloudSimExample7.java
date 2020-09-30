@@ -50,7 +50,7 @@ public class CloudSimExample7 {
 
 	private static List<Vm> createVM(int userId, int vms, int idShift) {
 		//Creates a container to store VMs. This list is passed to the broker later
-		LinkedList<Vm> list = new LinkedList<Vm>();
+		LinkedList<Vm> list = new LinkedList<>();
 
 		//VM Parameters
 		long size = 10000; //image size (MB)
@@ -74,7 +74,7 @@ public class CloudSimExample7 {
 
 	private static List<Cloudlet> createCloudlet(int userId, int cloudlets, int idShift){
 		// Creates a container to store Cloudlets
-		LinkedList<Cloudlet> list = new LinkedList<Cloudlet>();
+		LinkedList<Cloudlet> list = new LinkedList<>();
 
 		//cloudlet parameters
 		long length = 40000;
@@ -116,9 +116,7 @@ public class CloudSimExample7 {
 
 			// Second step: Create Datacenters
 			//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
-			@SuppressWarnings("unused")
 			Datacenter datacenter0 = createDatacenter("Datacenter_0");
-			@SuppressWarnings("unused")
 			Datacenter datacenter1 = createDatacenter("Datacenter_1");
 
 			//Third step: Create Broker
@@ -133,41 +131,38 @@ public class CloudSimExample7 {
 			broker.submitCloudletList(cloudletList);
 
 			// A thread that will create a new broker at 200 clock time
-			Runnable monitor = new Runnable() {
-				@Override
-				public void run() {
-					CloudSim.pauseSimulation(200);
-					while (true) {
-						if (CloudSim.isPaused()) {
-							break;
-						}
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+			Runnable monitor = () -> {
+				CloudSim.pauseSimulation(200);
+				while (true) {
+					if (CloudSim.isPaused()) {
+						break;
 					}
-
-					Log.printLine("\n\n\n" + CloudSim.clock() + ": The simulation is paused for 5 sec \n\n");
-
 					try {
-						Thread.sleep(5000);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-
-					DatacenterBroker broker = createBroker("Broker_1");
-					int brokerId = broker.getId();
-
-					//Create VMs and Cloudlets and send them to broker
-					vmlist = createVM(brokerId, 5, 100); //creating 5 vms
-					cloudletList = createCloudlet(brokerId, 10, 100); // creating 10 cloudlets
-
-					broker.submitVmList(vmlist);
-					broker.submitCloudletList(cloudletList);
-
-					CloudSim.resumeSimulation();
 				}
+
+				Log.printLine("\n\n\n" + CloudSim.clock() + ": The simulation is paused for 5 sec \n\n");
+
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				DatacenterBroker broker1 = createBroker("Broker_1");
+				int brokerId1 = broker1.getId();
+
+				//Create VMs and Cloudlets and send them to broker
+				vmlist = createVM(brokerId1, 5, 100); //creating 5 vms
+				cloudletList = createCloudlet(brokerId1, 10, 100); // creating 10 cloudlets
+
+				broker1.submitVmList(vmlist);
+				broker1.submitCloudletList(cloudletList);
+
+				CloudSim.resumeSimulation();
 			};
 
 			new Thread(monitor).start();
@@ -197,12 +192,12 @@ public class CloudSimExample7 {
 		// Here are the steps needed to create a PowerDatacenter:
 		// 1. We need to create a list to store one or more
 		//    Machines
-		List<Host> hostList = new ArrayList<Host>();
+		List<Host> hostList = new ArrayList<>();
 
 		// 2. A Machine contains one or more PEs or CPUs/Cores. Therefore, should
 		//    create a list to store these PEs before creating
 		//    a Machine.
-		List<Pe> peList1 = new ArrayList<Pe>();
+		List<Pe> peList1 = new ArrayList<>();
 
 		int mips = 1000;
 
@@ -214,7 +209,7 @@ public class CloudSimExample7 {
 		peList1.add(new Pe(3, new PeProvisionerSimple(mips)));
 
 		//Another list, for a dual-core machine
-		List<Pe> peList2 = new ArrayList<Pe>();
+		List<Pe> peList2 = new ArrayList<>();
 
 		peList2.add(new Pe(0, new PeProvisionerSimple(mips)));
 		peList2.add(new Pe(1, new PeProvisionerSimple(mips)));
@@ -261,7 +256,7 @@ public class CloudSimExample7 {
 		double costPerMem = 0.05;		// the cost of using memory in this resource
 		double costPerStorage = 0.1;	// the cost of using storage in this resource
 		double costPerBw = 0.1;			// the cost of using bw in this resource
-		LinkedList<Storage> storageList = new LinkedList<Storage>();	//we are not adding SAN devices by now
+		LinkedList<Storage> storageList = new LinkedList<>();	//we are not adding SAN devices by now
 
 		DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
                 arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
@@ -307,18 +302,18 @@ public class CloudSimExample7 {
 				"Data center ID" + indent + "VM ID" + indent + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
-		for (int i = 0; i < size; i++) {
-			cloudlet = list.get(i);
-			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
+        for (Cloudlet value : list) {
+            cloudlet = value;
+            Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS){
-				Log.print("SUCCESS");
+            if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
+                Log.print("SUCCESS");
 
-				Log.printLine( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
-						indent + indent + indent + dft.format(cloudlet.getActualCPUTime()) +
-						indent + indent + dft.format(cloudlet.getExecStartTime())+ indent + indent + indent + dft.format(cloudlet.getFinishTime()));
-			}
-		}
+                Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
+                        indent + indent + indent + dft.format(cloudlet.getActualCPUTime()) +
+                        indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent + indent + dft.format(cloudlet.getFinishTime()));
+            }
+        }
 
 	}
 }

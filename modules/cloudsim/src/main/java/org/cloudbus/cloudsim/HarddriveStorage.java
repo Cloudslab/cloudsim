@@ -101,8 +101,8 @@ public class HarddriveStorage implements Storage {
 	 * created.
 	 */
 	private void init() {
-		fileList = new ArrayList<File>();
-		nameList = new ArrayList<String>();
+		fileList = new ArrayList<>();
+		nameList = new ArrayList<>();
 		gen = null;
 		currentSize = 0;
 
@@ -503,9 +503,7 @@ public class HarddriveStorage implements Storage {
 			return result;
 		}
 		// check each file in the list
-		Iterator<String> it = nameList.iterator();
-		while (it.hasNext()) {
-			String name = it.next();
+		for (String name : nameList) {
 			if (name.equals(fileName)) {
 				result = true;
 				break;
@@ -543,9 +541,7 @@ public class HarddriveStorage implements Storage {
 		}
 
 		// replace the file name in the name list
-		Iterator<String> it = nameList.iterator();
-		while (it.hasNext()) {
-			String name = it.next();
+		for (String name : nameList) {
 			if (name.equals(file.getName())) {
 				file.setTransactionTime(0);
 				nameList.remove(name);

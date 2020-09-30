@@ -23,7 +23,7 @@ public class PowerContainerVm extends ContainerVm {
     /**
      * The utilization history.
      */
-    private final List<Double> utilizationHistory = new LinkedList<Double>();
+    private final List<Double> utilizationHistory = new LinkedList<>();
 
     /**
      * The previous time.

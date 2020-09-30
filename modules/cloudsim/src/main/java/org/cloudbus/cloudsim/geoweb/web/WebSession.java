@@ -46,7 +46,7 @@ import java.util.logging.Level;
         "Complete", "Failed", "SourceIP", "ServerIP" })
 public class WebSession {
 
-    private static final Set<Integer> FAIL_CLOUDLET_STATES = new HashSet<Integer>(Arrays.asList(Cloudlet.FAILED,
+    private static final Set<Integer> FAIL_CLOUDLET_STATES = new HashSet<>(Arrays.asList(Cloudlet.FAILED,
             Cloudlet.FAILED_RESOURCE_UNAVAILABLE, Cloudlet.CANCELED));
 
     private final IGenerator<? extends WebCloudlet> appServerCloudLets;
@@ -368,8 +368,7 @@ public class WebSession {
      * @return if the session has failed.
      */
     public boolean isFailed() {
-        return (currentAppServerCloudLet != null && FAIL_CLOUDLET_STATES.contains(currentAppServerCloudLet
-                .getCloudletStatus()))
+        return (currentAppServerCloudLet != null && FAIL_CLOUDLET_STATES.contains(currentAppServerCloudLet.getStatus()))
                 || (currentDBServerCloudLets != null && anyCloudletsFailed(currentDBServerCloudLets));
     }
 
@@ -384,10 +383,10 @@ public class WebSession {
         if (isFailed()) {
             List<WebCloudlet> res = new ArrayList<>();
             if (currentAppServerCloudLet != null
-                    && FAIL_CLOUDLET_STATES.contains(currentAppServerCloudLet.getCloudletStatus())) {
+                    && FAIL_CLOUDLET_STATES.contains(currentAppServerCloudLet.getStatus())) {
                 res.add(currentAppServerCloudLet);
                 for (WebCloudlet wc : currentDBServerCloudLets) {
-                    if (FAIL_CLOUDLET_STATES.contains(wc.getCloudletStatus())) {
+                    if (FAIL_CLOUDLET_STATES.contains(wc.getStatus())) {
                         res.add(wc);
                     }
                 }
@@ -400,7 +399,7 @@ public class WebSession {
 
     private boolean anyCloudletsFailed(List<? extends WebCloudlet> currentDBServerCloudLets2) {
         for (WebCloudlet wc : currentDBServerCloudLets2) {
-            if (FAIL_CLOUDLET_STATES.contains(wc.getCloudletStatus())) {
+            if (FAIL_CLOUDLET_STATES.contains(wc.getStatus())) {
                 return true;
             }
         }

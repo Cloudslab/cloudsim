@@ -106,11 +106,7 @@ public class ContainerCloudletSchedulerTimeShared extends ContainerCloudletSched
             pesInUse += rcl.getNumberOfPes();
         }
 
-        if (pesInUse > currentCPUs) {
-            capacity /= pesInUse;
-        } else {
-            capacity /= currentCPUs;
-        }
+        capacity /= Math.max(pesInUse, currentCPUs);
         return capacity;
     }
 

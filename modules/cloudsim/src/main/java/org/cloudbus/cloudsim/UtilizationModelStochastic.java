@@ -40,7 +40,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 	 * Instantiates a new utilization model stochastic.
 	 */
 	public UtilizationModelStochastic() {
-		setHistory(new HashMap<Double, Double>());
+		setHistory(new HashMap<>());
 		setRandomGenerator(new Random());
 	}
 
@@ -50,7 +50,7 @@ public class UtilizationModelStochastic implements UtilizationModel {
 	 * @param seed the seed
 	 */
 	public UtilizationModelStochastic(long seed) {
-		setHistory(new HashMap<Double, Double>());
+		setHistory(new HashMap<>());
 		setRandomGenerator(new Random(seed));
 	}
 

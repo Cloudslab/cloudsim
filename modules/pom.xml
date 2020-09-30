@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.cloudbus.cloudsim</groupId>
     <artifactId>cloudsim-package</artifactId>
-    <version>4.0</version>
+    <version>5.0</version>
   </parent>
   
   <artifactId>modules</artifactId>
@@ -22,8 +22,7 @@
       	<groupId>org.apache.maven.plugins</groupId>
       		<artifactId>maven-compiler-plugin</artifactId>
       		<configuration>
-      		<source>1.8</source>
-      		<target>1.8</target>
+              <release>${jdk.release}</release>
       		</configuration>
       </plugin>
 

@@ -142,8 +142,8 @@ public class CustomLog {
     public static void printConcat(final Level level, final Object... messages) {
         if (isLevelHighEnough(level)) {
             builder.setLength(0); // Clear the buffer
-            for (int i = 0; i < messages.length; i++) {
-                builder.append(String.valueOf(messages[i]));
+            for (Object message : messages) {
+                builder.append(message);
             }
             LOGGER.log(level == null ? DEFAULT_LEVEL : level, String.valueOf(builder));
         }
@@ -170,8 +170,8 @@ public class CustomLog {
     public static void printConcatLine(final Level level, final Object... messages) {
         if (isLevelHighEnough(level)) {
             builder.setLength(0); // Clear the buffer
-            for (int i = 0; i < messages.length; i++) {
-                builder.append(String.valueOf(messages[i]));
+            for (Object message : messages) {
+                builder.append(message);
             }
             LOGGER.log(level == null ? DEFAULT_LEVEL : level, String.valueOf(builder));
         }
@@ -355,7 +355,7 @@ public class CustomLog {
         if (klass != null) {
             // Print header line
             CustomLog.printLine(TextUtil.getCaptionLine(klass, TextUtil.DEFAULT_DELIM, properties, virtualProps
-                    .keySet().toArray(new String[virtualProps.size()])));
+                    .keySet().toArray(new String[0])));
         }
 
         // Print details for each element
@@ -395,7 +395,7 @@ public class CustomLog {
         if (klass != null) {
             // Print header line
             CustomLog.printLine(TextUtil.getCaptionLine(klass, TextUtil.DEFAULT_DELIM, null, virtualProps.keySet()
-                    .toArray(new String[virtualProps.size()])));
+                    .toArray(new String[0])));
         }
 
         // Print details for each cloudlet
@@ -560,19 +560,18 @@ public class CustomLog {
      *             - if something goes wrong with the I/O.
      */
     public static void configLogger(final Properties props) throws SecurityException, IOException {
-        final String fileName = props.containsKey(FILE_PATH_PROP_KEY) ? props.getProperty(FILE_PATH_PROP_KEY)
-                .toString() : null;
-        final String format = props.getProperty(LOG_FORMAT_PROP_KEY, "getLevel;getMessage").toString().trim();
+        final String fileName = props.containsKey(FILE_PATH_PROP_KEY) ? props.getProperty(FILE_PATH_PROP_KEY) : null;
+        final String format = props.getProperty(LOG_FORMAT_PROP_KEY, "getLevel;getMessage").trim();
         final boolean prefixCloudSimClock = Boolean.parseBoolean(props
-                .getProperty(LOG_CLOUD_SIM_CLOCK_PROP_KEY, "false").toString().trim());
+                .getProperty(LOG_CLOUD_SIM_CLOCK_PROP_KEY, "false").trim());
         final boolean prefixReadableCloudSimClock = Boolean.parseBoolean(props
-                .getProperty(LOG_READABLE_CLOUD_SIM_CLOCK_PROP_KEY, "false").toString().trim());
+                .getProperty(LOG_READABLE_CLOUD_SIM_CLOCK_PROP_KEY, "false").trim());
         final boolean prefixRealTimeClock = Boolean.parseBoolean(props
-                .getProperty(LOG_CLOUD_REAL_TIME_PROP_KEY, "false").toString().trim());
+                .getProperty(LOG_CLOUD_REAL_TIME_PROP_KEY, "false").trim());
         final boolean shutStandardMessages = Boolean.parseBoolean(props
-                .getProperty(SHUT_STANDART_LOGGER_PROP_KEY, "false").toString().trim());
-        granularityLevel = Level.parse(props.getProperty(LOG_LEVEL_PROP_KEY, DEFAULT_LEVEL.getName()).toString());
-        bufferSize = Integer.parseInt(props.getProperty(BUFFER_SIZE_PROP_KEY, "-1").toString().trim());
+                .getProperty(SHUT_STANDART_LOGGER_PROP_KEY, "false").trim());
+        granularityLevel = Level.parse(props.getProperty(LOG_LEVEL_PROP_KEY, DEFAULT_LEVEL.getName()));
+        bufferSize = Integer.parseInt(props.getProperty(BUFFER_SIZE_PROP_KEY, "-1").trim());
 
         if (shutStandardMessages) {
             Log.setOutput(new NullOutputStream());
@@ -681,15 +680,15 @@ public class CustomLog {
         @Override
         public String format(final LogRecord record) {
             final String[] methodCalls = format.split(";");
-            final StringBuffer result = new StringBuffer();
+            final StringBuilder result = new StringBuilder();
             if (prefixRealTimeClock) {
-                result.append(TextUtil.getTimeFormat().format(new Date(record.getMillis())) + "\t");
+                result.append(TextUtil.getTimeFormat().format(new Date(record.getMillis()))).append("\t");
             }
             if (prefixCloudSimClock) {
-                result.append(TextUtil.toString(CloudSim.clock()) + "\t");
+                result.append(TextUtil.toString(CloudSim.clock())).append("\t");
             }
             if (prefixReadableCloudSimClock) {
-                result.append(TextUtil.getReadableTime(CloudSim.clock()) + "\t");
+                result.append(TextUtil.getReadableTime(CloudSim.clock())).append("\t");
             }
 
             // If there is an exception - use the standard formatter

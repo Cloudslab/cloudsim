@@ -130,13 +130,13 @@ public class ContainerDatacenterBroker extends SimEntity {
     public ContainerDatacenterBroker(String name, double overBookingfactor) throws Exception {
         super(name);
 
-        setVmList(new ArrayList<ContainerVm>());
-        setContainerList(new ArrayList<Container>());
-        setVmsCreatedList(new ArrayList<ContainerVm>());
-        setContainersCreatedList(new ArrayList<Container>());
-        setCloudletList(new ArrayList<ContainerCloudlet>());
-        setCloudletSubmittedList(new ArrayList<ContainerCloudlet>());
-        setCloudletReceivedList(new ArrayList<ContainerCloudlet>());
+        setVmList(new ArrayList<>());
+        setContainerList(new ArrayList<>());
+        setVmsCreatedList(new ArrayList<>());
+        setContainersCreatedList(new ArrayList<>());
+        setCloudletList(new ArrayList<>());
+        setCloudletSubmittedList(new ArrayList<>());
+        setCloudletReceivedList(new ArrayList<>());
         cloudletsSubmitted = 0;
         setVmsRequested(0);
         setVmsAcks(0);
@@ -144,11 +144,11 @@ public class ContainerDatacenterBroker extends SimEntity {
         setContainersCreated(0);
         setVmsDestroyed(0);
         setOverBookingfactor(overBookingfactor);
-        setDatacenterIdsList(new LinkedList<Integer>());
-        setDatacenterRequestedIdsList(new ArrayList<Integer>());
-        setVmsToDatacentersMap(new HashMap<Integer, Integer>());
-        setContainersToDatacentersMap(new HashMap<Integer, Integer>());
-        setDatacenterCharacteristicsList(new HashMap<Integer, ContainerDatacenterCharacteristics>());
+        setDatacenterIdsList(new LinkedList<>());
+        setDatacenterRequestedIdsList(new ArrayList<>());
+        setVmsToDatacentersMap(new HashMap<>());
+        setContainersToDatacentersMap(new HashMap<>());
+        setDatacenterCharacteristicsList(new HashMap<>());
         setNumberOfCreatedVMs(0);
     }
 
@@ -290,7 +290,7 @@ public class ContainerDatacenterBroker extends SimEntity {
 
         if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
             getDatacenterCharacteristicsList().clear();
-            setDatacenterRequestedIdsList(new ArrayList<Integer>());
+            setDatacenterRequestedIdsList(new ArrayList<>());
             createVmsInDatacenter(getDatacenterIdsList().get(0));
         }
     }
@@ -304,7 +304,7 @@ public class ContainerDatacenterBroker extends SimEntity {
      */
     protected void processResourceCharacteristicsRequest(SimEvent ev) {
         setDatacenterIdsList(CloudSim.getCloudResourceList());
-        setDatacenterCharacteristicsList(new HashMap<Integer, ContainerDatacenterCharacteristics>());
+        setDatacenterCharacteristicsList(new HashMap<>());
 
         //Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloud Resource List received with ",
 //                getDatacenterIdsList().size(), " resource(s)");
@@ -602,10 +602,7 @@ public class ContainerDatacenterBroker extends SimEntity {
 
         }
 
-        for(Container container:getContainerList()){
-            successfullySubmitted.add(container);
-
-        }
+        successfullySubmitted.addAll(getContainerList());
         sendNow(getDatacenterIdsList().get(0), containerCloudSimTags.CONTAINER_SUBMIT, successfullySubmitted);
 
 //        List<Container> successfullySubmitted = new ArrayList<>();

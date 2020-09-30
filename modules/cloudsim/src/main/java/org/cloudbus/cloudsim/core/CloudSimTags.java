@@ -55,7 +55,7 @@ public class CloudSimTags {
 	 * Denotes insignificant simulation entity or time. This tag will not be used for identification
 	 * purposes.
 	 */
-	public static final int INSIGNIFICANT = BASE + 0;
+	public static final int INSIGNIFICANT = BASE;
 
 	/** Sends an Experiment object between UserEntity and Broker entity */
 	public static final int EXPERIMENT = BASE + 1;

@@ -112,10 +112,10 @@ public class ConstSessionGenerator implements ISessionGenerator {
         IGenerator<WebCloudlet> appServerCloudLets = new StatGenerator(asGenerators, startTime, endTime, null);
 
         Map<String, NumberGenerator<? extends Number>> dbGenerators = new HashMap<>();
-        dbGenerators.put(StatGenerator.CLOUDLET_LENGTH, new ConstantGenerator<Double>((double) dbCloudletLength));
-        dbGenerators.put(StatGenerator.CLOUDLET_RAM, new ConstantGenerator<Double>((double) dbRam));
-        dbGenerators.put(StatGenerator.CLOUDLET_IO, new ConstantGenerator<Double>((double) dbCloudletIOLength));
-        dbGenerators.put(StatGenerator.CLOUDLET_MODIFIES_DATA, new ConstantGenerator<Integer>(modifiesData ? 1 : 0));
+        dbGenerators.put(StatGenerator.CLOUDLET_LENGTH, new ConstantGenerator<>((double) dbCloudletLength));
+        dbGenerators.put(StatGenerator.CLOUDLET_RAM, new ConstantGenerator<>((double) dbRam));
+        dbGenerators.put(StatGenerator.CLOUDLET_IO, new ConstantGenerator<>((double) dbCloudletIOLength));
+        dbGenerators.put(StatGenerator.CLOUDLET_MODIFIES_DATA, new ConstantGenerator<>(modifiesData ? 1 : 0));
 
         CompositeGenerator<? extends WebCloudlet> dbServerCloudLets = new CompositeGenerator<>(new StatGenerator(
                 dbGenerators, startTime, endTime, data));

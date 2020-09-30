@@ -25,7 +25,7 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
         private double previousUtilizationMips;
 
         /** The state history. */
-        private final List<HostStateHistoryEntry> stateHistory = new LinkedList<HostStateHistoryEntry>();
+        private final List<HostStateHistoryEntry> stateHistory = new LinkedList<>();
 
         /**
          * Instantiates a new host.

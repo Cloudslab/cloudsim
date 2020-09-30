@@ -25,7 +25,7 @@ public class ContainerVmSchedulerTimeShared extends ContainerVmScheduler {
      */
     public ContainerVmSchedulerTimeShared(List<? extends ContainerVmPe> pelist) {
         super(pelist);
-        setMipsMapRequested(new HashMap<String, List<Double>>());
+        setMipsMapRequested(new HashMap<>());
     }
 
     @Override
@@ -36,9 +36,7 @@ public class ContainerVmSchedulerTimeShared extends ContainerVmScheduler {
                 getVmsMigratingOut().add(containerVm.getUid());
             }
         } else {
-            if (getVmsMigratingOut().contains(containerVm.getUid())) {
-                getVmsMigratingOut().remove(containerVm.getUid());
-            }
+            getVmsMigratingOut().remove(containerVm.getUid());
         }
         boolean result = allocatePesForVm(containerVm.getUid(), mipsShare);
         updatePeProvisioning();
@@ -77,7 +75,7 @@ public class ContainerVmSchedulerTimeShared extends ContainerVmScheduler {
             totalRequestedMips *= 0.1;
         }
 
-        List<Double> mipsShareAllocated = new ArrayList<Double>();
+        List<Double> mipsShareAllocated = new ArrayList<>();
         for (Double mipsRequested : mipsShareRequested) {
             if (getVmsMigratingOut().contains(vmUid)) {
                 // performance degradation due to migration = 10% MIPS
@@ -113,7 +111,7 @@ public class ContainerVmSchedulerTimeShared extends ContainerVmScheduler {
 
         for (Map.Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
             String vmUid = entry.getKey();
-            getPeMap().put(vmUid, new LinkedList<ContainerVmPe>());
+            getPeMap().put(vmUid, new LinkedList<>());
 
             for (double mips : entry.getValue()) {
 //                Log.printConcatLine("The mips value is: ",mips);

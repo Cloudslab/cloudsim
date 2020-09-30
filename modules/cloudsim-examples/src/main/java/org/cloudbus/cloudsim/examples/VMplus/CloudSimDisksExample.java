@@ -114,10 +114,10 @@ public class CloudSimDisksExample {
         // Step 8: Create 4 jobs, associate them to VMs and send them to the
         // broker. Each job uses one of the 4 data items.
 
-        HddCloudlet cloudlet1_1 = new HddCloudlet(VM_MIPS * 1, HOST_MIOPS * 2, 5, broker.getId(), false, dataItem_1_1);
-        HddCloudlet cloudlet1_2 = new HddCloudlet(VM_MIPS * 2, HOST_MIOPS * 1, 5, broker.getId(), false, dataItem_1_2);
-        HddCloudlet cloudlet_XX = new HddCloudlet(VM_MIPS * 2, HOST_MIOPS * 1, 5, broker.getId(), false, dataItem_2_2);
-        HddCloudlet cloudlet2_1 = new HddCloudlet(VM_MIPS * 1, HOST_MIOPS * 2, 5, broker.getId(), false, dataItem_2_2);
+        HddCloudlet cloudlet1_1 = new HddCloudlet(VM_MIPS, HOST_MIOPS * 2, 5, broker.getId(), false, dataItem_1_1);
+        HddCloudlet cloudlet1_2 = new HddCloudlet(VM_MIPS * 2, HOST_MIOPS, 5, broker.getId(), false, dataItem_1_2);
+        HddCloudlet cloudlet_XX = new HddCloudlet(VM_MIPS * 2, HOST_MIOPS, 5, broker.getId(), false, dataItem_2_2);
+        HddCloudlet cloudlet2_1 = new HddCloudlet(VM_MIPS, HOST_MIOPS * 2, 5, broker.getId(), false, dataItem_2_2);
 
         cloudlet1_1.setVmId(vm1_1.getId());
         cloudlet1_2.setVmId(vm1_2.getId());
