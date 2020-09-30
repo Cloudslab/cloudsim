@@ -85,8 +85,8 @@
           <entry name="$MAVEN_REPOSITORY$/pl/pragmatists/JUnitParams/1.0.5/JUnitParams-1.0.5.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/threeten/threeten-extra/1.5.0/threeten-extra-1.5.0.jar" />
         </processorPath>
-        <module name="cloudsim" />
         <module name="cloudsim-examples" />
+        <module name="cloudsim" />
         <module name="documentation" />
       </profile>
     </annotationProcessing>

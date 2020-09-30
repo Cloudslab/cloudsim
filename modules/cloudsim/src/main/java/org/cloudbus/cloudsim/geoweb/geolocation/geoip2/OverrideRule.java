@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.geoweb.geolocation.geoip2;
 
-import com.google.api.client.util.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
@@ -77,7 +77,7 @@ public class OverrideRule {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("ip_prefix", ip_prefix).add("location", location).add("lon", lon)
+        return MoreObjects.toStringHelper(this).add("ip_prefix", ip_prefix).add("location", location).add("lon", lon)
                 .add("lat", lat).add("Details", details).toString();
     }
 }
