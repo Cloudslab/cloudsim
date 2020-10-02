@@ -32,7 +32,7 @@ public class HostDynamicWorkload extends Host {
 	private double previousUtilizationMips;
 
 	/** The host utilization state history. */
-	private final List<HostStateHistoryEntry> stateHistory = new LinkedList<>();
+	private final List<HostStateHistoryEntry> stateHistory = new ArrayList<>();
 
 	/**
 	 * Instantiates a new host.

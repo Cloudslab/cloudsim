@@ -1,6 +1,5 @@
 package org.cloudbus.cloudsim.geoweb.geolocation.geoip2;
 
-import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.base.Preconditions;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -9,6 +8,7 @@ import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.Location;
+import com.opencsv.CSVReader;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.cloudbus.cloudsim.geoweb.geolocation.BaseGeolocationService;
@@ -134,17 +134,17 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
                 BufferedReader nodeDefsReader = new BufferedReader(new InputStreamReader(pingerMonitoringSites))) {
             parseNodesDefitions(nodeDefsReader);
             parseInterNodePings(pingsReader);
-        } catch (IOException e) {
+        } catch (Exception e) {
             String msg = " A file could not be found or read properly. Message: " + e.getMessage();
             CustomLog.logError(Level.SEVERE, msg, e);
             throw new IllegalArgumentException(msg, e);
         }
     }
 
-    private void parseInterNodePings(final BufferedReader pings) throws IOException {
+    private void parseInterNodePings(final BufferedReader pings) throws Exception {
         latencyTable.clear();
         Set<String> unknownNodes = new LinkedHashSet<>();
-        try (CSVReader csv = new CSVReader(pings, TSV_SEP, QUOTE_SYMBOL)) {
+        try (CSVReader csv = new CSVReader(pings)) {
             // Skip header line
             String[] lineElems = csv.readNext();
             int lineCount = 0;
@@ -184,9 +184,9 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
         CustomLog.print(Level.FINER, "The definitions of the following nodes are missing." + unknownNodes.toString());
     }
 
-    private void parseNodesDefitions(final BufferedReader defs) throws IOException {
+    private void parseNodesDefitions(final BufferedReader defs) throws Exception {
         nodesTable.clear();
-        try (CSVReader csv = new CSVReader(defs, CSV_SEP, QUOTE_SYMBOL)) {
+        try (CSVReader csv = new CSVReader(defs)) {
             // Skip header line
             String[] lineElems = csv.readNext();
             int lineCount = 0;

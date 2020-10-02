@@ -1,6 +1,8 @@
 package org.cloudbus.cloudsim.examples.container;
 
 import com.opencsv.CSVWriter;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
@@ -1071,7 +1073,8 @@ public class HelperEx {
 
 
         File f = new File(fileAddress);
-        CSVWriter writer = new CSVWriter(new FileWriter(fileAddress, true), ',',CSVWriter.NO_QUOTE_CHARACTER);
+        CSVWriter writer = new CSVWriter(new FileWriter(fileAddress, true), ',',CSVWriter.NO_QUOTE_CHARACTER,
+                CSVWriter.DEFAULT_ESCAPE_CHARACTER, ICSVWriter.DEFAULT_LINE_END);
         File parent = f.getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
             throw new IllegalStateException("Couldn't create dir: " + parent);

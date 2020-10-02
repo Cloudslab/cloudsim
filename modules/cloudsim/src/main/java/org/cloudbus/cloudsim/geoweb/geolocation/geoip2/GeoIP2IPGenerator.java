@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.geoweb.geolocation.geoip2;
 
-import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.base.Preconditions;
+import com.opencsv.CSVReader;
 import org.cloudbus.cloudsim.geoweb.geolocation.BaseIPGenerator;
 import org.cloudbus.cloudsim.geoweb.geolocation.IPGenerator;
 import org.cloudbus.cloudsim.geoweb.geolocation.IPUtil;
@@ -31,7 +31,7 @@ public class GeoIP2IPGenerator extends BaseIPGenerator implements IPGenerator {
     /** All ranges specified in the file. */
     private final List<IPRange> ranges = new ArrayList<>();
     /**
-     * A list with the same size as {@link GeoIP2IPGenerator.ranges}. Each i-th
+     * A list with the same size as {@link GeoIP2IPGenerator.IPRange}. Each i-th
      * element in this list contains the sums of the lengths of the ranges in
      * ranges[0:i].
      */
@@ -170,7 +170,7 @@ public class GeoIP2IPGenerator extends BaseIPGenerator implements IPGenerator {
         sumOfRangesLengths = 0;
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                CSVReader csv = new CSVReader(reader, CSV_SEP, QUOTE_SYMBOL)) {
+                CSVReader csv = new CSVReader(reader)) {
             // Read the file line by line
             int lineCount = 0;
             String[] lineElems = csv.readNext();
@@ -191,10 +191,10 @@ public class GeoIP2IPGenerator extends BaseIPGenerator implements IPGenerator {
                     Arrays.toString(getCountryCodes().toArray()), ranges.size());
 
             sumOfRangesLengths = accum;
-        } catch (IOException e) {
+        } catch (Exception e) {
             ranges.clear();
             CustomLog.logError(Level.SEVERE, "Parsing Error", e);
-            throw new IllegalArgumentException("Parsing Error", e);
+//            throw new IllegalArgumentException("Parsing Error", e);
         }
     }
 

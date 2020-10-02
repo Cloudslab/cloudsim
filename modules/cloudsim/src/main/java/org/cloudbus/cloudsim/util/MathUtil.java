@@ -373,9 +373,7 @@ public class MathUtil {
 	 */
 	public static double[] abs(final double[] data) {
 		double[] result = new double[data.length];
-		for (int i = 0; i < result.length; i++) {
-			result[i] = Math.abs(data[i]);
-		}
+		Arrays.setAll(result, i -> Math.abs(data[i]));
 		return result;
 	}
 

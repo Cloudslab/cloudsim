@@ -384,8 +384,8 @@ public class WorkloadFileReader implements WorkloadModel {
                     obj = Integer.valueOf(array[RUN_TIME].trim());
                     int runTime = obj;
 
-                    final int userID = Integer;
-                    final int groupID = Integer;
+                    final int userID = Integer.valueOf(array[USER_ID].trim());
+                    final int groupID = Integer.valueOf(array[GROUP_ID].trim());
 
                     // according to the SWF manual, runtime of 0 is possible due
                     // to rounding down. E.g. runtime is 0.4 seconds -> runtime = 0

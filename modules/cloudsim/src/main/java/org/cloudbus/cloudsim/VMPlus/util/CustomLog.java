@@ -574,7 +574,7 @@ public class CustomLog {
         bufferSize = Integer.parseInt(props.getProperty(BUFFER_SIZE_PROP_KEY, "-1").trim());
 
         if (shutStandardMessages) {
-            Log.setOutput(new NullOutputStream());
+            Log.setOutput(NullOutputStream.NULL_OUTPUT_STREAM);
             Log.disable();
         }
 
