@@ -598,7 +598,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         for (Container container : vm.getContainerList()) {
             util += container.getTotalUtilizationOfCpuMips(CloudSim.clock());
         }
-        if (util > vm.getHost().getTotalMips() / vm.getHost().getNumberOfPes() * vm.getNumberOfPes()) {
+        if (util > 1.0*vm.getHost().getTotalMips() / vm.getHost().getNumberOfPes() * vm.getNumberOfPes()) {
             return false;
         }
 

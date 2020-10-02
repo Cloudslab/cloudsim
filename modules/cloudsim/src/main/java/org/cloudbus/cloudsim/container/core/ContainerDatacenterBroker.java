@@ -574,7 +574,6 @@ public class ContainerDatacenterBroker extends SimEntity {
      *
      */
     protected void submitContainers(){
-        List<Container> successfullySubmitted = new ArrayList<>();
         int i = 0;
         for(Container container:getContainerList()) {
             ContainerCloudlet cloudlet = getCloudletList().get(i);
@@ -602,7 +601,7 @@ public class ContainerDatacenterBroker extends SimEntity {
 
         }
 
-        successfullySubmitted.addAll(getContainerList());
+        List<Container> successfullySubmitted = new ArrayList<>(getContainerList());
         sendNow(getDatacenterIdsList().get(0), containerCloudSimTags.CONTAINER_SUBMIT, successfullySubmitted);
 
 //        List<Container> successfullySubmitted = new ArrayList<>();

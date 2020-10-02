@@ -29,8 +29,6 @@ public abstract class BaseEntryPoint implements IEntryPoint {
      * @param appId
      *            - the id of the application this entry point services. Must
      *            not be null.
-     * @param latencySLA
-     *            - the latency SLA of the application.
      */
     public BaseEntryPoint(final IGeolocationService geoService, final long appId) {
         this.geoService = geoService;

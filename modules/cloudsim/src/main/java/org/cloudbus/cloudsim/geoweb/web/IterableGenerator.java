@@ -21,6 +21,7 @@ public class IterableGenerator<T> implements IGenerator<T> {
      * 
      * @param collection
      */
+    @SafeVarargs
     public IterableGenerator(T... collection) {
         this(Arrays.asList(collection));
     }

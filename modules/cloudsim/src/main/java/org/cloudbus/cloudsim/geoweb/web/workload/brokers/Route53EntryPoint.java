@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.geoweb.web.workload.brokers;
 
 import org.cloudbus.cloudsim.geoweb.geolocation.IGeolocationService;
-import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
+import org.cloudbus.cloudsim.vmplus.util.CustomLog;
 import org.cloudbus.cloudsim.geoweb.web.ILoadBalancer;
 import org.cloudbus.cloudsim.geoweb.web.WebSession;
 

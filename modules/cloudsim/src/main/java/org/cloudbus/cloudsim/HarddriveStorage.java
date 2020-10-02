@@ -118,10 +118,8 @@ public class HarddriveStorage implements Storage {
 
 	@Override
 	public boolean isFull() {
-		if (Math.abs(currentSize - capacity) < .0000001) { // currentSize == capacity
-			return true;
-		}
-		return false;
+		// currentSize == capacity
+		return Math.abs(currentSize - capacity) < .0000001;
 	}
 
 	@Override

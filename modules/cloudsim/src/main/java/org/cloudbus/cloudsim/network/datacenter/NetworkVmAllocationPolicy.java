@@ -78,8 +78,7 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 		int requiredPes = vm.getNumberOfPes();
 		boolean result = false;
 		int tries = 0;
-		List<Integer> freePesTmp = new ArrayList<>();
-		freePesTmp.addAll(getFreePes());
+		List<Integer> freePesTmp = new ArrayList<>(getFreePes());
 
 		if (!getVmTable().containsKey(vm.getUid())) { // if this vm was not created
 			do {// we still trying until we find a host or until we try all of them

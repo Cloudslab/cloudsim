@@ -56,8 +56,7 @@ public class ContainerVmAllocationPolicySimple extends ContainerVmAllocationPoli
         int requiredPes = containerVm.getNumberOfPes();
         boolean result = false;
         int tries = 0;
-        List<Integer> freePesTmp = new ArrayList<>();
-        freePesTmp.addAll(getFreePes());
+        List<Integer> freePesTmp = new ArrayList<>(getFreePes());
 
         if (!getVmTable().containsKey(containerVm.getUid())) { // if this vm was not created
             do {// we still trying until we find a host or until we try all of them

@@ -11,10 +11,10 @@ package org.cloudbus.cloudsim.examples.geoweb.web;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.VMPlus.DatacenterBrokerEX;
-import org.cloudbus.cloudsim.VMPlus.disk.*;
-import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
-import org.cloudbus.cloudsim.VMPlus.util.TextUtil;
+import org.cloudbus.cloudsim.vmplus.DatacenterBrokerEX;
+import org.cloudbus.cloudsim.vmplus.disk.*;
+import org.cloudbus.cloudsim.vmplus.util.CustomLog;
+import org.cloudbus.cloudsim.vmplus.util.TextUtil;
 import org.cloudbus.cloudsim.geoweb.web.*;
 import org.cloudbus.cloudsim.geoweb.web.workload.brokers.WebBroker;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;

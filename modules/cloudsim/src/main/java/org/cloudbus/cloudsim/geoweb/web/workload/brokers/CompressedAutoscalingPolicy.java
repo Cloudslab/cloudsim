@@ -1,13 +1,13 @@
 package org.cloudbus.cloudsim.geoweb.web.workload.brokers;
 
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.VMPlus.IAutoscalingPolicy;
-import org.cloudbus.cloudsim.VMPlus.MonitoringBorkerEX;
-import org.cloudbus.cloudsim.VMPlus.billing.IVmBillingPolicy;
-import org.cloudbus.cloudsim.VMPlus.disk.HddCloudletSchedulerTimeShared;
-import org.cloudbus.cloudsim.VMPlus.disk.HddVm;
-import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
-import org.cloudbus.cloudsim.VMPlus.vm.VMStatus;
+import org.cloudbus.cloudsim.vmplus.IAutoscalingPolicy;
+import org.cloudbus.cloudsim.vmplus.MonitoringBorkerEX;
+import org.cloudbus.cloudsim.vmplus.billing.IVmBillingPolicy;
+import org.cloudbus.cloudsim.vmplus.disk.HddCloudletSchedulerTimeShared;
+import org.cloudbus.cloudsim.vmplus.disk.HddVm;
+import org.cloudbus.cloudsim.vmplus.util.CustomLog;
+import org.cloudbus.cloudsim.vmplus.vm.VMStatus;
 import org.cloudbus.cloudsim.geoweb.web.ILoadBalancer;
 
 import java.util.*;

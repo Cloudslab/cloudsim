@@ -1,13 +1,12 @@
 package org.cloudbus.cloudsim.geoweb.geolocation.geoip2;
 
 import com.google.common.base.Preconditions;
-import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
+import org.cloudbus.cloudsim.vmplus.util.CustomLog;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Objects;
 import java.util.logging.Level;
 
 /**

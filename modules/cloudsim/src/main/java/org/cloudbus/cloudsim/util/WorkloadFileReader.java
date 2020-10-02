@@ -372,8 +372,8 @@ public class WorkloadFileReader implements WorkloadModel {
                     }
 
                     // get the submit time
-                    final Long l = Long.valueOf(array[SUBMIT_TIME].trim());
-                    final long submitTime = l.intValue();
+                    final long l = Long.parseLong(array[SUBMIT_TIME].trim());
+                    final long submitTime = (int) l;
 
                     // get the user estimated run time
                     obj = Integer.valueOf(array[REQ_RUN_TIME].trim());
@@ -384,8 +384,8 @@ public class WorkloadFileReader implements WorkloadModel {
                     obj = Integer.valueOf(array[RUN_TIME].trim());
                     int runTime = obj;
 
-                    final int userID = Integer.valueOf(array[USER_ID].trim());
-                    final int groupID = Integer.valueOf(array[GROUP_ID].trim());
+                    final int userID = Integer.parseInt(array[USER_ID].trim());
+                    final int groupID = Integer.parseInt(array[GROUP_ID].trim());
 
                     // according to the SWF manual, runtime of 0 is possible due
                     // to rounding down. E.g. runtime is 0.4 seconds -> runtime = 0

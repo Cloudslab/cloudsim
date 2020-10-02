@@ -187,11 +187,7 @@ public class CloudInformationService extends SimEntity {
 	 */
 	public boolean resourceSupportAR(int id) {
 		boolean flag = false;
-		if (id < 0) {
-			flag = false;
-		} else {
-			flag = checkResource(arList, id);
-		}
+		if (id >= 0) flag = checkResource(arList, id);
 
 		return flag;
 	}
@@ -206,11 +202,7 @@ public class CloudInformationService extends SimEntity {
 	 */
 	public boolean resourceExist(int id) {
 		boolean flag = false;
-		if (id < 0) {
-			flag = false;
-		} else {
-			flag = checkResource(resList, id);
-		}
+		if (id >= 0) flag = checkResource(resList, id);
 
 		return flag;
 	}

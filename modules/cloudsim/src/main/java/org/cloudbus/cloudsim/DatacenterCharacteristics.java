@@ -304,11 +304,10 @@ public class DatacenterCharacteristics {
 	public double getCpuTime(double cloudletLength, double load) {
 		double cpuTime = 0.0;
 
-		switch (getAllocationPolicy()) {
-			case DatacenterCharacteristics.TIME_SHARED:
-                                /*@todo It is not exacly clear what this method does.
+		if (getAllocationPolicy() == DatacenterCharacteristics.TIME_SHARED) {
+			/* @todo It is not exacly clear what this method does.
                                 I guess it computes how many time the cloudlet will
-                                spend using the CPU to finish its job, considering 
+                                spend using the CPU to finish its job, considering
                                 the CPU allocation policy. By this way,
                                 the load parameter may be cloudlet's the percentage of load (from 0 to 1).
                                 Then, (getMipsOfOnePe() * (1.0 - load)) computes the amount
@@ -316,18 +315,14 @@ public class DatacenterCharacteristics {
                                 Dividing the total cloudlet length in MI by that result
                                 returns the number of seconds that the cloudlet will spend
                                 to execute its total MI.
-                                
+
                                 This method has to be reviewed and documentation
                                 checked.
-                            
-                                If load is equals to 1, this calculation will 
+
+                                If load is equals to 1, this calculation will
                                 raise and division by zero exception, what makes invalid
                                 the pre condition defined in the method documention*/
-				cpuTime = cloudletLength / (getMipsOfOnePe() * (1.0 - load));
-				break;
-
-			default:
-				break;
+			cpuTime = cloudletLength / (getMipsOfOnePe() * (1.0 - load));
 		}
 
 		return cpuTime;

@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.geoweb.web.workload;
 
-import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
+import org.cloudbus.cloudsim.vmplus.util.CustomLog;
 import org.cloudbus.cloudsim.geoweb.web.WebSession;
 import org.cloudbus.cloudsim.geoweb.web.workload.freq.FrequencyFunction;
 import org.cloudbus.cloudsim.geoweb.web.workload.sessions.ISessionGenerator;

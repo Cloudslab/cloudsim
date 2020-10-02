@@ -105,13 +105,13 @@ public class CloudSim {
 	 * <p>
 	 * 
 	 * @param numUser the number of User Entities created. This parameters indicates that
-	 *            {@link gridsim.CloudSimShutdown} first waits for all user entities's
+	 *            {@link CloudSimShutdown} first waits for all user entities's
 	 *            END_OF_SIMULATION signal before issuing terminate signal to other entities
 	 * @param cal starting time for this simulation. If it is <tt>null</tt>, then the time will be
 	 *            taken from <tt>Calendar.getInstance()</tt>
 	 * @param traceFlag <tt>true</tt> if CloudSim trace need to be written
-	 * @see gridsim.CloudSimShutdown
-	 * @see CloudInformationService.CloudInformationService
+	 * @see CloudSimShutdown
+	 * @see CloudInformationService
 	 * @pre numUser >= 0
 	 * @post $none
 	 */
@@ -141,15 +141,15 @@ public class CloudSim {
 	 * <p>
 	 * 
 	 * @param numUser the number of User Entities created. This parameters indicates that
-	 *            {@link gridsim.CloudSimShutdown} first waits for all user entities's
+	 *            {@link CloudSimShutdown} first waits for all user entities's
 	 *            END_OF_SIMULATION signal before issuing terminate signal to other entities
 	 * @param cal starting time for this simulation. If it is <tt>null</tt>, then the time will be
 	 *            taken from <tt>Calendar.getInstance()</tt>
 	 * @param traceFlag <tt>true</tt> if CloudSim trace need to be written
 	 * @param periodBetweenEvents - the minimal period between events. Events within shorter periods
 	 * after the last event are discarded.
-	 * @see gridsim.CloudSimShutdown
-	 * @see CloudInformationService.CloudInformationService
+	 * @see CloudSimShutdown
+	 * @see CloudInformationService
 	 * @pre numUser >= 0
 	 * @post $none
 	 */
@@ -174,7 +174,7 @@ public class CloudSim {
 	 * @return the last clock time
 	 * @throws NullPointerException This happens when creating this entity before initialising
 	 *             CloudSim package or this entity name is <tt>null</tt> or empty.
-	 * @see gridsim.CloudSim#init(int, Calendar, boolean)
+	 * @see CloudSim#init(int, Calendar, boolean)
 	 * @pre $none
 	 * @post $none
 	 */
@@ -199,14 +199,13 @@ public class CloudSim {
 	}
 
 	/**
-	 * Stops Cloud Simulation (based on {@link Simulation#runStop()}). This should be only called if
+	 * Stops Cloud Simulation. This should be only called if
 	 * any of the user defined entities <b>explicitly</b> want to terminate simulation during
 	 * execution.
 	 * 
 	 * @throws NullPointerException This happens when creating this entity before initialising
 	 *             CloudSim package or this entity name is <tt>null</tt> or empty
-	 * @see gridsim.CloudSim#init(int, Calendar, boolean)
-	 * @see Simulation#runStop()
+	 * @see CloudSim#init(int, Calendar, boolean)
 	 * @pre $none
 	 * @post $none
 	 */
@@ -453,7 +452,7 @@ public class CloudSim {
 	public static List<SimEntity> getEntityList() {
 		// create a new list to prevent the user from changing
 		// the list of entities used by Simulation
-		List<SimEntity> list = new LinkedList<SimEntity>(entities);
+		List<SimEntity> list = new LinkedList<>(entities);
 		return list;
 	}
 

@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.geoweb.web;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.VMPlus.disk.DataItem;
-import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
+import org.cloudbus.cloudsim.vmplus.disk.DataItem;
+import org.cloudbus.cloudsim.vmplus.util.CustomLog;
 import org.uncommons.maths.number.NumberGenerator;
 
 import java.util.LinkedList;
@@ -62,7 +62,7 @@ public abstract class BaseStatGenerator<T extends Cloudlet> implements IGenerato
     /**
      * Creates a new generator with the specified statistical distributions.
      * 
-     * @param randomGenerators
+     * @param seqGenerators
      *            - the statistical distributions to be used for the generation
      *            of CloudLets. See the standard keys provided above to see what
      *            is usually expected from this map. Inheriting classes may

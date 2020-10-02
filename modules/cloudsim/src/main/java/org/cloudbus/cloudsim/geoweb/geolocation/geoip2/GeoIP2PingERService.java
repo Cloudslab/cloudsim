@@ -14,7 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.cloudbus.cloudsim.geoweb.geolocation.BaseGeolocationService;
 import org.cloudbus.cloudsim.geoweb.geolocation.IGeolocationService;
 import org.cloudbus.cloudsim.geoweb.geolocation.IPMetadata;
-import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
+import org.cloudbus.cloudsim.vmplus.util.CustomLog;
 
 import java.io.*;
 import java.net.InetAddress;

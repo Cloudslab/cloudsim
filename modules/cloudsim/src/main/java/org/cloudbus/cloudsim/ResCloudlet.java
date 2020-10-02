@@ -180,11 +180,7 @@ public class ResCloudlet {
 	 * @post $none
 	 */
 	public boolean hasReserved() {
-		if (reservId == NOT_FOUND) {
-			return false;
-		}
-
-		return true;
+		return reservId != NOT_FOUND;
 	}
 
 	/**
@@ -443,7 +439,7 @@ public class ResCloudlet {
 			return 0;
 		}
 
-		return (long) Math.floor(length / Consts.MILLION);
+		return (long) Math.floor(1.0*length / Consts.MILLION);
 	}
 
 	/**

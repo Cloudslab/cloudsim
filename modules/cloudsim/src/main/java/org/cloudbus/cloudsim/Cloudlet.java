@@ -540,10 +540,7 @@ public class Cloudlet {
      * <tt>false</tt> otherwise
      */
     public boolean hasReserved() {
-        if (reservationId == -1) {
-            return false;
-        }
-        return true;
+        return reservationId != -1;
     }
 
     /**
@@ -759,8 +756,8 @@ public class Cloudlet {
      * cancel or to move this Cloudlet into different CloudResources.
      *
      * @param length length of this Cloudlet
-     * @see gridsim.AllocPolicy
-     * @see gridsim.ResCloudlet
+     * @see VmAllocationPolicy
+     * @see ResCloudlet
      * @pre length >= 0.0
      * @post $none
      */

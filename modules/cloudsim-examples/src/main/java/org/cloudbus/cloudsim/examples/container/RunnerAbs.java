@@ -389,7 +389,7 @@ public abstract class RunnerAbs {
     }
 
     public void setEnableOutput(boolean enableOutput) {
-        this.enableOutput = enableOutput;
+        RunnerAbs.enableOutput = enableOutput;
     }
 
     public boolean isEnableOutput() {

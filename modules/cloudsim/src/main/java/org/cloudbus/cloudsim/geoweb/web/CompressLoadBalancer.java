@@ -1,9 +1,9 @@
 package org.cloudbus.cloudsim.geoweb.web;
 
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.VMPlus.disk.HddVm;
-import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
-import org.cloudbus.cloudsim.VMPlus.vm.MonitoredVMex;
+import org.cloudbus.cloudsim.vmplus.disk.HddVm;
+import org.cloudbus.cloudsim.vmplus.util.CustomLog;
+import org.cloudbus.cloudsim.vmplus.vm.MonitoredVMex;
 import org.cloudbus.cloudsim.geoweb.web.workload.brokers.WebBroker;
 
 import java.util.*;

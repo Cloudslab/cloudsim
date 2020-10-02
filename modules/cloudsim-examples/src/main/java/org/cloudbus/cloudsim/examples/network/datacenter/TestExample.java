@@ -56,7 +56,7 @@ public class TestExample {
 
 			// Third step: Create Broker
 			NetDatacenterBroker broker = createBroker();
-			broker.setLinkDC(datacenter0);
+			NetDatacenterBroker.setLinkDC(datacenter0);
 			// broker.setLinkDC(datacenter0);
 			// Fifth step: Create one Cloudlet
 

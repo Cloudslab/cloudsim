@@ -1,13 +1,12 @@
 package org.cloudbus.cloudsim.geoweb.web.workload.brokers;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
-import org.cloudbus.cloudsim.VMPlus.MonitoringBorkerEX;
-import org.cloudbus.cloudsim.VMPlus.util.CustomLog;
+import org.cloudbus.cloudsim.vmplus.MonitoringBorkerEX;
+import org.cloudbus.cloudsim.vmplus.util.CustomLog;
 import org.cloudbus.cloudsim.geoweb.web.ILoadBalancer;
 import org.cloudbus.cloudsim.geoweb.web.SessionFailedException;
 import org.cloudbus.cloudsim.geoweb.web.WebCloudlet;

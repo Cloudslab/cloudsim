@@ -29,21 +29,17 @@ public class HostSelectionPolicyMostFull extends HostSelectionPolicy {
                     selectedHost = host;
 
                 }
-
-
             }
         }
 
-        return selectedHost;
-    }else {
+        }else {
 
 //            At the simulation start all the VMs by leastFull algorithms.
 
             selectedHost = new HostSelectionPolicyFirstFit().getHost(hostList,obj ,excludedHostList);
 
-            return selectedHost;
         }
-
+        return selectedHost;
 
 
     }

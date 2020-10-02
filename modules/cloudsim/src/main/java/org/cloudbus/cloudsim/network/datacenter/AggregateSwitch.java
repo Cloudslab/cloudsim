@@ -69,7 +69,7 @@ public class AggregateSwitch extends Switch {
 			// packet is coming from root so need to be sent to edgelevel swich
 			// find the id for edgelevel switch
 			int switchid = dc.VmToSwitchid.get(recvVMid);
-			List<NetworkPacket> pktlist = downlinkswitchpktlist.computeIfAbsent(switchid, k -> new ArrayList<NetworkPacket>());
+			List<NetworkPacket> pktlist = downlinkswitchpktlist.computeIfAbsent(switchid, k -> new ArrayList<>());
 			pktlist.add(hspkt);
 			return;
 		}
@@ -102,20 +102,12 @@ public class AggregateSwitch extends Switch {
 				}
 			}
 			if (flagtoswtich) {
-				List<NetworkPacket> pktlist = downlinkswitchpktlist.get(switchid);
-				if (pktlist == null) {
-					pktlist = new ArrayList<NetworkPacket>();
-					downlinkswitchpktlist.put(switchid, pktlist);
-				}
+				List<NetworkPacket> pktlist = downlinkswitchpktlist.computeIfAbsent(switchid, k -> new ArrayList<>());
 				pktlist.add(hspkt);
 			} else// send to up
 			{
 				Switch sw = uplinkswitches.get(0);
-				List<NetworkPacket> pktlist = uplinkswitchpktlist.get(sw.getId());
-				if (pktlist == null) {
-					pktlist = new ArrayList<NetworkPacket>();
-					uplinkswitchpktlist.put(sw.getId(), pktlist);
-				}
+				List<NetworkPacket> pktlist = uplinkswitchpktlist.computeIfAbsent(sw.getId(), k -> new ArrayList<>());
 				pktlist.add(hspkt);
 			}
 		}
