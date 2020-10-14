@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="882.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.cloudsimgui.AboutUsController">
+   <children>
+      <Label layoutX="386.0" layoutY="14.0" text="About Us" textFill="WHITE">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Label>
+      <Label layoutX="328.0" layoutY="200.0" text="Sabir Mohammedi Taieb" textFill="WHITE">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <Label layoutX="374.0" layoutY="231.0" text="Youssouf Kella" textFill="WHITE">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <Label layoutX="189.0" layoutY="108.0" text="Master 2 : Advanced Information systems engeneering" textFill="WHITE">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <Label layoutX="31.0" layoutY="164.0" text="Approach of virtual machine migration for optimizing energy consumption and improuving quality of service in DataCenters" textFill="WHITE" />
+      <Label layoutX="267.0" layoutY="71.0" text="Hassiba Ben Bouali University of Chlef" textFill="WHITE">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <Label layoutX="386.0" layoutY="365.0" text="Year : 2019/2020" textFill="WHITE" />
+      <Label layoutX="286.0" layoutY="285.0" text="Supervised by: Dr. Kella Abdelaziz" textFill="WHITE">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

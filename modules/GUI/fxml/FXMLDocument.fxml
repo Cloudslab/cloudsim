@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.cloudsimgui.FXMLDocumentController">
+    <children>
+      <ImageView fitHeight="759.0" fitWidth="1095.0" opacity="0.33" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../cloudsimgui/server-room-interior-in-datacenter.jpg" />
+         </image>
+      </ImageView>
+      <Pane prefHeight="66.0" prefWidth="1095.0" style="-fx-background-color: black;">
+         <children>
+            <Label layoutX="433.0" layoutY="8.0" text="CloudSim GUI" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="35.0" />
+               </font>
+               <effect>
+                  <Bloom />
+               </effect>
+            </Label>
+         </children>
+      </Pane>
+        <Button id="SimulationConifg" fx:id="SimulationConfig" layoutX="388.0" layoutY="207.0" onAction="#goToSimulationConfig" text="Simulation Settings" textFill="WHITE">
+         <font>
+            <Font size="31.0" />
+         </font></Button>
+      <Button fx:id="aboutUsBtn" layoutX="463.0" layoutY="386.0" mnemonicParsing="false" onAction="#goToAbout" text="About Us" textFill="WHITE">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Button>
+      <Button fx:id="approach" layoutX="460.0" layoutY="301.0" mnemonicParsing="false" onAction="#goToApproach" text="Approach" textFill="WHITE">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Button>
+      <Label layoutX="789.0" layoutY="487.0" text="Sabir Mohammedi Taieb">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Label>
+      <Label layoutX="849.0" layoutY="533.0" text="Youssouf Kella">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

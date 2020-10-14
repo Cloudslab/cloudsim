@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="529.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.cloudsimgui.ViewChartController">
+   <children>
+      <BarChart fx:id="EnergyChart" prefHeight="469.0" prefWidth="948.0" title="Energy">
+        <xAxis>
+          <CategoryAxis fx:id="X" label="Vm/Pm" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="Y" label="Energy Consumption(KWh)" side="LEFT" />
+        </yAxis>
+      </BarChart>
+   </children>
+</AnchorPane>
