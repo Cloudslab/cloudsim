@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * Created by sareh on 28/07/15.
+ * The VM Selection Policy is used for selecting VMs to migrate when a host status is determined as
+ * "Overloaded"
  */
 public abstract class PowerContainerVmSelectionPolicy {
 

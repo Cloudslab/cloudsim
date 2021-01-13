@@ -37,7 +37,7 @@ public class ContainerPe {
     private int status;
 
     /**
-     * The pe provisioner.
+     * The Processing Element (PE) a.k.a. CPU provisioner.
      */
     private ContainerPeProvisioner containerPeProvisioner;
 

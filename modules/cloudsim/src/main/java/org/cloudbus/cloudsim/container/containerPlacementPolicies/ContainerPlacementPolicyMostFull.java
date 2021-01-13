@@ -21,7 +21,7 @@ public class ContainerPlacementPolicyMostFull extends ContainerPlacementPolicy {
                 continue;
             }
 
-            double containerUsage = containerVm1.getContainerScheduler().getAvailableMips();
+            double containerUsage = containerVm1.getAvailableMips();
             if ( containerUsage > maxMips) {
                 maxMips = containerUsage;
                 selectedVm = containerVm1;

@@ -17,7 +17,7 @@ public class ConstantsExamples {
     public static final boolean ENABLE_OUTPUT = true;
     public static final boolean OUTPUT_CSV = false;
     public static final double SCHEDULING_INTERVAL = 300.0D;
-    public static final double SIMULATION_LIMIT = 87400.0D;
+    public static final double SIMULATION_LIMIT = 86400.0D;
     /**
      * Cloudlet specs
      */
@@ -71,10 +71,12 @@ public class ConstantsExamples {
      * population.
      */
 
+    public static final int NUMBER_HOSTS = 2;
+    public static final int NUMBER_VMS = 5;
+    public static final int NUMBER_CLOUDLETS = 2;
 
-    public static final int NUMBER_HOSTS = 20;
-    public static final int NUMBER_VMS = 25;
-    public static final int NUMBER_CLOUDLETS = 50;
+//    public static final String CONTAINER_VM_TYPE = "PowerContainerVm";
+    public static final String CONTAINER_VM_TYPE = "BidderContainerVM";
 
 //-----------------------The Addresses
 

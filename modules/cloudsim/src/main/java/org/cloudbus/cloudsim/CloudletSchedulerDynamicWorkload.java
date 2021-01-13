@@ -55,6 +55,12 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
          */
 	private List<Double> cacheCurrentRequestedMips;
 
+	public CloudletSchedulerDynamicWorkload() {
+		super();
+		mips = 0;
+		numberOfPes = 0;
+	}
+
 	/**
 	 * Instantiates a new VM scheduler
 	 * 

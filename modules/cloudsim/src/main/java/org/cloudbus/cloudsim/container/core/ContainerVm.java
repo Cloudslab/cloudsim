@@ -67,7 +67,7 @@ public class ContainerVm {
 
 
     /**
-     * The vmm.
+     * The Virtual Machine Manager (vmm).
      */
     private String vmm;
 
@@ -143,7 +143,7 @@ public class ContainerVm {
     private ContainerBwProvisioner containerBwProvisioner;
 
     /**
-     * The vm list.
+     * The container list.
      */
     private final List<? extends Container> containerList = new ArrayList<>();
 
@@ -846,9 +846,10 @@ public class ContainerVm {
      */
     public boolean isSuitableForContainer(Container container) {
 
-        return (getContainerScheduler().getPeCapacity() >= container.getCurrentRequestedMaxMips()&& getContainerScheduler().getAvailableMips() >= container.getWorkloadTotalMips()
-                && getContainerRamProvisioner().isSuitableForContainer(container, container.getCurrentRequestedRam()) && getContainerBwProvisioner()
-                .isSuitableForContainer(container, container.getCurrentRequestedBw()));
+        return (getContainerScheduler().getPeCapacity() >= container.getCurrentRequestedMaxMips() &&
+                getContainerScheduler().getAvailableMips() >= container.getWorkloadTotalMips() &&
+                getContainerRamProvisioner().isSuitableForContainer(container, container.getCurrentRequestedRam()) &&
+                getContainerBwProvisioner().isSuitableForContainer(container, container.getCurrentRequestedBw()));
     }
 
        /**
@@ -1226,7 +1227,7 @@ public class ContainerVm {
     public int getNumberOfContainers() {
         int c =0;
         for(Container container:getContainerList()){
-            if(!getContainersMigratingIn().contains(container)){
+                if(!getContainersMigratingIn().contains(container)){
                 c++;
             }
         }

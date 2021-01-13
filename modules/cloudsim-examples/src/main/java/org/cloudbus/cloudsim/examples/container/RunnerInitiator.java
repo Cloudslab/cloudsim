@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.examples.container;
 
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.examples.power.Helper;
 
 import java.util.Calendar;
 
@@ -11,7 +12,6 @@ import java.util.Calendar;
  */
 
 public class RunnerInitiator extends RunnerAbs {
-
 
     /**
      * Instantiates a new runner.
@@ -36,7 +36,6 @@ public class RunnerInitiator extends RunnerAbs {
             String hostSelectionPolicy,
             double overBookingFactor, String runTime, String logAddress) {
 
-
         super(enableOutput,
                 outputToFile,
                 inputFolder,
@@ -50,6 +49,33 @@ public class RunnerInitiator extends RunnerAbs {
 
     }
 
+    public RunnerInitiator() {
+
+    }
+
+//    public RunnerInitiator(
+//            RunConfig rc,
+//            double overBookingFactor) {
+//
+//        this.rc = rc;
+//
+//        initializeAndStart(
+//                rc.isEnableOutput(),
+//                rc.isOutputToFile(),
+//                rc.getInputFolder(),
+//                rc.getOutputFolder(),
+//                rc.getVmAllocationPolicy(),
+//                rc.getContainerAllocationPolicy(),
+//                rc.getVmSelectionPolicy(),
+//                rc.getContainerSelectionPolicy(),
+//                rc.getHostSelectionPolicy(),
+//                overBookingFactor, Integer.toString(rc.getRunTime()), rc.getOutputFolder()
+//        );
+//
+//
+//
+//    }
+
     /*
      * (non-Javadoc)
      *
@@ -58,14 +84,22 @@ public class RunnerInitiator extends RunnerAbs {
     @Override
     protected void init(String inputFolder, double overBookingFactor) {
         try {
+            Log.printLine("Initializing Simulation");
+
             CloudSim.init(1, Calendar.getInstance(), false);
 //            setOverBookingFactor(overBookingFactor);
             broker = HelperEx.createBroker(overBookingFactor);
+
+//            broker = HelperEx.createAuctionBroker(overBookingFactor);
             int brokerId = broker.getId();
-            cloudletList = HelperEx.createContainerCloudletList(brokerId, inputFolder, ConstantsExamples.NUMBER_CLOUDLETS);
-            containerList = HelperEx.createContainerList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
-            vmList = HelperEx.createVmList(brokerId, ConstantsExamples.NUMBER_VMS);
-            hostList = HelperEx.createHostList(ConstantsExamples.NUMBER_HOSTS);
+//            cloudletList = HelperEx.createContainerCloudletList(brokerId, inputFolder, ConstantsExamples.NUMBER_CLOUDLETS);
+            cloudletList = HelperEx.createContainerCloudletList(brokerId, inputFolder, rc.getNumberCloudlets());
+//            containerList = HelperEx.createContainerList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
+            containerList = HelperEx.createContainerList(brokerId, rc.getNumberCloudlets());
+//            vmList = HelperEx.createVmList(brokerId, ConstantsExamples.NUMBER_VMS, ConstantsExamples.CONTAINER_VM_TYPE);
+            vmList = HelperEx.createVmList(brokerId, rc.getNumberVms(), rc.getContainerType());
+//            hostList = HelperEx.createHostList(ConstantsExamples.NUMBER_HOSTS);
+            hostList = HelperEx.createHostList(rc.getNumberHosts());
 
         } catch (Exception e) {
             e.printStackTrace();

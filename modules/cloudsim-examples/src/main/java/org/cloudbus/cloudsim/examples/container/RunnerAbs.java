@@ -1,5 +1,6 @@
 package org.cloudbus.cloudsim.examples.container;
 
+import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.container.containerPlacementPolicies.*;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
@@ -24,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The RunnerAbs Class is the modified version of {@link org.cloudbus.cloudsim.examples.power.RunnerAbstract}
@@ -33,6 +35,7 @@ public abstract class RunnerAbs {
     private static boolean enableOutput;
 
     protected static ContainerDatacenterBroker broker;
+//    protected static DatacenterBroker broker;
     /**
      * The vm list.
      */
@@ -63,8 +66,41 @@ public abstract class RunnerAbs {
 
     private String runTime;
 
+    public void setRc(RunConfig rc) {
+        this.rc = rc;
+    }
+
+    RunConfig rc;
+
+
+    public RunnerAbs () {
+
+    }
 
     public RunnerAbs(boolean enableOutput, boolean outputToFile, String inputFolder, String outputFolder, String vmAllocationPolicy, String containerAllocationPolicy, String vmSelectionPolicy, String containerSelectionPolicy, String hostSelectionPolicy, double overBookingFactor, String runTime, String logAddress) {
+
+        initializeAndStart( enableOutput,  outputToFile,  inputFolder,  outputFolder,  vmAllocationPolicy,  containerAllocationPolicy,  vmSelectionPolicy,  containerSelectionPolicy,  hostSelectionPolicy,  overBookingFactor,  runTime,  logAddress);
+
+    }
+
+    public void initializeAndStart(double overBookingFactor) {
+        if (rc != null) {
+            initializeAndStart(
+                    rc.isEnableOutput(),
+                    rc.isOutputToFile(),
+                    rc.getInputFolder(),
+                    rc.getOutputFolder(),
+                    rc.getVmAllocationPolicy(),
+                    rc.getContainerAllocationPolicy(),
+                    rc.getVmSelectionPolicy(),
+                    rc.getContainerSelectionPolicy(),
+                    rc.getHostSelectionPolicy(),
+                    overBookingFactor, Integer.toString(rc.getRunTime()), rc.getOutputFolder()
+            );
+        }
+    }
+
+    public void initializeAndStart(boolean enableOutput, boolean outputToFile, String inputFolder, String outputFolder, String vmAllocationPolicy, String containerAllocationPolicy, String vmSelectionPolicy, String containerSelectionPolicy, String hostSelectionPolicy, double overBookingFactor, String runTime, String logAddress) {
         setOverBookingFactor(overBookingFactor);
         setRunTime(runTime);
         setLogAddress(logAddress);
@@ -97,7 +133,7 @@ public abstract class RunnerAbs {
         this.runTime = runTime;
     }
 
-    protected void initLogOutput(boolean enableOutput, boolean outputToFile, String outputFolder, String vmAllocationPolicy, String vmSelectionPolicy, String containerSelectionPolicy, String hostSelectionPolicy) throws IOException, FileNotFoundException {
+    protected void  initLogOutput(boolean enableOutput, boolean outputToFile, String outputFolder, String vmAllocationPolicy, String vmSelectionPolicy, String containerSelectionPolicy, String hostSelectionPolicy) throws IOException, FileNotFoundException {
         this.setEnableOutput(enableOutput);
         Log.setDisabled(!this.isEnableOutput());
 //        OutputStream out = new FileOutputStream("/home/sareh/Dropbox/programming/Results/log.txt");
@@ -178,18 +214,25 @@ public abstract class RunnerAbs {
 //            PowerContainerDatacenter e = (PowerContainerDatacenter) HelperEx.createDatacenter("Datacenter", PowerContainerDatacenter.class, hostList, vmAllocationPolicy, containerAllocationPolicy);
             vmAllocationPolicy.setDatacenter(e);
             e.setDisableVmMigrations(false);
+
             broker.submitVmList(vmList);
             broker.submitContainerList(containerList);
             broker.submitCloudletList(cloudletList.subList(0, containerList.size()));
-            ;
-            CloudSim.terminateSimulation(86400.0D);
+
+            CloudSim.terminateSimulation(ConstantsExamples.SIMULATION_LIMIT);
             double lastClock = CloudSim.startSimulation();
             List newList = broker.getCloudletReceivedList();
+            List submitList = broker.getCloudletSubmittedList();
+
+            Log.printLine("Requested " + cloudletList.size() + " cloudlets");
             Log.printLine("Received " + newList.size() + " cloudlets");
+            Log.printLine("Submitted " + submitList.size() + " cloudlets");
             CloudSim.stopSimulation();
 
 //            HelperEx.printResults(e, broker.getVmsCreatedList(),broker.getContainersCreatedList() ,lastClock, experimentName, true, outputFolder);
-            HelperEx.printResultsNew(e, broker, lastClock, experimentName, true, outputFolder);
+
+            HelperEx.printResults(e, broker, lastClock, experimentName, true, outputFolder, containerList.size());
+
         } catch (Exception var8) {
             var8.printStackTrace();
             Log.printLine("The simulation has been terminated due to an unexpected error");
@@ -259,7 +302,7 @@ public abstract class RunnerAbs {
 
     protected ContainerAllocationPolicy getContainerAllocationPolicy(String containerAllocationPolicyName) {
         ContainerAllocationPolicy containerAllocationPolicy;
-        if (containerAllocationPolicyName == "Simple") {
+        if (Objects.equals(containerAllocationPolicyName, "Simple")) {
 
             containerAllocationPolicy = new PowerContainerAllocationPolicySimple(); // DVFS policy without VM migrations
         } else {
@@ -273,42 +316,52 @@ public abstract class RunnerAbs {
     }
 
     protected ContainerPlacementPolicy getContainerPlacementPolicy(String name) {
-        ContainerPlacementPolicy placementPolicy;
-        switch (name) {
-            case "LeastFull":
-                placementPolicy = new ContainerPlacementPolicyLeastFull();
-                break;
-            case "MostFull":
-                placementPolicy = new ContainerPlacementPolicyMostFull();
-                break;
+        ContainerPlacementPolicy placementPolicy = null;
+        ClassLoader classLoader = RunnerAbs.class.getClassLoader();
 
-            case "FirstFit":
-                placementPolicy = new ContainerPlacementPolicyFirstFit();
-                break;
-            case "Random":
-                placementPolicy = new ContainerPlacementPolicyRandomSelection();
-                break;
-            default:
-                placementPolicy = null;
-                System.out.println("The container placement policy is not defined");
-                break;
+        try {
+            Class reflectionClass = classLoader.loadClass("org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicy" + name);
+            placementPolicy = (ContainerPlacementPolicy) reflectionClass.newInstance();
+        } catch (Exception e) {
+            placementPolicy = null;
+            System.out.println("The container placement policy is not defined");
         }
+
+//        switch (name) {
+//            case "LeastFull":
+//                placementPolicy = new ContainerPlacementPolicyLeastFull();
+//                break;
+//            case "MostFull":
+//                placementPolicy = new ContainerPlacementPolicyMostFull();
+//                break;
+//
+//            case "FirstFit":
+//                placementPolicy = new ContainerPlacementPolicyFirstFit();
+//                break;
+//            case "Random":
+//                placementPolicy = new ContainerPlacementPolicyRandomSelection();
+//                break;
+//            default:
+//                placementPolicy = null;
+//                System.out.println("The container placement policy is not defined");
+//                break;
+//        }
         return placementPolicy;
     }
 
     protected HostSelectionPolicy getHostSelectionPolicy(String hostSelectionPolicyName) {
         Object hostSelectionPolicy = null;
-        if (hostSelectionPolicyName == "FirstFit") {
+        if (Objects.equals(hostSelectionPolicyName, "FirstFit")) {
 
             hostSelectionPolicy = new HostSelectionPolicyFirstFit();
 
 
-        } else if (hostSelectionPolicyName == "LeastFull") {
+        } else if (Objects.equals(hostSelectionPolicyName, "LeastFull")) {
 
             hostSelectionPolicy = new HostSelectionPolicyLeastFull();
 
 
-        } else if (hostSelectionPolicyName == "MostFull") {
+        } else if (Objects.equals(hostSelectionPolicyName, "MostFull")) {
 
             hostSelectionPolicy = new HostSelectionPolicyMostFull();
 
@@ -320,7 +373,7 @@ public abstract class RunnerAbs {
 
 
 //        }
-    else if (hostSelectionPolicyName == "RandomSelection") {
+    else if (Objects.equals(hostSelectionPolicyName, "RandomSelection")) {
 
             hostSelectionPolicy = new HostSelectionPolicyRandomSelection();
 

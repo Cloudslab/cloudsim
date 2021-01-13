@@ -43,7 +43,7 @@ public abstract class PowerContainerAllocationPolicy extends ContainerAllocation
         @Override
         public boolean allocateVmForContainer(Container container, ContainerVm containerVm) {
             if (containerVm == null) {
-                Log.formatLine("%.2f: No suitable VM found for Container#" + container.getId() + "\n", CloudSim.clock());
+                Log.formatLine("%.2f: No suitable VM found for Container #" + container.getId() + "\n", CloudSim.clock());
                 return false;
             }
             if (containerVm.containerCreate(container)) { // if vm has been succesfully created in the host
@@ -61,7 +61,7 @@ public abstract class PowerContainerAllocationPolicy extends ContainerAllocation
         }
 
         /**
-         * Find host for vm.
+         * Find vm for container.
          *
          * @param container the vm
          * @return the power host

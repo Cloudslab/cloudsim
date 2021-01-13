@@ -19,7 +19,7 @@ public class ContainerPlacementPolicyLeastFull extends ContainerPlacementPolicy{
             if (excludedVmList.contains(containerVm1)) {
                 continue;
             }
-            double containerUsage = containerVm1.getContainerScheduler().getAvailableMips();
+            double containerUsage = containerVm1.getAvailableMips();
             if ( containerUsage < minMips ) {
                 minMips = containerUsage;
                 selectedVm = containerVm1;

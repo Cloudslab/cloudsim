@@ -15,6 +15,7 @@ public abstract class ContainerPlacementPolicy {
      * Gets the VM List, and the excluded VMs
      *
      * @param vmList the host
+     * @param obj the Container
      * @return the destination vm to place container
      */
     public abstract ContainerVm getContainerVm(List<ContainerVm> vmList, Object obj, Set<? extends ContainerVm> excludedVmList);

@@ -7,6 +7,7 @@ import java.util.Set;
 
 /**
  * Created by sareh on 11/08/15.
+ * The host selection policy determines which hosts should be selected as the migration destination.
  */
 public abstract class HostSelectionPolicy {
 

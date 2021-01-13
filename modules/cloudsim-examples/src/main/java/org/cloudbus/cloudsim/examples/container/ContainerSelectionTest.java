@@ -2,6 +2,8 @@ package org.cloudbus.cloudsim.examples.container;
 
 
 import java.io.IOException;
+import java.nio.file.Paths;
+
 /**
  * This Example is following the format for {@link org.cloudbus.cloudsim.examples.power.planetlab.Dvfs}
  * It specifically studies the placement of containers.
@@ -22,8 +24,12 @@ public class ContainerSelectionTest {
          * The experiments can be repeated for (repeat - runtime +1) times.
          * Please set these values as the arguments of the main function or set them bellow:
          */
-        int runTime = Integer.parseInt(args[0]);
-        int repeat = Integer.parseInt(args[1]);
+        int runTime = 2;
+        int repeat = 2;
+        if (args.length > 2)  {
+            runTime = Integer.parseInt(args[0]);
+            repeat = Integer.parseInt(args[1]);
+        }
         for (int i = runTime ; i < repeat; ++i) {
             boolean enableOutput = true;
             boolean outputToFile = true;
@@ -34,7 +40,7 @@ public class ContainerSelectionTest {
             /**
              * The output folder for the logs. The log files would be located in this folder.
              */
-            String outputFolder = "~/Results";
+            String outputFolder = Paths.get(".").toAbsolutePath().normalize().toString() + "/Results";
             /**
              * The allocation policy for VMs.
              */
@@ -68,6 +74,7 @@ public class ContainerSelectionTest {
             int OverBookingFactor = 80;
 
             new RunnerInitiator(
+
                     enableOutput,
                     outputToFile,
                     inputFolder,
