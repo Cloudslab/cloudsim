@@ -133,24 +133,24 @@ public class Datacenter extends SimEntity {
 		switch (ev.getTag()) {
 		// Resource characteristics inquiry
 			case CloudSimTags.RESOURCE_CHARACTERISTICS:
-				srcId = ((Integer) ev.getData()).intValue();
+				srcId = (Integer) ev.getData();
 				sendNow(srcId, ev.getTag(), getCharacteristics());
 				break;
 
 			// Resource dynamic info inquiry
 			case CloudSimTags.RESOURCE_DYNAMICS:
-				srcId = ((Integer) ev.getData()).intValue();
+				srcId = (Integer) ev.getData();
 				sendNow(srcId, ev.getTag(), 0);
 				break;
 
 			case CloudSimTags.RESOURCE_NUM_PE:
-				srcId = ((Integer) ev.getData()).intValue();
+				srcId = (Integer) ev.getData();
 				int numPE = getCharacteristics().getNumberOfPes();
 				sendNow(srcId, ev.getTag(), numPE);
 				break;
 
 			case CloudSimTags.RESOURCE_NUM_FREE_PE:
-				srcId = ((Integer) ev.getData()).intValue();
+				srcId = (Integer) ev.getData();
 				int freePesNumber = getCharacteristics().getNumberOfFreePes();
 				sendNow(srcId, ev.getTag(), freePesNumber);
 				break;
@@ -282,7 +282,7 @@ public class Datacenter extends SimEntity {
 		}
 
 		String filename = (String) data[0];
-		int req_source = ((Integer) data[1]).intValue();
+		int req_source = (Integer) data[1];
 		int tag = -1;
 
 		// check if this file can be deleted (do not delete is right now)
@@ -297,7 +297,7 @@ public class Datacenter extends SimEntity {
 			// send back to sender
 			Object pack[] = new Object[2];
 			pack[0] = filename;
-			pack[1] = Integer.valueOf(msg);
+			pack[1] = msg;
 
 			sendNow(req_source, tag, pack);
 		}
@@ -322,7 +322,7 @@ public class Datacenter extends SimEntity {
 
 		File file = (File) pack[0]; // get the file
 		file.setMasterCopy(true); // set the file into a master copy
-		int sentFrom = ((Integer) pack[1]).intValue(); // get sender ID
+		int sentFrom = (Integer) pack[1]; // get sender ID
 
 		/******
 		 * // DEBUG Log.printLine(super.get_name() + ".addMasterFile(): " + file.getName() +
@@ -335,8 +335,8 @@ public class Datacenter extends SimEntity {
 		int msg = addFile(file); // add the file
 
 		if (ack) {
-			data[1] = Integer.valueOf(-1); // no sender id
-			data[2] = Integer.valueOf(msg); // the result of adding a master file
+			data[1] = -1; // no sender id
+			data[2] = msg; // the result of adding a master file
 			sendNow(sentFrom, DataCloudTags.FILE_ADD_MASTER_RESULT, data);
 		}
 	}
@@ -902,8 +902,7 @@ public class Datacenter extends SimEntity {
 			List<? extends Host> list = getVmAllocationPolicy().getHostList();
 			double smallerTime = Double.MAX_VALUE;
 			// for each host...
-			for (int i = 0; i < list.size(); i++) {
-				Host host = list.get(i);
+			for (Host host : list) {
 				// inform VMs to update processing
 				double time = host.updateVmsProcessing(CloudSim.clock());
 				// what time do we expect that the next cloudlet will finish?
@@ -911,7 +910,7 @@ public class Datacenter extends SimEntity {
 					smallerTime = time;
 				}
 			}
-			// gurantees a minimal interval before scheduling the event
+			// guarantees a minimal interval before scheduling the event
 			if (smallerTime < CloudSim.clock() + CloudSim.getMinTimeBetweenEvents() + 0.01) {
 				smallerTime = CloudSim.clock() + CloudSim.getMinTimeBetweenEvents() + 0.01;
 			}
@@ -931,8 +930,7 @@ public class Datacenter extends SimEntity {
 	 */
 	protected void checkCloudletCompletion() {
 		List<? extends Host> list = getVmAllocationPolicy().getHostList();
-		for (int i = 0; i < list.size(); i++) {
-			Host host = list.get(i);
+		for (Host host : list) {
 			for (Vm vm : host.getVmList()) {
 				while (vm.getCloudletScheduler().isFinishedCloudlets()) {
 					Cloudlet cl = vm.getCloudletScheduler().getNextFinishedCloudlet();
