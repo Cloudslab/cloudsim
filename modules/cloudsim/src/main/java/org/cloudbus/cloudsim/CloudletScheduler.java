@@ -56,11 +56,11 @@ public abstract class CloudletScheduler {
 	 */
 	public CloudletScheduler() {
 		setPreviousTime(0.0);
-		cloudletWaitingList = new LinkedList<ResCloudlet>();
-		cloudletExecList = new LinkedList<ResCloudlet>();
-		cloudletPausedList = new LinkedList<ResCloudlet>();
-		cloudletFinishedList = new LinkedList<ResCloudlet>();
-		cloudletFailedList = new LinkedList<ResCloudlet>();
+		cloudletWaitingList = new LinkedList<>();
+		cloudletExecList = new LinkedList<>();
+		cloudletPausedList = new LinkedList<>();
+		cloudletFinishedList = new LinkedList<>();
+		cloudletFailedList = new LinkedList<>();
 	}
 
 	/**

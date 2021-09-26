@@ -9,8 +9,9 @@ package org.cloudbus.cloudsim;
  */
 public final class Consts {
 
-    /** Suppreses intantiation. */
+    /** Suppresses instantiation. */
     private Consts() {
+        throw new RuntimeException("This class should not be instantiated");
     }
 
     /** One million. */

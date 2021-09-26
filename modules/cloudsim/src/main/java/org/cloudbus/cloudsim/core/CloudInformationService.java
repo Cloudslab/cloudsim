@@ -64,9 +64,9 @@ public class CloudInformationService extends SimEntity {
 	 */
 	public CloudInformationService(String name) throws Exception {
 		super(name);
-		resList = new LinkedList<Integer>();
-		arList = new LinkedList<Integer>();
-		gisList = new LinkedList<Integer>();
+		resList = new LinkedList<>();
+		arList = new LinkedList<>();
+		gisList = new LinkedList<>();
 	}
 
         /**
@@ -89,7 +89,7 @@ public class CloudInformationService extends SimEntity {
 			case CloudSimTags.REQUEST_REGIONAL_GIS:
 
 				// Get ID of an entity that send this event
-				id = ((Integer) ev.getData()).intValue();
+				id = (Integer) ev.getData();
 
 				// Send the regional GIS list back to sender
 				super.send(id, 0L, ev.getTag(), gisList);
@@ -110,7 +110,7 @@ public class CloudInformationService extends SimEntity {
 			case CloudSimTags.RESOURCE_LIST:
 
 				// Get ID of an entity that send this event
-				id = ((Integer) ev.getData()).intValue();
+				id = (Integer) ev.getData();
 
 				// Send the resource list back to the sender
 				super.send(id, 0L, ev.getTag(), resList);
@@ -120,7 +120,7 @@ public class CloudInformationService extends SimEntity {
 			case CloudSimTags.RESOURCE_AR_LIST:
 
 				// Get ID of an entity that send this event
-				id = ((Integer) ev.getData()).intValue();
+				id = (Integer) ev.getData();
 
 				// Send the resource AR list back to the sender
 				super.send(id, 0L, ev.getTag(), arList);
@@ -279,13 +279,9 @@ public class CloudInformationService extends SimEntity {
 			return flag;
 		}
 
-		Integer obj = null;
-		Iterator<Integer> it = list.iterator();
-
 		// a loop to find the match the resource id in a list
-		while (it.hasNext()) {
-			obj = it.next();
-			if (obj.intValue() == id) {
+		for (Integer integer : list) {
+			if (integer == id) {
 				flag = true;
 				break;
 			}
