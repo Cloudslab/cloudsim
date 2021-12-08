@@ -233,11 +233,7 @@ public class Container {
      * @return the current requested total mips
      */
     public double getCurrentRequestedTotalMips() {
-        double totalRequestedMips = 0;
-        for (double mips : getCurrentRequestedMips()) {
-            totalRequestedMips += mips;
-        }
-        return totalRequestedMips;
+        return getCurrentRequestedMips().stream().mapToDouble(mips -> mips).sum();
     }
 
     /**
@@ -246,13 +242,7 @@ public class Container {
      * @return the current requested max mips
      */
     public double getCurrentRequestedMaxMips() {
-        double maxMips = 0;
-        for (double mips : getCurrentRequestedMips()) {
-            if (mips > maxMips) {
-                maxMips = mips;
-            }
-        }
-        return maxMips;
+        return getCurrentRequestedMips().stream().mapToDouble(mips -> mips).filter(mips -> mips >= 0).max().orElse(0);
     }
 
     /**

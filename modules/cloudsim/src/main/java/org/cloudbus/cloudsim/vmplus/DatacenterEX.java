@@ -1,5 +1,7 @@
 package org.cloudbus.cloudsim.vmplus;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
@@ -21,6 +23,8 @@ public class DatacenterEX extends Datacenter {
     // FIXME Find a better way to obtain an unused constant
     private static final int DATACENTER_BOOT_VM_TAG = 2345678;
 
+    @Setter
+    @Getter
     private IVMBootDelayDistribution delayDistribution = new ConstantVMBootDelay(0);
 
     public DatacenterEX(String name, DatacenterCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy,
@@ -32,14 +36,6 @@ public class DatacenterEX extends Datacenter {
                         List<Storage> storageList, double schedulingInterval, IVMBootDelayDistribution delayDistribution)
             throws Exception {
         super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
-        this.delayDistribution = delayDistribution;
-    }
-
-    public IVMBootDelayDistribution getDelayDistribution() {
-        return delayDistribution;
-    }
-
-    public void setDelayDistribution(IVMBootDelayDistribution delayDistribution) {
         this.delayDistribution = delayDistribution;
     }
 

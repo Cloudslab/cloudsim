@@ -22,12 +22,7 @@ public class ContainerPeList {
      * @post $none
      */
     public static <T extends ContainerPe> ContainerPe getById(List<T> peList, int id) {
-        for (ContainerPe pe : peList) {
-            if (pe.getId() == id) {
-                return pe;
-            }
-        }
-        return null;
+        return peList.stream().filter(pe -> pe.getId() == id).findFirst().orElse(null);
     }
 
     /**
@@ -41,10 +36,7 @@ public class ContainerPeList {
      */
     public static <T extends ContainerPe> int getMips(List<T> peList, int id) {
         ContainerPe pe = getById(peList, id);
-        if (pe != null) {
-            return pe.getMips();
-        }
-        return -1;
+        return pe != null ? pe.getMips() : -1;
     }
 
     /**
@@ -56,11 +48,7 @@ public class ContainerPeList {
      * @post $none
      */
     public static <T extends ContainerPe> int getTotalMips(List<T> peList) {
-        int totalMips = 0;
-        for (ContainerPe pe : peList) {
-            totalMips += pe.getMips();
-        }
-        return totalMips;
+        return peList.stream().mapToInt(ContainerPe::getMips).sum();
     }
 
     /**
@@ -110,12 +98,7 @@ public class ContainerPeList {
      * @post $none
      */
     public static <T extends ContainerPe> ContainerPe getFreePe(List<T> peList) {
-        for (ContainerPe pe : peList) {
-            if (pe.getStatus() == ContainerPe.FREE) {
-                return pe;
-            }
-        }
-        return null;
+        return peList.stream().filter(pe -> pe.getStatus() == ContainerPe.FREE).findFirst().orElse(null);
     }
 
     /**
@@ -127,13 +110,7 @@ public class ContainerPeList {
      * @post $result >= 0
      */
     public static <T extends ContainerPe> int getNumberOfFreePes(List<T> peList) {
-        int cnt = 0;
-        for (ContainerPe pe : peList) {
-            if (pe.getStatus() == ContainerPe.FREE) {
-                cnt++;
-            }
-        }
-        return cnt;
+        return (int) peList.stream().filter(pe -> pe.getStatus() == ContainerPe.FREE).count();
     }
 
     /**
@@ -165,13 +142,7 @@ public class ContainerPeList {
      * @post $result >= 0
      */
     public static <T extends ContainerPe> int getNumberOfBusyPes(List<T> peList) {
-        int cnt = 0;
-        for (ContainerPe pe : peList) {
-            if (pe.getStatus() == ContainerPe.BUSY) {
-                cnt++;
-            }
-        }
-        return cnt;
+        return (int) peList.stream().filter(pe -> pe.getStatus() == ContainerPe.BUSY).count();
     }
 
     /**
@@ -188,12 +159,7 @@ public class ContainerPeList {
             String resName,
             int hostId,
             boolean failed) {
-        String status = null;
-        if (failed) {
-            status = "FAILED";
-        } else {
-            status = "WORKING";
-        }
+        String status = failed ? "FAILED" : "WORKING";
 
         Log.printConcatLine(resName, " - Machine: ", hostId, " is ", status);
 
@@ -208,13 +174,7 @@ public class ContainerPeList {
      */
     public static <T extends ContainerPe> void setStatusFailed(List<T> peList, boolean failed) {
         // a loop to set the status of all the PEs in this machine
-        for (ContainerPe pe : peList) {
-            if (failed) {
-                pe.setStatus(ContainerPe.FAILED);
-            } else {
-                pe.setStatus(ContainerPe.FREE);
-            }
-        }
+        peList.forEach(pe -> pe.setStatus(failed ? ContainerPe.FAILED : ContainerPe.FREE));
     }
 
 }

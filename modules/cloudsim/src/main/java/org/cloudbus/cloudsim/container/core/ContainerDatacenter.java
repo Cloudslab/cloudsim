@@ -1,6 +1,9 @@
 package org.cloudbus.cloudsim.container.core;
 
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.*;
@@ -28,6 +31,8 @@ public class ContainerDatacenter extends SimEntity {
     /**
      * The regional cis name.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PROTECTED)
     private String regionalCisName;
 
     /**
@@ -37,6 +42,8 @@ public class ContainerDatacenter extends SimEntity {
     /**
      * The container provisioner.
      */
+    @Setter
+    @Getter
     private ContainerAllocationPolicy containerAllocationPolicy;
 
     /**
@@ -47,6 +54,8 @@ public class ContainerDatacenter extends SimEntity {
     /**
      * The storage list.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PROTECTED)
     private List<Storage> storageList;
 
     /**
@@ -1126,24 +1135,6 @@ public class ContainerDatacenter extends SimEntity {
     }
 
     /**
-     * Gets the regional cis name.
-     *
-     * @return the regional cis name
-     */
-    protected String getRegionalCisName() {
-        return regionalCisName;
-    }
-
-    /**
-     * Sets the regional cis name.
-     *
-     * @param regionalCisName the new regional cis name
-     */
-    protected void setRegionalCisName(String regionalCisName) {
-        this.regionalCisName = regionalCisName;
-    }
-
-    /**
      * Gets the vm allocation policy.
      *
      * @return the vm allocation policy
@@ -1177,24 +1168,6 @@ public class ContainerDatacenter extends SimEntity {
      */
     protected void setLastProcessTime(double lastProcessTime) {
         this.lastProcessTime = lastProcessTime;
-    }
-
-    /**
-     * Gets the storage list.
-     *
-     * @return the storage list
-     */
-    protected List<Storage> getStorageList() {
-        return storageList;
-    }
-
-    /**
-     * Sets the storage list.
-     *
-     * @param storageList the new storage list
-     */
-    protected void setStorageList(List<Storage> storageList) {
-        this.storageList = storageList;
     }
 
     /**
@@ -1232,15 +1205,6 @@ public class ContainerDatacenter extends SimEntity {
      */
     protected void setSchedulingInterval(double schedulingInterval) {
         this.schedulingInterval = schedulingInterval;
-    }
-
-
-    public ContainerAllocationPolicy getContainerAllocationPolicy() {
-        return containerAllocationPolicy;
-    }
-
-    public void setContainerAllocationPolicy(ContainerAllocationPolicy containerAllocationPolicy) {
-        this.containerAllocationPolicy = containerAllocationPolicy;
     }
 
 

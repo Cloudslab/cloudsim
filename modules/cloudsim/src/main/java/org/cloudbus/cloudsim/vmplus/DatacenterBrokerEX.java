@@ -227,7 +227,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
     /**
      * Submits the list of vms after a given delay
      * 
-     * @param list
+     * @param vms
      * @param delay
      */
     public void createVmsAfter(List<? extends Vm> vms, double delay) {
@@ -363,14 +363,13 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      */
     public void destroyVMList(final List<? extends Vm> vms) {
         if (getVmDestructsAcks() != getVmsDestroyed()) {
-            throw new IllegalStateException("#" + getVmsDestroyed() + " have been marked for termination, but only #"
-                    + getVmDestructsAcks() + " acknowlegdements have been received.");
+            throw new IllegalStateException("#%d have been marked for termination, but only #%d acknowlegdements have been received.".formatted(getVmsDestroyed(), getVmDestructsAcks()));
         }
 
         int requestedVmTerminations = 0;
         for (final Vm vm : vms) {
             if (vm.getHost() == null || vm.getHost().getDatacenter() == null) {
-                Log.print("VM " + vm.getId() + " has not been assigned in a valid way and can not be terminated.");
+                Log.print("VM %d has not been assigned in a valid way and can not be terminated.".formatted(vm.getId()));
                 continue;
             }
 
