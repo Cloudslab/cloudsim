@@ -211,36 +211,26 @@ public class ContainerDatacenterBroker extends SimEntity {
     public void processEvent(SimEvent ev) {
         switch (ev.getTag()) {
             // Resource characteristics request
-            case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST:
-                processResourceCharacteristicsRequest(ev);
-                break;
+            case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST -> processResourceCharacteristicsRequest(ev);
+
             // Resource characteristics answer
-            case CloudSimTags.RESOURCE_CHARACTERISTICS:
-                processResourceCharacteristics(ev);
-                break;
+            case CloudSimTags.RESOURCE_CHARACTERISTICS -> processResourceCharacteristics(ev);
+
             // VM Creation answer
-            case CloudSimTags.VM_CREATE_ACK:
-                processVmCreate(ev);
-                break;
+            case CloudSimTags.VM_CREATE_ACK -> processVmCreate(ev);
+
             // New VM Creation answer
-            case containerCloudSimTags.VM_NEW_CREATE:
-                processNewVmCreate(ev);
-                break;
+            case containerCloudSimTags.VM_NEW_CREATE -> processNewVmCreate(ev);
+
             // A finished cloudlet returned
-            case CloudSimTags.CLOUDLET_RETURN:
-                processCloudletReturn(ev);
-                break;
+            case CloudSimTags.CLOUDLET_RETURN -> processCloudletReturn(ev);
+
             // if the simulation finishes
-            case CloudSimTags.END_OF_SIMULATION:
-                shutdownEntity();
-                break;
-            case containerCloudSimTags.CONTAINER_CREATE_ACK:
-                processContainerCreate(ev);
-                break;
+            case CloudSimTags.END_OF_SIMULATION -> shutdownEntity();
+            case containerCloudSimTags.CONTAINER_CREATE_ACK -> processContainerCreate(ev);
+
             // other unknown tags are processed by this method
-            default:
-                processOtherEvent(ev);
-                break;
+            default -> processOtherEvent(ev);
         }
     }
 
@@ -579,8 +569,7 @@ public class ContainerDatacenterBroker extends SimEntity {
             ContainerCloudlet cloudlet = getCloudletList().get(i);
                 //Log.printLine("Containers Created" + getContainersCreated());
 
-                if (cloudlet.getUtilizationModelCpu() instanceof UtilizationModelPlanetLabInMemory) {
-                    UtilizationModelPlanetLabInMemory temp = (UtilizationModelPlanetLabInMemory) cloudlet.getUtilizationModelCpu();
+                if (cloudlet.getUtilizationModelCpu() instanceof UtilizationModelPlanetLabInMemory temp) {
                     double[] cloudletUsage = temp.getData();
                     Percentile percentile = new Percentile();
                     double percentileUsage = percentile.evaluate(cloudletUsage, getOverBookingfactor());

@@ -70,10 +70,10 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
     /** A pattern for a string representing a decimal double number. */
     private static final String DOUBLE_GROUP_PATTERN = "(\\-?\\d+(\\.\\d+)?)";
     /** A regular expression for strings of the format (latitude longitude). */
-    private static Pattern COORD_PATTERN = Pattern.compile("\\(\\s*" + DOUBLE_GROUP_PATTERN + "\\s+"
+    private static final Pattern COORD_PATTERN = Pattern.compile("\\(\\s*" + DOUBLE_GROUP_PATTERN + "\\s+"
             + DOUBLE_GROUP_PATTERN + "\\s*\\)");
 
-    private DatabaseReader reader;
+    private final DatabaseReader reader;
 
     private final Map<String, double[]> nodesTable = new HashMap<>();
     private final Map<Pair<String, String>, Double> latencyTable = new HashMap<>();
@@ -181,7 +181,7 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
             }
         }
         CustomLog.printf(Level.FINER, "Total %d ping measurments definitions parsed", latencyTable.size());
-        CustomLog.print(Level.FINER, "The definitions of the following nodes are missing." + unknownNodes.toString());
+        CustomLog.print(Level.FINER, "The definitions of the following nodes are missing." + unknownNodes);
     }
 
     private void parseNodesDefitions(final BufferedReader defs) throws Exception {
@@ -370,7 +370,7 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
      * ArrayList in every call to updateHeap! <strong>NOTE:<\strong> do not
      * modify from other methods!
      */
-    private List<PingERLatencyEntry> elemsWithMatchingNodes = new ArrayList<>();
+    private final List<PingERLatencyEntry> elemsWithMatchingNodes = new ArrayList<>();
 
     /**
      * Adds the new entry to the heap, only if there is no other entry with less

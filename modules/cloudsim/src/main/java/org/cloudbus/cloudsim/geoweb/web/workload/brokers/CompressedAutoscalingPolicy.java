@@ -22,13 +22,13 @@ import java.util.*;
  */
 public class CompressedAutoscalingPolicy implements IAutoscalingPolicy {
 
-    private StringBuilder debugSB = new StringBuilder();
+    private final StringBuilder debugSB = new StringBuilder();
 
-    private long appId;
-    private double triggerCPU;
-    private double triggerRAM;
-    private int n;
-    private double delta;
+    private final long appId;
+    private final double triggerCPU;
+    private final double triggerRAM;
+    private final int n;
+    private final double delta;
 
     public CompressedAutoscalingPolicy(long appId, double triggerCPU, double triggerRAM, int n, double delta) {
         super();
@@ -41,8 +41,7 @@ public class CompressedAutoscalingPolicy implements IAutoscalingPolicy {
 
     @Override
     public void scale(final MonitoringBorkerEX broker) {
-        if (broker instanceof WebBroker) {
-            WebBroker webBroker = (WebBroker) broker;
+        if (broker instanceof WebBroker webBroker) {
             ILoadBalancer loadBalancer = webBroker.getLoadBalancers().get(appId);
             Set<Integer> usedASServers = webBroker.getUsedASServers();
 
@@ -150,7 +149,7 @@ public class CompressedAutoscalingPolicy implements IAutoscalingPolicy {
     }
 
     private static class CloudPriceComparator implements Comparator<HddVm> {
-        private IVmBillingPolicy policy;
+        private final IVmBillingPolicy policy;
 
         public CloudPriceComparator(final IVmBillingPolicy policy) {
             super();

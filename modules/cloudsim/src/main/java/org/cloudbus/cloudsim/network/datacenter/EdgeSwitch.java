@@ -92,7 +92,6 @@ public class EdgeSwitch extends Switch {
 		Switch sw = uplinkswitches.get(0);
 		List<NetworkPacket> pktlist = uplinkswitchpktlist.computeIfAbsent(sw.getId(), k -> new ArrayList<>());
 		pktlist.add(hspkt);
-		return;
 
 	}
 

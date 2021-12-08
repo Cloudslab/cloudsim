@@ -111,7 +111,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
      */
     @Override
     public double updateVmProcessing(final double currentTime, final List<Double> mipsShare) {
-        return updateVmProcessing(currentTime, mipsShare, Arrays.asList());
+        return updateVmProcessing(currentTime, mipsShare, List.of());
     }
 
     /**
@@ -444,7 +444,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
     public void cloudletFinish(final ResCloudlet rcl) {
         rcl.setCloudletStatus(HddCloudlet.SUCCESS);
         rcl.finalizeCloudlet();
-        ((List) getCloudletFinishedList()).add(rcl);
+        getCloudletFinishedList().add(rcl);
     }
 
     /**
@@ -791,7 +791,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void addFailedCloudlet(final HddCloudlet cl) throws Exception {
         cl.setCloudletStatus(Cloudlet.FAILED);
-        ((List) getCloudletFailedList()).add(new HddResCloudlet(cl));
+        getCloudletFailedList().add(new HddResCloudlet(cl));
     }
 
 }

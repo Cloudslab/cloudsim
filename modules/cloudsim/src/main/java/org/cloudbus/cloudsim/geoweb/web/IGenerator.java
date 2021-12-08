@@ -6,7 +6,7 @@ package org.cloudbus.cloudsim.geoweb.web;
  * The order of generation may rely on the time - e.g. new entities are
  * generated and cached every 5 seconds. In this case the generator relies on an
  * external caller to periodically notify it of the time - see the
- * {@link IGenerator.notifyOfTime} method.
+ * {@link #notifyOfTime} method.
  * 
  * 
  * @author nikolay.grozev

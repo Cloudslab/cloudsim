@@ -26,7 +26,7 @@ import org.cloudbus.cloudsim.Vm;
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
- * @todo Attributes should be private
+ * //TODO Attributes should be private
  */
 public class NetworkVm extends Vm implements Comparable<NetworkVm> {
         /**
@@ -35,7 +35,7 @@ public class NetworkVm extends Vm implements Comparable<NetworkVm> {
 	public ArrayList<NetworkCloudlet> cloudletlist;
 
         /**
-         * @todo It doesn't appear to be used.
+         * //TODO It doesn't appear to be used.
          */
 	int type;
 
@@ -45,12 +45,12 @@ public class NetworkVm extends Vm implements Comparable<NetworkVm> {
 	public ArrayList<HostPacket> recvPktlist;
 
         /**
-         * @todo It doesn't appear to be used.
+         * //TODO It doesn't appear to be used.
          */
 	public double memory;
 
         /**
-         * @todo It doesn't appear to be used.
+         * //TODO It doesn't appear to be used.
          */
 	public boolean flagfree;
 
@@ -80,7 +80,7 @@ public class NetworkVm extends Vm implements Comparable<NetworkVm> {
 
 	@Override
 	public int compareTo(NetworkVm arg0) {
-		NetworkVm hs = (NetworkVm) arg0;
+		NetworkVm hs = arg0;
 		return Double.compare(finishtime, hs.finishtime);
 	}
 }

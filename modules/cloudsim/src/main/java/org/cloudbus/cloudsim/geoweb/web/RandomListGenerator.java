@@ -16,7 +16,7 @@ public class RandomListGenerator<T> implements IGenerator<T> {
 
     private final Random rand = new Random();
 
-    private LinkedHashMap<T, Double> values = new LinkedHashMap<>();
+    private final LinkedHashMap<T, Double> values = new LinkedHashMap<>();
     private final double maxValue;
     private T peeked;
 

@@ -23,9 +23,9 @@ package org.cloudbus.cloudsim.geoweb.web.workload.freq;
  */
 public class PeriodicStochasticFrequencyFunction extends FrequencyFunction {
 
-    private double periodLength;
-    private double nullPoint;
-    private CompositeValuedSet valuedSet;
+    private final double periodLength;
+    private final double nullPoint;
+    private final CompositeValuedSet valuedSet;
 
     public PeriodicStochasticFrequencyFunction(double unit, double periodLength, double nullPoint,
             CompositeValuedSet valuedSet) {

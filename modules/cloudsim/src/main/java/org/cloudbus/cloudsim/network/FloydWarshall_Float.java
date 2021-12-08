@@ -43,7 +43,7 @@ public class FloydWarshall_Float {
 	 * Initialization the matrix.
 	 * 
 	 * @param numVertices number of nodes
-         * @todo The class doesn't have a constructor. This should be the constructor.
+         * //TODO The class doesn't have a constructor. This should be the constructor.
 	 */
 	public void initialize(int numVertices) {
 		this.numVertices = numVertices;

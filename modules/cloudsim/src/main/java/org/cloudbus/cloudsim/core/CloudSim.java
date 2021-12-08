@@ -499,7 +499,7 @@ public class CloudSim {
 	 * called in simulations.
 	 * 
 	 * @return true, if successful otherwise
-         * @todo If the method shouldn't be called by the user,
+         * //TODO If the method shouldn't be called by the user,
          * it should be protected in any way, such as changing
          * its visibility to package.
 	 */
@@ -758,15 +758,12 @@ public class CloudSim {
 
 		// Ok now process it
 		switch (e.getType()) {
-			case SimEvent.ENULL:
-				throw new IllegalArgumentException("Event has a null type.");
-
-			case SimEvent.CREATE:
+			case SimEvent.ENULL -> throw new IllegalArgumentException("Event has a null type.");
+			case SimEvent.CREATE -> {
 				SimEntity newe = (SimEntity) e.getData();
 				addEntityDynamically(newe);
-				break;
-
-			case SimEvent.SEND:
+			}
+			case SimEvent.SEND -> {
 				// Check for matching wait
 				dest = e.getDestination();
 				if (dest < 0) {
@@ -788,19 +785,17 @@ public class CloudSim {
 						deferred.addEvent(e);
 					}
 				}
-				break;
-
-			case SimEvent.HOLD_DONE:
+			}
+			case SimEvent.HOLD_DONE -> {
 				src = e.getSource();
 				if (src < 0) {
 					throw new IllegalArgumentException("Null entity holding.");
 				} else {
 					entities.get(src).setState(SimEntity.RUNNABLE);
 				}
-				break;
-
-			default:
-				break;
+			}
+			default -> {
+			}
 		}
 	}
 

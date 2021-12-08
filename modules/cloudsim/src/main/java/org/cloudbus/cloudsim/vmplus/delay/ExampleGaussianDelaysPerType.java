@@ -64,6 +64,6 @@ public class ExampleGaussianDelaysPerType {
             // .put(of("hs1.8xlarge", NIX_OS), of())
 
             // === Wildcards
-            .put(of((String) null, NIX_OS), of(96.9, 10.0)).put(of((String) null, WINDOWS), of(810.2, 10.0)).build();
+            .put(of(null, NIX_OS), of(96.9, 10.0)).put(of(null, WINDOWS), of(810.2, 10.0)).build();
 
 }

@@ -117,17 +117,10 @@ public class VMex extends Vm {
      */
     public void setStatus(final VMStatus status) {
         switch (status) {
-        case INITIALISING:
-            setSubmissionTime(getCurrentTime());
-            break;
-        case RUNNING:
-            setStartTime(getCurrentTime());
-            break;
-        case TERMINATED:
-            setEndTime(getCurrentTime());
-            break;
-        default:
-            throw new IllegalArgumentException("Unknown status " + status.name());
+            case INITIALISING -> setSubmissionTime(getCurrentTime());
+            case RUNNING -> setStartTime(getCurrentTime());
+            case TERMINATED -> setEndTime(getCurrentTime());
+            default -> throw new IllegalArgumentException("Unknown status " + status.name());
         }
 
         this.status = status;

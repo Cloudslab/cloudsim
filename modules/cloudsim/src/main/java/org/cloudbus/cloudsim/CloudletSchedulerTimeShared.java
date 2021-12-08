@@ -62,7 +62,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 			if (remainingLength == 0) {// finished: remove from the list
 				toRemove.add(rcl);
 				cloudletFinish(rcl);
-				continue;
 			}
 		}
 		getCloudletExecList().removeAll(toRemove);
@@ -276,7 +275,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	@Override
 	public double getTotalUtilizationOfCpu(double time) {
                 /*
-                 * @todo 
+                 * //TODO
                  */
 		double totalUtilization = 0;
 		for (ResCloudlet gl : getCloudletExecList()) {
@@ -318,19 +317,19 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
-            /*@todo It isn't being used any the the given parameters.*/
+            /*//TODO It isn't being used any the the given parameters.*/
             return getCapacity(getCurrentMipsShare());
 	}
 
 	@Override
 	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
-                //@todo The method is not implemented, in fact
+                ////TODO The method is not implemented, in fact
 		return 0.0;
 	}
 
 	@Override
 	public double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time) {
-                //@todo The method is not implemented, in fact
+                ////TODO The method is not implemented, in fact
 		// TODO Auto-generated method stub
 		return 0.0;
 	}

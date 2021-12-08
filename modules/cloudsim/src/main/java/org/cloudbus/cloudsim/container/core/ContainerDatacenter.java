@@ -142,142 +142,90 @@ public class ContainerDatacenter extends SimEntity {
 
         switch (ev.getTag()) {
             // Resource characteristics inquiry
-            case CloudSimTags.RESOURCE_CHARACTERISTICS:
+            case CloudSimTags.RESOURCE_CHARACTERISTICS -> {
                 srcId = (Integer) ev.getData();
                 sendNow(srcId, ev.getTag(), getCharacteristics());
-                break;
+            }
 
             // Resource dynamic info inquiry
-            case CloudSimTags.RESOURCE_DYNAMICS:
+            case CloudSimTags.RESOURCE_DYNAMICS -> {
                 srcId = (Integer) ev.getData();
                 sendNow(srcId, ev.getTag(), 0);
-                break;
-
-            case CloudSimTags.RESOURCE_NUM_PE:
+            }
+            case CloudSimTags.RESOURCE_NUM_PE -> {
                 srcId = (Integer) ev.getData();
                 int numPE = getCharacteristics().getNumberOfPes();
                 sendNow(srcId, ev.getTag(), numPE);
-                break;
-
-            case CloudSimTags.RESOURCE_NUM_FREE_PE:
+            }
+            case CloudSimTags.RESOURCE_NUM_FREE_PE -> {
                 srcId = (Integer) ev.getData();
                 int freePesNumber = getCharacteristics().getNumberOfFreePes();
                 sendNow(srcId, ev.getTag(), freePesNumber);
-                break;
+            }
 
             // New Cloudlet arrives
-            case CloudSimTags.CLOUDLET_SUBMIT:
-                processCloudletSubmit(ev, false);
-                break;
+            case CloudSimTags.CLOUDLET_SUBMIT -> processCloudletSubmit(ev, false);
+
 
             // New Cloudlet arrives, but the sender asks for an ack
-            case CloudSimTags.CLOUDLET_SUBMIT_ACK:
-                processCloudletSubmit(ev, true);
-                break;
+            case CloudSimTags.CLOUDLET_SUBMIT_ACK -> processCloudletSubmit(ev, true);
+
 
             // Cancels a previously submitted Cloudlet
-            case CloudSimTags.CLOUDLET_CANCEL:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_CANCEL);
-                break;
+            case CloudSimTags.CLOUDLET_CANCEL -> processCloudlet(ev, CloudSimTags.CLOUDLET_CANCEL);
+
 
             // Pauses a previously submitted Cloudlet
-            case CloudSimTags.CLOUDLET_PAUSE:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_PAUSE);
-                break;
+            case CloudSimTags.CLOUDLET_PAUSE -> processCloudlet(ev, CloudSimTags.CLOUDLET_PAUSE);
+
 
             // Pauses a previously submitted Cloudlet, but the sender
             // asks for an acknowledgement
-            case CloudSimTags.CLOUDLET_PAUSE_ACK:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_PAUSE_ACK);
-                break;
+            case CloudSimTags.CLOUDLET_PAUSE_ACK -> processCloudlet(ev, CloudSimTags.CLOUDLET_PAUSE_ACK);
+
 
             // Resumes a previously submitted Cloudlet
-            case CloudSimTags.CLOUDLET_RESUME:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_RESUME);
-                break;
+            case CloudSimTags.CLOUDLET_RESUME -> processCloudlet(ev, CloudSimTags.CLOUDLET_RESUME);
+
 
             // Resumes a previously submitted Cloudlet, but the sender
             // asks for an acknowledgement
-            case CloudSimTags.CLOUDLET_RESUME_ACK:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_RESUME_ACK);
-                break;
+            case CloudSimTags.CLOUDLET_RESUME_ACK -> processCloudlet(ev, CloudSimTags.CLOUDLET_RESUME_ACK);
+
 
             // Moves a previously submitted Cloudlet to a different resource
-            case CloudSimTags.CLOUDLET_MOVE:
-                processCloudletMove((int[]) ev.getData(), CloudSimTags.CLOUDLET_MOVE);
-                break;
+            case CloudSimTags.CLOUDLET_MOVE -> processCloudletMove((int[]) ev.getData(), CloudSimTags.CLOUDLET_MOVE);
+
 
             // Moves a previously submitted Cloudlet to a different resource
-            case CloudSimTags.CLOUDLET_MOVE_ACK:
-                processCloudletMove((int[]) ev.getData(), CloudSimTags.CLOUDLET_MOVE_ACK);
-                break;
+            case CloudSimTags.CLOUDLET_MOVE_ACK -> processCloudletMove((int[]) ev.getData(), CloudSimTags.CLOUDLET_MOVE_ACK);
+
 
             // Checks the status of a Cloudlet
-            case CloudSimTags.CLOUDLET_STATUS:
-                processCloudletStatus(ev);
-                break;
+            case CloudSimTags.CLOUDLET_STATUS -> processCloudletStatus(ev);
+
 
             // Ping packet
-            case CloudSimTags.INFOPKT_SUBMIT:
-                processPingRequest(ev);
-                break;
-
-            case CloudSimTags.VM_CREATE:
-                processVmCreate(ev, false);
-                break;
-
-            case CloudSimTags.VM_CREATE_ACK:
-                processVmCreate(ev, true);
-                break;
-
-            case CloudSimTags.VM_DESTROY:
-                processVmDestroy(ev, false);
-                break;
-
-            case CloudSimTags.VM_DESTROY_ACK:
-                processVmDestroy(ev, true);
-                break;
-
-            case CloudSimTags.VM_MIGRATE:
-                processVmMigrate(ev, false);
-                break;
-
-            case CloudSimTags.VM_MIGRATE_ACK:
-                processVmMigrate(ev, true);
-                break;
-
-            case CloudSimTags.VM_DATA_ADD:
-                processDataAdd(ev, false);
-                break;
-
-            case CloudSimTags.VM_DATA_ADD_ACK:
-                processDataAdd(ev, true);
-                break;
-
-            case CloudSimTags.VM_DATA_DEL:
-                processDataDelete(ev, false);
-                break;
-
-            case CloudSimTags.VM_DATA_DEL_ACK:
-                processDataDelete(ev, true);
-                break;
-
-            case CloudSimTags.VM_DATACENTER_EVENT:
+            case CloudSimTags.INFOPKT_SUBMIT -> processPingRequest(ev);
+            case CloudSimTags.VM_CREATE -> processVmCreate(ev, false);
+            case CloudSimTags.VM_CREATE_ACK -> processVmCreate(ev, true);
+            case CloudSimTags.VM_DESTROY -> processVmDestroy(ev, false);
+            case CloudSimTags.VM_DESTROY_ACK -> processVmDestroy(ev, true);
+            case CloudSimTags.VM_MIGRATE -> processVmMigrate(ev, false);
+            case CloudSimTags.VM_MIGRATE_ACK -> processVmMigrate(ev, true);
+            case CloudSimTags.VM_DATA_ADD -> processDataAdd(ev, false);
+            case CloudSimTags.VM_DATA_ADD_ACK -> processDataAdd(ev, true);
+            case CloudSimTags.VM_DATA_DEL -> processDataDelete(ev, false);
+            case CloudSimTags.VM_DATA_DEL_ACK -> processDataDelete(ev, true);
+            case CloudSimTags.VM_DATACENTER_EVENT -> {
                 updateCloudletProcessing();
                 checkCloudletCompletion();
-                break;
-            case containerCloudSimTags.CONTAINER_SUBMIT:
-                processContainerSubmit(ev, true);
-                break;
+            }
+            case containerCloudSimTags.CONTAINER_SUBMIT -> processContainerSubmit(ev, true);
+            case containerCloudSimTags.CONTAINER_MIGRATE -> processContainerMigrate(ev, false);
 
-            case containerCloudSimTags.CONTAINER_MIGRATE:
-                processContainerMigrate(ev, false);
-                // other unknown tags are processed by this method
-                break;
-
-            default:
-                processOtherEvent(ev);
-                break;
+            // other unknown tags are processed by this method
+            default -> processOtherEvent(ev);
         }
     }
 
@@ -696,27 +644,13 @@ public class ContainerDatacenter extends SimEntity {
 
         // begins executing ....
         switch (type) {
-            case CloudSimTags.CLOUDLET_CANCEL:
-                processCloudletCancel(cloudletId, userId, vmId, containerId);
-                break;
-
-            case CloudSimTags.CLOUDLET_PAUSE:
-                processCloudletPause(cloudletId, userId, vmId, containerId, false);
-                break;
-
-            case CloudSimTags.CLOUDLET_PAUSE_ACK:
-                processCloudletPause(cloudletId, userId, vmId, containerId, true);
-                break;
-
-            case CloudSimTags.CLOUDLET_RESUME:
-                processCloudletResume(cloudletId, userId, vmId, containerId, false);
-                break;
-
-            case CloudSimTags.CLOUDLET_RESUME_ACK:
-                processCloudletResume(cloudletId, userId, vmId, containerId, true);
-                break;
-            default:
-                break;
+            case CloudSimTags.CLOUDLET_CANCEL -> processCloudletCancel(cloudletId, userId, vmId, containerId);
+            case CloudSimTags.CLOUDLET_PAUSE -> processCloudletPause(cloudletId, userId, vmId, containerId, false);
+            case CloudSimTags.CLOUDLET_PAUSE_ACK -> processCloudletPause(cloudletId, userId, vmId, containerId, true);
+            case CloudSimTags.CLOUDLET_RESUME -> processCloudletResume(cloudletId, userId, vmId, containerId, false);
+            case CloudSimTags.CLOUDLET_RESUME_ACK -> processCloudletResume(cloudletId, userId, vmId, containerId, true);
+            default -> {
+            }
         }
 
     }
@@ -1170,7 +1104,7 @@ public class ContainerDatacenter extends SimEntity {
      */
     @SuppressWarnings("unchecked")
     public <T extends ContainerHost> List<T> getHostList() {
-        return (List<T>) getCharacteristics().getHostList();
+        return getCharacteristics().getHostList();
     }
 
     /**

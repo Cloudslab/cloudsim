@@ -32,12 +32,7 @@ public class HostList {
 	 * @post $none
 	 */
 	public static <T extends Host> T getById(List<T> hostList, int id) {
-		for (T host : hostList) {
-			if (host.getId() == id) {
-				return host;
-			}
-		}
-		return null;
+		return hostList.stream().filter(host -> host.getId() == id).findFirst().orElse(null);
 	}
 
 	/**
@@ -50,10 +45,7 @@ public class HostList {
 	 * @post $result >= 0
 	 */
 	public static <T extends Host> int getNumberOfPes(List<T> hostList) {
-		int numberOfPes = 0;
-		for (T host : hostList) {
-			numberOfPes += host.getPeList().size();
-		}
+		int numberOfPes = hostList.stream().mapToInt(host -> host.getPeList().size()).sum();
 		return numberOfPes;
 	}
 

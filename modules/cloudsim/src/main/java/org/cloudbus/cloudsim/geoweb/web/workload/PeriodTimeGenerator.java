@@ -47,7 +47,7 @@ public class PeriodTimeGenerator implements IWorkloadGenerator {
             for (int i = 0; i * period - leftOver < periodLen && count > 0; i++) {
                 count--;
                 time = startTime + i * period - leftOver;
-                result.put(time, Arrays.asList(sessGen.generateSessionAt(time)));
+                result.put(time, List.of(sessGen.generateSessionAt(time)));
             }
             leftOver = periodLen + startTime - time;
         }

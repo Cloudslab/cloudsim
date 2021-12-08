@@ -22,10 +22,10 @@ public class FiniteValuedInterval {
     private static final Pattern INTERVAL_PATTERN = Pattern
             .compile("(\\(|\\[)(\\d+\\.?\\d*),(\\d+\\.?\\d*)(\\)|\\])m=(\\d+\\.?\\d*)std=(\\d+\\.?\\d*)");
 
-    private double start;
-    private boolean startIncluded;
-    private double end;
-    private boolean endIncluded;
+    private final double start;
+    private final boolean startIncluded;
+    private final double end;
+    private final boolean endIncluded;
 
     private double value;
     private GaussianGenerator generator;

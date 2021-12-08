@@ -32,7 +32,7 @@ public class PeriodWorkloadGenerator implements IWorkloadGenerator {
         for (int i = 0; i < periodLen / period && sessionsNumber > 0; i++) {
             sessionsNumber--;
             double startAt = startTime + i * period;
-            result.put(startAt, Arrays.asList(sessGen.generateSessionAt(startAt)));
+            result.put(startAt, List.of(sessGen.generateSessionAt(startAt)));
         }
         return result;
     }

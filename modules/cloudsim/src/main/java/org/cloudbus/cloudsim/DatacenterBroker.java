@@ -122,7 +122,7 @@ public class DatacenterBroker extends SimEntity {
 	 * @pre list !=null
 	 * @post $none
          * 
-         * @todo The name of the method is confused with the {@link #submitCloudlets()},
+         * //TODO The name of the method is confused with the {@link #submitCloudlets()},
          * that in fact submit cloudlets to VMs. The term "submit" is being used
          * ambiguously. The method {@link #submitCloudlets()} would be named "sendCloudletsToVMs"
          * 
@@ -149,30 +149,23 @@ public class DatacenterBroker extends SimEntity {
 	@Override
 	public void processEvent(SimEvent ev) {
 		switch (ev.getTag()) {
-		// Resource characteristics request
-			case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST:
-				processResourceCharacteristicsRequest(ev);
-				break;
+			// Resource characteristics request
+			case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST -> processResourceCharacteristicsRequest(ev);
+
 			// Resource characteristics answer
-			case CloudSimTags.RESOURCE_CHARACTERISTICS:
-				processResourceCharacteristics(ev);
-				break;
+			case CloudSimTags.RESOURCE_CHARACTERISTICS -> processResourceCharacteristics(ev);
+
 			// VM Creation answer
-			case CloudSimTags.VM_CREATE_ACK:
-				processVmCreate(ev);
-				break;
+			case CloudSimTags.VM_CREATE_ACK -> processVmCreate(ev);
+
 			// A finished cloudlet returned
-			case CloudSimTags.CLOUDLET_RETURN:
-				processCloudletReturn(ev);
-				break;
+			case CloudSimTags.CLOUDLET_RETURN -> processCloudletReturn(ev);
+
 			// if the simulation finishes
-			case CloudSimTags.END_OF_SIMULATION:
-				shutdownEntity();
-				break;
+			case CloudSimTags.END_OF_SIMULATION -> shutdownEntity();
+
 			// other unknown tags are processed by this method
-			default:
-				processOtherEvent(ev);
-				break;
+			default -> processOtherEvent(ev);
 		}
 	}
 
@@ -301,7 +294,7 @@ public class DatacenterBroker extends SimEntity {
 	 * @param ev a SimEvent object
 	 * @pre ev != null
 	 * @post $none
-         * @todo to ensure the method will be overridden, it should be defined 
+         * //TODO to ensure the method will be overridden, it should be defined
          * as abstract in a super class from where new brokers have to be extended.
 	 */
 	protected void processOtherEvent(SimEvent ev) {

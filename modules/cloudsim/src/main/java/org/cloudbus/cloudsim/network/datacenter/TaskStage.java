@@ -23,7 +23,7 @@ package org.cloudbus.cloudsim.network.datacenter;
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 1.0
- * @todo Attributes should be defined as private.
+ * //TODO Attributes should be defined as private.
  */
 public class TaskStage {
 	int vpeer;
@@ -31,7 +31,7 @@ public class TaskStage {
         /**
          * The task type, either {@link NetworkConstants#EXECUTION}, 
          * {@link NetworkConstants#WAIT_SEND} or {@link NetworkConstants#WAIT_RECV}.
-         * @todo It would be used enum instead of int constants.
+         * //TODO It would be used enum instead of int constants.
          */
 	int type;
 

@@ -69,7 +69,7 @@ public class InfoPacket implements Packet {
 	private long pingSize;
 
 	/** The level of service type. 
-         @todo Is it the Type of Service (ToS) of IPv4, like in
+         //TODO Is it the Type of Service (ToS) of IPv4, like in
          the {@link Cloudlet#netToS}? If yes, so the names would
          be standardized. */
 	private int netServiceType;
@@ -441,7 +441,7 @@ public class InfoPacket implements Packet {
 	 * @return an Integer Array of hop ids
 	 * @pre $none
 	 * @post $none
-         * @todo Why does not return an array of Integer (that is the type of the 
+         * //TODO Why does not return an array of Integer (that is the type of the
          * entities attribute)? In fact, this method does not appear to be used anywhere.
 	 */
 	public Object[] getDetailHops() {
@@ -458,7 +458,7 @@ public class InfoPacket implements Packet {
 	 * @return an Integer Array of entry time
 	 * @pre $none
 	 * @post $none
-         * @todo Why does not return an array of Double (that is the type of the 
+         * //TODO Why does not return an array of Double (that is the type of the
          * entyTimes attribute)? In fact, this method does not appear to be used anywhere.
 	 */
 	public Object[] getDetailEntryTimes() {
@@ -555,15 +555,11 @@ public class InfoPacket implements Packet {
 	public boolean setTag(int tag) {
 		boolean flag = false;
 		switch (tag) {
-			case CloudSimTags.INFOPKT_SUBMIT:
-			case CloudSimTags.INFOPKT_RETURN:
+			case CloudSimTags.INFOPKT_SUBMIT, CloudSimTags.INFOPKT_RETURN -> {
 				this.tag = tag;
 				flag = true;
-				break;
-
-			default:
-				flag = false;
-				break;
+			}
+			default -> flag = false;
 		}
 
 		return flag;

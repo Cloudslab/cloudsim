@@ -8,6 +8,8 @@
 
 package org.cloudbus.cloudsim;
 
+import lombok.Getter;
+
 /**
  * A class for representing a physical file in a DataCloud environment
  * 
@@ -30,6 +32,7 @@ public class File {
 	/** A transaction time for adding, deleting or getting the file. 
          * @see #setTransactionTime(double) 
          */
+	@Getter
 	private double transactionTime;
 
 	/** Denotes that this file has not been registered to a Replica Catalogue. */
@@ -411,15 +414,6 @@ public class File {
 
 		transactionTime = time;
 		return true;
-	}
-
-	/**
-	 * Gets the last transaction time of the file (in second).
-	 * 
-	 * @return the transaction time (in second)
-	 */
-	public double getTransactionTime() {
-		return transactionTime;
 	}
 
 }

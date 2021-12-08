@@ -17,7 +17,7 @@ import java.io.OutputStream;
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
- * @todo To add a method to print formatted text, such as the 
+ * //TODO To add a method to print formatted text, such as the
  * {@link String#format(java.lang.String, java.lang.Object...)} method.
  */
 public class Log {
@@ -33,7 +33,7 @@ public class Log {
 	private static boolean disabled;
 	
 	/** Buffer to avoid creating new string builder upon every print. */
-	private static StringBuilder buffer = new StringBuilder();		    
+	private static final StringBuilder buffer = new StringBuilder();
 
 	/**
 	 * Prints a message.

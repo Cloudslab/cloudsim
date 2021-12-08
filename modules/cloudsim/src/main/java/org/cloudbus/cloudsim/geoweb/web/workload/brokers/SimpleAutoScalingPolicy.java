@@ -24,8 +24,8 @@ public class SimpleAutoScalingPolicy implements IAutoscalingPolicy {
     private final double scaleDownCPUTrigger;
     private final double coolDownPeriod;
 
-    private long appId;
-    private StringBuilder debugSB = new StringBuilder();
+    private final long appId;
+    private final StringBuilder debugSB = new StringBuilder();
 
     private double lastActionTime = -1;
 
@@ -48,8 +48,7 @@ public class SimpleAutoScalingPolicy implements IAutoscalingPolicy {
         double currentTime = CloudSim.clock();
         boolean performScaling = lastActionTime < 0 || lastActionTime + coolDownPeriod < currentTime;
 
-        if (performScaling && broker instanceof WebBroker) {
-            WebBroker webBroker = (WebBroker) broker;
+        if (performScaling && broker instanceof WebBroker webBroker) {
             debugSB.setLength(0);
 
             ILoadBalancer loadBalancer = webBroker.getLoadBalancers().get(appId);
@@ -76,13 +75,13 @@ public class SimpleAutoScalingPolicy implements IAutoscalingPolicy {
             if (avgCPU > scaleUpCPUTrigger) {
                 HddVm newASServer = loadBalancer.getAppServers().get(0).clone(new HddCloudletSchedulerTimeShared());
                 loadBalancer.registerAppServer(newASServer);
-                webBroker.createVmsAfter(Arrays.asList(newASServer), 0);
+                webBroker.createVmsAfter(List.of(newASServer), 0);
                 lastActionTime = currentTime;
 
                 CustomLog.printf("Simple-Autoscale(%s) Scale-Up: New AS VMs provisioned: %s", webBroker.toString(),
                         newASServer);
             } else if (avgCPU < scaleDownCPUTrigger && count > 1) {
-                List<HddVm> toStop = Arrays.asList(candidateToStop);
+                List<HddVm> toStop = List.of(candidateToStop);
                 webBroker.destroyVMsAfter(toStop, 0);
                 loadBalancer.getAppServers().removeAll(toStop);
                 lastActionTime = currentTime;

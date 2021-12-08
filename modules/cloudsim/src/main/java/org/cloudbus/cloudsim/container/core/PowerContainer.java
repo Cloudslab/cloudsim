@@ -84,10 +84,7 @@ public class PowerContainer extends Container{
         public double getUtilizationMad() {
             double mad = 0;
             if (!getUtilizationHistory().isEmpty()) {
-                int n = HISTORY_LENGTH;
-                if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-                    n = getUtilizationHistory().size();
-                }
+                int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
                 double median = MathUtil.median(getUtilizationHistory());
                 double[] deviationSum = new double[n];
                 for (int i = 0; i < n; i++) {
@@ -106,10 +103,7 @@ public class PowerContainer extends Container{
         public double getUtilizationMean() {
             double mean = 0;
             if (!getUtilizationHistory().isEmpty()) {
-                int n = HISTORY_LENGTH;
-                if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-                    n = getUtilizationHistory().size();
-                }
+                int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
                 for (int i = 0; i < n; i++) {
                     mean += getUtilizationHistory().get(i);
                 }
@@ -127,10 +121,7 @@ public class PowerContainer extends Container{
             double mean = getUtilizationMean();
             double variance = 0;
             if (!getUtilizationHistory().isEmpty()) {
-                int n = HISTORY_LENGTH;
-                if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-                    n = getUtilizationHistory().size();
-                }
+                int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
                 for (int i = 0; i < n; i++) {
                     double tmp = getUtilizationHistory().get(i) * getMips() - mean;
                     variance += tmp * tmp;

@@ -55,8 +55,7 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
     public BigDecimal bill(final List<? extends Vm> vms, double before) {
         BigDecimal result = BigDecimal.ZERO;
         for (Vm vm : vms) {
-            if (vm instanceof VMex) {
-                VMex vmEx = (VMex) vm;
+            if (vm instanceof VMex vmEx) {
                 if (shouldBillVm(vmEx)) {
                     result = result.add(billSingleVmUntil(vmEx, before));
                 }

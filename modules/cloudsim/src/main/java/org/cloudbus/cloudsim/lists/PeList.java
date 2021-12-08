@@ -32,7 +32,7 @@ public class PeList {
 	 * @post $none
 	 */
 	public static <T extends Pe> Pe getById(List<T> peList, int id) {
-                /*@todo such kind of search would be made using a HashMap
+                /*//TODO such kind of search would be made using a HashMap
                 (to avoid always iterating over the list),
                 where the key is the id of the object and the value the object
                 itself. The same occurs for lists of hosts and VMs.*/
@@ -70,10 +70,7 @@ public class PeList {
 	 * @post $none
 	 */
 	public static <T extends Pe> int getTotalMips(List<T> peList) {
-		int totalMips = 0;
-		for (Pe pe : peList) {
-			totalMips += pe.getMips();
-		}
+		int totalMips = peList.stream().mapToInt(Pe::getMips).sum();
 		return totalMips;
 	}
 
@@ -124,12 +121,7 @@ public class PeList {
 	 * @post $none
 	 */
 	public static <T extends Pe> Pe getFreePe(List<T> peList) {
-		for (Pe pe : peList) {
-			if (pe.getStatus() == Pe.FREE) {
-				return pe;
-			}
-		}
-		return null;
+		return peList.stream().filter(pe -> pe.getStatus() == Pe.FREE).findFirst().orElse(null);
 	}
 
 	/**
@@ -141,12 +133,7 @@ public class PeList {
 	 * @post $result >= 0
 	 */
 	public static <T extends Pe> int getNumberOfFreePes(List<T> peList) {
-		int cnt = 0;
-		for (Pe pe : peList) {
-			if (pe.getStatus() == Pe.FREE) {
-				cnt++;
-			}
-		}
+		int cnt = (int) peList.stream().filter(pe -> pe.getStatus() == Pe.FREE).count();
 		return cnt;
 	}
 
@@ -179,12 +166,7 @@ public class PeList {
 	 * @post $result >= 0
 	 */
 	public static <T extends Pe> int getNumberOfBusyPes(List<T> peList) {
-		int cnt = 0;
-		for (Pe pe : peList) {
-			if (pe.getStatus() == Pe.BUSY) {
-				cnt++;
-			}
-		}
+		int cnt = (int) peList.stream().filter(pe -> pe.getStatus() == Pe.BUSY).count();
 		return cnt;
 	}
 
@@ -205,12 +187,7 @@ public class PeList {
 			String resName,
 			int hostId,
 			boolean failed) {
-		String status = null;
-		if (failed) {
-			status = "FAILED";
-		} else {
-			status = "WORKING";
-		}
+		String status = failed ? "FAILED" : "WORKING";
 
 		Log.printConcatLine(resName, " - Machine: ", hostId, " is ", status);
 
@@ -226,13 +203,9 @@ public class PeList {
 	 */
 	public static <T extends Pe> void setStatusFailed(List<T> peList, boolean failed) {
 		// a loop to set the status of all the PEs in this machine
-		for (Pe pe : peList) {
-			if (failed) {
-				pe.setStatus(Pe.FAILED);
-			} else {
-				pe.setStatus(Pe.FREE);
-			}
-		}
+		peList.forEach(pe -> {
+			pe.setStatus(failed ? Pe.FAILED : Pe.FREE);
+		});
 	}
 
 }

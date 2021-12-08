@@ -11,10 +11,10 @@ public class ExperimentDefinition {
 
     public static int GIGABYTE_IN_MEGA = 1024;
 
-    private Class<?> mainClass;
-    private int maxMem;
-    private int minMem;
-    private String[] arguements;
+    private final Class<?> mainClass;
+    private final int maxMem;
+    private final int minMem;
+    private final String[] arguements;
 
     /**
      * Constr.

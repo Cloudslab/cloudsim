@@ -2,100 +2,20 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Annotation profile for cloudsim-package" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+      <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/com/google/errorprone/error_prone_core/2.4.0/error_prone_core-2.4.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/errorprone/error_prone_annotation/2.4.0/error_prone_annotation-2.4.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/27.0.1-jre/guava-27.0.1-jre.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/checkerframework/checker-qual/2.5.2/checker-qual-2.5.2.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/errorprone/error_prone_annotations/2.4.0/error_prone_annotations-2.4.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/codehaus/mojo/animal-sniffer-annotations/1.17/animal-sniffer-annotations-1.17.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/errorprone/error_prone_type_annotations/2.4.0/error_prone_type_annotations-2.4.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/errorprone/error_prone_check_api/2.4.0/error_prone_check_api-2.4.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/checkerframework/dataflow-shaded/3.1.2/dataflow-shaded-3.1.2.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/googlecode/java-diff-utils/diffutils/1.3.0/diffutils-1.3.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/auto/value/auto-value-annotations/1.7/auto-value-annotations-1.7.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/github/kevinstern/software-and-algorithms/1.0/software-and-algorithms-1.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/github/ben-manes/caffeine/caffeine/2.8.0/caffeine-2.8.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/errorprone/error_prone_test_helpers/2.4.0/error_prone_test_helpers-2.4.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/googlejavaformat/google-java-format/1.4/google-java-format-1.4.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/errorprone/javac-shaded/9-dev-r4023-3/javac-shaded-9-dev-r4023-3.jar" />
-          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.13/junit-4.13.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/truth/truth/0.45/truth-0.45.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/checkerframework/checker-compat-qual/2.5.5/checker-compat-qual-2.5.5.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/jimfs/jimfs/1.1/jimfs-1.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/testing/compile/compile-testing/0.18/compile-testing-0.18.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/auto/auto-common/0.10/auto-common-0.10.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/pcollections/pcollections/2.1.2/pcollections-2.1.2.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/gwt/gwt-user/2.8.2/gwt-user-2.8.2.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/jsinterop/jsinterop-annotations/1.0.2/jsinterop-annotations-1.0.2.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/jsinterop/jsinterop-annotations/1.0.2/jsinterop-annotations-1.0.2-sources.jar" />
-          <entry name="$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar" />
-          <entry name="$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA-sources.jar" />
-          <entry name="$MAVEN_REPOSITORY$/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/w3c/css/sac/1.3/sac-1.3.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/truth/extensions/truth-java8-extension/0.45/truth-java8-extension-0.45.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/truth/extensions/truth-proto-extension/0.45/truth-proto-extension-0.45.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/truth/extensions/truth-liteproto-extension/0.45/truth-liteproto-extension-0.45.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/protobuf/protobuf-java/3.4.0/protobuf-java-3.4.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/inject/guice/4.0-beta5/guice-4.0-beta5.jar" />
-          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/inject/extensions/guice-assistedinject/4.0-beta5/guice-assistedinject-4.0-beta5.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/inject/extensions/guice-servlet/4.0-beta5/guice-servlet-4.0-beta5.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/inject/extensions/guice-testlib/4.0/guice-testlib-4.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/gwt/inject/gin/2.1.2/gin-2.1.2.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mockito/mockito-core/2.25.0/mockito-core-2.25.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/net/bytebuddy/byte-buddy/1.9.7/byte-buddy-1.9.7.jar" />
-          <entry name="$MAVEN_REPOSITORY$/net/bytebuddy/byte-buddy-agent/1.9.7/byte-buddy-agent-1.9.7.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/objenesis/objenesis/2.6/objenesis-2.6.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/jmock/jmock/2.8.0/jmock-2.8.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/cglib/cglib-nodep/3.1/cglib-nodep-3.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/beanshell/bsh/1.3.0/bsh-1.3.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/jmock/jmock-junit4/2.8.0/jmock-junit4-2.8.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/dagger/dagger/2.14.1/dagger-2.14.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/dagger/dagger-producers/2.14.1/dagger-producers-2.14.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/auto/factory/auto-factory/1.0-beta5/auto-factory-1.0-beta5.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/squareup/javapoet/1.7.0/javapoet-1.7.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava-testlib/27.0.1-jre/guava-testlib-27.0.1-jre.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/protobuf/protobuf-java-util/3.7.1/protobuf-java-util-3.7.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.7/gson-2.7.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/ibm/icu/icu4j/56.1/icu4j-56.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/auto/service/auto-service-annotations/1.0-rc6/auto-service-annotations-1.0-rc6.jar" />
-          <entry name="$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.42.Final/netty-all-4.1.42.Final.jar" />
-          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9.4/joda-time-2.9.4.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/common/html/types/proto/1.0.0/proto-1.0.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/com/google/common/html/types/types/1.0.5/types-1.0.5.jar" />
-          <entry name="$MAVEN_REPOSITORY$/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.9.0/assertj-core-3.9.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/easymock/easymock/3.1/easymock-3.1.jar" />
-          <entry name="$MAVEN_REPOSITORY$/pl/pragmatists/JUnitParams/1.0.5/JUnitParams-1.0.5.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/threeten/threeten-extra/1.5.0/threeten-extra-1.5.0.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.22/9c08ea24c6eb714e2d6170e8122c069a0ba9aacf/lombok-1.18.22.jar" />
         </processorPath>
-        <module name="cloudsim-examples" />
-        <module name="cloudsim" />
-        <module name="documentation" />
+        <module name="cloudsim-package.cloudsim.main" />
+        <module name="cloudsim-package.cloudsim-examples.main" />
+        <module name="cloudsim-package.cloudsim.test" />
+        <module name="cloudsim-package.cloudsim-examples.test" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="cloudsim" target="11" />
+    <bytecodeTargetLevel target="17">
       <module name="cloudsim-examples" target="11" />
-      <module name="cloudsim-package" target="1.5" />
       <module name="distribution" target="1.5" />
-      <module name="documentation" target="11" />
       <module name="modules" target="11" />
     </bytecodeTargetLevel>
   </component>
@@ -103,7 +23,12 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="cloudsim" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
       <module name="cloudsim-examples" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="cloudsim-package.cloudsim" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="cloudsim-package.cloudsim-examples" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="cloudsim-package.documentation" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="cloudsim-package.modules" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
       <module name="documentation" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="modules" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
     </option>
   </component>
 </project>

@@ -27,8 +27,8 @@ import org.cloudbus.cloudsim.UtilizationModel;
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 1.0
- * @todo Attributes should be private
- * @todo The different cloudlet classes should have a class hierarchy, by means
+ * //TODO Attributes should be private
+ * //TODO The different cloudlet classes should have a class hierarchy, by means
  * of a super class and/or interface.
  */
 public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloudlet> {
@@ -56,7 +56,7 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 	public double timespentInStage; 
 
         /** 
-         * @todo It doesn't appear to be used. 
+         * //TODO It doesn't appear to be used.
         */
 	public Map<Double, HostPacket> timeCommunicate;
 
@@ -65,7 +65,7 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
         
         /**
          * Cloudlet's memory.
-         * @todo Required, allocated, used memory?
+         * //TODO Required, allocated, used memory?
          * It doesn't appear to be used.
          */
 	long memory;

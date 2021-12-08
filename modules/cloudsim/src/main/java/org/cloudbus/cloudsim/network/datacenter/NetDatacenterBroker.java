@@ -33,7 +33,7 @@ import org.cloudbus.cloudsim.lists.VmList;
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
- * @todo The class is not a broker acting on behalf of users, but on behalf
+ * //TODO The class is not a broker acting on behalf of users, but on behalf
  * of a provider. Maybe this distinction would be explicit by 
  * different class hierarchy, such as UserDatacenterBroker and ProviderDatacenterBroker.
  */
@@ -54,7 +54,7 @@ public class NetDatacenterBroker extends SimEntity {
 	private List<? extends AppCloudlet> appCloudletList;
 
 	/** The list of submitted {@link AppCloudlet AppCloudlets}.
-         * @todo attribute appears to be redundant with {@link #appCloudletList}
+         * //TODO attribute appears to be redundant with {@link #appCloudletList}
          */
 	private final Map<Integer, Integer> appCloudletRecieved;
 
@@ -63,7 +63,7 @@ public class NetDatacenterBroker extends SimEntity {
 	private List<? extends Cloudlet> cloudletSubmittedList;
 
 	/** The list of received {@link Cloudlet Cloudlets}.
-         * @todo attribute appears to be redundant with {@link #cloudletSubmittedList}
+         * //TODO attribute appears to be redundant with {@link #cloudletSubmittedList}
          */
 	private List<? extends Cloudlet> cloudletReceivedList;
 
@@ -83,7 +83,7 @@ public class NetDatacenterBroker extends SimEntity {
 	private List<Integer> datacenterIdsList;
 
 	/** The datacenter requested IDs list. 
-         * @todo attribute appears to be redundant with {@link #datacenterIdsList}
+         * //TODO attribute appears to be redundant with {@link #datacenterIdsList}
          */
 	private List<Integer> datacenterRequestedIdsList;
 

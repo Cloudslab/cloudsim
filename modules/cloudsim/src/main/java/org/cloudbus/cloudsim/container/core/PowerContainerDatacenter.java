@@ -449,7 +449,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
 
 
     public CostumeCSVWriter getDatacenterEnergyWriter() {
-        return (CostumeCSVWriter) datacenterEnergyWriter;
+        return datacenterEnergyWriter;
     }
 
     public void setDatacenterEnergyWriter(CostumeCSVWriter datacenterEnergyWriter) {

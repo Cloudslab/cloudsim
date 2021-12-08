@@ -21,7 +21,7 @@ package org.cloudbus.cloudsim.network.datacenter;
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 1.0
- * @todo Attributes should be private
+ * //TODO Attributes should be private
  */
 public class HostPacket {
         /**

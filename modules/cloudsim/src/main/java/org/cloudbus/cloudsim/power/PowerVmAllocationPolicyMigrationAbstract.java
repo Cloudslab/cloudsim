@@ -35,7 +35,7 @@ import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
  * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * Issue 13, Pages: 1397-1420, John Wiley &amp; Sons, Ltd, New York, USA, 2012</a>
  * </ul>
  * 
  * @author Anton Beloglazov
@@ -47,7 +47,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	private PowerVmSelectionPolicy vmSelectionPolicy;
 
 	/** A list of maps between a VM and the host where it is place.
-         * @todo This list of map is implemented in the worst way.
+         * //TODO This list of map is implemented in the worst way.
          * It should be used just a Map<Vm, Host> to find out 
          * what PM is hosting a given VM.
          */
@@ -59,7 +59,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 
 	/** 
          * The metric history. 
-         * @todo the map stores different data. Sometimes it stores the upper threshold,
+         * //TODO the map stores different data. Sometimes it stores the upper threshold,
          * other it stores utilization threshold or predicted utilization, that
          * is very confusing.
          */

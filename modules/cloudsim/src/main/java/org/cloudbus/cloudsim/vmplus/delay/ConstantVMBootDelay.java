@@ -7,7 +7,6 @@ import org.cloudbus.cloudsim.Vm;
  * 
  * @author nikolay.grozev
  * 
- * @param <V>
  */
 public class ConstantVMBootDelay implements IVMBootDelayDistribution {
 

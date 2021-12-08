@@ -44,7 +44,7 @@ public class WebBroker extends MonitoringBorkerEX {
     /** Mapping of application Ids to entry points. */
     private final Map<Long, IEntryPoint> entryPoins = new HashMap<>();
 
-    private String[] metadata;
+    private final String[] metadata;
 
     /**
      * By default CloudSim's brokers use all available datacenters. So we need
@@ -436,7 +436,7 @@ public class WebBroker extends MonitoringBorkerEX {
     @Override
     public void startEntity() {
         Log.printConcatLine(getName(), " is starting...");
-        schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST, Arrays.asList(dataCenterId));
+        schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST, List.of(dataCenterId));
     }
 
     @SuppressWarnings("unchecked")

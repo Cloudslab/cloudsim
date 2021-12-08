@@ -64,8 +64,7 @@ public class GoogleOnDemandPolicy extends BaseCustomerVmBillingPolicy {
     @Override
     public double nexChargeTime(final Vm vm) {
         double result = -1;
-        if (vm instanceof VMex && ((VMex) vm).getStatus() == VMStatus.RUNNING) {
-            VMex vmex = (VMex) vm;
+        if (vm instanceof VMex vmex && ((VMex) vm).getStatus() == VMStatus.RUNNING) {
             double elapsedTime = getCurrentTime() - vmex.getStartTime();
             result = vmex.getStartTime() + MINUTE * Math.max(10, (int) (elapsedTime / MINUTE) + 1);
         }

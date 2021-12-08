@@ -17,7 +17,7 @@ import java.util.logging.Level;
  */
 public class RoundRobinDBBalancer extends BaseDBLoadBalancer {
 
-    private Map<Integer, Integer> dataItemToCounter = new HashMap<>();
+    private final Map<Integer, Integer> dataItemToCounter = new HashMap<>();
 
     /**
      * Constr.

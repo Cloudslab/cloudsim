@@ -26,7 +26,7 @@ public class ExecutionTimeMeasurer {
          * Usually, this name is the method/process name, making
          * easy to identify the execution times into the map.
          * 
-         * @todo The name of the attribute doesn't match with what it stores.
+         * //TODO The name of the attribute doesn't match with what it stores.
          * It in fact stores the method/process start time,
          * no the time it spent executing.
          */

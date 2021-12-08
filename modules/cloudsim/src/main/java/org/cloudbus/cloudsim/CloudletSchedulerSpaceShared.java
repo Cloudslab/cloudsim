@@ -398,7 +398,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	 * @pre $none
 	 * @post $none
          * 
-         * @todo it doesn't check if the list is empty
+         * //TODO it doesn't check if the list is empty
 	 */
 	@Override
 	public Cloudlet migrateCloudlet() {
@@ -420,7 +420,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
-                /*@todo The param rcl is not being used.*/
+                /*//TODO The param rcl is not being used.*/
 		double capacity = 0.0;
 		int cpus = 0;
 		for (Double mips : mipsShare) { // count the cpus available to the vmm
@@ -436,28 +436,28 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 	@Override
 	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {   
-                //@todo the method isn't in fact implemented
+                ////TODO the method isn't in fact implemented
 		// TODO Auto-generated method stub
 		return 0.0;
 	}
 
 	@Override
 	public double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time) {
-                //@todo the method isn't in fact implemented
+                ////TODO the method isn't in fact implemented
 		// TODO Auto-generated method stub
 		return 0.0;
 	}
 
 	@Override
 	public double getCurrentRequestedUtilizationOfRam() {
-                //@todo the method isn't in fact implemented
+                ////TODO the method isn't in fact implemented
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public double getCurrentRequestedUtilizationOfBw() {
-                //@todo the method isn't in fact implemented
+                ////TODO the method isn't in fact implemented
 		// TODO Auto-generated method stub
 		return 0;
 	}

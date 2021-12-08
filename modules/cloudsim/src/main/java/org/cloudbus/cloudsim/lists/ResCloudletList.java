@@ -33,18 +33,13 @@ public class ResCloudletList {
 	 * @pre userId >= 0
 	 * @post $none
      * 
-     * @todo The second phrase of the class documentation is not clear. 
+     * //TODO The second phrase of the class documentation is not clear.
 	 */
 	public static <T extends ResCloudlet> ResCloudlet getByIdAndUserId(
 			List<T> list,
 			int cloudletId,
 			int userId) {
-		for (T rcl : list) {
-			if (rcl.getCloudletId() == cloudletId && rcl.getUserId() == userId) {
-				return rcl;
-			}
-		}
-		return null;
+		return list.stream().filter(rcl -> rcl.getCloudletId() == cloudletId && rcl.getUserId() == userId).findFirst().map(rcl -> rcl).orElse(null);
 	}
 
 	/**

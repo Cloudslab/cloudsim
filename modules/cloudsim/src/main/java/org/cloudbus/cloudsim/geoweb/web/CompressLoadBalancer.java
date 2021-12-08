@@ -24,9 +24,9 @@ public class CompressLoadBalancer extends BaseWebLoadBalancer implements ILoadBa
     private final double cpuThreshold;
     private final double ramThreshold;
 
-    private StringBuilder debugSB = new StringBuilder();
+    private final StringBuilder debugSB = new StringBuilder();
 
-    private LinkedHashMap<Integer, Integer> secsToArrivals = new LinkedHashMap<>();
+    private final LinkedHashMap<Integer, Integer> secsToArrivals = new LinkedHashMap<>();
 
     /**
      * Const.

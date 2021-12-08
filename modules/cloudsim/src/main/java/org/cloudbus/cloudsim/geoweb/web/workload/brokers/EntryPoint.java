@@ -127,16 +127,16 @@ public class EntryPoint extends BaseEntryPoint implements IEntryPoint {
     }
 
     private static class CloudPriceComparator implements Comparator<WebBroker> {
-        private long appId;
+        private final long appId;
 
         // We do not want to call getASServersToNumSessions() all the time,
         // since it can be resource intensive operation. Thus we cache the
         // values.
-        private Map<WebBroker, Map<Integer, Integer>> brokersToMaps = new HashMap<>();
-        private Map<WebBroker, Boolean> overloadedDBLayer = new HashMap<>();
+        private final Map<WebBroker, Map<Integer, Integer>> brokersToMaps = new HashMap<>();
+        private final Map<WebBroker, Boolean> overloadedDBLayer = new HashMap<>();
 
         Map<WebBroker, Double> latestPriceEstimations = new HashMap<>();
-        private Map<WebBroker, String> readablePriceEstimations = new HashMap<>();
+        private final Map<WebBroker, String> readablePriceEstimations = new HashMap<>();
 
         public CloudPriceComparator(final long appId) {
             super();

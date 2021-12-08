@@ -23,7 +23,7 @@ public class MonitoredVMex extends VMex {
 
     private final double summaryPeriodLength;
 
-    private MonitoredData data = new MonitoredData();
+    private final MonitoredData data = new MonitoredData();
 
     private double[] lastUtilMeasurement = new double[] { 0, 0, 0 };
     private boolean newPerfDataAvailableFlag = false;
@@ -203,17 +203,17 @@ public class MonitoredVMex extends VMex {
      */
     public static class MonitoredData {
 
-        private static int MAX_POOL_SIZE = 500;
+        private static final int MAX_POOL_SIZE = 500;
 
         /**
          * We don't want to create new arrays every time - this creates too much
          * garbage. That's why we need to keep a pool of unused array objects,
          * which we reuse.
          */
-        private List<double[]> arrayPool = new ArrayList<>();
-        private List<MutableDouble> doublePool = new ArrayList<>();
+        private final List<double[]> arrayPool = new ArrayList<>();
+        private final List<MutableDouble> doublePool = new ArrayList<>();
 
-        private ArrayList<MutablePair<MutableDouble, double[]>> data = new ArrayList<>();
+        private final ArrayList<MutablePair<MutableDouble, double[]>> data = new ArrayList<>();
         private int startIdx = 0;
         private int endIdx = 0;
         /** If there is not monitoring data. */
@@ -223,7 +223,7 @@ public class MonitoredVMex extends VMex {
          * Keeping the sums of all observations, to avoid excessive looping over
          * the observations.
          */
-        private double[] measurementsSums = new double[] { 0, 0, 0 };
+        private final double[] measurementsSums = new double[] { 0, 0, 0 };
         /**
          * The number/count of all observations. We keep it in a variable to
          * avoid looping.

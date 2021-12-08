@@ -71,7 +71,6 @@ public class AggregateSwitch extends Switch {
 			int switchid = dc.VmToSwitchid.get(recvVMid);
 			List<NetworkPacket> pktlist = downlinkswitchpktlist.computeIfAbsent(switchid, k -> new ArrayList<>());
 			pktlist.add(hspkt);
-			return;
 		}
 
 	}

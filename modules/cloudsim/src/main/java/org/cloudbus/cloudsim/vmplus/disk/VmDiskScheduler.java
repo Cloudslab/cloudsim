@@ -24,7 +24,7 @@ public class VmDiskScheduler extends VmSchedulerWithIndependentPes<HddPe> {
 
     @Override
     protected VmScheduler createSchedulerFroPe(final HddPe pe) {
-        return new VmSchedulerTimeSharedOverSubscription(Arrays.asList(pe));
+        return new VmSchedulerTimeSharedOverSubscription(List.of(pe));
     }
 
     @Override

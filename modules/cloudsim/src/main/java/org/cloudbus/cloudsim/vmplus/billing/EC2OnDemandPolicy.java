@@ -55,8 +55,7 @@ public class EC2OnDemandPolicy extends BaseCustomerVmBillingPolicy {
     @Override
     public double nexChargeTime(final Vm vm) {
         double result = -1;
-        if (vm instanceof VMex && ((VMex) vm).getStatus() == VMStatus.RUNNING) {
-            VMex vmex = (VMex) vm;
+        if (vm instanceof VMex vmex && ((VMex) vm).getStatus() == VMStatus.RUNNING) {
             double elapsedTime = getCurrentTime() - vmex.getStartTime();
             result = vmex.getStartTime() + HOUR * ((int) (elapsedTime / HOUR) + 1);
         }

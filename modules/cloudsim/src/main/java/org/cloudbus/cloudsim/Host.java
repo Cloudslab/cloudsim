@@ -93,7 +93,7 @@ public class Host {
 	 *         {@link Double#MAX_VALUE} if there is no future events expected in this host
 	 * @pre currentTime >= 0.0
 	 * @post $none
-         * @todo there is an inconsistency between the return value of this method
+         * //TODO there is an inconsistency between the return value of this method
          * and the individual call of {@link Vm#updateVmProcessing(double, java.util.List),
          * and consequently the {@link CloudletScheduler#updateVmProcessing(double, java.util.List)}.
          * The current method returns {@link Double#MAX_VALUE}  while the other ones

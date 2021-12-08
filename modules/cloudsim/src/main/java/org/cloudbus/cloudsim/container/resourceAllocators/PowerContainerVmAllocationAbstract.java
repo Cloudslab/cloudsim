@@ -67,7 +67,7 @@ public abstract  class PowerContainerVmAllocationAbstract extends ContainerVmAll
          * @return the power host
          */
         public ContainerHost findHostForVm(ContainerVm containerVm) {
-            for (ContainerHost host : this.<ContainerHost> getContainerHostList()) {
+            for (ContainerHost host : this.getContainerHostList()) {
                 if (host.isSuitableForContainerVm(containerVm)) {
                     return host;
                 }

@@ -18,7 +18,7 @@ import java.util.logging.Level;
 public class SimpleWebLoadBalancer extends BaseWebLoadBalancer implements ILoadBalancer {
 
     private long startPositionWhenEqual = 0;
-    private StringBuffer debugSB = new StringBuffer();
+    private final StringBuffer debugSB = new StringBuffer();
     WebBroker broker;
 
     /**

@@ -99,7 +99,7 @@ public class CustomLog {
     private static final Logger LOGGER = Logger.getLogger(CustomLog.class.getPackage().getName());
 
     /** Buffer to avoid creating new string builder upon every print. */
-    private static StringBuilder builder = new StringBuilder();
+    private static final StringBuilder builder = new StringBuilder();
 
     private static Level granularityLevel = DEFAULT_LEVEL;
     private static Formatter formatter;

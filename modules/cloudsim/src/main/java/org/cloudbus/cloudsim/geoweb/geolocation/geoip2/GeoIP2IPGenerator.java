@@ -205,8 +205,8 @@ public class GeoIP2IPGenerator extends BaseIPGenerator implements IPGenerator {
      * 
      */
     private static class IPRange {
-        private int from;
-        private int to;
+        private final int from;
+        private final int to;
 
         public IPRange(int from, int to) {
             super();

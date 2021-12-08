@@ -1,5 +1,7 @@
 package org.cloudbus.cloudsim.geoweb.web;
 
+import java.io.Serial;
+
 /**
  * Indicates that a session has failed.
  * 
@@ -11,6 +13,7 @@ public class SessionFailedException extends RuntimeException {
     /**
      * 
      */
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final int sessionId;

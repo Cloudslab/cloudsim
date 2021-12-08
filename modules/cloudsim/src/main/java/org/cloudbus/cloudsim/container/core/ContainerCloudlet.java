@@ -1,5 +1,7 @@
 package org.cloudbus.cloudsim.container.core;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 
@@ -9,6 +11,8 @@ import java.util.List;
  * Created by sareh on 10/07/15.
  */
 public class ContainerCloudlet extends Cloudlet {
+    @Setter
+    @Getter
     public int containerId = -1;
 
 
@@ -31,11 +35,4 @@ public class ContainerCloudlet extends Cloudlet {
         super(cloudletId, cloudletLength, pesNumber, cloudletFileSize, cloudletOutputSize, utilizationModelCpu, utilizationModelRam, utilizationModelBw, record);
     }
 
-    public int getContainerId() {
-        return containerId;
-    }
-
-    public void setContainerId(int containerId) {
-        this.containerId = containerId;
-    }
 }

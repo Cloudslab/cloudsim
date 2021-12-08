@@ -127,19 +127,15 @@ public class GraphReaderBrite implements GraphReaderIF {
 		for (int actualParam = 0; tokenizer.hasMoreElements() && actualParam < parameters; actualParam++) {
 			String token = tokenizer.nextToken();
 			switch (actualParam) {
-				case 0:	// Log.printLine("nodeID: "+token);
-						// Log.printLine("nodeLabel: "+token);
+				case 0 -> {    // Log.printLine("nodeID: "+token);
+					// Log.printLine("nodeLabel: "+token);
 					nodeID = Integer.parseInt(token);
 					nodeLabel = Integer.toString(nodeID);
-					break;
-
-				case 1:	// Log.printLine("x-Pos: "+token);
-					xPos = Integer.parseInt(token);
-					break;
-
-				case 2:	// Log.printLine("y-Pos: "+token);
-					yPos = Integer.parseInt(token);
-					break;
+				}
+				case 1 ->    // Log.printLine("x-Pos: "+token);
+						xPos = Integer.parseInt(token);
+				case 2 ->    // Log.printLine("y-Pos: "+token);
+						yPos = Integer.parseInt(token);
 			}
 		}
 

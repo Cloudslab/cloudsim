@@ -191,7 +191,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                 Map<String, Object> migrate = new HashMap<>();
                 migrate.put("container", container);
                 migrate.put("vm", vm);
-                migrate.put("host", (PowerContainerHost) allocationMap.get("host"));
+                migrate.put("host", allocationMap.get("host"));
                 migrationMap.add(migrate);
             } else {
                 Map<String, Object> migrate = new HashMap<>();
@@ -288,7 +288,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                     migrate.put("NewEventRequired", container);
                     migrate.put("container", container);
                     migrate.put("vm", vm);
-                    migrate.put("host", (PowerContainerHost) allocationMap.get("host"));
+                    migrate.put("host", allocationMap.get("host"));
                     newMigrationMap.add(migrate);
 
                 }
@@ -456,7 +456,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
             PowerContainerHost host = (PowerContainerHost) host1;
             for(Map<String, Object> map:createdVm){
-                if((ContainerHost) map.get("host")== host1){
+                if(map.get("host") == host1){
                 vmList.add((ContainerVm) map.get("vm"));
                 }
 
@@ -508,10 +508,10 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 //            int vmType = 1;
 //        Log.print(vmType);
         for (int j = 0; j < vmPes[vmType]; ++j) {
-            peList.add(new ContainerPe(j, new CotainerPeProvisionerSimple((double) vmMips[vmType])));
+            peList.add(new ContainerPe(j, new CotainerPeProvisionerSimple(vmMips[vmType])));
         }
         int brokerId = 2;
-        PowerContainerVm vm = new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, (double) vmMips[vmType],
+        PowerContainerVm vm = new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, vmMips[vmType],
                 vmRam[vmType],
                 vmBw, vmSize, "Xen",
                 new ContainerSchedulerTimeSharedOverSubscription(peList),

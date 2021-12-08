@@ -8,7 +8,7 @@ package org.cloudbus.cloudsim.geoweb.web.workload.freq;
  */
 public class ConstFreqFunction extends FrequencyFunction {
 
-    private int value;
+    private final int value;
 
     /**
      * Constructor.

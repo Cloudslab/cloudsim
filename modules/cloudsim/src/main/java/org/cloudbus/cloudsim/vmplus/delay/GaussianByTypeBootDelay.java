@@ -149,12 +149,11 @@ public class GaussianByTypeBootDelay implements IVMBootDelayDistribution {
     @Override
     public double getDelay(final Vm vm) {
         double result = defaultValue;
-        if (vm instanceof VMex) {
-            VMex vmex = (VMex) vm;
+        if (vm instanceof VMex vmex) {
             NumberGenerator<Double> gaussianGenerator = null;
             Pair<String, String> key = BaseCustomerVmBillingPolicy.keyOf(vmex);
-            Pair<String, String> partialKey1 = ImmutablePair.of(vmex.getMetadata().getType(), (String) null);
-            Pair<String, String> partialKey2 = ImmutablePair.of((String) null, vmex.getMetadata().getOS());
+            Pair<String, String> partialKey1 = ImmutablePair.of(vmex.getMetadata().getType(), null);
+            Pair<String, String> partialKey2 = ImmutablePair.of(null, vmex.getMetadata().getOS());
 
             if (delayGenerators.containsKey(key)) {
                 gaussianGenerator = delayGenerators.get(key);

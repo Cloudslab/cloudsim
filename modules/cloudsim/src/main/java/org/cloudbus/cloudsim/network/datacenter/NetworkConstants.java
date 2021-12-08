@@ -10,7 +10,7 @@ package org.cloudbus.cloudsim.network.datacenter;
 
 /**
  * Network constants
- * @todo This class uses several hard-coded values that appears to be used 
+ * //TODO This class uses several hard-coded values that appears to be used
  * only for examples. If yes, it should be moved to the examples package.
  * The exceptions are the  {@link TaskStage} types and number of
  * switches by level.
@@ -27,7 +27,7 @@ public class NetworkConstants {
 
 	/** 
          * Types of {@link TaskStage}
-         * @todo should be an enum
+         * //TODO should be an enum
          */
 	public static final int EXECUTION = 0; 
 	public static final int WAIT_SEND = 1;

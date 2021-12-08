@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class CompositeValuedSet {
 
-    private List<FiniteValuedInterval> subIntervals;
+    private final List<FiniteValuedInterval> subIntervals;
 
     /**
      * Constr.
@@ -39,7 +39,7 @@ public class CompositeValuedSet {
                 return i.getValue();
             }
         }
-        throw new IllegalArgumentException("X=" + x + " is not contained in " + toString());
+        throw new IllegalArgumentException("X=" + x + " is not contained in " + this);
     }
 
     /**

@@ -393,7 +393,7 @@ public class WebSession {
             }
             return res;
         } else {
-            return Collections.<WebCloudlet> emptyList();
+            return Collections.emptyList();
         }
     }
 

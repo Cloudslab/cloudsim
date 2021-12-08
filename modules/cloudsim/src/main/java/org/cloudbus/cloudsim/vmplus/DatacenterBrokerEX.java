@@ -44,7 +44,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      * Events that will be executed after the broker has started. The are
      * usually set before the simulation start.
      */
-    private List<PresetEvent> presetEvents = new ArrayList<>();
+    private final List<PresetEvent> presetEvents = new ArrayList<>();
 
     /** If this broker has started receiving and responding to events. */
     private boolean started = false;
@@ -276,30 +276,22 @@ public class DatacenterBrokerEX extends DatacenterBroker {
     @Override
     protected void processOtherEvent(SimEvent ev) {
         switch (ev.getTag()) {
-        case CloudSimTags.VM_DESTROY_ACK:
-            processVMDestroy(ev);
-            break;
-        case BROKER_DESTROY_VMS_NOW:
-            destroyVMList((List<Vm>) ev.getData());
-            break;
-        case BROKER_SUBMIT_VMS_NOW:
-            submitVmList((List<Vm>) ev.getData());
-            // TODO Is the following valid when multiple data centres are
-            // handled with a single broker?
-            for (int nextDatacenterId : getDatacenterIdsList()) {
-                createVmsInDatacenter(nextDatacenterId);
+            case CloudSimTags.VM_DESTROY_ACK -> processVMDestroy(ev);
+            case BROKER_DESTROY_VMS_NOW -> destroyVMList((List<Vm>) ev.getData());
+            case BROKER_SUBMIT_VMS_NOW -> {
+                submitVmList((List<Vm>) ev.getData());
+                // TODO Is the following valid when multiple data centres are
+                // handled with a single broker?
+                for (int nextDatacenterId : getDatacenterIdsList()) {
+                    createVmsInDatacenter(nextDatacenterId);
+                }
             }
-            break;
-        case BROKER_CLOUDLETS_NOW:
-            submitCloudletList((List<Cloudlet>) ev.getData());
-            submitCloudlets();
-            break;
-        case BROKER_DESTROY_ITSELF_NOW:
-            closeDownBroker();
-            break;
-        default:
-            super.processOtherEvent(ev);
-            break;
+            case BROKER_CLOUDLETS_NOW -> {
+                submitCloudletList((List<Cloudlet>) ev.getData());
+                submitCloudlets();
+            }
+            case BROKER_DESTROY_ITSELF_NOW -> closeDownBroker();
+            default -> super.processOtherEvent(ev);
         }
     }
 
@@ -356,8 +348,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
     }
 
     private void finilizeVM(final Vm vm) {
-        if (vm instanceof VMex) {
-            VMex vmEX = ((VMex) vm);
+        if (vm instanceof VMex vmEX) {
             if (vmEX.getStatus() != VMStatus.TERMINATED) {
                 vmEX.setStatus(VMStatus.TERMINATED);
             }

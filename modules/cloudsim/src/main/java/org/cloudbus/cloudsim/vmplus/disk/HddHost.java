@@ -104,7 +104,7 @@ public class HddHost extends Host {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public List<HddVm> getVmList() {
-        return (List) super.getVmList();
+        return super.getVmList();
     }
 
     /**

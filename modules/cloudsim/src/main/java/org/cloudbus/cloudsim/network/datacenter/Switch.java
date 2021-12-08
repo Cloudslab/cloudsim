@@ -28,7 +28,7 @@ import org.cloudbus.cloudsim.lists.VmList;
 
 /**
  * Represents a Network Switch.
- * @todo attributes should be private
+ * //TODO attributes should be private
  */
 public class Switch extends SimEntity {
 
@@ -42,7 +42,7 @@ public class Switch extends SimEntity {
 
         /**
          * The id of the datacenter where the switch is connected to.
-         * @todo It doesn't appear to be used
+         * //TODO It doesn't appear to be used
          */
 	public int datacenterid;
 
@@ -85,7 +85,7 @@ public class Switch extends SimEntity {
 
         /**
          * The switch type: edge switch or aggregation switch.
-         * @todo should be an enum
+         * //TODO should be an enum
          */
 	int type;
 
@@ -101,7 +101,7 @@ public class Switch extends SimEntity {
 
         /**
          * The latency of the network where the switch is connected to.
-         * @todo Its value is being defined by a constant, but not every subclass
+         * //TODO Its value is being defined by a constant, but not every subclass
          * is setting the attribute accordingly.
          * The constants should be used as default values, but the class
          * should have a setter for this attribute.
@@ -112,16 +112,16 @@ public class Switch extends SimEntity {
 
         /**
          * The datacenter where the switch is connected to.
-         * @todo It doesn't appear to be used
+         * //TODO It doesn't appear to be used
          */
 	public NetworkDatacenter dc;
 
 	/** Something is running on these hosts. 
-         * @todo The attribute is only used at the TestExample class. */
+         * //TODO The attribute is only used at the TestExample class. */
 	public SortedMap<Double, List<NetworkHost>> fintimelistHost = new TreeMap<>();
 
 	/** Something is running on these hosts. 
-         * @todo The attribute doesn't appear to be used */
+         * //TODO The attribute doesn't appear to be used */
 	public SortedMap<Double, List<NetworkVm>> fintimelistVM = new TreeMap<>();
 
         /**
@@ -130,7 +130,7 @@ public class Switch extends SimEntity {
 	public ArrayList<NetworkPacket> pktlist = new ArrayList<>();
 
 	/** 
-         * @todo The attribute doesn't appear to be used */
+         * //TODO The attribute doesn't appear to be used */
 	public List<Vm> BagofTaskVm = new ArrayList<>();
 
         /**
@@ -138,7 +138,7 @@ public class Switch extends SimEntity {
          * This time is considered constant no matter how many packets 
          * the switch have to process.
          * 
-         * @todo The value of this attribute is being defined by
+         * //TODO The value of this attribute is being defined by
          * constants such as {@link NetworkConstants#SwitchingDelayRoot},
          * but not all sub classes are setting a value to it.
          * The constants should be used as default values, but the class
@@ -148,7 +148,7 @@ public class Switch extends SimEntity {
 
         /**
          * A map of VMs connected to this switch.
-         * @todo The list doesn't appear to be updated (VMs added to it) anywhere. 
+         * //TODO The list doesn't appear to be updated (VMs added to it) anywhere.
          */
 	public Map<Integer, NetworkVm> Vmlist = new HashMap<>();
 
@@ -168,30 +168,21 @@ public class Switch extends SimEntity {
 	public void processEvent(SimEvent ev) {
 		// Log.printLine(CloudSim.clock()+"[Broker]: event received:"+ev.getTag());
 		switch (ev.getTag()) {
-		// Resource characteristics request
-			case CloudSimTags.Network_Event_UP:
-				// process the packet from down switch or host
-				processpacket_up(ev);
-				break;
-			case CloudSimTags.Network_Event_DOWN:
-				// process the packet from uplink
-				processpacket_down(ev);
-				break;
-			case CloudSimTags.Network_Event_send:
-				processpacketforward(ev);
-				break;
+			// Resource characteristics request
+			case CloudSimTags.Network_Event_UP ->
+					// process the packet from down switch or host
+					processpacket_up(ev);
+			case CloudSimTags.Network_Event_DOWN ->
+					// process the packet from uplink
+					processpacket_down(ev);
+			case CloudSimTags.Network_Event_send -> processpacketforward(ev);
+			case CloudSimTags.Network_Event_Host -> processhostpacket(ev);
 
-			case CloudSimTags.Network_Event_Host:
-				processhostpacket(ev);
-				break;
 			// Resource characteristics answer
-			case CloudSimTags.RESOURCE_Register:
-				registerHost(ev);
-				break;
+			case CloudSimTags.RESOURCE_Register -> registerHost(ev);
+
 			// other unknown tags are processed by this method
-			default:
-				processOtherEvent(ev);
-				break;
+			default -> processOtherEvent(ev);
 		}
 	}
 
@@ -236,7 +227,6 @@ public class Switch extends SimEntity {
 			int switchid = dc.VmToSwitchid.get(recvVMid);
 			List<NetworkPacket> pktlist = downlinkswitchpktlist.computeIfAbsent(switchid, k -> new ArrayList<>());
 			pktlist.add(hspkt);
-			return;
 		}
 
 	}
@@ -353,7 +343,7 @@ public class Switch extends SimEntity {
          * This method should be overridden by subclasses in other to process
          * new defined events.
          *  
-         * @todo the method should be protected to allow sub classes to override it,
+         * //TODO the method should be protected to allow sub classes to override it,
          * once it does nothing here.
          */
 	private void processOtherEvent(SimEvent ev) {

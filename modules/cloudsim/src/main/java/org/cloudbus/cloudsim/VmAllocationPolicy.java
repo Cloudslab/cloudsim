@@ -64,7 +64,7 @@ public abstract class VmAllocationPolicy {
 	 * @param vmList the vm list
 	 * @return the array list< hash map< string, object>>
          * 
-         * @todo It returns a list of maps, where each map key is a string 
+         * //TODO It returns a list of maps, where each map key is a string
          * and stores an object. What in fact are the keys and values of this
          * Map? Neither this class or its subclasses implement the method
          * or have clear documentation. The only sublcass is the {@link VmAllocationPolicySimple}. 

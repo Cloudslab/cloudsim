@@ -29,7 +29,7 @@ public class VmList {
 	 * @pre $none
 	 * @post $none
          * 
-         * @todo It may be considered the use of a HashMap in order to improve 
+         * //TODO It may be considered the use of a HashMap in order to improve
          * VM search, instead of a List. The map key can be the vm id
          * and the value the VM itself. However, it has to be assessed
          * the feasibility to have VMs with the same ID and the need

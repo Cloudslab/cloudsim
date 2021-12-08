@@ -13,7 +13,7 @@ import java.util.Iterator;
  */
 public class IterableGenerator<T> implements IGenerator<T> {
 
-    private Iterator<T> iterator;
+    private final Iterator<T> iterator;
     private T peeked;
 
     /**

@@ -181,7 +181,7 @@ public class ExperimentsRunner {
         processBuilderList.addAll(vmParams);
         processBuilderList.addAll(Arrays.asList("-cp", classpath, className));
         processBuilderList.addAll(appParams);
-        ProcessBuilder builder = new ProcessBuilder((String[]) processBuilderList.toArray(new String[0]));
+        ProcessBuilder builder = new ProcessBuilder(processBuilderList.toArray(new String[0]));
 
         // Redirect the standard I/O to here (this process)
         builder.inheritIO();

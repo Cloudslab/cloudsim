@@ -37,7 +37,7 @@ public abstract class BaseStatGenerator<T extends Cloudlet> implements IGenerato
 
     protected Map<String, ? extends NumberGenerator<? extends Number>> seqGenerators;
     private final LinkedList<Double> idealStartUpTimes = new LinkedList<>();
-    private DataItem data;
+    private final DataItem data;
     private double startTime = -1;
     private double endTime = -1;
     private T peeked;

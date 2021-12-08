@@ -25,9 +25,9 @@ import java.util.Map;
  */
 public class RandomIPWorkloadGenerator implements IWorkloadGenerator {
 
-    private IWorkloadGenerator wrappedGenerator;
-    private IPGenerator ipGen;
-    private IGeolocationService geoService;
+    private final IWorkloadGenerator wrappedGenerator;
+    private final IPGenerator ipGen;
+    private final IGeolocationService geoService;
 
     private static final int ATTEMPTS = 10;
 

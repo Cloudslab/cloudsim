@@ -28,8 +28,8 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
     private CostumeCSVWriter newlyCreatedVmWriter;
     private int newlyCreatedVms;
     private List<Integer> newlyCreatedVmsList;
-    private double vmStartupDelay;
-    private double containerStartupDelay;
+    private final double vmStartupDelay;
+    private final double containerStartupDelay;
 
 
     public PowerContainerDatacenterCM(String name, ContainerDatacenterCharacteristics characteristics,
