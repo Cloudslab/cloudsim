@@ -82,7 +82,7 @@ public class CloudSimExampleCustom1 {
 			// Datacenters are the resource providers in CloudSim. We need at
 			// list one of them to run a CloudSim simulation
 			Datacenter datacenter0 = createDatacenter("Datacenter_0");
-
+			Log.printLine("Datacenter " + datacenter0.getName() + " has been created.");
 			// Third step: Create Broker
 			DatacenterBroker broker = createBroker();
 			int brokerId = broker.getId();
