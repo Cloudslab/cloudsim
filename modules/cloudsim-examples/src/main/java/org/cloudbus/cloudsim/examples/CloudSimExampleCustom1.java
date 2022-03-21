@@ -252,6 +252,7 @@ public class CloudSimExampleCustom1 {
 	 */
 	private static void printCloudletList(List<Cloudlet> list) {
 		int size = list.size();
+		Log.printLine("Number of cloudlets in list: " + size);  // daniel
 		Cloudlet cloudlet;
 
 		String indent = "    ";
