@@ -118,7 +118,7 @@ public class CloudSimExampleCustom1 {
 			// Cloudlet properties
 			int id = 0;
 			// long length = 400000;
-			long length = 1600000;
+			long length = 2000000;
 			// long fileSize = 300;
 			long fileSize = 30000;
 			// long outputSize = 300;
