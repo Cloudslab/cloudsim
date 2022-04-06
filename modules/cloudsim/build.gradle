@@ -5,6 +5,7 @@
 plugins {
     id 'org.cloudbus.cloudsim.java-conventions'
 //    id("net.ltgt.errorprone") version("2.0.2")
+    id 'jacoco'
 }
 
 dependencies {
@@ -35,6 +36,18 @@ javadoc{
     options.tags = ["pre:a:Precondition","post:a:Postcondition"]
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
 
 java {
 //    withJavadocJar()
