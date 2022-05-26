@@ -78,6 +78,7 @@ public class LrMmtCustom {
 
 		//Workbook workbook = new XSSFWorkbook();
 		Workbook workbook = setupWorksheet();
+		attachDataToWorksheet(workbook);
 		writeToWorkbook(workbook , "/workspace/cloudsim-latest/output/log/graphs.xlsx");
 		
 		// File file2 = new File("/workspace/cloudsim-latest/modules/cloudsim-examples/target/classes/workload/planetlab");
@@ -155,6 +156,13 @@ public class LrMmtCustom {
 		return workbook;
 	}
 	
+	public static void attachDataToWorksheet(Workbook workbook) {
+		XSSFSheet tableSheet = (XSSFSheet) workbook.getSheet("Table");
+
+		excelPopulaterString(tableSheet, 1, 1, "20110303");
+
+	}
+
     private static Workbook linkOrCreateWorkbook(String filePath) {
     	File file = new File(filePath);
     	FileInputStream	inputStream = null;
@@ -261,7 +269,7 @@ public class LrMmtCustom {
 		CellReference cellTopLeft = null;
 		CellReference cellBottomRight = null;
 		cellTopLeft = new CellReference(0, 0);
-		cellBottomRight = new CellReference(11, 9);
+		cellBottomRight = new CellReference(10, 8);
 		AreaReference reference = workbook.getCreationHelper().createAreaReference(cellTopLeft, cellBottomRight);
         table.setCellReferences(reference);
 
