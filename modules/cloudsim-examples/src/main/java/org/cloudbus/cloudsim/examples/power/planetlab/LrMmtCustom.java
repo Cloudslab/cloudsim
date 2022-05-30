@@ -63,7 +63,7 @@ public class LrMmtCustom {
 		boolean outputToFile = true;
 		String inputFolder = LrMmt.class.getClassLoader().getResource("workload/planetlab").getPath();
 		String outputFolder = "output";
-		String workload = "20110306"; // PlanetLab workload
+		String workload = "20110303"; // PlanetLab workload
 		String vmAllocationPolicy = "lr"; // Local Regression (LR) VM allocation policy
 		String vmSelectionPolicy = "mmt"; // Minimum Migration Time (MMT) VM selection policy
 		String parameter = "1.2"; // the safety parameter of the LR policy
@@ -78,8 +78,8 @@ public class LrMmtCustom {
 
 		//Workbook workbook = new XSSFWorkbook();
 		Workbook workbook = setupWorksheet();
-		attachDataToWorksheet(workbook);
-		writeToWorkbook(workbook , "/workspace/cloudsim-latest/output/log/graphs.xlsx");
+
+		writeToWorkbook(workbook , "../cloudsim-latest/output/log/graphs.xlsx");
 		
 		// File file2 = new File("/workspace/cloudsim-latest/modules/cloudsim-examples/target/classes/workload/planetlab");
 		// String[] directories = file2.list(new FilenameFilter() {
@@ -89,11 +89,11 @@ public class LrMmtCustom {
 		// }
 		// });
 
-		//System.out.println(Arrays.toString(directories));
+		// System.out.println(Arrays.toString(directories));
 
 		// Loop thorugh all workloads
+
 		// for (String d: directories) {           
-			
 		// 	workload = d;
 			
 		// 	new PlanetLabRunner(
@@ -113,16 +113,16 @@ public class LrMmtCustom {
 
 
 
-		// new PlanetLabRunner(
-		// 		enableOutput,
-		// 		outputToFile,
-		// 		inputFolder,
-		// 		outputFolder,
-		// 		workload,
-		// 		vmAllocationPolicy,
-		// 		vmSelectionPolicy,
-		// 		parameter);
-	}
+		new PlanetLabRunner(
+				enableOutput,
+				outputToFile,
+				inputFolder,
+				outputFolder,
+				workload,
+				vmAllocationPolicy,
+				vmSelectionPolicy,
+				parameter);
+	} // End main
 
 	// Prints all file/directory names in the entire directory tree!
 	private static void walkDirTree(String rootFolder) throws Exception {
@@ -152,14 +152,38 @@ public class LrMmtCustom {
 		excelPopulaterString(tableSheet, 0, 6, "IqrRs");
 		excelPopulaterString(tableSheet, 0, 7, "LrMc");
 		excelPopulaterString(tableSheet, 0, 8, "LrMmt");
-		
+
+		excelPopulaterInt(tableSheet, 1, 0, 1);
+		excelPopulaterInt(tableSheet, 2, 0, 2);
+		excelPopulaterInt(tableSheet, 3, 0, 3);
+		excelPopulaterInt(tableSheet, 4, 0, 4);
+		excelPopulaterInt(tableSheet, 5, 0, 5);
+		excelPopulaterInt(tableSheet, 6, 0, 6);
+		excelPopulaterInt(tableSheet, 7, 0, 7);
+		excelPopulaterInt(tableSheet, 8, 0, 8);
+		excelPopulaterInt(tableSheet, 9, 0, 9);
+		excelPopulaterInt(tableSheet, 10, 0, 10);
+
+		excelPopulaterString(tableSheet, 1, 1, "20110303");
+		excelPopulaterString(tableSheet, 2, 1, "20110306");
+		excelPopulaterString(tableSheet, 3, 1, "20110309");
+		excelPopulaterString(tableSheet, 4, 1, "20110322");
+		excelPopulaterString(tableSheet, 5, 1, "20110325");
+		excelPopulaterString(tableSheet, 6, 1, "20110403");
+		excelPopulaterString(tableSheet, 7, 1, "20110409");
+		excelPopulaterString(tableSheet, 8, 1, "20110411");
+		excelPopulaterString(tableSheet, 9, 1, "20110412");
+		excelPopulaterString(tableSheet, 10, 1, "20110420");
+
+
+
 		return workbook;
 	}
 	
 	public static void attachDataToWorksheet(Workbook workbook) {
 		XSSFSheet tableSheet = (XSSFSheet) workbook.getSheet("Table");
 
-		excelPopulaterString(tableSheet, 1, 1, "20110303");
+		//excelPopulaterString(tableSheet, 1, 1, "20110303");
 
 	}
 
