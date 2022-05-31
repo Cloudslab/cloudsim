@@ -1,11 +1,16 @@
 package org.cloudbus.cloudsim.examples.power.planetlab;
 
 import java.util.Calendar;
+import java.util.List;
 
+import org.cloudbus.cloudsim.examples.power.Constants;
+import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.examples.power.Helper;
 import org.cloudbus.cloudsim.examples.power.RunnerAbstract;
+import org.cloudbus.cloudsim.power.PowerDatacenter;
 
 /**
  * The example runner for the PlanetLab workload.
@@ -76,6 +81,54 @@ public class PlanetLabRunner extends RunnerAbstract {
 			Log.printLine("The simulation has been terminated due to an unexpected error");
 			System.exit(0);
 		}
+	}
+
+	@Override
+	/**
+	 * Starts the simulation.
+	 * 
+	 * @param experimentName the experiment name
+	 * @param outputFolder the output folder
+	 * @param vmAllocationPolicy the vm allocation policy
+	 */
+	protected void start(String experimentName, String outputFolder, VmAllocationPolicy vmAllocationPolicy) {
+		System.out.println("Starting " + experimentName);
+
+		try {
+			PowerDatacenter datacenter = (PowerDatacenter) Helper.createDatacenter(
+					"Datacenter",
+					PowerDatacenter.class,
+					hostList,
+					vmAllocationPolicy);
+
+			datacenter.setDisableMigrations(false);
+
+			broker.submitVmList(vmList);
+			broker.submitCloudletList(cloudletList);
+
+			CloudSim.terminateSimulation(Constants.SIMULATION_LIMIT);
+			double lastClock = CloudSim.startSimulation();
+
+			List<Cloudlet> newList = broker.getCloudletReceivedList();
+			Log.printLine("Received " + newList.size() + " cloudlets");
+
+			CloudSim.stopSimulation();
+
+			Helper.printResults(
+					datacenter,
+					vmList,
+					lastClock,
+					experimentName,
+					true,
+					outputFolder);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.printLine("The simulation has been terminated due to an unexpected error");
+			System.exit(0);
+		}
+
+		Log.printLine("Finished " + experimentName);
 	}
 
 }

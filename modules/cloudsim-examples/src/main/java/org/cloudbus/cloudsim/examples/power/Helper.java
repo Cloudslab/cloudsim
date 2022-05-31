@@ -652,14 +652,17 @@ public class Helper {
 	public static void writeDataRow(String data, String outputPath) {
 		File file = new File(outputPath);
 		try {
-			file.createNewFile();
+			if (!file.exists()) {
+				file.createNewFile();
+			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			System.exit(0);
 		}
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-			writer.write(data);
+			//writer.write(data);
+			writer.append(data);
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();

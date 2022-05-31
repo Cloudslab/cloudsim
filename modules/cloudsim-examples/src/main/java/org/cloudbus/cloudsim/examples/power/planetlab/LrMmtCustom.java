@@ -76,10 +76,10 @@ public class LrMmtCustom {
 		// }
 
 
-		//Workbook workbook = new XSSFWorkbook();
-		Workbook workbook = setupWorksheet();
+		////Workbook workbook = new XSSFWorkbook();
+		//Workbook workbook = setupWorksheet();
 
-		writeToWorkbook(workbook , "../cloudsim-latest/output/log/graphs.xlsx");
+		//writeToWorkbook(workbook , "../cloudsim-latest/output/log/graphs.xlsx");
 		
 		// File file2 = new File("/workspace/cloudsim-latest/modules/cloudsim-examples/target/classes/workload/planetlab");
 		// String[] directories = file2.list(new FilenameFilter() {
@@ -119,6 +119,16 @@ public class LrMmtCustom {
 				inputFolder,
 				outputFolder,
 				workload,
+				vmAllocationPolicy,
+				vmSelectionPolicy,
+				parameter);
+
+		new PlanetLabRunner(
+				enableOutput,
+				outputToFile,
+				inputFolder,
+				outputFolder,
+				"20110306",
 				vmAllocationPolicy,
 				vmSelectionPolicy,
 				parameter);
