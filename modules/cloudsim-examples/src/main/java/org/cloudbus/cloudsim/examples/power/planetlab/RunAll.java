@@ -48,8 +48,8 @@ public class RunAll {
 		String parameter; // the safety parameter of the LR policy
 
 		String[] workloadArray = { "20110303", "20110306"/*, "20110309", "20110322", "20110325", "20110403", "20110409", "20110411", "20110412", "20110420"*/ };
-		String[] vmAllocationPolicyArray = { "iqr"/*, "lr", "lrr", "mad", "thr"*/ };
-		String[] vmSelectionPolicyArray = { "mc"/*, "mmt", "mu", "rs"*/ };
+		String[] vmAllocationPolicyArray = { "iqr", "lr", "lrr", "mad", "thr" };
+		String[] vmSelectionPolicyArray = { "mc", "mmt", "mu", "rs" };
 
 		// Loop thorugh all workloads
 		for (String workloadName : workloadArray) {
@@ -62,7 +62,7 @@ public class RunAll {
 				// Set safety parameter based on vmAllocationPolicy
 				if (vmAllocationPolicy.equals("iqr")) {
 					parameter = "1.5";
-				} else if (vmAllocationPolicy.equals("lr") || workload.equals("lrr")) {
+				} else if (vmAllocationPolicy.equals("lr") || vmAllocationPolicy.equals("lrr")) {
 					parameter = "1.2";
 				} else if (vmAllocationPolicy.equals("mad")) {
 					parameter = "2.5";
