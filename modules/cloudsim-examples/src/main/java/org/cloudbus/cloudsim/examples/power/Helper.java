@@ -312,6 +312,10 @@ public class Helper {
 			if (!folder4.exists()) {
 				folder4.mkdir();
 			}
+			File allStatsFile = new File(outputFolder + "/stats/all_stats.csv");
+			if (!allStatsFile.exists()) {
+				writeDataRow("experimentName,workload,vmAllocationPolicy,vsSelectionPolicy,parameter,numberOfHosts,numberOfVms,totalSimulationTime,energy,numberOfMigrations,sla,slaTimePerActiveHost,slaDegradationDueToMigration,slaOverall,slaAverage,numberOfHostShutdowns,meanTimeBeforeHostShutdown,stDevTimeBeforeHostShutdown,meanTimeBeforeVmMigration,stDevTimeBeforeVmMigration,executionTimeVmSelectionMean,executionTimeVmSelectionStDev,executionTimeHostSelectionMean,executionTimeHostSelectionStDev,executionTimeVmReallocationMean,executionTimeVmReallocationStDev,executionTimeTotalMean,executionTimeTotalStDev" + "\n", outputFolder + "/stats/" + "all" + "_stats.csv");
+			}
 
 			StringBuilder data = new StringBuilder();
 			String delimeter = ",";
@@ -373,7 +377,8 @@ public class Helper {
 
 			data.append("\n");
 
-			writeDataRow(data.toString(), outputFolder + "/stats/" + experimentName + "_stats.csv");
+			//writeDataRow(data.toString(), outputFolder + "/stats/" + experimentName + "_stats.csv");
+			writeDataRow(data.toString(), outputFolder + "/stats/" + "all" + "_stats.csv");
 			writeDataColumn(timeBeforeHostShutdown, outputFolder + "/time_before_host_shutdown/"
 					+ experimentName + "_time_before_host_shutdown.csv");
 			writeDataColumn(timeBeforeVmMigration, outputFolder + "/time_before_vm_migration/"
@@ -660,7 +665,7 @@ public class Helper {
 			System.exit(0);
 		}
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 			//writer.write(data);
 			writer.append(data);
 			writer.close();

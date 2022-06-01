@@ -42,22 +42,14 @@ public class RunAll {
 		boolean outputToFile = false;
 		String inputFolder = LrMmt.class.getClassLoader().getResource("workload/planetlab").getPath();
 		String outputFolder = "output";
-		String workload = ""; // PlanetLab workload
-		String vmAllocationPolicy = ""; // Local Regression (LR) VM allocation policy
-		String vmSelectionPolicy = ""; // Minimum Migration Time (MMT) VM selection policy
-		String parameter = ""; // the safety parameter of the LR policy
+		String workload; // PlanetLab workload
+		String vmAllocationPolicy; // Local Regression (LR) VM allocation policy
+		String vmSelectionPolicy; // Minimum Migration Time (MMT) VM selection policy
+		String parameter; // the safety parameter of the LR policy
 
-		// File workloadsFolder = new File("/workspace/cloudsim-latest/modules/cloudsim-examples/target/classes/workload/planetlab");
-		// String[] workloadArray = workloadsFolder.list(new FilenameFilter() {
-		// 	@Override
-		// 	public boolean accept(File current, String name) {
-		// 		return new File(current, name).isDirectory();
-		// 	}
-		// });
-
-		String[] workloadArray = { "20110303", "20110306", "20110309", "20110322", "20110325", "20110403", "20110409", "20110411", "20110412", "20110420" }
-		String[] vmAllocationPolicyArray = { "iqr", "lr", "lrr", "mad", "thr" };
-		String[] vmSelectionPolicyArray = { "mc", "mmt", "mu", "rs" };
+		String[] workloadArray = { "20110303", "20110306"/*, "20110309", "20110322", "20110325", "20110403", "20110409", "20110411", "20110412", "20110420"*/ };
+		String[] vmAllocationPolicyArray = { "iqr"/*, "lr", "lrr", "mad", "thr"*/ };
+		String[] vmSelectionPolicyArray = { "mc"/*, "mmt", "mu", "rs"*/ };
 
 		// Loop thorugh all workloads
 		for (String workloadName : workloadArray) {
@@ -68,33 +60,38 @@ public class RunAll {
 				vmAllocationPolicy = vmAllocationPolicyName;
 				System.out.println("vmAllocationPolicy: " + vmAllocationPolicy);
 				// Set safety parameter based on vmAllocationPolicy
-				if (workload.equals("iqr")) {
+				if (vmAllocationPolicy.equals("iqr")) {
 					parameter = "1.5";
-				} else if (workload.equals("lr") || workload.equals("lrr")) {
+				} else if (vmAllocationPolicy.equals("lr") || workload.equals("lrr")) {
 					parameter = "1.2";
-				} else if (workload.equals("mad")) {
+				} else if (vmAllocationPolicy.equals("mad")) {
 					parameter = "2.5";
-				} else if (workload.equals("thr")) {
+				} else if (vmAllocationPolicy.equals("thr")) {
 					parameter = "0.8";
+				} else {
+					parameter = "";
+					System.out.println("Parameter not set");
+					System.exit(0);
 				}
 				// Loop through all vmSelectionPolicies
 				for (String vmSelectionPolicyName : vmSelectionPolicyArray) {
 					vmSelectionPolicy = vmSelectionPolicyName;
 					System.out.println("vmSelectionPolicy: " + vmSelectionPolicy);
-				}
-			}
-			
-			// Run the simulation
-			new PlanetLabRunner(
-					enableOutput,
-					outputToFile,
-					inputFolder,
-					outputFolder,
-					workload,
-					vmAllocationPolicy,
-					vmSelectionPolicy,
-					parameter);
-		} // End for workload
+					
+					// Run the simulation
+					new PlanetLabRunner(
+							enableOutput,
+							outputToFile,
+							inputFolder,
+							outputFolder,
+							workload,
+							vmAllocationPolicy,
+							vmSelectionPolicy,
+							parameter);
 
+				} // End for vmSelectionPolicy
+			} // End for vmAllocationPolicy
+		} // End for workload
+	
 	} // End main
 } // End class
