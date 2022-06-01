@@ -1,7 +1,5 @@
 package org.cloudbus.cloudsim.examples.power.planetlab;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**
