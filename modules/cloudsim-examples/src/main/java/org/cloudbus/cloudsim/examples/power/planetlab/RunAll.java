@@ -38,7 +38,7 @@ public class RunAll {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void main(String[] args) throws IOException {
-		boolean enableOutput = true;
+		boolean enableOutput = false;
 		boolean outputToFile = false;
 		String inputFolder = LrMmt.class.getClassLoader().getResource("workload/planetlab").getPath();
 		String outputFolder = "output";
@@ -47,19 +47,44 @@ public class RunAll {
 		String vmSelectionPolicy = ""; // Minimum Migration Time (MMT) VM selection policy
 		String parameter = ""; // the safety parameter of the LR policy
 
-		File workloadsFolder = new File(
-				"/workspace/cloudsim-latest/modules/cloudsim-examples/target/classes/workload/planetlab");
-		String[] workloadArray = workloadsFolder.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File current, String name) {
-				return new File(current, name).isDirectory();
-			}
-		});
+		// File workloadsFolder = new File("/workspace/cloudsim-latest/modules/cloudsim-examples/target/classes/workload/planetlab");
+		// String[] workloadArray = workloadsFolder.list(new FilenameFilter() {
+		// 	@Override
+		// 	public boolean accept(File current, String name) {
+		// 		return new File(current, name).isDirectory();
+		// 	}
+		// });
+
+		String[] workloadArray = { "20110303", "20110306", "20110309", "20110322", "20110325", "20110403", "20110409", "20110411", "20110412", "20110420" }
+		String[] vmAllocationPolicyArray = { "iqr", "lr", "lrr", "mad", "thr" };
+		String[] vmSelectionPolicyArray = { "mc", "mmt", "mu", "rs" };
 
 		// Loop thorugh all workloads
 		for (String workloadName : workloadArray) {
 			workload = workloadName;
-			System.out.println(workload);
+			System.out.println("workload: " + workload);
+			// Loop through all vmAllocationPolicies
+			for (String vmAllocationPolicyName : vmAllocationPolicyArray) {
+				vmAllocationPolicy = vmAllocationPolicyName;
+				System.out.println("vmAllocationPolicy: " + vmAllocationPolicy);
+				// Set safety parameter based on vmAllocationPolicy
+				if (workload.equals("iqr")) {
+					parameter = "1.5";
+				} else if (workload.equals("lr") || workload.equals("lrr")) {
+					parameter = "1.2";
+				} else if (workload.equals("mad")) {
+					parameter = "2.5";
+				} else if (workload.equals("thr")) {
+					parameter = "0.8";
+				}
+				// Loop through all vmSelectionPolicies
+				for (String vmSelectionPolicyName : vmSelectionPolicyArray) {
+					vmSelectionPolicy = vmSelectionPolicyName;
+					System.out.println("vmSelectionPolicy: " + vmSelectionPolicy);
+				}
+			}
+			
+			// Run the simulation
 			new PlanetLabRunner(
 					enableOutput,
 					outputToFile,
