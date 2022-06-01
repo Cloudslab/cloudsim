@@ -379,10 +379,10 @@ public class Helper {
 
 			//writeDataRow(data.toString(), outputFolder + "/stats/" + experimentName + "_stats.csv");
 			writeDataRow(data.toString(), outputFolder + "/stats/" + "all" + "_stats.csv");
-			writeDataColumn(timeBeforeHostShutdown, outputFolder + "/time_before_host_shutdown/"
-					+ experimentName + "_time_before_host_shutdown.csv");
-			writeDataColumn(timeBeforeVmMigration, outputFolder + "/time_before_vm_migration/"
-					+ experimentName + "_time_before_vm_migration.csv");
+			//writeDataColumn(timeBeforeHostShutdown, outputFolder + "/time_before_host_shutdown/"
+			//		+ experimentName + "_time_before_host_shutdown.csv");
+			//writeDataColumn(timeBeforeVmMigration, outputFolder + "/time_before_vm_migration/"
+			//		+ experimentName + "_time_before_vm_migration.csv");
 
 		} else {
 			Log.setDisabled(false);
