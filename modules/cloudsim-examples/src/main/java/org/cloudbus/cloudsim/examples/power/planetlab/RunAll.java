@@ -47,7 +47,7 @@ public class RunAll {
 		String vmSelectionPolicy; // Minimum Migration Time (MMT) VM selection policy
 		String parameter; // the safety parameter of the LR policy
 
-		String[] workloadArray = { "20110303", "20110306", "20110309", "20110322", "20110325", "20110403", "20110409", "20110411", "20110412", "2011020" };
+		String[] workloadArray = { /*"20110303", "20110306", "20110309", "20110322", "20110325", "20110403", "20110409", "20110411", "20110412", */"20110420" };
 		String[] vmAllocationPolicyArray = { "iqr", "lr", "lrr", "mad", "thr" };
 		String[] vmSelectionPolicyArray = { "mc", "mmt", "mu", "rs" };
 
