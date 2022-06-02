@@ -40,24 +40,17 @@ public class RunAll {
 		boolean outputToFile = false;
 		String inputFolder = LrMmt.class.getClassLoader().getResource("workload/planetlab").getPath();
 		String outputFolder = "output";
-		String workload; // PlanetLab workload
-		String vmAllocationPolicy; // Local Regression (LR) VM allocation policy
-		String vmSelectionPolicy; // Minimum Migration Time (MMT) VM selection policy
-		String parameter; // the safety parameter of the LR policy
+		// Create 3 arrays to hold experiment spcific data
+		String[] workloadArray = { "20110303", "20110306", "20110309", "20110322", "20110325", "20110403", "20110409", "20110411", "20110412", "20110420" }; // PlanetLab workloads
+		String[] vmAllocationPolicyArray = { "iqr", "lr", "lrr", "mad", "thr" }; // VM allocation policies
+		String[] vmSelectionPolicyArray = { "mc", "mmt", "mu", "rs" }; // VM selection policies
+		String parameter = ""; // Safety parameter
 
-		String[] workloadArray = { "20110303", "20110306", "20110309", "20110322", "20110325", "20110403", "20110409", "20110411", "20110412", "20110420" };
-		String[] vmAllocationPolicyArray = { "iqr", "lr", "lrr", "mad", "thr" };
-		String[] vmSelectionPolicyArray = { "mc", "mmt", "mu", "rs" };
-
-		// Loop thorugh all workloads
-		for (String workloadName : workloadArray) {
-			workload = workloadName;
-			System.out.println("workload: " + workload);
-			// Loop through all vmAllocationPolicies
-			for (String vmAllocationPolicyName : vmAllocationPolicyArray) {
-				vmAllocationPolicy = vmAllocationPolicyName;
-				System.out.println("vmAllocationPolicy: " + vmAllocationPolicy);
-				// Set safety parameter based on vmAllocationPolicy
+		// Loop thorugh all PlanetLab workloads
+		for (String workload : workloadArray) {
+			// Loop through all VM allocation policies
+			for (String vmAllocationPolicy : vmAllocationPolicyArray) {
+				// Set safety parameter based on VM allocation policy
 				if (vmAllocationPolicy.equals("iqr")) {
 					parameter = "1.5";
 				} else if (vmAllocationPolicy.equals("lr") || vmAllocationPolicy.equals("lrr")) {
@@ -71,11 +64,8 @@ public class RunAll {
 					System.out.println("Parameter not set");
 					System.exit(0);
 				}
-				// Loop through all vmSelectionPolicies
-				for (String vmSelectionPolicyName : vmSelectionPolicyArray) {
-					vmSelectionPolicy = vmSelectionPolicyName;
-					System.out.println("vmSelectionPolicy: " + vmSelectionPolicy);
-					
+				// Loop through all VM Selection Policies
+				for (String vmSelectionPolicy : vmSelectionPolicyArray) {
 					// Run the simulation
 					new PlanetLabRunner(
 							enableOutput,
@@ -86,7 +76,6 @@ public class RunAll {
 							vmAllocationPolicy,
 							vmSelectionPolicy,
 							parameter);
-
 				} // End for vmSelectionPolicy
 			} // End for vmAllocationPolicy
 		} // End for workload
