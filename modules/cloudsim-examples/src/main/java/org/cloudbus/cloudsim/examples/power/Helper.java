@@ -371,7 +371,7 @@ public class Helper {
 				data.append(String.format("%.5f", executionTimeTotalMean)).append(delimeter);
 				data.append(String.format("%.5f", executionTimeTotalStDev)).append(delimeter);
 
-				//writeMetricHistory(hosts, vmAllocationPolicy, outputFolder + "/metrics/" + experimentName
+				// writeMetricHistory(hosts, vmAllocationPolicy, outputFolder + "/metrics/" + experimentName
 				//		+ "_metric");
 			}
 
