@@ -319,6 +319,7 @@ public class Helper {
 
 			StringBuilder data = new StringBuilder();
 			String delimeter = ",";
+			String newLine = "\n";
 
 			data.append(experimentName).append(delimeter);
 			data.append(parseExperimentName(experimentName));
@@ -369,13 +370,11 @@ public class Helper {
 				data.append(String.format("%.5f", executionTimeVmReallocationMean)).append(delimeter);
 				data.append(String.format("%.5f", executionTimeVmReallocationStDev)).append(delimeter);
 				data.append(String.format("%.5f", executionTimeTotalMean)).append(delimeter);
-				data.append(String.format("%.5f", executionTimeTotalStDev)).append(delimeter);
+				data.append(String.format("%.5f", executionTimeTotalStDev)).append(newLine);
 
 				// writeMetricHistory(hosts, vmAllocationPolicy, outputFolder + "/metrics/" + experimentName
 				//		+ "_metric");
 			}
-
-			data.append("\n");
 
 			//writeDataRow(data.toString(), outputFolder + "/stats/" + experimentName + "_stats.csv");
 			writeDataRow(data.toString(), outputFolder + "/stats/" + "all" + "_stats.csv");
