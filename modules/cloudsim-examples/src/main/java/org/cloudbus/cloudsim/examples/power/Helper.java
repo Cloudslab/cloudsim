@@ -314,7 +314,7 @@ public class Helper {
 			}
 			File allStatsFile = new File(outputFolder + "/stats/all_stats.csv");
 			if (!allStatsFile.exists()) {
-				writeDataRow("experimentName,workload,vmAllocationPolicy,vsSelectionPolicy,parameter,numberOfHosts,numberOfVms,totalSimulationTime,energy,numberOfMigrations,sla,slaTimePerActiveHost,slaDegradationDueToMigration,slaOverall,slaAverage,numberOfHostShutdowns,meanTimeBeforeHostShutdown,stDevTimeBeforeHostShutdown,meanTimeBeforeVmMigration,stDevTimeBeforeVmMigration,executionTimeVmSelectionMean,executionTimeVmSelectionStDev,executionTimeHostSelectionMean,executionTimeHostSelectionStDev,executionTimeVmReallocationMean,executionTimeVmReallocationStDev,executionTimeTotalMean,executionTimeTotalStDev" + "\n", outputFolder + "/stats/" + "all" + "_stats.csv");
+				writeDataRow("experimentName,workload,vmAllocationPolicy,vmSelectionPolicy,parameter,numberOfHosts,numberOfVms,totalSimulationTime,energy,numberOfMigrations,sla,slaTimePerActiveHost,slaDegradationDueToMigration,slaOverall,slaAverage,numberOfHostShutdowns,meanTimeBeforeHostShutdown,stDevTimeBeforeHostShutdown,meanTimeBeforeVmMigration,stDevTimeBeforeVmMigration,executionTimeVmSelectionMean,executionTimeVmSelectionStDev,executionTimeHostSelectionMean,executionTimeHostSelectionStDev,executionTimeVmReallocationMean,executionTimeVmReallocationStDev,executionTimeTotalMean,executionTimeTotalStDev" + "\n", outputFolder + "/stats/" + "all" + "_stats.csv");
 			}
 
 			StringBuilder data = new StringBuilder();
