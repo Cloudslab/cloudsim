@@ -11,21 +11,19 @@ package org.cloudbus.cloudsim.power;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 
 /**
- * An abstract VM selection policy used to select VMs from a list of migratable VMs.
- * The selection is defined by sub classes.
+ * The class of an abstract VM selection policy.
  * 
- * <br/>If you are using any algorithms, policies or workload included in the power package please cite
- * the following paper:<br/>
+ * If you are using any algorithms, policies or workload included in the power package, please cite
+ * the following paper:
  * 
- * <ul>
- * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
- * </ul>
+ * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
@@ -33,27 +31,66 @@ import org.cloudbus.cloudsim.Vm;
 public abstract class PowerVmSelectionPolicy {
 
 	/**
-	 * Gets a VM to migrate from a given host.
+	 * Gets the vms to migrate.
 	 * 
 	 * @param host the host
-	 * @return the vm to migrate
+	 * @param migrateMoreThanOne 
+	 * @return the vms to migrate
 	 */
-	public abstract Vm getVmToMigrate(PowerHost host);
+	public abstract Vm getVmToMigrate(PowerHost host, boolean migrateMoreThanOne);
 
 	/**
-	 * Gets the list of migratable VMs from a given host.
+	 * Gets the migratable vms.
 	 * 
 	 * @param host the host
-	 * @return the list of migratable VMs
+	 * @return the migratable vms
 	 */
 	protected List<PowerVm> getMigratableVms(PowerHost host) {
-		List<PowerVm> migratableVms = new ArrayList<>();
+		List<PowerVm> migratableVms = new ArrayList<PowerVm>();
+		//Log.printLine("In method to get the migratable VMS");
+		//Log.printLine(host.getVmList());
 		for (PowerVm vm : host.<PowerVm> getVmList()) {
+			//Log.printLine("Looping over migratable VMs");
+			//Log.printLine(vm.isInMigration());
 			if (!vm.isInMigration()) {
 				migratableVms.add(vm);
+				//Log.printLine("We have added one");
 			}
 		}
+		if(migratableVms.isEmpty()) {
+			return null;
+		}
+		
 		return migratableVms;
 	}
+	
+	public static List<PowerVm> getMigratableVmsNew(PowerHost host) {
+		List<PowerVm> migratableVms = new ArrayList<PowerVm>();
+		//Log.printLine("In method to get the migratable VMS");
+		//Log.printLine(host.getVmList());
+		for (PowerVm vm : host.<PowerVm> getVmList()) {
+			//Log.printLine("Looping over migratable VMs");
+			//Log.printLine(vm.isInMigration());
+			if (!vm.isInMigration()) {
+				migratableVms.add(vm);
+				//Log.printLine("We have added one");
+			}
+		}
+		if(migratableVms.isEmpty()) {
+			return null;
+		}
+		
+		return migratableVms;
+	}
+	
+	
+	public void updateQValues(PowerHost host, PowerVm vm) {
+		
+	}
+	
+	public void reset() {
+		
+	}
+
 
 }

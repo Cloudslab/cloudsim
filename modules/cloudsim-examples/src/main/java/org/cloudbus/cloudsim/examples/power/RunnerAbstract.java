@@ -26,6 +26,7 @@ import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumUtilization;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyRandomSelection;
+import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyReinforcementLearning;
 
 /**
  * The Class RunnerAbstract.
@@ -233,71 +234,60 @@ public abstract class RunnerAbstract {
 		}
 		double parameter = 0;
 		if (!parameterName.isEmpty()) {
-			parameter = Double.parseDouble(parameterName);
+			parameter = Double.valueOf(parameterName);
 		}
-		switch (vmAllocationPolicyName) {
-			case "iqr": {
-				PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
-						hostList,
-						vmSelectionPolicy,
-						0.7);
-				vmAllocationPolicy = new PowerVmAllocationPolicyMigrationInterQuartileRange(
-						hostList,
-						vmSelectionPolicy,
-						parameter,
-						fallbackVmSelectionPolicy);
-				break;
-			}
-			case "mad": {
-				PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
-						hostList,
-						vmSelectionPolicy,
-						0.7);
-				vmAllocationPolicy = new PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(
-						hostList,
-						vmSelectionPolicy,
-						parameter,
-						fallbackVmSelectionPolicy);
-				break;
-			}
-			case "lr": {
-				PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
-						hostList,
-						vmSelectionPolicy,
-						0.7);
-				vmAllocationPolicy = new PowerVmAllocationPolicyMigrationLocalRegression(
-						hostList,
-						vmSelectionPolicy,
-						parameter,
-						Constants.SCHEDULING_INTERVAL,
-						fallbackVmSelectionPolicy);
-				break;
-			}
-			case "lrr": {
-				PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
-						hostList,
-						vmSelectionPolicy,
-						0.7);
-				vmAllocationPolicy = new PowerVmAllocationPolicyMigrationLocalRegressionRobust(
-						hostList,
-						vmSelectionPolicy,
-						parameter,
-						Constants.SCHEDULING_INTERVAL,
-						fallbackVmSelectionPolicy);
-				break;
-			}
-			case "thr":
-				vmAllocationPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
-						hostList,
-						vmSelectionPolicy,
-						parameter);
-				break;
-			case "dvfs":
-				vmAllocationPolicy = new PowerVmAllocationPolicySimple(hostList);
-				break;
-			default:
-				System.out.println("Unknown VM allocation policy: " + vmAllocationPolicyName);
-				System.exit(0);
+		if (vmAllocationPolicyName.equals("iqr")) {
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
+					hostList,
+					vmSelectionPolicy,
+					0.7);
+			vmAllocationPolicy = new PowerVmAllocationPolicyMigrationInterQuartileRange(
+					hostList,
+					vmSelectionPolicy,
+					parameter,
+					fallbackVmSelectionPolicy);
+		} else if (vmAllocationPolicyName.equals("mad")) {
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
+					hostList,
+					vmSelectionPolicy,
+					0.7);
+			vmAllocationPolicy = new PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(
+					hostList,
+					vmSelectionPolicy,
+					parameter,
+					fallbackVmSelectionPolicy);
+		} else if (vmAllocationPolicyName.equals("lr")) {
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
+					hostList,
+					vmSelectionPolicy,
+					0.7);
+			vmAllocationPolicy = new PowerVmAllocationPolicyMigrationLocalRegression(
+					hostList,
+					vmSelectionPolicy,
+					parameter,
+					Constants.SCHEDULING_INTERVAL,
+					fallbackVmSelectionPolicy);
+		} else if (vmAllocationPolicyName.equals("lrr")) {
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
+					hostList,
+					vmSelectionPolicy,
+					0.7);
+			vmAllocationPolicy = new PowerVmAllocationPolicyMigrationLocalRegressionRobust(
+					hostList,
+					vmSelectionPolicy,
+					parameter,
+					Constants.SCHEDULING_INTERVAL,
+					fallbackVmSelectionPolicy);
+		} else if (vmAllocationPolicyName.equals("thr")) {
+			vmAllocationPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
+					hostList,
+					vmSelectionPolicy,
+					parameter);
+		} else if (vmAllocationPolicyName.equals("dvfs")) {
+			vmAllocationPolicy = new PowerVmAllocationPolicySimple(hostList);
+		} else {
+			System.out.println("Unknown VM allocation policy: " + vmAllocationPolicyName);
+			System.exit(0);
 		}
 		return vmAllocationPolicy;
 	}
@@ -310,23 +300,21 @@ public abstract class RunnerAbstract {
 	 */
 	protected PowerVmSelectionPolicy getVmSelectionPolicy(String vmSelectionPolicyName) {
 		PowerVmSelectionPolicy vmSelectionPolicy = null;
-		switch (vmSelectionPolicyName) {
-			case "mc":
-				vmSelectionPolicy = new PowerVmSelectionPolicyMaximumCorrelation(
-						new PowerVmSelectionPolicyMinimumMigrationTime());
-				break;
-			case "mmt":
-				vmSelectionPolicy = new PowerVmSelectionPolicyMinimumMigrationTime();
-				break;
-			case "mu":
-				vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
-				break;
-			case "rs":
-				vmSelectionPolicy = new PowerVmSelectionPolicyRandomSelection();
-				break;
-			default:
-				System.out.println("Unknown VM selection policy: " + vmSelectionPolicyName);
-				System.exit(0);
+		if (vmSelectionPolicyName.equals("mc")) {
+			vmSelectionPolicy = new PowerVmSelectionPolicyMaximumCorrelation(
+					new PowerVmSelectionPolicyMinimumMigrationTime());
+		} else if (vmSelectionPolicyName.equals("mmt")) {
+			vmSelectionPolicy = new PowerVmSelectionPolicyMinimumMigrationTime();
+		} else if (vmSelectionPolicyName.equals("mu")) {
+			vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
+		} else if (vmSelectionPolicyName.equals("rs")) {
+			vmSelectionPolicy = new PowerVmSelectionPolicyRandomSelection();
+		} else if (vmSelectionPolicyName.equals("RL")) {
+			vmSelectionPolicy = new PowerVmSelectionPolicyReinforcementLearning();
+		}
+		else {
+			System.out.println("Unknown VM selection policy: " + vmSelectionPolicyName);
+			System.exit(0);
 		}
 		return vmSelectionPolicy;
 	}
