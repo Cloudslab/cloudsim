@@ -11,54 +11,37 @@ package org.cloudbus.cloudsim.power;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
- * A VM allocation policy that uses Local Regression (LR) to predict host utilization (load)
- * and define if a host is overloaded or not.
+ * The Local Regression (LR) VM allocation policy.
  * 
- * <br/>If you are using any algorithms, policies or workload included in the power package please cite
- * the following paper:<br/>
+ * If you are using any algorithms, policies or workload included in the power package, please cite
+ * the following paper:
  * 
- * <ul>
- * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
+ * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
- * </ul>
+ * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
  */
 public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllocationPolicyMigrationAbstract {
 
-	/** The scheduling interval that defines the periodicity of VM migrations. */
+	/** The scheduling interval. */
 	private double schedulingInterval;
 
-	/** The safety parameter in percentage (at scale from 0 to 1).
-         * It is a tuning parameter used by the allocation policy to 
-         * estimate host utilization (load). The host overload detection is based
-         * on this estimation.
-         * This parameter is used to tune the estimation
-         * to up or down. If the parameter is set as 1.2, for instance, 
-         * the estimated host utilization is increased in 20%, giving
-         * the host a safety margin of 20% to grow its usage in order to try
-         * avoiding SLA violations. As this parameter decreases, more
-         * aggressive will be the consolidation (packing) of VMs inside a host,
-         * what may lead to optimization of resource usage, but rising of SLA 
-         * violations. Thus, the parameter has to be set in order to balance
-         * such factors.
-         */
+	/** The safety parameter. */
 	private double safetyParameter;
 
-	/** The fallback VM allocation policy to be used when
-         * the Local REgression over utilization host detection doesn't have
-         * data to be computed. */
+	/** The fallback vm allocation policy. */
 	private PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy;
 
 	/**
-	 * Instantiates a new PowerVmAllocationPolicyMigrationLocalRegression.
+	 * Instantiates a new power vm allocation policy migration local regression.
 	 * 
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
@@ -80,7 +63,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 	}
 
 	/**
-	 * Instantiates a new PowerVmAllocationPolicyMigrationLocalRegression.
+	 * Instantiates a new power vm allocation policy migration local regression.
 	 * 
 	 * @param hostList the host list
 	 * @param vmSelectionPolicy the vm selection policy
@@ -100,15 +83,23 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 	}
 
 	/**
-	 * Checks if a host is over utilized.
+	 * Checks if is host over utilized.
 	 * 
 	 * @param host the host
-	 * @return true, if is host over utilized; false otherwise
+	 * @return true, if is host over utilized
 	 */
+	
+	//THIS LOOKS TO BE WHAT MAKES THE LOCAL REGRESSION PART OF THE ALGORITHM IN LR-MMT TO BE UNIQUE
+	
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {
+		
+		//Log.printLine("In isHostOverUtilized");
+		
+		//THIS IS THE ONE WE KEEP ENDING UP IN THAT SEEMS TO RETURN NO OVER UTILIZED HOSTS 
 		PowerHostUtilizationHistory _host = (PowerHostUtilizationHistory) host;
 		double[] utilizationHistory = _host.getUtilizationHistory();
+		//_host.getU
 		int length = 10; // we use 10 to make the regression responsive enough to latest values
 		if (utilizationHistory.length < length) {
 			return getFallbackVmAllocationPolicy().isHostOverUtilized(host);
@@ -128,15 +119,21 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 		predictedUtilization *= getSafetyParameter();
 
 		addHistoryEntry(host, predictedUtilization);
-
+		
+		//Log.printLine("Host Overutilized");
+		
+		//if((predictedUtilization >= 1) == true) {
+			//Log.printLine("Host Overutilized new");
+		//}
+		
 		return predictedUtilization >= 1;
 	}
 
 	/**
-	 * Gets utilization estimates.
+	 * Gets the parameter estimates.
 	 * 
-	 * @param utilizationHistoryReversed the utilization history in reverse order
-	 * @return the utilization estimates
+	 * @param utilizationHistoryReversed the utilization history reversed
+	 * @return the parameter estimates
 	 */
 	protected double[] getParameterEstimates(double[] utilizationHistoryReversed) {
 		return MathUtil.getLoessParameterEstimates(utilizationHistoryReversed);

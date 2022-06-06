@@ -26,6 +26,7 @@ import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumUtilization;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyRandomSelection;
+import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyReinforcementLearning;
 
 /**
  * The Class RunnerAbstract.
@@ -308,7 +309,10 @@ public abstract class RunnerAbstract {
 			vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
 		} else if (vmSelectionPolicyName.equals("rs")) {
 			vmSelectionPolicy = new PowerVmSelectionPolicyRandomSelection();
-		} else {
+		} else if (vmSelectionPolicyName.equals("RL")) {
+			vmSelectionPolicy = new PowerVmSelectionPolicyReinforcementLearning();
+		}
+		else {
 			System.out.println("Unknown VM selection policy: " + vmSelectionPolicyName);
 			System.exit(0);
 		}

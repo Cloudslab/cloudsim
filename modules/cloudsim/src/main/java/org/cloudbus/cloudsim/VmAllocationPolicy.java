@@ -11,11 +11,13 @@ package org.cloudbus.cloudsim;
 import java.util.List;
 import java.util.Map;
 
+import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
+import org.cloudbus.cloudsim.power.PowerVmSelectionPolicy;
+
 /**
  * VmAllocationPolicy is an abstract class that represents the provisioning policy of hosts to
- * virtual machines in a Datacenter. It allocates hosts for placing VMs. 
- * It supports two-stage commit of reservation of hosts: first, we
- * reserve the host and, once committed by the user, it is effectively allocated to he/she.
+ * virtual machines in a Datacentre. It supports two-stage commit of reservation of hosts: first, we
+ * reserve the host and, once commited by the user, it is effectivelly allocated to he/she
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
@@ -25,11 +27,12 @@ public abstract class VmAllocationPolicy {
 
 	/** The host list. */
 	private List<? extends Host> hostList;
+	private PowerVmSelectionPolicy powerVmSelectionPolicy;
 
 	/**
-	 * Creates a new VmAllocationPolicy object.
+	 * Allocates a new VmAllocationPolicy object.
 	 * 
-	 * @param list Machines available in a {@link Datacenter}
+	 * @param list Machines available in this Datacentre
 	 * @pre $none
 	 * @post $none
 	 */
@@ -38,9 +41,10 @@ public abstract class VmAllocationPolicy {
 	}
 
 	/**
-	 * Allocates a host for a given VM.
+	 * Allocates a host for a given VM. The host to be allocated is the one that was already
+	 * reserved.
 	 * 
-	 * @param vm the VM to allocate a host to
+	 * @param vm virtual machine which the host is reserved to
 	 * @return $true if the host could be allocated; $false otherwise
 	 * @pre $none
 	 * @post $none
@@ -51,7 +55,6 @@ public abstract class VmAllocationPolicy {
 	 * Allocates a specified host for a given VM.
 	 * 
 	 * @param vm virtual machine which the host is reserved to
-         * @param host host to allocate the the given VM
 	 * @return $true if the host could be allocated; $false otherwise
 	 * @pre $none
 	 * @post $none
@@ -62,31 +65,30 @@ public abstract class VmAllocationPolicy {
 	 * Optimize allocation of the VMs according to current utilization.
 	 * 
 	 * @param vmList the vm list
+	 * @param utilizationBound the utilization bound
+	 * @param time the time
 	 * @return the array list< hash map< string, object>>
-         * 
-         * @todo It returns a list of maps, where each map key is a string 
-         * and stores an object. What in fact are the keys and values of this
-         * Map? Neither this class or its subclasses implement the method
-         * or have clear documentation. The only sublcass is the {@link VmAllocationPolicySimple}. 
-         * 
 	 */
 	public abstract List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList);
 
 	/**
 	 * Releases the host used by a VM.
 	 * 
-	 * @param vm the vm to get its host released
+	 * @param vm the vm
 	 * @pre $none
 	 * @post $none
 	 */
+	
+	public abstract List<Map<String, Object>> optimizeAllocationReinforcementLearning(List<PowerHostUtilizationHistory> overUtilizedHost, List<PowerHostUtilizationHistory> overutilizedHosts, boolean lastHost);
+
+	
 	public abstract void deallocateHostForVm(Vm vm);
 
 	/**
-	 * Get the host that is executing the given VM.
+	 * Get the host that is executing the given VM belonging to the given user.
 	 * 
 	 * @param vm the vm
-	 * @return the Host with the given vmID; $null if not found
-         * 
+	 * @return the Host with the given vmID and userID; $null if not found
 	 * @pre $none
 	 * @post $none
 	 */
@@ -121,5 +123,17 @@ public abstract class VmAllocationPolicy {
 	public <T extends Host> List<T> getHostList() {
 		return (List<T>) hostList;
 	}
+	
+	//ADDED FOR MY FUNCTIONALITY 
+	public abstract List<PowerHostUtilizationHistory> getOverUtilizedHosts();
+
+	public PowerVmSelectionPolicy getVmSelectionPolicy() {
+		return powerVmSelectionPolicy;
+	}
+	
+	public void setVmSelectionPolicy(PowerVmSelectionPolicy powerVmSelectionPolicy) {
+		this.powerVmSelectionPolicy = powerVmSelectionPolicy;
+	}
+
 
 }
