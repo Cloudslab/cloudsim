@@ -136,14 +136,8 @@ public abstract class VmScheduler {
 	 * @return the total allocated mips for the vm
 	 */
 	public double getTotalAllocatedMipsForVm(Vm vm) {
-		double allocated = 0;
 		List<Double> mipsMap = getAllocatedMipsForVm(vm);
-		if (mipsMap != null) {
-			for (double mips : mipsMap) {
-				allocated += mips;
-			}
-		}
-		return allocated;
+		return mipsMap != null ? mipsMap.stream().mapToDouble(Double::doubleValue).sum() : 0.0;
 	}
 
 	/**
