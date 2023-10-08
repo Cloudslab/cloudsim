@@ -81,7 +81,7 @@ public class CloudSimExample1 {
 
 			// Second step: Create Datacenters
 			// Datacenters are the resource providers in CloudSim. We need at
-			// list one of them to run a CloudSim simulation
+			// least one of them to run a CloudSim simulation
 			Datacenter datacenter0 = createDatacenter("Datacenter_0");
 
 			// Third step: Create Broker
@@ -132,7 +132,7 @@ public class CloudSimExample1 {
 			// submit cloudlet list to the broker
 			broker.submitCloudletList(cloudletList);
 
-			// Sixth step: Starts the simulation
+			// Sixth step: Start the simulation
 			CloudSim.startSimulation();
 
 			CloudSim.stopSimulation();
