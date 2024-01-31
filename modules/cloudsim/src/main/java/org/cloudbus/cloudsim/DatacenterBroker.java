@@ -21,6 +21,10 @@ import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.lists.CloudletList;
 import org.cloudbus.cloudsim.lists.VmList;
 
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * DatacentreBroker represents a broker acting on behalf of a user. It hides VM management, as vm
  * creation, submission of cloudlets to VMs and destruction of VMs.
@@ -30,6 +34,7 @@ import org.cloudbus.cloudsim.lists.VmList;
  * @since CloudSim Toolkit 1.0
  */
 public class DatacenterBroker extends SimEntity {
+	private static final Logger logger = Logger.getLogger(DatacenterBroker.class.getName());
 
 	/** The list of VMs submitted to be managed by the broker. */
 	protected List<? extends Vm> vmList;
