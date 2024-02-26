@@ -1,5 +1,6 @@
 package org.cloudbus.cloudsim.container.core;
 
+import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisioner;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisioner;
@@ -21,11 +22,13 @@ import java.util.List;
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
  * @author Sareh Fotuhi Piraghaj
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  * <p/>
  * Created by sareh on 9/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
-public class ContainerVm {
+public class ContainerVm extends Vm {
 
     /**
      * The user id.
@@ -55,7 +58,7 @@ public class ContainerVm {
     /**
      * The ram.
      */
-    private float ram;
+    private int ram;
 
     /**
      * The bw.
@@ -95,7 +98,7 @@ public class ContainerVm {
     /**
      * The current allocated ram.
      */
-    private float currentAllocatedRam;
+    private int currentAllocatedRam;
 
     /**
      * The current allocated bw.
@@ -183,7 +186,7 @@ public class ContainerVm {
             int id,
             int userId,
             double mips,
-            float ram,
+            int ram,
             long bw,
             long size,
             String vmm,
@@ -192,26 +195,10 @@ public class ContainerVm {
             ContainerBwProvisioner containerBwProvisioner,
             List<? extends ContainerPe> peList
     ) {
-        setId(id);
-        setUserId(userId);
-        setUid(getUid(userId, id));
-        setMips(mips);
+        super(id, userId, mips, peList.size(), ram, bw, size, vmm, null);
+        // TODO: Remo Andreoli -> avoid null here, try to reconcile ContainerScheduler and CloudletScheduler classes
         setPeList(peList);
-        setNumberOfPes(getPeList().size());
-        setRam(ram);
-        setBw(bw);
-        setSize(size);
-        setVmm(vmm);
         setContainerScheduler(containerScheduler);
-
-        setInMigration(false);
-        setInWaiting(false);
-        setBeingInstantiated(true);
-
-        setCurrentAllocatedBw(0);
-        setCurrentAllocatedMips(null);
-        setCurrentAllocatedRam(0);
-        setCurrentAllocatedSize(0);
 
         setContainerRamProvisioner(containerRamProvisioner);
         setContainerBwProvisioner(containerBwProvisioner);
@@ -231,6 +218,7 @@ public class ContainerVm {
      * @pre currentTime >= 0
      * @post $none
      */
+    @Override
     public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
 //        Log.printLine("Vm: update Vms Processing at " + currentTime);
         if (mipsShare != null && !getContainerList().isEmpty()) {
@@ -259,6 +247,7 @@ public class ContainerVm {
      *
      * @return the current requested mips
      */
+    @Override
     public List<Double> getCurrentRequestedMips() {
 
         double requestedMipsTemp = 0;
@@ -291,40 +280,11 @@ public class ContainerVm {
     }
 
     /**
-     * Gets the current requested total mips.
-     *
-     * @return the current requested total mips
-     */
-    public double getCurrentRequestedTotalMips() {
-        double totalRequestedMips = 0;
-        for (double mips : getCurrentRequestedMips()) {
-            totalRequestedMips += mips;
-        }
-        //Log.printLine("Container: get Current totalRequestedMips" + totalRequestedMips);
-        return totalRequestedMips;
-    }
-
-    /**
-     * Gets the current requested max mips among all virtual PEs.
-     *
-     * @return the current requested max mips
-     */
-    public double getCurrentRequestedMaxMips() {
-        double maxMips = 0;
-        for (double mips : getCurrentRequestedMips()) {
-            if (mips > maxMips) {
-                maxMips = mips;
-            }
-        }
-        //Log.printLine("Container: get Current RequestedMaxMips" + maxMips);
-        return maxMips;
-    }
-
-    /**
      * Gets the current requested bw.
      *
      * @return the current requested bw
      */
+    @Override
     public long getCurrentRequestedBw() {
 
         if (isBeingInstantiated()) {
@@ -350,12 +310,13 @@ public class ContainerVm {
      *
      * @return the current requested ram
      */
-    public float getCurrentRequestedRam() {
+    @Override
+    public int getCurrentRequestedRam() {
         if (isBeingInstantiated()) {
             return getRam();
         } else {
 
-            float requestedRamTemp = 0;
+            int requestedRamTemp = 0;
 
             for (Container container : getContainerList()) {
                 requestedRamTemp += container.getCurrentRequestedRam();
@@ -374,6 +335,7 @@ public class ContainerVm {
      * @param time the time
      * @return total utilization
      */
+    @Override
     public double getTotalUtilizationOfCpu(double time) {
         float TotalUtilizationOfCpu = 0;
 
@@ -383,202 +345,7 @@ public class ContainerVm {
 
         //Log.printLine("Vm: get Current requested Mips" + TotalUtilizationOfCpu);
         return TotalUtilizationOfCpu;
-
-
     }
-
-    /**
-     * Get utilization created by all containers running on this Container in MIPS.
-     *
-     * @param time the time
-     * @return total utilization
-     */
-    public double getTotalUtilizationOfCpuMips(double time) {
-        //Log.printLine("Container: get Current getTotalUtilizationOfCpuMips" + getTotalUtilizationOfCpu(time) * getMips());
-        return getTotalUtilizationOfCpu(time) * getMips();
-    }
-
-    /**
-     * Sets the uid.
-     *
-     * @param uid the new uid
-     */
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    /**
-     * Get unique string identificator of the Container.
-     *
-     * @return string uid
-     */
-    public String getUid() {
-        return uid;
-    }
-
-    /**
-     * Generate unique string identificator of the Container.
-     *
-     * @param userId the user id
-     * @param vmId   the vm id
-     * @return string uid
-     */
-    public static String getUid(int userId, int vmId) {
-        return userId + "-" + vmId;
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    protected void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Sets the user id.
-     *
-     * @param userId the new user id
-     */
-    protected void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * Gets the ID of the owner of the VM.
-     *
-     * @return VM's owner ID
-     * @pre $none
-     * @post $none
-     */
-    public int getUserId() {
-        return userId;
-    }
-
-    /**
-     * Gets the mips.
-     *
-     * @return the mips
-     */
-    public double getMips() {
-        return mips;
-    }
-
-    /**
-     * Sets the mips.
-     *
-     * @param mips the new mips
-     */
-    protected void setMips(double mips) {
-        this.mips = mips;
-    }
-
-
-    /**
-     * Sets the number of pes.
-     *
-     * @param numberOfPes the new number of pes
-     */
-    protected void setNumberOfPes(int numberOfPes) {
-        this.numberOfPes = numberOfPes;
-    }
-
-
-    /**
-     * Sets the amount of ram.
-     *
-     * @param ram new amount of ram
-     * @pre ram > 0
-     * @post $none
-     */
-    public void setRam(float ram) {
-        this.ram = ram;
-    }
-
-
-    /**
-     * Sets the amount of bandwidth.
-     *
-     * @param bw new amount of bandwidth
-     * @pre bw > 0
-     * @post $none
-     */
-    public void setBw(long bw) {
-        this.bw = bw;
-    }
-
-    /**
-     * Gets the amount of storage.
-     *
-     * @return amount of storage
-     * @pre $none
-     * @post $none
-     */
-    public long getSize() {
-        return size;
-    }
-
-    /**
-     * Sets the amount of storage.
-     *
-     * @param size new amount of storage
-     * @pre size > 0
-     * @post $none
-     */
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    /**
-     * Gets the VMM.
-     *
-     * @return VMM
-     * @pre $none
-     * @post $none
-     */
-    public String getVmm() {
-        return vmm;
-    }
-
-    /**
-     * Sets the VMM.
-     *
-     * @param vmm the new VMM
-     */
-    protected void setVmm(String vmm) {
-        this.vmm = vmm;
-    }
-
-    /**
-     * Sets the host that runs this VM.
-     *
-     * @param host Host running the VM
-     * @pre host != $null
-     * @post $none
-     */
-    public void setHost(ContainerHost host) {
-        this.host = host;
-    }
-
-    /**
-     * Gets the host.
-     *
-     * @return the host
-     */
-    public ContainerHost getHost() {
-        return host;
-    }
-
 
     /**
      * Sets the vm scheduler.
@@ -587,151 +354,6 @@ public class ContainerVm {
      */
     protected void setContainerScheduler(ContainerScheduler containerScheduler) {
         this.containerScheduler = containerScheduler;
-    }
-
-    /**
-     * Checks if is in migration.
-     *
-     * @return true, if is in migration
-     */
-    public boolean isInMigration() {
-        return inMigration;
-    }
-
-    /**
-     * Sets the in migration.
-     *
-     * @param inMigration the new in migration
-     */
-    public void setInMigration(boolean inMigration) {
-        this.inMigration = inMigration;
-    }
-
-    /**
-     * Gets the current allocated size.
-     *
-     * @return the current allocated size
-     */
-    public long getCurrentAllocatedSize() {
-        return currentAllocatedSize;
-    }
-
-    /**
-     * Sets the current allocated size.
-     *
-     * @param currentAllocatedSize the new current allocated size
-     */
-    protected void setCurrentAllocatedSize(long currentAllocatedSize) {
-        this.currentAllocatedSize = currentAllocatedSize;
-    }
-
-    /**
-     * Gets the current allocated ram.
-     *
-     * @return the current allocated ram
-     */
-    public float getCurrentAllocatedRam() {
-        return currentAllocatedRam;
-    }
-
-    /**
-     * Sets the current allocated ram.
-     *
-     * @param currentAllocatedRam the new current allocated ram
-     */
-    public void setCurrentAllocatedRam(float currentAllocatedRam) {
-        this.currentAllocatedRam = currentAllocatedRam;
-    }
-
-    /**
-     * Gets the current allocated bw.
-     *
-     * @return the current allocated bw
-     */
-    public long getCurrentAllocatedBw() {
-        return currentAllocatedBw;
-    }
-
-    /**
-     * Sets the current allocated bw.
-     *
-     * @param currentAllocatedBw the new current allocated bw
-     */
-    public void setCurrentAllocatedBw(long currentAllocatedBw) {
-        this.currentAllocatedBw = currentAllocatedBw;
-    }
-
-    /**
-     * Gets the current allocated mips.
-     *
-     * @return the current allocated mips
-     */
-    public List<Double> getCurrentAllocatedMips() {
-        return currentAllocatedMips;
-    }
-
-    /**
-     * Sets the current allocated mips.
-     *
-     * @param currentAllocatedMips the new current allocated mips
-     */
-    public void setCurrentAllocatedMips(List<Double> currentAllocatedMips) {
-        this.currentAllocatedMips = currentAllocatedMips;
-    }
-
-    /**
-     * Checks if is being instantiated.
-     *
-     * @return true, if is being instantiated
-     */
-    public boolean isBeingInstantiated() {
-        return beingInstantiated;
-    }
-
-    /**
-     * Sets the being instantiated.
-     *
-     * @param beingInstantiated the new being instantiated
-     */
-    public void setBeingInstantiated(boolean beingInstantiated) {
-        this.beingInstantiated = beingInstantiated;
-    }
-
-    /**
-     * Gets the state history.
-     *
-     * @return the state history
-     */
-    public List<VmStateHistoryEntry> getStateHistory() {
-        return stateHistory;
-    }
-
-    /**
-     * Adds the state history entry.
-     *
-     * @param time          the time
-     * @param allocatedMips the allocated mips
-     * @param requestedMips the requested mips
-     * @param isInMigration the is in migration
-     */
-    public void addStateHistoryEntry(
-            double time,
-            double allocatedMips,
-            double requestedMips,
-            boolean isInMigration) {
-        VmStateHistoryEntry newState = new VmStateHistoryEntry(
-                time,
-                allocatedMips,
-                requestedMips,
-                isInMigration);
-        if (!getStateHistory().isEmpty()) {
-            VmStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
-            if (previousState.getTime() == time) {
-                getStateHistory().set(getStateHistory().size() - 1, newState);
-                return;
-            }
-        }
-        getStateHistory().add(newState);
     }
 
     /**
@@ -931,16 +553,6 @@ public class ContainerVm {
     }
 
     /**
-     * Gets the pes number.
-     *
-     * @return the pes number
-     */
-    public int getNumberOfPes() {
-//        Log.printLine("ContainerVm: get the PeList Size......" + getPeList().size());
-        return getPeList().size();
-    }
-
-    /**
      * Gets the free pes number.
      *
      * @return the free pes number
@@ -1048,7 +660,7 @@ public class ContainerVm {
      * @pre $none
      * @post $result > 0
      */
-    public float getRam() {
+    public int getRam() {
         //Log.printLine("ContainerVm: Get Ram:......" + getContainerRamProvisioner().getRam());
 
         return getContainerRamProvisioner().getRam();

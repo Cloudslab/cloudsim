@@ -3,11 +3,13 @@ package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
+import org.cloudbus.cloudsim.lists.HostList;
 
 import java.util.*;
 
 /**
  * Created by sareh on 17/11/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection extends PowerContainerVmAllocationPolicyMigrationAbstract {
 
@@ -42,16 +44,16 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
         boolean find = false;
         Set<ContainerHost> excludedHost1 = new HashSet<>(excludedHosts);
         while (!find) {
-            ContainerHost host = getHostSelectionPolicy().getHost(getContainerHostList(), vm, excludedHost1);
+            ContainerHost host = getHostSelectionPolicy().getHost(getHostList(), vm, excludedHost1);
             if (host == null) {
                 return allocatedHost;
             }
-            if (host.isSuitableForContainerVm(vm)) {
+            if (host.isSuitableForVm(vm)) {
                 find = true;
                 allocatedHost = (PowerContainerHost) host;
             } else {
                 excludedHost1.add(host);
-                if (getContainerHostList().size() == excludedHost1.size()) {
+                if (getHostList().size() == excludedHost1.size()) {
 
                     return null;
 
@@ -82,7 +84,7 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
     protected boolean isHostOverUtilized(PowerContainerHost host) {
         addHistoryEntry(host, getUtilizationThreshold());
         double totalRequestedMips = 0;
-        for (ContainerVm vm : host.getVmList()) {
+        for (ContainerVm vm : host.<ContainerVm>getVmList()) {
             totalRequestedMips += vm.getCurrentRequestedTotalMips();
         }
         double utilization = totalRequestedMips / host.getTotalMips();
@@ -135,7 +137,7 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
 
             return null;
         }
-        ContainerHostList.sortByCpuUtilizationDescending(underUtilizedHostList);
+        HostList.sortByCpuUtilizationDescending(underUtilizedHostList);
 //        Log.print(String.format("The under Utilized Hosts are %d", underUtilizedHostList.size()));
         PowerContainerHost underUtilizedHost = (PowerContainerHost) underUtilizedHostList.get(0);
 
@@ -151,7 +153,7 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
      */
     protected List<ContainerHost> getUnderUtilizedHostList(Set<? extends ContainerHost> excludedHosts) {
         List<ContainerHost> underUtilizedHostList = new ArrayList<>();
-        for (PowerContainerHost host : this.<PowerContainerHost>getContainerHostList()) {
+        for (PowerContainerHost host : this.<PowerContainerHost>getHostList()) {
             if (excludedHosts.contains(host)) {
                 continue;
             }
@@ -161,10 +163,5 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
             }
         }
         return underUtilizedHostList;
-    }
-
-
-    @Override
-    public void setDatacenter(ContainerDatacenter datacenter) {
     }
 }

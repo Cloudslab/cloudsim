@@ -27,6 +27,7 @@ import org.cloudbus.cloudsim.provisioners.PeProvisioner;
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
 public class VmSchedulerTimeShared extends VmScheduler {

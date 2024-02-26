@@ -2,15 +2,15 @@ package org.cloudbus.cloudsim.container.lists;
 
 import org.cloudbus.cloudsim.container.core.ContainerVm;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.lists.VmList;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by sareh on 28/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
-public class PowerContainerVmList extends ContainerVmList {
+public class PowerContainerVmList extends VmList {
 
         /**
          * Sort by cpu utilization.

@@ -8,14 +8,17 @@
 
 package org.cloudbus.cloudsim.lists;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 /**
  * HostList is a collection of operations on lists of hosts (PMs).
  * 
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 2.0
  */
 public class HostList {
@@ -136,5 +139,29 @@ public class HostList {
 		}
 		return host.setPeStatus(peId, status);
 	}
+
+    /**
+     * Sort by cpu utilization.
+     *
+     * @param hostList the vm list
+     */
+    public static <T extends Host> void sortByCpuUtilization(List<T> hostList) {
+        hostList.sort((a, b) -> {
+            Double aUtilization = ((PowerHost) a).getUtilizationOfCpu();
+            Double bUtilization = ((PowerHost) b).getUtilizationOfCpu();
+            return bUtilization.compareTo(aUtilization);
+        });
+    }
+
+    public static <T extends Host> void sortByCpuUtilizationDescending(List<T> hostList) {
+
+        hostList.sort(Collections.reverseOrder((a, b) -> {
+            Double aUtilization = ((PowerHost) a).getUtilizationOfCpu();
+            Double bUtilization = ((PowerHost) b).getUtilizationOfCpu();
+            return bUtilization.compareTo(aUtilization);
+        }));
+
+
+    }
 
 }

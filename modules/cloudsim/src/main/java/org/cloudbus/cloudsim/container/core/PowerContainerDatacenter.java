@@ -2,8 +2,9 @@ package org.cloudbus.cloudsim.container.core;
 
 //import cloudSimGr.containerCloudSim.Experiments.HelperEx;
 //import cloudSimGr.containerCloudSim.Experiments.Paper1.RunnerAbs;
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
+import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 /**
  * Created by sareh on 20/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerDatacenter extends ContainerDatacenter {
 
@@ -71,8 +73,8 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
      */
     public PowerContainerDatacenter(
             String name,
-            ContainerDatacenterCharacteristics characteristics,
-            ContainerVmAllocationPolicy vmAllocationPolicy,
+            DatacenterCharacteristics characteristics,
+            VmAllocationPolicy vmAllocationPolicy,
             ContainerAllocationPolicy containerAllocationPolicy,
             List<Storage> storageList,
             double schedulingInterval, String experimentName, String logAddress) throws Exception {
@@ -146,7 +148,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
                                     oldHost.getId(),
                                     targetHost.getId());
                         }
-                        targetHost.addMigratingInContainerVm(vm);
+                        targetHost.addMigratingInVm(vm);
                         incrementMigrationCount();
 
                         /** VM migration delay = RAM / bandwidth **/
@@ -212,7 +214,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         for (PowerContainerHost host : this.<PowerContainerHost>getHostList()) {
             Log.printLine();
 
-            double time = host.updateContainerVmsProcessing(currentTime); // inform VMs to update processing
+            double time = host.updateVmsProcessing(currentTime); // inform VMs to update processing
             if (time < minTime) {
                 minTime = time;
             }
@@ -500,8 +502,11 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         setNumberOfVms(0);
         setNumberOfContainers(0);
         List<ContainerVm> temp= new ArrayList<>();
-        for(ContainerHost host:getHostList()) {
-            for (ContainerVm vm : host.getVmList()) {
+        List<ContainerHost> containerHosts = getHostList();
+
+        for(ContainerHost host : containerHosts) {
+            List<ContainerVm> containerVms = host.getVmList();
+            for (ContainerVm vm : containerVms) {
                 if (!temp.contains(vm)) {
                     int tempNumbers = this.getNumberOfVms() + 1;
                     setNumberOfVms(tempNumbers);

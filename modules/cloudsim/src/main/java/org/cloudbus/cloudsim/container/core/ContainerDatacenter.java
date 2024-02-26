@@ -2,14 +2,13 @@ package org.cloudbus.cloudsim.container.core;
 
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
-import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 
 import java.util.ArrayList;
@@ -20,13 +19,14 @@ import java.util.Map;
 
 /**
  * Created by sareh on 10/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
-public class ContainerDatacenter extends SimEntity {
+public class ContainerDatacenter extends Datacenter {
 
     /**
      * The characteristics.
      */
-    private ContainerDatacenterCharacteristics characteristics;
+    private DatacenterCharacteristics characteristics;
 
     /**
      * The regional cis name.
@@ -38,7 +38,7 @@ public class ContainerDatacenter extends SimEntity {
     /**
      * The vm provisioner.
      */
-    private ContainerVmAllocationPolicy vmAllocationPolicy;
+    private VmAllocationPolicy vmAllocationPolicy;
     /**
      * The container provisioner.
      */
@@ -95,25 +95,19 @@ public class ContainerDatacenter extends SimEntity {
      */
     public ContainerDatacenter(
             String name,
-            ContainerDatacenterCharacteristics characteristics,
-            ContainerVmAllocationPolicy vmAllocationPolicy,
+            DatacenterCharacteristics characteristics,
+            VmAllocationPolicy vmAllocationPolicy,
             ContainerAllocationPolicy containerAllocationPolicy,
             List<Storage> storageList,
             double schedulingInterval, String experimentName, String logAddress) throws Exception {
-        super(name);
+        super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
 
-        setCharacteristics(characteristics);
-        setVmAllocationPolicy(vmAllocationPolicy);
         setContainerAllocationPolicy(containerAllocationPolicy);
-        setLastProcessTime(0.0);
-        setStorageList(storageList);
-        setContainerVmList(new ArrayList<>());
         setContainerList(new ArrayList<>());
-        setSchedulingInterval(schedulingInterval);
         setExperimentName(experimentName);
         setLogAddress(logAddress);
 
-        for (ContainerHost host : getCharacteristics().getHostList()) {
+        for (Host host : getCharacteristics().getHostList()) {
             host.setDatacenter(this);
         }
 
@@ -382,6 +376,7 @@ public class ContainerDatacenter extends SimEntity {
         int vmId = 0;
         int containerId = 0;
         int status = -1;
+        ContainerVm containerVm;
 
         try {
             // if a sender using cloudletXXX() methods
@@ -391,8 +386,9 @@ public class ContainerDatacenter extends SimEntity {
             vmId = data[2];
             containerId = data[3];
             //Log.printLine("Data Center is processing the cloudletStatus Event ");
-            status = getVmAllocationPolicy().getHost(vmId, userId).getContainerVm(vmId, userId).
-                    getContainer(containerId, userId).getContainerCloudletScheduler().getCloudletStatus(cloudletId);
+
+            containerVm = (ContainerVm) getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId, userId);
+            status = containerVm.getContainer(containerId, userId).getContainerCloudletScheduler().getCloudletStatus(cloudletId);
         }
 
         // if a sender using normal send() methods
@@ -403,8 +399,8 @@ public class ContainerDatacenter extends SimEntity {
                 userId = cl.getUserId();
                 containerId = cl.getContainerId();
 
-                status = getVmAllocationPolicy().getHost(vmId, userId).getContainerVm(vmId, userId).getContainer(containerId, userId)
-                        .getContainerCloudletScheduler().getCloudletStatus(cloudletId);
+                containerVm = (ContainerVm) getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId, userId);
+                status = containerVm.getContainer(containerId, userId).getContainerCloudletScheduler().getCloudletStatus(cloudletId);
             } catch (Exception e) {
                 Log.printConcatLine(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
                 Log.printLine(e.getMessage());
@@ -473,8 +469,8 @@ public class ContainerDatacenter extends SimEntity {
                 containerVm.setBeingInstantiated(false);
             }
 
-            containerVm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(containerVm).getContainerVmScheduler()
-                    .getAllocatedMipsForContainerVm(containerVm));
+            containerVm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(containerVm).getVmScheduler()
+                    .getAllocatedMipsForVm(containerVm));
         }
 
     }
@@ -526,7 +522,7 @@ public class ContainerDatacenter extends SimEntity {
         ContainerHost host = (ContainerHost) migrate.get("host");
 
         getVmAllocationPolicy().deallocateHostForVm(containerVm);
-        host.removeMigratingInContainerVm(containerVm);
+        host.removeMigratingInVm(containerVm);
         boolean result = getVmAllocationPolicy().allocateHostForVm(containerVm, host);
         if (!result) {
             Log.printLine("[Datacenter.processVmMigrate] VM allocation to the destination host failed");
@@ -684,10 +680,12 @@ public class ContainerDatacenter extends SimEntity {
         int vmDestId = array[4];
         int containerDestId = array[5];
         int destId = array[6];
+        ContainerVm containerVm;
 
         // get the cloudlet
-        Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getContainerVm(vmId, userId).getContainer(containerId, userId)
-                .getContainerCloudletScheduler().cloudletCancel(cloudletId);
+        containerVm = (ContainerVm) getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId, userId);
+        Cloudlet cl = containerVm.getContainer(containerId, userId)
+                                 .getContainerCloudletScheduler().cloudletCancel(cloudletId);
 
         boolean failed = false;
         if (cl == null) {// cloudlet doesn't exist
@@ -708,7 +706,7 @@ public class ContainerDatacenter extends SimEntity {
 
             // the cloudlet will migrate from one vm to another does the destination VM exist?
             if (destId == getId()) {
-                ContainerVm containerVm = getVmAllocationPolicy().getHost(vmDestId, userId).getContainerVm(vmDestId, userId);
+                containerVm = (ContainerVm) getVmAllocationPolicy().getHost(vmDestId, userId).getVm(vmDestId, userId);
                 if (containerVm == null) {
                     failed = true;
                 } else {
@@ -790,8 +788,8 @@ public class ContainerDatacenter extends SimEntity {
             // time to transfer the files
             double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());
 
-            ContainerHost host = getVmAllocationPolicy().getHost(vmId, userId);
-            ContainerVm vm = host.getContainerVm(vmId, userId);
+            ContainerHost host = (ContainerHost) getVmAllocationPolicy().getHost(vmId, userId);
+            ContainerVm vm = (ContainerVm) host.getVm(vmId, userId);
             Container container = vm.getContainer(containerId, userId);
             double estimatedFinishTime = container.getContainerCloudletScheduler().cloudletSubmit(cl, fileTransferTime);
 
@@ -855,8 +853,9 @@ public class ContainerDatacenter extends SimEntity {
      * @post $none
      */
     protected void processCloudletResume(int cloudletId, int userId, int vmId, int containerId, boolean ack) {
-        double eventTime = getVmAllocationPolicy().getHost(vmId, userId).getContainerVm(vmId, userId).getContainer(containerId, userId)
-                .getContainerCloudletScheduler().cloudletResume(cloudletId);
+        ContainerVm containerVm = (ContainerVm) getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId, userId);
+        double eventTime = containerVm.getContainer(containerId, userId)
+                                      .getContainerCloudletScheduler().cloudletResume(cloudletId);
 
         boolean status = false;
         if (eventTime > 0.0) { // if this cloudlet is in the exec queue
@@ -890,7 +889,8 @@ public class ContainerDatacenter extends SimEntity {
      * @post $none
      */
     protected void processCloudletPause(int cloudletId, int userId, int vmId, int containerId, boolean ack) {
-        boolean status = getVmAllocationPolicy().getHost(vmId, userId).getContainerVm(vmId, userId).getContainer(containerId, userId)
+        ContainerVm containerVm = (ContainerVm) getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId, userId);
+        boolean status = containerVm.getContainer(containerId, userId)
                 .getContainerCloudletScheduler().cloudletPause(cloudletId);
 
         if (ack) {
@@ -916,7 +916,8 @@ public class ContainerDatacenter extends SimEntity {
      * @post $none
      */
     protected void processCloudletCancel(int cloudletId, int userId, int vmId, int containerId) {
-        Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getContainerVm(vmId, userId).getContainer(containerId, userId)
+        ContainerVm containerVm = (ContainerVm) getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId, userId);
+        Cloudlet cl = containerVm.getContainer(containerId, userId)
                 .getContainerCloudletScheduler().cloudletCancel(cloudletId);
         sendNow(userId, CloudSimTags.CLOUDLET_CANCEL, cl);
     }
@@ -934,12 +935,12 @@ public class ContainerDatacenter extends SimEntity {
         // R: for term is to allow loop at simulation start. Otherwise, one initial
         // simulation step is skipped and schedulers are not properly initialized
         if (CloudSim.clock() < 0.111 || CloudSim.clock() > getLastProcessTime() + CloudSim.getMinTimeBetweenEvents()) {
-            List<? extends ContainerHost> list = getVmAllocationPolicy().getContainerHostList();
+            List<? extends ContainerHost> list = getVmAllocationPolicy().getHostList();
             double smallerTime = Double.MAX_VALUE;
             // for each host...
             for (ContainerHost host : list) {
                 // inform VMs to update processing
-                double time = host.updateContainerVmsProcessing(CloudSim.clock());
+                double time = host.updateVmsProcessing(CloudSim.clock());
                 // what time do we expect that the next cloudlet will finish?
                 if (time < smallerTime) {
                     smallerTime = time;
@@ -964,9 +965,10 @@ public class ContainerDatacenter extends SimEntity {
      * @post $none
      */
     protected void checkCloudletCompletion() {
-        List<? extends ContainerHost> list = getVmAllocationPolicy().getContainerHostList();
+        List<? extends ContainerHost> list = getVmAllocationPolicy().getHostList();
         for (ContainerHost host : list) {
-            for (ContainerVm vm : host.getVmList()) {
+            List<ContainerVm> containerVms = host.getVmList();
+            for (ContainerVm vm : containerVms) {
                 for (Container container : vm.getContainerList()) {
                     while (container.getContainerCloudletScheduler().isFinishedCloudlets()) {
                         Cloudlet cl = container.getContainerCloudletScheduler().getNextFinishedCloudlet();
@@ -1112,7 +1114,7 @@ public class ContainerDatacenter extends SimEntity {
      * @return the host list
      */
     @SuppressWarnings("unchecked")
-    public <T extends ContainerHost> List<T> getHostList() {
+    public <T extends Host> List<T> getHostList() {
         return getCharacteristics().getHostList();
     }
 
@@ -1121,7 +1123,7 @@ public class ContainerDatacenter extends SimEntity {
      *
      * @return the characteristics
      */
-    protected ContainerDatacenterCharacteristics getCharacteristics() {
+    protected DatacenterCharacteristics getCharacteristics() {
         return characteristics;
     }
 
@@ -1130,7 +1132,7 @@ public class ContainerDatacenter extends SimEntity {
      *
      * @param characteristics the new characteristics
      */
-    protected void setCharacteristics(ContainerDatacenterCharacteristics characteristics) {
+    protected void setCharacteristics(DatacenterCharacteristics characteristics) {
         this.characteristics = characteristics;
     }
 
@@ -1139,7 +1141,7 @@ public class ContainerDatacenter extends SimEntity {
      *
      * @return the vm allocation policy
      */
-    public ContainerVmAllocationPolicy getVmAllocationPolicy() {
+    public VmAllocationPolicy getVmAllocationPolicy() {
         return vmAllocationPolicy;
     }
 
@@ -1148,7 +1150,7 @@ public class ContainerDatacenter extends SimEntity {
      *
      * @param vmAllocationPolicy the new vm allocation policy
      */
-    protected void setVmAllocationPolicy(ContainerVmAllocationPolicy vmAllocationPolicy) {
+    protected void setVmAllocationPolicy(VmAllocationPolicy vmAllocationPolicy) {
         this.vmAllocationPolicy = vmAllocationPolicy;
     }
 

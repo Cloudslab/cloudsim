@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Created by sareh on 3/08/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMC extends PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelection {
 //public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMC extends PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelectionUnderUtilizedAdded {
@@ -30,7 +31,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMC extends 
             List<? extends ContainerHost> hostList,
             PowerContainerVmSelectionPolicy vmSelectionPolicy, PowerContainerSelectionPolicy containerSelectionPolicy,
             HostSelectionPolicy hostSelectionPolicy, double utilizationThreshold,
-            int numberOfVmTypes, int[] vmPes, float[] vmRam, long vmBw, long vmSize, double[] vmMips) {
+            int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy, containerSelectionPolicy, hostSelectionPolicy,
         		 numberOfVmTypes, vmPes, vmRam, vmBw, vmSize, vmMips);
         setUtilizationThreshold(utilizationThreshold);
@@ -46,7 +47,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMC extends 
     protected boolean isHostOverUtilized(PowerContainerHost host) {
         addHistoryEntry(host, getUtilizationThreshold());
         double totalRequestedMips = 0;
-        for (ContainerVm vm : host.getVmList()) {
+        for (ContainerVm vm : host.<ContainerVm>getVmList()) {
             totalRequestedMips += vm.getCurrentRequestedTotalMips();
         }
         double utilization = totalRequestedMips / host.getTotalMips();

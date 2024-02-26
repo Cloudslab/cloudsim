@@ -10,33 +10,30 @@ package org.cloudbus.cloudsim.examples.container;
  * Copyright (c) 2009, The University of Melbourne, Australia
  */
 
+/**
+ * Modified by Remo Andreoli (Feb 2024)
+ */
 
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.UtilizationModelNull;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.CotainerPeProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmBwProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPe;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPeProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmRamProvisionerSimple;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyFirstFit;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.PowerContainerAllocationPolicySimple;
 import org.cloudbus.cloudsim.container.schedulers.ContainerCloudletSchedulerDynamicWorkload;
 import org.cloudbus.cloudsim.container.schedulers.ContainerSchedulerTimeSharedOverSubscription;
-import org.cloudbus.cloudsim.container.schedulers.ContainerVmSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
@@ -47,6 +44,7 @@ import java.util.List;
 
 /**
  * A simple example showing how to create a data center with one host, one VM, one container and run one cloudlet on it.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class ContainerCloudSimExample1 {
 
@@ -142,7 +140,7 @@ public class ContainerCloudSimExample1 {
             /**
              * 7- The container allocation policy  which defines the allocation of VMs to containers.
              */
-            ContainerVmAllocationPolicy vmAllocationPolicy = new
+            VmAllocationPolicy vmAllocationPolicy = new
                     PowerContainerVmAllocationPolicyMigrationAbstractHostSelection(hostList, vmSelectionPolicy,
                     hostSelectionPolicy, overUtilizationThreshold, underUtilizationThreshold);
             /**
@@ -292,10 +290,10 @@ public class ContainerCloudSimExample1 {
             int vmType = i / (int) Math.ceil((double) containerVmsNumber / 4.0D);
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
                 peList.add(new ContainerPe(j,
-                        new CotainerPeProvisionerSimple((double) ConstantsExamples.VM_MIPS[vmType])));
+                        new CotainerPeProvisionerSimple(ConstantsExamples.VM_MIPS[vmType])));
             }
             containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId,
-                    (double) ConstantsExamples.VM_MIPS[vmType], (float) ConstantsExamples.VM_RAM[vmType],
+                    ConstantsExamples.VM_MIPS[vmType], ConstantsExamples.VM_RAM[vmType],
                     ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen",
                     new ContainerSchedulerTimeSharedOverSubscription(peList),
                     new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
@@ -320,16 +318,16 @@ public class ContainerCloudSimExample1 {
         ArrayList<ContainerHost> hostList = new ArrayList<>();
         for (int i = 0; i < hostsNumber; ++i) {
             int hostType = i / (int) Math.ceil((double) hostsNumber / 3.0D);
-            ArrayList<ContainerVmPe> peList = new ArrayList<>();
+            ArrayList<Pe> peList = new ArrayList<>();
             for (int j = 0; j < ConstantsExamples.HOST_PES[hostType]; ++j) {
-                peList.add(new ContainerVmPe(j,
-                        new ContainerVmPeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));
+                peList.add(new Pe(j,
+                        new PeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));
             }
 
             hostList.add(new PowerContainerHostUtilizationHistory(IDs.pollId(ContainerHost.class),
-                    new ContainerVmRamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
-                    new ContainerVmBwProvisionerSimple(1000000L), 1000000L, peList,
-                    new ContainerVmSchedulerTimeSharedOverSubscription(peList),
+                    new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
+                    new BwProvisionerSimple(1000000L), 1000000L, peList,
+                    new VmSchedulerTimeSharedOverSubscription(peList),
                     ConstantsExamples.HOST_POWER[hostType]));
         }
 
@@ -353,7 +351,7 @@ public class ContainerCloudSimExample1 {
 
     public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass,
                                                        List<ContainerHost> hostList,
-                                                       ContainerVmAllocationPolicy vmAllocationPolicy,
+                                                       VmAllocationPolicy vmAllocationPolicy,
                                                        ContainerAllocationPolicy containerAllocationPolicy,
                                                        String experimentName, double schedulingInterval, String logAddress, double VMStartupDelay,
                                                        double ContainerStartupDelay) throws Exception {
@@ -365,8 +363,8 @@ public class ContainerCloudSimExample1 {
         double costPerMem = 0.05D;
         double costPerStorage = 0.001D;
         double costPerBw = 0.0D;
-        ContainerDatacenterCharacteristics characteristics = new
-                ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage,
+        DatacenterCharacteristics characteristics = new
+                DatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage,
                 costPerBw);
         ContainerDatacenter datacenter = new PowerContainerDatacenterCM(name, characteristics, vmAllocationPolicy,
                 containerAllocationPolicy, new LinkedList<>(), schedulingInterval, experimentName, logAddress,

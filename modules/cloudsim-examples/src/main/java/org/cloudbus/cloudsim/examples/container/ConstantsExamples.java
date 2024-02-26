@@ -37,7 +37,7 @@ public class ConstantsExamples {
     public static final int VM_TYPES = 4;
     public static final double[] VM_MIPS = new double[]{37274.0/ 2, 37274.0 / 2, 37274.0 / 2, 37274.0 / 2};
     public static final int[] VM_PES = new int[]{2, 4, 1, 8};
-    public static final float[] VM_RAM = new float[] {(float)1024, (float) 2048, (float) 4096, (float) 8192};//**MB*
+    public static final int[] VM_RAM = new int[] {1024, 2048, 4096, 8192};//**MB*
     public static final int VM_BW = 100000;
     public static final int VM_SIZE = 2500;
 

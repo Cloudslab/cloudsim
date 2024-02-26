@@ -63,7 +63,7 @@ public class Container {
     /**
      * The ram.
      */
-    @Getter @Setter private float ram;
+    @Getter @Setter private int ram;
 
     /**
      * The bw.
@@ -112,7 +112,7 @@ public class Container {
      */
     @Setter
     @Getter
-    private float currentAllocatedRam;
+    private int currentAllocatedRam;
 
     /**
      * The current allocated bw.
@@ -262,11 +262,11 @@ public class Container {
      *
      * @return the current requested ram
      */
-    public float getCurrentRequestedRam() {
+    public int getCurrentRequestedRam() {
         if (isBeingInstantiated()) {
             return getRam();
         }
-        return (float) (getContainerCloudletScheduler().getCurrentRequestedUtilizationOfRam() * getRam());
+        return (int) (getContainerCloudletScheduler().getCurrentRequestedUtilizationOfRam() * getRam());
     }
 
     /**

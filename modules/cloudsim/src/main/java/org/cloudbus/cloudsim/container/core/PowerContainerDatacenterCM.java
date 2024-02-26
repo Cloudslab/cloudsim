@@ -1,9 +1,10 @@
 package org.cloudbus.cloudsim.container.core;
 
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
+import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 /**
  * Created by sareh on 3/08/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
     /**
@@ -32,8 +34,8 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
     private final double containerStartupDelay;
 
 
-    public PowerContainerDatacenterCM(String name, ContainerDatacenterCharacteristics characteristics,
-                                      ContainerVmAllocationPolicy vmAllocationPolicy,
+    public PowerContainerDatacenterCM(String name, DatacenterCharacteristics characteristics,
+                                      VmAllocationPolicy vmAllocationPolicy,
                                       ContainerAllocationPolicy containerAllocationPolicy, List<Storage> storageList,
                                       double schedulingInterval, String experimentName, String logAddress,
                                       double vmStartupDelay, double containerStartupDelay) throws Exception {
@@ -167,7 +169,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                         targetHost.getId());
                             }
 
-                            targetHost.addMigratingInContainerVm(vm);
+                            targetHost.addMigratingInVm(vm);
                             incrementMigrationCount();
 
                             /** VM migration delay = RAM / bandwidth **/
@@ -266,8 +268,8 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                     containerVm.setBeingInstantiated(false);
                 }
 
-                containerVm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(containerVm).getContainerVmScheduler()
-                        .getAllocatedMipsForContainerVm(containerVm));
+                containerVm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(containerVm).getVmScheduler()
+                        .getAllocatedMipsForVm(containerVm));
             }
 
         } else {

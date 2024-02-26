@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.container.core;
 
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.container.lists.ContainerList;
-import org.cloudbus.cloudsim.container.lists.ContainerVmList;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.UtilizationModelPlanetLabInMemory;
@@ -10,6 +10,7 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.lists.CloudletList;
+import org.cloudbus.cloudsim.lists.VmList;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 
 /**
  * Created by sareh on 15/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 
 public class ContainerDatacenterBroker extends SimEntity {
@@ -109,7 +111,7 @@ public class ContainerDatacenterBroker extends SimEntity {
     /**
      * The datacenter characteristics list.
      */
-    protected Map<Integer, ContainerDatacenterCharacteristics> datacenterCharacteristicsList;
+    protected Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList;
 
     /**
      * The datacenter characteristics list.
@@ -247,8 +249,8 @@ public class ContainerDatacenterBroker extends SimEntity {
             getContainersToVmsMap().put(containerId, vmId);
             getContainersCreatedList().add(ContainerList.getById(getContainerList(), containerId));
 
-//            ContainerVm p= ContainerVmList.getById(getVmsCreatedList(), vmId);
-            int hostId = ContainerVmList.getById(getVmsCreatedList(), vmId).getHost().getId();
+//            ContainerVm p= VmList.getById(getVmsCreatedList(), vmId);
+            int hostId = VmList.getById(getVmsCreatedList(), vmId).getHost().getId();
             Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": The Container #", containerId,
                      ", is created on Vm #",vmId
                     , ", On Host#", hostId);
@@ -275,7 +277,7 @@ public class ContainerDatacenterBroker extends SimEntity {
      * @post $none
      */
     protected void processResourceCharacteristics(SimEvent ev) {
-        ContainerDatacenterCharacteristics characteristics = (ContainerDatacenterCharacteristics) ev.getData();
+        DatacenterCharacteristics characteristics = (DatacenterCharacteristics) ev.getData();
         getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
 
         if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
@@ -315,7 +317,7 @@ public class ContainerDatacenterBroker extends SimEntity {
             getVmsCreatedList().add(containerVm);
             Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #", vmId,
                     " has been created in Datacenter #", datacenterId, ", Host #",
-                    ContainerVmList.getById(getVmsCreatedList(), vmId).getHost().getId());
+                    VmList.getById(getVmsCreatedList(), vmId).getHost().getId());
         } else {
             Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
                     " failed in Datacenter #", datacenterId);
@@ -335,10 +337,10 @@ public class ContainerDatacenterBroker extends SimEntity {
 
         if (result == CloudSimTags.TRUE) {
             getVmsToDatacentersMap().put(vmId, datacenterId);
-            getVmsCreatedList().add(ContainerVmList.getById(getVmList(), vmId));
+            getVmsCreatedList().add(VmList.getById(getVmList(), vmId));
             Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": VM #", vmId,
                     " has been created in Datacenter #", datacenterId, ", Host #",
-                    ContainerVmList.getById(getVmsCreatedList(), vmId).getHost().getId());
+                    VmList.getById(getVmsCreatedList(), vmId).getHost().getId());
             setNumberOfCreatedVMs(getNumberOfCreatedVMs()+1);
         } else {
             Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
@@ -489,7 +491,7 @@ public class ContainerDatacenterBroker extends SimEntity {
 //            if (cloudlet.getContainerId() == -1) {
 //                Log.print("User has forgotten to bound the cloudlet to container");
 //            } else { // submit to the specific vm
-//                vm = ContainerVmList.getById(getVmsCreatedList(), cloudlet.getVmId());
+//                vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
 //                if (vm == null) { // vm was not created
 //                    if (!Log.isDisabled()) {
 //                        Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
@@ -515,7 +517,7 @@ public class ContainerDatacenterBroker extends SimEntity {
 //            if (cloudlet.getVmId() == -1) {
 //                vm = getVmsCreatedList().get(vmIndex);
 //            } else { // submit to the specific vm
-//                vm = ContainerVmList.getById(getVmsCreatedList(), cloudlet.getVmId());
+//                vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
 //                if (vm == null) { // vm was not created
 //                    if (!Log.isDisabled()) {
 //                        Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
@@ -852,7 +854,7 @@ public class ContainerDatacenterBroker extends SimEntity {
      *
      * @return the datacenter characteristics list
      */
-    protected Map<Integer, ContainerDatacenterCharacteristics> getDatacenterCharacteristicsList() {
+    protected Map<Integer, DatacenterCharacteristics> getDatacenterCharacteristicsList() {
         return datacenterCharacteristicsList;
     }
 
@@ -862,7 +864,7 @@ public class ContainerDatacenterBroker extends SimEntity {
      * @param datacenterCharacteristicsList the datacenter characteristics list
      */
     protected void setDatacenterCharacteristicsList(
-            Map<Integer, ContainerDatacenterCharacteristics> datacenterCharacteristicsList) {
+            Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList) {
         this.datacenterCharacteristicsList = datacenterCharacteristicsList;
     }
 

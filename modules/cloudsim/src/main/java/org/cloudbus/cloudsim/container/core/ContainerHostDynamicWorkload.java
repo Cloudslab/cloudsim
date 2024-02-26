@@ -1,21 +1,20 @@
 package org.cloudbus.cloudsim.container.core;
 
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmBwProvisioner;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPe;
-import org.cloudbus.cloudsim.container.lists.ContainerVmPeList;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmRamProvisioner;
-import org.cloudbus.cloudsim.container.schedulers.ContainerVmScheduler;
-import org.cloudbus.cloudsim.HostStateHistoryEntry;
-import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.lists.PeList;
+import org.cloudbus.cloudsim.provisioners.BwProvisioner;
+import org.cloudbus.cloudsim.provisioners.RamProvisioner;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by sareh on 14/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
-public class ContainerHostDynamicWorkload extends ContainerHost{
+public class ContainerHostDynamicWorkload extends ContainerHost {
 
 
         /** The utilization mips. */
@@ -39,11 +38,11 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
          */
         public ContainerHostDynamicWorkload(
                 int id,
-                ContainerVmRamProvisioner ramProvisioner,
-                ContainerVmBwProvisioner bwProvisioner,
+                RamProvisioner ramProvisioner,
+                BwProvisioner bwProvisioner,
                 long storage,
-                List<? extends ContainerVmPe> peList,
-                ContainerVmScheduler vmScheduler) {
+                List<? extends Pe> peList,
+                VmScheduler vmScheduler) {
             super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler);
             setUtilizationMips(0);
             setPreviousUtilizationMips(0);
@@ -54,23 +53,25 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
          * @see cloudsim.Host#updateVmsProcessing(double)
          */
         @Override
-        public double updateContainerVmsProcessing(double currentTime) {
-            double smallerTime = super.updateContainerVmsProcessing(currentTime);
+        public double updateVmsProcessing(double currentTime) {
+            double smallerTime = super.updateVmsProcessing(currentTime);
             setPreviousUtilizationMips(getUtilizationMips());
             setUtilizationMips(0);
             double hostTotalRequestedMips = 0;
 
-            for (ContainerVm containerVm : getVmList()) {
-                getContainerVmScheduler().deallocatePesForVm(containerVm);
+            List<ContainerVm> containerVms = getVmList();
+
+            for (ContainerVm containerVm : containerVms) {
+                getVmScheduler().deallocatePesForVm(containerVm);
             }
 
-            for (ContainerVm  containerVm : getVmList()) {
-                getContainerVmScheduler().allocatePesForVm(containerVm, containerVm.getCurrentRequestedMips());
+            for (ContainerVm  containerVm : containerVms) {
+                getVmScheduler().allocatePesForVm(containerVm, containerVm.getCurrentRequestedMips());
             }
 
-            for (ContainerVm  containerVm : getVmList()) {
+            for (ContainerVm containerVm : containerVms) {
                 double totalRequestedMips = containerVm.getCurrentRequestedTotalMips();
-                double totalAllocatedMips = getContainerVmScheduler().getTotalAllocatedMipsForContainerVm(containerVm);
+                double totalAllocatedMips = getVmScheduler().getTotalAllocatedMipsForVm(containerVm);
 
                 if (!Log.isDisabled()) {
                     Log.formatLine(
@@ -83,15 +84,15 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
                             containerVm.getMips(),
                             totalRequestedMips / containerVm.getMips() * 100);
 
-                    List<ContainerVmPe> pes = getContainerVmScheduler().getPesAllocatedForContainerVM(containerVm);
+                    List<Pe> pes = getVmScheduler().getPesAllocatedForVM(containerVm);
                     StringBuilder pesString = new StringBuilder();
-                    for (ContainerVmPe pe : pes) {
-                        pesString.append(String.format(" PE #" + pe.getId() + ": %.2f.", pe.getContainerVmPeProvisioner()
-                                .getTotalAllocatedMipsForContainerVm(containerVm)));
+                    for (Pe pe : pes) {
+                        pesString.append(String.format(" PE #" + pe.getId() + ": %.2f.", pe.getPeProvisioner()
+                                .getTotalAllocatedMipsForVm(containerVm)));
                     }
                     Log.formatLine(
                             "%.2f: [Host #" + getId() + "] MIPS for VM #" + containerVm.getId() + " by PEs ("
-                                    + getNumberOfPes() + " * " + getContainerVmScheduler().getPeCapacity() + ")."
+                                    + getNumberOfPes() + " * " + getVmScheduler().getPeCapacity() + ")."
                                     + pesString,
                             CloudSim.clock());
                 }
@@ -139,7 +140,9 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
          */
         public List<ContainerVm> getCompletedVms() {
             List<ContainerVm> vmsToRemove = new ArrayList<>();
-            for (ContainerVm containerVm : getVmList()) {
+            List<ContainerVm> containerVms = getVmList();
+
+            for (ContainerVm containerVm : containerVms) {
                 if (containerVm.isInMigration()) {
                     continue;
                 }
@@ -166,7 +169,9 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
      */
     public int getNumberofContainers() {
         int numberofContainers = 0;
-        for (ContainerVm containerVm : getVmList()) {
+        List<ContainerVm> containerVms = getVmList();
+
+        for (ContainerVm containerVm : containerVms) {
             numberofContainers += containerVm.getNumberOfContainers();
             Log.print("The number of containers in VM# " + containerVm.getId()+"is: "+ containerVm.getNumberOfContainers());
             Log.printLine();
@@ -183,7 +188,7 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
          * @return the utilization
          */
         public double getMaxUtilization() {
-            return ContainerVmPeList.getMaxUtilization(getPeList());
+            return PeList.getMaxUtilization(getPeList());
         }
 
         /**
@@ -193,7 +198,7 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
          * @return the utilization
          */
         public double getMaxUtilizationAmongVmsPes(ContainerVm vm) {
-            return ContainerVmPeList.getMaxUtilizationAmongVmsPes(getPeList(), vm);
+            return PeList.getMaxUtilizationAmongVmsPes(getPeList(), vm);
         }
 
         /**
@@ -201,8 +206,8 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
          *
          * @return the utilization of memory
          */
-        public double getUtilizationOfRam() {
-            return getContainerVmRamProvisioner().getUsedVmRam();
+        public int getUtilizationOfRam() {
+            return getRamProvisioner().getUsedRam();
         }
 
         /**
@@ -211,7 +216,7 @@ public class ContainerHostDynamicWorkload extends ContainerHost{
          * @return the utilization of bw
          */
         public double getUtilizationOfBw() {
-            return getContainerVmBwProvisioner().getUsedBw();
+            return getBwProvisioner().getUsedBw();
         }
 
         /**

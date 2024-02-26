@@ -52,7 +52,7 @@ public class PowerContainerVm extends ContainerVm {
             final int id,
             final int userId,
             final double mips,
-            final float ram,
+            final int ram,
             final long bw,
             final long size,
             final String vmm,

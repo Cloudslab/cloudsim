@@ -16,6 +16,7 @@ import org.cloudbus.cloudsim.Vm;
  * VmList is a collection of operations on lists of VMs.
  * 
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 2.0
  */
 public class VmList {

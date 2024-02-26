@@ -32,7 +32,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtil
             List<? extends ContainerHost> hostList,
             PowerContainerVmSelectionPolicy vmSelectionPolicy, PowerContainerSelectionPolicy containerSelectionPolicy,
             HostSelectionPolicy hostSelectionPolicy, double utilizationThreshold, double underUtilizationThresh,
-            int numberOfVmTypes, int[] vmPes, float[] vmRam, long vmBw, long vmSize, double[] vmMips) {
+            int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy, containerSelectionPolicy, hostSelectionPolicy,underUtilizationThresh,
         		 numberOfVmTypes, vmPes, vmRam, vmBw, vmSize, vmMips);
         setUtilizationThreshold(utilizationThreshold);
@@ -48,7 +48,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtil
     protected boolean isHostOverUtilized(PowerContainerHost host) {
         addHistoryEntry(host, getUtilizationThreshold());
         double totalRequestedMips = 0;
-        for (ContainerVm vm : host.getVmList()) {
+        for (ContainerVm vm : host.<ContainerVm>getVmList()) {
             totalRequestedMips += vm.getCurrentRequestedTotalMips();
         }
         double utilization = totalRequestedMips / host.getTotalMips();

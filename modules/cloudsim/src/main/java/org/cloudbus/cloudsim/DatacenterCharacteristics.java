@@ -23,6 +23,7 @@ import org.cloudbus.cloudsim.lists.PeList;
  * @author Rajkumar Buyya
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  * //TODO the characteristics are used only for datacenter (as the class name indicates),
  * however, the class documentation uses the generic term "resource" instead of "datacenter",
@@ -508,7 +509,7 @@ public class DatacenterCharacteristics {
 	 * 
 	 * @param id the new id
 	 */
-	protected void setId(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

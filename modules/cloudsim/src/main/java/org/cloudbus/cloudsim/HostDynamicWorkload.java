@@ -19,8 +19,9 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
 /**
  * A host supporting dynamic workloads and performance degradation.
- * 
+ *
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 2.0
  */
 public class HostDynamicWorkload extends Host {
@@ -140,7 +141,7 @@ public class HostDynamicWorkload extends Host {
 	 * 
 	 * @return the completed vms
 	 */
-	public List<Vm> getCompletedVms() {
+	public List<? extends Vm> getCompletedVms() {
 		List<Vm> vmsToRemove = new ArrayList<>();
 		for (Vm vm : getVmList()) {
 			if (vm.isInMigration()) {
@@ -274,7 +275,7 @@ public class HostDynamicWorkload extends Host {
 
 	/**
 	 * Adds a host state history entry.
-	 * 
+	 *
 	 * @param time the time
 	 * @param allocatedMips the allocated mips
 	 * @param requestedMips the requested mips

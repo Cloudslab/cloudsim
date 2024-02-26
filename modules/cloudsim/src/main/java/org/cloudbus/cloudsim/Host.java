@@ -23,6 +23,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
 public class Host {

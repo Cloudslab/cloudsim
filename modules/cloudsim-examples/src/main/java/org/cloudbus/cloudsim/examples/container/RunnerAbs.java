@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.examples.container;
 
 import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.container.containerPlacementPolicies.*;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyCor;
@@ -12,7 +13,6 @@ import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerCo
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicyRS;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.PowerContainerAllocationPolicySimple;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumCorrelation;
@@ -28,6 +28,7 @@ import java.util.List;
 /**
  * The RunnerAbs Class is the modified version of {@link org.cloudbus.cloudsim.examples.power.RunnerAbstract}
  * Created by sareh on 18/08/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public abstract class RunnerAbs {
     private static boolean enableOutput;
@@ -167,7 +168,7 @@ public abstract class RunnerAbs {
 
     protected abstract void init(String var1, double overBookingFactor);
 
-    protected void start(String experimentName, String outputFolder, ContainerVmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy) {
+    protected void start(String experimentName, String outputFolder, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy) {
         System.out.println("Starting " + experimentName);
 
         try {
@@ -176,7 +177,7 @@ public abstract class RunnerAbs {
                     getExperimentName(), ConstantsExamples.SCHEDULING_INTERVAL, getLogAddress(),
                     ConstantsExamples.VM_STARTTUP_DELAY, ConstantsExamples.CONTAINER_STARTTUP_DELAY);
 //            PowerContainerDatacenter e = (PowerContainerDatacenter) HelperEx.createDatacenter("Datacenter", PowerContainerDatacenter.class, hostList, vmAllocationPolicy, containerAllocationPolicy);
-            vmAllocationPolicy.setDatacenter(e);
+            // not needed: vmAllocationPolicy.setDatacenter(e);
             e.setDisableVmMigrations(false);
             broker.submitVmList(vmList);
             broker.submitContainerList(containerList);
@@ -215,8 +216,8 @@ public abstract class RunnerAbs {
     }
 
 
-    protected ContainerVmAllocationPolicy getVmAllocationPolicy(String vmAllocationPolicyName, String vmSelectionPolicyName, String containerSelectionPolicyName, String hostSelectionPolicyName) {
-        Object vmAllocationPolicy = null;
+    protected VmAllocationPolicy getVmAllocationPolicy(String vmAllocationPolicyName, String vmSelectionPolicyName, String containerSelectionPolicyName, String hostSelectionPolicyName) {
+        VmAllocationPolicy vmAllocationPolicy = null;
         PowerContainerVmSelectionPolicy vmSelectionPolicy = null;
         PowerContainerSelectionPolicy containerSelectionPolicy = null;
         HostSelectionPolicy hostSelectionPolicy = null;
@@ -253,7 +254,7 @@ public abstract class RunnerAbs {
             System.exit(0);
         }
 
-        return (ContainerVmAllocationPolicy) vmAllocationPolicy;
+        return vmAllocationPolicy;
     }
 
     protected ContainerAllocationPolicy getContainerAllocationPolicy(String containerAllocationPolicyName) {

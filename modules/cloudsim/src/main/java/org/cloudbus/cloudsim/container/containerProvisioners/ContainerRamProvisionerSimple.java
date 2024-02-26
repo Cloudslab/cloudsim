@@ -7,31 +7,32 @@ import org.cloudbus.cloudsim.container.core.Container;
 
 /**
  * @author sareh
+ * @author Remo Andreoli
  */
 public class ContainerRamProvisionerSimple extends ContainerRamProvisioner {
     /**
      * The RAM table.
      */
-    private Map<String, Float> containerRamTable;
+    private Map<String, Integer> containerRamTable;
 
     /**
      * @param availableRam the available ram
      */
-    public ContainerRamProvisionerSimple(float availableRam) {
+    public ContainerRamProvisionerSimple(int availableRam) {
         super(availableRam);
         setContainerRamTable(new HashMap<>());
     }
 
     /**
-     * @see ContainerRamProvisioner#allocateRamForContainer(Container, float)
+     * @see ContainerRamProvisioner#allocateRamForContainer(Container, int)
      * @param container the container
      * @param ram       the ram
      * @return
      */
     @Override
     public boolean allocateRamForContainer(Container container,
-                                           float ram) {
-        float maxRam = container.getRam();
+                                           int ram) {
+        int maxRam = container.getRam();
 
         if (ram >= maxRam) {
             ram = maxRam;
@@ -57,7 +58,7 @@ public class ContainerRamProvisionerSimple extends ContainerRamProvisioner {
      * @return
      */
     @Override
-    public float getAllocatedRamForContainer(Container container) {
+    public int getAllocatedRamForContainer(Container container) {
         if (getContainerRamTable().containsKey(container.getUid())) {
             return getContainerRamTable().get(container.getUid());
         }
@@ -71,7 +72,7 @@ public class ContainerRamProvisionerSimple extends ContainerRamProvisioner {
     @Override
     public void deallocateRamForContainer(Container container) {
         if (getContainerRamTable().containsKey(container.getUid())) {
-            float amountFreed = getContainerRamTable().remove(container.getUid());
+            int amountFreed = getContainerRamTable().remove(container.getUid());
             setAvailableVmRam(getAvailableVmRam() + amountFreed);
             container.setCurrentAllocatedRam(0);
         }
@@ -88,15 +89,15 @@ public class ContainerRamProvisionerSimple extends ContainerRamProvisioner {
 
 
     /**
-     * @see ContainerRamProvisioner#isSuitableForContainer(Container, float)
+     * @see ContainerRamProvisioner#isSuitableForContainer(Container, int)
      * @param container the container
      * @param ram       the vm's ram
      * @return
      */
     @Override
     public boolean isSuitableForContainer(Container container,
-                                          float ram) {
-        float allocatedRam = getAllocatedRamForContainer(container);
+                                          int ram) {
+        int allocatedRam = getAllocatedRamForContainer(container);
         boolean result = allocateRamForContainer(container, ram);
         deallocateRamForContainer(container);
         if (allocatedRam > 0) {
@@ -110,14 +111,14 @@ public class ContainerRamProvisionerSimple extends ContainerRamProvisioner {
      *
      * @return the containerRamTable
      */
-    protected Map<String, Float> getContainerRamTable() {
+    protected Map<String, Integer> getContainerRamTable() {
         return containerRamTable;
     }
 
     /**
      * @param containerRamTable the containerRamTable to set
      */
-    protected void setContainerRamTable(Map<String, Float> containerRamTable) {
+    protected void setContainerRamTable(Map<String, Integer> containerRamTable) {
         this.containerRamTable = containerRamTable;
     }
 

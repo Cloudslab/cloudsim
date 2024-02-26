@@ -11,12 +11,12 @@ public abstract class ContainerRamProvisioner {
     /**
      * The ram.
      */
-    private float ram;
+    private int ram;
 
     /**
      * The available availableContainerRam.
      */
-    private float availableVmRam;
+    private int availableVmRam;
 
 
     /**
@@ -24,7 +24,7 @@ public abstract class ContainerRamProvisioner {
      *
      * @param availableContainerRam the vm ram
      */
-    public ContainerRamProvisioner(float availableContainerRam) {
+    public ContainerRamProvisioner(int availableContainerRam) {
         setRam(availableContainerRam);
         setAvailableVmRam(availableContainerRam);
     }
@@ -36,7 +36,7 @@ public abstract class ContainerRamProvisioner {
      * @param ram       the ram
      * @return $true if successful
      */
-    public abstract boolean allocateRamForContainer(Container container, float ram);
+    public abstract boolean allocateRamForContainer(Container container, int ram);
 
     /**
      * Get the allocated ram of the container
@@ -44,7 +44,7 @@ public abstract class ContainerRamProvisioner {
      * @param container the container
      * @return the allocated ram of the container
      */
-    public abstract float getAllocatedRamForContainer(Container container);
+    public abstract int getAllocatedRamForContainer(Container container);
 
     /**
      * Release the allocated ram amount of the container
@@ -68,14 +68,14 @@ public abstract class ContainerRamProvisioner {
      * @param ram       the vm's ram
      * @return $ture if it is suitable
      */
-    public abstract boolean isSuitableForContainer(Container container, float ram);
+    public abstract boolean isSuitableForContainer(Container container, int ram);
 
     /**
      * get the allocated ram of the Vm
      *
      * @return the used ram of the Vm
      */
-    public float getUsedVmRam() {
+    public int getUsedVmRam() {
         return getRam() - availableVmRam;
     }
 
@@ -85,7 +85,7 @@ public abstract class ContainerRamProvisioner {
      *
      * @return the available ram of the Vm
      */
-    public float getAvailableVmRam() {
+    public int getAvailableVmRam() {
         return availableVmRam;
     }
 
@@ -95,21 +95,21 @@ public abstract class ContainerRamProvisioner {
      *
      * @param availableRam the availableVmRam
      */
-    public void setAvailableVmRam(float availableRam) {
+    public void setAvailableVmRam(int availableRam) {
         this.availableVmRam = availableRam;
     }
 
     /**
      * @return the ram
      */
-    public float getRam() {
+    public int getRam() {
         return ram;
     }
 
     /**
      * @param ram the ram to set
      */
-    public void setRam(float ram) {
+    public void setRam(int ram) {
         this.ram = ram;
     }
 

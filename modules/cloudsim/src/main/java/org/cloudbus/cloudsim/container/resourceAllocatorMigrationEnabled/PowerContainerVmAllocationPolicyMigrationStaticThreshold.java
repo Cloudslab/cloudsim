@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Created by sareh on 30/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerVmAllocationPolicyMigrationStaticThreshold extends PowerContainerVmAllocationPolicyMigrationAbstract {
 
@@ -37,7 +38,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThreshold extends Po
     protected boolean isHostOverUtilized(PowerContainerHost host) {
         addHistoryEntry(host, getUtilizationThreshold());
         double totalRequestedMips = 0;
-        for (ContainerVm vm : host.getVmList()) {
+        for (ContainerVm vm : host.<ContainerVm>getVmList()) {
             totalRequestedMips += vm.getCurrentRequestedTotalMips();
         }
         double utilization = totalRequestedMips / host.getTotalMips();
@@ -65,10 +66,5 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThreshold extends Po
      */
     protected double getUtilizationThreshold() {
         return utilizationThreshold;
-    }
-
-    @Override
-    public void setDatacenter(ContainerDatacenter datacenter) {
-
     }
 }

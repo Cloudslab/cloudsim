@@ -12,7 +12,7 @@ import java.util.Set;
 public class HostSelectionPolicyLeastFull extends HostSelectionPolicy{
 
     @Override
-    public ContainerHost getHost(List<ContainerHost> hostList, Object obj,Set<? extends ContainerHost> excludedHostList) {
+    public ContainerHost getHost(List<ContainerHost> hostList, Object obj, Set<? extends ContainerHost> excludedHostList) {
         double minUsage = Double.MAX_VALUE;
         ContainerHost selectedHost = null;
         for (ContainerHost host : hostList) {

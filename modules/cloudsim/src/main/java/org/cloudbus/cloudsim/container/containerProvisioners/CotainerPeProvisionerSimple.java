@@ -34,9 +34,6 @@ public class CotainerPeProvisionerSimple extends ContainerPeProvisioner {
         setPeTable(new HashMap<String, ArrayList<Double>>());
     }
 
-    /* (non-Javadoc)
-     * @see ContainerVmPeProvisioner#allocateMipsForContainer
-     */
     @Override
     public boolean allocateMipsForContainer(Container container, double mips) {
         // TODO Auto-generated method stub
@@ -44,9 +41,6 @@ public class CotainerPeProvisionerSimple extends ContainerPeProvisioner {
         return allocateMipsForContainer(container.getUid(), mips);
     }
 
-    /* (non-Javadoc)
-     * @see ContainerVmPeProvisioner#allocateMipsForContainer(java.lang.String, double)
-     */
     @Override
     public boolean allocateMipsForContainer(String containerUid, double mips) {
         if (getAvailableMips() < mips) {
@@ -69,9 +63,6 @@ public class CotainerPeProvisionerSimple extends ContainerPeProvisioner {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see ContainerVmPeProvisioner#allocateMipsForContainer(Container, java.util.List)
-     */
     @Override
     public boolean allocateMipsForContainer(Container container, List<Double> mips) {
         int totalMipsToAllocate = 0;
@@ -111,9 +102,6 @@ public class CotainerPeProvisionerSimple extends ContainerPeProvisioner {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see ContainerVmPeProvisioner#getTotalAllocatedMipsForContainer
-     */
     @Override
     public double getTotalAllocatedMipsForContainer(Container container) {
         if (getPeTable().containsKey(container.getUid())) {
@@ -126,9 +114,6 @@ public class CotainerPeProvisionerSimple extends ContainerPeProvisioner {
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see ContainerVmPeProvisioner#getAllocatedMipsForContainerByVirtualPeId(Container, int)
-     */
     @Override
     public double getAllocatedMipsForContainerByVirtualPeId(Container container,
                                                             int peId) {
@@ -141,9 +126,6 @@ public class CotainerPeProvisionerSimple extends ContainerPeProvisioner {
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see ContainerVmPeProvisioner#deallocateMipsForContainer(Container)
-     */
     @Override
     public void deallocateMipsForContainer(Container container) {
         if (getPeTable().containsKey(container.getUid())) {

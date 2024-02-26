@@ -22,6 +22,7 @@ import org.cloudbus.cloudsim.lists.PeList;
  * 
  * @author Anton Beloglazov
  * @author Rodrigo N. Calheiros
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  */
 public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared {
@@ -91,8 +92,9 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 			redistributeMipsDueToOverSubscription();
 		}
 
-		return true;
-	}
+        mipsShareRequestedCapped.clear();
+        return true;
+    }
 
 	/**
 	 * Recalculates distribution of MIPs among VMs, considering eventual shortage of MIPS

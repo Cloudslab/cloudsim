@@ -1,16 +1,17 @@
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
 import org.cloudbus.cloudsim.container.core.ContainerHost;
-import org.cloudbus.cloudsim.container.core.ContainerHostList;
 import org.cloudbus.cloudsim.container.core.PowerContainerHost;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
+import org.cloudbus.cloudsim.lists.HostList;
 
 import java.util.*;
 
 /**
  * Created by sareh on 13/08/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelectionUnderUtilizedAdded extends PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelection {
 
@@ -20,7 +21,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             List<? extends ContainerHost> hostList, PowerContainerVmSelectionPolicy vmSelectionPolicy,
             PowerContainerSelectionPolicy containerSelectionPolicy, HostSelectionPolicy hostSelectionPolicy,
             double underUtilizationThr,
-            int numberOfVmTypes, int[] vmPes, float[] vmRam, long vmBw, long vmSize, double[] vmMips) {
+            int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy, containerSelectionPolicy, hostSelectionPolicy,
         		 numberOfVmTypes, vmPes, vmRam, vmBw, vmSize, vmMips);
         setUnderUtilizationThr(underUtilizationThr);
@@ -41,7 +42,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
             return null;
         }
-        ContainerHostList.sortByCpuUtilizationDescending(underUtilizedHostList);
+        HostList.sortByCpuUtilizationDescending(underUtilizedHostList);
 //        Log.print(String.format("The under Utilized Hosts are %d", underUtilizedHostList.size()));
         PowerContainerHost underUtilizedHost = (PowerContainerHost) underUtilizedHostList.get(0);
 
@@ -57,7 +58,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
      */
     protected List<ContainerHost> getUnderUtilizedHostList(Set<? extends ContainerHost> excludedHosts) {
         List<ContainerHost> underUtilizedHostList = new ArrayList<>();
-        for (PowerContainerHost host : this.<PowerContainerHost>getContainerHostList()) {
+        for (PowerContainerHost host : this.<PowerContainerHost>getHostList()) {
             if (excludedHosts.contains(host)) {
                 continue;
             }

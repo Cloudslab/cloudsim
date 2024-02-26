@@ -1,25 +1,21 @@
 package org.cloudbus.cloudsim.examples.container;
 
 import com.opencsv.CSVWriter;
-import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.CotainerPeProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmBwProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPe;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPeProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmRamProvisionerSimple;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstract;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.container.schedulers.ContainerCloudletSchedulerDynamicWorkload;
 import org.cloudbus.cloudsim.container.schedulers.ContainerSchedulerTimeSharedOverSubscription;
-import org.cloudbus.cloudsim.container.schedulers.ContainerVmSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.utils.IDs;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 import java.io.*;
@@ -29,6 +25,7 @@ import java.util.*;
 /**
  * This is the modified version of {@link org.cloudbus.cloudsim.examples.power.Helper} class in cloudsim.
  * Created by sareh on 15/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 
 public class HelperEx {
@@ -112,7 +109,7 @@ public class HelperEx {
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
                 peList.add(new ContainerPe(j, new CotainerPeProvisionerSimple((double) ConstantsExamples.VM_MIPS[vmType])));
             }
-            containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (float) ConstantsExamples.VM_RAM[vmType],
+            containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (int) ConstantsExamples.VM_RAM[vmType],
                     ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen", new ContainerSchedulerTimeSharedOverSubscription(peList),
                     new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
                     new ContainerBwProvisionerSimple(ConstantsExamples.VM_BW), peList, ConstantsExamples.SCHEDULING_INTERVAL));
@@ -134,13 +131,13 @@ public class HelperEx {
             ArrayList peList = new ArrayList();
 
             for (int j = 0; j < ConstantsExamples.HOST_PES[hostType]; ++j) {
-                peList.add(new ContainerVmPe(j, new ContainerVmPeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));
+                peList.add(new Pe(j, new PeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));
             }
 
-//            hostList.add(new PowerContainerHost(i, new ContainerVmRamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
-//                    new ContainerVmBwProvisionerSimple(1000000L), 1000000L, peList, new ContainerVmSchedulerTimeSharedOverSubscription(peList), ConstantsExamples.HOST_POWER[hostType]));
-            hostList.add(new PowerContainerHostUtilizationHistory(IDs.pollId(ContainerHost.class), new ContainerVmRamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
-                    new ContainerVmBwProvisionerSimple(1000000L), 1000000L, peList, new ContainerVmSchedulerTimeSharedOverSubscription(peList), ConstantsExamples.HOST_POWER[hostType]));
+//            hostList.add(new PowerContainerHost(i, new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
+//                    new BwProvisionerSimple(1000000L), 1000000L, peList, new VmSchedulerTimeSharedOverSubscription(peList), ConstantsExamples.HOST_POWER[hostType]));
+            hostList.add(new PowerContainerHostUtilizationHistory(IDs.pollId(ContainerHost.class), new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
+                    new BwProvisionerSimple(1000000L), 1000000L, peList, new VmSchedulerTimeSharedOverSubscription(peList), ConstantsExamples.HOST_POWER[hostType]));
         }
 
         return hostList;
@@ -163,7 +160,7 @@ public class HelperEx {
     }
 
     //    // Data Center
-//    public static PowerContainerDatacenter createDatacenter(String name, List<ContainerHost> hostList, ContainerVmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy) throws Exception {
+//    public static PowerContainerDatacenter createDatacenter(String name, List<ContainerHost> hostList, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy) throws Exception {
 //        String arch = "x86";
 //        String os = "Linux";
 //        String vmm = "Xen";
@@ -172,7 +169,7 @@ public class HelperEx {
 //        double costPerMem = 0.05D;
 //        double costPerStorage = 0.001D;
 //        double costPerBw = 0.0D;
-//        ContainerDatacenterCharacteristics characteristics = new ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
+//        DatacenterCharacteristics characteristics = new DatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
 //        PowerContainerDatacenter datacenter = null;
 ////        datacenter = new PowerContainerDatacenter(name,characteristics, vmAllocationPolicy, containerAllocationPolicy , new LinkedList(),Double.valueOf(300.0D));
 //        datacenter = new PowerContainerDatacenterCM(name,characteristics, vmAllocationPolicy, containerAllocationPolicy , new LinkedList(),Double.valueOf(300.0D));
@@ -180,7 +177,7 @@ public class HelperEx {
 //        return datacenter;
 //    }
     // Data Center
-//    public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass, List<ContainerHost> hostList, ContainerVmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy, String experimentName, String logAddress) throws Exception {
+//    public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass, List<ContainerHost> hostList, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy, String experimentName, String logAddress) throws Exception {
 //        String arch = "x86";
 //        String os = "Linux";
 //        String vmm = "Xen";
@@ -189,13 +186,13 @@ public class HelperEx {
 //        double costPerMem = 0.05D;
 //        double costPerStorage = 0.001D;
 //        double costPerBw = 0.0D;
-//        ContainerDatacenterCharacteristics characteristics = new ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
+//        DatacenterCharacteristics characteristics = new DatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
 //        ContainerDatacenter datacenter = null;
 //        try {
 //            datacenter = datacenterClass.getConstructor(
 //                    String.class,
-//                    ContainerDatacenterCharacteristics.class,
-//                    ContainerVmAllocationPolicy.class,
+//                    DatacenterCharacteristics.class,
+//                    VmAllocationPolicy.class,
 //                    ContainerAllocationPolicy.class,
 //                    List.class,
 //                    Double.TYPE, String.class, String.class
@@ -233,7 +230,7 @@ public class HelperEx {
 
     public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass,
                                                        List<ContainerHost> hostList,
-                                                       ContainerVmAllocationPolicy vmAllocationPolicy,
+                                                       VmAllocationPolicy vmAllocationPolicy,
                                                        ContainerAllocationPolicy containerAllocationPolicy,
                                                        String experimentName, double schedulingInterval, String logAddress, double VMStartupDelay,
                                                        double ContainerStartupDelay) throws Exception {
@@ -245,8 +242,8 @@ public class HelperEx {
         double costPerMem = 0.05D;
         double costPerStorage = 0.001D;
         double costPerBw = 0.0D;
-        ContainerDatacenterCharacteristics characteristics = new
-                ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage,
+        DatacenterCharacteristics characteristics = new
+                DatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage,
                 costPerBw);
         ContainerDatacenter datacenter = new PowerContainerDatacenterCM(name, characteristics, vmAllocationPolicy,
                 containerAllocationPolicy, new LinkedList<>(), schedulingInterval, experimentName, logAddress,

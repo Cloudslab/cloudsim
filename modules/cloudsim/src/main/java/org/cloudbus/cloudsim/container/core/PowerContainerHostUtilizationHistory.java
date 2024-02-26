@@ -1,16 +1,17 @@
 package org.cloudbus.cloudsim.container.core;
 
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmBwProvisioner;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmPe;
-import org.cloudbus.cloudsim.container.containerVmProvisioners.ContainerVmRamProvisioner;
-import org.cloudbus.cloudsim.container.schedulers.ContainerVmScheduler;
+import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.VmScheduler;
 import org.cloudbus.cloudsim.power.models.PowerModel;
+import org.cloudbus.cloudsim.provisioners.BwProvisioner;
+import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 import java.util.List;
 
 /**
  * Created by sareh on 15/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerHostUtilizationHistory extends PowerContainerHost {
 
@@ -27,11 +28,11 @@ public class PowerContainerHostUtilizationHistory extends PowerContainerHost {
      */
     public PowerContainerHostUtilizationHistory(
             int id,
-            ContainerVmRamProvisioner ramProvisioner,
-            ContainerVmBwProvisioner bwProvisioner,
+            RamProvisioner ramProvisioner,
+            BwProvisioner bwProvisioner,
             long storage,
-            List<? extends ContainerVmPe> peList,
-            ContainerVmScheduler vmScheduler,
+            List<? extends Pe> peList,
+            VmScheduler vmScheduler,
             PowerModel powerModel) {
         super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler, powerModel);
     }

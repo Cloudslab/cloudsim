@@ -18,6 +18,7 @@ import org.cloudbus.cloudsim.Vm;
  * PeList is a collection of operations on lists of PEs.
  * 
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 2.0
  */
 public class PeList {
