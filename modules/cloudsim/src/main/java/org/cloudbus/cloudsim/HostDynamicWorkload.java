@@ -178,7 +178,7 @@ public class HostDynamicWorkload extends Host {
 	 * 
 	 * @return the utilization of memory
 	 */
-	public double getUtilizationOfRam() {
+	public int getUtilizationOfRam() {
 		return getRamProvisioner().getUsedRam();
 	}
 

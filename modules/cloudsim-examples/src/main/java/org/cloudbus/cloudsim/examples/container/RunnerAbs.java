@@ -1,5 +1,6 @@
 package org.cloudbus.cloudsim.examples.container;
 
+import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.container.containerPlacementPolicies.*;
@@ -46,7 +47,7 @@ public abstract class RunnerAbs {
     /**
      * The host list.
      */
-    protected static List<ContainerHost> hostList;
+    protected static List<Host> hostList;
 
     /**
      * The Cloudlet List

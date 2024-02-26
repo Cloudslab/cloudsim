@@ -3,14 +3,15 @@ package org.cloudbus.cloudsim.container.containerSelectionPolicies;
 
 import org.cloudbus.cloudsim.container.core.Container;
 import org.cloudbus.cloudsim.container.core.PowerContainer;
-import org.cloudbus.cloudsim.container.core.PowerContainerHost;
 import org.cloudbus.cloudsim.container.core.PowerContainerVm;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by sareh on 31/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public abstract class PowerContainerSelectionPolicy {
 
@@ -20,7 +21,7 @@ public abstract class PowerContainerSelectionPolicy {
      * @param host the host
      * @return the container to migrate
      */
-    public abstract Container getContainerToMigrate(PowerContainerHost host);
+    public abstract Container getContainerToMigrate(PowerHost host);
 
     /**
      * Gets the migratable containers.
@@ -28,7 +29,7 @@ public abstract class PowerContainerSelectionPolicy {
      * @param host the host
      * @return the migratable containers
      */
-    protected List<PowerContainer> getMigratableContainers(PowerContainerHost host) {
+    protected List<PowerContainer> getMigratableContainers(PowerHost host) {
         List<PowerContainer> migratableContainers= new ArrayList<>();
         for (PowerContainerVm vm : host.<PowerContainerVm> getVmList()) {
             if (!vm.isInMigration()) {

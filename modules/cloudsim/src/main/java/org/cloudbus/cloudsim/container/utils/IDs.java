@@ -5,6 +5,7 @@ package org.cloudbus.cloudsim.container.utils;
  * Modified by Remo Andreoli (Feb 2024)
  */
 
+import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.core.*;
@@ -21,6 +22,7 @@ import java.util.Map;
  * Modifies for containers
  *
  * @author nikolay.grozev
+ * @author Remo Andreoli
  */
 
 public final class IDs {
@@ -34,7 +36,7 @@ public final class IDs {
         COUNTERS.put(ContainerCloudlet.class, 1);
         COUNTERS.put(ContainerVm.class, 1);
         COUNTERS.put(Container.class, 1);
-        COUNTERS.put(ContainerHost.class, 1);
+        COUNTERS.put(Host.class, 1);
         COUNTERS.put(ContainerDatacenterBroker.class, 1);
         COUNTERS.put(ContainerPe.class, 1);
         COUNTERS.put(Pe.class, 1);

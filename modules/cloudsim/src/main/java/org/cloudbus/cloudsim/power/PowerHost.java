@@ -31,6 +31,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
  * </ul>
  * 
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 2.0
  */
 public class PowerHost extends HostDynamicWorkload {

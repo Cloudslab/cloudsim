@@ -3,6 +3,7 @@ package org.cloudbus.cloudsim.container.core;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.PeList;
+import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by sareh on 14/07/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public class ContainerHostDynamicWorkload extends ContainerHost {
+public class ContainerHostDynamicWorkload extends Host {
 
 
         /** The utilization mips. */
@@ -327,5 +328,4 @@ public class ContainerHostDynamicWorkload extends ContainerHost {
         }
 
     }
-
 

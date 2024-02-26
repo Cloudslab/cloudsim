@@ -18,7 +18,7 @@ import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.CotainerPeProvisionerSimple;
+import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPeProvisionerSimple;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyFirstFit;
@@ -31,6 +31,7 @@ import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -68,7 +69,7 @@ public class ContainerCloudSimExample1 {
      * The hostList.
      */
 
-    private static List<ContainerHost> hostList;
+    private static List<Host> hostList;
 
     /**
      * Creates main() to run this example.
@@ -290,7 +291,7 @@ public class ContainerCloudSimExample1 {
             int vmType = i / (int) Math.ceil((double) containerVmsNumber / 4.0D);
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
                 peList.add(new ContainerPe(j,
-                        new CotainerPeProvisionerSimple(ConstantsExamples.VM_MIPS[vmType])));
+                        new ContainerPeProvisionerSimple(ConstantsExamples.VM_MIPS[vmType])));
             }
             containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId,
                     ConstantsExamples.VM_MIPS[vmType], ConstantsExamples.VM_RAM[vmType],
@@ -314,8 +315,8 @@ public class ContainerCloudSimExample1 {
      */
 
 
-    public static List<ContainerHost> createHostList(int hostsNumber) {
-        ArrayList<ContainerHost> hostList = new ArrayList<>();
+    public static List<Host> createHostList(int hostsNumber) {
+        ArrayList<Host> hostList = new ArrayList<>();
         for (int i = 0; i < hostsNumber; ++i) {
             int hostType = i / (int) Math.ceil((double) hostsNumber / 3.0D);
             ArrayList<Pe> peList = new ArrayList<>();
@@ -324,7 +325,7 @@ public class ContainerCloudSimExample1 {
                         new PeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));
             }
 
-            hostList.add(new PowerContainerHostUtilizationHistory(IDs.pollId(ContainerHost.class),
+            hostList.add(new PowerHostUtilizationHistory(IDs.pollId(Host.class),
                     new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
                     new BwProvisionerSimple(1000000L), 1000000L, peList,
                     new VmSchedulerTimeSharedOverSubscription(peList),
@@ -350,7 +351,7 @@ public class ContainerCloudSimExample1 {
      */
 
     public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass,
-                                                       List<ContainerHost> hostList,
+                                                       List<Host> hostList,
                                                        VmAllocationPolicy vmAllocationPolicy,
                                                        ContainerAllocationPolicy containerAllocationPolicy,
                                                        String experimentName, double schedulingInterval, String logAddress, double VMStartupDelay,

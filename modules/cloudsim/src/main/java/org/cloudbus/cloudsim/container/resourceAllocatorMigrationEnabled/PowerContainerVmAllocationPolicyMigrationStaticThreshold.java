@@ -1,6 +1,8 @@
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
+import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThreshold extends Po
      * @param utilizationThreshold the utilization threshold
      */
     public PowerContainerVmAllocationPolicyMigrationStaticThreshold(
-            List<? extends ContainerHost> hostList,
+            List<? extends Host> hostList,
             PowerContainerVmSelectionPolicy vmSelectionPolicy,
             double utilizationThreshold) {
         super(hostList, vmSelectionPolicy);
@@ -35,7 +37,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThreshold extends Po
      * @return true, if is host over utilized
      */
     @Override
-    protected boolean isHostOverUtilized(PowerContainerHost host) {
+    protected boolean isHostOverUtilized(PowerHost host) {
         addHistoryEntry(host, getUtilizationThreshold());
         double totalRequestedMips = 0;
         for (ContainerVm vm : host.<ContainerVm>getVmList()) {
@@ -46,7 +48,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThreshold extends Po
     }
 
     @Override
-    protected boolean isHostUnderUtilized(PowerContainerHost host) {
+    protected boolean isHostUnderUtilized(PowerHost host) {
         return false;
     }
 

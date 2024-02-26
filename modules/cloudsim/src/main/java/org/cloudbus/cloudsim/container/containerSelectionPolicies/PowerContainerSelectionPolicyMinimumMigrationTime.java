@@ -1,13 +1,14 @@
 package org.cloudbus.cloudsim.container.containerSelectionPolicies;
 
-import org.cloudbus.cloudsim.container.core.PowerContainerHost;
 import org.cloudbus.cloudsim.container.core.Container;
 import org.cloudbus.cloudsim.container.core.PowerContainer;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.util.List;
 
 /**
  * Created by sareh on 3/08/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerSelectionPolicyMinimumMigrationTime extends PowerContainerSelectionPolicy {
 
@@ -18,7 +19,7 @@ public class PowerContainerSelectionPolicyMinimumMigrationTime extends PowerCont
      * PowerContainerSelectionPolicy#getContainerToMigrate
      */
     @Override
-    public Container getContainerToMigrate(PowerContainerHost host) {
+    public Container getContainerToMigrate(PowerHost host) {
         List<PowerContainer> migratableContainers = getMigratableContainers(host);
         if (migratableContainers.isEmpty()) {
             return null;

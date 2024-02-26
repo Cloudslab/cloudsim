@@ -20,6 +20,7 @@ import org.cloudbus.cloudsim.container.core.ContainerVm;
  * ContainerContainerGoogle in a Datacentre.
  * 
  * @author Sareh Fotuhi Piraghaj
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  */
 
@@ -31,7 +32,7 @@ public abstract class ContainerAllocationPolicy {
 		private List<? extends ContainerVm> containerVmList;
 
 		/**
-		 * Allocates a new VmAllocationPolicy object.
+		 * Allocates a new ContainerAllocationPolicy object.
 		 *
 		 * @pre $none
 		 * @post $none
@@ -121,6 +122,3 @@ public abstract class ContainerAllocationPolicy {
 		}
 
 	}
-
-
-

@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.container.vmSelectionPolicies;
 
 import org.cloudbus.cloudsim.container.core.*;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 import java.util.LinkedList;
@@ -33,7 +34,7 @@ public class PowerContainerVmSelectionPolicyMaximumCorrelation extends PowerCont
          * getVmsToMigrate(org.cloudbus .cloudsim.power.PowerHost)
          */
         @Override
-        public ContainerVm getVmToMigrate(final PowerContainerHost host) {
+        public ContainerVm getVmToMigrate(final PowerHost host) {
             List<PowerContainerVm> migratableVms = getMigratableVms(host);
             if (migratableVms.isEmpty()) {
                 return null;

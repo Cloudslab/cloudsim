@@ -2,8 +2,8 @@ package org.cloudbus.cloudsim.container.containerSelectionPolicies;
 
 import org.cloudbus.cloudsim.container.core.Container;
 import org.cloudbus.cloudsim.container.core.PowerContainer;
-import org.cloudbus.cloudsim.container.core.PowerContainerHost;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 import java.util.LinkedList;
@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by sareh on 31/07/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerSelectionPolicyMaximumCorrelation extends PowerContainerSelectionPolicy {
 
@@ -36,7 +37,7 @@ public class PowerContainerSelectionPolicyMaximumCorrelation extends PowerContai
      * @see powerContainerSelectionPolicy#getContainerToMigrate()
      */
     @Override
-    public Container getContainerToMigrate(final PowerContainerHost host) {
+    public Container getContainerToMigrate(final PowerHost host) {
         List<PowerContainer> migratableContainers = getMigratableContainers(host);
         if (migratableContainers.isEmpty()) {
             return null;

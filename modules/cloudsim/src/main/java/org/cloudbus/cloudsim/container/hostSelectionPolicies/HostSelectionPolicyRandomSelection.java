@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.container.hostSelectionPolicies;
 
-import org.cloudbus.cloudsim.container.core.ContainerHost;
+import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.utils.RandomGen;
 import org.cloudbus.cloudsim.core.CloudSim;
 
@@ -9,12 +9,13 @@ import java.util.Set;
 
 /**
  * Created by sareh on 12/08/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class HostSelectionPolicyRandomSelection extends  HostSelectionPolicy {
 
     @Override
-    public ContainerHost getHost(List<ContainerHost> hostList, Object obj, Set<? extends ContainerHost> excludedHostList) {
-        ContainerHost host = null;
+    public Host getHost(List<Host> hostList, Object obj, Set<? extends Host> excludedHostList) {
+        Host host = null;
 
         if (CloudSim.clock() > 1.0) {
             while (true) {

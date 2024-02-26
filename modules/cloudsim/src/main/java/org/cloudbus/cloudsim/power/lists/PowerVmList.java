@@ -30,8 +30,7 @@ import org.cloudbus.cloudsim.lists.VmList;
  * </ul>
  * 
  * @author Anton Beloglazov
- * 
- * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 2.0
  * This class in fact doesn't use a list or PowerVm, but a list of Vm.
  * The used methods are just of the Vm class, thus doesn't have

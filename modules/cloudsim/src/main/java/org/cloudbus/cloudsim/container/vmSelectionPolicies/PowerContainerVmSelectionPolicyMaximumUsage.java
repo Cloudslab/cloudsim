@@ -1,13 +1,14 @@
 package org.cloudbus.cloudsim.container.vmSelectionPolicies;
 
 import org.cloudbus.cloudsim.container.core.ContainerVm;
-import org.cloudbus.cloudsim.container.core.PowerContainerHost;
 import org.cloudbus.cloudsim.container.core.PowerContainerVm;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.util.List;
 
 /**
  * Created by sareh on 16/11/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerVmSelectionPolicyMaximumUsage extends PowerContainerVmSelectionPolicy {
     /*
@@ -17,7 +18,7 @@ public class PowerContainerVmSelectionPolicyMaximumUsage extends PowerContainerV
      * .cloudsim.power.PowerHost)
      */
     @Override
-    public ContainerVm getVmToMigrate(PowerContainerHost host) {
+    public ContainerVm getVmToMigrate(PowerHost host) {
         List<PowerContainerVm> migratableContainers = getMigratableVms(host);
         if (migratableContainers.isEmpty()) {
             return null;

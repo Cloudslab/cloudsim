@@ -3,14 +3,16 @@ package org.cloudbus.cloudsim.container.containerSelectionPolicies;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.Container;
 import org.cloudbus.cloudsim.container.core.PowerContainer;
-import org.cloudbus.cloudsim.container.core.PowerContainerHost;
-import org.cloudbus.cloudsim.container.core.PowerContainerHostUtilizationHistory;
 import org.cloudbus.cloudsim.container.utils.Correlation;
 import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.power.PowerHost;
+import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
+
 import java.util.List;
 
 /**
  * Created by sareh on 7/08/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerSelectionPolicyCor extends PowerContainerSelectionPolicy {
     /**
@@ -34,7 +36,7 @@ public class PowerContainerSelectionPolicyCor extends PowerContainerSelectionPol
     * @see PowerContainerSelectionPolicy#getContainerToMigrate
     */
     @Override
-    public Container getContainerToMigrate(final PowerContainerHost host) {
+    public Container getContainerToMigrate(final PowerHost host) {
         List<PowerContainer> migratableContainers = getMigratableContainers(host);
         if (migratableContainers.isEmpty()) {
             return null;
@@ -68,16 +70,16 @@ public class PowerContainerSelectionPolicyCor extends PowerContainerSelectionPol
         this.fallbackPolicy = fallbackPolicy;
     }
 
-    public Container getContainer(List<PowerContainer> migratableContainers, PowerContainerHost host) {
+    public Container getContainer(List<PowerContainer> migratableContainers, PowerHost host) {
 
         double[] corResult = new double[migratableContainers.size()];
         Correlation correlation = new Correlation();
         int i = 0;
         double maxValue = -2.0;
         int id = -1;
-        if (host instanceof PowerContainerHostUtilizationHistory) {
+        if (host instanceof PowerHostUtilizationHistory) {
 
-            double[] hostUtilization = ((PowerContainerHostUtilizationHistory) host).getUtilizationHistory();
+            double[] hostUtilization = ((PowerHostUtilizationHistory) host).getUtilizationHistory();
             for (Container container : migratableContainers) {
                 double[] containerUtilization = ((PowerContainer) container).getUtilizationHistoryList();
 

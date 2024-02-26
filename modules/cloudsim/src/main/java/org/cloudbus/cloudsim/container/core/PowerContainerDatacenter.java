@@ -2,16 +2,14 @@ package org.cloudbus.cloudsim.container.core;
 
 //import cloudSimGr.containerCloudSim.Experiments.HelperEx;
 //import cloudSimGr.containerCloudSim.Experiments.Paper1.RunnerAbs;
-import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -126,13 +124,13 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
 
             if (!isDisableVmMigrations()) {
                 List<Map<String, Object>> migrationMap = getVmAllocationPolicy().optimizeAllocation(
-                        getContainerVmList());
+                        getVmList());
                 int previousMigrationCount = getVmMigrationCount();
                 if (migrationMap != null) {
                     for (Map<String, Object> migrate : migrationMap) {
                         ContainerVm vm = (ContainerVm) migrate.get("vm");
-                        PowerContainerHost targetHost = (PowerContainerHost) migrate.get("host");
-                        PowerContainerHost oldHost = (PowerContainerHost) vm.getHost();
+                        PowerHost targetHost = (PowerHost) migrate.get("host");
+                        PowerHost oldHost = (PowerHost) vm.getHost();
 
                         if (oldHost == null) {
                             Log.formatLine(
@@ -211,7 +209,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         Log.printLine("\n\n--------------------------------------------------------------\n\n");
         Log.formatLine("Power data center: New resource usage for the time frame starting at %.2f:", currentTime);
 
-        for (PowerContainerHost host : this.<PowerContainerHost>getHostList()) {
+        for (PowerHost host : this.<PowerHost>getHostList()) {
             Log.printLine();
 
             double time = host.updateVmsProcessing(currentTime); // inform VMs to update processing
@@ -232,7 +230,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
                     getLastProcessTime(),
                     currentTime);
 
-            for (PowerContainerHost host : this.<PowerContainerHost>getHostList()) {
+            for (PowerHost host : this.<PowerHost>getHostList()) {
                 double previousUtilizationOfCpu = host.getPreviousUtilizationOfCpu();
                 double utilizationOfCpu = host.getUtilizationOfCpu();
                 double timeFrameHostEnergy = host.getEnergyLinearInterpolation(
@@ -278,10 +276,10 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
 
         int numberOfActiveHosts =0;
         /** Remove completed VMs **/
-        for (PowerContainerHost host : this.<PowerContainerHost>getHostList()) {
-            for (ContainerVm vm : host.getCompletedVms()) {
+        for (PowerHost host : this.<PowerHost>getHostList()) {
+            for (Vm vm : host.getCompletedVms()) {
                 getVmAllocationPolicy().deallocateHostForVm(vm);
-                getContainerVmList().remove(vm);
+                getVmList().remove(vm);
                 Log.printLine(String.format("VM #%d has been deallocated from host #%d", vm.getId(), host.getId()));
             }
             if(host.getVmList().size() !=0){
@@ -371,7 +369,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
      */
     protected boolean isInMigration() {
         boolean result = false;
-        for (ContainerVm vm : getContainerVmList()) {
+        for (ContainerVm vm : this.<ContainerVm>getVmList()) {
             if (vm.isInMigration()) {
                 result = true;
                 break;
@@ -502,9 +500,8 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         setNumberOfVms(0);
         setNumberOfContainers(0);
         List<ContainerVm> temp= new ArrayList<>();
-        List<ContainerHost> containerHosts = getHostList();
 
-        for(ContainerHost host : containerHosts) {
+        for(Host host : getHostList()) {
             List<ContainerVm> containerVms = host.getVmList();
             for (ContainerVm vm : containerVms) {
                 if (!temp.contains(vm)) {

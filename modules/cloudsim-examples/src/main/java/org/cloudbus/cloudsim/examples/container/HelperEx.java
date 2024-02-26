@@ -6,13 +6,14 @@ import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.CotainerPeProvisionerSimple;
+import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPeProvisionerSimple;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstract;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.schedulers.ContainerCloudletSchedulerDynamicWorkload;
 import org.cloudbus.cloudsim.container.schedulers.ContainerSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.utils.IDs;
+import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -107,7 +108,7 @@ public class HelperEx {
             //            int vmType = 1;
 
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
-                peList.add(new ContainerPe(j, new CotainerPeProvisionerSimple((double) ConstantsExamples.VM_MIPS[vmType])));
+                peList.add(new ContainerPe(j, new ContainerPeProvisionerSimple((double) ConstantsExamples.VM_MIPS[vmType])));
             }
             containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (int) ConstantsExamples.VM_RAM[vmType],
                     ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen", new ContainerSchedulerTimeSharedOverSubscription(peList),
@@ -121,7 +122,7 @@ public class HelperEx {
     }
 
 
-    public static List<ContainerHost> createHostList(int hostsNumber) {
+    public static List<Host> createHostList(int hostsNumber) {
         ArrayList hostList = new ArrayList();
         for (int i = 0; i < hostsNumber; ++i) {
 //            int hostType =  new RandomGen().getNum(ConstantsExamples.HOST_TYPES);
@@ -134,9 +135,9 @@ public class HelperEx {
                 peList.add(new Pe(j, new PeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));
             }
 
-//            hostList.add(new PowerContainerHost(i, new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
+//            hostList.add(new PowerHost(i, new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
 //                    new BwProvisionerSimple(1000000L), 1000000L, peList, new VmSchedulerTimeSharedOverSubscription(peList), ConstantsExamples.HOST_POWER[hostType]));
-            hostList.add(new PowerContainerHostUtilizationHistory(IDs.pollId(ContainerHost.class), new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
+            hostList.add(new PowerHostUtilizationHistory(IDs.pollId(Host.class), new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
                     new BwProvisionerSimple(1000000L), 1000000L, peList, new VmSchedulerTimeSharedOverSubscription(peList), ConstantsExamples.HOST_POWER[hostType]));
         }
 
@@ -160,7 +161,7 @@ public class HelperEx {
     }
 
     //    // Data Center
-//    public static PowerContainerDatacenter createDatacenter(String name, List<ContainerHost> hostList, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy) throws Exception {
+//    public static PowerContainerDatacenter createDatacenter(String name, List<Host> hostList, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy) throws Exception {
 //        String arch = "x86";
 //        String os = "Linux";
 //        String vmm = "Xen";
@@ -177,7 +178,7 @@ public class HelperEx {
 //        return datacenter;
 //    }
     // Data Center
-//    public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass, List<ContainerHost> hostList, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy, String experimentName, String logAddress) throws Exception {
+//    public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass, List<Host> hostList, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy, String experimentName, String logAddress) throws Exception {
 //        String arch = "x86";
 //        String os = "Linux";
 //        String vmm = "Xen";
@@ -229,7 +230,7 @@ public class HelperEx {
      */
 
     public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass,
-                                                       List<ContainerHost> hostList,
+                                                       List<Host> hostList,
                                                        VmAllocationPolicy vmAllocationPolicy,
                                                        ContainerAllocationPolicy containerAllocationPolicy,
                                                        String experimentName, double schedulingInterval, String logAddress, double VMStartupDelay,
@@ -269,7 +270,7 @@ public class HelperEx {
             boolean outputInCsv,
             String outputFolder) {
         Log.enable();
-        List<ContainerHost> hosts = datacenter.getHostList();
+        List<Host> hosts = datacenter.getHostList();
 
         int numberOfHosts = hosts.size();
         int numberOfVms = vms.size();
@@ -551,9 +552,9 @@ public class HelperEx {
      * @param hosts the hosts
      * @return the times before host shutdown
      */
-    public static List<Double> getTimesBeforeHostShutdown(List<ContainerHost> hosts) {
+    public static List<Double> getTimesBeforeHostShutdown(List<Host> hosts) {
         List<Double> timeBeforeShutdown = new LinkedList<>();
-        for (ContainerHost host : hosts) {
+        for (Host host : hosts) {
             boolean previousIsActive = true;
             double lastTimeSwitchedOn = 0;
             for (HostStateHistoryEntry entry : ((ContainerHostDynamicWorkload) host).getStateHistory()) {
@@ -597,11 +598,11 @@ public class HelperEx {
      * @param hosts the hosts
      * @return the sla time per active host
      */
-    protected static double getSlaTimePerActiveHost(List<ContainerHost> hosts) {
+    protected static double getSlaTimePerActiveHost(List<Host> hosts) {
         double slaViolationTimePerHost = 0;
         double totalTime = 0;
 
-        for (ContainerHost _host : hosts) {
+        for (Host _host : hosts) {
             ContainerHostDynamicWorkload host = (ContainerHostDynamicWorkload) _host;
             double previousTime = -1;
             double previousAllocated = 0;
@@ -633,11 +634,11 @@ public class HelperEx {
      * @param hosts the hosts
      * @return the sla time per host
      */
-    protected static double getSlaTimePerHost(List<ContainerHost> hosts) {
+    protected static double getSlaTimePerHost(List<Host> hosts) {
         double slaViolationTimePerHost = 0;
         double totalTime = 0;
 
-        for (ContainerHost _host : hosts) {
+        for (Host _host : hosts) {
             ContainerHostDynamicWorkload host = (ContainerHostDynamicWorkload) _host;
             double previousTime = -1;
             double previousAllocated = 0;
@@ -786,12 +787,12 @@ public class HelperEx {
      * @param outputPath         the output path
      */
     public static void writeMetricHistory(
-            List<? extends ContainerHost> hosts,
+            List<? extends Host> hosts,
             PowerContainerVmAllocationPolicyMigrationAbstract vmAllocationPolicy,
             String outputPath) {
         // for (Host host : hosts) {
         for (int j = 0; j < 10; j++) {
-            ContainerHost host = hosts.get(j);
+            Host host = hosts.get(j);
 
             if (!vmAllocationPolicy.getTimeHistory().containsKey(host.getId())) {
                 continue;
@@ -831,10 +832,10 @@ public class HelperEx {
      * @param vmAllocationPolicy the vm allocation policy
      */
     public static void printMetricHistory(
-            List<? extends ContainerHost> hosts,
+            List<? extends Host> hosts,
             PowerContainerVmAllocationPolicyMigrationAbstract vmAllocationPolicy) {
         for (int i = 0; i < 10; i++) {
-            ContainerHost host = hosts.get(i);
+            Host host = hosts.get(i);
 
             Log.printLine("Host #" + host.getId());
             Log.printLine("Time:");
@@ -867,7 +868,7 @@ public class HelperEx {
         List<ContainerVm> vms = broker.getVmsCreatedList();
         List<Container>  containers = broker.getContainersCreatedList();
         Log.enable();
-        List<ContainerHost> hosts = datacenter.getHostList();
+        List<Host> hosts = datacenter.getHostList();
         Map<String, Double> slaMetrics = getSlaMetrics(vms);
         String[] msg = { "ExperimentName","hostSelectionPolicy","vmAllocationPolicy", "OLThreshold","ULThreshold",  "VMSPolicy","ContainerSpolicy","ContainerPlacement","Percentile",
                 "numberOfHosts",
@@ -1102,10 +1103,10 @@ public class HelperEx {
     }
 
 
-    public static int getNumberofOverUtilization(List<? extends ContainerHost> hosts,
+    public static int getNumberofOverUtilization(List<? extends Host> hosts,
                                                  PowerContainerVmAllocationPolicyMigrationAbstract vmAllocationPolicy) {
         int numberOfOverUtilization = 0;
-        for (ContainerHost host : hosts) {
+        for (Host host : hosts) {
             if (!vmAllocationPolicy.getTimeHistory().containsKey(host.getId())) {
                 continue;
             }

@@ -2,7 +2,6 @@ package org.cloudbus.cloudsim.container.resourceAllocators;
 
 
 import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.container.core.ContainerHost;
 import org.cloudbus.cloudsim.container.core.ContainerVm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyAbstract;
@@ -26,8 +25,8 @@ public abstract  class PowerContainerVmAllocationAbstract extends PowerVmAllocat
 
     public List<ContainerVm> getOverUtilizedVms() {
         List<ContainerVm> vmList = new ArrayList<>();
-        List<ContainerHost> hostList = getHostList();
-        for (ContainerHost host : hostList) {
+        List<Host> hostList = getHostList();
+        for (Host host : hostList) {
             List<ContainerVm> containerVms = host.getVmList();
             for (ContainerVm vm : containerVms) {
                 if (vm.getTotalUtilizationOfCpuMips(CloudSim.clock()) > vm.getTotalMips()) {

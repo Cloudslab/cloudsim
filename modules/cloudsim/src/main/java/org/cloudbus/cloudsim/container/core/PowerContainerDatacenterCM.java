@@ -1,15 +1,13 @@
 package org.cloudbus.cloudsim.container.core;
 
-import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,7 +68,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 
             if (!isDisableMigrations()) {
                 List<Map<String, Object>> migrationMap = getVmAllocationPolicy().optimizeAllocation(
-                        getContainerVmList());
+                        getVmList());
                 int previousContainerMigrationCount = getContainerMigrationCount();
                 int previousVmMigrationCount = getVmMigrationCount();
                 if (migrationMap != null) {
@@ -151,8 +149,8 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                             }
                         } else {
                             ContainerVm vm = (ContainerVm) migrate.get("vm");
-                            PowerContainerHost targetHost = (PowerContainerHost) migrate.get("host");
-                            PowerContainerHost oldHost = (PowerContainerHost) vm.getHost();
+                            PowerHost targetHost = (PowerHost) migrate.get("host");
+                            PowerHost oldHost = (PowerHost) vm.getHost();
 
                             if (oldHost == null) {
                                 Log.formatLine(
@@ -238,7 +236,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
         if (ev.getData() instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) ev.getData();
             ContainerVm containerVm = (ContainerVm) map.get("vm");
-            ContainerHost host = (ContainerHost) map.get("host");
+            Host host = (Host) map.get("host");
             boolean result = getVmAllocationPolicy().allocateHostForVm(containerVm, host);
 //                set the containerVm in waiting state
             containerVm.setInWaiting(true);
@@ -261,7 +259,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
             if (result) {
                 Log.printLine(String.format("%s VM ID #%d is created on Host #%d", CloudSim.clock(), containerVm.getId(), host.getId()));
                 incrementNewlyCreatedVmsCount();
-                getContainerVmList().add(containerVm);
+                getVmList().add(containerVm);
 
 
                 if (containerVm.isBeingInstantiated()) {

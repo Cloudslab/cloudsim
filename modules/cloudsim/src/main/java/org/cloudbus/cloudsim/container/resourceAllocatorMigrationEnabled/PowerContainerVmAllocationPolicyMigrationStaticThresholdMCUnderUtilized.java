@@ -1,17 +1,18 @@
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
+import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.ContainerDatacenter;
-import org.cloudbus.cloudsim.container.core.ContainerHost;
 import org.cloudbus.cloudsim.container.core.ContainerVm;
-import org.cloudbus.cloudsim.container.core.PowerContainerHost;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.util.List;
 
 /**
  * Created by sareh on 18/08/15.
+ * Modified by Remo Andreoli (Feb 2024)
  */
 public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized extends PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelectionUnderUtilizedAdded{
 
@@ -29,7 +30,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtil
      * @param utilizationThreshold the utilization threshold
      */
     public PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized(
-            List<? extends ContainerHost> hostList,
+            List<? extends Host> hostList,
             PowerContainerVmSelectionPolicy vmSelectionPolicy, PowerContainerSelectionPolicy containerSelectionPolicy,
             HostSelectionPolicy hostSelectionPolicy, double utilizationThreshold, double underUtilizationThresh,
             int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
@@ -45,7 +46,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtil
      * @return true, if is host over utilized
      */
     @Override
-    protected boolean isHostOverUtilized(PowerContainerHost host) {
+    protected boolean isHostOverUtilized(PowerHost host) {
         addHistoryEntry(host, getUtilizationThreshold());
         double totalRequestedMips = 0;
         for (ContainerVm vm : host.<ContainerVm>getVmList()) {
@@ -56,7 +57,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtil
     }
 
     @Override
-    protected boolean isHostUnderUtilized(PowerContainerHost host) {
+    protected boolean isHostUnderUtilized(PowerHost host) {
         return false;
     }
 

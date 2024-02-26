@@ -1,5 +1,6 @@
 package org.cloudbus.cloudsim.container.core;
 
+import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisioner;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
@@ -31,105 +32,13 @@ import java.util.List;
 public class ContainerVm extends Vm {
 
     /**
-     * The user id.
-     */
-    private int userId;
-
-    /**
-     * The uid.
-     */
-    private String uid;
-
-    /**
-     * The size.
-     */
-    private long size;
-
-    /**
-     * The MIPS.
-     */
-    private double mips;
-
-    /**
-     * The number of PEs.
-     */
-    private int numberOfPes;
-
-    /**
-     * The ram.
-     */
-    private int ram;
-
-    /**
-     * The bw.
-     */
-    private long bw;
-
-
-    /**
-     * The vmm.
-     */
-    private String vmm;
-
-    /**
      * The Cloudlet scheduler.
      */
     private ContainerScheduler containerScheduler;
-
-    /**
-     * The host.
-     */
-    private ContainerHost host;
-
-    /**
-     * In migration flag.
-     */
-    private boolean inMigration;
  /**
      * In waiting flag. shows that vm is waiting for containers to come.
      */
     private boolean inWaiting;
-
-    /**
-     * The current allocated size.
-     */
-    private long currentAllocatedSize;
-
-    /**
-     * The current allocated ram.
-     */
-    private int currentAllocatedRam;
-
-    /**
-     * The current allocated bw.
-     */
-    private long currentAllocatedBw;
-
-    /**
-     * The current allocated mips.
-     */
-    private List<Double> currentAllocatedMips;
-
-    /**
-     * The VM is being instantiated.
-     */
-    private boolean beingInstantiated;
-
-    /**
-     * The mips allocation history.
-     */
-    private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
-
-
-    /**
-     * The id.
-     */
-    private int id;
-
-    /**
-     * The storage.
-     */
-    private long storage;
 
     /**
      * The ram provisioner.
@@ -202,8 +111,6 @@ public class ContainerVm extends Vm {
 
         setContainerRamProvisioner(containerRamProvisioner);
         setContainerBwProvisioner(containerBwProvisioner);
-
-
     }
 
 

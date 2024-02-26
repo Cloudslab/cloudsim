@@ -1,13 +1,10 @@
 package org.cloudbus.cloudsim.container.core;
 
-import org.cloudbus.cloudsim.DatacenterCharacteristics;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.lists.ContainerList;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.UtilizationModelPlanetLabInMemory;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
-import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.lists.CloudletList;
 import org.cloudbus.cloudsim.lists.VmList;
@@ -23,57 +20,15 @@ import java.util.HashMap;
  * Modified by Remo Andreoli (Feb 2024)
  */
 
-public class ContainerDatacenterBroker extends SimEntity {
-
-
+public class ContainerDatacenterBroker extends DatacenterBroker {
     /**
-     * The vm list.
+     * The container list
      */
-    protected List<? extends ContainerVm> vmList;
-
+    protected List<? extends Container> containerList;
     /**
-     * The vms created list.
-     */
-    protected List<? extends ContainerVm> vmsCreatedList;
-/**
      * The containers created list.
      */
     protected List<? extends Container> containersCreatedList;
-
-    /**
-     * The cloudlet list.
-     */
-    protected List<? extends ContainerCloudlet> cloudletList;
-    /**
-    * The container list
-     */
-
-    protected List<? extends Container> containerList;
-
-    /**
-     * The cloudlet submitted list.
-     */
-    protected List<? extends ContainerCloudlet> cloudletSubmittedList;
-
-    /**
-     * The cloudlet received list.
-     */
-    protected List<? extends ContainerCloudlet> cloudletReceivedList;
-
-    /**
-     * The cloudlets submitted.
-     */
-    protected int cloudletsSubmitted;
-
-    /**
-     * The vms requested.
-     */
-    protected int vmsRequested;
-
-    /**
-     * The vms acks.
-     */
-    protected int vmsAcks;
     /**
      * The containers acks.
      */
@@ -84,34 +39,12 @@ public class ContainerDatacenterBroker extends SimEntity {
 
     protected int containersCreated;
 
-    /**
-     * The vms destroyed.
-     */
-    protected int vmsDestroyed;
 
-    /**
-     * The datacenter ids list.
-     */
-    protected List<Integer> datacenterIdsList;
-
-    /**
-     * The datacenter requested ids list.
-     */
-    protected List<Integer> datacenterRequestedIdsList;
-
-    /**
-     * The vms to datacenters map.
-     */
-    protected Map<Integer, Integer> vmsToDatacentersMap;
  /**
      * The vms to datacenters map.
      */
     protected Map<Integer, Integer> containersToDatacentersMap;
 
-    /**
-     * The datacenter characteristics list.
-     */
-    protected Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList;
 
     /**
      * The datacenter characteristics list.
@@ -155,29 +88,6 @@ public class ContainerDatacenterBroker extends SimEntity {
     }
 
     /**
-     * This method is used to send to the broker the list with virtual machines that must be
-     * created.
-     *
-     * @param list the list
-     * @pre list !=null
-     * @post $none
-     */
-    public void submitVmList(List<? extends ContainerVm> list) {
-        getVmList().addAll(list);
-    }
-
-    /**
-     * This method is used to send to the broker the list of cloudlets.
-     *
-     * @param list the list
-     * @pre list !=null
-     * @post $none
-     */
-    public void submitCloudletList(List<? extends ContainerCloudlet> list) {
-        getCloudletList().addAll(list);
-    }
-
-    /**
      * Specifies that a given cloudlet must run in a specific virtual machine.
      *
      * @param cloudletId ID of the cloudlet being bount to a vm
@@ -200,7 +110,8 @@ public class ContainerDatacenterBroker extends SimEntity {
      * @post $none
      */
     public void bindCloudletToContainer(int cloudletId, int containerId) {
-        CloudletList.getById(getCloudletList(), cloudletId).setContainerId(containerId);
+        ContainerCloudlet containerCloudlet = CloudletList.getById(getCloudletList(), cloudletId);
+        containerCloudlet.setContainerId(containerId);
     }
     /**
      * Processes events available for this Broker.
@@ -212,27 +123,13 @@ public class ContainerDatacenterBroker extends SimEntity {
     @Override
     public void processEvent(SimEvent ev) {
         switch (ev.getTag()) {
-            // Resource characteristics request
-            case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST -> processResourceCharacteristicsRequest(ev);
-
-            // Resource characteristics answer
-            case CloudSimTags.RESOURCE_CHARACTERISTICS -> processResourceCharacteristics(ev);
-
-            // VM Creation answer
-            case CloudSimTags.VM_CREATE_ACK -> processVmCreate(ev);
-
             // New VM Creation answer
             case containerCloudSimTags.VM_NEW_CREATE -> processNewVmCreate(ev);
-
-            // A finished cloudlet returned
-            case CloudSimTags.CLOUDLET_RETURN -> processCloudletReturn(ev);
-
-            // if the simulation finishes
-            case CloudSimTags.END_OF_SIMULATION -> shutdownEntity();
             case containerCloudSimTags.CONTAINER_CREATE_ACK -> processContainerCreate(ev);
-
-            // other unknown tags are processed by this method
-            default -> processOtherEvent(ev);
+            // VM Creation answer
+            case CloudSimTags.VM_CREATE_ACK -> processVmCreate(ev);
+            // other (potentially unknown tags) are processed by the base class
+            default -> super.processEvent(ev);
         }
     }
 
@@ -269,42 +166,6 @@ public class ContainerDatacenterBroker extends SimEntity {
 
     }
 
-    /**
-     * Process the return of a request for the characteristics of a PowerDatacenter.
-     *
-     * @param ev a SimEvent object
-     * @pre ev != $null
-     * @post $none
-     */
-    protected void processResourceCharacteristics(SimEvent ev) {
-        DatacenterCharacteristics characteristics = (DatacenterCharacteristics) ev.getData();
-        getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
-
-        if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
-            getDatacenterCharacteristicsList().clear();
-            setDatacenterRequestedIdsList(new ArrayList<>());
-            createVmsInDatacenter(getDatacenterIdsList().get(0));
-        }
-    }
-
-    /**
-     * Process a request for the characteristics of a PowerDatacenter.
-     *
-     * @param ev a SimEvent object
-     * @pre ev != $null
-     * @post $none
-     */
-    protected void processResourceCharacteristicsRequest(SimEvent ev) {
-        setDatacenterIdsList(CloudSim.getCloudResourceList());
-        setDatacenterCharacteristicsList(new HashMap<>());
-
-        //Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloud Resource List received with ",
-//                getDatacenterIdsList().size(), " resource(s)");
-
-        for (Integer datacenterId : getDatacenterIdsList()) {
-            sendNow(datacenterId, CloudSimTags.RESOURCE_CHARACTERISTICS, getId());
-        }
-    }
     protected void processNewVmCreate(SimEvent ev) {
         Map<String, Object> map = (Map<String, Object>) ev.getData();
         int datacenterId = (int) map.get("datacenterID");
@@ -381,52 +242,6 @@ public class ContainerDatacenterBroker extends SimEntity {
     }
 
     /**
-     * Process a cloudlet return event.
-     *
-     * @param ev a SimEvent object
-     * @pre ev != $null
-     * @post $none
-     */
-    protected void processCloudletReturn(SimEvent ev) {
-        ContainerCloudlet cloudlet = (ContainerCloudlet) ev.getData();
-        getCloudletReceivedList().add(cloudlet);
-        Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloudlet ", cloudlet.getCloudletId(),
-                " returned");
-        Log.printConcatLine(CloudSim.clock(), ": ", getName(), "The number of finished Cloudlets is:", getCloudletReceivedList().size());
-        cloudletsSubmitted--;
-        if (getCloudletList().size() == 0 && cloudletsSubmitted == 0) { // all cloudlets executed
-            Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": All Cloudlets executed. Finishing...");
-            clearDatacenters();
-            finishExecution();
-        } else { // some cloudlets haven't finished yet
-            if (getCloudletList().size() > 0 && cloudletsSubmitted == 0) {
-                // all the cloudlets sent finished. It means that some bount
-                // cloudlet is waiting its VM be created
-                clearDatacenters();
-                createVmsInDatacenter(0);
-            }
-
-        }
-    }
-
-    /**
-     * Overrides this method when making a new and different type of Broker. This method is called
-     * by  for incoming unknown tags.
-     *
-     * @param ev a SimEvent object
-     * @pre ev != null
-     * @post $none
-     */
-    protected void processOtherEvent(SimEvent ev) {
-        if (ev == null) {
-            Log.printConcatLine(getName(), ".processOtherEvent(): ", "Error - an event is null.");
-            return;
-        }
-
-        Log.printConcatLine(getName(), ".processOtherEvent(): Error - event unknown by this DatacenterBroker.");
-    }
-
-    /**
      * Create the virtual machines in a datacenter.
      *
      * @param datacenterId Id of the chosen PowerDatacenter
@@ -437,7 +252,7 @@ public class ContainerDatacenterBroker extends SimEntity {
         // send as much vms as possible for this datacenter before trying the next one
         int requestedVms = 0;
         String datacenterName = CloudSim.getEntityName(datacenterId);
-        for (ContainerVm vm : getVmList()) {
+        for (Vm vm : getVmList()) {
             if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
                 Log.printLine(String.format("%s: %s: Trying to Create VM #%d in %s", CloudSim.clock(), getName(), vm.getId(), datacenterName));
                 sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
@@ -460,7 +275,7 @@ public class ContainerDatacenterBroker extends SimEntity {
     protected void submitCloudlets() {
         int containerIndex = 0;
         List<ContainerCloudlet> successfullySubmitted = new ArrayList<>();
-        for (ContainerCloudlet cloudlet : getCloudletList()) {
+        for (ContainerCloudlet cloudlet : this.<ContainerCloudlet>getCloudletList()) {
             //Log.printLine("Containers Created" + getContainersCreated());
             if (containerIndex < getContainersCreated()) {
                     //Log.printLine("Container Index" + containerIndex);
@@ -546,29 +361,13 @@ public class ContainerDatacenterBroker extends SimEntity {
         successfullySubmitted.clear();
     }
 
-    /**getOverBookingfactor
-     * Destroy the virtual machines running in datacenters.
-     *
-     * @pre $none
-     * @post $none
-     */
-    protected void clearDatacenters() {
-        for (ContainerVm vm : getVmsCreatedList()) {
-//            Log.printConcatLine(CloudSim.clock(), ": " + getName(), ": Destroying VM #", vm.getId());
-            sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.VM_DESTROY, vm);
-        }
-
-        getVmsCreatedList().clear();
-    }
-
-
     /**
      *
      */
     protected void submitContainers(){
         int i = 0;
         for(Container container:getContainerList()) {
-            ContainerCloudlet cloudlet = getCloudletList().get(i);
+            ContainerCloudlet cloudlet = (ContainerCloudlet) getCloudletList().get(i);
                 //Log.printLine("Containers Created" + getContainersCreated());
 
                 if (cloudlet.getUtilizationModelCpu() instanceof UtilizationModelPlanetLabInMemory temp) {
@@ -611,177 +410,6 @@ public class ContainerDatacenterBroker extends SimEntity {
         // remove submitted cloudlets from waiting list
     }
 
-
-    /**
-     * Send an internal event communicating the end of the simulation.
-     *
-     * @pre $none
-     * @post $none
-     */
-    protected void finishExecution() {
-        sendNow(getId(), CloudSimTags.END_OF_SIMULATION);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see cloudsim.core.SimEntity#shutdownEntity()
-     */
-    @Override
-    public void shutdownEntity() {
-        Log.printConcatLine(getName(), " is shutting down...");
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see cloudsim.core.SimEntity#startEntity()
-     */
-    @Override
-    public void startEntity() {
-        Log.printConcatLine(getName(), " is starting...");
-        schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST);
-    }
-
-    /**
-     * Gets the vm list.
-     *
-     * @param <T> the generic type
-     * @return the vm list
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends ContainerVm> List<T> getVmList() {
-        return (List<T>) vmList;
-    }
-
-    /**
-     * Sets the vm list.
-     *
-     * @param <T>    the generic type
-     * @param vmList the new vm list
-     */
-    protected <T extends ContainerVm> void setVmList(List<T> vmList) {
-        this.vmList = vmList;
-    }
-
-    /**
-     * Gets the cloudlet list.
-     *
-     * @param <T> the generic type
-     * @return the cloudlet list
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends ContainerCloudlet> List<T> getCloudletList() {
-        return (List<T>) cloudletList;
-    }
-
-    /**
-     * Sets the cloudlet list.
-     *
-     * @param <T>          the generic type
-     * @param cloudletList the new cloudlet list
-     */
-    protected <T extends ContainerCloudlet> void setCloudletList(List<T> cloudletList) {
-        this.cloudletList = cloudletList;
-    }
-
-    /**
-     * Gets the cloudlet submitted list.
-     *
-     * @param <T> the generic type
-     * @return the cloudlet submitted list
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends ContainerCloudlet> List<T> getCloudletSubmittedList() {
-        return (List<T>) cloudletSubmittedList;
-    }
-
-    /**
-     * Sets the cloudlet submitted list.
-     *
-     * @param <T>                   the generic type
-     * @param cloudletSubmittedList the new cloudlet submitted list
-     */
-    protected <T extends ContainerCloudlet> void setCloudletSubmittedList(List<T> cloudletSubmittedList) {
-        this.cloudletSubmittedList = cloudletSubmittedList;
-    }
-
-    /**
-     * Gets the cloudlet received list.
-     *
-     * @param <T> the generic type
-     * @return the cloudlet received list
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends ContainerCloudlet> List<T> getCloudletReceivedList() {
-        return (List<T>) cloudletReceivedList;
-    }
-
-    /**
-     * Sets the cloudlet received list.
-     *
-     * @param <T>                  the generic type
-     * @param cloudletReceivedList the new cloudlet received list
-     */
-    protected <T extends ContainerCloudlet> void setCloudletReceivedList(List<T> cloudletReceivedList) {
-        this.cloudletReceivedList = cloudletReceivedList;
-    }
-
-    /**
-     * Gets the vm list.
-     *
-     * @param <T> the generic type
-     * @return the vm list
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends ContainerVm> List<T> getVmsCreatedList() {
-        return (List<T>) vmsCreatedList;
-    }
-
-    /**
-     * Sets the vm list.
-     *
-     * @param <T>            the generic type
-     * @param vmsCreatedList the vms created list
-     */
-    protected <T extends ContainerVm> void setVmsCreatedList(List<T> vmsCreatedList) {
-        this.vmsCreatedList = vmsCreatedList;
-    }
-
-    /**
-     * Gets the vms requested.
-     *
-     * @return the vms requested
-     */
-    protected int getVmsRequested() {
-        return vmsRequested;
-    }
-
-    /**
-     * Sets the vms requested.
-     *
-     * @param vmsRequested the new vms requested
-     */
-    protected void setVmsRequested(int vmsRequested) {
-        this.vmsRequested = vmsRequested;
-    }
-
-    /**
-     * Gets the vms acks.
-     *
-     * @return the vms acks
-     */
-    protected int getVmsAcks() {
-        return vmsAcks;
-    }
-
-    /**
-     * Sets the vms acks.
-     *
-     * @param vmsAcks the new vms acks
-     */
-    protected void setVmsAcks(int vmsAcks) {
-        this.vmsAcks = vmsAcks;
-    }
-
     /**
      * Increment vms acks.
      */
@@ -793,97 +421,6 @@ public class ContainerDatacenterBroker extends SimEntity {
      */
     protected void incrementContainersAcks() {
         setContainersAcks(getContainersAcks()+1);
-    }
-
-    /**
-     * Gets the vms destroyed.
-     *
-     * @return the vms destroyed
-     */
-    protected int getVmsDestroyed() {
-        return vmsDestroyed;
-    }
-
-    /**
-     * Sets the vms destroyed.
-     *
-     * @param vmsDestroyed the new vms destroyed
-     */
-    protected void setVmsDestroyed(int vmsDestroyed) {
-        this.vmsDestroyed = vmsDestroyed;
-    }
-
-    /**
-     * Gets the datacenter ids list.
-     *
-     * @return the datacenter ids list
-     */
-    protected List<Integer> getDatacenterIdsList() {
-        return datacenterIdsList;
-    }
-
-    /**
-     * Sets the datacenter ids list.
-     *
-     * @param datacenterIdsList the new datacenter ids list
-     */
-    protected void setDatacenterIdsList(List<Integer> datacenterIdsList) {
-        this.datacenterIdsList = datacenterIdsList;
-    }
-
-    /**
-     * Gets the vms to datacenters map.
-     *
-     * @return the vms to datacenters map
-     */
-    protected Map<Integer, Integer> getVmsToDatacentersMap() {
-        return vmsToDatacentersMap;
-    }
-
-    /**
-     * Sets the vms to datacenters map.
-     *
-     * @param vmsToDatacentersMap the vms to datacenters map
-     */
-    protected void setVmsToDatacentersMap(Map<Integer, Integer> vmsToDatacentersMap) {
-        this.vmsToDatacentersMap = vmsToDatacentersMap;
-    }
-
-    /**
-     * Gets the datacenter characteristics list.
-     *
-     * @return the datacenter characteristics list
-     */
-    protected Map<Integer, DatacenterCharacteristics> getDatacenterCharacteristicsList() {
-        return datacenterCharacteristicsList;
-    }
-
-    /**
-     * Sets the datacenter characteristics list.
-     *
-     * @param datacenterCharacteristicsList the datacenter characteristics list
-     */
-    protected void setDatacenterCharacteristicsList(
-            Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList) {
-        this.datacenterCharacteristicsList = datacenterCharacteristicsList;
-    }
-
-    /**
-     * Gets the datacenter requested ids list.
-     *
-     * @return the datacenter requested ids list
-     */
-    protected List<Integer> getDatacenterRequestedIdsList() {
-        return datacenterRequestedIdsList;
-    }
-
-    /**
-     * Sets the datacenter requested ids list.
-     *
-     * @param datacenterRequestedIdsList the new datacenter requested ids list
-     */
-    protected void setDatacenterRequestedIdsList(List<Integer> datacenterRequestedIdsList) {
-        this.datacenterRequestedIdsList = datacenterRequestedIdsList;
     }
 
 //------------------------------------------------

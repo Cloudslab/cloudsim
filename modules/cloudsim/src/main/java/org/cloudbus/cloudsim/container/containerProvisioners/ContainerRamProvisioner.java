@@ -60,7 +60,6 @@ public abstract class ContainerRamProvisioner {
         setAvailableVmRam(getRam());
     }
 
-
     /**
      * It checks whether or not the vm have enough ram for the container
      *
@@ -71,6 +70,20 @@ public abstract class ContainerRamProvisioner {
     public abstract boolean isSuitableForContainer(Container container, int ram);
 
     /**
+     * @return the ram
+     */
+    public int getRam() {
+        return ram;
+    }
+
+    /**
+     * @param ram the ram to set
+     */
+    public void setRam(int ram) {
+        this.ram = ram;
+    }
+
+    /**
      * get the allocated ram of the Vm
      *
      * @return the used ram of the Vm
@@ -78,7 +91,6 @@ public abstract class ContainerRamProvisioner {
     public int getUsedVmRam() {
         return getRam() - availableVmRam;
     }
-
 
     /**
      * get the available ram
@@ -97,20 +109,6 @@ public abstract class ContainerRamProvisioner {
      */
     public void setAvailableVmRam(int availableRam) {
         this.availableVmRam = availableRam;
-    }
-
-    /**
-     * @return the ram
-     */
-    public int getRam() {
-        return ram;
-    }
-
-    /**
-     * @param ram the ram to set
-     */
-    public void setRam(int ram) {
-        this.ram = ram;
     }
 
 }
