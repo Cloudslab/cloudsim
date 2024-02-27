@@ -1,0 +1,96 @@
+Running the CloudSim examples
+-----------------------------
+
+To run the CloudSim examples you need to do the following steps.
+
+In Windows:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>\jars
+2. java -classpath cloudsim-<VERSION>.jar;cloudsim-examples-<VERSION>.jar org.cloudbus.cloudsim.examples.CloudSimExample<EXAMPLE NUMBER>
+
+In Unix/Linux:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>/jars
+2. java -classpath cloudsim-<VERSION>.jar:cloudsim-examples-<VERSION>.jar org.cloudbus.cloudsim.examples.CloudSimExample<EXAMPLE NUMBER>
+
+Where you need to replace:
+
+<PATH TO CLOUDSIM PACKAGE> - by the path to a directory where you have unpacked the CloudSim package
+<VERSION> - by the version of the downloaded CloudSim package
+<EXAMPLE NUMBER> - by the of number of the example you want to run
+
+
+CloudSim examples source code
+-----------------------------
+
+You can find the source code of the examples in <PATH TO CLOUDSIM PACKAGE>/examples/org/cloudbus/cloudsim/examples/
+
+
+Compiling and running examples
+------------------------------
+
+To compile and run an example (let's say org.cloudbus.cloudsim.examples.CloudSimExample1) you need to do the following steps:
+
+In Windows:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>
+2. javac -classpath jars\cloudsim-<VERSION>.jar;examples examples\org\cloudbus\cloudsim\examples\CloudSimExample1.java
+3. java -classpath jars\cloudsim-<VERSION>.jar;examples org.cloudbus.cloudsim.examples.CloudSimExample1
+
+In Unix/Linux:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>
+2. javac -classpath jars/cloudsim-<VERSION>.jar:examples examples/org/cloudbus/cloudsim/examples/CloudSimExample1.java
+3. java -classpath jars/cloudsim-<VERSION>.jar:examples org.cloudbus.cloudsim.examples.CloudSimExample1
+
+
+Compiling and running examples from the power package
+-----------------------------------------------------
+
+To compile and run an example (let's say org.cloudbus.cloudsim.examples.power.planetlab.LrMc) you need to do the following steps:
+
+In Windows:
+
+1. Download Michael Thomas Flanagan's Java Scientific Library from http://www.ee.ucl.ac.uk/~mflanaga/java/
+2. Copy flanagan.jar to <PATH TO CLOUDSIM PACKAGE>/jars/
+3. cd <PATH TO CLOUDSIM PACKAGE>
+4. javac -classpath jars\cloudsim-<VERSION>.jar;jars\flanagan.jar;examples examples\org\cloudbus\cloudsim\examples\power\planetlab\LrMc.java
+5. java -classpath jars\cloudsim-<VERSION>.jar;jars\flanagan.jar;examples org.cloudbus.cloudsim.examples.power.planetlab.LrMc
+
+In Unix/Linux:
+
+1. cd <PATH TO CLOUDSIM PACKAGE>
+2. chmod +x ./install-flanagan.sh
+3. ./install-flanagan.jar
+4. javac -classpath jars/cloudsim-<VERSION>.jar:jars/flanagan.jar:examples examples/org/cloudbus/cloudsim/examples/power/planetlab/LrMc.java
+5. java -classpath jars/cloudsim-<VERSION>.jar:jars/flanagan.jar:examples org.cloudbus.cloudsim.examples.power.planetlab.LrMc
+
+
+Description of the CloudSim examples
+------------------------------------
+
+Here is the description of what each example does:
+
+CloudSimExample1.java : shows how to create a datacenter with one host and run one cloudlet on it.
+
+CloudSimExample2.java : shows how to create a datacenter with one host and run two cloudlets on it.
+			The cloudlets run in VMs with the same MIPS requirements. The cloudlets will take the same 
+			time to complete the execution.
+
+CloudSimExample3.java : shows how to create a datacenter with two hosts and run two cloudlets on it.
+			The cloudlets run in VMs with different MIPS requirements. The cloudlets will take different 
+			time to complete the execution depending on the requested VM performance.
+
+CloudSimExample4.java : shows how to create two datacenters with one host each and run two cloudlets on them.
+
+CloudSimExample5.java : shows how to create two datacenters with one host each and run cloudlets of two users on them. 
+
+CloudSimExample6.java : shows how to create scalable simulations.
+
+CloudSimExample7.java : shows how to pause simulations.
+
+CloudSimExample8.java : shows how to add entities in run time.
+
+network: this package contains examples on how to run simulation with network simulation.
+
+power: this package contains examples on how to use CloudSim's power-aware features.
