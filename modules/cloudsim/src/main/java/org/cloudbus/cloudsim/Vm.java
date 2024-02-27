@@ -77,14 +77,14 @@ public class Vm {
 	private boolean beingInstantiated;
 
 	/** The mips allocation history. 
-         * @todo Instead of using a list, this attribute would be 
+         * //TODO Instead of using a list, this attribute would be
          * a map, where the key can be the history time
          * and the value the history itself. 
          * By this way, if one wants to get the history for a given
          * time, he/she doesn't have to iterate over the entire list
          * to find the desired entry.
          */
-	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<VmStateHistoryEntry>();
+	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
 
 	/**
 	 * Creates a new Vm object.
@@ -165,7 +165,7 @@ public class Vm {
 	public List<Double> getCurrentRequestedMips() {
 		List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
 		if (isBeingInstantiated()) {
-			currentRequestedMips = new ArrayList<Double>();
+			currentRequestedMips = new ArrayList<>();
 			for (int i = 0; i < getNumberOfPes(); i++) {
 				currentRequestedMips.add(getMips());
 			}
@@ -549,7 +549,7 @@ public class Vm {
 	 * Gets the current allocated mips.
 	 * 
 	 * @return the current allocated mips
-	 * @TODO replace returning the field by a call to getCloudletScheduler().getCurrentMipsShare()
+	 * //TODO replace returning the field by a call to getCloudletScheduler().getCurrentMipsShare()
 	 */
 	public List<Double> getCurrentAllocatedMips() {
 		return currentAllocatedMips;

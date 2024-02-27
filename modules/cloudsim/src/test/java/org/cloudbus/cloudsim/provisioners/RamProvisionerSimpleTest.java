@@ -56,7 +56,7 @@ public class RamProvisionerSimpleTest {
 
 		assertTrue(ramProvisioner.isSuitableForVm(vm2, RAM / 4));
 		assertTrue(ramProvisioner.allocateRamForVm(vm2, RAM / 4));
-		assertEquals(RAM * 1 / 4, ramProvisioner.getAvailableRam());
+		assertEquals(RAM / 4, ramProvisioner.getAvailableRam());
 
 		assertTrue(ramProvisioner.isSuitableForVm(vm2, RAM / 2));
 		assertTrue(ramProvisioner.allocateRamForVm(vm2, RAM / 2));

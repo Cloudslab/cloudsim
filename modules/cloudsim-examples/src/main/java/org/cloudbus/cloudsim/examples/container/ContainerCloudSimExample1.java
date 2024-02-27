@@ -135,10 +135,10 @@ public class ContainerCloudSimExample1 {
              * 6- The host list is created considering the number of hosts, and host types which are specified
              * in the {@link ConstantsExamples}.
              */
-            hostList = new ArrayList<ContainerHost>();
+            hostList = new ArrayList<>();
             hostList = createHostList(ConstantsExamples.NUMBER_HOSTS);
-            cloudletList = new ArrayList<ContainerCloudlet>();
-            vmList = new ArrayList<ContainerVm>();
+            cloudletList = new ArrayList<>();
+            vmList = new ArrayList<>();
             /**
              * 7- The container allocation policy  which defines the allocation of VMs to containers.
              */
@@ -163,8 +163,7 @@ public class ContainerCloudSimExample1 {
              */
             String logAddress = "~/Results";
 
-            @SuppressWarnings("unused")
-			PowerContainerDatacenter e = (PowerContainerDatacenter) createDatacenter("datacenter",
+            PowerContainerDatacenter e = (PowerContainerDatacenter) createDatacenter("datacenter",
                     PowerContainerDatacenterCM.class, hostList, vmAllocationPolicy, containerAllocationPolicy,
                     getExperimentName("ContainerCloudSimExample-1", String.valueOf(overBookingFactor)),
                     ConstantsExamples.SCHEDULING_INTERVAL, logAddress,
@@ -261,8 +260,8 @@ public class ContainerCloudSimExample1 {
                 + "Start Time" + indent + "Finish Time");
 
         DecimalFormat dft = new DecimalFormat("###.##");
-        for (int i = 0; i < size; i++) {
-            cloudlet = list.get(i);
+        for (ContainerCloudlet containerCloudlet : list) {
+            cloudlet = containerCloudlet;
             Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
             if (cloudlet.getCloudletStatusString() == "Success") {
@@ -286,10 +285,10 @@ public class ContainerCloudSimExample1 {
      * @param containerVmsNumber
      */
     private static ArrayList<ContainerVm> createVmList(int brokerId, int containerVmsNumber) {
-        ArrayList<ContainerVm> containerVms = new ArrayList<ContainerVm>();
+        ArrayList<ContainerVm> containerVms = new ArrayList<>();
 
         for (int i = 0; i < containerVmsNumber; ++i) {
-            ArrayList<ContainerPe> peList = new ArrayList<ContainerPe>();
+            ArrayList<ContainerPe> peList = new ArrayList<>();
             int vmType = i / (int) Math.ceil((double) containerVmsNumber / 4.0D);
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
                 peList.add(new ContainerPe(j,
@@ -318,10 +317,10 @@ public class ContainerCloudSimExample1 {
 
 
     public static List<ContainerHost> createHostList(int hostsNumber) {
-        ArrayList<ContainerHost> hostList = new ArrayList<ContainerHost>();
+        ArrayList<ContainerHost> hostList = new ArrayList<>();
         for (int i = 0; i < hostsNumber; ++i) {
             int hostType = i / (int) Math.ceil((double) hostsNumber / 3.0D);
-            ArrayList<ContainerVmPe> peList = new ArrayList<ContainerVmPe>();
+            ArrayList<ContainerVmPe> peList = new ArrayList<>();
             for (int j = 0; j < ConstantsExamples.HOST_PES[hostType]; ++j) {
                 peList.add(new ContainerVmPe(j,
                         new ContainerVmPeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));
@@ -370,7 +369,7 @@ public class ContainerCloudSimExample1 {
                 ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage,
                 costPerBw);
         ContainerDatacenter datacenter = new PowerContainerDatacenterCM(name, characteristics, vmAllocationPolicy,
-                containerAllocationPolicy, new LinkedList<Storage>(), schedulingInterval, experimentName, logAddress,
+                containerAllocationPolicy, new LinkedList<>(), schedulingInterval, experimentName, logAddress,
                 VMStartupDelay, ContainerStartupDelay);
 
         return datacenter;
@@ -385,7 +384,7 @@ public class ContainerCloudSimExample1 {
      */
 
     public static List<Container> createContainerList(int brokerId, int containersNumber) {
-        ArrayList<Container> containers = new ArrayList<Container>();
+        ArrayList<Container> containers = new ArrayList<>();
 
         for (int i = 0; i < containersNumber; ++i) {
             int containerType = i / (int) Math.ceil((double) containersNumber / 3.0D);
@@ -409,24 +408,25 @@ public class ContainerCloudSimExample1 {
     public static List<ContainerCloudlet> createContainerCloudletList(int brokerId, int numberOfCloudlets)
             throws FileNotFoundException {
         String inputFolderName = ContainerCloudSimExample1.class.getClassLoader().getResource("workload/planetlab").getPath();
-        ArrayList<ContainerCloudlet> cloudletList = new ArrayList<ContainerCloudlet>();
+
+        java.io.File inputFolder1 = new java.io.File("modules/cloudsim-examples/src/main/resources/workload/planetlab/");
+        ArrayList<ContainerCloudlet> cloudletList = new ArrayList<>();
         long fileSize = 300L;
         long outputSize = 300L;
         UtilizationModelNull utilizationModelNull = new UtilizationModelNull();
-        java.io.File inputFolder1 = new java.io.File(inputFolderName);
         java.io.File[] files1 = inputFolder1.listFiles();
         int createdCloudlets = 0;
         for (java.io.File aFiles1 : files1) {
             java.io.File inputFolder = new java.io.File(aFiles1.toString());
             java.io.File[] files = inputFolder.listFiles();
-            for (int i = 0; i < files.length; ++i) {
+            for (java.io.File file : files) {
                 if (createdCloudlets < numberOfCloudlets) {
                     ContainerCloudlet cloudlet = null;
 
                     try {
                         cloudlet = new ContainerCloudlet(IDs.pollId(ContainerCloudlet.class), ConstantsExamples.CLOUDLET_LENGTH, 1,
                                 fileSize, outputSize,
-                                new UtilizationModelPlanetLabInMemoryExtended(files[i].getAbsolutePath(), 300.0D),
+                                new UtilizationModelPlanetLabInMemoryExtended(file.getAbsolutePath(), 300.0D),
                                 utilizationModelNull, utilizationModelNull);
                     } catch (Exception var13) {
                         var13.printStackTrace();

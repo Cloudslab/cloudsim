@@ -34,7 +34,7 @@ import org.cloudbus.cloudsim.core.SimEvent;
  * method of the superclass, it will not be used, as processing of cloudlets are handled by the
  * CloudletScheduler and processing of VirtualMachines are handled by the VmAllocationPolicy.
  * 
- * @todo If an AllocPolicy is not being used, why it is being created. Perhaps 
+ * //TODO If an AllocPolicy is not being used, why it is being created. Perhaps
  * a better class hierarchy should be created, introducing some abstract class
  * or interface.
  * 
@@ -53,7 +53,7 @@ public class NetworkDatacenter extends Datacenter {
          * A map between VMs and Switches, where each key
          * is a VM id and the corresponding value is the id of the switch where the VM is connected to.
          */
-	public Map<Integer, Integer> VmToSwitchid = new HashMap<Integer, Integer>();
+	public Map<Integer, Integer> VmToSwitchid = new HashMap<>();
 
         /**
          * A map between hosts and Switches, where each key
@@ -102,10 +102,10 @@ public class NetworkDatacenter extends Datacenter {
 			List<Storage> storageList,
 			double schedulingInterval) throws Exception {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
-		VmToSwitchid = new HashMap<Integer, Integer>();
-		HostToSwitchid = new HashMap<Integer, Integer>();
-		VmtoHostlist = new HashMap<Integer, Integer>();
-		Switchlist = new HashMap<Integer, Switch>();
+		VmToSwitchid = new HashMap<>();
+		HostToSwitchid = new HashMap<>();
+		VmtoHostlist = new HashMap<>();
+		Switchlist = new HashMap<>();
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class NetworkDatacenter extends Datacenter {
          * and each value it the switch itself.
 	 */
 	public Map<Integer, Switch> getEdgeSwitch() {
-		Map<Integer, Switch> edgeswitch = new HashMap<Integer, Switch>();
+		Map<Integer, Switch> edgeswitch = new HashMap<>();
 		for (Entry<Integer, Switch> es : Switchlist.entrySet()) {
 			if (es.getValue().level == NetworkConstants.EDGE_LEVEL) {
 				edgeswitch.put(es.getKey(), es.getValue());

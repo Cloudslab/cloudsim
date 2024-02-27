@@ -1,6 +1,8 @@
 package org.cloudbus.cloudsim.examples.container;
 
 import com.opencsv.CSVWriter;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
@@ -39,7 +41,7 @@ public class HelperEx {
 
     public static List<ContainerCloudlet> createContainerCloudletList(int brokerId, String inputFolderName, int numberOfCloudlets)
             throws FileNotFoundException {
-        ArrayList cloudletList = new ArrayList();
+        ArrayList<ContainerCloudlet> cloudletList = new ArrayList<>();
         long fileSize = 300L;
         long outputSize = 300L;
         UtilizationModelNull utilizationModelNull = new UtilizationModelNull();
@@ -49,13 +51,13 @@ public class HelperEx {
         for (File aFiles1 : files1) {
             File inputFolder = new File(aFiles1.toString());
             File[] files = inputFolder.listFiles();
-            for (int i = 0; i < files.length; ++i) {
+            for (File file : files) {
                 if (createdCloudlets < numberOfCloudlets) {
                     ContainerCloudlet cloudlet = null;
 
                     try {
                         cloudlet = new ContainerCloudlet(IDs.pollId(ContainerCloudlet.class), 216000000L * 1000, 1, fileSize, outputSize,
-                                new UtilizationModelPlanetLabInMemoryExtended(files[i].getAbsolutePath(), 300.0D),
+                                new UtilizationModelPlanetLabInMemoryExtended(file.getAbsolutePath(), 300.0D),
                                 utilizationModelNull, utilizationModelNull);
                     } catch (Exception var13) {
                         var13.printStackTrace();
@@ -78,7 +80,7 @@ public class HelperEx {
 
     // create the containers for hosting the cloudlets and binding them together.
     public static List<Container> createContainerList(int brokerId, int containersNumber) {
-        ArrayList containers = new ArrayList();
+        ArrayList<Container> containers = new ArrayList<>();
 
         for (int i = 0; i < containersNumber; ++i) {
 //            int containerType = new RandomGen().getNum(ConstantsExamples.CONTAINER_TYPES);
@@ -247,7 +249,7 @@ public class HelperEx {
                 ContainerDatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage,
                 costPerBw);
         ContainerDatacenter datacenter = new PowerContainerDatacenterCM(name, characteristics, vmAllocationPolicy,
-                containerAllocationPolicy, new LinkedList<Storage>(), schedulingInterval, experimentName, logAddress,
+                containerAllocationPolicy, new LinkedList<>(), schedulingInterval, experimentName, logAddress,
                 VMStartupDelay, ContainerStartupDelay);
 
         return datacenter;
@@ -345,26 +347,26 @@ public class HelperEx {
             StringBuilder data = new StringBuilder();
             String delimeter = ",";
 
-            data.append(experimentName + delimeter);
+            data.append(experimentName).append(delimeter);
             data.append(parseExperimentName(experimentName));
-            data.append(String.format("%d", numberOfHosts) + delimeter);
-            data.append(String.format("%d", numberOfVms) + delimeter);
-            data.append(String.format("%.2f", totalSimulationTime) + delimeter);
-            data.append(String.format("%.5f", energy) + delimeter);
+            data.append(String.format("%d", numberOfHosts)).append(delimeter);
+            data.append(String.format("%d", numberOfVms)).append(delimeter);
+            data.append(String.format("%.2f", totalSimulationTime)).append(delimeter);
+            data.append(String.format("%.5f", energy)).append(delimeter);
 //            data.append(String.format("%d", numberOfMigrations) + delimeter);
-            data.append(String.format("%.10f", sla) + delimeter);
-            data.append(String.format("%.10f", slaTimePerActiveHost) + delimeter);
-            data.append(String.format("%.10f", slaDegradationDueToMigration) + delimeter);
-            data.append(String.format("%.10f", slaOverall) + delimeter);
-            data.append(String.format("%.10f", slaAverage) + delimeter);
+            data.append(String.format("%.10f", sla)).append(delimeter);
+            data.append(String.format("%.10f", slaTimePerActiveHost)).append(delimeter);
+            data.append(String.format("%.10f", slaDegradationDueToMigration)).append(delimeter);
+            data.append(String.format("%.10f", slaOverall)).append(delimeter);
+            data.append(String.format("%.10f", slaAverage)).append(delimeter);
 //             data.append(String.format("%.5f", slaTimePerVmWithMigration) + delimeter);
             // data.append(String.format("%.5f", slaTimePerVmWithoutMigration) + delimeter);
             // data.append(String.format("%.5f", slaTimePerHost) + delimeter);
-            data.append(String.format("%d", numberOfHostShutdowns) + delimeter);
-            data.append(String.format("%.2f", meanTimeBeforeHostShutdown) + delimeter);
-            data.append(String.format("%.2f", stDevTimeBeforeHostShutdown) + delimeter);
-            data.append(String.format("%.2f", meanTimeBeforeVmMigration) + delimeter);
-            data.append(String.format("%.2f", stDevTimeBeforeVmMigration) + delimeter);
+            data.append(String.format("%d", numberOfHostShutdowns)).append(delimeter);
+            data.append(String.format("%.2f", meanTimeBeforeHostShutdown)).append(delimeter);
+            data.append(String.format("%.2f", stDevTimeBeforeHostShutdown)).append(delimeter);
+            data.append(String.format("%.2f", meanTimeBeforeVmMigration)).append(delimeter);
+            data.append(String.format("%.2f", stDevTimeBeforeVmMigration)).append(delimeter);
 
             if (datacenter.getVmAllocationPolicy() instanceof PowerContainerVmAllocationPolicyMigrationAbstract) {
                 PowerContainerVmAllocationPolicyMigrationAbstract vmAllocationPolicy = (PowerContainerVmAllocationPolicyMigrationAbstract) datacenter
@@ -387,14 +389,14 @@ public class HelperEx {
                 double executionTimeTotalStDev = MathUtil.stDev(vmAllocationPolicy
                         .getExecutionTimeHistoryTotal());
 
-                data.append(String.format("%.5f", executionTimeVmSelectionMean) + delimeter);
-                data.append(String.format("%.5f", executionTimeVmSelectionStDev) + delimeter);
-                data.append(String.format("%.5f", executionTimeHostSelectionMean) + delimeter);
-                data.append(String.format("%.5f", executionTimeHostSelectionStDev) + delimeter);
-                data.append(String.format("%.5f", executionTimeVmReallocationMean) + delimeter);
-                data.append(String.format("%.5f", executionTimeVmReallocationStDev) + delimeter);
-                data.append(String.format("%.5f", executionTimeTotalMean) + delimeter);
-                data.append(String.format("%.5f", executionTimeTotalStDev) + delimeter);
+                data.append(String.format("%.5f", executionTimeVmSelectionMean)).append(delimeter);
+                data.append(String.format("%.5f", executionTimeVmSelectionStDev)).append(delimeter);
+                data.append(String.format("%.5f", executionTimeHostSelectionMean)).append(delimeter);
+                data.append(String.format("%.5f", executionTimeHostSelectionStDev)).append(delimeter);
+                data.append(String.format("%.5f", executionTimeVmReallocationMean)).append(delimeter);
+                data.append(String.format("%.5f", executionTimeVmReallocationStDev)).append(delimeter);
+                data.append(String.format("%.5f", executionTimeTotalMean)).append(delimeter);
+                data.append(String.format("%.5f", executionTimeTotalStDev)).append(delimeter);
 
                 writeMetricHistory(hosts, vmAllocationPolicy, outputFolder + "/metrics/" + experimentName
                         + "_metric");
@@ -411,9 +413,9 @@ public class HelperEx {
         } else {
             Log.setDisabled(false);
             Log.printLine();
-            Log.printLine(String.format("Experiment name: " + experimentName));
-            Log.printLine(String.format("Number of hosts: " + numberOfHosts));
-            Log.printLine(String.format("Number of VMs: " + numberOfVms));
+            Log.printLine("Experiment name: " + experimentName);
+            Log.printLine("Number of hosts: " + numberOfHosts);
+            Log.printLine("Number of VMs: " + numberOfVms);
             Log.printLine(String.format("Total simulation time: %.2f sec", totalSimulationTime));
             Log.printLine(String.format("Energy consumption: %.2f kWh", energy));
 //            Log.printLine(String.format("Number of VM migrations: %d", numberOfMigrations));
@@ -505,7 +507,7 @@ public class HelperEx {
      * @return the times before vm migration
      */
     public static List<Double> getTimesBeforeVmMigration(List<ContainerVm> vms) {
-        List<Double> timeBeforeVmMigration = new LinkedList<Double>();
+        List<Double> timeBeforeVmMigration = new LinkedList<>();
         for (ContainerVm vm : vms) {
             boolean previousIsInMigration = false;
             double lastTimeMigrationFinished = 0;
@@ -529,7 +531,7 @@ public class HelperEx {
      * @return the times before vm migration
      */
     public static List<Double> getTimesBeforeContainerMigration(List<Container> containers) {
-        List<Double> timeBeforeVmMigration = new LinkedList<Double>();
+        List<Double> timeBeforeVmMigration = new LinkedList<>();
         for (Container container : containers) {
             boolean previousIsInMigration = false;
             double lastTimeMigrationFinished = 0;
@@ -553,7 +555,7 @@ public class HelperEx {
      * @return the times before host shutdown
      */
     public static List<Double> getTimesBeforeHostShutdown(List<ContainerHost> hosts) {
-        List<Double> timeBeforeShutdown = new LinkedList<Double>();
+        List<Double> timeBeforeShutdown = new LinkedList<>();
         for (ContainerHost host : hosts) {
             boolean previousIsActive = true;
             double lastTimeSwitchedOn = 0;
@@ -583,7 +585,7 @@ public class HelperEx {
         scanner.useDelimiter("_");
         for (int i = 0; i < 8; i++) {
             if (scanner.hasNext()) {
-                csvName.append(scanner.next() + ",");
+                csvName.append(scanner.next()).append(",");
             } else {
                 csvName.append(",");
             }
@@ -669,8 +671,8 @@ public class HelperEx {
      * @return the sla metrics
      */
     protected static Map<String, Double> getSlaMetrics(List<ContainerVm> vms) {
-        Map<String, Double> metrics = new HashMap<String, Double>();
-        List<Double> slaViolation = new LinkedList<Double>();
+        Map<String, Double> metrics = new HashMap<>();
+        List<Double> slaViolation = new LinkedList<>();
         double totalAllocated = 0;
         double totalRequested = 0;
         double totalUnderAllocatedDueToMigration = 0;
@@ -990,39 +992,39 @@ public class HelperEx {
         StringBuilder data = new StringBuilder();
         String delimeter = ",";
 
-        data.append(experimentName + delimeter);
+        data.append(experimentName).append(delimeter);
         data.append(parseExperimentName(experimentName));
-        data.append(String.format("%d", numberOfHosts) + delimeter);
-        data.append(String.format("%d", numberOfVms) + delimeter);
-        data.append(String.format("%.2f", totalSimulationTime) + delimeter);
-        data.append(String.format("%.10f", slaOverall) + delimeter);
-        data.append(String.format("%.10f", slaAverage) + delimeter);
-        data.append(String.format("%.10f", slaTimePerActiveHost) + delimeter);
-        data.append(String.format("%.10f", meanTimeBeforeHostShutdown) + delimeter);
-        data.append(String.format("%.10f", stDevTimeBeforeHostShutdown) + delimeter);
-        data.append(String.format("%.10f", medTimeBeforeHostShutdown) + delimeter);
-        data.append(String.format("%.10f", meanTimeBeforeContainerMigration) + delimeter);
-        data.append(String.format("%.10f", stDevTimeBeforeContainerMigration) + delimeter);
-        data.append(String.format("%.10f", medTimeBeforeContainerMigration) + delimeter);
-        data.append(String.format("%.10f", meanActiveVm) + delimeter);
-        data.append(String.format("%.10f", stDevActiveVm) + delimeter);
-        data.append(String.format("%.10f", medActiveVm) + delimeter);
-        data.append(String.format("%.10f", meanActiveHosts) + delimeter);
-        data.append(String.format("%.10f", stDevActiveHosts) + delimeter);
-        data.append(String.format("%.10f", medActiveHosts) + delimeter);
-        data.append(String.format("%.10f", meanNumberOfContainerMigrations) + delimeter);
-        data.append(String.format("%.10f", stDevNumberOfContainerMigrations) + delimeter);
-        data.append(String.format("%.10f", medNumberOfContainerMigrations) + delimeter);
-        data.append(String.format("%.10f", meanDatacenterEnergy) + delimeter);
-        data.append(String.format("%.10f", stDevDatacenterEnergy) + delimeter);
-        data.append(String.format("%.10f", medDatacenterEnergy) + delimeter);
-        data.append(String.format("%d", totalContainerMigration) + delimeter);
-        data.append(String.format("%d", totalVmMigration) + delimeter);
-        data.append(String.format("%d", totalVmCreated) + delimeter);
-        data.append(String.format("%d", numberOfOverUtilization) + delimeter);
-        data.append(String.format("%.5f", energy) + delimeter);
-        data.append(String.format("%d", broker.getContainersCreated()) + delimeter);
-        data.append(String.format("%d", broker.getNumberOfCreatedVMs()) + delimeter);
+        data.append(String.format("%d", numberOfHosts)).append(delimeter);
+        data.append(String.format("%d", numberOfVms)).append(delimeter);
+        data.append(String.format("%.2f", totalSimulationTime)).append(delimeter);
+        data.append(String.format("%.10f", slaOverall)).append(delimeter);
+        data.append(String.format("%.10f", slaAverage)).append(delimeter);
+        data.append(String.format("%.10f", slaTimePerActiveHost)).append(delimeter);
+        data.append(String.format("%.10f", meanTimeBeforeHostShutdown)).append(delimeter);
+        data.append(String.format("%.10f", stDevTimeBeforeHostShutdown)).append(delimeter);
+        data.append(String.format("%.10f", medTimeBeforeHostShutdown)).append(delimeter);
+        data.append(String.format("%.10f", meanTimeBeforeContainerMigration)).append(delimeter);
+        data.append(String.format("%.10f", stDevTimeBeforeContainerMigration)).append(delimeter);
+        data.append(String.format("%.10f", medTimeBeforeContainerMigration)).append(delimeter);
+        data.append(String.format("%.10f", meanActiveVm)).append(delimeter);
+        data.append(String.format("%.10f", stDevActiveVm)).append(delimeter);
+        data.append(String.format("%.10f", medActiveVm)).append(delimeter);
+        data.append(String.format("%.10f", meanActiveHosts)).append(delimeter);
+        data.append(String.format("%.10f", stDevActiveHosts)).append(delimeter);
+        data.append(String.format("%.10f", medActiveHosts)).append(delimeter);
+        data.append(String.format("%.10f", meanNumberOfContainerMigrations)).append(delimeter);
+        data.append(String.format("%.10f", stDevNumberOfContainerMigrations)).append(delimeter);
+        data.append(String.format("%.10f", medNumberOfContainerMigrations)).append(delimeter);
+        data.append(String.format("%.10f", meanDatacenterEnergy)).append(delimeter);
+        data.append(String.format("%.10f", stDevDatacenterEnergy)).append(delimeter);
+        data.append(String.format("%.10f", medDatacenterEnergy)).append(delimeter);
+        data.append(String.format("%d", totalContainerMigration)).append(delimeter);
+        data.append(String.format("%d", totalVmMigration)).append(delimeter);
+        data.append(String.format("%d", totalVmCreated)).append(delimeter);
+        data.append(String.format("%d", numberOfOverUtilization)).append(delimeter);
+        data.append(String.format("%.5f", energy)).append(delimeter);
+        data.append(String.format("%d", broker.getContainersCreated())).append(delimeter);
+        data.append(String.format("%d", broker.getNumberOfCreatedVMs())).append(delimeter);
 
 //        data.append(String.format("%.10f", sla) + delimeter);
 //        data.append(String.format("%.10f", slaDegradationDueToMigration) + delimeter);
@@ -1071,7 +1073,8 @@ public class HelperEx {
 
 
         File f = new File(fileAddress);
-        CSVWriter writer = new CSVWriter(new FileWriter(fileAddress, true), ',',CSVWriter.NO_QUOTE_CHARACTER);
+        CSVWriter writer = new CSVWriter(new FileWriter(fileAddress, true), ',',CSVWriter.NO_QUOTE_CHARACTER,
+                CSVWriter.DEFAULT_ESCAPE_CHARACTER, ICSVWriter.DEFAULT_LINE_END);
         File parent = f.getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
             throw new IllegalStateException("Couldn't create dir: " + parent);
@@ -1105,9 +1108,7 @@ public class HelperEx {
     public static int getNumberofOverUtilization(List<? extends ContainerHost> hosts,
                                                  PowerContainerVmAllocationPolicyMigrationAbstract vmAllocationPolicy) {
         int numberOfOverUtilization = 0;
-        for (int j = 0; j < hosts.size(); j++) {
-            ContainerHost host = hosts.get(j);
-
+        for (ContainerHost host : hosts) {
             if (!vmAllocationPolicy.getTimeHistory().containsKey(host.getId())) {
                 continue;
             }

@@ -22,7 +22,7 @@ package org.cloudbus.cloudsim.network.datacenter;
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 1.0
- * @todo Attributes should be private
+ * //TODO Attributes should be private
  */
 public class NetworkPacket {
     /**
@@ -42,19 +42,19 @@ public class NetworkPacket {
 
     /**
      * Id of the sender VM.
-     * @todo Isn't this data at {@link #pkt}?
+     * //TODO Isn't this data at {@link #pkt}?
      */
     int sendervmid;
 
     /**
      * Id of the receiver VM.
-     * @todo Isn't this data at {@link #pkt}?
+     * //TODO Isn't this data at {@link #pkt}?
      */
     int recievervmid;
 
     /**
      * Id of the sender cloudlet.
-     * @todo This field is not needed, since its value is being
+     * //TODO This field is not needed, since its value is being
      * get from a {@link HostPacket} instance at {@link NetworkHost#sendpackets()}.
      * So, such a data can be got form the {@link #pkt} attribute.
      */

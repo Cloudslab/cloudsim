@@ -50,20 +50,17 @@ public class ContainerVm {
     /**
      * The number of PEs.
      */
-    @SuppressWarnings("unused")
-	private int numberOfPes;
+    private int numberOfPes;
 
     /**
      * The ram.
      */
-    @SuppressWarnings("unused")
-	private float ram;
+    private float ram;
 
     /**
      * The bw.
      */
-    @SuppressWarnings("unused")
-	private long bw;
+    private long bw;
 
 
     /**
@@ -118,7 +115,7 @@ public class ContainerVm {
     /**
      * The mips allocation history.
      */
-    private final List<VmStateHistoryEntry> stateHistory = new LinkedList<VmStateHistoryEntry>();
+    private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
 
 
     /**
@@ -129,8 +126,7 @@ public class ContainerVm {
     /**
      * The storage.
      */
-    @SuppressWarnings("unused")
-	private long storage;
+    private long storage;
 
     /**
      * The ram provisioner.
@@ -165,8 +161,7 @@ public class ContainerVm {
     /**
      * The datacenter where the host is placed.
      */
-    @SuppressWarnings("unused")
-	private ContainerDatacenter datacenter;
+    private ContainerDatacenter datacenter;
 
 
     /**

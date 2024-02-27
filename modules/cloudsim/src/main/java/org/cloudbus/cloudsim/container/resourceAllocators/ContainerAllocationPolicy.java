@@ -37,7 +37,7 @@ public abstract class ContainerAllocationPolicy {
 		 * @post $none
 		 */
 		public ContainerAllocationPolicy() {
-			setContainerVmList(new ArrayList<ContainerVm>());
+			setContainerVmList(new ArrayList<>());
 		}
 
 		/**

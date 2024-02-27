@@ -30,12 +30,7 @@ public class CloudletList {
 	 * @return a Cloudlet with the given ID or $null if not found
 	 */
 	public static <T extends Cloudlet> T getById(List<T> cloudletList, int id) {
-		for (T cloudlet : cloudletList) {
-			if (cloudlet.getCloudletId() == id) {
-				return cloudlet;
-			}
-		}
-		return null;
+		return cloudletList.stream().filter(cloudlet -> cloudlet.getCloudletId() == id).findFirst().orElse(null);
 	}
 
 	/**
@@ -64,26 +59,26 @@ public class CloudletList {
 	 * @post $none
 	 */
 	public static <T extends Cloudlet> void sort(List<T> cloudletList) {
-		Collections.sort(cloudletList, new Comparator<T>() {
+		cloudletList.sort(new Comparator<>() {
 
 			/**
 			 * Compares two Cloudlets.
-			 * 
+			 *
 			 * @param a the first Cloudlet to be compared
 			 * @param b the second Cloudlet to be compared
 			 * @return the value 0 if both Cloudlets are numerically equal; a value less than 0 if the
-			 *         first Object is numerically less than the second Cloudlet; and a value greater
-			 *         than 0 if the first Cloudlet is numerically greater than the second Cloudlet.
+			 * first Object is numerically less than the second Cloudlet; and a value greater
+			 * than 0 if the first Cloudlet is numerically greater than the second Cloudlet.
 			 * @throws ClassCastException <tt>a</tt> and <tt>b</tt> are expected to be of type
-			 *             <tt>Cloudlet</tt>
+			 *                            <tt>Cloudlet</tt>
 			 * @pre a != null
 			 * @pre b != null
 			 * @post $none
 			 */
 			@Override
 			public int compare(T a, T b) throws ClassCastException {
-				Double cla = Double.valueOf(a.getCloudletTotalLength());
-				Double clb = Double.valueOf(b.getCloudletTotalLength());
+				Double cla = (double) a.getCloudletTotalLength();
+				Double clb = (double) b.getCloudletTotalLength();
 				return cla.compareTo(clb);
 			}
 		});

@@ -40,11 +40,11 @@ public abstract class ContainerCloudletScheduler {
          */
         public ContainerCloudletScheduler() {
             setPreviousTime(0.0);
-            cloudletWaitingList = new ArrayList<ResCloudlet>();
-            cloudletExecList = new ArrayList<ResCloudlet>();
-            cloudletPausedList = new ArrayList<ResCloudlet>();
-            cloudletFinishedList = new ArrayList<ResCloudlet>();
-            cloudletFailedList = new ArrayList<ResCloudlet>();
+            cloudletWaitingList = new ArrayList<>();
+            cloudletExecList = new ArrayList<>();
+            cloudletPausedList = new ArrayList<>();
+            cloudletFinishedList = new ArrayList<>();
+            cloudletFailedList = new ArrayList<>();
         }
 
         /**

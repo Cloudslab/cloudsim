@@ -10,12 +10,7 @@ import java.util.List;
 public class ContainerVmList {
 
     public static <T extends ContainerVm> T getById(List<T> vmList, int id) {
-        for (T vm : vmList) {
-            if (vm.getId() == id) {
-                return vm;
-            }
-        }
-        return null;
+        return vmList.stream().filter(vm -> vm.getId() == id).findFirst().orElse(null);
     }
 
     /**
@@ -29,12 +24,7 @@ public class ContainerVmList {
      * @post $none
      */
     public static <T extends ContainerVm> T getByIdAndUserId(List<T> vmList, int id, int userId) {
-        for (T vm : vmList) {
-            if (vm.getId() == id && vm.getUserId() == userId) {
-                return vm;
-            }
-        }
-        return null;
+        return vmList.stream().filter(vm -> vm.getId() == id && vm.getUserId() == userId).findFirst().orElse(null);
     }
 
 }

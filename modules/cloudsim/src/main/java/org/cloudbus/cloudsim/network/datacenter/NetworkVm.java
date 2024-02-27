@@ -26,16 +26,16 @@ import org.cloudbus.cloudsim.Vm;
  * 
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
- * @todo Attributes should be private
+ * //TODO Attributes should be private
  */
-public class NetworkVm extends Vm implements Comparable<Object> {
+public class NetworkVm extends Vm implements Comparable<NetworkVm> {
         /**
          * List of {@link NetworkCloudlet} of the VM.
          */
 	public ArrayList<NetworkCloudlet> cloudletlist;
 
         /**
-         * @todo It doesn't appear to be used.
+         * //TODO It doesn't appear to be used.
          */
 	int type;
 
@@ -45,12 +45,12 @@ public class NetworkVm extends Vm implements Comparable<Object> {
 	public ArrayList<HostPacket> recvPktlist;
 
         /**
-         * @todo It doesn't appear to be used.
+         * //TODO It doesn't appear to be used.
          */
 	public double memory;
 
         /**
-         * @todo It doesn't appear to be used.
+         * //TODO It doesn't appear to be used.
          */
 	public boolean flagfree;
 
@@ -71,7 +71,7 @@ public class NetworkVm extends Vm implements Comparable<Object> {
 			CloudletScheduler cloudletScheduler) {
 		super(id, userId, mips, pesNumber, ram, bw, size, vmm, cloudletScheduler);
 
-		cloudletlist = new ArrayList<NetworkCloudlet>();
+		cloudletlist = new ArrayList<>();
 	}
 
 	public boolean isFree() {
@@ -79,14 +79,8 @@ public class NetworkVm extends Vm implements Comparable<Object> {
 	}
 
 	@Override
-	public int compareTo(Object arg0) {
-		NetworkVm hs = (NetworkVm) arg0;
-		if (hs.finishtime > finishtime) {
-			return -1;
-		}
-		if (hs.finishtime < finishtime) {
-			return 1;
-		}
-		return 0;
+	public int compareTo(NetworkVm arg0) {
+		NetworkVm hs = arg0;
+		return Double.compare(finishtime, hs.finishtime);
 	}
 }

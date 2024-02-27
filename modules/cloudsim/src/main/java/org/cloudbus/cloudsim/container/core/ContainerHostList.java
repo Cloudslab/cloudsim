@@ -143,27 +143,19 @@ public class ContainerHostList {
      * @param hostList the vm list
      */
     public static <T extends ContainerHost> void sortByCpuUtilization(List<T> hostList) {
-        Collections.sort(hostList, new Comparator<T>() {
-
-            @Override
-            public int compare(T a, T b) throws ClassCastException {
-                Double aUtilization = ((PowerContainerHost) a).getUtilizationOfCpu();
-                Double bUtilization = ((PowerContainerHost) b).getUtilizationOfCpu();
-                return bUtilization.compareTo(aUtilization);
-            }
+        hostList.sort((a, b) -> {
+            Double aUtilization = ((PowerContainerHost) a).getUtilizationOfCpu();
+            Double bUtilization = ((PowerContainerHost) b).getUtilizationOfCpu();
+            return bUtilization.compareTo(aUtilization);
         });
     }
 
     public static <T extends ContainerHost> void sortByCpuUtilizationDescending(List<T> hostList) {
 
-        Collections.sort(hostList, Collections.reverseOrder(new Comparator<T>() {
-
-            @Override
-            public int compare(T a, T b) throws ClassCastException {
-                Double aUtilization = ((PowerContainerHost) a).getUtilizationOfCpu();
-                Double bUtilization = ((PowerContainerHost) b).getUtilizationOfCpu();
-                return bUtilization.compareTo(aUtilization);
-            }
+        hostList.sort(Collections.reverseOrder((a, b) -> {
+            Double aUtilization = ((PowerContainerHost) a).getUtilizationOfCpu();
+            Double bUtilization = ((PowerContainerHost) b).getUtilizationOfCpu();
+            return bUtilization.compareTo(aUtilization);
         }));
 
 

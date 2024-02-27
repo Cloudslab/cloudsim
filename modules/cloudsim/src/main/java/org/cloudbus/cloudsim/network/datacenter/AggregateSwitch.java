@@ -43,14 +43,14 @@ public class AggregateSwitch extends Switch {
 	 */
 	public AggregateSwitch(String name, int level, NetworkDatacenter dc) {
 		super(name, level, dc);
-		downlinkswitchpktlist = new HashMap<Integer, List<NetworkPacket>>();
-		uplinkswitchpktlist = new HashMap<Integer, List<NetworkPacket>>();
+		downlinkswitchpktlist = new HashMap<>();
+		uplinkswitchpktlist = new HashMap<>();
 		uplinkbandwidth = NetworkConstants.BandWidthAggRoot;
 		downlinkbandwidth = NetworkConstants.BandWidthEdgeAgg;
 		latency = NetworkConstants.SwitchingDelayAgg;
 		numport = NetworkConstants.AggSwitchPort;
-		uplinkswitches = new ArrayList<Switch>();
-		downlinkswitches = new ArrayList<Switch>();
+		uplinkswitches = new ArrayList<>();
+		downlinkswitches = new ArrayList<>();
 	}
 
 	@Override
@@ -69,13 +69,8 @@ public class AggregateSwitch extends Switch {
 			// packet is coming from root so need to be sent to edgelevel swich
 			// find the id for edgelevel switch
 			int switchid = dc.VmToSwitchid.get(recvVMid);
-			List<NetworkPacket> pktlist = downlinkswitchpktlist.get(switchid);
-			if (pktlist == null) {
-				pktlist = new ArrayList<NetworkPacket>();
-				downlinkswitchpktlist.put(switchid, pktlist);
-			}
+			List<NetworkPacket> pktlist = downlinkswitchpktlist.computeIfAbsent(switchid, k -> new ArrayList<>());
 			pktlist.add(hspkt);
-			return;
 		}
 
 	}
@@ -102,23 +97,16 @@ public class AggregateSwitch extends Switch {
 			for (Switch sw : downlinkswitches) {
 				if (switchid == sw.getId()) {
 					flagtoswtich = true;
+					break;
 				}
 			}
 			if (flagtoswtich) {
-				List<NetworkPacket> pktlist = downlinkswitchpktlist.get(switchid);
-				if (pktlist == null) {
-					pktlist = new ArrayList<NetworkPacket>();
-					downlinkswitchpktlist.put(switchid, pktlist);
-				}
+				List<NetworkPacket> pktlist = downlinkswitchpktlist.computeIfAbsent(switchid, k -> new ArrayList<>());
 				pktlist.add(hspkt);
 			} else// send to up
 			{
 				Switch sw = uplinkswitches.get(0);
-				List<NetworkPacket> pktlist = uplinkswitchpktlist.get(sw.getId());
-				if (pktlist == null) {
-					pktlist = new ArrayList<NetworkPacket>();
-					uplinkswitchpktlist.put(sw.getId(), pktlist);
-				}
+				List<NetworkPacket> pktlist = uplinkswitchpktlist.computeIfAbsent(sw.getId(), k -> new ArrayList<>());
 				pktlist.add(hspkt);
 			}
 		}

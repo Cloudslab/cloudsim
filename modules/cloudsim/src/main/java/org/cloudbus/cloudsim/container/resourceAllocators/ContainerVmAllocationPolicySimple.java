@@ -41,14 +41,14 @@ public class ContainerVmAllocationPolicySimple extends ContainerVmAllocationPoli
     public ContainerVmAllocationPolicySimple(List<? extends ContainerHost> list) {
         super(list);
 
-        setFreePes(new ArrayList<Integer>());
+        setFreePes(new ArrayList<>());
         for (ContainerHost host : getContainerHostList()) {
             getFreePes().add(host.getNumberOfPes());
 
         }
 
-        setVmTable(new HashMap<String, ContainerHost>());
-        setUsedPes(new HashMap<String, Integer>());
+        setVmTable(new HashMap<>());
+        setUsedPes(new HashMap<>());
     }
 
     @Override
@@ -56,10 +56,7 @@ public class ContainerVmAllocationPolicySimple extends ContainerVmAllocationPoli
         int requiredPes = containerVm.getNumberOfPes();
         boolean result = false;
         int tries = 0;
-        List<Integer> freePesTmp = new ArrayList<>();
-        for (Integer freePes : getFreePes()) {
-            freePesTmp.add(freePes);
-        }
+        List<Integer> freePesTmp = new ArrayList<>(getFreePes());
 
         if (!getVmTable().containsKey(containerVm.getUid())) { // if this vm was not created
             do {// we still trying until we find a host or until we try all of them

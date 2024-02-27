@@ -90,10 +90,10 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         setDisableVmMigrations(false);
         setCloudletSubmitted(-1);
         setVmMigrationCount(0);
-        setActiveHostList(new ArrayList<Double>());
-        setActiveVmList(new ArrayList<Double>());
-        setDatacenterEnergyList(new ArrayList<Double>());
-        setContainerMigrationList(new ArrayList<Double>());
+        setActiveHostList(new ArrayList<>());
+        setActiveVmList(new ArrayList<>());
+        setDatacenterEnergyList(new ArrayList<>());
+        setContainerMigrationList(new ArrayList<>());
         setNumberOfVms(0);
         setNumberOfContainers(0);
     }
@@ -449,7 +449,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
 
 
     public CostumeCSVWriter getDatacenterEnergyWriter() {
-        return (CostumeCSVWriter) datacenterEnergyWriter;
+        return datacenterEnergyWriter;
     }
 
     public void setDatacenterEnergyWriter(CostumeCSVWriter datacenterEnergyWriter) {

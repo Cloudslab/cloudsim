@@ -180,11 +180,7 @@ public class ResCloudlet {
 	 * @post $none
 	 */
 	public boolean hasReserved() {
-		if (reservId == NOT_FOUND) {
-			return false;
-		}
-
-		return true;
+		return reservId != NOT_FOUND;
 	}
 
 	/**
@@ -284,7 +280,7 @@ public class ResCloudlet {
 	 */
 	public boolean setCloudletStatus(int status) {
 		// gets Cloudlet's previous status
-		int prevStatus = cloudlet.getCloudletStatus();
+		int prevStatus = cloudlet.getStatus();
 
 		// if the status of a Cloudlet is the same as last time, then ignore
 		if (prevStatus == status) {
@@ -363,7 +359,7 @@ public class ResCloudlet {
 	 * @pre peID >= 0
 	 * @post $none
          * 
-         * @todo the machineId param and attribute mean a VM or a PM id?
+         * //TODO the machineId param and attribute mean a VM or a PM id?
          * Only the term machine is ambiguous. 
          * At {@link  CloudletSchedulerTimeShared#cloudletSubmit(org.cloudbus.cloudsim.Cloudlet)}
          * it is stated it is a VM.
@@ -443,7 +439,7 @@ public class ResCloudlet {
 			return 0;
 		}
 
-		return (long) Math.floor(length / Consts.MILLION);
+		return (long) Math.floor(1.0*length / Consts.MILLION);
 	}
 
 	/**
@@ -466,7 +462,7 @@ public class ResCloudlet {
 
 		long finished = 0;
 		//if (cloudlet.getCloudletTotalLength() * Consts.MILLION < cloudletFinishedSoFar) {
-		if (cloudlet.getCloudletStatus()==Cloudlet.SUCCESS) {
+		if (cloudlet.getStatus() ==Cloudlet.SUCCESS) {
 			finished = cloudlet.getCloudletLength();
 		} else {
 			finished = cloudletFinishedSoFar / Consts.MILLION;
@@ -493,7 +489,7 @@ public class ResCloudlet {
 	 * @pre $none
 	 * @post $result >= 0.0
          * 
-         * @todo It is being used different words for the same term.
+         * //TODO It is being used different words for the same term.
          * Here it is used arrival time while at Resource inner classe of the Cloudlet class
          * it is being used submissionTime. It needs to be checked if they are 
          * the same term or different ones in fact.
@@ -547,7 +543,7 @@ public class ResCloudlet {
 	 * @post $none
 	 */
 	public int getCloudletStatus() {
-		return cloudlet.getCloudletStatus();
+		return cloudlet.getStatus();
 	}
 
 	/**

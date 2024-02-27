@@ -264,13 +264,8 @@ public class ContainerDatacenterCharacteristics {
     public double getCpuTime(double cloudletLength, double load) {
         double cpuTime = 0.0;
 
-        switch (getAllocationPolicy()) {
-            case ContainerDatacenterCharacteristics.TIME_SHARED:
-                cpuTime = cloudletLength / (getMipsOfOnePe() * (1.0 - load));
-                break;
-
-            default:
-                break;
+        if (getAllocationPolicy() == ContainerDatacenterCharacteristics.TIME_SHARED) {
+            cpuTime = cloudletLength / (getMipsOfOnePe() * (1.0 - load));
         }
 
         return cpuTime;
@@ -365,10 +360,7 @@ public class ContainerDatacenterCharacteristics {
      * @return if all machines are working, otherwise
      */
     public boolean isWorking() {
-        boolean result = false;
-        if (getNumberOfFailedHosts() == 0) {
-            result = true;
-        }
+        boolean result = getNumberOfFailedHosts() == 0;
 
         return result;
     }

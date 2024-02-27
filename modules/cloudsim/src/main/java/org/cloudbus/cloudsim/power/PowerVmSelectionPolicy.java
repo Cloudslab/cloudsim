@@ -24,7 +24,7 @@ import org.cloudbus.cloudsim.Vm;
  * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * Issue 13, Pages: 1397-1420, John Wiley &amp; Sons, Ltd, New York, USA, 2012</a>
  * </ul>
  * 
  * @author Anton Beloglazov
@@ -47,7 +47,7 @@ public abstract class PowerVmSelectionPolicy {
 	 * @return the list of migratable VMs
 	 */
 	protected List<PowerVm> getMigratableVms(PowerHost host) {
-		List<PowerVm> migratableVms = new ArrayList<PowerVm>();
+		List<PowerVm> migratableVms = new ArrayList<>();
 		for (PowerVm vm : host.<PowerVm> getVmList()) {
 			if (!vm.isInMigration()) {
 				migratableVms.add(vm);

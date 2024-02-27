@@ -33,7 +33,7 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
  * @author Saurabh Kumar Garg
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 3.0
- * @todo Attributes should be private
+ * //TODO Attributes should be private
  */
 public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 	/** The current CPUs. */
@@ -63,19 +63,19 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 	 */
 	public NetworkCloudletSpaceSharedScheduler() {
 		super();
-		cloudletWaitingList = new ArrayList<ResCloudlet>();
-		cloudletExecList = new ArrayList<ResCloudlet>();
-		cloudletPausedList = new ArrayList<ResCloudlet>();
-		cloudletFinishedList = new ArrayList<ResCloudlet>();
+		cloudletWaitingList = new ArrayList<>();
+		cloudletExecList = new ArrayList<>();
+		cloudletPausedList = new ArrayList<>();
+		cloudletFinishedList = new ArrayList<>();
 		usedPes = 0;
 		currentCpus = 0;
-		pkttosend = new HashMap<Integer, List<HostPacket>>();
-		pktrecv = new HashMap<Integer, List<HostPacket>>();
+		pkttosend = new HashMap<>();
+		pktrecv = new HashMap<>();
 	}
 
 	@Override
 	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
-                /*@todo Method to long. Several "extract method" refactorings may be performed.*/
+                /*//TODO Method to long. Several "extract method" refactorings may be performed.*/
 		setCurrentMipsShare(mipsShare);
 		// update
 		double capacity = 0.0;
@@ -118,7 +118,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 				}
 				if (st.type == NetworkConstants.WAIT_RECV) {
 					List<HostPacket> pktlist = pktrecv.get(st.peer);
-					List<HostPacket> pkttoremove = new ArrayList<HostPacket>();
+					List<HostPacket> pkttoremove = new ArrayList<>();
 					if (pktlist != null) {
 						Iterator<HostPacket> it = pktlist.iterator();
 						HostPacket pkt = null;
@@ -166,7 +166,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 
 		// update each cloudlet
 		int finished = 0;
-		List<ResCloudlet> toRemove = new ArrayList<ResCloudlet>();
+		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			// rounding issue...
 			if (((NetworkCloudlet) (rcl.getCloudlet())).currStagenum == NetworkConstants.FINISH) {
@@ -220,7 +220,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
         /**
          * Changes a cloudlet to the next stage.
          * 
-         * @todo It has to be corrected the method name case. Method too long
+         * //TODO It has to be corrected the method name case. Method too long
          * to understand what is its responsibility.*/
 	private void changetonextstage(NetworkCloudlet cl, TaskStage st) {
 		cl.timespentInStage = 0;
@@ -243,7 +243,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 							cl.stages.get(i).vpeer);
 					List<HostPacket> pktlist = pkttosend.get(cl.getVmId());
 					if (pktlist == null) {
-						pktlist = new ArrayList<HostPacket>();
+						pktlist = new ArrayList<>();
 					}
 					pktlist.add(pkt);
 					pkttosend.put(cl.getVmId(), pktlist);
@@ -554,18 +554,16 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 
 	@Override
 	public List<Double> getCurrentRequestedMips() {
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		if (getCurrentMipsShare() != null) {
-			for (Double mips : getCurrentMipsShare()) {
-				mipsShare.add(mips);
-			}
+			mipsShare.addAll(getCurrentMipsShare());
 		}
 		return mipsShare;
 	}
 
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
-                /*@todo The param rcl is not being used.*/
+                /*//TODO The param rcl is not being used.*/
 		double capacity = 0.0;
 		int cpus = 0;
 		for (Double mips : mipsShare) { // count the cpus available to the vmm
@@ -581,25 +579,25 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 
 	@Override
 	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
-                //@todo The method doesn't appear to be implemented in fact
+                ////TODO The method doesn't appear to be implemented in fact
 		return 0.0;
 	}
 
 	@Override
 	public double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time) {
-                //@todo The method doesn't appear to be implemented in fact
+                ////TODO The method doesn't appear to be implemented in fact
 		return 0.0;
 	}
 
 	@Override
 	public double getCurrentRequestedUtilizationOfBw() {
-                //@todo The method doesn't appear to be implemented in fact
+                ////TODO The method doesn't appear to be implemented in fact
 		return 0;
 	}
 
 	@Override
 	public double getCurrentRequestedUtilizationOfRam() {
-                //@todo The method doesn't appear to be implemented in fact
+                ////TODO The method doesn't appear to be implemented in fact
 		return 0;
 	}
 

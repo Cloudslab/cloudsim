@@ -35,7 +35,7 @@ public class RamProvisionerSimple extends RamProvisioner {
 	 */
 	public RamProvisionerSimple(int availableRam) {
 		super(availableRam);
-		setRamTable(new HashMap<String, Integer>());
+		setRamTable(new HashMap<>());
 	}
 
 	@Override

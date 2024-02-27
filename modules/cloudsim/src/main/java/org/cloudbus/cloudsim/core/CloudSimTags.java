@@ -15,7 +15,7 @@ import org.cloudbus.cloudsim.Datacenter;
  * by CloudSim entities when they receive or send events. <b>NOTE:</b> To avoid conflicts with other
  * tags, CloudSim reserves negative numbers, 0 - 299, and 9600.
  * 
- * @todo There aren't negative reserved tags, but only positive tags (with 2 exceptions).
+ * //TODO There aren't negative reserved tags, but only positive tags (with 2 exceptions).
  * 
  * @author Manzur Murshed
  * @author Rajkumar Buyya
@@ -55,7 +55,7 @@ public class CloudSimTags {
 	 * Denotes insignificant simulation entity or time. This tag will not be used for identification
 	 * purposes.
 	 */
-	public static final int INSIGNIFICANT = BASE + 0;
+	public static final int INSIGNIFICANT = BASE;
 
 	/** Sends an Experiment object between UserEntity and Broker entity */
 	public static final int EXPERIMENT = BASE + 1;

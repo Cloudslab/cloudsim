@@ -1,6 +1,9 @@
 package org.cloudbus.cloudsim.container.core;
 
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerVmAllocationPolicy;
 import org.cloudbus.cloudsim.*;
@@ -28,6 +31,8 @@ public class ContainerDatacenter extends SimEntity {
     /**
      * The regional cis name.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PROTECTED)
     private String regionalCisName;
 
     /**
@@ -37,6 +42,8 @@ public class ContainerDatacenter extends SimEntity {
     /**
      * The container provisioner.
      */
+    @Setter
+    @Getter
     private ContainerAllocationPolicy containerAllocationPolicy;
 
     /**
@@ -47,6 +54,8 @@ public class ContainerDatacenter extends SimEntity {
     /**
      * The storage list.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PROTECTED)
     private List<Storage> storageList;
 
     /**
@@ -98,8 +107,8 @@ public class ContainerDatacenter extends SimEntity {
         setContainerAllocationPolicy(containerAllocationPolicy);
         setLastProcessTime(0.0);
         setStorageList(storageList);
-        setContainerVmList(new ArrayList<ContainerVm>());
-        setContainerList(new ArrayList<Container>());
+        setContainerVmList(new ArrayList<>());
+        setContainerList(new ArrayList<>());
         setSchedulingInterval(schedulingInterval);
         setExperimentName(experimentName);
         setLogAddress(logAddress);
@@ -142,142 +151,90 @@ public class ContainerDatacenter extends SimEntity {
 
         switch (ev.getTag()) {
             // Resource characteristics inquiry
-            case CloudSimTags.RESOURCE_CHARACTERISTICS:
-                srcId = ((Integer) ev.getData()).intValue();
+            case CloudSimTags.RESOURCE_CHARACTERISTICS -> {
+                srcId = (Integer) ev.getData();
                 sendNow(srcId, ev.getTag(), getCharacteristics());
-                break;
+            }
 
             // Resource dynamic info inquiry
-            case CloudSimTags.RESOURCE_DYNAMICS:
-                srcId = ((Integer) ev.getData()).intValue();
+            case CloudSimTags.RESOURCE_DYNAMICS -> {
+                srcId = (Integer) ev.getData();
                 sendNow(srcId, ev.getTag(), 0);
-                break;
-
-            case CloudSimTags.RESOURCE_NUM_PE:
-                srcId = ((Integer) ev.getData()).intValue();
+            }
+            case CloudSimTags.RESOURCE_NUM_PE -> {
+                srcId = (Integer) ev.getData();
                 int numPE = getCharacteristics().getNumberOfPes();
                 sendNow(srcId, ev.getTag(), numPE);
-                break;
-
-            case CloudSimTags.RESOURCE_NUM_FREE_PE:
-                srcId = ((Integer) ev.getData()).intValue();
+            }
+            case CloudSimTags.RESOURCE_NUM_FREE_PE -> {
+                srcId = (Integer) ev.getData();
                 int freePesNumber = getCharacteristics().getNumberOfFreePes();
                 sendNow(srcId, ev.getTag(), freePesNumber);
-                break;
+            }
 
             // New Cloudlet arrives
-            case CloudSimTags.CLOUDLET_SUBMIT:
-                processCloudletSubmit(ev, false);
-                break;
+            case CloudSimTags.CLOUDLET_SUBMIT -> processCloudletSubmit(ev, false);
+
 
             // New Cloudlet arrives, but the sender asks for an ack
-            case CloudSimTags.CLOUDLET_SUBMIT_ACK:
-                processCloudletSubmit(ev, true);
-                break;
+            case CloudSimTags.CLOUDLET_SUBMIT_ACK -> processCloudletSubmit(ev, true);
+
 
             // Cancels a previously submitted Cloudlet
-            case CloudSimTags.CLOUDLET_CANCEL:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_CANCEL);
-                break;
+            case CloudSimTags.CLOUDLET_CANCEL -> processCloudlet(ev, CloudSimTags.CLOUDLET_CANCEL);
+
 
             // Pauses a previously submitted Cloudlet
-            case CloudSimTags.CLOUDLET_PAUSE:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_PAUSE);
-                break;
+            case CloudSimTags.CLOUDLET_PAUSE -> processCloudlet(ev, CloudSimTags.CLOUDLET_PAUSE);
+
 
             // Pauses a previously submitted Cloudlet, but the sender
             // asks for an acknowledgement
-            case CloudSimTags.CLOUDLET_PAUSE_ACK:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_PAUSE_ACK);
-                break;
+            case CloudSimTags.CLOUDLET_PAUSE_ACK -> processCloudlet(ev, CloudSimTags.CLOUDLET_PAUSE_ACK);
+
 
             // Resumes a previously submitted Cloudlet
-            case CloudSimTags.CLOUDLET_RESUME:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_RESUME);
-                break;
+            case CloudSimTags.CLOUDLET_RESUME -> processCloudlet(ev, CloudSimTags.CLOUDLET_RESUME);
+
 
             // Resumes a previously submitted Cloudlet, but the sender
             // asks for an acknowledgement
-            case CloudSimTags.CLOUDLET_RESUME_ACK:
-                processCloudlet(ev, CloudSimTags.CLOUDLET_RESUME_ACK);
-                break;
+            case CloudSimTags.CLOUDLET_RESUME_ACK -> processCloudlet(ev, CloudSimTags.CLOUDLET_RESUME_ACK);
+
 
             // Moves a previously submitted Cloudlet to a different resource
-            case CloudSimTags.CLOUDLET_MOVE:
-                processCloudletMove((int[]) ev.getData(), CloudSimTags.CLOUDLET_MOVE);
-                break;
+            case CloudSimTags.CLOUDLET_MOVE -> processCloudletMove((int[]) ev.getData(), CloudSimTags.CLOUDLET_MOVE);
+
 
             // Moves a previously submitted Cloudlet to a different resource
-            case CloudSimTags.CLOUDLET_MOVE_ACK:
-                processCloudletMove((int[]) ev.getData(), CloudSimTags.CLOUDLET_MOVE_ACK);
-                break;
+            case CloudSimTags.CLOUDLET_MOVE_ACK -> processCloudletMove((int[]) ev.getData(), CloudSimTags.CLOUDLET_MOVE_ACK);
+
 
             // Checks the status of a Cloudlet
-            case CloudSimTags.CLOUDLET_STATUS:
-                processCloudletStatus(ev);
-                break;
+            case CloudSimTags.CLOUDLET_STATUS -> processCloudletStatus(ev);
+
 
             // Ping packet
-            case CloudSimTags.INFOPKT_SUBMIT:
-                processPingRequest(ev);
-                break;
-
-            case CloudSimTags.VM_CREATE:
-                processVmCreate(ev, false);
-                break;
-
-            case CloudSimTags.VM_CREATE_ACK:
-                processVmCreate(ev, true);
-                break;
-
-            case CloudSimTags.VM_DESTROY:
-                processVmDestroy(ev, false);
-                break;
-
-            case CloudSimTags.VM_DESTROY_ACK:
-                processVmDestroy(ev, true);
-                break;
-
-            case CloudSimTags.VM_MIGRATE:
-                processVmMigrate(ev, false);
-                break;
-
-            case CloudSimTags.VM_MIGRATE_ACK:
-                processVmMigrate(ev, true);
-                break;
-
-            case CloudSimTags.VM_DATA_ADD:
-                processDataAdd(ev, false);
-                break;
-
-            case CloudSimTags.VM_DATA_ADD_ACK:
-                processDataAdd(ev, true);
-                break;
-
-            case CloudSimTags.VM_DATA_DEL:
-                processDataDelete(ev, false);
-                break;
-
-            case CloudSimTags.VM_DATA_DEL_ACK:
-                processDataDelete(ev, true);
-                break;
-
-            case CloudSimTags.VM_DATACENTER_EVENT:
+            case CloudSimTags.INFOPKT_SUBMIT -> processPingRequest(ev);
+            case CloudSimTags.VM_CREATE -> processVmCreate(ev, false);
+            case CloudSimTags.VM_CREATE_ACK -> processVmCreate(ev, true);
+            case CloudSimTags.VM_DESTROY -> processVmDestroy(ev, false);
+            case CloudSimTags.VM_DESTROY_ACK -> processVmDestroy(ev, true);
+            case CloudSimTags.VM_MIGRATE -> processVmMigrate(ev, false);
+            case CloudSimTags.VM_MIGRATE_ACK -> processVmMigrate(ev, true);
+            case CloudSimTags.VM_DATA_ADD -> processDataAdd(ev, false);
+            case CloudSimTags.VM_DATA_ADD_ACK -> processDataAdd(ev, true);
+            case CloudSimTags.VM_DATA_DEL -> processDataDelete(ev, false);
+            case CloudSimTags.VM_DATA_DEL_ACK -> processDataDelete(ev, true);
+            case CloudSimTags.VM_DATACENTER_EVENT -> {
                 updateCloudletProcessing();
                 checkCloudletCompletion();
-                break;
-            case containerCloudSimTags.CONTAINER_SUBMIT:
-                processContainerSubmit(ev, true);
-                break;
+            }
+            case containerCloudSimTags.CONTAINER_SUBMIT -> processContainerSubmit(ev, true);
+            case containerCloudSimTags.CONTAINER_MIGRATE -> processContainerMigrate(ev, false);
 
-            case containerCloudSimTags.CONTAINER_MIGRATE:
-                processContainerMigrate(ev, false);
-                // other unknown tags are processed by this method
-                break;
-
-            default:
-                processOtherEvent(ev);
-                break;
+            // other unknown tags are processed by this method
+            default -> processOtherEvent(ev);
         }
     }
 
@@ -337,7 +294,7 @@ public class ContainerDatacenter extends SimEntity {
         }
 
         String filename = (String) data[0];
-        int req_source = ((Integer) data[1]).intValue();
+        int req_source = (Integer) data[1];
         int tag = -1;
 
         // check if this file can be deleted (do not delete is right now)
@@ -350,9 +307,9 @@ public class ContainerDatacenter extends SimEntity {
 
         if (ack) {
             // send back to sender
-            Object pack[] = new Object[2];
+            Object[] pack = new Object[2];
             pack[0] = filename;
-            pack[1] = Integer.valueOf(msg);
+            pack[1] = msg;
 
             sendNow(req_source, tag, pack);
         }
@@ -376,7 +333,7 @@ public class ContainerDatacenter extends SimEntity {
 
         File file = (File) pack[0]; // get the file
         file.setMasterCopy(true); // set the file into a master copy
-        int sentFrom = ((Integer) pack[1]).intValue(); // get sender ID
+        int sentFrom = (Integer) pack[1]; // get sender ID
 
         /******
          * // DEBUG Log.printLine(super.get_name() + ".addMasterFile(): " + file.getName() +
@@ -389,8 +346,8 @@ public class ContainerDatacenter extends SimEntity {
         int msg = addFile(file); // add the file
 
         if (ack) {
-            data[1] = Integer.valueOf(-1); // no sender id
-            data[2] = Integer.valueOf(msg); // the result of adding a master file
+            data[1] = -1; // no sender id
+            data[2] = msg; // the result of adding a master file
             sendNow(sentFrom, DataCloudTags.FILE_ADD_MASTER_RESULT, data);
         }
     }
@@ -428,7 +385,7 @@ public class ContainerDatacenter extends SimEntity {
 
         try {
             // if a sender using cloudletXXX() methods
-            int data[] = (int[]) ev.getData();
+            int[] data = (int[]) ev.getData();
             cloudletId = data[0];
             userId = data[1];
             vmId = data[2];
@@ -668,7 +625,7 @@ public class ContainerDatacenter extends SimEntity {
         int containerId = 0;
 
         try { // if the sender using cloudletXXX() methods
-            int data[] = (int[]) ev.getData();
+            int[] data = (int[]) ev.getData();
             cloudletId = data[0];
             userId = data[1];
             vmId = data[2];
@@ -696,27 +653,13 @@ public class ContainerDatacenter extends SimEntity {
 
         // begins executing ....
         switch (type) {
-            case CloudSimTags.CLOUDLET_CANCEL:
-                processCloudletCancel(cloudletId, userId, vmId, containerId);
-                break;
-
-            case CloudSimTags.CLOUDLET_PAUSE:
-                processCloudletPause(cloudletId, userId, vmId, containerId, false);
-                break;
-
-            case CloudSimTags.CLOUDLET_PAUSE_ACK:
-                processCloudletPause(cloudletId, userId, vmId, containerId, true);
-                break;
-
-            case CloudSimTags.CLOUDLET_RESUME:
-                processCloudletResume(cloudletId, userId, vmId, containerId, false);
-                break;
-
-            case CloudSimTags.CLOUDLET_RESUME_ACK:
-                processCloudletResume(cloudletId, userId, vmId, containerId, true);
-                break;
-            default:
-                break;
+            case CloudSimTags.CLOUDLET_CANCEL -> processCloudletCancel(cloudletId, userId, vmId, containerId);
+            case CloudSimTags.CLOUDLET_PAUSE -> processCloudletPause(cloudletId, userId, vmId, containerId, false);
+            case CloudSimTags.CLOUDLET_PAUSE_ACK -> processCloudletPause(cloudletId, userId, vmId, containerId, true);
+            case CloudSimTags.CLOUDLET_RESUME -> processCloudletResume(cloudletId, userId, vmId, containerId, false);
+            case CloudSimTags.CLOUDLET_RESUME_ACK -> processCloudletResume(cloudletId, userId, vmId, containerId, true);
+            default -> {
+            }
         }
 
     }
@@ -994,8 +937,7 @@ public class ContainerDatacenter extends SimEntity {
             List<? extends ContainerHost> list = getVmAllocationPolicy().getContainerHostList();
             double smallerTime = Double.MAX_VALUE;
             // for each host...
-            for (int i = 0; i < list.size(); i++) {
-                ContainerHost host = list.get(i);
+            for (ContainerHost host : list) {
                 // inform VMs to update processing
                 double time = host.updateContainerVmsProcessing(CloudSim.clock());
                 // what time do we expect that the next cloudlet will finish?
@@ -1023,8 +965,7 @@ public class ContainerDatacenter extends SimEntity {
      */
     protected void checkCloudletCompletion() {
         List<? extends ContainerHost> list = getVmAllocationPolicy().getContainerHostList();
-        for (int i = 0; i < list.size(); i++) {
-            ContainerHost host = list.get(i);
+        for (ContainerHost host : list) {
             for (ContainerVm vm : host.getVmList()) {
                 for (Container container : vm.getContainerList()) {
                     while (container.getContainerCloudletScheduler().isFinishedCloudlets()) {
@@ -1172,7 +1113,7 @@ public class ContainerDatacenter extends SimEntity {
      */
     @SuppressWarnings("unchecked")
     public <T extends ContainerHost> List<T> getHostList() {
-        return (List<T>) getCharacteristics().getHostList();
+        return getCharacteristics().getHostList();
     }
 
     /**
@@ -1191,24 +1132,6 @@ public class ContainerDatacenter extends SimEntity {
      */
     protected void setCharacteristics(ContainerDatacenterCharacteristics characteristics) {
         this.characteristics = characteristics;
-    }
-
-    /**
-     * Gets the regional cis name.
-     *
-     * @return the regional cis name
-     */
-    protected String getRegionalCisName() {
-        return regionalCisName;
-    }
-
-    /**
-     * Sets the regional cis name.
-     *
-     * @param regionalCisName the new regional cis name
-     */
-    protected void setRegionalCisName(String regionalCisName) {
-        this.regionalCisName = regionalCisName;
     }
 
     /**
@@ -1248,24 +1171,6 @@ public class ContainerDatacenter extends SimEntity {
     }
 
     /**
-     * Gets the storage list.
-     *
-     * @return the storage list
-     */
-    protected List<Storage> getStorageList() {
-        return storageList;
-    }
-
-    /**
-     * Sets the storage list.
-     *
-     * @param storageList the new storage list
-     */
-    protected void setStorageList(List<Storage> storageList) {
-        this.storageList = storageList;
-    }
-
-    /**
      * Gets the vm list.
      *
      * @return the vm list
@@ -1300,15 +1205,6 @@ public class ContainerDatacenter extends SimEntity {
      */
     protected void setSchedulingInterval(double schedulingInterval) {
         this.schedulingInterval = schedulingInterval;
-    }
-
-
-    public ContainerAllocationPolicy getContainerAllocationPolicy() {
-        return containerAllocationPolicy;
-    }
-
-    public void setContainerAllocationPolicy(ContainerAllocationPolicy containerAllocationPolicy) {
-        this.containerAllocationPolicy = containerAllocationPolicy;
     }
 
 

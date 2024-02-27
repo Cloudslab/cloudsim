@@ -56,11 +56,11 @@ public class TestExample {
 
 			// Third step: Create Broker
 			NetDatacenterBroker broker = createBroker();
-			broker.setLinkDC(datacenter0);
+			NetDatacenterBroker.setLinkDC(datacenter0);
 			// broker.setLinkDC(datacenter0);
 			// Fifth step: Create one Cloudlet
 
-			vmlist = new ArrayList<NetworkVm>();
+			vmlist = new ArrayList<>();
 
 			// submit vm list to the broker
 
@@ -99,7 +99,7 @@ public class TestExample {
 		// 1. We need to create a list to store
 		// our machine
 
-		List<NetworkHost> hostList = new ArrayList<NetworkHost>();
+		List<NetworkHost> hostList = new ArrayList<>();
 
 		// 2. A Machine contains one or more PEs or CPUs/Cores.
 		// In this example, it will have only one core.
@@ -121,7 +121,7 @@ public class TestExample {
 			// 2. A Machine contains one or more PEs or CPUs/Cores.
 			// In this example, it will have only one core.
 			// 3. Create PEs and add these into an object of PowerPeList.
-			List<Pe> peList = new ArrayList<Pe>();
+			List<Pe> peList = new ArrayList<>();
 			peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to
 			// store
 			// PowerPe
@@ -195,7 +195,7 @@ public class TestExample {
 		double costPerStorage = 0.001; // the cost of using storage in this
 		// resource
 		double costPerBw = 0.0; // the cost of using bw in this resource
-		LinkedList<Storage> storageList = new LinkedList<Storage>(); // we are
+		LinkedList<Storage> storageList = new LinkedList<>(); // we are
 		// not
 		// adding
 		// SAN
@@ -266,11 +266,11 @@ public class TestExample {
 				+ indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
-		for (int i = 0; i < size; i++) {
-			cloudlet = list.get(i);
+		for (Cloudlet value : list) {
+			cloudlet = value;
 			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS) {
+			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
 				Log.print("SUCCESS");
 				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
 						+ cloudlet.getVmId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
@@ -284,7 +284,7 @@ public class TestExample {
 	static void CreateNetwork(int numhost, NetworkDatacenter dc) {
 
 		// Edge Switch
-		EdgeSwitch edgeswitch[] = new EdgeSwitch[1];
+		EdgeSwitch[] edgeswitch = new EdgeSwitch[1];
 
 		for (int i = 0; i < 1; i++) {
 			edgeswitch[i] = new EdgeSwitch("Edge" + i, NetworkConstants.EDGE_LEVEL, dc);
@@ -301,11 +301,7 @@ public class TestExample {
 			edgeswitch[switchnum].hostlist.put(hs.getId(), hs1);
 			dc.HostToSwitchid.put(hs.getId(), edgeswitch[switchnum].getId());
 			hs1.sw = edgeswitch[switchnum];
-			List<NetworkHost> hslist = hs1.sw.fintimelistHost.get(0D);
-			if (hslist == null) {
-				hslist = new ArrayList<NetworkHost>();
-				hs1.sw.fintimelistHost.put(0D, hslist);
-			}
+			List<NetworkHost> hslist = hs1.sw.fintimelistHost.computeIfAbsent(0D, k -> new ArrayList<>());
 			hslist.add(hs1);
 
 		}

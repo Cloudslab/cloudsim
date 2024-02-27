@@ -53,7 +53,7 @@ public class PredicateFrom extends Predicate {
 	public boolean match(SimEvent ev) {
 		int src = ev.getSource();
                 /*
-                @todo Instead of using an array where each position stores
+                //TODO Instead of using an array where each position stores
                 the id of an entity (that requires a loop over the array, it would be 
                 used a HashSet (Set interface) to reduce the time
                 to match the event. 

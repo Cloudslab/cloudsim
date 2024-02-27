@@ -26,14 +26,13 @@ import org.cloudbus.cloudsim.lists.VmList;
  * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * Issue 13, Pages: 1397-1420, John Wiley &amp; Sons, Ltd, New York, USA, 2012</a>
  * </ul>
  * 
  * @author Anton Beloglazov
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
- * @todo It is a list, so it would be better inside the org.cloudbus.cloudsim.lists package.
  * This class in fact doesn't use a list or PowerVm, but a list of Vm.
  * The used methods are just of the Vm class, thus doesn't have
  * a reason to create another class. This classes don't either stores lists of VM,
@@ -41,6 +40,8 @@ import org.cloudbus.cloudsim.lists.VmList;
  * So, the method of this class would be moved to the VmList class
  * and the class erased.
  */
+ //TODO It is a list, so it would be better inside the org.cloudbus.cloudsim.lists package.
+
 public class PowerVmList extends VmList {
 
 	/**
@@ -49,14 +50,10 @@ public class PowerVmList extends VmList {
 	 * @param vmList the vm list to be sorted
 	 */
 	public static <T extends Vm> void sortByCpuUtilization(List<T> vmList) {
-		Collections.sort(vmList, new Comparator<T>() {
-
-			@Override
-			public int compare(T a, T b) throws ClassCastException {
-				Double aUtilization = a.getTotalUtilizationOfCpuMips(CloudSim.clock());
-				Double bUtilization = b.getTotalUtilizationOfCpuMips(CloudSim.clock());
-				return bUtilization.compareTo(aUtilization);
-			}
+		vmList.sort((a, b) -> {
+			Double aUtilization = a.getTotalUtilizationOfCpuMips(CloudSim.clock());
+			Double bUtilization = b.getTotalUtilizationOfCpuMips(CloudSim.clock());
+			return bUtilization.compareTo(aUtilization);
 		});
 	}
 

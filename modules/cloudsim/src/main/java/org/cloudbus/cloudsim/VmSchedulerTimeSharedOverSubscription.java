@@ -52,7 +52,7 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 
 		// if the requested mips is bigger than the capacity of a single PE, we cap
 		// the request to the PE's capacity
-		List<Double> mipsShareRequestedCapped = new ArrayList<Double>();
+		List<Double> mipsShareRequestedCapped = new ArrayList<>();
 		double peMips = getPeCapacity();
 		for (Double mips : mipsShareRequested) {
 			if (mips > peMips) {
@@ -73,7 +73,7 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 		}
 
 		if (getAvailableMips() >= totalRequestedMips) {
-			List<Double> mipsShareAllocated = new ArrayList<Double>();
+			List<Double> mipsShareAllocated = new ArrayList<>();
 			for (Double mipsRequested : mipsShareRequestedCapped) {
 				if (getVmsMigratingOut().contains(vmUid)) {
 					// performance degradation due to migration = 10% MIPS
@@ -103,13 +103,13 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 		// proportionally
 		double totalRequiredMipsByAllVms = 0;
 
-		Map<String, List<Double>> mipsMapCapped = new HashMap<String, List<Double>>();
+		Map<String, List<Double>> mipsMapCapped = new HashMap<>();
 		for (Entry<String, List<Double>> entry : getMipsMapRequested().entrySet()) {
 
 			double requiredMipsByThisVm = 0.0;
 			String vmId = entry.getKey();
 			List<Double> mipsShareRequested = entry.getValue();
-			List<Double> mipsShareRequestedCapped = new ArrayList<Double>();
+			List<Double> mipsShareRequestedCapped = new ArrayList<>();
 			double peMips = getPeCapacity();
 			for (Double mips : mipsShareRequested) {
 				if (mips > peMips) {
@@ -141,7 +141,7 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 			String vmUid = entry.getKey();
 			List<Double> requestedMips = entry.getValue();
 
-			List<Double> updatedMipsAllocation = new ArrayList<Double>();
+			List<Double> updatedMipsAllocation = new ArrayList<>();
 			for (Double mips : requestedMips) {
 				if (getVmsMigratingOut().contains(vmUid)) {
 					// the original amount is scaled

@@ -30,9 +30,9 @@ import org.cloudbus.cloudsim.core.SimEvent;
  * @see PredicateAny
  * @see PredicateNone
  * @see Simulation
- * @todo It would be an interface, since it doesn't have any attributes, just 
+ * //TODO It would be an interface, since it doesn't have any attributes, just
  * abstract methods.
- * @todo There already is a native java {@link java.util.function.Predicate} interface.
+ * //TODO There already is a native java {@link java.util.function.Predicate} interface.
  * Maybe it was introduced with Java 8 (due to Stream and Lambda functions).
  * 
  */

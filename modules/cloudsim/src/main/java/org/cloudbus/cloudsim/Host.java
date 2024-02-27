@@ -43,7 +43,7 @@ public class Host {
 	private VmScheduler vmScheduler;
 
 	/** The list of VMs assigned to the host. */
-	private final List<? extends Vm> vmList = new ArrayList<Vm>();
+	private final List<? extends Vm> vmList = new ArrayList<>();
 
 	/** The Processing Elements (PEs) of the host, that
          * represent the CPU cores of it, and thus, its processing capacity. */
@@ -53,7 +53,7 @@ public class Host {
 	private boolean failed;
 
 	/** The VMs migrating in. */
-	private final List<Vm> vmsMigratingIn = new ArrayList<Vm>();
+	private final List<Vm> vmsMigratingIn = new ArrayList<>();
 
 	/** The datacenter where the host is placed. */
 	private Datacenter datacenter;
@@ -93,7 +93,7 @@ public class Host {
 	 *         {@link Double#MAX_VALUE} if there is no future events expected in this host
 	 * @pre currentTime >= 0.0
 	 * @post $none
-         * @todo there is an inconsistency between the return value of this method
+         * //TODO there is an inconsistency between the return value of this method
          * and the individual call of {@link Vm#updateVmProcessing(double, java.util.List),
          * and consequently the {@link CloudletScheduler#updateVmProcessing(double, java.util.List)}.
          * The current method returns {@link Double#MAX_VALUE}  while the other ones

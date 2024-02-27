@@ -92,8 +92,8 @@ public class VmTest {
 
 	@Test
 	public void testGetHost() {
-		assertEquals(null, vm.getHost());
-		Host host = new Host(0, null, null, 0, new ArrayList<Pe>(), null);
+		assertNull(vm.getHost());
+		Host host = new Host(0, null, null, 0, new ArrayList<>(), null);
 		vm.setHost(host);
 		assertEquals(host, vm.getHost());
 	}
@@ -123,9 +123,9 @@ public class VmTest {
 	@Test
 	public void testUpdateVmProcessing() {
 		assertEquals(0, vm.updateVmProcessing(0, null), 0);
-		ArrayList<Double> mipsShare1 = new ArrayList<Double>();
+		ArrayList<Double> mipsShare1 = new ArrayList<>();
 		mipsShare1.add(1.0);
-		ArrayList<Double> mipsShare2 = new ArrayList<Double>();
+		ArrayList<Double> mipsShare2 = new ArrayList<>();
 		mipsShare2.add(1.0);
 		assertEquals(vmScheduler.updateVmProcessing(0, mipsShare1), vm.updateVmProcessing(0, mipsShare2), 0);
 	}
@@ -171,7 +171,7 @@ public class VmTest {
 		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
 		vm.setBeingInstantiated(false);
 
-		List<Double> expectedCurrentMips = new ArrayList<Double>();
+		List<Double> expectedCurrentMips = new ArrayList<>();
 		expectedCurrentMips.add(MIPS / 2);
 		expectedCurrentMips.add(MIPS / 2);
 
@@ -189,7 +189,7 @@ public class VmTest {
 		CloudletScheduler cloudletScheduler = createMock(CloudletScheduler.class);
 		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
 
-		ArrayList<Double> currentMips = new ArrayList<Double>();
+		ArrayList<Double> currentMips = new ArrayList<>();
 		currentMips.add(MIPS);
 		currentMips.add(MIPS);
 

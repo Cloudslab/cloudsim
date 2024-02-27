@@ -50,7 +50,7 @@ public class NetworkHost extends Host {
 	public List<NetworkPacket> packetrecieved;
 
         /**
-         * @todo the attribute is not being used 
+         * //TODO the attribute is not being used
          * and is redundant with the ram capacity defined in {@link Host#ramProvisioner}
          */
 	public double memory;
@@ -61,18 +61,18 @@ public class NetworkHost extends Host {
 	public Switch sw; 
 
         /**
-         * @todo What exactly is this bandwidth?
+         * //TODO What exactly is this bandwidth?
          * Because it is redundant with the bw capacity defined in {@link Host#bwProvisioner}
          */
 	public double bandwidth; 
 
 	/** Time when last job will finish on CPU1. 
-         * @todo it is not being used.
+         * //TODO it is not being used.
          **/
-	public List<Double> CPUfinTimeCPU = new ArrayList<Double>();
+	public List<Double> CPUfinTimeCPU = new ArrayList<>();
 
 	/** 
-         * @todo it is not being used.
+         * //TODO it is not being used.
          **/
 	public double fintime = 0;
 
@@ -85,9 +85,9 @@ public class NetworkHost extends Host {
 			VmScheduler vmScheduler) {
 		super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler);
 
-		packetrecieved = new ArrayList<NetworkPacket>();
-		packetTosendGlobal = new ArrayList<NetworkPacket>();
-		packetTosendLocal = new ArrayList<NetworkPacket>();
+		packetrecieved = new ArrayList<>();
+		packetTosendGlobal = new ArrayList<>();
+		packetTosendLocal = new ArrayList<>();
 
 	}
 
@@ -97,7 +97,7 @@ public class NetworkHost extends Host {
 		// insert in each vm packet recieved
 		recvpackets();
 		for (Vm vm : super.getVmList()) {
-			double time = ((NetworkVm) vm).updateVmProcessing(currentTime, getVmScheduler()
+			double time = vm.updateVmProcessing(currentTime, getVmScheduler()
 					.getAllocatedMipsForVm(vm));
 			if (time > 0.0 && time < smallerTime) {
 				smallerTime = time;
@@ -120,15 +120,8 @@ public class NetworkHost extends Host {
 			// insert the packet in recievedlist of VM
 			Vm vm = VmList.getById(getVmList(), hs.pkt.reciever);
 			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
-					.get(hs.pkt.sender);
+					.computeIfAbsent(hs.pkt.sender, k -> new ArrayList<>());
 
-			if (pktlist == null) {
-				pktlist = new ArrayList<HostPacket>();
-				((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv.put(
-						hs.pkt.sender,
-						pktlist);
-
-			}
 			pktlist.add(hs.pkt);
 
 		}
@@ -166,15 +159,9 @@ public class NetworkHost extends Host {
                     // insertthe packet in recievedlist
                     Vm vm = VmList.getById(getVmList(), hs.pkt.reciever);
 
-                    List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
-                                    .get(hs.pkt.sender);
-                    if (pktlist == null) {
-                            pktlist = new ArrayList<HostPacket>();
-                            ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv.put(
-                                            hs.pkt.sender,
-                                            pktlist);
-                    }
-                    pktlist.add(hs.pkt);
+			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
+					.computeIfAbsent(hs.pkt.sender, k -> new ArrayList<>());
+			pktlist.add(hs.pkt);
 		}
 		if (flag) {
                     for (Vm vm : super.getVmList()) {

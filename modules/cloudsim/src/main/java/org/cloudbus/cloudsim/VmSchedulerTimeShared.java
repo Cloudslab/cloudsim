@@ -46,22 +46,20 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	 */
 	public VmSchedulerTimeShared(List<? extends Pe> pelist) {
 		super(pelist);
-		setMipsMapRequested(new HashMap<String, List<Double>>());
+		setMipsMapRequested(new HashMap<>());
 	}
 
 	@Override
 	public boolean allocatePesForVm(Vm vm, List<Double> mipsShareRequested) {
 		/*
-		 * @todo add the same to RAM and BW provisioners
+		 * //TODO add the same to RAM and BW provisioners
 		 */
 		if (vm.isInMigration()) {
 			if (!getVmsMigratingIn().contains(vm.getUid()) && !getVmsMigratingOut().contains(vm.getUid())) {
 				getVmsMigratingOut().add(vm.getUid());
 			}
 		} else {
-			if (getVmsMigratingOut().contains(vm.getUid())) {
-				getVmsMigratingOut().remove(vm.getUid());
-			}
+			getVmsMigratingOut().remove(vm.getUid());
 		}
 		boolean result = allocatePesForVm(vm.getUid(), mipsShareRequested);
 		updatePeProvisioning();
@@ -99,7 +97,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 			totalRequestedMips *= 0.1;
 		}
 
-		List<Double> mipsShareAllocated = new ArrayList<Double>();
+		List<Double> mipsShareAllocated = new ArrayList<>();
 		for (Double mipsRequested : mipsShareRequested) {
 			if (getVmsMigratingOut().contains(vmUid)) {
 				// performance degradation due to migration = 10% MIPS
@@ -135,7 +133,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 		for (Map.Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
 			String vmUid = entry.getKey();
-			getPeMap().put(vmUid, new LinkedList<Pe>());
+			getPeMap().put(vmUid, new LinkedList<>());
 
 			for (double mips : entry.getValue()) {
 				while (mips >= 0.1) {

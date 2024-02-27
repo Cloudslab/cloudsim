@@ -20,7 +20,7 @@ import org.cloudbus.cloudsim.core.SimEvent;
  * @since CloudSim Toolkit 1.0
  * @see Predicate
  * @see Simulation
- * @todo If there is only one instance of this class, it should be defined as a Singleton.
+ * //TODO If there is only one instance of this class, it should be defined as a Singleton.
  * The same may apply for the other predicates.
  */
 public class PredicateAny extends Predicate {

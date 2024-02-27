@@ -29,11 +29,11 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author Saurabh Kumar Garg
  * @since CloudSim Toolkit 1.0
  * 
- * @todo If it is an application/cloudlet, it would extend the Cloudlet class.
+ * //TODO If it is an application/cloudlet, it would extend the Cloudlet class.
  * In the case of Cloudlet class has more attributes and methods than
  * required by this class, a common interface would be created.
  * 
- * @todo The attributes have to be defined as private.
+ * //TODO The attributes have to be defined as private.
  */
 public class AppCloudlet {
 
@@ -61,7 +61,7 @@ public class AppCloudlet {
 
         /**
          * Number of VMs the AppCloudlet can use.
-         * @todo the attribute would be renamed to numberOfVMs or something 
+         * //TODO the attribute would be renamed to numberOfVMs or something
          * like that.
          */
 	public int numbervm;
@@ -72,7 +72,7 @@ public class AppCloudlet {
 	public int userId;
 
         /**
-         * @todo It would be "execTime". This attribute is very strange.
+         * //TODO It would be "execTime". This attribute is very strange.
          * The the todo in the TestBagofTaskApp class.
          */
 	public double exeTime;
@@ -93,14 +93,14 @@ public class AppCloudlet {
 		this.deadline = deadline;
 		this.numbervm = numbervm;
 		this.userId = userId;
-		clist = new ArrayList<NetworkCloudlet>();
+		clist = new ArrayList<>();
 	}
 
 	/**
 	 * An example of creating APPcloudlet
 	 * 
 	 * @param vmIdList VMs where Cloudlet will be executed
-         * @todo This method is very strange too. It creates the internal cloudlet list
+         * //TODO This method is very strange too. It creates the internal cloudlet list
          * with cloudlets of hard-coded defined attributes, such as
          * fileSize, outputSize and length, what doesn't make sense.
          * If this class is to be an example, it should be 

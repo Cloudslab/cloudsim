@@ -32,7 +32,7 @@ public class CloudInformationService extends SimEntity {
 
 	/** A list containing the id of all entities that are registered at the 
          * Cloud Information Service (CIS). 
-         * @todo It is not clear if this list is a list of host id's or datacenter id's.
+         * //TODO It is not clear if this list is a list of host id's or datacenter id's.
          * The previous attribute documentation just said "For all types of hostList".
          * It can be seen at the method {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)}
          * that the list is updated when a CloudSimTags.REGISTER_RESOURCE event
@@ -58,15 +58,15 @@ public class CloudInformationService extends SimEntity {
 	 * @pre name != null
 	 * @post $none
          * 
-         * @todo The use of Exception is not recommended. Specific exceptions
+         * //TODO The use of Exception is not recommended. Specific exceptions
          * would be thrown (such as {@link IllegalArgumentException})
          * or {@link RuntimeException}
 	 */
 	public CloudInformationService(String name) throws Exception {
 		super(name);
-		resList = new LinkedList<Integer>();
-		arList = new LinkedList<Integer>();
-		gisList = new LinkedList<Integer>();
+		resList = new LinkedList<>();
+		arList = new LinkedList<>();
+		gisList = new LinkedList<>();
 	}
 
         /**
@@ -80,55 +80,50 @@ public class CloudInformationService extends SimEntity {
 	public void processEvent(SimEvent ev) {
 		int id = -1;  // requester id
 		switch (ev.getTag()) {
-		// storing regional CIS id
-			case CloudSimTags.REGISTER_REGIONAL_GIS:
-				gisList.add((Integer) ev.getData());
-				break;
+			// storing regional CIS id
+			case CloudSimTags.REGISTER_REGIONAL_GIS -> gisList.add((Integer) ev.getData());
+
 
 			// request for all regional CIS list
-			case CloudSimTags.REQUEST_REGIONAL_GIS:
+			case CloudSimTags.REQUEST_REGIONAL_GIS -> {
 
 				// Get ID of an entity that send this event
-				id = ((Integer) ev.getData()).intValue();
+				id = (Integer) ev.getData();
 
 				// Send the regional GIS list back to sender
 				super.send(id, 0L, ev.getTag(), gisList);
-				break;
+			}
 
 			// A resource is requesting to register.
-			case CloudSimTags.REGISTER_RESOURCE:
-				resList.add((Integer) ev.getData());
-				break;
+			case CloudSimTags.REGISTER_RESOURCE -> resList.add((Integer) ev.getData());
+
 
 			// A resource that can support Advance Reservation
-			case CloudSimTags.REGISTER_RESOURCE_AR:
+			case CloudSimTags.REGISTER_RESOURCE_AR -> {
 				resList.add((Integer) ev.getData());
 				arList.add((Integer) ev.getData());
-				break;
+			}
 
 			// A Broker is requesting for a list of all hostList.
-			case CloudSimTags.RESOURCE_LIST:
+			case CloudSimTags.RESOURCE_LIST -> {
 
 				// Get ID of an entity that send this event
-				id = ((Integer) ev.getData()).intValue();
+				id = (Integer) ev.getData();
 
 				// Send the resource list back to the sender
 				super.send(id, 0L, ev.getTag(), resList);
-				break;
+			}
 
 			// A Broker is requesting for a list of all hostList.
-			case CloudSimTags.RESOURCE_AR_LIST:
+			case CloudSimTags.RESOURCE_AR_LIST -> {
 
 				// Get ID of an entity that send this event
-				id = ((Integer) ev.getData()).intValue();
+				id = (Integer) ev.getData();
 
 				// Send the resource AR list back to the sender
 				super.send(id, 0L, ev.getTag(), arList);
-				break;
-
-			default:
-				processOtherEvent(ev);
-				break;
+			}
+			default -> processOtherEvent(ev);
 		}
 	}
 
@@ -187,11 +182,7 @@ public class CloudInformationService extends SimEntity {
 	 */
 	public boolean resourceSupportAR(int id) {
 		boolean flag = false;
-		if (id < 0) {
-			flag = false;
-		} else {
-			flag = checkResource(arList, id);
-		}
+		if (id >= 0) flag = checkResource(arList, id);
 
 		return flag;
 	}
@@ -206,11 +197,7 @@ public class CloudInformationService extends SimEntity {
 	 */
 	public boolean resourceExist(int id) {
 		boolean flag = false;
-		if (id < 0) {
-			flag = false;
-		} else {
-			flag = checkResource(resList, id);
-		}
+		if (id >= 0) flag = checkResource(resList, id);
 
 		return flag;
 	}
@@ -280,12 +267,11 @@ public class CloudInformationService extends SimEntity {
 		}
 
 		Integer obj = null;
-		Iterator<Integer> it = list.iterator();
 
 		// a loop to find the match the resource id in a list
-		while (it.hasNext()) {
-			obj = it.next();
-			if (obj.intValue() == id) {
+		for (Integer integer : list) {
+			obj = integer;
+			if (obj == id) {
 				flag = true;
 				break;
 			}
@@ -332,7 +318,7 @@ public class CloudInformationService extends SimEntity {
 		// Send END_OF_SIMULATION event to all entities in the list
 		while (it.hasNext()) {
 			obj = it.next();
-			id = obj.intValue();
+			id = obj;
 			super.send(id, 0L, CloudSimTags.END_OF_SIMULATION);
 		}
 	}

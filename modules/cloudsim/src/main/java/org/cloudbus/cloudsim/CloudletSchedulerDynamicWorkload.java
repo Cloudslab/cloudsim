@@ -25,14 +25,14 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 2.0
- * @todo The name of the class doesn't represent its goal. A clearer name would be
  * CloudletSchedulerSingleService as its Test Suite
  */
+//TODO The name of the class doesn't represent its goal. A clearer name would be
 public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShared {
 
 	/** The individual MIPS capacity of each PE allocated to the VM using the scheduler,
          * considering that all PEs have the same capacity. 
-         * @todo Despite of the class considers that all PEs have the same capacity,
+         * //TODO Despite of the class considers that all PEs have the same capacity,
          * it accepts a list of PEs with different MIPS at the method 
          * {@link #updateVmProcessing(double, java.util.List) }
          */
@@ -66,13 +66,13 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 		super();
 		setMips(mips);
 		setNumberOfPes(numberOfPes);
-                /*@todo There shouldn't be a setter to total mips, considering
+                /*//TODO There shouldn't be a setter to total mips, considering
                 that it is computed from number of PEs and mips.
                 If the number of pes of mips is set any time after here,
                 the total mips will be wrong. Just the getTotalMips is enough,
                 and it have to compute there the total, instead of storing into an attribute.*/
 		setTotalMips(getNumberOfPes() * getMips());
-		setUnderAllocatedMips(new HashMap<String, Double>());
+		setUnderAllocatedMips(new HashMap<>());
 		setCachePreviousTime(-1);
 	}
 
@@ -82,7 +82,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 
 		double timeSpan = currentTime - getPreviousTime();
 		double nextEvent = Double.MAX_VALUE;
-		List<ResCloudlet> cloudletsToFinish = new ArrayList<ResCloudlet>();
+		List<ResCloudlet> cloudletsToFinish = new ArrayList<>();
 
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			rcl.updateCloudletFinishedSoFar((long) (timeSpan
@@ -90,7 +90,6 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 
 			if (rcl.getRemainingCloudletLength() == 0) { // finished: remove from the list
 				cloudletsToFinish.add(rcl);
-				continue;
 			} else { // not finish: estimate the finish time
 				double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
 				if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
@@ -155,7 +154,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 		if (getCachePreviousTime() == getPreviousTime()) {
 			return getCacheCurrentRequestedMips();
 		}
-		List<Double> currentMips = new ArrayList<Double>();
+		List<Double> currentMips = new ArrayList<>();
 		double totalMips = getTotalUtilizationOfCpu(getPreviousTime()) * getTotalMips();
 		double mipsForPe = totalMips / getNumberOfPes();
 
@@ -194,10 +193,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
 		double totalCurrentRequestedMips = getTotalCurrentRequestedMipsForCloudlet(rcl, time);
 		double totalCurrentAvailableMips = getTotalCurrentAvailableMipsForCloudlet(rcl, getCurrentMipsShare());
-		if (totalCurrentRequestedMips > totalCurrentAvailableMips) {
-			return totalCurrentAvailableMips;
-		}
-		return totalCurrentRequestedMips;
+		return Math.min(totalCurrentRequestedMips, totalCurrentAvailableMips);
 	}
 
 	/**
@@ -205,7 +201,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * 
 	 * @param rcl the rgl
 	 * @param mips the mips
-         * @todo It is not clear the goal of this method. The related test case
+         * //TODO It is not clear the goal of this method. The related test case
          * doesn't make it clear too. The method doesn't appear to be used anywhere.
 	 */
 	public void updateUnderAllocatedMipsForCloudlet(ResCloudlet rcl, double mips) {

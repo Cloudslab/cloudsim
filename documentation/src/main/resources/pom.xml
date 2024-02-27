@@ -37,14 +37,14 @@ Acknowledgement:
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.cloudbus.cloudsim</groupId>
 	<artifactId>cloudsim-toolkit</artifactId>
-	<version>4.0</version>
+	<version>5.1</version>
 	<packaging>bundle</packaging>
 	<name>cloudsim-toolkit</name>
 	<description>CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services</description>
 	<url>http://www.cloudbus.org/cloudsim/</url>
 
 	<properties>
-		<jdk.version>1.6</jdk.version>
+		<jdk.version>11</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<felix-version>2.0.1</felix-version>
 	</properties>
@@ -66,7 +66,7 @@ Acknowledgement:
 			<plugins>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
+					<version>3.8.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -89,8 +89,8 @@ Acknowledgement:
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>11</source>
+					<target>11</target>
 					<debug>true</debug>
 				</configuration>
 			</plugin>

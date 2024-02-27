@@ -86,21 +86,21 @@ public class DatacenterBroker extends SimEntity {
 	public DatacenterBroker(String name) throws Exception {
 		super(name);
 
-		setVmList(new ArrayList<Vm>());
-		setVmsCreatedList(new ArrayList<Vm>());
-		setCloudletList(new ArrayList<Cloudlet>());
-		setCloudletSubmittedList(new ArrayList<Cloudlet>());
-		setCloudletReceivedList(new ArrayList<Cloudlet>());
+		setVmList(new ArrayList<>());
+		setVmsCreatedList(new ArrayList<>());
+		setCloudletList(new ArrayList<>());
+		setCloudletSubmittedList(new ArrayList<>());
+		setCloudletReceivedList(new ArrayList<>());
 
 		cloudletsSubmitted = 0;
 		setVmsRequested(0);
 		setVmsAcks(0);
 		setVmsDestroyed(0);
 
-		setDatacenterIdsList(new LinkedList<Integer>());
-		setDatacenterRequestedIdsList(new ArrayList<Integer>());
-		setVmsToDatacentersMap(new HashMap<Integer, Integer>());
-		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
+		setDatacenterIdsList(new LinkedList<>());
+		setDatacenterRequestedIdsList(new ArrayList<>());
+		setVmsToDatacentersMap(new HashMap<>());
+		setDatacenterCharacteristicsList(new HashMap<>());
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class DatacenterBroker extends SimEntity {
 	 * @pre list !=null
 	 * @post $none
          * 
-         * @todo The name of the method is confused with the {@link #submitCloudlets()},
+         * //TODO The name of the method is confused with the {@link #submitCloudlets()},
          * that in fact submit cloudlets to VMs. The term "submit" is being used
          * ambiguously. The method {@link #submitCloudlets()} would be named "sendCloudletsToVMs"
          * 
@@ -149,30 +149,23 @@ public class DatacenterBroker extends SimEntity {
 	@Override
 	public void processEvent(SimEvent ev) {
 		switch (ev.getTag()) {
-		// Resource characteristics request
-			case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST:
-				processResourceCharacteristicsRequest(ev);
-				break;
+			// Resource characteristics request
+			case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST -> processResourceCharacteristicsRequest(ev);
+
 			// Resource characteristics answer
-			case CloudSimTags.RESOURCE_CHARACTERISTICS:
-				processResourceCharacteristics(ev);
-				break;
+			case CloudSimTags.RESOURCE_CHARACTERISTICS -> processResourceCharacteristics(ev);
+
 			// VM Creation answer
-			case CloudSimTags.VM_CREATE_ACK:
-				processVmCreate(ev);
-				break;
+			case CloudSimTags.VM_CREATE_ACK -> processVmCreate(ev);
+
 			// A finished cloudlet returned
-			case CloudSimTags.CLOUDLET_RETURN:
-				processCloudletReturn(ev);
-				break;
+			case CloudSimTags.CLOUDLET_RETURN -> processCloudletReturn(ev);
+
 			// if the simulation finishes
-			case CloudSimTags.END_OF_SIMULATION:
-				shutdownEntity();
-				break;
+			case CloudSimTags.END_OF_SIMULATION -> shutdownEntity();
+
 			// other unknown tags are processed by this method
-			default:
-				processOtherEvent(ev);
-				break;
+			default -> processOtherEvent(ev);
 		}
 	}
 
@@ -188,7 +181,7 @@ public class DatacenterBroker extends SimEntity {
 		getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
 
 		if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
-			setDatacenterRequestedIdsList(new ArrayList<Integer>());
+			setDatacenterRequestedIdsList(new ArrayList<>());
 			createVmsInDatacenter(getDatacenterIdsList().get(0));
 		}
 	}
@@ -202,7 +195,7 @@ public class DatacenterBroker extends SimEntity {
 	 */
 	protected void processResourceCharacteristicsRequest(SimEvent ev) {
 		setDatacenterIdsList(CloudSim.getCloudResourceList());
-		setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
+		setDatacenterCharacteristicsList(new HashMap<>());
 
 		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloud Resource List received with ",
 				getDatacenterIdsList().size(), " resource(s)");
@@ -301,7 +294,7 @@ public class DatacenterBroker extends SimEntity {
 	 * @param ev a SimEvent object
 	 * @pre ev != null
 	 * @post $none
-         * @todo to ensure the method will be overridden, it should be defined 
+         * //TODO to ensure the method will be overridden, it should be defined
          * as abstract in a super class from where new brokers have to be extended.
 	 */
 	protected void processOtherEvent(SimEvent ev) {
@@ -349,7 +342,7 @@ public class DatacenterBroker extends SimEntity {
 	 */
 	protected void submitCloudlets() {
 		int vmIndex = 0;
-		List<Cloudlet> successfullySubmitted = new ArrayList<Cloudlet>();
+		List<Cloudlet> successfullySubmitted = new ArrayList<>();
 		for (Cloudlet cloudlet : getCloudletList()) {
 			Vm vm;
 			// if user didn't bind this cloudlet and it has not been executed yet

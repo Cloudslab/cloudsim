@@ -150,7 +150,7 @@ public abstract class RunnerAbs {
                 folder5.mkdir();
             }
 
-            File file = new File(outputFolder + "/log/" + getExperimentName().substring(0, index) + "/" + this.getExperimentName(new String[]{hostSelectionPolicy, vmAllocationPolicy, vmSelectionPolicy, containerSelectionPolicy, String.valueOf(getOverBookingFactor()), getRunTime()}) + ".txt");
+            File file = new File(outputFolder + "/log/" + getExperimentName().substring(0, index) + "/" + this.getExperimentName(hostSelectionPolicy, vmAllocationPolicy, vmSelectionPolicy, containerSelectionPolicy, String.valueOf(getOverBookingFactor()), getRunTime()) + ".txt");
             file.createNewFile();
             Log.setOutput(new FileOutputStream(file));
         }
@@ -181,10 +181,9 @@ public abstract class RunnerAbs {
             broker.submitVmList(vmList);
             broker.submitContainerList(containerList);
             broker.submitCloudletList(cloudletList.subList(0, containerList.size()));
-            ;
             CloudSim.terminateSimulation(86400.0D);
             double lastClock = CloudSim.startSimulation();
-            List newList = broker.getCloudletReceivedList();
+            List<ContainerCloudlet> newList = broker.getCloudletReceivedList();
             Log.printLine("Received " + newList.size() + " cloudlets");
             CloudSim.stopSimulation();
 
@@ -390,7 +389,7 @@ public abstract class RunnerAbs {
     }
 
     public void setEnableOutput(boolean enableOutput) {
-        this.enableOutput = enableOutput;
+        RunnerAbs.enableOutput = enableOutput;
     }
 
     public boolean isEnableOutput() {

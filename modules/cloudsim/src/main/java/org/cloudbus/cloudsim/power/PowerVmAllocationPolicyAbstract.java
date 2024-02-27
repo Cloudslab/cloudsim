@@ -28,7 +28,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * Issue 13, Pages: 1397-1420, John Wiley &amp; Sons, Ltd, New York, USA, 2012</a>
  * </ul>
  * 
  * @author Anton Beloglazov
@@ -38,7 +38,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	/** The map map where each key is a VM id and
          * each value is the host where the VM is placed. */
-	private final Map<String, Host> vmTable = new HashMap<String, Host>();
+	private final Map<String, Host> vmTable = new HashMap<>();
 
 	/**
 	 * Instantiates a new PowerVmAllocationPolicyAbstract.

@@ -39,7 +39,7 @@ public abstract class VmScheduler {
          * The PEs where the MIPS capacity is get are defined
          * in the {@link #peMap}.
          * 
-         * @todo subclasses such as {@link VmSchedulerTimeShared} have an 
+         * //TODO subclasses such as {@link VmSchedulerTimeShared} have an
          * {@link VmSchedulerTimeShared#mipsMapRequested} attribute that
          * may be confused with this one. So, the name of this one
          * may be changed to something such as allocatedMipsMap
@@ -64,11 +64,11 @@ public abstract class VmScheduler {
 	 */
 	public VmScheduler(List<? extends Pe> pelist) {
 		setPeList(pelist);
-		setPeMap(new HashMap<String, List<Pe>>());
-		setMipsMap(new HashMap<String, List<Double>>());
+		setPeMap(new HashMap<>());
+		setMipsMap(new HashMap<>());
 		setAvailableMips(PeList.getTotalMips(getPeList()));
-		setVmsMigratingIn(new ArrayList<String>());
-		setVmsMigratingOut(new ArrayList<String>());
+		setVmsMigratingIn(new ArrayList<>());
+		setVmsMigratingOut(new ArrayList<>());
 	}
 
 	/**
@@ -172,7 +172,7 @@ public abstract class VmScheduler {
 	 * Returns PE capacity in MIPS.
 	 * 
 	 * @return mips
-         * @todo It considers that all PEs have the same capacity,
+         * //TODO It considers that all PEs have the same capacity,
          * what has been shown doesn't be assured. The peList
          * received by the VmScheduler can be heterogeneous PEs.
 	 */
@@ -189,7 +189,7 @@ public abstract class VmScheduler {
 	 * 
 	 * @param <T> the generic type
 	 * @return the pe list
-         * @todo The warning have to be checked 
+         * //TODO The warning have to be checked
          * 
 	 */
 	@SuppressWarnings("unchecked")

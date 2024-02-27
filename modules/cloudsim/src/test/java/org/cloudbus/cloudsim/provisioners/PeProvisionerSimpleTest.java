@@ -88,7 +88,7 @@ public class PeProvisionerSimpleTest {
 		assertEquals(MIPS / 2, peProvisioner.getTotalAllocatedMips(), 0);
 		assertEquals(0.5, peProvisioner.getUtilization(), 0);
 
-		ArrayList<Double> mipsArray = new ArrayList<Double>();
+		ArrayList<Double> mipsArray = new ArrayList<>();
 		mipsArray.add(MIPS / 2.0);
 		mipsArray.add(MIPS / 2.0);
 
@@ -108,17 +108,17 @@ public class PeProvisionerSimpleTest {
 		assertEquals(0, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm1, 0), 0);
 
 		assertTrue(peProvisioner.allocateMipsForVm(vm1, MIPS / 2));
-		ArrayList<Double> allocatedMips1 = new ArrayList<Double>();
+		ArrayList<Double> allocatedMips1 = new ArrayList<>();
 		allocatedMips1.add(MIPS / 2);
-		assertTrue(allocatedMips1.equals(peProvisioner.getAllocatedMipsForVm(vm1)));
+		assertEquals(allocatedMips1, peProvisioner.getAllocatedMipsForVm(vm1));
 		assertEquals(MIPS / 2, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm1, 0), 0);
 		assertEquals(0, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm1, 1), 0);
 		assertEquals(MIPS / 2, peProvisioner.getTotalAllocatedMipsForVm(vm1), 0);
 
 		assertTrue(peProvisioner.allocateMipsForVm(vm2, MIPS / 4));
-		ArrayList<Double> allocatedMips2 = new ArrayList<Double>();
+		ArrayList<Double> allocatedMips2 = new ArrayList<>();
 		allocatedMips2.add(MIPS / 4);
-		assertTrue(allocatedMips2.equals(peProvisioner.getAllocatedMipsForVm(vm2)));
+		assertEquals(allocatedMips2, peProvisioner.getAllocatedMipsForVm(vm2));
 		assertEquals(MIPS / 4, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm2, 0), 0);
 		assertEquals(MIPS / 4, peProvisioner.getTotalAllocatedMipsForVm(vm2), 0);
 
@@ -126,29 +126,29 @@ public class PeProvisionerSimpleTest {
 		peProvisioner.deallocateMipsForVm(vm2);
 
 		assertTrue(peProvisioner.allocateMipsForVm(vm3, MIPS / 4));
-		ArrayList<Double> allocatedMips3 = new ArrayList<Double>();
+		ArrayList<Double> allocatedMips3 = new ArrayList<>();
 		allocatedMips3.add(MIPS / 4);
-		assertTrue(allocatedMips3.equals(peProvisioner.getAllocatedMipsForVm(vm3)));
+		assertEquals(allocatedMips3, peProvisioner.getAllocatedMipsForVm(vm3));
 		assertEquals(MIPS / 4, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm3, 0), 0);
 		assertEquals(MIPS / 4, peProvisioner.getTotalAllocatedMipsForVm(vm3), 0);
 
 		assertTrue(peProvisioner.allocateMipsForVm(vm3, MIPS / 4));
 		allocatedMips3.add(MIPS / 4);
-		assertTrue(allocatedMips3.equals(peProvisioner.getAllocatedMipsForVm(vm3)));
+		assertEquals(allocatedMips3, peProvisioner.getAllocatedMipsForVm(vm3));
 		assertEquals(MIPS / 4, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm3, 0), 0);
 		assertEquals(MIPS / 4, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm3, 1), 0);
 		assertEquals(MIPS / 2, peProvisioner.getTotalAllocatedMipsForVm(vm3), 0);
 
-		ArrayList<Double> allocatedMips4 = new ArrayList<Double>();
+		ArrayList<Double> allocatedMips4 = new ArrayList<>();
 		allocatedMips4.add(MIPS / 2.0);
 		allocatedMips4.add(MIPS);
 		assertFalse(peProvisioner.allocateMipsForVm(vm3, allocatedMips4));
 
-		ArrayList<Double> allocatedMips5 = new ArrayList<Double>();
+		ArrayList<Double> allocatedMips5 = new ArrayList<>();
 		allocatedMips5.add(MIPS / 2.0);
 		allocatedMips5.add(MIPS / 2.0);
 		assertTrue(peProvisioner.allocateMipsForVm(vm3, allocatedMips5));
-		assertTrue(allocatedMips5.equals(peProvisioner.getAllocatedMipsForVm(vm3)));
+		assertEquals(allocatedMips5, peProvisioner.getAllocatedMipsForVm(vm3));
 		assertEquals(MIPS / 2, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm3, 0), 0);
 		assertEquals(MIPS / 2, peProvisioner.getAllocatedMipsForVmByVirtualPeId(vm3, 1), 0);
 		assertEquals(MIPS, peProvisioner.getTotalAllocatedMipsForVm(vm3), 0);

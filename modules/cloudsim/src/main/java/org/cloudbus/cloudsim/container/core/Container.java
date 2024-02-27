@@ -1,5 +1,9 @@
 package org.cloudbus.cloudsim.container.core;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.container.schedulers.ContainerCloudletScheduler;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.util.MathUtil;
@@ -16,97 +20,124 @@ public class Container {
     /**
      * The id.
      */
-    private int id;
+    @Setter(AccessLevel.PROTECTED) @Getter private int id;
 
     /**
      * The user id.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter
     private int userId;
 
     /**
      * The uid.
      */
-    private String uid;
+    @Getter @Setter private String uid;
 
     /**
      * The size.
      */
+    @Getter
+    @Setter
     private long size;
 
     /**
      * The MIPS.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter
     private double mips;
 
     /**
      * The workloadMips.
      */
+    @Setter
+    @Getter
     private double workloadMips;
 
     /**
      * The number of PEs.
      */
-    private int numberOfPes;
+    @Getter @Setter private int numberOfPes;
 
     /**
      * The ram.
      */
-    private float ram;
+    @Getter @Setter private float ram;
 
     /**
      * The bw.
      */
+    @Getter
+    @Setter
     private long bw;
 
     /**
      * The containerManager.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter
     private String containerManager;
 
     /**
      * The ContainerCloudlet scheduler.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter
     private ContainerCloudletScheduler containerCloudletScheduler;
 
     /**
      * The ContainerVm.
      */
+    @Getter
+    @Setter
     private ContainerVm vm;
 
     /**
      * In migration flag.
      */
+    @Setter
+    @Getter
     private boolean inMigration;
 
     /**
      * The current allocated size.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter
     private long currentAllocatedSize;
 
     /**
      * The current allocated ram.
      */
+    @Setter
+    @Getter
     private float currentAllocatedRam;
 
     /**
      * The current allocated bw.
      */
+    @Setter
+    @Getter
     private long currentAllocatedBw;
 
     /**
      * The current allocated mips.
      */
+    @Setter
     private List<Double> currentAllocatedMips;
 
     /**
      * The VM is being instantiated.
      */
+    @Getter
     private boolean beingInstantiated;
 
     /**
      * The mips allocation history.
      */
-    private final List<VmStateHistoryEntry> stateHistory = new LinkedList<VmStateHistoryEntry>();
+    @Getter
+    private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
 
 //    added from the power Vm
     /**
@@ -117,16 +148,21 @@ public class Container {
     /**
      * The utilization history.
      */
-    private final List<Double> utilizationHistory = new LinkedList<Double>();
+    @Getter(AccessLevel.PROTECTED)
+    private final List<Double> utilizationHistory = new LinkedList<>();
 
     /**
      * The previous time.
      */
+    @Setter
+    @Getter
     private double previousTime;
 
     /**
      * The scheduling interval.
      */
+    @Setter(AccessLevel.PROTECTED)
+    @Getter
     private double schedulingInterval;
 
 
@@ -197,11 +233,7 @@ public class Container {
      * @return the current requested total mips
      */
     public double getCurrentRequestedTotalMips() {
-        double totalRequestedMips = 0;
-        for (double mips : getCurrentRequestedMips()) {
-            totalRequestedMips += mips;
-        }
-        return totalRequestedMips;
+        return getCurrentRequestedMips().stream().mapToDouble(mips -> mips).sum();
     }
 
     /**
@@ -210,13 +242,7 @@ public class Container {
      * @return the current requested max mips
      */
     public double getCurrentRequestedMaxMips() {
-        double maxMips = 0;
-        for (double mips : getCurrentRequestedMips()) {
-            if (mips > maxMips) {
-                maxMips = mips;
-            }
-        }
-        return maxMips;
+        return getCurrentRequestedMips().stream().mapToDouble(mips -> mips).filter(mips -> mips >= 0).max().orElse(0);
     }
 
     /**
@@ -265,23 +291,6 @@ public class Container {
         return getTotalUtilizationOfCpu(time) * getMips();
     }
 
-    /**
-     * Sets the uid.
-     *
-     * @param uid the new uid
-     */
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    /**
-     * Get unique string identificator of the container.
-     *
-     * @return string uid
-     */
-    public String getUid() {
-        return uid;
-    }
 
     /**
      * Generate unique string identificator of the container.
@@ -295,62 +304,6 @@ public class Container {
     }
 
     /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
-    protected void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Sets the user id.
-     *
-     * @param userId the new user id
-     */
-    protected void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * Gets the ID of the owner of the container.
-     *
-     * @return container's owner ID
-     * @pre $none
-     * @post $none
-     */
-    public int getUserId() {
-        return userId;
-    }
-
-    /**
-     * Gets the mips.
-     *
-     * @return the mips
-     */
-    public double getMips() {
-        return mips;
-    }
-
-    /**
-     * Sets the mips.
-     *
-     * @param mips the new mips
-     */
-    protected void setMips(double mips) {
-        this.mips = mips;
-    }
-
-    /**
      * Sets the mips.
      *
      * @param mips the new mips
@@ -359,219 +312,6 @@ public class Container {
         this.mips = mips;
     }
 
-    /**
-     * Gets the number of pes.
-     *
-     * @return the number of pes
-     */
-    public int getNumberOfPes() {
-        return numberOfPes;
-    }
-
-    /**
-     * Sets the number of pes.
-     *
-     * @param numberOfPes the new number of pes
-     */
-    protected void setNumberOfPes(int numberOfPes) {
-        this.numberOfPes = numberOfPes;
-    }
-
-    /**
-     * Gets the amount of ram.
-     *
-     * @return amount of ram
-     * @pre $none
-     * @post $none
-     */
-    public float getRam() {
-        return ram;
-    }
-
-    /**
-     * Sets the amount of ram.
-     *
-     * @param ram new amount of ram
-     * @pre ram > 0
-     * @post $none
-     */
-    public void setRam(int ram) {
-        this.ram = ram;
-    }
-
-    /**
-     * Gets the amount of bandwidth.
-     *
-     * @return amount of bandwidth
-     * @pre $none
-     * @post $none
-     */
-    public long getBw() {
-        return bw;
-    }
-
-    /**
-     * Sets the amount of bandwidth.
-     *
-     * @param bw new amount of bandwidth
-     * @pre bw > 0
-     * @post $none
-     */
-    public void setBw(long bw) {
-        this.bw = bw;
-    }
-
-    /**
-     * Gets the amount of storage.
-     *
-     * @return amount of storage
-     * @pre $none
-     * @post $none
-     */
-    public long getSize() {
-        return size;
-    }
-
-    /**
-     * Sets the amount of storage.
-     *
-     * @param size new amount of storage
-     * @pre size > 0
-     * @post $none
-     */
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    /**
-     * Gets the VMM.
-     *
-     * @return VMM
-     * @pre $none
-     * @post $none
-     */
-    public String getContainerManager() {
-        return containerManager;
-    }
-
-    /**
-     * Sets the VMM.
-     *
-     * @param containerManager the new containerManager
-     */
-    protected void setContainerManager(String containerManager) {
-        this.containerManager = containerManager;
-    }
-
-    /**
-     * Gets the vm.
-     *
-     * @return the vm
-     */
-    public ContainerVm getVm() {
-        return vm;
-    }
-
-    /**
-     * Gets the containerCloudletScheduler.
-     *
-     * @return the containerCloudletScheduler
-     */
-    public ContainerCloudletScheduler getContainerCloudletScheduler() {
-        return containerCloudletScheduler;
-    }
-
-    /**
-     * Sets the VM that runs this container.
-     *
-     * @param vm VM running the container
-     * @pre vm != $null
-     * @post $none
-     */
-    public void setVm(ContainerVm vm) {
-        this.vm = vm;
-    }
-
-    /**
-     * Sets the Container Cloudlet Scheduler.
-     *
-     * @param containerCloudletScheduler the new Container Cloudlet Scheduler
-     */
-    protected void setContainerCloudletScheduler(ContainerCloudletScheduler containerCloudletScheduler) {
-        this.containerCloudletScheduler = containerCloudletScheduler;
-    }
-
-    /**
-     * Checks if is in migration.
-     *
-     * @return true, if is in migration
-     */
-    public boolean isInMigration() {
-        return inMigration;
-    }
-
-    /**
-     * Sets the in migration.
-     *
-     * @param inMigration the new in migration
-     */
-    public void setInMigration(boolean inMigration) {
-        this.inMigration = inMigration;
-    }
-
-    /**
-     * Gets the current allocated size.
-     *
-     * @return the current allocated size
-     */
-    public long getCurrentAllocatedSize() {
-        return currentAllocatedSize;
-    }
-
-    /**
-     * Sets the current allocated size.
-     *
-     * @param currentAllocatedSize the new current allocated size
-     */
-    protected void setCurrentAllocatedSize(long currentAllocatedSize) {
-        this.currentAllocatedSize = currentAllocatedSize;
-    }
-
-    /**
-     * Gets the current allocated ram.
-     *
-     * @return the current allocated ram
-     */
-    public float getCurrentAllocatedRam() {
-        return currentAllocatedRam;
-    }
-
-    /**
-     * Sets the current allocated ram.
-     *
-     * @param currentAllocatedRam the new current allocated ram
-     */
-    public void setCurrentAllocatedRam(float currentAllocatedRam) {
-        this.currentAllocatedRam = currentAllocatedRam;
-    }
-
-    /**
-     * Gets the current allocated bw.
-     *
-     * @return the current allocated bw
-     */
-    public long getCurrentAllocatedBw() {
-        return currentAllocatedBw;
-    }
-
-    /**
-     * Sets the current allocated bw.
-     *
-     * @param currentAllocatedBw the new current allocated bw
-     */
-    public void setCurrentAllocatedBw(long currentAllocatedBw) {
-        this.currentAllocatedBw = currentAllocatedBw;
-    }
 
     /**
      * Gets the current allocated mips.
@@ -583,39 +323,12 @@ public class Container {
     }
 
     /**
-     * Sets the current allocated mips.
-     *
-     * @param currentAllocatedMips the new current allocated mips
-     */
-    public void setCurrentAllocatedMips(List<Double> currentAllocatedMips) {
-        this.currentAllocatedMips = currentAllocatedMips;
-    }
-
-    /**
-     * Checks if is being instantiated.
-     *
-     * @return true, if is being instantiated
-     */
-    public boolean isBeingInstantiated() {
-        return beingInstantiated;
-    }
-
-    /**
      * Sets the being instantiated.
      *
      * @param beingInstantiated the new being instantiated
      */
     public void setBeingInstantiated(boolean beingInstantiated) {
         this.beingInstantiated = beingInstantiated;
-    }
-
-    /**
-     * Gets the state history.
-     *
-     * @return the state history
-     */
-    public List<VmStateHistoryEntry> getStateHistory() {
-        return stateHistory;
     }
 
     /**
@@ -655,10 +368,7 @@ public class Container {
     public double getUtilizationMad() {
         double mad = 0;
         if (!getUtilizationHistory().isEmpty()) {
-            int n = HISTORY_LENGTH;
-            if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-                n = getUtilizationHistory().size();
-            }
+            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
             double median = MathUtil.median(getUtilizationHistory());
             double[] deviationSum = new double[n];
             for (int i = 0; i < n; i++) {
@@ -677,10 +387,7 @@ public class Container {
     public double getUtilizationMean() {
         double mean = 0;
         if (!getUtilizationHistory().isEmpty()) {
-            int n = HISTORY_LENGTH;
-            if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-                n = getUtilizationHistory().size();
-            }
+            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
             for (int i = 0; i < n; i++) {
                 mean += getUtilizationHistory().get(i);
             }
@@ -698,10 +405,7 @@ public class Container {
         double mean = getUtilizationMean();
         double variance = 0;
         if (!getUtilizationHistory().isEmpty()) {
-            int n = HISTORY_LENGTH;
-            if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-                n = getUtilizationHistory().size();
-            }
+            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
             for (int i = 0; i < n; i++) {
                 double tmp = getUtilizationHistory().get(i) * getMips() - mean;
                 variance += tmp * tmp;
@@ -724,54 +428,7 @@ public class Container {
     }
 
 
-    /**
-     * Gets the utilization history.
-     *
-     * @return the utilization history
-     */
-    protected List<Double> getUtilizationHistory() {
-        return utilizationHistory;
-    }
-
-    /**
-     * Gets the previous time.
-     *
-     * @return the previous time
-     */
-    public double getPreviousTime() {
-        return previousTime;
-    }
-
-    /**
-     * Sets the previous time.
-     *
-     * @param previousTime the new previous time
-     */
-    public void setPreviousTime(final double previousTime) {
-        this.previousTime = previousTime;
-    }
-
-    /**
-     * Gets the scheduling interval.
-     *
-     * @return the schedulingInterval
-     */
-    public double getSchedulingInterval() {
-        return schedulingInterval;
-    }
-
-    /**
-     * Sets the scheduling interval.
-     *
-     * @param schedulingInterval the schedulingInterval to set
-     */
-
-
-    protected void setSchedulingInterval(double schedulingInterval) {
-        this.schedulingInterval = schedulingInterval;
-    }
-
-//
+    //
 
     public List<Double> getCurrentRequestedMips() {
         if (isBeingInstantiated()) {
@@ -787,14 +444,6 @@ public class Container {
 
 
         return getContainerCloudletScheduler().getCurrentRequestedMips();
-    }
-
-    public double getWorkloadMips() {
-        return workloadMips;
-    }
-
-    public void setWorkloadMips(double workloadMips) {
-        this.workloadMips = workloadMips;
     }
 
     /**

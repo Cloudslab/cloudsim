@@ -20,7 +20,7 @@ public class ContainerVmRamProvisionerSimple extends ContainerVmRamProvisioner {
      */
     public ContainerVmRamProvisionerSimple(int availableRam) {
         super(availableRam);
-        setContainerVmRamTable(new HashMap<String, Float>());
+        setContainerVmRamTable(new HashMap<>());
     }
 
     @Override

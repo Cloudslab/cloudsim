@@ -47,14 +47,14 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 	public VmAllocationPolicySimple(List<? extends Host> list) {
 		super(list);
 
-		setFreePes(new ArrayList<Integer>());
+		setFreePes(new ArrayList<>());
 		for (Host host : getHostList()) {
 			getFreePes().add(host.getNumberOfPes());
 
 		}
 
-		setVmTable(new HashMap<String, Host>());
-		setUsedPes(new HashMap<String, Integer>());
+		setVmTable(new HashMap<>());
+		setUsedPes(new HashMap<>());
 	}
 
 	/**
@@ -70,10 +70,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		int requiredPes = vm.getNumberOfPes();
 		boolean result = false;
 		int tries = 0;
-		List<Integer> freePesTmp = new ArrayList<Integer>();
-		for (Integer freePes : getFreePes()) {
-			freePesTmp.add(freePes);
-		}
+		List<Integer> freePesTmp = new ArrayList<>(getFreePes());
 
 		if (!getVmTable().containsKey(vm.getUid())) { // if this vm was not created
 			do {// we still trying until we find a host or until we try all of them

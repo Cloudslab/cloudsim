@@ -24,7 +24,7 @@ public final class Consts {
     /** One day time in seconds. */
     public static final int DAY = 24 * HOUR;
     /** One week time in seconds. */
-    public static final int WEEK = 24 * HOUR;
+    public static final int WEEK = 7 * DAY;
 
     // ================== OS constants ==================
     /** Constant for *nix Operating Systems. */

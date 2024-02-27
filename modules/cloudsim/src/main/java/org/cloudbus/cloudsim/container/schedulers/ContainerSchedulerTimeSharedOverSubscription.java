@@ -28,7 +28,7 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
 
         // if the requested mips is bigger than the capacity of a single PE, we cap
         // the request to the PE's capacity
-        List<Double> mipsShareRequestedCapped = new ArrayList<Double>();
+        List<Double> mipsShareRequestedCapped = new ArrayList<>();
         double peMips = getPeCapacity();
         for (Double mips : mipsShareRequested) {
             if (mips > peMips) {
@@ -53,7 +53,7 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
         }
 
         if (getAvailableMips() >= totalRequestedMips) {
-            List<Double> mipsShareAllocated = new ArrayList<Double>();
+            List<Double> mipsShareAllocated = new ArrayList<>();
             for (Double mipsRequested : mipsShareRequestedCapped) {
 //                if (getContainersMigratingOut().contains(containerUid)) {
 //                    // performance degradation due to migration = 10% MIPS
@@ -84,13 +84,13 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
         // proportionally
         double totalRequiredMipsByAllVms = 0;
 
-        Map<String, List<Double>> mipsMapCapped = new HashMap<String, List<Double>>();
+        Map<String, List<Double>> mipsMapCapped = new HashMap<>();
         for (Map.Entry<String, List<Double>> entry : getMipsMapRequested().entrySet()) {
 
             double requiredMipsByThisContainer = 0.0;
             String vmId = entry.getKey();
             List<Double> mipsShareRequested = entry.getValue();
-            List<Double> mipsShareRequestedCapped = new ArrayList<Double>();
+            List<Double> mipsShareRequestedCapped = new ArrayList<>();
             double peMips = getPeCapacity();
             for (Double mips : mipsShareRequested) {
                 if (mips > peMips) {
@@ -122,7 +122,7 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
             String vmUid = entry.getKey();
             List<Double> requestedMips = entry.getValue();
 
-            List<Double> updatedMipsAllocation = new ArrayList<Double>();
+            List<Double> updatedMipsAllocation = new ArrayList<>();
             for (Double mips : requestedMips) {
 //                if (getContainersMigratingOut().contains(vmUid)) {
                     // the original amount is scaled

@@ -35,7 +35,7 @@ import org.cloudbus.cloudsim.network.TopologicalNode;
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
  * 
- * @todo The class only have static methods, that indicates it doesn't have to be instantiated.
+ * //TODO The class only have static methods, that indicates it doesn't have to be instantiated.
  * In fact, it doesn't appear it is being instantiated anywhere.
  * A private default constructor would be created to avoid instantiation.
  */
@@ -85,7 +85,7 @@ public class NetworkTopology {
 
 		try {
 			graph = reader.readGraphFile(fileName);
-			map = new HashMap<Integer, Integer>();
+			map = new HashMap<>();
 			generateMatrices();
 		} catch (IOException e) {
 			// problem with the file. Does not simulate network
@@ -128,7 +128,7 @@ public class NetworkTopology {
 		}
 
 		if (map == null) {
-			map = new HashMap<Integer, Integer>();
+			map = new HashMap<>();
 		}
 
 		// maybe add the nodes

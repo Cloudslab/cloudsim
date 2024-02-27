@@ -16,17 +16,20 @@
 
 package org.cloudbus.cloudsim;
 
+import java.io.Serial;
+
 /**
  * This exception is to report bad or invalid parameters given during constructor.
  * 
  * @author Gokul Poduval
  * @author Chen-Khong Tham, National University of Singapore
  * @since CloudSim Toolkit 1.0
- * @todo It would be used the native class InvalidArgumentException instead of this new one.
+ * //TODO It would be used the native class InvalidArgumentException instead of this new one.
  */
 public class ParameterException extends Exception {
 
 	/** The Constant serialVersionUID. */
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/** The message. */

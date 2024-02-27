@@ -46,14 +46,14 @@ public class EdgeSwitch extends Switch {
 	 */
 	public EdgeSwitch(String name, int level, NetworkDatacenter dc) {
 		super(name, level, dc);
-		hostlist = new HashMap<Integer, NetworkHost>();
-		uplinkswitchpktlist = new HashMap<Integer, List<NetworkPacket>>();
-		packetTohost = new HashMap<Integer, List<NetworkPacket>>();
+		hostlist = new HashMap<>();
+		uplinkswitchpktlist = new HashMap<>();
+		packetTohost = new HashMap<>();
 		uplinkbandwidth = NetworkConstants.BandWidthEdgeAgg;
 		downlinkbandwidth = NetworkConstants.BandWidthEdgeHost;
 		switching_delay = NetworkConstants.SwitchingDelayEdge;
 		numport = NetworkConstants.EdgeSwitchPort;
-		uplinkswitches = new ArrayList<Switch>();
+		uplinkswitches = new ArrayList<>();
 	}
 
 	@Override
@@ -79,11 +79,7 @@ public class EdgeSwitch extends Switch {
 		// packet needs to go to a host which is connected directly to switch
 		if (hs != null) {
 			// packet to be sent to host connected to the switch
-			List<NetworkPacket> pktlist = packetTohost.get(hostid);
-			if (pktlist == null) {
-				pktlist = new ArrayList<NetworkPacket>();
-				packetTohost.put(hostid, pktlist);
-			}
+			List<NetworkPacket> pktlist = packetTohost.computeIfAbsent(hostid, k -> new ArrayList<>());
 			pktlist.add(hspkt);
 			return;
 
@@ -94,13 +90,8 @@ public class EdgeSwitch extends Switch {
 		// if there are more than one Aggregate level switch one need to modify following code
 
 		Switch sw = uplinkswitches.get(0);
-		List<NetworkPacket> pktlist = uplinkswitchpktlist.get(sw.getId());
-		if (pktlist == null) {
-			pktlist = new ArrayList<NetworkPacket>();
-			uplinkswitchpktlist.put(sw.getId(), pktlist);
-		}
+		List<NetworkPacket> pktlist = uplinkswitchpktlist.computeIfAbsent(sw.getId(), k -> new ArrayList<>());
 		pktlist.add(hspkt);
-		return;
 
 	}
 
@@ -115,9 +106,7 @@ public class EdgeSwitch extends Switch {
 				if (!hspktlist.isEmpty()) {
 					// sharing bandwidth between packets
 					double avband = uplinkbandwidth / hspktlist.size();
-					Iterator<NetworkPacket> it = hspktlist.iterator();
-					while (it.hasNext()) {
-						NetworkPacket hspkt = it.next();
+					for (NetworkPacket hspkt : hspktlist) {
 						double delay = 1000 * hspkt.pkt.data / avband;
 
 						this.send(tosend, delay, CloudSimTags.Network_Event_UP, hspkt);
@@ -131,9 +120,7 @@ public class EdgeSwitch extends Switch {
 				List<NetworkPacket> hspktlist = es.getValue();
 				if (!hspktlist.isEmpty()) {
 					double avband = downlinkbandwidth / hspktlist.size();
-					Iterator<NetworkPacket> it = hspktlist.iterator();
-					while (it.hasNext()) {
-						NetworkPacket hspkt = it.next();
+					for (NetworkPacket hspkt : hspktlist) {
 						// hspkt.recieverhostid=tosend;
 						// hs.packetrecieved.add(hspkt);
 						this.send(getId(), hspkt.pkt.data / avband, CloudSimTags.Network_Event_Host, hspkt);

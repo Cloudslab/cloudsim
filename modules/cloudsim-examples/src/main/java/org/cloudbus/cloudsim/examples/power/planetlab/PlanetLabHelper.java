@@ -20,7 +20,7 @@ import org.cloudbus.cloudsim.examples.power.Constants;
  * Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012
+ * Issue 13, Pages: 1397-1420, John Wiley &amp; Sons, Ltd, New York, USA, 2012
  * 
  * @author Anton Beloglazov
  * @since Jan 5, 2012
@@ -37,7 +37,7 @@ public class PlanetLabHelper {
 	 */
 	public static List<Cloudlet> createCloudletListPlanetLab(int brokerId, String inputFolderName)
 			throws FileNotFoundException {
-		List<Cloudlet> list = new ArrayList<Cloudlet>();
+		List<Cloudlet> list = new ArrayList<>();
 
 		long fileSize = 300;
 		long outputSize = 300;

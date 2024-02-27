@@ -20,7 +20,7 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
- * @todo Using Java 8 Stream, some methods here can be improved or removed.
+ * //TODO Using Java 8 Stream, some methods here can be improved or removed.
  */
 public class MathUtil {
 
@@ -43,7 +43,7 @@ public class MathUtil {
 	 * 
 	 * @param list the list of numbers
 	 * @return the double[]
-         * @todo The method {@link List#toArray()} could be used directly
+         * //TODO The method {@link List#toArray()} could be used directly
          * instead of creating this method.
 	 */
 	public static double[] listToArray(final List<? extends Number> list) {
@@ -103,9 +103,9 @@ public class MathUtil {
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 
 		// Add the data from the array
-		for (int i = 0; i < list.length; i++) {
-			stats.addValue(list[i]);
-		}
+        for (double v : list) {
+            stats.addValue(v);
+        }
 		return stats;
 	}
 
@@ -269,11 +269,11 @@ public class MathUtil {
 		double[] yW = new double[y.length];
 
 		int numZeroWeigths = 0;
-		for (int i = 0; i < weigths.length; i++) {
-			if (weigths[i] <= 0) {
-				numZeroWeigths++;
-			}
-		}
+        for (double weigth : weigths) {
+            if (weigth <= 0) {
+                numZeroWeigths++;
+            }
+        }
 
 		for (int i = 0; i < x.length; i++) {
 			if (numZeroWeigths >= 0.4 * weigths.length) {
@@ -323,7 +323,7 @@ public class MathUtil {
 	 * 
 	 * @param n the number of weights
 	 * @return an array of tricube weigths with n elements
-         * @todo The word "weight" is misspelled in the method name.
+         * //TODO The word "weight" is misspelled in the method name.
 	 */
 	public static double[] getTricubeWeigts(final int n) {
 		double[] weights = new double[n];
@@ -346,7 +346,7 @@ public class MathUtil {
 	 * 
 	 * @param residuals the residuals array
 	 * @return the tricube bisquare weigths
-         * @todo The word "weight" is misspelled in the method name.
+         * //TODO The word "weight" is misspelled in the method name.
 	 */
 	public static double[] getTricubeBisquareWeigts(final double[] residuals) {
 		int n = residuals.length;
@@ -373,9 +373,7 @@ public class MathUtil {
 	 */
 	public static double[] abs(final double[] data) {
 		double[] result = new double[data.length];
-		for (int i = 0; i < result.length; i++) {
-			result[i] = Math.abs(data[i]);
-		}
+		Arrays.setAll(result, i -> Math.abs(data[i]));
 		return result;
 	}
 

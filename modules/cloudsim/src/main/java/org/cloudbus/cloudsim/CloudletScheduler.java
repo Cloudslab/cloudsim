@@ -56,11 +56,11 @@ public abstract class CloudletScheduler {
 	 */
 	public CloudletScheduler() {
 		setPreviousTime(0.0);
-		cloudletWaitingList = new LinkedList<ResCloudlet>();
-		cloudletExecList = new LinkedList<ResCloudlet>();
-		cloudletPausedList = new LinkedList<ResCloudlet>();
-		cloudletFinishedList = new LinkedList<ResCloudlet>();
-		cloudletFailedList = new LinkedList<ResCloudlet>();
+		cloudletWaitingList = new LinkedList<>();
+		cloudletExecList = new LinkedList<>();
+		cloudletPausedList = new LinkedList<>();
+		cloudletFinishedList = new LinkedList<>();
+		cloudletFailedList = new LinkedList<>();
 	}
 
 	/**
@@ -78,7 +78,7 @@ public abstract class CloudletScheduler {
 	/**
 	 * Receives an cloudlet to be executed in the VM managed by this scheduler.
 	 * 
-	 * @param gl the submited cloudlet (@todo it's a strange param name)
+	 * @param gl the submited cloudlet (//TODO it's a strange param name)
 	 * @param fileTransferTime time required to move the required files from the SAN to the VM
 	 * @return expected finish time of this cloudlet, or 0 if it is in a waiting queue
 	 * @pre gl != null
@@ -143,7 +143,7 @@ public abstract class CloudletScheduler {
 	 * @pre $none
 	 * @post $none
          * 
-         * @todo cloudlet status should be an enum
+         * //TODO cloudlet status should be an enum
 	 */
 	public abstract int getCloudletStatus(int clId);
 
@@ -153,7 +153,7 @@ public abstract class CloudletScheduler {
 	 * @return $true if there is at least one finished cloudlet; $false otherwise
 	 * @pre $none
 	 * @post $none
-         * @todo the method name would be isThereFinishedCloudlets to be clearer
+         * //TODO the method name would be isThereFinishedCloudlets to be clearer
 	 */
 	public abstract boolean isFinishedCloudlets();
 
@@ -206,7 +206,7 @@ public abstract class CloudletScheduler {
 	 * @param rcl the rcl
 	 * @param mipsShare the mips share
 	 * @return the total current mips
-         * @todo In fact, this method is returning different data depending 
+         * //TODO In fact, this method is returning different data depending
          * of the subclass. It is expected that the way the method use to compute
          * the resulting value can be different in every subclass,
          * but is not supposed that each subclass returns a complete different 

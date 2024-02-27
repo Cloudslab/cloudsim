@@ -26,7 +26,7 @@ import org.cloudbus.cloudsim.util.MathUtil;
  * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * Issue 13, Pages: 1397-1420, John Wiley &amp; Sons, Ltd, New York, USA, 2012</a>
  * </ul>
  * 
  * @author Anton Beloglazov
@@ -81,7 +81,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 	 */
 	protected double[][] getUtilizationMatrix(final List<PowerVm> vmList) {
 		int n = vmList.size();
-                /*@todo It gets the min size of the history among all VMs considering
+                /*//TODO It gets the min size of the history among all VMs considering
                 that different VMs can have different history sizes.
                 However, the j loop is not using the m variable
                 but the size of the vm list. If a VM list has 
@@ -124,7 +124,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation extends PowerVmSelectionPo
 	protected List<Double> getCorrelationCoefficients(final double[][] data) {
 		int n = data.length;
 		int m = data[0].length;
-		List<Double> correlationCoefficients = new LinkedList<Double>();
+		List<Double> correlationCoefficients = new LinkedList<>();
 		for (int i = 0; i < n; i++) {
 			double[][] x = new double[n - 1][m];
 			int k = 0;

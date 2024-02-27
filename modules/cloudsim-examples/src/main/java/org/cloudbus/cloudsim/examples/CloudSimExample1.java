@@ -48,7 +48,6 @@ public class CloudSimExample1 {
 	 *
 	 * @param args the args
 	 */
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Log.printLine("Starting CloudSimExample1...");
 
@@ -89,7 +88,7 @@ public class CloudSimExample1 {
 			int brokerId = broker.getId();
 
 			// Fourth step: Create one virtual machine
-			vmlist = new ArrayList<Vm>();
+			vmlist = new ArrayList<>();
 
 			// VM description
 			int vmid = 0;
@@ -110,7 +109,7 @@ public class CloudSimExample1 {
 			broker.submitVmList(vmlist);
 
 			// Fifth step: Create one Cloudlet
-			cloudletList = new ArrayList<Cloudlet>();
+			cloudletList = new ArrayList<>();
 
 			// Cloudlet properties
 			int id = 0;
@@ -160,11 +159,11 @@ public class CloudSimExample1 {
 		// Here are the steps needed to create a PowerDatacenter:
 		// 1. We need to create a list to store
 		// our machine
-		List<Host> hostList = new ArrayList<Host>();
+		List<Host> hostList = new ArrayList<>();
 
 		// 2. A Machine contains one or more PEs or CPUs/Cores.
 		// In this example, it will have only one core.
-		List<Pe> peList = new ArrayList<Pe>();
+		List<Pe> peList = new ArrayList<>();
 
 		int mips = 1000;
 
@@ -202,7 +201,7 @@ public class CloudSimExample1 {
 		double costPerStorage = 0.001; // the cost of using storage in this
 										// resource
 		double costPerBw = 0.0; // the cost of using bw in this resource
-		LinkedList<Storage> storageList = new LinkedList<Storage>(); // we are not adding SAN
+		LinkedList<Storage> storageList = new LinkedList<>(); // we are not adding SAN
 													// devices by now
 
 		DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
@@ -256,11 +255,11 @@ public class CloudSimExample1 {
 				+ "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
-		for (int i = 0; i < size; i++) {
-			cloudlet = list.get(i);
+		for (Cloudlet value : list) {
+			cloudlet = value;
 			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS) {
+			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
 				Log.print("SUCCESS");
 
 				Log.printLine(indent + indent + cloudlet.getResourceId()

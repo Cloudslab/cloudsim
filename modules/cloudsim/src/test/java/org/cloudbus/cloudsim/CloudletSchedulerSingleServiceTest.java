@@ -62,7 +62,7 @@ public class CloudletSchedulerSingleServiceTest {
 				utilizationModel, utilizationModel, utilizationModel);
 		ResCloudlet rcl = new ResCloudlet(cloudlet);
 
-		Map<String, Double> underAllocatedMips = new HashMap<String, Double>();
+		Map<String, Double> underAllocatedMips = new HashMap<>();
 		assertEquals(underAllocatedMips, vmScheduler.getUnderAllocatedMips());
 
 		underAllocatedMips.put(rcl.getUid(), MIPS / 2);
@@ -81,7 +81,7 @@ public class CloudletSchedulerSingleServiceTest {
 				utilizationModel, utilizationModel, utilizationModel);
 		cloudlet.setResourceParameter(0, 0, 0);
 
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS);
 		mipsShare.add(MIPS);
 		vmScheduler.setCurrentMipsShare(mipsShare);
@@ -94,7 +94,7 @@ public class CloudletSchedulerSingleServiceTest {
 
 		vmScheduler.cloudletSubmit(cloudlet);
 
-		List<Double> requestedMips = new ArrayList<Double>();
+		List<Double> requestedMips = new ArrayList<>();
 		requestedMips.add(MIPS * utilization);
 		requestedMips.add(MIPS * utilization);
 
@@ -108,7 +108,7 @@ public class CloudletSchedulerSingleServiceTest {
 				utilizationModel, utilizationModel, utilizationModel);
 		cloudlet.setResourceParameter(0, 0, 0);
 
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS);
 		mipsShare.add(MIPS);
 		vmScheduler.setCurrentMipsShare(mipsShare);
@@ -131,7 +131,7 @@ public class CloudletSchedulerSingleServiceTest {
 				utilizationModel, utilizationModel, utilizationModel);
 		cloudlet.setResourceParameter(0, 0, 0);
 
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS);
 		mipsShare.add(MIPS);
 		vmScheduler.setCurrentMipsShare(mipsShare);
@@ -146,7 +146,7 @@ public class CloudletSchedulerSingleServiceTest {
 
 	@Test
 	public void testGetTotalCurrentMips() {
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);
 		vmScheduler.setCurrentMipsShare(mipsShare);
@@ -162,7 +162,7 @@ public class CloudletSchedulerSingleServiceTest {
 		cloudlet.setResourceParameter(0, 0, 0);
 		ResCloudlet rgl = new ResCloudlet(cloudlet);
 
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);
@@ -199,7 +199,7 @@ public class CloudletSchedulerSingleServiceTest {
 		cloudlet.setResourceParameter(0, 0, 0);
 		ResCloudlet rgl = new ResCloudlet(cloudlet);
 
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);
@@ -247,7 +247,7 @@ public class CloudletSchedulerSingleServiceTest {
 				utilizationModel, utilizationModel, utilizationModel);
 		cloudlet.setResourceParameter(0, 0, 0);
 
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);
@@ -331,7 +331,7 @@ public class CloudletSchedulerSingleServiceTest {
 				utilizationModel, utilizationModel, utilizationModel);
 		cloudlet.setResourceParameter(0, 0, 0);
 
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);

@@ -22,7 +22,7 @@ public class ContainerVmBwProvisionerSimple extends ContainerVmBwProvisioner {
      */
     public ContainerVmBwProvisionerSimple(long bw) {
         super(bw);
-        setBwTable(new HashMap<String, Long>());
+        setBwTable(new HashMap<>());
     }
 
 

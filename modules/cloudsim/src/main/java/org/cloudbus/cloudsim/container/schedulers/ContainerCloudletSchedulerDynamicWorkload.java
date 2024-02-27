@@ -44,7 +44,7 @@ public class ContainerCloudletSchedulerDynamicWorkload extends ContainerCloudlet
             setMips(mips);
             setNumberOfPes(numberOfPes);
             setTotalMips(getNumberOfPes() * getMips());
-            setUnderAllocatedMips(new HashMap<String, Double>());
+            setUnderAllocatedMips(new HashMap<>());
             setCachePreviousTime(-1);
         }
 
@@ -233,10 +233,7 @@ public class ContainerCloudletSchedulerDynamicWorkload extends ContainerCloudlet
         public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
             double totalCurrentRequestedMips = getTotalCurrentRequestedMipsForCloudlet(rcl, time);
             double totalCurrentAvailableMips = getTotalCurrentAvailableMipsForCloudlet(rcl, getCurrentMipsShare());
-            if (totalCurrentRequestedMips > totalCurrentAvailableMips) {
-                return totalCurrentAvailableMips;
-            }
-            return totalCurrentRequestedMips;
+            return Math.min(totalCurrentRequestedMips, totalCurrentAvailableMips);
         }
 
         /**

@@ -32,7 +32,7 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
  * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * Issue 13, Pages: 1397-1420, John Wiley &amp; Sons, Ltd, New York, USA, 2012</a>
  * </ul>
  * 
  * @author Anton Beloglazov
@@ -147,7 +147,7 @@ public class PowerDatacenter extends Datacenter {
 	 * 
 	 * @return the double
          * @see #updateCloudetProcessingWithoutSchedulingFutureEventsForce() 
-         * @todo There is an inconsistence in the return value of this
+         * //TODO There is an inconsistence in the return value of this
          * method with return value of similar methods
          * such as {@link #updateCloudetProcessingWithoutSchedulingFutureEventsForce()},
          * that returns {@link Double#MAX_VALUE} by default.

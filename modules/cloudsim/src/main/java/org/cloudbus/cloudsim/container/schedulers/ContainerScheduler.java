@@ -42,11 +42,11 @@ public abstract class  ContainerScheduler {
      */
     public ContainerScheduler(List<? extends ContainerPe> pelist) {
         setPeList(pelist);
-        setPeMap(new HashMap<String, List<ContainerPe>>());
-        setMipsMap(new HashMap<String, List<Double>>());
+        setPeMap(new HashMap<>());
+        setMipsMap(new HashMap<>());
         setAvailableMips(ContainerPeList.getTotalMips(getPeList()));
-        setContainersMigratingIn(new ArrayList<String>());
-        setContainersMigratingOut(new ArrayList<String>());
+        setContainersMigratingIn(new ArrayList<>());
+        setContainersMigratingOut(new ArrayList<>());
 
     }
 

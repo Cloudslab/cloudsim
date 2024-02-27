@@ -28,7 +28,7 @@ public class VmListTest {
 
 	@Before
 	public void setUp() throws Exception {
-		vmList = new ArrayList<Vm>();
+		vmList = new ArrayList<>();
 	}
 
 	@Test

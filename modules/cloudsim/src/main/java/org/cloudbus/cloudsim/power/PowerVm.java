@@ -27,7 +27,7 @@ import org.cloudbus.cloudsim.util.MathUtil;
  * <li><a href="http://dx.doi.org/10.1002/cpe.1867">Anton Beloglazov, and Rajkumar Buyya, "Optimal Online Deterministic Algorithms and Adaptive
  * Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in
  * Cloud Data Centers", Concurrency and Computation: Practice and Experience (CCPE), Volume 24,
- * Issue 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012</a>
+ * Issue 13, Pages: 1397-1420, John Wiley &amp; Sons, Ltd, New York, USA, 2012</a>
  * </ul>
  * 
  * @author Anton Beloglazov
@@ -39,7 +39,7 @@ public class PowerVm extends Vm {
 	public static final int HISTORY_LENGTH = 30;
 
 	/** The CPU utilization percentage history. */
-	private final List<Double> utilizationHistory = new LinkedList<Double>();
+	private final List<Double> utilizationHistory = new LinkedList<>();
 
 	/** The previous time that cloudlets were processed. */
 	private double previousTime;
@@ -100,10 +100,7 @@ public class PowerVm extends Vm {
 	public double getUtilizationMad() {
 		double mad = 0;
 		if (!getUtilizationHistory().isEmpty()) {
-			int n = HISTORY_LENGTH;
-			if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-				n = getUtilizationHistory().size();
-			}
+			int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
 			double median = MathUtil.median(getUtilizationHistory());
 			double[] deviationSum = new double[n];
 			for (int i = 0; i < n; i++) {
@@ -122,10 +119,7 @@ public class PowerVm extends Vm {
 	public double getUtilizationMean() {
 		double mean = 0;
 		if (!getUtilizationHistory().isEmpty()) {
-			int n = HISTORY_LENGTH;
-			if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-				n = getUtilizationHistory().size();
-			}
+			int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
 			for (int i = 0; i < n; i++) {
 				mean += getUtilizationHistory().get(i);
 			}
@@ -143,10 +137,7 @@ public class PowerVm extends Vm {
 		double mean = getUtilizationMean();
 		double variance = 0;
 		if (!getUtilizationHistory().isEmpty()) {
-			int n = HISTORY_LENGTH;
-			if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-				n = getUtilizationHistory().size();
-			}
+			int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
 			for (int i = 0; i < n; i++) {
 				double tmp = getUtilizationHistory().get(i) * getMips() - mean;
 				variance += tmp * tmp;

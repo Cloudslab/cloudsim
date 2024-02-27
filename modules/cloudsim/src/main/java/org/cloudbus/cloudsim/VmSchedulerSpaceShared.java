@@ -42,8 +42,8 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 	 */
 	public VmSchedulerSpaceShared(List<? extends Pe> pelist) {
 		super(pelist);
-		setPeAllocationMap(new HashMap<String, List<Pe>>());
-		setFreePes(new ArrayList<Pe>());
+		setPeAllocationMap(new HashMap<>());
+		setFreePes(new ArrayList<>());
 		getFreePes().addAll(pelist);
 	}
 
@@ -54,7 +54,7 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 			return false;
 		}
 
-		List<Pe> selectedPes = new ArrayList<Pe>();
+		List<Pe> selectedPes = new ArrayList<>();
 		Iterator<Pe> peIterator = getFreePes().iterator();
 		Pe pe = peIterator.next();
 		double totalMips = 0;

@@ -28,8 +28,8 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
     private CostumeCSVWriter newlyCreatedVmWriter;
     private int newlyCreatedVms;
     private List<Integer> newlyCreatedVmsList;
-    private double vmStartupDelay;
-    private double containerStartupDelay;
+    private final double vmStartupDelay;
+    private final double containerStartupDelay;
 
 
     public PowerContainerDatacenterCM(String name, ContainerDatacenterCharacteristics characteristics,
@@ -44,7 +44,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
         setNewlyCreatedVmWriter(new CostumeCSVWriter(newlyCreatedVmsAddress));
         setNewlyCreatedVms(0);
         setDisableMigrations(false);
-        setNewlyCreatedVmsList(new ArrayList<Integer>());
+        setNewlyCreatedVmsList(new ArrayList<>());
         this.vmStartupDelay = vmStartupDelay;
         this.containerStartupDelay = containerStartupDelay;
     }
@@ -72,7 +72,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                 int previousContainerMigrationCount = getContainerMigrationCount();
                 int previousVmMigrationCount = getVmMigrationCount();
                 if (migrationMap != null) {
-                    List<ContainerVm> vmList = new ArrayList<ContainerVm>();
+                    List<ContainerVm> vmList = new ArrayList<>();
                     for (Map<String, Object> migrate : migrationMap) {
                         if (migrate.containsKey("container")) {
                             Container container = (Container) migrate.get("container");
@@ -243,7 +243,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 //                containerVm.addMigratingInContainer((Container) map.get("container"));
             ack = true;
             if (ack) {
-                Map<String, Object> data = new HashMap<String, Object>();
+                Map<String, Object> data = new HashMap<>();
                 data.put("vm", containerVm);
                 data.put("result", containerVm);
                 data.put("datacenterID", getId());

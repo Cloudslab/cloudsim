@@ -35,9 +35,9 @@ public class ContainerAllocationPolicySimple extends ContainerAllocationPolicy {
 	 */
 	public ContainerAllocationPolicySimple() {
 		super();
-		setFreePes(new ArrayList<Integer>());
-		setContainerVmTable(new HashMap<String, ContainerVm>());
-		setUsedPes(new HashMap<String, Integer>());
+		setFreePes(new ArrayList<>());
+		setContainerVmTable(new HashMap<>());
+		setUsedPes(new HashMap<>());
 	}
 
 
@@ -52,10 +52,7 @@ public class ContainerAllocationPolicySimple extends ContainerAllocationPolicy {
 		int requiredPes = container.getNumberOfPes();
 		boolean result = false;
 		int tries = 0;
-		List<Integer> freePesTmp = new ArrayList<>();
-		for (Integer freePes : getFreePes()) {
-			freePesTmp.add(freePes);
-		}
+		List<Integer> freePesTmp = new ArrayList<>(getFreePes());
 
 		if (!getContainerVmTable().containsKey(container.getUid())) { // if this vm was not created
 			do {// we still trying until we find a host or until we try all of them
@@ -98,7 +95,7 @@ public class ContainerAllocationPolicySimple extends ContainerAllocationPolicy {
 			getContainerVmTable().put(container.getUid(), containerVm);
 
 			int requiredPes = container.getNumberOfPes();
-			int idx = getContainerVmList().indexOf(container);
+			int idx = getContainerVmList().indexOf(containerVm);
 			getUsedPes().put(container.getUid(), requiredPes);
 			getFreePes().set(idx, getFreePes().get(idx) - requiredPes);
 

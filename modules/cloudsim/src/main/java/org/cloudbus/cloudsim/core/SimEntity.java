@@ -16,16 +16,16 @@ import org.cloudbus.cloudsim.core.predicates.Predicate;
  * This class represents a simulation entity. An entity handles events and can send events to other
  * entities. When this class is extended, there are a few methods that need to be implemented:
  * <ul>
- * <li> {@link #startEntity()} is invoked by the {@link Simulation} class when the simulation is
+ * <li> {@link #startEntity()} is invoked by the {@link CloudSim} class when the simulation is
  * started. This method should be responsible for starting the entity up.
- * <li> {@link #processEvent(SimEvent)} is invoked by the {@link Simulation} class whenever there is
+ * <li> {@link #processEvent(SimEvent)} is invoked by the {@link CloudSim} class whenever there is
  * an event in the deferred queue, which needs to be processed by the entity.
- * <li> {@link #shutdownEntity()} is invoked by the {@link Simulation} before the simulation
+ * <li> {@link #shutdownEntity()} is invoked by the {@link CloudSim} before the simulation
  * finishes. If you want to save data in log files this is the method in which the corresponding
  * code would be placed.
  * </ul>
  * 
- * @todo the list above is redundant once all mentioned methods are abstract.
+ * //TODO the list above is redundant once all mentioned methods are abstract.
  * The documentation duplication may lead to have some of them
  * out-of-date and future confusion.
  * 
@@ -52,7 +52,7 @@ public abstract class SimEntity implements Cloneable {
 	 * @param name the name to be associated with the entity
 	 */
 	public SimEntity(String name) {
-		if (name.indexOf(" ") != -1) {
+		if (name.contains(" ")) {
 			throw new IllegalArgumentException("Entity names can't contain spaces.");
 		}
 		this.name = name;
@@ -399,9 +399,6 @@ public abstract class SimEntity implements Cloneable {
 	 * deferred queue, which needs to be processed by the entity.
 	 * 
 	 * @param ev information about the event just happened
-         * 
-	 * @pre ev != null
-	 * @post $none
 	 */
 	public abstract void processEvent(SimEvent ev);
 
@@ -482,7 +479,7 @@ public abstract class SimEntity implements Cloneable {
 	}
 
 	// The entity states
-        //@todo The states should be an enum.
+        ////TODO The states should be an enum.
 	/** The Constant RUNNABLE. */
 	public static final int RUNNABLE = 0;
 

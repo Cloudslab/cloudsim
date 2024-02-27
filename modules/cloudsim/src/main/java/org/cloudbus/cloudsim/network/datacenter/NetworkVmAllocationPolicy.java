@@ -52,14 +52,14 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	public NetworkVmAllocationPolicy(List<? extends Host> list) {
 		super(list);
 
-		setFreePes(new ArrayList<Integer>());
+		setFreePes(new ArrayList<>());
 		for (Host host : getHostList()) {
 			getFreePes().add(host.getNumberOfPes());
 
 		}
 
-		setVmTable(new HashMap<String, Host>());
-		setUsedPes(new HashMap<String, Integer>());
+		setVmTable(new HashMap<>());
+		setUsedPes(new HashMap<>());
 	}
 
 	/**
@@ -78,10 +78,7 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 		int requiredPes = vm.getNumberOfPes();
 		boolean result = false;
 		int tries = 0;
-		List<Integer> freePesTmp = new ArrayList<Integer>();
-		for (Integer freePes : getFreePes()) {
-			freePesTmp.add(freePes);
-		}
+		List<Integer> freePesTmp = new ArrayList<>(getFreePes());
 
 		if (!getVmTable().containsKey(vm.getUid())) { // if this vm was not created
 			do {// we still trying until we find a host or until we try all of them
@@ -222,7 +219,7 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 
 	@Override
 	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
-		/*@todo Auto-generated method stub.
+		/*//TODO Auto-generated method stub.
                 The method is doing nothing.*/
 		return null;
 	}

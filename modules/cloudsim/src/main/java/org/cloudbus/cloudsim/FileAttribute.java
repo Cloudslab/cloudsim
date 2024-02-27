@@ -10,6 +10,7 @@ package org.cloudbus.cloudsim;
 
 import java.util.Date;
 
+import lombok.Getter;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
@@ -19,7 +20,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author Anthony Sulistio
  * @since CloudSim Toolkit 1.0
  * 
- * @todo Some attributes of this class may be duplicated from the {@link File} class,
+ * //TODO Some attributes of this class may be duplicated from the {@link File} class,
  * such as name (logical file name), that is clearly related to the file.
  * There would be a relation between File and FileAttribute. There is a lot of duplicated
  * methods to, such as {@link #setMasterCopy(boolean)} or {@link #isReadOnly()}
@@ -41,9 +42,11 @@ public class FileAttribute {
         /** Last updated time (sec) - relative. */
 	private double lastUpdateTime; 
         /** Creation time (ms) - abosulte/relative. */
-	private long creationTime;     
+	@Getter
+	private long creationTime;
         /** Price of the file. */
-	private double cost;           
+	@Getter
+	private double cost;
         /** Indicates if the file is a master copy or not. 
          * If the attribute is false, it means the file is a replica. */
 	private boolean masterCopy;    
@@ -135,15 +138,6 @@ public class FileAttribute {
 
 		this.creationTime = creationTime;
 		return true;
-	}
-
-	/**
-	 * Gets the file creation time (in millisecond).
-	 * 
-	 * @return the file creation time (in millisecond)
-	 */
-	public long getCreationTime() {
-		return creationTime;
 	}
 
 	/**
@@ -362,24 +356,12 @@ public class FileAttribute {
 	}
 
 	/**
-	 * Gets the cost associated with the file.
-	 * 
-	 * @return the cost of this file
-	 */
-	public double getCost() {
-		return cost;
-	}
-
-	/**
 	 * Checks if the file is already registered to a Replica Catalogue.
 	 * 
 	 * @return <tt>true</tt> if it is registered, <tt>false</tt> otherwise
 	 */
 	public boolean isRegistered() {
-		boolean result = true;
-		if (id == File.NOT_REGISTERED) {
-			result = false;
-		}
+		boolean result = id != File.NOT_REGISTERED;
 
 		return result;
 	}

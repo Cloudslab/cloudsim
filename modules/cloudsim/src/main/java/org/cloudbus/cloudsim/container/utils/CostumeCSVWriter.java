@@ -32,7 +32,11 @@ public class CostumeCSVWriter {
     public void writeTofile(String[] entries) throws IOException {
         // feed in your array (or convert your data to an array)
         try {
-            writer = new CSVWriter(new FileWriter(fileAddress, true), ',',CSVWriter.NO_QUOTE_CHARACTER);
+            writer = new CSVWriter(new FileWriter(fileAddress, true),
+                    ',',
+                    CSVWriter.NO_QUOTE_CHARACTER,
+                    CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                    CSVWriter.DEFAULT_LINE_END);
 
         } catch (IOException e) {
             Log.printConcatLine("Couldn't find the file to write to: ", fileAddress);

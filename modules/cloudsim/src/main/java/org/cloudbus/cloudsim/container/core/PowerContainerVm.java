@@ -23,7 +23,7 @@ public class PowerContainerVm extends ContainerVm {
     /**
      * The utilization history.
      */
-    private final List<Double> utilizationHistory = new LinkedList<Double>();
+    private final List<Double> utilizationHistory = new LinkedList<>();
 
     /**
      * The previous time.
@@ -109,10 +109,7 @@ public class PowerContainerVm extends ContainerVm {
     public double getUtilizationMad() {
         double mad = 0;
         if (!getUtilizationHistory().isEmpty()) {
-            int n = HISTORY_LENGTH;
-            if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-                n = getUtilizationHistory().size();
-            }
+            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
             double median = MathUtil.median(getUtilizationHistory());
             double[] deviationSum = new double[n];
             for (int i = 0; i < n; i++) {
@@ -131,10 +128,7 @@ public class PowerContainerVm extends ContainerVm {
     public double getUtilizationMean() {
         double mean = 0;
         if (!getUtilizationHistory().isEmpty()) {
-            int n = HISTORY_LENGTH;
-            if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-                n = getUtilizationHistory().size();
-            }
+            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
             for (int i = 0; i < n; i++) {
                 mean += getUtilizationHistory().get(i);
             }
@@ -152,10 +146,7 @@ public class PowerContainerVm extends ContainerVm {
         double mean = getUtilizationMean();
         double variance = 0;
         if (!getUtilizationHistory().isEmpty()) {
-            int n = HISTORY_LENGTH;
-            if (HISTORY_LENGTH > getUtilizationHistory().size()) {
-                n = getUtilizationHistory().size();
-            }
+            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
             for (int i = 0; i < n; i++) {
                 double tmp = getUtilizationHistory().get(i) * getMips() - mean;
                 variance += tmp * tmp;

@@ -86,7 +86,7 @@ public interface Packet {
 	 * @pre $none
 	 * @post $none
          * 
-         * @todo Is it the Type of Service (ToS) of IPv4, like in
+         * //TODO Is it the Type of Service (ToS) of IPv4, like in
          * the {@link Cloudlet#netToS}? If yes, so the names would
          * be standardized.
 	 */

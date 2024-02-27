@@ -77,7 +77,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 		// update each cloudlet
 		int finished = 0;
-		List<ResCloudlet> toRemove = new ArrayList<ResCloudlet>();
+		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			// finished anyway, rounding issue...
 			if (rcl.getRemainingCloudletLength() == 0) {
@@ -398,7 +398,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	 * @pre $none
 	 * @post $none
          * 
-         * @todo it doesn't check if the list is empty
+         * //TODO it doesn't check if the list is empty
 	 */
 	@Override
 	public Cloudlet migrateCloudlet() {
@@ -411,18 +411,16 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 	@Override
 	public List<Double> getCurrentRequestedMips() {
-		List<Double> mipsShare = new ArrayList<Double>();
+		List<Double> mipsShare = new ArrayList<>();
 		if (getCurrentMipsShare() != null) {
-			for (Double mips : getCurrentMipsShare()) {
-				mipsShare.add(mips);
-			}
+			mipsShare.addAll(getCurrentMipsShare());
 		}
 		return mipsShare;
 	}
 
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
-                /*@todo The param rcl is not being used.*/
+                /*//TODO The param rcl is not being used.*/
 		double capacity = 0.0;
 		int cpus = 0;
 		for (Double mips : mipsShare) { // count the cpus available to the vmm
@@ -438,28 +436,28 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 	@Override
 	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {   
-                //@todo the method isn't in fact implemented
+                ////TODO the method isn't in fact implemented
 		// TODO Auto-generated method stub
 		return 0.0;
 	}
 
 	@Override
 	public double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time) {
-                //@todo the method isn't in fact implemented
+                ////TODO the method isn't in fact implemented
 		// TODO Auto-generated method stub
 		return 0.0;
 	}
 
 	@Override
 	public double getCurrentRequestedUtilizationOfRam() {
-                //@todo the method isn't in fact implemented
+                ////TODO the method isn't in fact implemented
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public double getCurrentRequestedUtilizationOfBw() {
-                //@todo the method isn't in fact implemented
+                ////TODO the method isn't in fact implemented
 		// TODO Auto-generated method stub
 		return 0;
 	}

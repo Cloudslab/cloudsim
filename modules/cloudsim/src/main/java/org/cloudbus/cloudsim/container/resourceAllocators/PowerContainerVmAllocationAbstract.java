@@ -16,7 +16,7 @@ import java.util.Map;
 public abstract  class PowerContainerVmAllocationAbstract extends ContainerVmAllocationPolicy{
 
         /** The vm table. */
-        private final Map<String, ContainerHost> vmTable = new HashMap<String, ContainerHost>();
+        private final Map<String, ContainerHost> vmTable = new HashMap<>();
 
         /**
          * Instantiates a new power vm allocation policy abstract.
@@ -67,7 +67,7 @@ public abstract  class PowerContainerVmAllocationAbstract extends ContainerVmAll
          * @return the power host
          */
         public ContainerHost findHostForVm(ContainerVm containerVm) {
-            for (ContainerHost host : this.<ContainerHost> getContainerHostList()) {
+            for (ContainerHost host : this.getContainerHostList()) {
                 if (host.isSuitableForContainerVm(containerVm)) {
                     return host;
                 }
@@ -115,7 +115,7 @@ public abstract  class PowerContainerVmAllocationAbstract extends ContainerVmAll
         }
 
     public List<ContainerVm> getOverUtilizedVms() {
-        List<ContainerVm> vmList = new ArrayList<ContainerVm>();
+        List<ContainerVm> vmList = new ArrayList<>();
         for (ContainerHost host : getContainerHostList()) {
             for (ContainerVm vm : host.getVmList()) {
                 if (vm.getTotalUtilizationOfCpuMips(CloudSim.clock()) > vm.getTotalMips()) {

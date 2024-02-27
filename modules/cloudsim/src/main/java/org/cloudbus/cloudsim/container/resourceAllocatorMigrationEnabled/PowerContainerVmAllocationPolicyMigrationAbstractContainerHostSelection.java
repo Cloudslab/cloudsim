@@ -30,10 +30,9 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         PowerContainerHost allocatedHost = null;
         ContainerVm allocatedVm = null;
         Map<String, Object> map = new HashMap<>();
-        Set<ContainerHost> excludedHost1 = new HashSet<>();
         if(excludedHosts.size() == getContainerHostList().size()){
             return map;}
-        excludedHost1.addAll(excludedHosts);
+        Set<ContainerHost> excludedHost1 = new HashSet<>(excludedHosts);
         while (true) {
             if(getContainerHostList().size()==0){
                 return map;
@@ -95,7 +94,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
     protected Collection<? extends Map<String, Object>> getContainerMigrationMapFromUnderUtilizedHosts(List<PowerContainerHostUtilizationHistory> overUtilizedHosts, List<Map<String, Object>> previouseMap) {
 
 
-        List<Map<String, Object>> migrationMap = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> migrationMap = new LinkedList<>();
         List<PowerContainerHost> switchedOffHosts = getSwitchedOffHosts();
 
         // over-utilized hosts + hosts that are selected to migrate VMs to from over-utilized hosts
@@ -105,7 +104,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         excludedHostsForFindingUnderUtilizedHost.addAll(extractHostListFromMigrationMap(previouseMap));
 
         // over-utilized + under-utilized hosts
-        Set<PowerContainerHost> excludedHostsForFindingNewContainerPlacement = new HashSet<PowerContainerHost>();
+        Set<PowerContainerHost> excludedHostsForFindingNewContainerPlacement = new HashSet<>();
         excludedHostsForFindingNewContainerPlacement.addAll(overUtilizedHosts);
         excludedHostsForFindingNewContainerPlacement.addAll(switchedOffHosts);
 
@@ -195,7 +194,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
     protected List<Map<String, Object>> getNewContainerPlacementFromUnderUtilizedHost(
             List<? extends Container> containersToMigrate,
             Set<? extends ContainerHost> excludedHosts) {
-        List<Map<String, Object>> migrationMap = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> migrationMap = new LinkedList<>();
         PowerContainerList.sortByCpuUtilization(containersToMigrate);
         for (Container container : containersToMigrate) {
             Map<String, Object> allocatedMap = findHostForContainer(container, excludedHosts, true);

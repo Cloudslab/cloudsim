@@ -9,12 +9,7 @@ import java.util.List;
  */
 public class ContainerList {
     public static <T extends Container> T getById(List<T> containerList, int id) {
-        for (T container : containerList) {
-            if (container.getId() == id) {
-                return container;
-            }
-        }
-        return null;
+        return containerList.stream().filter(container -> container.getId() == id).findFirst().orElse(null);
     }
 
     /**
@@ -28,12 +23,8 @@ public class ContainerList {
      * @post $none
      */
     public static <T extends Container> T getByIdAndUserId(List<T> containerList, int id, int userId) {
-        for (T container : containerList) {
-            if (container.getId() == id && container.getUserId() == userId) {
-                return container;
-            }
-        }
-        return null;
+        return containerList.stream().filter(container -> container.getId() == id && container.getUserId() == userId)
+                .findFirst().orElse(null);
     }
 
 

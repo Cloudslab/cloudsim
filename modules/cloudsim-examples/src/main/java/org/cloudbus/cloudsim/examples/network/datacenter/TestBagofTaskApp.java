@@ -38,7 +38,7 @@ public class TestBagofTaskApp extends AppCloudlet {
 	@Override
     public void createCloudletList(List<Integer> vmIdList){
 		//basically, each task runs the simulation and then data is consolidated in one task
-		int executionTime = getExecTime();
+		double executionTime = getExecTime();
 		long memory = 1000;
 		long fileSize = NetworkConstants.FILE_SIZE;
 		long outputSize = NetworkConstants.OUTPUT_SIZE;
@@ -47,7 +47,7 @@ public class TestBagofTaskApp extends AppCloudlet {
 		int t=NetworkConstants.currentCloudletId;
 	  	for(int i=0;i<numbervm;i++){
     		UtilizationModel utilizationModel = new UtilizationModelFull();
-    		NetworkCloudlet cl = new NetworkCloudlet(NetworkConstants.currentCloudletId, executionTime/numbervm, pesNumber, fileSize, outputSize, memory, utilizationModel, utilizationModel, utilizationModel);
+    		NetworkCloudlet cl = new NetworkCloudlet(NetworkConstants.currentCloudletId, (long) (executionTime/numbervm), pesNumber, fileSize, outputSize, memory, utilizationModel, utilizationModel, utilizationModel);
     		NetworkConstants.currentCloudletId++;
     		cl.setUserId(userId);
 			cl.submittime=CloudSim.clock();
@@ -81,10 +81,10 @@ public class TestBagofTaskApp extends AppCloudlet {
 		return 4;
 	}
 	
-	private int getExecTime() {
+	private double getExecTime() {
 		//use exec constraints 
 		
-		return 100;
+		return 100.0;
 	}
 
 	

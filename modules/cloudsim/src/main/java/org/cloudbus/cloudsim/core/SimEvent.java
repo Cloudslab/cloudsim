@@ -12,7 +12,6 @@ package org.cloudbus.cloudsim.core;
  * This class represents a simulation event which is passed between the entities in the simulation.
  * 
  * @author Costas Simatos
- * @see Simulation
  * @see SimEntity
  */
 public class SimEvent implements Cloneable, Comparable<SimEvent> {
@@ -37,7 +36,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/** 
          * Any data the event is carrying. 
-         * @todo I would be used generics to define the type of the event data.
+         * //TODO I would be used generics to define the type of the event data.
          * But this modification would incur several changes in the simulator core
          * that has to be assessed first.
          **/

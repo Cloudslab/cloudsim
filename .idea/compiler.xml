@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.22/9c08ea24c6eb714e2d6170e8122c069a0ba9aacf/lombok-1.18.22.jar" />
+        </processorPath>
+        <module name="cloudsim-package.cloudsim.main" />
+        <module name="cloudsim-package.cloudsim-examples.main" />
+        <module name="cloudsim-package.cloudsim.test" />
+        <module name="cloudsim-package.cloudsim-examples.test" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="17">
+      <module name="cloudsim-examples" target="11" />
+      <module name="distribution" target="1.5" />
+      <module name="modules" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="cloudsim" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="cloudsim-examples" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="cloudsim-package.cloudsim" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="cloudsim-package.cloudsim-examples" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="cloudsim-package.documentation" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="cloudsim-package.modules" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="documentation" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+      <module name="modules" options="-XDcompilePolicy=simple -Xplugin:ErrorProne" />
+    </option>
+  </component>
+</project>
