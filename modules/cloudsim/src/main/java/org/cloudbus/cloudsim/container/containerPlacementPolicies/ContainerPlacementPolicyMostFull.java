@@ -14,18 +14,17 @@ public class ContainerPlacementPolicyMostFull extends ContainerPlacementPolicy {
     @Override
     public ContainerVm getContainerVm(List<ContainerVm> vmList, Object obj, Set<? extends ContainerVm> excludedVmList) {
         ContainerVm selectedVm = null;
-        double maxMips = Double.MIN_VALUE;
+        double leastAvailable = Double.MAX_VALUE;
 
         for (ContainerVm containerVm1 : vmList) {
             if (excludedVmList.contains(containerVm1)) {
                 continue;
             }
 
-            double containerUsage = containerVm1.getContainerScheduler().getAvailableMips();
-            if ( containerUsage > maxMips) {
-                maxMips = containerUsage;
+            double containerAvailable = containerVm1.getContainerScheduler().getAvailableMips();
+            if ( containerAvailable < leastAvailable) {
+                leastAvailable = containerAvailable;
                 selectedVm = containerVm1;
-
             }
         }
 
