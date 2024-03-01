@@ -260,6 +260,10 @@ public class Helper {
 		int numberOfMigrations = datacenter.getMigrationCount();
 
 		Map<String, Double> slaMetrics = getSlaMetrics(vms);
+		
+		// get total migration time and energy from the class PowerDatacenter
+		double Emigr = datacenter.getMigrationEnergy();
+                double Tmigr = datacenter.getMigrationTime();
 
 		double slaOverall = slaMetrics.get("overall");
 		double slaAverage = slaMetrics.get("average");
@@ -413,6 +417,9 @@ public class Helper {
 			Log.printLine(String.format(
 					"StDev time before a VM migration: %.2f sec",
 					stDevTimeBeforeVmMigration));
+			//print total migration time and energy
+			Log.printLine(String.format("Migration Energy : %.5f kWh", Emigr));
+                        Log.printLine(String.format("Migration Time: %.2f sec", Tmigr));
 
 			if (datacenter.getVmAllocationPolicy() instanceof PowerVmAllocationPolicyMigrationAbstract) {
 				PowerVmAllocationPolicyMigrationAbstract vmAllocationPolicy = (PowerVmAllocationPolicyMigrationAbstract) datacenter
