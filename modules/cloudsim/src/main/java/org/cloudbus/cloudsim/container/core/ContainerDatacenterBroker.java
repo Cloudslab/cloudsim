@@ -380,12 +380,11 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //                    double maxUsage = Doubles.max(cloudletUsage);
 //                    double newmips = maxUsage * container.getMips();
                     container.setWorkloadMips(newmips);
-//                    bindCloudletToContainer(cloudlet.getCloudletId(), container.getId());
-                    cloudlet.setContainerId(container.getId());
-                    if(cloudlet.getContainerId() != container.getId()){
-//                        Log.printConcatLine("Binding Cloudlet: ", cloudlet.getCloudletId(), "To Container: ",container.getId() , "Now it is", cloudlet.getContainerId());
-                    }
+                }
 
+                if (cloudlet.getContainerId() != container.getId()) {
+                    bindCloudletToContainer(cloudlet.getCloudletId(), container.getId());
+                    Log.printConcatLine("Binding Cloudlet: ", cloudlet.getCloudletId(), " to Container: ",container.getId());
                 }
             i++;
 
