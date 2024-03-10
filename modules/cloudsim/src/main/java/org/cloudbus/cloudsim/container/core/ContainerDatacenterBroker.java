@@ -316,10 +316,10 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //                }
 //            }
 //
-//            if (!Log.isDisabled()) {
-//                Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Sending cloudlet ",
-//                        cloudlet.getCloudletId(), " to VM #", cloudlet.getContainerId());
-//            }
+            if (!Log.isDisabled()) {
+                Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Sending cloudlet ",
+                        cloudlet.getCloudletId(), " to VM #", cloudlet.getContainerId());
+            }
 
 
 //            containerIndex = (containerIndex + 1) % getVmsCreatedList().size();

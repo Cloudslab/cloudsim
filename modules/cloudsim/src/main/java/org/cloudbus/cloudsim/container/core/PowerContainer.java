@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.container.core;
 
-import org.cloudbus.cloudsim.container.schedulers.ContainerCloudletScheduler;
+import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.util.MathUtil;
 
@@ -46,7 +46,7 @@ public class PowerContainer extends Container{
                 final long bw,
                 final long size,
                 final String vmm,
-                final ContainerCloudletScheduler cloudletScheduler,
+                final CloudletScheduler cloudletScheduler,
                 final double schedulingInterval) {
             super(id, userId, mips, pesNumber, ram, bw, size, vmm, cloudletScheduler, schedulingInterval);
         }

@@ -1,10 +1,8 @@
 package org.cloudbus.cloudsim.container.core;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.cloudbus.cloudsim.container.schedulers.ContainerCloudletScheduler;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.util.MathUtil;
 
@@ -84,7 +82,7 @@ public class Container {
      */
     @Setter(AccessLevel.PROTECTED)
     @Getter
-    private ContainerCloudletScheduler containerCloudletScheduler;
+    private CloudletScheduler containerCloudletScheduler;
 
     /**
      * The ContainerVm.
@@ -188,7 +186,7 @@ public class Container {
             long bw,
             long size,
             String containerManager,
-            ContainerCloudletScheduler containerCloudletScheduler, double schedulingInterval) {
+            CloudletScheduler containerCloudletScheduler, double schedulingInterval) {
         setWorkloadMips(mips);
         setId(id);
         setUserId(userId);
@@ -221,7 +219,7 @@ public class Container {
      */
     public double updateContainerProcessing(double currentTime, List<Double> mipsShare) {
         if (mipsShare != null) {
-            return getContainerCloudletScheduler().updateContainerProcessing(currentTime, mipsShare);
+            return getContainerCloudletScheduler().updateCloudletProcessing(currentTime, mipsShare);
         }
         return 0.0;
     }
