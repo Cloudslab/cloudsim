@@ -110,7 +110,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
      * @post $none
      */
     @Override
-    public double updateVmProcessing(final double currentTime, final List<Double> mipsShare) {
+    public double updateCloudletProcessing(final double currentTime, final List<Double> mipsShare) {
         return updateVmProcessing(currentTime, mipsShare, List.of());
     }
 

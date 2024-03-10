@@ -120,11 +120,10 @@ public class ContainerCloudletSchedulerTimeShared extends ContainerCloudletSched
      */
     @Override
     public Cloudlet cloudletCancel(int cloudletId) {
-        boolean found = false;
         int position = 0;
 
         // First, looks in the finished queue
-        found = false;
+        boolean found = false;
         for (ResCloudlet rcl : getCloudletFinishedList()) {
             if (rcl.getCloudletId() == cloudletId) {
                 found = true;
@@ -454,8 +453,3 @@ public class ContainerCloudletSchedulerTimeShared extends ContainerCloudletSched
     }
 
 }
-
-
-
-
-

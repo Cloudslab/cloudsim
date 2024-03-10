@@ -22,6 +22,7 @@ import org.cloudbus.cloudsim.network.datacenter.NetworkCloudletSpaceSharedSchedu
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
 public abstract class CloudletScheduler {
@@ -73,7 +74,7 @@ public abstract class CloudletScheduler {
 	 * @pre currentTime >= 0
 	 * @post $none
 	 */
-	public abstract double updateVmProcessing(double currentTime, List<Double> mipsShare);
+	public abstract double updateCloudletProcessing(double currentTime, List<Double> mipsShare);
 
 	/**
 	 * Receives an cloudlet to be executed in the VM managed by this scheduler.

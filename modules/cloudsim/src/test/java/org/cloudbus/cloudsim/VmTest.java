@@ -127,7 +127,7 @@ public class VmTest {
 		mipsShare1.add(1.0);
 		ArrayList<Double> mipsShare2 = new ArrayList<>();
 		mipsShare2.add(1.0);
-		assertEquals(vmScheduler.updateVmProcessing(0, mipsShare1), vm.updateVmProcessing(0, mipsShare2), 0);
+		assertEquals(vmScheduler.updateCloudletProcessing(0, mipsShare1), vm.updateVmProcessing(0, mipsShare2), 0);
 	}
 
 	@Test

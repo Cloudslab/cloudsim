@@ -24,6 +24,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * Each VM has to have its own instance of a CloudletScheduler.
  * 
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 2.0
  * CloudletSchedulerSingleService as its Test Suite
  */
@@ -34,7 +35,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
          * considering that all PEs have the same capacity. 
          * //TODO Despite of the class considers that all PEs have the same capacity,
          * it accepts a list of PEs with different MIPS at the method 
-         * {@link #updateVmProcessing(double, java.util.List) }
+         * {@link #updateCloudletProcessing(double, java.util.List) }
          */
 	private double mips;
 
@@ -77,7 +78,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	}
 
 	@Override
-	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
+	public double updateCloudletProcessing(double currentTime, List<Double> mipsShare) {
 		setCurrentMipsShare(mipsShare);
 
 		double timeSpan = currentTime - getPreviousTime();

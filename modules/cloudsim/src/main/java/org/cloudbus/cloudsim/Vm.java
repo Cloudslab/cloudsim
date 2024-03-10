@@ -18,6 +18,7 @@ import java.util.List;
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
 public class Vm {
@@ -152,7 +153,7 @@ public class Vm {
 	 */
 	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
 		if (mipsShare != null) {
-			return getCloudletScheduler().updateVmProcessing(currentTime, mipsShare);
+			return getCloudletScheduler().updateCloudletProcessing(currentTime, mipsShare);
 		}
 		return 0.0;
 	}

@@ -350,7 +350,7 @@ public class CloudletSchedulerSingleServiceTest {
 		}
 
 		double expectedCompletiontime1 = ((double) CLOUDLET_LENGTH * PES_NUMBER) / requestedMips1;
-		double actualCompletionTime1 = vmScheduler.updateVmProcessing(0, mipsShare);
+		double actualCompletionTime1 = vmScheduler.updateCloudletProcessing(0, mipsShare);
 		assertEquals(expectedCompletiontime1, actualCompletionTime1, 0);
 
 		double utilization2 = utilizationModel.getUtilization(1);
@@ -360,12 +360,12 @@ public class CloudletSchedulerSingleServiceTest {
 		}
 
 		double expectedCompletiontime2 = 1 + ((CLOUDLET_LENGTH * PES_NUMBER - requestedMips1 * 1)) / requestedMips2;
-		double actualCompletionTime2 = vmScheduler.updateVmProcessing(1, mipsShare);
+		double actualCompletionTime2 = vmScheduler.updateCloudletProcessing(1, mipsShare);
 		assertEquals(expectedCompletiontime2, actualCompletionTime2, 0);
 
 		assertFalse(vmScheduler.isFinishedCloudlets());
 
-		assertEquals(0, vmScheduler.updateVmProcessing(CLOUDLET_LENGTH, mipsShare), 0);
+		assertEquals(0, vmScheduler.updateCloudletProcessing(CLOUDLET_LENGTH, mipsShare), 0);
 
 		assertTrue(vmScheduler.isFinishedCloudlets());
 	}

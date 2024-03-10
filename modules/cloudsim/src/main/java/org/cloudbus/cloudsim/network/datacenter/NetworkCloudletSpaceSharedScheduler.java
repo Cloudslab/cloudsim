@@ -31,7 +31,7 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
  * Each VM has to have its own instance of a CloudletScheduler.
  * 
  * @author Saurabh Kumar Garg
- * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  * //TODO Attributes should be private
  */
@@ -74,7 +74,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 	}
 
 	@Override
-	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
+	public double updateCloudletProcessing(double currentTime, List<Double> mipsShare) {
                 /*//TODO Method to long. Several "extract method" refactorings may be performed.*/
 		setCurrentMipsShare(mipsShare);
 		// update

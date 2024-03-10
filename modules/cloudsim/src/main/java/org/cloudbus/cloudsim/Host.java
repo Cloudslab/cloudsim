@@ -96,7 +96,7 @@ public class Host {
 	 * @post $none
          * //TODO there is an inconsistency between the return value of this method
          * and the individual call of {@link Vm#updateVmProcessing(double, java.util.List),
-         * and consequently the {@link CloudletScheduler#updateVmProcessing(double, java.util.List)}.
+         * and consequently the {@link CloudletScheduler#updateCloudletProcessing(double, java.util.List)}.
          * The current method returns {@link Double#MAX_VALUE}  while the other ones
          * return 0. It has to be checked if there is a reason for this
          * difference.}
