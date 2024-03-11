@@ -36,9 +36,9 @@ public class HelperEx {
     }
 
 
-    public static List<ContainerCloudlet> createContainerCloudletList(int brokerId, String inputFolderName, int numberOfCloudlets)
+    public static List<Cloudlet> createContainerCloudletList(int brokerId, String inputFolderName, int numberOfCloudlets)
             throws FileNotFoundException {
-        ArrayList<ContainerCloudlet> cloudletList = new ArrayList<>();
+        ArrayList<Cloudlet> cloudletList = new ArrayList<>();
         long fileSize = 300L;
         long outputSize = 300L;
         UtilizationModelNull utilizationModelNull = new UtilizationModelNull();
@@ -50,10 +50,10 @@ public class HelperEx {
             File[] files = inputFolder.listFiles();
             for (File file : files) {
                 if (createdCloudlets < numberOfCloudlets) {
-                    ContainerCloudlet cloudlet = null;
+                    Cloudlet cloudlet = null;
 
                     try {
-                        cloudlet = new ContainerCloudlet(IDs.pollId(ContainerCloudlet.class), 216000000L * 1000, 1, fileSize, outputSize,
+                        cloudlet = new Cloudlet(IDs.pollId(Cloudlet.class), 216000000L * 1000, 1, fileSize, outputSize,
                                 new UtilizationModelPlanetLabInMemoryExtended(file.getAbsolutePath(), 300.0D),
                                 utilizationModelNull, utilizationModelNull);
                     } catch (Exception var13) {

@@ -5,6 +5,7 @@ package org.cloudbus.cloudsim.container.utils;
  * Modified by Remo Andreoli (Feb 2024)
  */
 
+import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
@@ -33,7 +34,7 @@ public final class IDs {
     private static int globalCounter = 1;
 
     static {
-        COUNTERS.put(ContainerCloudlet.class, 1);
+        COUNTERS.put(Cloudlet.class, 1);
         COUNTERS.put(ContainerVm.class, 1);
         COUNTERS.put(Container.class, 1);
         COUNTERS.put(Host.class, 1);

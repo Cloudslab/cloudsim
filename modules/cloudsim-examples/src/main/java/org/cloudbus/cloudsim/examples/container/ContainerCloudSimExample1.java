@@ -51,7 +51,7 @@ public class ContainerCloudSimExample1 {
     /**
      * The cloudlet list.
      */
-    private static List<ContainerCloudlet> cloudletList;
+    private static List<Cloudlet> cloudletList;
 
     /**
      * The vmlist.
@@ -189,7 +189,7 @@ public class ContainerCloudSimExample1 {
             /**
              * 15- Printing the results when the simulation is finished.
              */
-            List<ContainerCloudlet> newList = broker.getCloudletReceivedList();
+            List<Cloudlet> newList = broker.getCloudletReceivedList();
             printCloudletList(newList);
 
             Log.printLine("ContainerCloudSimExample1 finished!");
@@ -246,7 +246,7 @@ public class ContainerCloudSimExample1 {
      *
      * @param list list of Cloudlets
      */
-    private static void printCloudletList(List<ContainerCloudlet> list) {
+    private static void printCloudletList(List<Cloudlet> list) {
         int size = list.size();
         Cloudlet cloudlet;
 
@@ -258,7 +258,7 @@ public class ContainerCloudSimExample1 {
                 + "Start Time" + indent + "Finish Time");
 
         DecimalFormat dft = new DecimalFormat("###.##");
-        for (ContainerCloudlet containerCloudlet : list) {
+        for (Cloudlet containerCloudlet : list) {
             cloudlet = containerCloudlet;
             Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
@@ -403,12 +403,12 @@ public class ContainerCloudSimExample1 {
      * @return
      * @throws FileNotFoundException
      */
-    public static List<ContainerCloudlet> createContainerCloudletList(int brokerId, int numberOfCloudlets)
+    public static List<Cloudlet> createContainerCloudletList(int brokerId, int numberOfCloudlets)
             throws FileNotFoundException {
         String inputFolderName = ContainerCloudSimExample1.class.getClassLoader().getResource("workload/planetlab").getPath();
 
         java.io.File inputFolder1 = new java.io.File("modules/cloudsim-examples/src/main/resources/workload/planetlab/");
-        ArrayList<ContainerCloudlet> cloudletList = new ArrayList<>();
+        ArrayList<Cloudlet> cloudletList = new ArrayList<>();
         long fileSize = 300L;
         long outputSize = 300L;
         UtilizationModelNull utilizationModelNull = new UtilizationModelNull();
@@ -419,10 +419,10 @@ public class ContainerCloudSimExample1 {
             java.io.File[] files = inputFolder.listFiles();
             for (java.io.File file : files) {
                 if (createdCloudlets < numberOfCloudlets) {
-                    ContainerCloudlet cloudlet = null;
+                    Cloudlet cloudlet = null;
 
                     try {
-                        cloudlet = new ContainerCloudlet(IDs.pollId(ContainerCloudlet.class), ConstantsExamples.CLOUDLET_LENGTH, 1,
+                        cloudlet = new Cloudlet(IDs.pollId(Cloudlet.class), ConstantsExamples.CLOUDLET_LENGTH, 1,
                                 fileSize, outputSize,
                                 new UtilizationModelPlanetLabInMemoryExtended(file.getAbsolutePath(), 300.0D),
                                 utilizationModelNull, utilizationModelNull);

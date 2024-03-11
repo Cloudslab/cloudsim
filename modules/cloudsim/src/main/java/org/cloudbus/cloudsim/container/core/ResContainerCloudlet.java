@@ -16,5 +16,5 @@ public class ResContainerCloudlet extends ResCloudlet {
     }
 
 
-    public int getContainerId(){return((ContainerCloudlet)getCloudlet()).getContainerId();}
+    public int getContainerId(){return((Cloudlet)getCloudlet()).getContainerId();}
 }

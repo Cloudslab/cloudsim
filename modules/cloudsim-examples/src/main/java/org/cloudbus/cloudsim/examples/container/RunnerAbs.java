@@ -1,5 +1,6 @@
 package org.cloudbus.cloudsim.examples.container;
 
+import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
@@ -52,7 +53,7 @@ public abstract class RunnerAbs {
     /**
      * The Cloudlet List
      */
-    protected static List<ContainerCloudlet> cloudletList;
+    protected static List<Cloudlet> cloudletList;
     /**
      * The overBooking Factor for containers
      */
@@ -185,7 +186,7 @@ public abstract class RunnerAbs {
             broker.submitCloudletList(cloudletList.subList(0, containerList.size()));
             CloudSim.terminateSimulation(86400.0D);
             double lastClock = CloudSim.startSimulation();
-            List<ContainerCloudlet> newList = broker.getCloudletReceivedList();
+            List<Cloudlet> newList = broker.getCloudletReceivedList();
             Log.printLine("Received " + newList.size() + " cloudlets");
             CloudSim.stopSimulation();
 

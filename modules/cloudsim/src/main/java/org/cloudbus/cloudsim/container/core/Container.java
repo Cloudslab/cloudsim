@@ -78,7 +78,7 @@ public class Container {
     private String containerManager;
 
     /**
-     * The ContainerCloudlet scheduler.
+     * The Cloudlet scheduler.
      */
     @Setter(AccessLevel.PROTECTED)
     @Getter

@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
@@ -211,6 +212,14 @@ public class Cloudlet {
     @Getter
     protected int vmId;
 
+    /**
+     * The id of the container is planned to execute the cloudlet.
+     * It may be -1, if containers are not in use
+     */
+    @Setter
+    @Getter
+    protected int containerId = -1;
+    
     /**
      * The cost of each byte of bandwidth (bw) consumed.
      */

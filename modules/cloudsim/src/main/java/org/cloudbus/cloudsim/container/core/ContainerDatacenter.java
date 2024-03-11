@@ -171,7 +171,7 @@ public class ContainerDatacenter extends Datacenter {
         // if a sender using normal send() methods
         catch (ClassCastException c) {
             try {
-                ContainerCloudlet cl = (ContainerCloudlet) ev.getData();
+                Cloudlet cl = (Cloudlet) ev.getData();
                 cloudletId = cl.getCloudletId();
                 userId = cl.getUserId();
                 containerId = cl.getContainerId();
@@ -394,7 +394,7 @@ public class ContainerDatacenter extends Datacenter {
         // if the sender using normal send() methods
         catch (ClassCastException c) {
             try {
-                ContainerCloudlet cl = (ContainerCloudlet) ev.getData();
+                Cloudlet cl = (Cloudlet) ev.getData();
                 cloudletId = cl.getCloudletId();
                 userId = cl.getUserId();
                 vmId = cl.getVmId();
@@ -509,7 +509,7 @@ public class ContainerDatacenter extends Datacenter {
         updateCloudletProcessing();
 
         try {
-            ContainerCloudlet cl = (ContainerCloudlet) ev.getData();
+            Cloudlet cl = (Cloudlet) ev.getData();
 
             // checks whether this Cloudlet has finished or not
             if (cl.isFinished()) {

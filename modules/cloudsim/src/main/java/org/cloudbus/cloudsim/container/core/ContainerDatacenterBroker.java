@@ -110,7 +110,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
      * @post $none
      */
     public void bindCloudletToContainer(int cloudletId, int containerId) {
-        ContainerCloudlet containerCloudlet = CloudletList.getById(getCloudletList(), cloudletId);
+        Cloudlet containerCloudlet = CloudletList.getById(getCloudletList(), cloudletId);
         containerCloudlet.setContainerId(containerId);
     }
     /**
@@ -274,8 +274,8 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
      */
     protected void submitCloudlets() {
         int containerIndex = 0;
-        List<ContainerCloudlet> successfullySubmitted = new ArrayList<>();
-        for (ContainerCloudlet cloudlet : this.<ContainerCloudlet>getCloudletList()) {
+        List<Cloudlet> successfullySubmitted = new ArrayList<>();
+        for (Cloudlet cloudlet : this.<Cloudlet>getCloudletList()) {
             //Log.printLine("Containers Created" + getContainersCreated());
             if (containerIndex < getContainersCreated()) {
                     //Log.printLine("Container Index" + containerIndex);
@@ -325,8 +325,8 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //            containerIndex = (containerIndex + 1) % getVmsCreatedList().size();
 
 //          int vmIndex = 0;
-//        List<ContainerCloudlet> successfullySubmitted = new ArrayList<ContainerCloudlet>();
-//        for (ContainerCloudlet cloudlet : getCloudletList()) {
+//        List<Cloudlet> successfullySubmitted = new ArrayList<Cloudlet>();
+//        for (Cloudlet cloudlet : getCloudletList()) {
 //            ContainerVm vm;
 //            // if user didn't bind this cloudlet and it has not been executed yet
 //            if (cloudlet.getVmId() == -1) {
@@ -367,7 +367,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
     protected void submitContainers(){
         int i = 0;
         for(Container container:getContainerList()) {
-            ContainerCloudlet cloudlet = (ContainerCloudlet) getCloudletList().get(i);
+            Cloudlet cloudlet = (Cloudlet) getCloudletList().get(i);
                 //Log.printLine("Containers Created" + getContainersCreated());
 
                 if (cloudlet.getUtilizationModelCpu() instanceof UtilizationModelPlanetLabInMemory temp) {
