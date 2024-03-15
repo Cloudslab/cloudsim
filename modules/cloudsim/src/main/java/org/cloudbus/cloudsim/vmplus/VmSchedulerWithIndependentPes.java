@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.vmplus;
 
 import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmScheduler;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,13 +36,13 @@ public abstract class VmSchedulerWithIndependentPes<P extends Pe> extends VmSche
     }
 
     @Override
-    public List<Double> getAllocatedMipsForVm(final Vm vm) {
+    public List<Double> getAllocatedMipsForGuest(final GuestEntity guest) {
         List<Double> result = new ArrayList<>();
         for (Map.Entry<P, VmScheduler> entry : peIdsToSchedulers.entrySet()) {
             P pe = entry.getKey();
             VmScheduler scheduler = entry.getValue();
-            if (doesVmUse(vm, pe)) {
-                List<Double> alloc = scheduler.getAllocatedMipsForVm(vm);
+            if (doesVmUse(guest, pe)) {
+                List<Double> alloc = scheduler.getAllocatedMipsForGuest(guest);
                 result.add(alloc.get(0));
             } else {
                 result.add(0.0);
@@ -53,16 +53,16 @@ public abstract class VmSchedulerWithIndependentPes<P extends Pe> extends VmSche
     }
 
     @Override
-    public boolean allocatePesForVm(final Vm vm, final List<Double> mipsShare) {
+    public boolean allocatePesForGuest(final GuestEntity guest, final List<Double> mipsShare) {
         boolean result = true;
         int i = 0;
         for (Map.Entry<P, VmScheduler> entry : peIdsToSchedulers.entrySet()) {
             P pe = entry.getKey();
             VmScheduler scheduler = entry.getValue();
-            if (doesVmUse(vm, pe)) {
+            if (doesVmUse(guest, pe)) {
                 // Call the scheduler of the i-th Pe with the i-th value from
                 // the mipsShare
-                result &= scheduler.allocatePesForVm(vm, mipsShare.subList(i, i + 1));
+                result &= scheduler.allocatePesForGuest(guest, mipsShare.subList(i, i + 1));
             }
             i++;
         }
@@ -70,21 +70,21 @@ public abstract class VmSchedulerWithIndependentPes<P extends Pe> extends VmSche
     }
 
     @Override
-    public void deallocatePesForVm(final Vm vm) {
+    public void deallocatePesForGuest(final GuestEntity guest) {
         for (Map.Entry<P, VmScheduler> entry : peIdsToSchedulers.entrySet()) {
             P pe = entry.getKey();
             VmScheduler scheduler = entry.getValue();
-            if (doesVmUse(vm, pe)) {
-                scheduler.deallocatePesForVm(vm);
+            if (doesVmUse(guest, pe)) {
+                scheduler.deallocatePesForGuest(guest);
             }
         }
     }
 
     @Override
-    public void deallocatePesForAllVms() {
+    public void deallocatePesForAllGuests() {
         for (Map.Entry<P, VmScheduler> entry : peIdsToSchedulers.entrySet()) {
             VmScheduler scheduler = entry.getValue();
-            scheduler.deallocatePesForAllVms();
+            scheduler.deallocatePesForAllGuests();
         }
     }
 
@@ -99,13 +99,11 @@ public abstract class VmSchedulerWithIndependentPes<P extends Pe> extends VmSche
 
     /**
      * A predicate method, returning if a VM uses a Pe.
-     * 
-     * @param vm
-     *            - the vm to check for,
-     * @param pe
-     *            - the pe to check for.
+     *
+     * @param guest - the vm to check for,
+     * @param pe    - the pe to check for.
      * @return - if the vm uses the Pe.
      */
-    protected abstract boolean doesVmUse(final Vm vm, final Pe pe);
+    protected abstract boolean doesVmUse(final GuestEntity guest, final Pe pe);
 
 }

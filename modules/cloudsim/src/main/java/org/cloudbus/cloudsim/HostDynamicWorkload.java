@@ -9,10 +9,10 @@
 package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
@@ -58,23 +58,23 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	@Override
-	public double updateVmsProcessing(double currentTime) {
-		double smallerTime = super.updateVmsProcessing(currentTime);
+	public double updateGuestsProcessing(double currentTime) {
+		double smallerTime = super.updateGuestsProcessing(currentTime);
 		setPreviousUtilizationMips(getUtilizationMips());
 		setUtilizationMips(0);
 		double hostTotalRequestedMips = 0;
 
-		for (Vm vm : getVmList()) {
-			getVmScheduler().deallocatePesForVm(vm);
+		for (GuestEntity vm : getGuestList()) {
+			getGuestScheduler().deallocatePesForGuest(vm);
 		}
 
-		for (Vm vm : getVmList()) {
-			getVmScheduler().allocatePesForVm(vm, vm.getCurrentRequestedMips());
+		for (GuestEntity vm : getGuestList()) {
+			getGuestScheduler().allocatePesForGuest(vm, vm.getCurrentRequestedMips());
 		}
 
-		for (Vm vm : getVmList()) {
+		for (GuestEntity vm : getGuestList()) {
 			double totalRequestedMips = vm.getCurrentRequestedTotalMips();
-			double totalAllocatedMips = getVmScheduler().getTotalAllocatedMipsForVm(vm);
+			double totalAllocatedMips = getGuestScheduler().getTotalAllocatedMipsForGuest(vm);
 
 			if (!Log.isDisabled()) {
 				Log.formatLine(
@@ -87,20 +87,20 @@ public class HostDynamicWorkload extends Host {
 						vm.getMips(),
 						totalRequestedMips / vm.getMips() * 100);
 
-				List<Pe> pes = getVmScheduler().getPesAllocatedForVM(vm);
+				List<Pe> pes = getGuestScheduler().getPesAllocatedForGuest(vm);
 				StringBuilder pesString = new StringBuilder();
 				for (Pe pe : pes) {
 					pesString.append(String.format(" PE #" + pe.getId() + ": %.2f.", pe.getPeProvisioner()
-							.getTotalAllocatedMipsForVm(vm)));
+							.getTotalAllocatedMipsForGuest(vm)));
 				}
 				Log.formatLine(
 						"%.2f: [Host #" + getId() + "] MIPS for VM #" + vm.getId() + " by PEs ("
-								+ getNumberOfPes() + " * " + getVmScheduler().getPeCapacity() + ")."
+								+ getNumberOfPes() + " * " + getGuestScheduler().getPeCapacity() + ")."
 								+ pesString,
 						CloudSim.clock());
 			}
 
-			if (getVmsMigratingIn().contains(vm)) {
+			if (getGuestsMigratingIn().contains(vm)) {
 				Log.formatLine("%.2f: [Host #" + getId() + "] VM #" + vm.getId()
 						+ " is being migrated to Host #" + getId(), CloudSim.clock());
 			} else {
@@ -113,7 +113,7 @@ public class HostDynamicWorkload extends Host {
 						currentTime,
 						totalAllocatedMips,
 						totalRequestedMips,
-						(vm.isInMigration() && !getVmsMigratingIn().contains(vm)));
+						(vm.isInMigration() && !getGuestsMigratingIn().contains(vm)));
 
 				if (vm.isInMigration()) {
 					Log.formatLine(
@@ -141,9 +141,9 @@ public class HostDynamicWorkload extends Host {
 	 * 
 	 * @return the completed vms
 	 */
-	public List<? extends Vm> getCompletedVms() {
-		List<Vm> vmsToRemove = new ArrayList<>();
-		for (Vm vm : getVmList()) {
+	public List<GuestEntity> getCompletedVms() {
+		List<GuestEntity> vmsToRemove = new ArrayList<>();
+		for (GuestEntity vm : getGuestList()) {
 			if (vm.isInMigration()) {
 				continue;
 			}

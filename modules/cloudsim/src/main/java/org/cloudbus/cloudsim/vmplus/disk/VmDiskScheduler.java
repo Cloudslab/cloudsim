@@ -1,12 +1,11 @@
 package org.cloudbus.cloudsim.vmplus.disk;
 
 import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmScheduler;
 import org.cloudbus.cloudsim.VmSchedulerTimeSharedOverSubscription;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.vmplus.VmSchedulerWithIndependentPes;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,8 +27,8 @@ public class VmDiskScheduler extends VmSchedulerWithIndependentPes<HddPe> {
     }
 
     @Override
-    protected boolean doesVmUse(final Vm vm, final Pe pe) {
-        return vm instanceof HddVm && ((HddVm) vm).getHddsIds().contains(pe.getId());
+    protected boolean doesVmUse(final GuestEntity guest, final Pe pe) {
+        return guest instanceof HddVm && ((HddVm) guest).getHddsIds().contains(pe.getId());
     }
 
 }

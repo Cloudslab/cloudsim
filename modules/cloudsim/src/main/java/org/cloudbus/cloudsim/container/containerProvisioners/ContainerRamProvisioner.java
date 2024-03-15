@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.container.containerProvisioners;
 
-import org.cloudbus.cloudsim.container.core.Container;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * This class takes care of the provisioning of Container's ram .
@@ -32,42 +32,42 @@ public abstract class ContainerRamProvisioner {
     /**
      * allocate vms ram to the container
      *
-     * @param container the container
-     * @param ram       the ram
+     * @param guest the container
+     * @param ram   the ram
      * @return $true if successful
      */
-    public abstract boolean allocateRamForContainer(Container container, int ram);
+    public abstract boolean allocateRamForGuest(GuestEntity guest, int ram);
 
     /**
      * Get the allocated ram of the container
      *
-     * @param container the container
+     * @param guest the container
      * @return the allocated ram of the container
      */
-    public abstract int getAllocatedRamForContainer(Container container);
+    public abstract int getAllocatedRamForGuest(GuestEntity guest);
 
     /**
      * Release the allocated ram amount of the container
      *
-     * @param container the container
+     * @param guest the container
      */
-    public abstract void deallocateRamForContainer(Container container);
+    public abstract void deallocateRamForGuest(GuestEntity guest);
 
     /**
      * Release the allocated ram of the vm.
      */
-    public void deallocateRamForAllContainers() {
+    public void deallocateRamForAllGuests() {
         setAvailableVmRam(getRam());
     }
 
     /**
      * It checks whether or not the vm have enough ram for the container
      *
-     * @param container the container
-     * @param ram       the vm's ram
+     * @param guest the container
+     * @param ram   the vm's ram
      * @return $ture if it is suitable
      */
-    public abstract boolean isSuitableForContainer(Container container, int ram);
+    public abstract boolean isSuitableForGuest(GuestEntity guest, int ram);
 
     /**
      * @return the ram

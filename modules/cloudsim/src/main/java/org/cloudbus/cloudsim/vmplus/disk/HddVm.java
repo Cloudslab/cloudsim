@@ -128,7 +128,7 @@ public class HddVm extends MonitoredVMex {
      */
     @Override
     @Deprecated
-    public double updateVmProcessing(final double currentTime, final List<Double> mipsShare) {
+    public double updateGuestProcessing(final double currentTime, final List<Double> mipsShare) {
         return updateVmProcessing(currentTime, mipsShare, List.of());
     }
 
@@ -197,7 +197,7 @@ public class HddVm extends MonitoredVMex {
 
     @Override
     public List<Double> getCurrentRequestedMips() {
-        if (getHost().getVmScheduler() instanceof VmSchedulerMapVmsToPes<?> scheduler) {
+        if (getHost().getGuestScheduler() instanceof VmSchedulerMapVmsToPes<?> scheduler) {
 
             List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
             if (isBeingInstantiated()) {

@@ -59,7 +59,7 @@ public class DatacenterEX extends Datacenter {
     protected void processVmCreate(final SimEvent ev, final boolean ack) {
         Vm vm = (Vm) ev.getData();
 
-        boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
+        boolean result = getVmAllocationPolicy().allocateHostForGuest(vm);
 
         double delay = delayDistribution.getDelay(vm);
         if (ack) {
@@ -79,8 +79,8 @@ public class DatacenterEX extends Datacenter {
             // vm.setBeingInstantiated(false);
             // }
 
-            vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
-                    .getAllocatedMipsForVm(vm));
+            vm.updateGuestProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
+                    .getAllocatedMipsForGuest(vm));
         }
 
     }

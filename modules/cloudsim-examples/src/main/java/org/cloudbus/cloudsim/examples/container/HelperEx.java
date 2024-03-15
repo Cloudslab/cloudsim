@@ -111,8 +111,8 @@ public class HelperEx {
             }
             containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (int) ConstantsExamples.VM_RAM[vmType],
                     ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen", new ContainerSchedulerTimeSharedOverSubscription(peList),
-                    new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
-                    new ContainerBwProvisionerSimple(ConstantsExamples.VM_BW), peList, ConstantsExamples.SCHEDULING_INTERVAL));
+                    new RamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
+                    new BwProvisionerSimple(ConstantsExamples.VM_BW), peList, ConstantsExamples.SCHEDULING_INTERVAL));
 
 
         }

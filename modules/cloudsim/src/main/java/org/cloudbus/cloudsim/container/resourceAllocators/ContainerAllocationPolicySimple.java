@@ -68,7 +68,7 @@ public class ContainerAllocationPolicySimple extends ContainerAllocationPolicy {
 				}
 
 				ContainerVm containerVm = getContainerVmList().get(idx);
-				result = containerVm.containerCreate(container);
+				result = containerVm.guestCreate(container);
 
 				if (result) { // if vm were succesfully created in the host
 					getContainerVmTable().put(container.getUid(), containerVm);
@@ -91,7 +91,7 @@ public class ContainerAllocationPolicySimple extends ContainerAllocationPolicy {
 
 	@Override
 	public boolean allocateVmForContainer(Container container, ContainerVm containerVm) {
-		if (containerVm.containerCreate(container)) { // if vm has been succesfully created in the host
+		if (containerVm.guestCreate(container)) { // if vm has been succesfully created in the host
 			getContainerVmTable().put(container.getUid(), containerVm);
 
 			int requiredPes = container.getNumberOfPes();
@@ -121,7 +121,7 @@ public class ContainerAllocationPolicySimple extends ContainerAllocationPolicy {
 		int idx = getContainerVmList().indexOf(containerVm);
 		int pes = getUsedPes().remove(container.getUid());
 		if (containerVm != null) {
-			containerVm.containerDestroy(container);
+			containerVm.guestDestroy(container);
 			getFreePes().set(idx, getFreePes().get(idx) + pes);
 		}
 

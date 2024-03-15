@@ -122,12 +122,12 @@ public class VmTest {
 
 	@Test
 	public void testUpdateVmProcessing() {
-		assertEquals(0, vm.updateVmProcessing(0, null), 0);
+		assertEquals(0, vm.updateGuestProcessing(0, null), 0);
 		ArrayList<Double> mipsShare1 = new ArrayList<>();
 		mipsShare1.add(1.0);
 		ArrayList<Double> mipsShare2 = new ArrayList<>();
 		mipsShare2.add(1.0);
-		assertEquals(vmScheduler.updateCloudletProcessing(0, mipsShare1), vm.updateVmProcessing(0, mipsShare2), 0);
+		assertEquals(vmScheduler.updateCloudletProcessing(0, mipsShare1), vm.updateGuestProcessing(0, mipsShare2), 0);
 	}
 
 	@Test

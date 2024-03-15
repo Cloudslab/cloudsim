@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
@@ -150,7 +151,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 	 */
 	protected double getMaximumVmMigrationTime(PowerHost host) {
 		int maxRam = Integer.MIN_VALUE;
-		for (Vm vm : host.getVmList()) {
+		for (GuestEntity vm : host.getGuestList()) {
 			int ram = vm.getRam();
 			if (ram > maxRam) {
 				maxRam = ram;

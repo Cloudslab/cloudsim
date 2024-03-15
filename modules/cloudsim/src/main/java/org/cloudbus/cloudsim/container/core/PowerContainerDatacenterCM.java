@@ -77,7 +77,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                         if (migrate.containsKey("container")) {
                             Container container = (Container) migrate.get("container");
                             ContainerVm targetVm = (ContainerVm) migrate.get("vm");
-                            ContainerVm oldVm = container.getVm();
+                            ContainerVm oldVm = (ContainerVm) container.getHost(); // TODO: Remo Andreoli: change to HostEntity?
                             if (oldVm == null) {
                                 Log.formatLine(
                                         "%.2f: Migration of Container #%d to Vm #%d is started",
@@ -106,7 +106,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                             currentTime,
                                             container.getId(),
                                             targetVm.getId());
-                                    targetVm.containerDestroyAll();
+                                    targetVm.guestDestroyAll();
                                     send(
                                             getId(),
                                             vmStartupDelay,
@@ -167,7 +167,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                         targetHost.getId());
                             }
 
-                            targetHost.addMigratingInVm(vm);
+                            targetHost.addMigratingInGuest(vm);
                             incrementMigrationCount();
 
                             /** VM migration delay = RAM / bandwidth **/
@@ -237,7 +237,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
             Map<String, Object> map = (Map<String, Object>) ev.getData();
             ContainerVm containerVm = (ContainerVm) map.get("vm");
             Host host = (Host) map.get("host");
-            boolean result = getVmAllocationPolicy().allocateHostForVm(containerVm, host);
+            boolean result = getVmAllocationPolicy().allocateHostForGuest(containerVm, host);
 //                set the containerVm in waiting state
             containerVm.setInWaiting(true);
 //                containerVm.addMigratingInContainer((Container) map.get("container"));
@@ -266,8 +266,8 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                     containerVm.setBeingInstantiated(false);
                 }
 
-                containerVm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(containerVm).getVmScheduler()
-                        .getAllocatedMipsForVm(containerVm));
+                containerVm.updateGuestProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(containerVm).getGuestScheduler()
+                        .getAllocatedMipsForGuest(containerVm));
             }
 
         } else {

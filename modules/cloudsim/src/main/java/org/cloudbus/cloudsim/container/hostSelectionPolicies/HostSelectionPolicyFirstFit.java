@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.container.hostSelectionPolicies;
 
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.core.HostEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -11,13 +12,13 @@ import java.util.Set;
  */
 public class HostSelectionPolicyFirstFit extends HostSelectionPolicy {
     @Override
-    public Host getHost(List<Host> hostList, Object obj, Set<? extends Host> excludedHostList) {
-        Host host = null;
-        for (Host host1 : hostList) {
+    public HostEntity getHost(List<HostEntity> hostList, Object obj, Set<? extends HostEntity> excludedHostList) {
+        HostEntity host = null;
+        for (HostEntity host1 : hostList) {
             if (excludedHostList.contains(host1)) {
                 continue;
             }
-            host= host1;
+            host = host1;
             break;
         }
     return host;

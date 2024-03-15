@@ -414,7 +414,7 @@ public class Switch extends SimEntity {
          */
 	protected NetworkHost getHostwithVM(int vmid) {
 		for (Entry<Integer, NetworkHost> es : hostlist.entrySet()) {
-			Vm vm = VmList.getById(es.getValue().getVmList(), vmid);
+			Vm vm = VmList.getById(es.getValue().getGuestList(), vmid);
 			if (vm != null) {
 				return es.getValue();
 			}

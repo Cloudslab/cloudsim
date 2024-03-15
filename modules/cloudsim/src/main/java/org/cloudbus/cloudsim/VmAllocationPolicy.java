@@ -8,6 +8,9 @@
 
 package org.cloudbus.cloudsim;
 
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
+
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +27,7 @@ import java.util.Map;
 public abstract class VmAllocationPolicy {
 
 	/** The host list. */
-	private List<? extends Host> hostList;
+	private List<? extends HostEntity> hostList;
 
 	/**
 	 * Creates a new VmAllocationPolicy object.
@@ -33,30 +36,30 @@ public abstract class VmAllocationPolicy {
 	 * @pre $none
 	 * @post $none
 	 */
-	public VmAllocationPolicy(List<? extends Host> list) {
+	public VmAllocationPolicy(List<? extends HostEntity> list) {
 		setHostList(list);
 	}
 
 	/**
 	 * Allocates a host for a given VM.
-	 * 
-	 * @param vm the VM to allocate a host to
+	 *
+	 * @param guest the VM to allocate a host to
 	 * @return $true if the host could be allocated; $false otherwise
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocateHostForVm(Vm vm);
+	public abstract boolean allocateHostForGuest(GuestEntity guest);
 
 	/**
 	 * Allocates a specified host for a given VM.
-	 * 
-	 * @param vm virtual machine which the host is reserved to
-         * @param host host to allocate the the given VM
+	 *
+	 * @param guest virtual machine which the host is reserved to
+	 * @param host  host to allocate the the given VM
 	 * @return $true if the host could be allocated; $false otherwise
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocateHostForVm(Vm vm, Host host);
+	public abstract boolean allocateHostForGuest(GuestEntity guest, HostEntity host);
 
 	/**
 	 * Optimize allocation of the VMs according to current utilization.
@@ -74,41 +77,40 @@ public abstract class VmAllocationPolicy {
 
 	/**
 	 * Releases the host used by a VM.
-	 * 
-	 * @param vm the vm to get its host released
+	 *
+	 * @param guest the vm to get its host released
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract void deallocateHostForVm(Vm vm);
+	public abstract void deallocateHostForGuest(GuestEntity guest);
 
 	/**
 	 * Get the host that is executing the given VM.
-	 * 
-	 * @param vm the vm
+	 *
+	 * @param guest the vm
 	 * @return the Host with the given vmID; $null if not found
-         * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract Host getHost(Vm vm);
+	public abstract HostEntity getHost(GuestEntity guest);
 
 	/**
 	 * Get the host that is executing the given VM belonging to the given user.
-	 * 
-	 * @param vmId the vm id
+	 *
+	 * @param vmId   the vm id
 	 * @param userId the user id
 	 * @return the Host with the given vmID and userID; $null if not found
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract Host getHost(int vmId, int userId);
+	public abstract HostEntity getHost(int vmId, int userId);
 
 	/**
 	 * Sets the host list.
 	 * 
 	 * @param hostList the new host list
 	 */
-	protected void setHostList(List<? extends Host> hostList) {
+	protected void setHostList(List<? extends HostEntity> hostList) {
 		this.hostList = hostList;
 	}
 
@@ -118,7 +120,7 @@ public abstract class VmAllocationPolicy {
 	 * @return the host list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Host> List<T> getHostList() {
+	public <T extends HostEntity> List<T> getHostList() {
 		return (List<T>) hostList;
 	}
 

@@ -49,7 +49,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMC extends 
     protected boolean isHostOverUtilized(PowerHost host) {
         addHistoryEntry(host, getUtilizationThreshold());
         double totalRequestedMips = 0;
-        for (ContainerVm vm : host.<ContainerVm>getVmList()) {
+        for (ContainerVm vm : host.<ContainerVm>getGuestList()) {
             totalRequestedMips += vm.getCurrentRequestedTotalMips();
         }
         double utilization = totalRequestedMips / host.getTotalMips();

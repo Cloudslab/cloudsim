@@ -7,6 +7,9 @@
 
 package org.cloudbus.cloudsim;
 
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +24,7 @@ import java.util.List;
  * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
-public class Vm {
+public class Vm implements GuestEntity {
 
 	/** The VM unique id. */
 	private int id;
@@ -54,7 +57,7 @@ public class Vm {
 	private CloudletScheduler cloudletScheduler;
 
 	/** The PM that hosts the VM. */
-	private Host host;
+	private HostEntity host;
 
 	/** Indicates if the VM is in migration process. */
 	private boolean inMigration;
@@ -151,7 +154,7 @@ public class Vm {
 	 * @pre currentTime >= 0
 	 * @post $none
 	 */
-	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
+	public double updateGuestProcessing(double currentTime, List<Double> mipsShare) {
 		if (mipsShare != null) {
 			return getCloudletScheduler().updateCloudletProcessing(currentTime, mipsShare);
 		}
@@ -443,7 +446,7 @@ public class Vm {
 	 * @pre host != $null
 	 * @post $none
 	 */
-	public void setHost(Host host) {
+	public void setHost(HostEntity host) {
 		this.host = host;
 	}
 
@@ -452,7 +455,7 @@ public class Vm {
 	 * 
 	 * @return the host
 	 */
-	public Host getHost() {
+	public HostEntity getHost() {
 		return host;
 	}
 

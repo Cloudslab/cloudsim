@@ -379,7 +379,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //                    double newmips = percentileUsage * container.getMips();
 //                    double maxUsage = Doubles.max(cloudletUsage);
 //                    double newmips = maxUsage * container.getMips();
-                    container.setWorkloadMips(newmips);
+                    container.setMips(newmips);
                 }
 
                 if (cloudlet.getContainerId() != container.getId()) {

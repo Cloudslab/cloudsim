@@ -78,7 +78,7 @@ public class ContainerPeList {
     public static <T extends ContainerPe> double getMaxUtilizationAmongVmsPes(List<T> peList, Container container) {
         double maxUtilization = 0;
         for (ContainerPe pe : peList) {
-            if (pe.getContainerPeProvisioner().getAllocatedMipsForContainer(container) == null) {
+            if (pe.getContainerPeProvisioner().getAllocatedMipsForGuest(container) == null) {
                 continue;
             }
             double utilization = pe.getContainerPeProvisioner().getUtilization();

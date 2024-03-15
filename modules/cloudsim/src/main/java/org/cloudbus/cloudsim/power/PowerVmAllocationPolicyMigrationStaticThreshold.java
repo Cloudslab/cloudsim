@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * A VM allocation policy that uses a Static CPU utilization Threshold (THR) to detect host over
@@ -62,7 +63,7 @@ public class PowerVmAllocationPolicyMigrationStaticThreshold extends PowerVmAllo
 	protected boolean isHostOverUtilized(PowerHost host) {
 		addHistoryEntry(host, getUtilizationThreshold());
 		double totalRequestedMips = 0;
-		for (Vm vm : host.getVmList()) {
+		for (GuestEntity vm : host.getGuestList()) {
 			totalRequestedMips += vm.getCurrentRequestedTotalMips();
 		}
 		double utilization = totalRequestedMips / host.getTotalMips();

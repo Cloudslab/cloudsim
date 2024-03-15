@@ -27,7 +27,7 @@ public abstract  class PowerContainerVmAllocationAbstract extends PowerVmAllocat
         List<ContainerVm> vmList = new ArrayList<>();
         List<Host> hostList = getHostList();
         for (Host host : hostList) {
-            List<ContainerVm> containerVms = host.getVmList();
+            List<ContainerVm> containerVms = host.getGuestList();
             for (ContainerVm vm : containerVms) {
                 if (vm.getTotalUtilizationOfCpuMips(CloudSim.clock()) > vm.getTotalMips()) {
                     vmList.add(vm);

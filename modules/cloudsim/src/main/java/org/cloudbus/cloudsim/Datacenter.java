@@ -13,10 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
-import org.cloudbus.cloudsim.core.SimEntity;
-import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.core.*;
 
 /**
  * Datacenter class is a CloudResource whose hostList are virtualized. It deals with processing of
@@ -333,7 +330,7 @@ public class Datacenter extends SimEntity {
 			userId = data[1];
 			vmId = data[2];
 
-			status = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId).getCloudletScheduler()
+			status = getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId,userId).getCloudletScheduler()
 					.getCloudletStatus(cloudletId);
 		}
 
@@ -344,7 +341,7 @@ public class Datacenter extends SimEntity {
 				cloudletId = cl.getCloudletId();
 				userId = cl.getUserId();
 
-				status = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
+				status = getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId,userId)
 						.getCloudletScheduler().getCloudletStatus(cloudletId);
 			} catch (Exception e) {
 				Log.printConcatLine(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
@@ -397,7 +394,7 @@ public class Datacenter extends SimEntity {
 	protected void processVmCreate(SimEvent ev, boolean ack) {
 		Vm vm = (Vm) ev.getData();
 
-		boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
+		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm);
 
 		if (ack) {
 			int[] data = new int[3];
@@ -419,8 +416,8 @@ public class Datacenter extends SimEntity {
 				vm.setBeingInstantiated(false);
 			}
 
-			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
-					.getAllocatedMipsForVm(vm));
+			vm.updateGuestProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
+					.getAllocatedMipsForGuest(vm));
 		}
 
 	}
@@ -439,7 +436,7 @@ public class Datacenter extends SimEntity {
 	 */
 	protected void processVmDestroy(SimEvent ev, boolean ack) {
 		Vm vm = (Vm) ev.getData();
-		getVmAllocationPolicy().deallocateHostForVm(vm);
+		getVmAllocationPolicy().deallocateHostForGuest(vm);
 
 		if (ack) {
 			int[] data = new int[3];
@@ -477,9 +474,9 @@ public class Datacenter extends SimEntity {
 		Host host = (Host) migrate.get("host");
 		
 		//destroy VM in src host
-		getVmAllocationPolicy().deallocateHostForVm(vm);
-		host.removeMigratingInVm(vm);
-		boolean result = getVmAllocationPolicy().allocateHostForVm(vm, host);
+		getVmAllocationPolicy().deallocateHostForGuest(vm);
+		host.removeMigratingInGuest(vm);
+		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm, host);
 		if (!result) {
 			Log.printLine("[Datacenter.processVmMigrate] VM allocation to the destination host failed");
 			System.exit(0);
@@ -580,7 +577,7 @@ public class Datacenter extends SimEntity {
 		int destId = array[4];
 
 		// get the cloudlet
-		Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
+		Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId,userId)
 				.getCloudletScheduler().cloudletCancel(cloudletId);
 
 		boolean failed = false;
@@ -602,7 +599,7 @@ public class Datacenter extends SimEntity {
 
 			// the cloudlet will migrate from one vm to another does the destination VM exist?
 			if (destId == getId()) {
-				Vm vm = getVmAllocationPolicy().getHost(vmDestId, userId).getVm(vmDestId,userId);
+				Vm vm = (Vm) getVmAllocationPolicy().getHost(vmDestId, userId).getGuest(vmDestId,userId);
 				if (vm == null) {
 					failed = true;
 				} else {
@@ -687,8 +684,8 @@ public class Datacenter extends SimEntity {
 			// time to transfer the files
 			double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());
 
-			Host host = getVmAllocationPolicy().getHost(vmId, userId);
-			Vm vm = host.getVm(vmId, userId);
+			HostEntity host = getVmAllocationPolicy().getHost(vmId, userId);
+			Vm vm = (Vm) host.getGuest(vmId, userId);
 			CloudletScheduler scheduler = vm.getCloudletScheduler();
 			double estimatedFinishTime = scheduler.cloudletSubmit(cl, fileTransferTime);
 
@@ -754,7 +751,7 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void processCloudletResume(int cloudletId, int userId, int vmId, boolean ack) {
-		double eventTime = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
+		double eventTime = getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId,userId)
 				.getCloudletScheduler().cloudletResume(cloudletId);
 
 		boolean status = false;
@@ -791,7 +788,7 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void processCloudletPause(int cloudletId, int userId, int vmId, boolean ack) {
-		boolean status = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
+		boolean status = getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId,userId)
 				.getCloudletScheduler().cloudletPause(cloudletId);
 
 		if (ack) {
@@ -818,7 +815,7 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void processCloudletCancel(int cloudletId, int userId, int vmId) {
-		Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getVm(vmId,userId)
+		Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId,userId)
 				.getCloudletScheduler().cloudletCancel(cloudletId);
 		sendNow(userId, CloudSimTags.CLOUDLET_CANCEL, cl);
 	}
@@ -841,7 +838,7 @@ public class Datacenter extends SimEntity {
 			// for each host...
 			for (Host host : list) {
 				// inform VMs to update processing
-				double time = host.updateVmsProcessing(CloudSim.clock());
+				double time = host.updateGuestsProcessing(CloudSim.clock());
 				// what time do we expect that the next cloudlet will finish?
 				if (time < smallerTime) {
 					smallerTime = time;
@@ -868,7 +865,7 @@ public class Datacenter extends SimEntity {
 	protected void checkCloudletCompletion() {
 		List<? extends Host> list = getVmAllocationPolicy().getHostList();
 		for (Host host : list) {
-			for (Vm vm : host.getVmList()) {
+			for (Vm vm : host.<Vm>getGuestList()) {
 				while (vm.getCloudletScheduler().isFinishedCloudlets()) {
 					Cloudlet cl = vm.getCloudletScheduler().getNextFinishedCloudlet();
 					if (cl != null) {

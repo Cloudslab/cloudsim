@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.vmplus;
 
 import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +41,8 @@ public abstract class VmSchedulerMapVmsToPes<P extends Pe> extends VmSchedulerWi
     }
 
     @Override
-    public boolean doesVmUse(final Vm vm, final Pe pe) {
-        return vmsToPes.containsKey(vm.getId()) && vmsToPes.get(vm.getId()).contains(pe.getId());
+    public boolean doesVmUse(final GuestEntity guest, final Pe pe) {
+        return vmsToPes.containsKey(guest.getId()) && vmsToPes.get(guest.getId()).contains(pe.getId());
     }
 
 }

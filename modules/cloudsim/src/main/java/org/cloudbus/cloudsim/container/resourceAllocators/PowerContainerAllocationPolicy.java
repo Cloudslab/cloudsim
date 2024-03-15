@@ -46,7 +46,7 @@ public abstract class PowerContainerAllocationPolicy extends ContainerAllocation
                 Log.formatLine("%.2f: No suitable VM found for Container#" + container.getId() + "\n", CloudSim.clock());
                 return false;
             }
-            if (containerVm.containerCreate(container)) { // if vm has been succesfully created in the host
+            if (containerVm.guestCreate(container)) { // if vm has been succesfully created in the host
                 getContainerTable().put(container.getUid(), containerVm);
 //                container.setVm(containerVm);
                 Log.formatLine(
@@ -69,7 +69,7 @@ public abstract class PowerContainerAllocationPolicy extends ContainerAllocation
         public ContainerVm findVmForContainer(Container container) {
             for (ContainerVm containerVm : getContainerVmList()) {
 //                Log.printConcatLine("Trying vm #",containerVm.getId(),"For container #", container.getId());
-                if (containerVm.isSuitableForContainer(container)) {
+                if (containerVm.isSuitableForGuest(container)) {
                     return containerVm;
                 }
             }
@@ -84,7 +84,7 @@ public abstract class PowerContainerAllocationPolicy extends ContainerAllocation
         public void deallocateVmForContainer(Container container) {
             ContainerVm containerVm = getContainerTable().remove(container.getUid());
             if (containerVm != null) {
-                containerVm.containerDestroy(container);
+                containerVm.guestDestroy(container);
             }
         }
 

@@ -2,7 +2,7 @@ package org.cloudbus.cloudsim.container.containerProvisioners;
 
 import java.util.List;
 
-import org.cloudbus.cloudsim.container.core.Container;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 
 public abstract class ContainerPeProvisioner {
@@ -27,16 +27,14 @@ public abstract class ContainerPeProvisioner {
 	}
 	/**
 	 * Allocates MIPS for a given Container.
-	 * 
-	 * @param container  container for which the MIPS are being allocated
-	 * @param mips the mips
-	 * 
+	 *
+	 * @param guest container for which the MIPS are being allocated
+	 * @param mips  the mips
 	 * @return $true if the MIPS could be allocated; $false otherwise
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocateMipsForContainer(Container container, double mips);
+	public abstract boolean allocateMipsForGuest(GuestEntity guest, double mips);
 
 	/**
 	 * Allocates MIPS for a given Container.
@@ -49,67 +47,58 @@ public abstract class ContainerPeProvisioner {
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocateMipsForContainer(String containerUid, double mips);
+	public abstract boolean allocateMipsForGuest(String containerUid, double mips);
 
 	/**
 	 * Allocates MIPS for a given container.
-	 * 
-	 * @param container container for which the MIPS are being allocated
-	 * @param mips the mips for each virtual Pe
-	 * 
+	 *
+	 * @param guest container for which the MIPS are being allocated
+	 * @param mips  the mips for each virtual Pe
 	 * @return $true if the MIPS could be allocated; $false otherwise
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocateMipsForContainer(Container container, List<Double> mips);
+	public abstract boolean allocateMipsForGuest(GuestEntity guest, List<Double> mips);
 
 	/**
 	 * Gets allocated MIPS for a given VM.
-	 * 
-	 * @param container container for which the MIPS are being allocated
-	 * 
+	 *
+	 * @param guest container for which the MIPS are being allocated
 	 * @return array of allocated MIPS
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract List<Double> getAllocatedMipsForContainer(Container container);
+	public abstract List<Double> getAllocatedMipsForGuest(GuestEntity guest);
 
 	/**
 	 * Gets total allocated MIPS for a given VM for all PEs.
-	 * 
-	 * @param container container for which the MIPS are being allocated
-	 * 
+	 *
+	 * @param guest container for which the MIPS are being allocated
 	 * @return total allocated MIPS
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract double getTotalAllocatedMipsForContainer(Container container);
+	public abstract double getTotalAllocatedMipsForGuest(GuestEntity guest);
 
 	/**
 	 * Gets allocated MIPS for a given container for a given virtual Pe.
-	 * 
-	 * @param container container for which the MIPS are being allocated
-	 * @param peId the pe id
-	 * 
+	 *
+	 * @param guest container for which the MIPS are being allocated
+	 * @param peId  the pe id
 	 * @return allocated MIPS
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract double getAllocatedMipsForContainerByVirtualPeId(Container container, int peId);
+	public abstract double getAllocatedMipsForGuestByVirtualPeId(GuestEntity guest, int peId);
 
 	/**
 	 * Releases MIPS used by a container.
-	 * 
-	 * @param container the container
-	 * 
+	 *
+	 * @param guest the container
 	 * @pre $none
 	 * @post none
 	 */
-	public abstract void deallocateMipsForContainer(Container container);
+	public abstract void deallocateMipsForGuest(GuestEntity guest);
 
 	/**
 	 * Releases MIPS used by all containers.
@@ -117,7 +106,7 @@ public abstract class ContainerPeProvisioner {
 	 * @pre $none
 	 * @post none
 	 */
-	public void deallocateMipsForAllContainers() {
+	public void deallocateMipsForAllGuests() {
 		setAvailableMips(getMips());
 	}
 

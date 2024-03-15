@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.cloudsim.*;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 import java.util.ArrayList;
@@ -12,8 +14,9 @@ import java.util.List;
 
 /**
  * Created by sareh on 9/07/15.
+ * Modified by Remo Andreoli (March 2024)
  */
-public class Container {
+public class Container implements GuestEntity {
 
     /**
      * The id.
@@ -47,13 +50,6 @@ public class Container {
     private double mips;
 
     /**
-     * The workloadMips.
-     */
-    @Setter
-    @Getter
-    private double workloadMips;
-
-    /**
      * The number of PEs.
      */
     @Getter @Setter private int numberOfPes;
@@ -82,14 +78,12 @@ public class Container {
      */
     @Setter(AccessLevel.PROTECTED)
     @Getter
-    private CloudletScheduler containerCloudletScheduler;
+    private CloudletScheduler cloudletScheduler;
 
     /**
      * The ContainerVm.
      */
-    @Getter
-    @Setter
-    private ContainerVm vm;
+    private HostEntity vm;
 
     /**
      * In migration flag.
@@ -187,7 +181,6 @@ public class Container {
             long size,
             String containerManager,
             CloudletScheduler containerCloudletScheduler, double schedulingInterval) {
-        setWorkloadMips(mips);
         setId(id);
         setUserId(userId);
         setUid(getUid(userId, id));
@@ -197,7 +190,7 @@ public class Container {
         setBw(bw);
         setSize(size);
         setContainerManager(containerManager);
-        setContainerCloudletScheduler(containerCloudletScheduler);
+        setCloudletScheduler(containerCloudletScheduler);
         setInMigration(false);
         setBeingInstantiated(true);
         setCurrentAllocatedBw(0);
@@ -217,9 +210,9 @@ public class Container {
      * @pre currentTime >= 0
      * @post $none
      */
-    public double updateContainerProcessing(double currentTime, List<Double> mipsShare) {
+    public double updateGuestProcessing(double currentTime, List<Double> mipsShare) {
         if (mipsShare != null) {
-            return getContainerCloudletScheduler().updateCloudletProcessing(currentTime, mipsShare);
+            return getCloudletScheduler().updateCloudletProcessing(currentTime, mipsShare);
         }
         return 0.0;
     }
@@ -252,7 +245,7 @@ public class Container {
         if (isBeingInstantiated()) {
             return getBw();
         }
-        return (long) (getContainerCloudletScheduler().getCurrentRequestedUtilizationOfBw() * getBw());
+        return (long) (getCloudletScheduler().getCurrentRequestedUtilizationOfBw() * getBw());
     }
 
     /**
@@ -264,7 +257,7 @@ public class Container {
         if (isBeingInstantiated()) {
             return getRam();
         }
-        return (int) (getContainerCloudletScheduler().getCurrentRequestedUtilizationOfRam() * getRam());
+        return (int) (getCloudletScheduler().getCurrentRequestedUtilizationOfRam() * getRam());
     }
 
     /**
@@ -274,8 +267,8 @@ public class Container {
      * @return total utilization
      */
     public double getTotalUtilizationOfCpu(double time) {
-        //Log.printLine("Container: get Current getTotalUtilizationOfCpu"+ getContainerCloudletScheduler().getTotalUtilizationOfCpu(time));
-        return getContainerCloudletScheduler().getTotalUtilizationOfCpu(time);
+        //Log.printLine("Container: get Current getTotalUtilizationOfCpu"+ getCloudletScheduler().getTotalUtilizationOfCpu(time));
+        return getCloudletScheduler().getTotalUtilizationOfCpu(time);
     }
 
     /**
@@ -441,19 +434,14 @@ public class Container {
         }
 
 
-        return getContainerCloudletScheduler().getCurrentRequestedMips();
+        return getCloudletScheduler().getCurrentRequestedMips();
     }
 
-    /**
-     * Gets the current requested total mips.
-     *
-     * @return the current requested total mips
-     */
-    public double getWorkloadTotalMips() {
-
-        //Log.printLine("Container: get Current totalRequestedMips"+ totalRequestedMips);
-        return getWorkloadMips() * getNumberOfPes();
+    public HostEntity getHost() {
+        return vm;
     }
 
-
+    public void setHost(HostEntity vm) {
+        this.vm = vm;
+    }
 }

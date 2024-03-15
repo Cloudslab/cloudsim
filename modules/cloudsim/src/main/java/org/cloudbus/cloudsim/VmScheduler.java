@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 
 /**
@@ -23,6 +24,7 @@ import org.cloudbus.cloudsim.lists.PeList;
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
 public abstract class VmScheduler {
@@ -67,30 +69,30 @@ public abstract class VmScheduler {
 		setPeMap(new HashMap<>());
 		setMipsMap(new HashMap<>());
 		setAvailableMips(PeList.getTotalMips(getPeList()));
-		setVmsMigratingIn(new ArrayList<>());
-		setVmsMigratingOut(new ArrayList<>());
+		setGuestsMigratingIn(new ArrayList<>());
+		setGuestsMigratingOut(new ArrayList<>());
 	}
 
 	/**
 	 * Requests the allocation of PEs for a VM.
-	 * 
-	 * @param vm the vm
+	 *
+	 * @param guest     the vm
 	 * @param mipsShare the list of MIPS share to be allocated to a VM
 	 * @return $true if this policy allows a new VM in the host, $false otherwise
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocatePesForVm(Vm vm, List<Double> mipsShare);
+	public abstract boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShare);
 
 	/**
 	 * Releases PEs allocated to a VM. After that, the PEs may be used
-         * on demand by other VMs.
-	 * 
-	 * @param vm the vm
+	 * on demand by other VMs.
+	 *
+	 * @param guest the vm
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract void deallocatePesForVm(Vm vm);
+	public abstract void deallocatePesForGuest(GuestEntity guest);
 
 	/**
 	 * Releases PEs allocated to all the VMs of the host the VmScheduler is associated to.
@@ -99,45 +101,45 @@ public abstract class VmScheduler {
 	 * @pre $none
 	 * @post $none
 	 */
-	public void deallocatePesForAllVms() {
+	public void deallocatePesForAllGuests() {
 		getMipsMap().clear();
 		setAvailableMips(PeList.getTotalMips(getPeList()));
 		for (Pe pe : getPeList()) {
-			pe.getPeProvisioner().deallocateMipsForAllVms();
+			pe.getPeProvisioner().deallocateMipsForAllGuests();
 		}
 	}
 
 	/**
 	 * Gets the pes allocated for a vm.
-	 * 
-	 * @param vm the vm
+	 *
+	 * @param guest the vm
 	 * @return the pes allocated for the given vm
 	 */
-	public List<Pe> getPesAllocatedForVM(Vm vm) {
-		return getPeMap().get(vm.getUid());
+	public List<Pe> getPesAllocatedForGuest(GuestEntity guest) {
+		return getPeMap().get(guest.getUid());
 	}
 
 	/**
 	 * Returns the MIPS share of each host's Pe that is allocated to a given VM.
-	 * 
-	 * @param vm the vm
+	 *
+	 * @param guest the vm
 	 * @return an array containing the amount of MIPS of each pe that is available to the VM
 	 * @pre $none
 	 * @post $none
 	 */
-	public List<Double> getAllocatedMipsForVm(Vm vm) {
-		return getMipsMap().get(vm.getUid());
+	public List<Double> getAllocatedMipsForGuest(GuestEntity guest) {
+		return getMipsMap().get(guest.getUid());
 	}
 
 	/**
 	 * Gets the total allocated MIPS for a VM along all its allocated PEs.
-	 * 
-	 * @param vm the vm
+	 *
+	 * @param guest the vm
 	 * @return the total allocated mips for the vm
 	 */
-	public double getTotalAllocatedMipsForVm(Vm vm) {
+	public double getTotalAllocatedMipsForGuest(GuestEntity guest) {
 		double allocated = 0;
-		List<Double> mipsMap = getAllocatedMipsForVm(vm);
+		List<Double> mipsMap = getAllocatedMipsForGuest(guest);
 		if (mipsMap != null) {
 			for (double mips : mipsMap) {
 				allocated += mips;
@@ -248,7 +250,7 @@ public abstract class VmScheduler {
 	 * 
 	 * @return the vms in migration
 	 */
-	public List<String> getVmsMigratingOut() {
+	public List<String> getGuestsMigratingOut() {
 		return vmsMigratingOut;
 	}
 
@@ -257,7 +259,7 @@ public abstract class VmScheduler {
 	 * 
 	 * @param vmsInMigration the new vms migrating out
 	 */
-	protected void setVmsMigratingOut(List<String> vmsInMigration) {
+	protected void setGuestsMigratingOut(List<String> vmsInMigration) {
 		vmsMigratingOut = vmsInMigration;
 	}
 
@@ -266,7 +268,7 @@ public abstract class VmScheduler {
 	 * 
 	 * @return the vms migrating in
 	 */
-	public List<String> getVmsMigratingIn() {
+	public List<String> getGuestsMigratingIn() {
 		return vmsMigratingIn;
 	}
 
@@ -275,7 +277,7 @@ public abstract class VmScheduler {
 	 * 
 	 * @param vmsMigratingIn the new vms migrating in
 	 */
-	protected void setVmsMigratingIn(List<String> vmsMigratingIn) {
+	protected void setGuestsMigratingIn(List<String> vmsMigratingIn) {
 		this.vmsMigratingIn = vmsMigratingIn;
 	}
 

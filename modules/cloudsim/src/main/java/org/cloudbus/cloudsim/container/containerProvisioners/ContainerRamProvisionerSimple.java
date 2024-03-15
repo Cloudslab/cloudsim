@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.cloudbus.cloudsim.container.core.Container;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * @author sareh
@@ -24,84 +25,84 @@ public class ContainerRamProvisionerSimple extends ContainerRamProvisioner {
     }
 
     /**
-     * @see ContainerRamProvisioner#allocateRamForContainer(Container, int)
-     * @param container the container
-     * @param ram       the ram
+     * @param guest the container
+     * @param ram   the ram
      * @return
+     * @see ContainerRamProvisioner#allocateRamForContainer(Container, int)
      */
     @Override
-    public boolean allocateRamForContainer(Container container,
-                                           int ram) {
-        int maxRam = container.getRam();
+    public boolean allocateRamForGuest(GuestEntity guest,
+                                       int ram) {
+        int maxRam = guest.getRam();
 
         if (ram >= maxRam) {
             ram = maxRam;
         }
 
-        deallocateRamForContainer(container);
+        deallocateRamForGuest(guest);
 
         if (getAvailableVmRam() >= ram) {
             setAvailableVmRam(getAvailableVmRam() - ram);
-            getContainerRamTable().put(container.getUid(), ram);
-            container.setCurrentAllocatedRam(getAllocatedRamForContainer(container));
+            getContainerRamTable().put(guest.getUid(), ram);
+            guest.setCurrentAllocatedRam(getAllocatedRamForGuest(guest));
             return true;
         }
 
-        container.setCurrentAllocatedRam(getAllocatedRamForContainer(container));
+        guest.setCurrentAllocatedRam(getAllocatedRamForGuest(guest));
 
         return false;
     }
 
     /**
-     * @link ContainerRamProvisioner#getAllocatedRamForContainer(Container)
-     * @param container the container
+     * @param guest the container
      * @return
+     * @link ContainerRamProvisioner#getAllocatedRamForContainer(Container)
      */
     @Override
-    public int getAllocatedRamForContainer(Container container) {
-        if (getContainerRamTable().containsKey(container.getUid())) {
-            return getContainerRamTable().get(container.getUid());
+    public int getAllocatedRamForGuest(GuestEntity guest) {
+        if (getContainerRamTable().containsKey(guest.getUid())) {
+            return getContainerRamTable().get(guest.getUid());
         }
         return 0;
     }
 
     /**
+     * @param guest the container
      * @see ContainerRamProvisioner#deallocateRamForContainer(Container)
-     * @param container the container
      */
     @Override
-    public void deallocateRamForContainer(Container container) {
-        if (getContainerRamTable().containsKey(container.getUid())) {
-            int amountFreed = getContainerRamTable().remove(container.getUid());
+    public void deallocateRamForGuest(GuestEntity guest) {
+        if (getContainerRamTable().containsKey(guest.getUid())) {
+            int amountFreed = getContainerRamTable().remove(guest.getUid());
             setAvailableVmRam(getAvailableVmRam() + amountFreed);
-            container.setCurrentAllocatedRam(0);
+            guest.setCurrentAllocatedRam(0);
         }
     }
 
     /**
-     * @see ContainerRamProvisioner#deallocateRamForAllContainers()
+     * @see ContainerRamProvisioner#deallocateRamForAllGuests()
      */
     @Override
-    public void deallocateRamForAllContainers() {
-        super.deallocateRamForAllContainers();
+    public void deallocateRamForAllGuests() {
+        super.deallocateRamForAllGuests();
         getContainerRamTable().clear();
     }
 
 
     /**
-     * @see ContainerRamProvisioner#isSuitableForContainer(Container, int)
-     * @param container the container
-     * @param ram       the vm's ram
+     * @param guest the container
+     * @param ram   the vm's ram
      * @return
+     * @see ContainerRamProvisioner#isSuitableForContainer(Container, int)
      */
     @Override
-    public boolean isSuitableForContainer(Container container,
-                                          int ram) {
-        int allocatedRam = getAllocatedRamForContainer(container);
-        boolean result = allocateRamForContainer(container, ram);
-        deallocateRamForContainer(container);
+    public boolean isSuitableForGuest(GuestEntity guest,
+                                      int ram) {
+        int allocatedRam = getAllocatedRamForGuest(guest);
+        boolean result = allocateRamForGuest(guest, ram);
+        deallocateRamForGuest(guest);
         if (allocatedRam > 0) {
-            allocateRamForContainer(container, allocatedRam);
+            allocateRamForGuest(guest, allocatedRam);
         }
         return result;
     }

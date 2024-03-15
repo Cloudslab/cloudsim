@@ -66,8 +66,8 @@ public class HostTest {
 		Vm vm0 = new Vm(0, 0, MIPS, 2, RAM, BW, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 2));
 		Vm vm1 = new Vm(1, 0, MIPS * 2, 1, RAM * 2, BW * 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS * 2, 2));
 
-		assertTrue(host.isSuitableForVm(vm0));
-		assertFalse(host.isSuitableForVm(vm1));
+		assertTrue(host.isSuitableForGuest(vm0));
+		assertFalse(host.isSuitableForGuest(vm1));
 	}
 
 	@Test
@@ -77,24 +77,24 @@ public class HostTest {
 		Vm vm2 = new Vm(2, 0, MIPS * 2, 1, RAM, BW, 0, "", new CloudletSchedulerDynamicWorkload(MIPS * 2, 1));
 		Vm vm3 = new Vm(3, 0, MIPS / 2, 2, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS / 2, 2));
 
-		assertTrue(host.vmCreate(vm0));
-		assertFalse(host.vmCreate(vm1));
-		assertFalse(host.vmCreate(vm2));
-		assertTrue(host.vmCreate(vm3));
+		assertTrue(host.guestCreate(vm0));
+		assertFalse(host.guestCreate(vm1));
+		assertFalse(host.guestCreate(vm2));
+		assertTrue(host.guestCreate(vm3));
 	}
 
 	@Test
 	public void testVmDestroy() {
 		Vm vm = new Vm(0, 0, MIPS, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 1));
 
-		assertTrue(host.vmCreate(vm));
-		assertSame(vm, host.getVm(0, 0));
-		assertEquals(MIPS, host.getVmScheduler().getAvailableMips(), 0);
+		assertTrue(host.guestCreate(vm));
+		assertSame(vm, host.getGuest(0, 0));
+		assertEquals(MIPS, host.getGuestScheduler().getAvailableMips(), 0);
 
-		host.vmDestroy(vm);
-		assertNull(host.getVm(0, 0));
-		assertEquals(0, host.getVmList().size());
-		assertEquals(MIPS * 2, host.getVmScheduler().getAvailableMips(), 0);
+		host.guestDestroy(vm);
+		assertNull(host.getGuest(0, 0));
+		assertEquals(0, host.getGuestList().size());
+		assertEquals(MIPS * 2, host.getGuestScheduler().getAvailableMips(), 0);
 	}
 
 	@Test
@@ -102,19 +102,19 @@ public class HostTest {
 		Vm vm0 = new Vm(0, 0, MIPS, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 1));
 		Vm vm1 = new Vm(1, 0, MIPS, 1, RAM / 2, BW / 2, 0, "", new CloudletSchedulerDynamicWorkload(MIPS, 1));
 
-		assertTrue(host.vmCreate(vm0));
-		assertSame(vm0, host.getVm(0, 0));
-		assertEquals(MIPS, host.getVmScheduler().getAvailableMips(), 0);
+		assertTrue(host.guestCreate(vm0));
+		assertSame(vm0, host.getGuest(0, 0));
+		assertEquals(MIPS, host.getGuestScheduler().getAvailableMips(), 0);
 
-		assertTrue(host.vmCreate(vm1));
-		assertSame(vm1, host.getVm(1, 0));
-		assertEquals(0, host.getVmScheduler().getAvailableMips(), 0);
+		assertTrue(host.guestCreate(vm1));
+		assertSame(vm1, host.getGuest(1, 0));
+		assertEquals(0, host.getGuestScheduler().getAvailableMips(), 0);
 
-		host.vmDestroyAll();
-		assertNull(host.getVm(0, 0));
-		assertNull(host.getVm(1, 0));
-		assertEquals(0, host.getVmList().size());
-		assertEquals(MIPS * 2, host.getVmScheduler().getAvailableMips(), 0);
+		host.guestDestroyAll();
+		assertNull(host.getGuest(0, 0));
+		assertNull(host.getGuest(1, 0));
+		assertEquals(0, host.getGuestList().size());
+		assertEquals(MIPS * 2, host.getGuestScheduler().getAvailableMips(), 0);
 	}
 
 	@Ignore

@@ -12,6 +12,7 @@ import java.util.List;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
 /**
@@ -49,18 +50,16 @@ public abstract class PeProvisioner {
 
 	/**
 	 * Allocates a new virtual PE with a specific capacity for a given VM.
-         * The virtual PE to be added will use the total or partial mips capacity
-         * of the physical PE.
-	 * 
-	 * @param vm the virtual machine for which the new virtual PE is being allocated
-	 * @param mips the mips to be allocated to the virtual PE of the given VM
-	 * 
+	 * The virtual PE to be added will use the total or partial mips capacity
+	 * of the physical PE.
+	 *
+	 * @param guest the virtual machine for which the new virtual PE is being allocated
+	 * @param mips  the mips to be allocated to the virtual PE of the given VM
 	 * @return $true if the virtual PE could be allocated; $false otherwise
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocateMipsForVm(Vm vm, double mips);
+	public abstract boolean allocateMipsForGuest(GuestEntity guest, double mips);
 
 	/**
 	 * Allocates a new virtual PE with a specific capacity for a given VM.
@@ -72,75 +71,66 @@ public abstract class PeProvisioner {
 	 * 
 	 * @pre $none
 	 * @post $none
-         * @see #allocateMipsForVm(org.cloudbus.cloudsim.Vm, double) 
+         * @see #allocateMipsForGuest(GuestEntity, double)
 	 */
-	public abstract boolean allocateMipsForVm(String vmUid, double mips);
+	public abstract boolean allocateMipsForGuest(String vmUid, double mips);
 
 	/**
 	 * Allocates a new set of virtual PEs with a specific capacity for a given VM.
-         * The virtual PE to be added will use the total or partial mips capacity
-         * of the physical PE.
-	 * 
-	 * @param vm the virtual machine for which the new virtual PE is being allocated
-	 * @param mips the list of mips capacity of each virtual PE to be allocated to the VM
-	 * 
+	 * The virtual PE to be added will use the total or partial mips capacity
+	 * of the physical PE.
+	 *
+	 * @param guest the virtual machine for which the new virtual PE is being allocated
+	 * @param mips  the list of mips capacity of each virtual PE to be allocated to the VM
 	 * @return $true if the set of virtual PEs could be allocated; $false otherwise
-	 * 
 	 * @pre $none
 	 * @post $none
-         * //TODO In this case, each PE can have a different capacity, what
-         * in many places this situation is not considered, such as 
-         * in the {@link Vm}, {@link Pe} and {@link DatacenterCharacteristics}
-         * classes.
+	 * //TODO In this case, each PE can have a different capacity, what
+	 * in many places this situation is not considered, such as
+	 * in the {@link Vm}, {@link Pe} and {@link DatacenterCharacteristics}
+	 * classes.
 	 */
-	public abstract boolean allocateMipsForVm(Vm vm, List<Double> mips);
+	public abstract boolean allocateMipsForGuest(GuestEntity guest, List<Double> mips);
 
 	/**
 	 * Gets the list of allocated virtual PEs' MIPS for a given VM.
-	 * 
-	 * @param vm the virtual machine the get the list of allocated virtual PEs' MIPS
-	 * 
+	 *
+	 * @param guest the virtual machine the get the list of allocated virtual PEs' MIPS
 	 * @return list of allocated virtual PEs' MIPS
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract List<Double> getAllocatedMipsForVm(Vm vm);
+	public abstract List<Double> getAllocatedMipsForGuest(GuestEntity guest);
 
 	/**
 	 * Gets total allocated MIPS for a given VM for all PEs.
-	 * 
-	 * @param vm the virtual machine the get the total allocated MIPS capacity
-	 * 
+	 *
+	 * @param guest the virtual machine the get the total allocated MIPS capacity
 	 * @return total allocated MIPS
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract double getTotalAllocatedMipsForVm(Vm vm);
+	public abstract double getTotalAllocatedMipsForGuest(GuestEntity guest);
 
 	/**
 	 * Gets the MIPS capacity of a virtual Pe allocated to a given VM.
-	 * 
-	 * @param vm virtual machine to get a given virtual PE capacity
-	 * @param peId the virtual pe id
-	 * 
+	 *
+	 * @param guest virtual machine to get a given virtual PE capacity
+	 * @param peId  the virtual pe id
 	 * @return allocated MIPS for the virtual PE
-	 * 
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract double getAllocatedMipsForVmByVirtualPeId(Vm vm, int peId);
+	public abstract double getAllocatedMipsForGuestByVirtualPeId(GuestEntity guest, int peId);
 
 	/**
 	 * Releases all virtual PEs allocated to a given VM.
-	 * 
-	 * @param vm the vm
-	 * 
+	 *
+	 * @param guest the vm
 	 * @pre $none
 	 * @post none
 	 */
-	public abstract void deallocateMipsForVm(Vm vm);
+	public abstract void deallocateMipsForGuest(GuestEntity guest);
 
 	/**
 	 * Releases all virtual PEs allocated to all VMs.
@@ -148,7 +138,7 @@ public abstract class PeProvisioner {
 	 * @pre $none
 	 * @post none
 	 */
-	public void deallocateMipsForAllVms() {
+	public void deallocateMipsForAllGuests() {
 		setAvailableMips(getMips());
 	}
 

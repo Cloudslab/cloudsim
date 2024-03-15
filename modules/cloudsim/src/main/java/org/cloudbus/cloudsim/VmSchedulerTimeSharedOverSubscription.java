@@ -48,7 +48,7 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 	 * @return true, if successful
 	 */
 	@Override
-	protected boolean allocatePesForVm(String vmUid, List<Double> mipsShareRequested) {
+	protected boolean allocatePesForGuest(String vmUid, List<Double> mipsShareRequested) {
 		double totalRequestedMips = 0;
 
 		// if the requested mips is bigger than the capacity of a single PE, we cap
@@ -68,7 +68,7 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 		getMipsMapRequested().put(vmUid, mipsShareRequested);
 		setPesInUse(getPesInUse() + mipsShareRequested.size());
 
-		if (getVmsMigratingIn().contains(vmUid)) {
+		if (getGuestsMigratingIn().contains(vmUid)) {
 			// the destination host only experience 10% of the migrating VM's MIPS
 			totalRequestedMips *= 0.1;
 		}
@@ -76,10 +76,10 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 		if (getAvailableMips() >= totalRequestedMips) {
 			List<Double> mipsShareAllocated = new ArrayList<>();
 			for (Double mipsRequested : mipsShareRequestedCapped) {
-				if (getVmsMigratingOut().contains(vmUid)) {
+				if (getGuestsMigratingOut().contains(vmUid)) {
 					// performance degradation due to migration = 10% MIPS
 					mipsRequested *= 0.9;
-				} else if (getVmsMigratingIn().contains(vmUid)) {
+				} else if (getGuestsMigratingIn().contains(vmUid)) {
 					// the destination host only experience 10% of the migrating VM's MIPS
 					mipsRequested *= 0.1;
 				}
@@ -125,7 +125,7 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 
 			mipsMapCapped.put(vmId, mipsShareRequestedCapped);
 
-			if (getVmsMigratingIn().contains(entry.getKey())) {
+			if (getGuestsMigratingIn().contains(entry.getKey())) {
 				// the destination host only experience 10% of the migrating VM's MIPS
 				requiredMipsByThisVm *= 0.1;
 			}
@@ -145,12 +145,12 @@ public class VmSchedulerTimeSharedOverSubscription extends VmSchedulerTimeShared
 
 			List<Double> updatedMipsAllocation = new ArrayList<>();
 			for (Double mips : requestedMips) {
-				if (getVmsMigratingOut().contains(vmUid)) {
+				if (getGuestsMigratingOut().contains(vmUid)) {
 					// the original amount is scaled
 					mips *= scalingFactor;
 					// performance degradation due to migration = 10% MIPS
 					mips *= 0.9;
-				} else if (getVmsMigratingIn().contains(vmUid)) {
+				} else if (getGuestsMigratingIn().contains(vmUid)) {
 					// the destination host only experiences 10% of the migrating VM's MIPS
 					mips *= 0.1;
 					// the final 10% of the requested MIPS are scaled

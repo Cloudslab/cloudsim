@@ -22,9 +22,7 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
-import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.core.*;
 
 /**
  * NetworkDatacenter class is a {@link Datacenter} whose hostList are virtualized and networked. It contains
@@ -135,7 +133,7 @@ public class NetworkDatacenter extends Datacenter {
 	 */
 	public boolean processVmCreateNetwork(Vm vm) {
 
-		boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
+		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm);
 
 		if (result) {
 			VmToSwitchid.put(vm.getId(), ((NetworkHost) vm.getHost()).sw.getId());
@@ -144,8 +142,8 @@ public class NetworkDatacenter extends Datacenter {
 
 			getVmList().add(vm);
 
-			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
-					.getAllocatedMipsForVm(vm));
+			vm.updateGuestProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
+					.getAllocatedMipsForGuest(vm));
 		}
 		return result;
 	}
@@ -197,8 +195,8 @@ public class NetworkDatacenter extends Datacenter {
 			// time to transfer the files
 			double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());
 
-			Host host = getVmAllocationPolicy().getHost(vmId, userId);
-			Vm vm = host.getVm(vmId, userId);
+			HostEntity host = getVmAllocationPolicy().getHost(vmId, userId);
+			GuestEntity vm = host.getGuest(vmId, userId);
 			CloudletScheduler scheduler = vm.getCloudletScheduler();
 			double estimatedFinishTime = scheduler.cloudletSubmit(cl, fileTransferTime);
 

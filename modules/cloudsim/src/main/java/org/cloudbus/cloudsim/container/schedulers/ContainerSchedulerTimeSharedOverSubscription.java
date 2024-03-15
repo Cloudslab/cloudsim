@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.container.schedulers;
 
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
-import org.cloudbus.cloudsim.container.lists.ContainerPeList;
+import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.lists.PeList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * Created by sareh on 22/07/15.
+ * Modified by Remo Andreoli (March 2024)
  */
 public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSchedulerTimeShared {
     /**
@@ -17,13 +18,13 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
      *
      * @param pelist the pelist
      */
-    public ContainerSchedulerTimeSharedOverSubscription(List<? extends ContainerPe> pelist) {
+    public ContainerSchedulerTimeSharedOverSubscription(List<? extends Pe> pelist) {
         super(pelist);
     }
 
 
     @Override
-    public boolean allocatePesForContainer(String containerUid, List<Double> mipsShareRequested) {
+    public boolean allocatePesForGuest(String containerUid, List<Double> mipsShareRequested) {
         double totalRequestedMips = 0;
 
         // if the requested mips is bigger than the capacity of a single PE, we cap
@@ -42,7 +43,7 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
 
 
 
-        if (getContainersMigratingIn().contains(containerUid)) {
+        if (getGuestsMigratingIn().contains(containerUid)) {
             // the destination host only experience 10% of the migrating VM's MIPS
             totalRequestedMips = 0.0;
         }else {
@@ -59,7 +60,7 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
 //                    // performance degradation due to migration = 10% MIPS
 //                    mipsRequested *= 0.9;
 //                } else
-                if (!getContainersMigratingIn().contains(containerUid)) {
+                if (!getGuestsMigratingIn().contains(containerUid)) {
                     // the destination host only experience 10% of the migrating VM's MIPS
                     mipsShareAllocated.add(mipsRequested);
                 }
@@ -111,7 +112,7 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
             totalRequiredMipsByAllVms += requiredMipsByThisContainer;
         }
 
-        double totalAvailableMips = ContainerPeList.getTotalMips(getPeList());
+        int totalAvailableMips = PeList.getTotalMips(getPeList());
         double scalingFactor = totalAvailableMips / totalRequiredMipsByAllVms;
 
         // Clear the old MIPS allocation
@@ -130,7 +131,7 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
                     // performance degradation due to migration = 10% MIPS
 //                    mips *= 0.9;
 //                } else
-                if (!getContainersMigratingIn().contains(vmUid)) {
+                if (!getGuestsMigratingIn().contains(vmUid)) {
                     // the destination host only experiences 10% of the migrating VM's MIPS
                     mips *= scalingFactor;
 
@@ -155,6 +156,3 @@ public class ContainerSchedulerTimeSharedOverSubscription extends ContainerSched
     }
 
 }
-
-
-

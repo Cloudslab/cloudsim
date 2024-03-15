@@ -6,7 +6,7 @@ package org.cloudbus.cloudsim.container.containerProvisioners;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cloudbus.cloudsim.container.core.Container;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * ContainerBwProvisionerSimple is a class that implements a simple best effort allocation policy: if there
@@ -35,49 +35,51 @@ public class ContainerBwProvisionerSimple extends ContainerBwProvisioner {
     /**
      * Allocate BW for the container
      *
-     * @param container
-     * @param bw       the bw
+     * @param guest
+     * @param bw    the bw
      * @return
      */
 
     @Override
-    public boolean allocateBwForContainer(Container container, long bw) {
-        deallocateBwForContainer(container);
+    public boolean allocateBwForGuest(GuestEntity guest, long bw) {
+        deallocateBwForGuest(guest);
         if (getAvailableVmBw() >= bw) {
             setAvailableVmBw(getAvailableVmBw() - bw);
-            getContainerBwTable().put(container.getUid(), bw);
-            container.setCurrentAllocatedBw(getAllocatedBwForContainer(container));
+            getContainerBwTable().put(guest.getUid(), bw);
+            guest.setCurrentAllocatedBw(getAllocatedBwForGuest(guest));
             return true;
         }
 
-        container.setCurrentAllocatedBw(getAllocatedBwForContainer(container));
+        guest.setCurrentAllocatedBw(getAllocatedBwForGuest(guest));
 
         return false;
     }
 
     /**
      * Get allocated bandwidth for container
-     * @param container
+     *
+     * @param guest
      * @return
      */
     @Override
-    public long getAllocatedBwForContainer(Container container) {
-        if (getContainerBwTable().containsKey(container.getUid())) {
-            return getContainerBwTable().get(container.getUid());
+    public long getAllocatedBwForGuest(GuestEntity guest) {
+        if (getContainerBwTable().containsKey(guest.getUid())) {
+            return getContainerBwTable().get(guest.getUid());
         }
         return 0;
     }
 
     /**
      * Release the allocated BW for the container
-     * @param container
+     *
+     * @param guest
      */
     @Override
-    public void deallocateBwForContainer(Container container) {
-        if (getContainerBwTable().containsKey(container.getUid())) {
-            long amountFreed = getContainerBwTable().remove(container.getUid());
+    public void deallocateBwForGuest(GuestEntity guest) {
+        if (getContainerBwTable().containsKey(guest.getUid())) {
+            long amountFreed = getContainerBwTable().remove(guest.getUid());
             setAvailableVmBw(getAvailableVmBw() + amountFreed);
-            container.setCurrentAllocatedBw(0);
+            guest.setCurrentAllocatedBw(0);
         }
 
     }
@@ -86,24 +88,25 @@ public class ContainerBwProvisionerSimple extends ContainerBwProvisioner {
      * Release the VM bandwidth that is allocated to the container.
      */
     @Override
-    public void deallocateBwForAllContainers() {
-        super.deallocateBwForAllContainers();
+    public void deallocateBwForAllGuests() {
+        super.deallocateBwForAllGuests();
         getContainerBwTable().clear();
     }
 
     /**
      * Check if the VM has enough BW to allocate to the container
-     * @param container
-     * @param bw        the bw
+     *
+     * @param guest
+     * @param bw    the bw
      * @return
      */
     @Override
-    public boolean isSuitableForContainer(Container container, long bw) {
-        long allocatedBw = getAllocatedBwForContainer(container);
-        boolean result = allocateBwForContainer(container, bw);
-        deallocateBwForContainer(container);
+    public boolean isSuitableForGuest(GuestEntity guest, long bw) {
+        long allocatedBw = getAllocatedBwForGuest(guest);
+        boolean result = allocateBwForGuest(guest, bw);
+        deallocateBwForGuest(guest);
         if (allocatedBw > 0) {
-            allocateBwForContainer(container, allocatedBw);
+            allocateBwForGuest(guest, allocatedBw);
         }
         return result;
     }

@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.vmplus.disk;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSimTags;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.vmplus.DatacenterEX;
 import org.cloudbus.cloudsim.vmplus.delay.IVMBootDelayDistribution;
@@ -59,7 +60,7 @@ public class HddDataCenter extends DatacenterEX {
             int vmId = cl.getVmId();
 
             HddHost host = (HddHost) getVmAllocationPolicy().getHost(vmId, userId);
-            HddVm vm = (HddVm) host.getVm(vmId, userId);
+            HddVm vm = (HddVm) host.getGuest(vmId, userId);
             HddCloudletSchedulerTimeShared scheduler = vm.getCloudletScheduler();
 
             if (!vm.isOutOfMemory()) {
@@ -97,8 +98,8 @@ public class HddDataCenter extends DatacenterEX {
         super.checkCloudletCompletion();
 
         // Return the failed cloudlets as well.
-        for (Host host : getVmAllocationPolicy().getHostList()) {
-            for (HddVm vm : ((HddHost) host).getVmList()) {
+        for (HostEntity host : getVmAllocationPolicy().getHostList()) {
+            for (HddVm vm : ((HddHost) host).getGuestList()) {
                 while (vm.getCloudletScheduler().isFailedCloudlets()) {
                     Cloudlet cl = vm.getCloudletScheduler().getNextFailedCloudlet();
                     if (cl != null) {

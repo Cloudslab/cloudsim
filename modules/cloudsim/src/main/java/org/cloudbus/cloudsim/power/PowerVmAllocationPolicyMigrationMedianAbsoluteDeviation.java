@@ -13,6 +13,7 @@ import java.util.List;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
@@ -119,7 +120,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 		}
 		addHistoryEntry(host, upperThreshold);
 		double totalRequestedMips = 0;
-		for (Vm vm : host.getVmList()) {
+		for (GuestEntity vm : host.getGuestList()) {
 			totalRequestedMips += vm.getCurrentRequestedTotalMips();
 		}
 		double utilization = totalRequestedMips / host.getTotalMips();

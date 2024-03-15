@@ -21,6 +21,8 @@ import org.cloudbus.cloudsim.HostDynamicWorkload;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.power.lists.PowerVmList;
 import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
 
@@ -187,14 +189,14 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			excludedHostsForFindingUnderUtilizedHost.add(underUtilizedHost);
 			excludedHostsForFindingNewVmPlacement.add(underUtilizedHost);
 
-			List<? extends Vm> vmsToMigrateFromUnderUtilizedHost = getVmsToMigrateFromUnderUtilizedHost(underUtilizedHost);
+			List<? extends GuestEntity> vmsToMigrateFromUnderUtilizedHost = getVmsToMigrateFromUnderUtilizedHost(underUtilizedHost);
 			if (vmsToMigrateFromUnderUtilizedHost.isEmpty()) {
 				continue;
 			}
 
 			Log.print("Reallocation of VMs from the under-utilized host: ");
 			if (!Log.isDisabled()) {
-				for (Vm vm : vmsToMigrateFromUnderUtilizedHost) {
+				for (GuestEntity vm : vmsToMigrateFromUnderUtilizedHost) {
 					Log.print(vm.getId() + " ");
 				}
 			}
@@ -238,7 +240,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @param excludedHosts the excluded hosts
 	 * @return the host found to host the VM
 	 */
-	public PowerHost findHostForVm(Vm vm, Set<? extends Host> excludedHosts) {
+	public PowerHost findHostForVm(GuestEntity vm, Set<? extends HostEntity> excludedHosts) {
 		double minPower = Double.MAX_VALUE;
 		PowerHost allocatedHost = null;
 
@@ -246,7 +248,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			if (excludedHosts.contains(host)) {
 				continue;
 			}
-			if (host.isSuitableForVm(vm)) {
+			if (host.isSuitableForGuest(vm)) {
 				if (getUtilizationOfCpuMips(host) != 0 && isHostOverUtilizedAfterAllocation(host, vm)) {
 					continue;
 				}
@@ -274,18 +276,18 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @param vm the candidate vm 
 	 * @return true, if the host will be over utilized after VM placement; false otherwise
 	 */
-	protected boolean isHostOverUtilizedAfterAllocation(PowerHost host, Vm vm) {
+	protected boolean isHostOverUtilizedAfterAllocation(PowerHost host, GuestEntity vm) {
 		boolean isHostOverUtilizedAfterAllocation = true;
-		if (host.vmCreate(vm)) {
+		if (host.guestCreate(vm)) {
 			isHostOverUtilizedAfterAllocation = isHostOverUtilized(host);
-			host.vmDestroy(vm);
+			host.guestDestroy(vm);
 		}
 		return isHostOverUtilizedAfterAllocation;
 	}
 
 	@Override
-	public PowerHost findHostForVm(Vm vm) {
-		Set<Host> excludedHosts = new HashSet<>();
+	public PowerHost findHostForVm(GuestEntity vm) {
+		Set<HostEntity> excludedHosts = new HashSet<>();
 		if (vm.getHost() != null) {
 			excludedHosts.add(vm.getHost());
 		}
@@ -321,7 +323,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 		for (Vm vm : vmsToMigrate) {
 			PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
 			if (allocatedHost != null) {
-				allocatedHost.vmCreate(vm);
+				allocatedHost.guestCreate(vm);
 				Log.printConcatLine("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
 
 				Map<String, Object> migrate = new HashMap<>();
@@ -341,14 +343,14 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @return the new vm placement from under utilized host
 	 */
 	protected List<Map<String, Object>> getNewVmPlacementFromUnderUtilizedHost(
-			List<? extends Vm> vmsToMigrate,
-			Set<? extends Host> excludedHosts) {
+			List<? extends GuestEntity> vmsToMigrate,
+			Set<? extends HostEntity> excludedHosts) {
 		List<Map<String, Object>> migrationMap = new LinkedList<>();
 		PowerVmList.sortByCpuUtilization(vmsToMigrate);
-		for (Vm vm : vmsToMigrate) {
+		for (GuestEntity vm : vmsToMigrate) {
 			PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
 			if (allocatedHost != null) {
-				allocatedHost.vmCreate(vm);
+				allocatedHost.guestCreate(vm);
 				Log.printConcatLine("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
 
 				Map<String, Object> migrate = new HashMap<>();
@@ -358,7 +360,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			} else {
 				Log.printLine("Not all VMs can be reallocated from the host, reallocation cancelled");
 				for (Map<String, Object> map : migrationMap) {
-					((Host) map.get("host")).vmDestroy((Vm) map.get("vm"));
+					((Host) map.get("host")).guestDestroy((Vm) map.get("vm"));
 				}
 				migrationMap.clear();
 				break;
@@ -383,7 +385,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 					break;
 				}
 				vmsToMigrate.add(vm);
-				host.vmDestroy(vm);
+				host.guestDestroy(vm);
 				if (!isHostOverUtilized(host)) {
 					break;
 				}
@@ -398,9 +400,9 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @param host the host
 	 * @return the vms to migrate from under utilized host
 	 */
-	protected List<? extends Vm> getVmsToMigrateFromUnderUtilizedHost(PowerHost host) {
-		List<Vm> vmsToMigrate = new LinkedList<>();
-		for (Vm vm : host.getVmList()) {
+	protected List<? extends GuestEntity> getVmsToMigrateFromUnderUtilizedHost(PowerHost host) {
+		List<GuestEntity> vmsToMigrate = new LinkedList<>();
+		for (GuestEntity vm : host.getGuestList()) {
 			if (!vm.isInMigration()) {
 				vmsToMigrate.add(vm);
 			}
@@ -468,11 +470,11 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @return true, if successful
 	 */
 	protected boolean areAllVmsMigratingOutOrAnyVmMigratingIn(PowerHost host) {
-		for (PowerVm vm : host.<PowerVm> getVmList()) {
+		for (PowerVm vm : host.<PowerVm>getGuestList()) {
 			if (!vm.isInMigration()) {
 				return false;
 			}
-			if (host.getVmsMigratingIn().contains(vm)) {
+			if (host.getGuestsMigratingIn().contains(vm)) {
 				return true;
 			}
 		}
@@ -517,9 +519,9 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 */
 	protected void saveAllocation() {
 		getSavedAllocation().clear();
-		for (Host host : getHostList()) {
-			for (Vm vm : host.getVmList()) {
-				if (host.getVmsMigratingIn().contains(vm)) {
+		for (HostEntity host : getHostList()) {
+			for (GuestEntity vm : host.getGuestList()) {
+				if (host.getGuestsMigratingIn().contains(vm)) {
 					continue;
 				}
 				Map<String, Object> map = new HashMap<>();
@@ -535,14 +537,14 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
          * @see #savedAllocation
 	 */
 	protected void restoreAllocation() {
-		for (Host host : getHostList()) {
-			host.vmDestroyAll();
-			host.reallocateMigratingInVms();
+		for (HostEntity host : getHostList()) {
+			host.guestDestroyAll();
+			host.reallocateMigratingInGuests();
 		}
 		for (Map<String, Object> map : getSavedAllocation()) {
 			Vm vm = (Vm) map.get("vm");
 			PowerHost host = (PowerHost) map.get("host");
-			if (!host.vmCreate(vm)) {
+			if (!host.guestCreate(vm)) {
 				Log.printConcatLine("Couldn't restore VM #", vm.getId(), " on host #", host.getId());
 				System.exit(0);
 			}
@@ -559,7 +561,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * 
 	 * @return the power after allocation
 	 */
-	protected double getPowerAfterAllocation(PowerHost host, Vm vm) {
+	protected double getPowerAfterAllocation(PowerHost host, GuestEntity vm) {
 		double power = 0;
 		try {
 			power = host.getPowerModel().getPower(getMaxUtilizationAfterAllocation(host, vm));
@@ -581,7 +583,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * 
 	 * @return the power after allocation
 	 */
-	protected double getMaxUtilizationAfterAllocation(PowerHost host, Vm vm) {
+	protected double getMaxUtilizationAfterAllocation(PowerHost host, GuestEntity vm) {
 		double requestedTotalMips = vm.getCurrentRequestedTotalMips();
 		double hostUtilizationMips = getUtilizationOfCpuMips(host);
 		double hostPotentialUtilizationMips = hostUtilizationMips + requestedTotalMips;
@@ -598,12 +600,12 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 */
 	protected double getUtilizationOfCpuMips(PowerHost host) {
 		double hostUtilizationMips = 0;
-		for (Vm vm2 : host.getVmList()) {
-			if (host.getVmsMigratingIn().contains(vm2)) {
+		for (GuestEntity vm2 : host.getGuestList()) {
+			if (host.getGuestsMigratingIn().contains(vm2)) {
 				// calculate additional potential CPU usage of a migrating in VM
-				hostUtilizationMips += host.getTotalAllocatedMipsForVm(vm2) * 0.9 / 0.1;
+				hostUtilizationMips += host.getTotalAllocatedMipsForGuest(vm2) * 0.9 / 0.1;
 			}
-			hostUtilizationMips += host.getTotalAllocatedMipsForVm(vm2);
+			hostUtilizationMips += host.getTotalAllocatedMipsForGuest(vm2);
 		}
 		return hostUtilizationMips;
 	}

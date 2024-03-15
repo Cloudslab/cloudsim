@@ -18,6 +18,8 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 
 /**
  * NetworkVmAllocationPolicy is an {@link VmAllocationPolicy} that chooses, 
@@ -26,13 +28,14 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
 public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 
 	/** The vm map where each key is a VM id and
          * each value is the host where the VM is placed. */
-	private Map<String, Host> vmTable;
+	private Map<String, HostEntity> vmTable;
 
 	/** The used PEs map, where each key is a VM id
          * and each value is the number of required PEs the VM is using. */
@@ -53,7 +56,7 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 		super(list);
 
 		setFreePes(new ArrayList<>());
-		for (Host host : getHostList()) {
+		for (HostEntity host : getHostList()) {
 			getFreePes().add(host.getNumberOfPes());
 
 		}
@@ -63,24 +66,22 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	}
 
 	/**
-	 * Allocates the host with less PEs in use for a given VM.
-	 * 
-	 * @param vm {@inheritDoc}
-	 * 
-	 * @return {@inheritDoc}
-	 * 
-	 * @pre $none
-	 * @post $none
-	 */
+     * Allocates the host with less PEs in use for a given VM.
+     *
+     * @param guest {@inheritDoc}
+     * @return {@inheritDoc}
+     * @pre $none
+     * @post $none
+     */
 	@Override
-	public boolean allocateHostForVm(Vm vm) {
+	public boolean allocateHostForGuest(GuestEntity guest) {
 
-		int requiredPes = vm.getNumberOfPes();
+		int requiredPes = guest.getNumberOfPes();
 		boolean result = false;
 		int tries = 0;
 		List<Integer> freePesTmp = new ArrayList<>(getFreePes());
 
-		if (!getVmTable().containsKey(vm.getUid())) { // if this vm was not created
+		if (!getVmTable().containsKey(guest.getUid())) { // if this vm was not created
 			do {// we still trying until we find a host or until we try all of them
 				int moreFree = Integer.MIN_VALUE;
 				int idx = -1;
@@ -94,11 +95,11 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 				}
 
 				NetworkHost host = this.<NetworkHost> getHostList().get(idx);
-				result = host.vmCreate(vm);
+				result = host.guestCreate(guest);
 
 				if (result) { // if vm were succesfully created in the host
-					getVmTable().put(vm.getUid(), host);
-					getUsedPes().put(vm.getUid(), requiredPes);
+					getVmTable().put(guest.getUid(), host);
+					getUsedPes().put(guest.getUid(), requiredPes);
 					getFreePes().set(idx, getFreePes().get(idx) - requiredPes);
 					result = true;
 					break;
@@ -119,47 +120,47 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
          * @param vm The VM to get the max PEs utilization
          * @return The max utilization among the PEs of the VM
          */
-	protected double getMaxUtilizationAfterAllocation(NetworkHost host, Vm vm) {
+	protected double getMaxUtilizationAfterAllocation(NetworkHost host, GuestEntity vm) {
 		List<Double> allocatedMipsForVm = null;
 		NetworkHost allocatedHost = (NetworkHost) vm.getHost();
 
 		if (allocatedHost != null) {
-			allocatedMipsForVm = vm.getHost().getAllocatedMipsForVm(vm);
+			allocatedMipsForVm = vm.getHost().getAllocatedMipsForGuest(vm);
 		}
 
-		if (!host.allocatePesForVm(vm, vm.getCurrentRequestedMips())) {
+		if (!host.allocatePesForGuest(vm, vm.getCurrentRequestedMips())) {
 			return -1;
 		}
 
 		double maxUtilization = host.getMaxUtilizationAmongVmsPes(vm);
 
-		host.deallocatePesForVm(vm);
+		host.deallocatePesForGuest(vm);
 
 		if (allocatedHost != null && allocatedMipsForVm != null) {
-			vm.getHost().allocatePesForVm(vm, allocatedMipsForVm);
+			vm.getHost().allocatePesForGuest(vm, allocatedMipsForVm);
 		}
 
 		return maxUtilization;
 	}
 
 	@Override
-	public void deallocateHostForVm(Vm vm) {
-		Host host = getVmTable().remove(vm.getUid());
+	public void deallocateHostForGuest(GuestEntity guest) {
+		HostEntity host = getVmTable().remove(guest.getUid());
 		int idx = getHostList().indexOf(host);
-		int pes = getUsedPes().remove(vm.getUid());
+		int pes = getUsedPes().remove(guest.getUid());
 		if (host != null) {
-			host.vmDestroy(vm);
+			host.guestDestroy(guest);
 			getFreePes().set(idx, getFreePes().get(idx) + pes);
 		}
 	}
 
 	@Override
-	public Host getHost(Vm vm) {
-		return getVmTable().get(vm.getUid());
+	public HostEntity getHost(GuestEntity guest) {
+		return getVmTable().get(guest.getUid());
 	}
 
 	@Override
-	public Host getHost(int vmId, int userId) {
+	public HostEntity getHost(int vmId, int userId) {
 		return getVmTable().get(Vm.getUid(userId, vmId));
 	}
 
@@ -168,7 +169,7 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	 * 
 	 * @return the vm table
 	 */
-	public Map<String, Host> getVmTable() {
+	public Map<String, HostEntity> getVmTable() {
 		return vmTable;
 	}
 
@@ -177,7 +178,7 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	 * 
 	 * @param vmTable the vm table
 	 */
-	protected void setVmTable(Map<String, Host> vmTable) {
+	protected void setVmTable(Map<String, HostEntity> vmTable) {
 		this.vmTable = vmTable;
 	}
 
@@ -225,17 +226,17 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 	}
 
 	@Override
-	public boolean allocateHostForVm(Vm vm, Host host) {
-		if (host.vmCreate(vm)) { // if vm has been succesfully created in the host
-			getVmTable().put(vm.getUid(), host);
+	public boolean allocateHostForGuest(GuestEntity guest, HostEntity host) {
+		if (host.guestCreate(guest)) { // if vm has been succesfully created in the host
+			getVmTable().put(guest.getUid(), host);
 
-			int requiredPes = vm.getNumberOfPes();
+			int requiredPes = guest.getNumberOfPes();
 			int idx = getHostList().indexOf(host);
-			getUsedPes().put(vm.getUid(), requiredPes);
+			getUsedPes().put(guest.getUid(), requiredPes);
 			getFreePes().set(idx, getFreePes().get(idx) - requiredPes);
 
 			Log.formatLine(
-					"%.2f: VM #" + vm.getId() + " has been allocated to the host #" + host.getId(),
+					"%.2f: VM #" + guest.getId() + " has been allocated to the host #" + host.getId(),
 					CloudSim.clock());
 			return true;
 		}

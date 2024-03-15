@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cloudbus.cloudsim.container.core.Container;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * @author Sareh Fotuhi Piraghaj
@@ -35,14 +35,14 @@ public class ContainerPeProvisionerSimple extends ContainerPeProvisioner {
     }
 
     @Override
-    public boolean allocateMipsForContainer(Container container, double mips) {
+    public boolean allocateMipsForGuest(GuestEntity guest, double mips) {
         // TODO Auto-generated method stub
 
-        return allocateMipsForContainer(container.getUid(), mips);
+        return allocateMipsForGuest(guest.getUid(), mips);
     }
 
     @Override
-    public boolean allocateMipsForContainer(String containerUid, double mips) {
+    public boolean allocateMipsForGuest(String containerUid, double mips) {
         if (getAvailableMips() < mips) {
             return false;
         }
@@ -64,19 +64,19 @@ public class ContainerPeProvisionerSimple extends ContainerPeProvisioner {
     }
 
     @Override
-    public boolean allocateMipsForContainer(Container container, List<Double> mips) {
+    public boolean allocateMipsForGuest(GuestEntity guest, List<Double> mips) {
         int totalMipsToAllocate = 0;
         for (double _mips : mips) {
             totalMipsToAllocate += _mips;
         }
 
-        if (getAvailableMips() + getTotalAllocatedMipsForContainer(container) < totalMipsToAllocate) {
+        if (getAvailableMips() + getTotalAllocatedMipsForGuest(guest) < totalMipsToAllocate) {
             return false;
         }
 
-        setAvailableMips(getAvailableMips() + getTotalAllocatedMipsForContainer(container) - totalMipsToAllocate);
+        setAvailableMips(getAvailableMips() + getTotalAllocatedMipsForGuest(guest) - totalMipsToAllocate);
 
-        getPeTable().put(container.getUid(), mips);
+        getPeTable().put(guest.getUid(), mips);
 
         return true;
     }
@@ -86,8 +86,8 @@ public class ContainerPeProvisionerSimple extends ContainerPeProvisioner {
      * @see containerProvisioners.PeProvisioner#deallocateMipsForAllContainers()
      */
     @Override
-    public void deallocateMipsForAllContainers() {
-        super.deallocateMipsForAllContainers();
+    public void deallocateMipsForAllGuests() {
+        super.deallocateMipsForAllGuests();
         getPeTable().clear();
     }
 
@@ -95,18 +95,18 @@ public class ContainerPeProvisionerSimple extends ContainerPeProvisioner {
      * @see ContainerPeProvisioner#getAllocatedMipsForContainer
      */
     @Override
-    public List<Double> getAllocatedMipsForContainer(Container container) {
-        if (getPeTable().containsKey(container.getUid())) {
-            return getPeTable().get(container.getUid());
+    public List<Double> getAllocatedMipsForGuest(GuestEntity guest) {
+        if (getPeTable().containsKey(guest.getUid())) {
+            return getPeTable().get(guest.getUid());
         }
         return null;
     }
 
     @Override
-    public double getTotalAllocatedMipsForContainer(Container container) {
-        if (getPeTable().containsKey(container.getUid())) {
+    public double getTotalAllocatedMipsForGuest(GuestEntity guest) {
+        if (getPeTable().containsKey(guest.getUid())) {
             double totalAllocatedMips = 0.0;
-            for (double mips : getPeTable().get(container.getUid())) {
+            for (double mips : getPeTable().get(guest.getUid())) {
                 totalAllocatedMips += mips;
             }
             return totalAllocatedMips;
@@ -115,11 +115,11 @@ public class ContainerPeProvisionerSimple extends ContainerPeProvisioner {
     }
 
     @Override
-    public double getAllocatedMipsForContainerByVirtualPeId(Container container,
-                                                            int peId) {
-        if (getPeTable().containsKey(container.getUid())) {
+    public double getAllocatedMipsForGuestByVirtualPeId(GuestEntity guest,
+                                                        int peId) {
+        if (getPeTable().containsKey(guest.getUid())) {
             try {
-                return getPeTable().get(container.getUid()).get(peId);
+                return getPeTable().get(guest.getUid()).get(peId);
             } catch (Exception e) {
             }
         }
@@ -127,12 +127,12 @@ public class ContainerPeProvisionerSimple extends ContainerPeProvisioner {
     }
 
     @Override
-    public void deallocateMipsForContainer(Container container) {
-        if (getPeTable().containsKey(container.getUid())) {
-            for (double mips : getPeTable().get(container.getUid())) {
+    public void deallocateMipsForGuest(GuestEntity guest) {
+        if (getPeTable().containsKey(guest.getUid())) {
+            for (double mips : getPeTable().get(guest.getUid())) {
                 setAvailableMips(getAvailableMips() + mips);
             }
-            getPeTable().remove(container.getUid());
+            getPeTable().remove(guest.getUid());
         }
     }
 

@@ -8,6 +8,8 @@
 
 package org.cloudbus.cloudsim;
 
+import org.cloudbus.cloudsim.core.GuestEntity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,7 +50,7 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 	}
 
 	@Override
-	public boolean allocatePesForVm(Vm vm, List<Double> mipsShare) {
+	public boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShare) {
 		// if there is no enough free PEs, fails
 		if (getFreePes().size() < mipsShare.size()) {
 			return false;
@@ -74,24 +76,24 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 
 		getFreePes().removeAll(selectedPes);
 
-		getPeAllocationMap().put(vm.getUid(), selectedPes);
-		getMipsMap().put(vm.getUid(), mipsShare);
+		getPeAllocationMap().put(guest.getUid(), selectedPes);
+		getMipsMap().put(guest.getUid(), mipsShare);
 		setAvailableMips(getAvailableMips() - totalMips);
 		return true;
 	}
 
 	@Override
-	public void deallocatePesForVm(Vm vm) {
-		getFreePes().addAll(getPeAllocationMap().get(vm.getUid()));
-		getPeAllocationMap().remove(vm.getUid());
+	public void deallocatePesForGuest(GuestEntity guest) {
+		getFreePes().addAll(getPeAllocationMap().get(guest.getUid()));
+		getPeAllocationMap().remove(guest.getUid());
 
 		double totalMips = 0;
-		for (double mips : getMipsMap().get(vm.getUid())) {
+		for (double mips : getMipsMap().get(guest.getUid())) {
 			totalMips += mips;
 		}
 		setAvailableMips(getAvailableMips() + totalMips);
 
-		getMipsMap().remove(vm.getUid());
+		getMipsMap().remove(guest.getUid());
 	}
 
 	/**

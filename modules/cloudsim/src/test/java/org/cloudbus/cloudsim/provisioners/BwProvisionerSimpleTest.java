@@ -46,20 +46,20 @@ public class BwProvisionerSimpleTest {
 		Vm vm1 = new Vm(0, 0, 0, 0, 0, BW / 2, 0, "", null);
 		Vm vm2 = new Vm(1, 0, 0, 0, 0, BW, 0, "", null);
 
-		assertTrue(bwProvisioner.isSuitableForVm(vm1, BW / 2));
-		assertTrue(bwProvisioner.allocateBwForVm(vm1, BW / 2));
+		assertTrue(bwProvisioner.isSuitableForGuest(vm1, BW / 2));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm1, BW / 2));
 		assertEquals(BW / 2, bwProvisioner.getAvailableBw());
 
-		assertFalse(bwProvisioner.isSuitableForVm(vm2, BW));
-		assertFalse(bwProvisioner.allocateBwForVm(vm2, BW));
+		assertFalse(bwProvisioner.isSuitableForGuest(vm2, BW));
+		assertFalse(bwProvisioner.allocateBwForGuest(vm2, BW));
 		assertEquals(BW / 2, bwProvisioner.getAvailableBw());
 
-		assertTrue(bwProvisioner.isSuitableForVm(vm2, BW / 4));
-		assertTrue(bwProvisioner.allocateBwForVm(vm2, BW / 4));
+		assertTrue(bwProvisioner.isSuitableForGuest(vm2, BW / 4));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm2, BW / 4));
 		assertEquals(BW / 4, bwProvisioner.getAvailableBw());
 
-		assertTrue(bwProvisioner.isSuitableForVm(vm2, BW / 2));
-		assertTrue(bwProvisioner.allocateBwForVm(vm2, BW / 2));
+		assertTrue(bwProvisioner.isSuitableForGuest(vm2, BW / 2));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm2, BW / 2));
 		assertEquals(0, bwProvisioner.getAvailableBw());
 	}
 
@@ -68,46 +68,46 @@ public class BwProvisionerSimpleTest {
 		Vm vm1 = new Vm(0, 0, 0, 0, 0, BW / 2, 0, "", null);
 		Vm vm2 = new Vm(1, 0, 0, 0, 0, BW, 0, "", null);
 
-		assertTrue(bwProvisioner.isSuitableForVm(vm1, BW / 2));
-		assertTrue(bwProvisioner.allocateBwForVm(vm1, BW / 2));
-		assertEquals(BW / 2, bwProvisioner.getAllocatedBwForVm(vm1));
+		assertTrue(bwProvisioner.isSuitableForGuest(vm1, BW / 2));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm1, BW / 2));
+		assertEquals(BW / 2, bwProvisioner.getAllocatedBwForGuest(vm1));
 
-		assertFalse(bwProvisioner.isSuitableForVm(vm2, BW));
-		assertFalse(bwProvisioner.allocateBwForVm(vm2, BW));
-		assertEquals(0, bwProvisioner.getAllocatedBwForVm(vm2));
+		assertFalse(bwProvisioner.isSuitableForGuest(vm2, BW));
+		assertFalse(bwProvisioner.allocateBwForGuest(vm2, BW));
+		assertEquals(0, bwProvisioner.getAllocatedBwForGuest(vm2));
 
-		assertTrue(bwProvisioner.isSuitableForVm(vm2, BW / 4));
-		assertTrue(bwProvisioner.allocateBwForVm(vm2, BW / 4));
-		assertEquals(BW / 4, bwProvisioner.getAllocatedBwForVm(vm2));
+		assertTrue(bwProvisioner.isSuitableForGuest(vm2, BW / 4));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm2, BW / 4));
+		assertEquals(BW / 4, bwProvisioner.getAllocatedBwForGuest(vm2));
 
-		assertTrue(bwProvisioner.isSuitableForVm(vm2, BW / 2));
-		assertTrue(bwProvisioner.allocateBwForVm(vm2, BW / 2));
-		assertEquals(BW / 2, bwProvisioner.getAllocatedBwForVm(vm2));
+		assertTrue(bwProvisioner.isSuitableForGuest(vm2, BW / 2));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm2, BW / 2));
+		assertEquals(BW / 2, bwProvisioner.getAllocatedBwForGuest(vm2));
 	}
 
 	@Test
-	public void testDeallocateBwForVm() {
+	public void testDeallocateBwForGuest() {
 		Vm vm1 = new Vm(0, 0, 0, 0, 0, BW / 2, 0, "", null);
 		Vm vm2 = new Vm(1, 0, 0, 0, 0, BW / 2, 0, "", null);
 
 		assertEquals(0, vm1.getCurrentAllocatedBw());
 		assertEquals(0, vm2.getCurrentAllocatedBw());
 
-		assertTrue(bwProvisioner.isSuitableForVm(vm1, BW / 2));
-		assertTrue(bwProvisioner.allocateBwForVm(vm1, BW / 2));
+		assertTrue(bwProvisioner.isSuitableForGuest(vm1, BW / 2));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm1, BW / 2));
 		assertEquals(BW / 2, bwProvisioner.getAvailableBw());
 
-		bwProvisioner.deallocateBwForVm(vm1);
+		bwProvisioner.deallocateBwForGuest(vm1);
 		assertEquals(BW, bwProvisioner.getAvailableBw());
 
-		assertTrue(bwProvisioner.isSuitableForVm(vm1, BW / 2));
-		assertTrue(bwProvisioner.allocateBwForVm(vm1, BW / 2));
-		assertTrue(bwProvisioner.isSuitableForVm(vm2, BW / 2));
-		assertTrue(bwProvisioner.allocateBwForVm(vm2, BW / 2));
+		assertTrue(bwProvisioner.isSuitableForGuest(vm1, BW / 2));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm1, BW / 2));
+		assertTrue(bwProvisioner.isSuitableForGuest(vm2, BW / 2));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm2, BW / 2));
 		assertEquals(0, bwProvisioner.getAvailableBw());
 
-		bwProvisioner.deallocateBwForVm(vm1);
-		bwProvisioner.deallocateBwForVm(vm2);
+		bwProvisioner.deallocateBwForGuest(vm1);
+		bwProvisioner.deallocateBwForGuest(vm2);
 		assertEquals(BW, bwProvisioner.getAvailableBw());
 		assertEquals(0, vm1.getCurrentAllocatedBw());
 		assertEquals(0, vm2.getCurrentAllocatedBw());

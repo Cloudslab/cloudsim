@@ -374,7 +374,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
             }
 
             // Update the cloudlets before we send the kill event
-            vm.getHost().updateVmsProcessing(CloudSim.clock());
+            vm.getHost().updateGuestsProcessing(CloudSim.clock());
 
             int datacenterId = vm.getHost().getDatacenter().getId();
             String datacenterName = vm.getHost().getDatacenter().getName();

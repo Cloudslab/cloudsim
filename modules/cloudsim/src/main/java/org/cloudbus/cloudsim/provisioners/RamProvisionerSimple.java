@@ -11,7 +11,7 @@ package org.cloudbus.cloudsim.provisioners;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * RamProvisionerSimple is an extension of {@link RamProvisioner} which uses a best-effort policy to
@@ -39,8 +39,8 @@ public class RamProvisionerSimple extends RamProvisioner {
 	}
 
 	@Override
-	public boolean allocateRamForVm(Vm vm, int ram) {
-		int maxRam = vm.getRam();
+	public boolean allocateRamForGuest(GuestEntity guest, int ram) {
+		int maxRam = guest.getRam();
                 /* If the requested amount of RAM to be allocated to the VM is greater than
                 the amount of VM is in fact requiring, allocate only the
                 amount defined in the Vm requirements.*/
@@ -48,50 +48,50 @@ public class RamProvisionerSimple extends RamProvisioner {
 			ram = maxRam;
 		}
 
-		deallocateRamForVm(vm);
+		deallocateRamForGuest(guest);
 
 		if (getAvailableRam() >= ram) {
 			setAvailableRam(getAvailableRam() - ram);
-			getRamTable().put(vm.getUid(), ram);
-			vm.setCurrentAllocatedRam(getAllocatedRamForVm(vm));
+			getRamTable().put(guest.getUid(), ram);
+			guest.setCurrentAllocatedRam(getAllocatedRamForGuest(guest));
 			return true;
 		}
 
-		vm.setCurrentAllocatedRam(getAllocatedRamForVm(vm));
+		guest.setCurrentAllocatedRam(getAllocatedRamForGuest(guest));
 
 		return false;
 	}
 
 	@Override
-	public int getAllocatedRamForVm(Vm vm) {
-		if (getRamTable().containsKey(vm.getUid())) {
-			return getRamTable().get(vm.getUid());
+	public int getAllocatedRamForGuest(GuestEntity guest) {
+		if (getRamTable().containsKey(guest.getUid())) {
+			return getRamTable().get(guest.getUid());
 		}
 		return 0;
 	}
 
 	@Override
-	public void deallocateRamForVm(Vm vm) {
-		if (getRamTable().containsKey(vm.getUid())) {
-			int amountFreed = getRamTable().remove(vm.getUid());
+	public void deallocateRamForGuest(GuestEntity guest) {
+		if (getRamTable().containsKey(guest.getUid())) {
+			int amountFreed = getRamTable().remove(guest.getUid());
 			setAvailableRam(getAvailableRam() + amountFreed);
-			vm.setCurrentAllocatedRam(0);
+			guest.setCurrentAllocatedRam(0);
 		}
 	}
 
 	@Override
-	public void deallocateRamForAllVms() {
-		super.deallocateRamForAllVms();
+	public void deallocateRamForAllGuests() {
+		super.deallocateRamForAllGuests();
 		getRamTable().clear();
 	}
 
 	@Override
-	public boolean isSuitableForVm(Vm vm, int ram) {
-		int allocatedRam = getAllocatedRamForVm(vm);
-		boolean result = allocateRamForVm(vm, ram);
-		deallocateRamForVm(vm);
+	public boolean isSuitableForGuest(GuestEntity guest, int ram) {
+		int allocatedRam = getAllocatedRamForGuest(guest);
+		boolean result = allocateRamForGuest(guest, ram);
+		deallocateRamForGuest(guest);
 		if (allocatedRam > 0) {
-			allocateRamForVm(vm, allocatedRam);
+			allocateRamForGuest(guest, allocatedRam);
 		}
 		return result;
 	}

@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.container.hostSelectionPolicies;
 
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.core.HostEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,6 @@ public abstract class HostSelectionPolicy {
      * @param hostList the host
      * @return the destination host to migrate
      */
-    public abstract Host getHost(List<Host> hostList, Object obj, Set<? extends Host> excludedHostList);
+    public abstract HostEntity getHost(List<HostEntity> hostList, Object obj, Set<? extends HostEntity> excludedHostList);
 
 }

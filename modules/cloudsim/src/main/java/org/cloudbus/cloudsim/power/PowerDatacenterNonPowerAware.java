@@ -18,6 +18,7 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 
 /**
@@ -106,7 +107,7 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 			for (PowerHost host : this.<PowerHost> getHostList()) {
 				Log.formatLine("\n%.2f: Host #%d", CloudSim.clock(), host.getId());
 
-				double time = host.updateVmsProcessing(currentTime); // inform VMs to update
+				double time = host.updateGuestsProcessing(currentTime); // inform VMs to update
 																		// processing
 				if (time < minTime) {
 					minTime = time;
@@ -119,8 +120,8 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 
 			/** Remove completed VMs **/
 			for (PowerHost host : this.<PowerHost> getHostList()) {
-				for (Vm vm : host.getCompletedVms()) {
-					getVmAllocationPolicy().deallocateHostForVm(vm);
+				for (GuestEntity vm : host.getCompletedVms()) {
+					getVmAllocationPolicy().deallocateHostForGuest(vm);
 					getVmList().remove(vm);
 					Log.printLine("VM #" + vm.getId() + " has been deallocated from host #" + host.getId());
 				}
@@ -153,7 +154,7 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 									targetHost.getId());
 						}
 
-						targetHost.addMigratingInVm(vm);
+						targetHost.addMigratingInGuest(vm);
 						incrementMigrationCount();
 
 						/** VM migration delay = RAM / bandwidth + C (C = 10 sec) **/

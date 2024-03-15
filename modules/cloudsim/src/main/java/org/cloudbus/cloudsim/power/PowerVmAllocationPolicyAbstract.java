@@ -17,6 +17,8 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 
 /**
  * An abstract power-aware VM allocation policy.
@@ -50,25 +52,24 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 	}
 
 	@Override
-	public boolean allocateHostForVm(Vm vm) {
-		return allocateHostForVm(vm, findHostForVm(vm));
+	public boolean allocateHostForGuest(GuestEntity guest) {
+		return allocateHostForGuest(guest, findHostForVm(guest));
 	}
 
-	@Override
-	public boolean allocateHostForVm(Vm vm, Host host) {
+	public boolean allocateHostForGuest(GuestEntity guest, HostEntity host) {
 		if (host == null) {
-			Log.formatLine("%.2f: No suitable host found for VM #" + vm.getId() + "\n", CloudSim.clock());
+			Log.formatLine("%.2f: No suitable host found for VM #" + guest.getId() + "\n", CloudSim.clock());
 			return false;
 		}
-		if (host.vmCreate(vm)) { // if vm has been succesfully created in the host
-			getVmTable().put(vm.getUid(), host);
+		if (host.guestCreate(guest)) { // if vm has been succesfully created in the host
+			getVmTable().put(guest.getUid(), (Host) host); // TODO: Remo Andreoli: change all to HostEntity
 			Log.formatLine(
-					"%.2f: VM #" + vm.getId() + " has been allocated to the host #" + host.getId(),
+					"%.2f: VM #" + guest.getId() + " has been allocated to the host #" + host.getId(),
 					CloudSim.clock());
 			return true;
 		}
 		Log.formatLine(
-				"%.2f: Creation of VM #" + vm.getId() + " on the host #" + host.getId() + " failed\n",
+				"%.2f: Creation of VM #" + guest.getId() + " on the host #" + host.getId() + " failed\n",
 				CloudSim.clock());
 		return false;
 	}
@@ -79,9 +80,9 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 	 * @param vm the vm to find a host for it
 	 * @return the first host found that can host the VM
 	 */
-	public PowerHost findHostForVm(Vm vm) {
+	public PowerHost findHostForVm(GuestEntity vm) {
 		for (PowerHost host : this.<PowerHost> getHostList()) {
-			if (host.isSuitableForVm(vm)) {
+			if (host.isSuitableForGuest(vm)) {
 				return host;
 			}
 		}
@@ -89,20 +90,20 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 	}
 
 	@Override
-	public void deallocateHostForVm(Vm vm) {
-		Host host = getVmTable().remove(vm.getUid());
+	public void deallocateHostForGuest(GuestEntity guest) {
+		Host host = getVmTable().remove(guest.getUid());
 		if (host != null) {
-			host.vmDestroy(vm);
+			host.guestDestroy(guest);
 		}
 	}
 
 	@Override
-	public Host getHost(Vm vm) {
-		return getVmTable().get(vm.getUid());
+	public HostEntity getHost(GuestEntity guest) {
+		return getVmTable().get(guest.getUid());
 	}
 
 	@Override
-	public Host getHost(int vmId, int userId) {
+	public HostEntity getHost(int vmId, int userId) {
 		return getVmTable().get(Vm.getUid(userId, vmId));
 	}
 

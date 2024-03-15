@@ -18,6 +18,7 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmScheduler;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
@@ -37,6 +38,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
  * </ul>
  * 
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  */
 public class NetworkHost extends Host {
@@ -92,13 +94,13 @@ public class NetworkHost extends Host {
 	}
 
 	@Override
-	public double updateVmsProcessing(double currentTime) {
+	public double updateGuestsProcessing(double currentTime) {
 		double smallerTime = Double.MAX_VALUE;
 		// insert in each vm packet recieved
 		recvpackets();
-		for (Vm vm : super.getVmList()) {
-			double time = vm.updateVmProcessing(currentTime, getVmScheduler()
-					.getAllocatedMipsForVm(vm));
+		for (GuestEntity vm : super.getGuestList()) {
+			double time = vm.updateGuestProcessing(currentTime, getGuestScheduler()
+					.getAllocatedMipsForGuest(vm));
 			if (time > 0.0 && time < smallerTime) {
 				smallerTime = time;
 			}
@@ -118,7 +120,7 @@ public class NetworkHost extends Host {
 			hs.pkt.recievetime = CloudSim.clock();
 
 			// insert the packet in recievedlist of VM
-			Vm vm = VmList.getById(getVmList(), hs.pkt.reciever);
+			Vm vm = VmList.getById(getGuestList(), hs.pkt.reciever);
 			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
 					.computeIfAbsent(hs.pkt.sender, k -> new ArrayList<>());
 
@@ -133,13 +135,13 @@ public class NetworkHost extends Host {
          * VM hosted on other machine.
 	 */
 	private void sendpackets() {
-		for (Vm vm : super.getVmList()) {
+		for (GuestEntity vm : super.getGuestList()) {
                     for (Entry<Integer, List<HostPacket>> es : ((NetworkCloudletSpaceSharedScheduler) vm
                                     .getCloudletScheduler()).pkttosend.entrySet()) {
                         List<HostPacket> pktlist = es.getValue();
                         for (HostPacket pkt : pktlist) {
                                 NetworkPacket hpkt = new NetworkPacket(getId(), pkt, vm.getId(), pkt.sender);
-                                Vm vm2 = VmList.getById(this.getVmList(), hpkt.recievervmid);
+                                Vm vm2 = VmList.getById(this.getGuestList(), hpkt.recievervmid);
                                 if (vm2 != null) {
                                         packetTosendLocal.add(hpkt);
                                 } else {
@@ -157,15 +159,15 @@ public class NetworkHost extends Host {
                     hs.stime = hs.rtime;
                     hs.pkt.recievetime = CloudSim.clock();
                     // insertthe packet in recievedlist
-                    Vm vm = VmList.getById(getVmList(), hs.pkt.reciever);
+                    Vm vm = VmList.getById(getGuestList(), hs.pkt.reciever);
 
 			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
 					.computeIfAbsent(hs.pkt.sender, k -> new ArrayList<>());
 			pktlist.add(hs.pkt);
 		}
 		if (flag) {
-                    for (Vm vm : super.getVmList()) {
-                        vm.updateVmProcessing(CloudSim.clock(), getVmScheduler().getAllocatedMipsForVm(vm));
+                    for (GuestEntity vm : super.getGuestList()) {
+                        vm.updateGuestProcessing(CloudSim.clock(), getGuestScheduler().getAllocatedMipsForGuest(vm));
                     }
 		}
 
@@ -187,7 +189,7 @@ public class NetworkHost extends Host {
          * @param vm The VM to get its PEs maximum utilization
          * @return The maximum utilization among the PEs of the VM.
          */
-	public double getMaxUtilizationAmongVmsPes(Vm vm) {
+	public double getMaxUtilizationAmongVmsPes(GuestEntity vm) {
 		return PeList.getMaxUtilizationAmongVmsPes(getPeList(), vm);
 	}
 

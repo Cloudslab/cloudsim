@@ -64,10 +64,10 @@ public class PowerContainer extends Container{
          * @post $none
          */
         @Override
-        public double updateContainerProcessing(final double currentTime, final List<Double> mipsShare) {
-            double time = super.updateContainerProcessing(currentTime, mipsShare);
+        public double updateGuestProcessing(final double currentTime, final List<Double> mipsShare) {
+            double time = super.updateGuestProcessing(currentTime, mipsShare);
             if (currentTime > getPreviousTime() && (currentTime - 0.2) % getSchedulingInterval() == 0) {
-                double utilization = getTotalUtilizationOfCpu(getContainerCloudletScheduler().getPreviousTime());
+                double utilization = getTotalUtilizationOfCpu(getCloudletScheduler().getPreviousTime());
                 if (CloudSim.clock() != 0 || utilization != 0) {
                     addUtilizationHistoryValue(utilization);
                 }

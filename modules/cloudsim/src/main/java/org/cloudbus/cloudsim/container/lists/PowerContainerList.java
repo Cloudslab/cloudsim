@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.container.lists;
 
 import org.cloudbus.cloudsim.container.core.Container;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,7 +19,7 @@ public class PowerContainerList {
      *
      * @param containerList the vm list
      */
-    public static <T extends Container> void sortByCpuUtilization(List<T> containerList) {
+    public static <T extends GuestEntity> void sortByCpuUtilization(List<T> containerList) {
         containerList.sort((a, b) -> {
             Double aUtilization = a.getTotalUtilizationOfCpuMips(CloudSim.clock());
             Double bUtilization = b.getTotalUtilizationOfCpuMips(CloudSim.clock());

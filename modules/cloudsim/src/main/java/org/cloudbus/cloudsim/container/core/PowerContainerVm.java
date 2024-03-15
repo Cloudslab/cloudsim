@@ -1,10 +1,12 @@
 package org.cloudbus.cloudsim.container.core;
 
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisioner;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
+import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.VmScheduler;
 import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisioner;
-import org.cloudbus.cloudsim.container.schedulers.ContainerScheduler;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.provisioners.BwProvisioner;
+import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 import java.util.LinkedList;
@@ -12,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by sareh on 14/07/15.
+ * Modified by Remo Andreoli (March 2024)
  */
 public class PowerContainerVm extends ContainerVm {
 
@@ -56,10 +59,10 @@ public class PowerContainerVm extends ContainerVm {
             final long bw,
             final long size,
             final String vmm,
-            final ContainerScheduler containerScheduler,
-            final ContainerRamProvisioner containerRamProvisioner,
-            final ContainerBwProvisioner containerBwProvisioner,
-            List<? extends ContainerPe> peList,
+            final VmScheduler containerScheduler,
+            final RamProvisioner containerRamProvisioner,
+            final BwProvisioner containerBwProvisioner,
+            List<? extends Pe> peList,
             final double schedulingInterval) {
         super(id, userId, mips, ram, bw, size, vmm, containerScheduler, containerRamProvisioner, containerBwProvisioner, peList);
         setSchedulingInterval(schedulingInterval);
@@ -80,15 +83,15 @@ public class PowerContainerVm extends ContainerVm {
 
 
     @Override
-    public double updateVmProcessing(final double currentTime, final List<Double> mipsShare) {
-        double time = super.updateVmProcessing(currentTime, mipsShare);
+    public double updateGuestProcessing(final double currentTime, final List<Double> mipsShare) {
+        double time = super.updateGuestProcessing(currentTime, mipsShare);
         if (currentTime > getPreviousTime() && (currentTime - 0.2) % getSchedulingInterval() == 0) {
             double utilization = 0;
 
-            for (Container container : getContainerList()) {
+            for (GuestEntity container : getGuestList()) {
                 // The containers which are going to migrate to the vm shouldn't be added to the utilization
-                if(!getContainersMigratingIn().contains(container)) {
-                    time = container.getContainerCloudletScheduler().getPreviousTime();
+                if(!getGuestsMigratingIn().contains(container)) {
+                    time = container.getCloudletScheduler().getPreviousTime();
                     utilization += container.getTotalUtilizationOfCpu(time);
                 }
                 }

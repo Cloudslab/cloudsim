@@ -4,6 +4,7 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.power.PowerHost;
 
@@ -44,13 +45,13 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
     public PowerHost findHostForVm(ContainerVm vm, Set<? extends Host> excludedHosts) {
         PowerHost allocatedHost = null;
         boolean find = false;
-        Set<Host> excludedHost1 = new HashSet<>(excludedHosts);
+        Set<HostEntity> excludedHost1 = new HashSet<>(excludedHosts);
         while (!find) {
-            Host host = getHostSelectionPolicy().getHost(getHostList(), vm, excludedHost1);
+            HostEntity host = getHostSelectionPolicy().getHost(getHostList(), vm, excludedHost1);
             if (host == null) {
                 return allocatedHost;
             }
-            if (host.isSuitableForVm(vm)) {
+            if (host.isSuitableForGuest(vm)) {
                 find = true;
                 allocatedHost = (PowerHost) host;
             } else {
@@ -86,7 +87,7 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
     protected boolean isHostOverUtilized(PowerHost host) {
         addHistoryEntry(host, getUtilizationThreshold());
         double totalRequestedMips = 0;
-        for (ContainerVm vm : host.<ContainerVm>getVmList()) {
+        for (ContainerVm vm : host.<ContainerVm>getGuestList()) {
             totalRequestedMips += vm.getCurrentRequestedTotalMips();
         }
         double utilization = totalRequestedMips / host.getTotalMips();

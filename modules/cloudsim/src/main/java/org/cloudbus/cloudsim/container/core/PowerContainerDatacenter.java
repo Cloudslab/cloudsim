@@ -7,6 +7,7 @@ import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPol
 import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -146,7 +147,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
                                     oldHost.getId(),
                                     targetHost.getId());
                         }
-                        targetHost.addMigratingInVm(vm);
+                        targetHost.addMigratingInGuest(vm);
                         incrementMigrationCount();
 
                         /** VM migration delay = RAM / bandwidth **/
@@ -212,7 +213,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         for (PowerHost host : this.<PowerHost>getHostList()) {
             Log.printLine();
 
-            double time = host.updateVmsProcessing(currentTime); // inform VMs to update processing
+            double time = host.updateGuestsProcessing(currentTime); // inform VMs to update processing
             if (time < minTime) {
                 minTime = time;
             }
@@ -277,12 +278,12 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         int numberOfActiveHosts =0;
         /** Remove completed VMs **/
         for (PowerHost host : this.<PowerHost>getHostList()) {
-            for (Vm vm : host.getCompletedVms()) {
-                getVmAllocationPolicy().deallocateHostForVm(vm);
+            for (GuestEntity vm : host.getCompletedVms()) {
+                getVmAllocationPolicy().deallocateHostForGuest(vm);
                 getVmList().remove(vm);
                 Log.printLine(String.format("VM #%d has been deallocated from host #%d", vm.getId(), host.getId()));
             }
-            if(host.getVmList().size() !=0){
+            if(host.getGuestList().size() !=0){
 
                 numberOfActiveHosts ++;
             }
@@ -502,7 +503,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         List<ContainerVm> temp= new ArrayList<>();
 
         for(Host host : getHostList()) {
-            List<ContainerVm> containerVms = host.getVmList();
+            List<ContainerVm> containerVms = host.getGuestList();
             for (ContainerVm vm : containerVms) {
                 if (!temp.contains(vm)) {
                     int tempNumbers = this.getNumberOfVms() + 1;

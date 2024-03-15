@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.container.containerProvisioners;
 
-import org.cloudbus.cloudsim.container.core.Container;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * ContainerBwProvisioner is an abstract class that represents the provisioning policy of bandwidth to
@@ -41,30 +41,30 @@ public abstract class ContainerBwProvisioner {
     /**
      * Allocates BW for a given container.
      *
-     * @param container containercontainer for which the bw are being allocated
-     * @param bw        the bw
+     * @param guest containercontainer for which the bw are being allocated
+     * @param bw    the bw
      * @return $true if the bw could be allocated; $false otherwise
      * @pre $none
      * @post $none
      */
-    public abstract boolean allocateBwForContainer(Container container, long bw);
+    public abstract boolean allocateBwForGuest(GuestEntity guest, long bw);
 
     /**
      * Gets the allocated BW for container.
      *
-     * @param container the container
+     * @param guest the container
      * @return the allocated BW for container
      */
-    public abstract long getAllocatedBwForContainer(Container container);
+    public abstract long getAllocatedBwForGuest(GuestEntity guest);
 
     /**
      * Releases BW used by a container.
      *
-     * @param container the container
+     * @param guest the container
      * @pre $none
      * @post none
      */
-    public abstract void deallocateBwForContainer(Container container);
+    public abstract void deallocateBwForGuest(GuestEntity guest);
 
     /**
      * Releases BW used by a all containers.
@@ -72,7 +72,7 @@ public abstract class ContainerBwProvisioner {
      * @pre $none
      * @post none
      */
-    public void deallocateBwForAllContainers() {
+    public void deallocateBwForAllGuests() {
         setAvailableVmBw(getBw());
     }
 
@@ -80,11 +80,11 @@ public abstract class ContainerBwProvisioner {
     /**
      * Checks if BW is suitable for container.
      *
-     * @param container the container
-     * @param bw        the bw
+     * @param guest the container
+     * @param bw    the bw
      * @return true, if BW is suitable for container
      */
-    public abstract boolean isSuitableForContainer(Container container, long bw);
+    public abstract boolean isSuitableForGuest(GuestEntity guest, long bw);
 
 
     /**

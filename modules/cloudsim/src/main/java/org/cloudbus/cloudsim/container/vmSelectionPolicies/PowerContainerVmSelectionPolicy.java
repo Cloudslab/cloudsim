@@ -29,7 +29,7 @@ public abstract class PowerContainerVmSelectionPolicy {
          */
         protected List<PowerContainerVm> getMigratableVms(PowerHost host) {
             List<PowerContainerVm> migratableVms = new ArrayList<>();
-            for (PowerContainerVm vm : host.<PowerContainerVm> getVmList()) {
+            for (PowerContainerVm vm : host.<PowerContainerVm> getGuestList()) {
                 if (!vm.isInMigration()) {
                     migratableVms.add(vm);
                 }

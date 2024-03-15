@@ -286,18 +286,18 @@ public class ContainerCloudSimExample1 {
         ArrayList<ContainerVm> containerVms = new ArrayList<>();
 
         for (int i = 0; i < containerVmsNumber; ++i) {
-            ArrayList<ContainerPe> peList = new ArrayList<>();
+            ArrayList<Pe> peList = new ArrayList<>();
             int vmType = i / (int) Math.ceil((double) containerVmsNumber / 4.0D);
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
-                peList.add(new ContainerPe(j,
-                        new ContainerPeProvisionerSimple(ConstantsExamples.VM_MIPS[vmType])));
+                peList.add(new Pe(j,
+                        new PeProvisionerSimple(ConstantsExamples.VM_MIPS[vmType])));
             }
             containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId,
                     ConstantsExamples.VM_MIPS[vmType], ConstantsExamples.VM_RAM[vmType],
                     ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen",
                     new ContainerSchedulerTimeSharedOverSubscription(peList),
-                    new ContainerRamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
-                    new ContainerBwProvisionerSimple(ConstantsExamples.VM_BW),
+                    new RamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
+                    new BwProvisionerSimple(ConstantsExamples.VM_BW),
                     peList, ConstantsExamples.SCHEDULING_INTERVAL));
 
 

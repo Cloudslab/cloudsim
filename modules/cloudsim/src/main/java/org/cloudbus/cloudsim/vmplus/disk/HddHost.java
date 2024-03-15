@@ -2,8 +2,9 @@ package org.cloudbus.cloudsim.vmplus.disk;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmScheduler;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.vmplus.VmSchedulerWithIndependentPes;
 import org.cloudbus.cloudsim.vmplus.util.Id;
 import org.cloudbus.cloudsim.lists.PeList;
@@ -53,12 +54,12 @@ public class HddHost extends Host {
      * @see org.cloudbus.cloudsim.Host#updateVmsProcessing(double)
      */
     @Override
-    public double updateVmsProcessing(final double currentTime) {
+    public double updateGuestsProcessing(final double currentTime) {
         double smallerTime = Double.MAX_VALUE;
 
-        for (HddVm vm : getVmList()) {
-            List<Double> mips = getVmScheduler().getAllocatedMipsForVm(vm);
-            List<Double> iops = getHddIOScheduler().getAllocatedMipsForVm(vm);
+        for (HddVm vm : this.getGuestList()) {
+            List<Double> mips = getGuestScheduler().getAllocatedMipsForGuest(vm);
+            List<Double> iops = getHddIOScheduler().getAllocatedMipsForGuest(vm);
             double time = vm.updateVmProcessing(currentTime, mips, iops);
 
             if (time > 0.0 && time < smallerTime) {
@@ -75,21 +76,21 @@ public class HddHost extends Host {
      * @see org.cloudbus.cloudsim.Host#vmCreate(org.cloudbus.cloudsim.Vm)
      */
     @Override
-    public boolean vmCreate(final Vm vm) {
+    public boolean guestCreate(final GuestEntity guest) {
         boolean allocationOfHDD = false;
-        Host prevHost = vm.getHost();
-        vm.setHost(this);
+        HostEntity prevHost = guest.getHost();
+        guest.setHost(this);
 
-        boolean allocatednOfCPUFlag = super.vmCreate(vm);
-        HddVm hddVm = (HddVm) vm;
+        boolean allocatednOfCPUFlag = super.guestCreate(guest);
+        HddVm hddVm = (HddVm) guest;
         allocationOfHDD = allocatednOfCPUFlag
-                && getHddIOScheduler().allocatePesForVm(hddVm, hddVm.getCurrentRequestedIOMips());
+                && getHddIOScheduler().allocatePesForGuest(hddVm, hddVm.getCurrentRequestedIOMips());
 
         if (allocatednOfCPUFlag && !allocationOfHDD) {
-            getRamProvisioner().deallocateRamForVm(hddVm);
-            getBwProvisioner().deallocateBwForVm(hddVm);
-            deallocatePesForVm(hddVm);
-            getHddIOScheduler().deallocatePesForVm(hddVm);
+            getRamProvisioner().deallocateRamForGuest(hddVm);
+            getBwProvisioner().deallocateBwForGuest(hddVm);
+            deallocatePesForGuest(hddVm);
+            getHddIOScheduler().deallocatePesForGuest(hddVm);
             hddVm.setHost(prevHost);
         }
 
@@ -103,8 +104,8 @@ public class HddHost extends Host {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public List<HddVm> getVmList() {
-        return super.getVmList();
+    public List<HddVm> getGuestList() {
+        return super.getGuestList();
     }
 
     /**

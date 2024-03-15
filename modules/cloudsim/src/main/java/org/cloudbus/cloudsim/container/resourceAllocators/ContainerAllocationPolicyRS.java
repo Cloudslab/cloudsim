@@ -35,7 +35,7 @@ public class ContainerAllocationPolicyRS extends  PowerContainerAllocationPolicy
 
                 return null;
             }
-            if (containerVm.isSuitableForContainer(container)) {
+            if (containerVm.isSuitableForGuest(container)) {
                 found = true;
                 return containerVm;
             }

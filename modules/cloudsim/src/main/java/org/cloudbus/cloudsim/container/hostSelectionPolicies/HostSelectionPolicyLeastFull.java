@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.container.hostSelectionPolicies;
 
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 
 import java.util.List;
@@ -13,10 +14,10 @@ import java.util.Set;
 public class HostSelectionPolicyLeastFull extends HostSelectionPolicy{
 
     @Override
-    public Host getHost(List<Host> hostList, Object obj, Set<? extends Host> excludedHostList) {
+    public HostEntity getHost(List<HostEntity> hostList, Object obj, Set<? extends HostEntity> excludedHostList) {
         double minUsage = Double.MAX_VALUE;
-        Host selectedHost = null;
-        for (Host host : hostList) {
+        HostEntity selectedHost = null;
+        for (HostEntity host : hostList) {
             if (excludedHostList.contains(host)) {
                 continue;
             }
