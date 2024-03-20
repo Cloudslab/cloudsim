@@ -127,8 +127,7 @@ public class HddVm extends MonitoredVMex {
      * @see org.cloudbus.cloudsim.Vm#updateVmProcessing(double, java.util.List)
      */
     @Override
-    @Deprecated
-    public double updateGuestProcessing(final double currentTime, final List<Double> mipsShare) {
+    public double updateCloudletsProcessing(final double currentTime, final List<Double> mipsShare) {
         return updateVmProcessing(currentTime, mipsShare, List.of());
     }
 

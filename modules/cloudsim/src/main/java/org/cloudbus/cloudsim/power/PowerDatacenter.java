@@ -287,7 +287,7 @@ public class PowerDatacenter extends Datacenter {
 	 */
 	protected boolean isInMigration() {
 		boolean result = false;
-		for (Vm vm : getVmList()) {
+		for (GuestEntity vm : getVmList()) {
 			if (vm.isInMigration()) {
 				result = true;
 				break;

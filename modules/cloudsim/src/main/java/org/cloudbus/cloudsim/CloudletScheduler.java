@@ -74,7 +74,7 @@ public abstract class CloudletScheduler {
 	 * @pre currentTime >= 0
 	 * @post $none
 	 */
-	public abstract double updateCloudletProcessing(double currentTime, List<Double> mipsShare);
+	public abstract double updateCloudletsProcessing(double currentTime, List<Double> mipsShare);
 
 	/**
 	 * Receives an cloudlet to be executed in the VM managed by this scheduler.

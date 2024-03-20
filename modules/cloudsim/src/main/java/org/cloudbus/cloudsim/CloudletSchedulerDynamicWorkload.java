@@ -35,7 +35,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
          * considering that all PEs have the same capacity. 
          * //TODO Despite of the class considers that all PEs have the same capacity,
          * it accepts a list of PEs with different MIPS at the method 
-         * {@link #updateCloudletProcessing(double, java.util.List) }
+         * {@link CloudletScheduler#updateCloudletsProcessing(double, List) }
          */
 	private double mips;
 
@@ -78,7 +78,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	}
 
 	@Override
-	public double updateCloudletProcessing(double currentTime, List<Double> mipsShare) {
+	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
 		setCurrentMipsShare(mipsShare);
 
 		double timeSpan = currentTime - getPreviousTime();

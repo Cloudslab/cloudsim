@@ -52,7 +52,7 @@ public class PowerContainer extends Container{
         }
 
         /**
-         * Updates the processing of cloudlets running on this VM.
+         * Updates the processing of guest entities running on this VM.
          *
          * @param currentTime current simulation time
          * @param mipsShare array with MIPS share of each Pe available to the scheduler
@@ -64,8 +64,8 @@ public class PowerContainer extends Container{
          * @post $none
          */
         @Override
-        public double updateGuestProcessing(final double currentTime, final List<Double> mipsShare) {
-            double time = super.updateGuestProcessing(currentTime, mipsShare);
+        public double updateCloudletsProcessing(final double currentTime, final List<Double> mipsShare) {
+            double time = super.updateCloudletsProcessing(currentTime, mipsShare);
             if (currentTime > getPreviousTime() && (currentTime - 0.2) % getSchedulingInterval() == 0) {
                 double utilization = getTotalUtilizationOfCpu(getCloudletScheduler().getPreviousTime());
                 if (CloudSim.clock() != 0 || utilization != 0) {

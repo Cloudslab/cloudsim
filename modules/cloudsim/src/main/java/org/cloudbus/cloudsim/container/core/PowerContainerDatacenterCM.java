@@ -93,7 +93,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                         targetVm.getId());
                             }
                             incrementContainerMigrationCount();
-                            targetVm.addMigratingInContainer(container);
+                            targetVm.addMigratingInGuest(container);
 
 
                             if (migrate.containsKey("NewEventRequired")) {
@@ -266,7 +266,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                     containerVm.setBeingInstantiated(false);
                 }
 
-                containerVm.updateGuestProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(containerVm).getGuestScheduler()
+                containerVm.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(containerVm).getGuestScheduler()
                         .getAllocatedMipsForGuest(containerVm));
             }
 

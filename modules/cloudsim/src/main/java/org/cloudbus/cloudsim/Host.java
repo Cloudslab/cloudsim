@@ -97,8 +97,8 @@ public class Host implements HostEntity {
 	 * @pre currentTime >= 0.0
 	 * @post $none
          * //TODO there is an inconsistency between the return value of this method
-         * and the individual call of {@link Vm#updateGuestProcessing(double, java.util.List),
-         * and consequently the {@link CloudletScheduler#updateCloudletProcessing(double, java.util.List)}.
+         * and the individual call of {@link GuestEntity#updateCloudletsProcessing(double, List) ,
+         * and consequently the {@link CloudletScheduler#updateCloudletsProcessing(double, List) }.
          * The current method returns {@link Double#MAX_VALUE}  while the other ones
          * return 0. It has to be checked if there is a reason for this
          * difference.}
@@ -107,7 +107,7 @@ public class Host implements HostEntity {
 		double smallerTime = Double.MAX_VALUE;
 
 		for (GuestEntity vm : getGuestList()) {
-			double time = vm.updateGuestProcessing(
+			double time = vm.updateCloudletsProcessing(
                                 currentTime, getGuestScheduler().getAllocatedMipsForGuest(vm));
 			if (time > 0.0 && time < smallerTime) {
 				smallerTime = time;

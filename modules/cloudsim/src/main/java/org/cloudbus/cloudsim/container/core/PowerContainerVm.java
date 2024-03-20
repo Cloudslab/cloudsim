@@ -2,7 +2,6 @@ package org.cloudbus.cloudsim.container.core;
 
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.VmScheduler;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisioner;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
@@ -83,8 +82,8 @@ public class PowerContainerVm extends ContainerVm {
 
 
     @Override
-    public double updateGuestProcessing(final double currentTime, final List<Double> mipsShare) {
-        double time = super.updateGuestProcessing(currentTime, mipsShare);
+    public double updateCloudletsProcessing(final double currentTime, final List<Double> mipsShare) {
+        double time = super.updateCloudletsProcessing(currentTime, mipsShare);
         if (currentTime > getPreviousTime() && (currentTime - 0.2) % getSchedulingInterval() == 0) {
             double utilization = 0;
 

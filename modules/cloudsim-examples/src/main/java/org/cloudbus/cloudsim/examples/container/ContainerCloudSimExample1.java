@@ -99,17 +99,41 @@ public class ContainerCloudSimExample1 {
 
 
             CloudSim.init(num_user, calendar, trace_flag);
+
             /**
-             * 2-  Defining the container allocation Policy. This policy determines how Containers are
+             * 2- Defining the thresholds for selecting the under-utilized and over-utilized hosts.
+             */
+
+            double overUtilizationThreshold = 0.80;
+            double underUtilizationThreshold = 0.70;
+
+            /**
+             * 3- The overbooking factor for allocating containers to VMs. This factor is used by the broker for the
+             * allocation process.
+             */
+            int overBookingFactor = 80;
+            ContainerDatacenterBroker broker = createBroker(overBookingFactor);
+            int brokerId = broker.getId();
+
+            /**
+             * 4- The host list is created considering the number of hosts, and host types which are specified
+             * in the {@link ConstantsExamples}. Same for the cloudlet, container and VM lists.
+             */
+            hostList = createHostList(ConstantsExamples.NUMBER_HOSTS);
+            cloudletList = createContainerCloudletList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
+            containerList = createContainerList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
+            vmList = createVmList(brokerId, ConstantsExamples.NUMBER_VMS);
+
+            /**
+             * 6-  Defining the container allocation Policy. This policy determines how Containers are
              * allocated to VMs in the data center.
              *
              */
 
-
-            ContainerAllocationPolicy containerAllocationPolicy = new PowerContainerAllocationPolicySimple();
+            ContainerAllocationPolicy containerAllocationPolicy = new PowerContainerAllocationPolicySimple(vmList);
 
             /**
-             * 3-  Defining the VM selection Policy. This policy determines which VMs should be selected for migration
+             * 7-  Defining the VM selection Policy. This policy determines which VMs should be selected for migration
              * when a host is identified as over-loaded.
              *
              */
@@ -118,44 +142,19 @@ public class ContainerCloudSimExample1 {
 
 
             /**
-             * 4-  Defining the host selection Policy. This policy determines which hosts should be selected as
+             * 8-  Defining the host selection Policy. This policy determines which hosts should be selected as
              * migration destination.
              *
              */
             HostSelectionPolicy hostSelectionPolicy = new HostSelectionPolicyFirstFit();
-            /**
-             * 5- Defining the thresholds for selecting the under-utilized and over-utilized hosts.
-             */
 
-            double overUtilizationThreshold = 0.80;
-            double underUtilizationThreshold = 0.70;
             /**
-             * 6- The host list is created considering the number of hosts, and host types which are specified
-             * in the {@link ConstantsExamples}.
-             */
-            hostList = new ArrayList<>();
-            hostList = createHostList(ConstantsExamples.NUMBER_HOSTS);
-            cloudletList = new ArrayList<>();
-            vmList = new ArrayList<>();
-            /**
-             * 7- The container allocation policy  which defines the allocation of VMs to containers.
+             * 9- The container allocation policy  which defines the allocation of VMs to containers.
              */
             VmAllocationPolicy vmAllocationPolicy = new
                     PowerContainerVmAllocationPolicyMigrationAbstractHostSelection(hostList, vmSelectionPolicy,
                     hostSelectionPolicy, overUtilizationThreshold, underUtilizationThreshold);
-            /**
-             * 8- The overbooking factor for allocating containers to VMs. This factor is used by the broker for the
-             * allocation process.
-             */
-            int overBookingFactor = 80;
-            ContainerDatacenterBroker broker = createBroker(overBookingFactor);
-            int brokerId = broker.getId();
-            /**
-             * 9- Creating the cloudlet, container and VM lists for submitting to the broker.
-             */
-            cloudletList = createContainerCloudletList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
-            containerList = createContainerList(brokerId, ConstantsExamples.NUMBER_CLOUDLETS);
-            vmList = createVmList(brokerId, ConstantsExamples.NUMBER_VMS);
+
             /**
              * 10- The address for logging the statistics of the VMs, containers in the data center.
              */

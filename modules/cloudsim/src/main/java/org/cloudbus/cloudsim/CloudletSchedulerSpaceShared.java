@@ -29,7 +29,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
 public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/** The number of PEs currently available for the VM using the scheduler,
          * according to the mips share provided to it by
-         * {@link #updateCloudletProcessing(double, java.util.List)} method. */
+         * {@link CloudletScheduler#updateCloudletsProcessing(double, List)} method. */
 	protected int currentCpus;
 
 	/** The number of used PEs. */
@@ -49,7 +49,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	}
 
 	@Override
-	public double updateCloudletProcessing(double currentTime, List<Double> mipsShare) {
+	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
 		setCurrentMipsShare(mipsShare);
 		double timeSpam = currentTime - getPreviousTime(); // time since last update
 		double capacity = 0.0;

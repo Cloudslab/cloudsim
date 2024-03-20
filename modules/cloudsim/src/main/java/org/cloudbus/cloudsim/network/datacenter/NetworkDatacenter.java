@@ -17,7 +17,6 @@ import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.Vm;
@@ -142,7 +141,7 @@ public class NetworkDatacenter extends Datacenter {
 
 			getVmList().add(vm);
 
-			vm.updateGuestProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
+			vm.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
 					.getAllocatedMipsForGuest(vm));
 		}
 		return result;

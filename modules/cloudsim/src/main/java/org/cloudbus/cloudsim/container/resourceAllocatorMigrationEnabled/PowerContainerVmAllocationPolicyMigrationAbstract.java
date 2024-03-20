@@ -87,7 +87,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @return the array list< hash map< string, object>>
      */
     @Override
-    public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
+    public List<Map<String, Object>> optimizeAllocation(List<? extends GuestEntity> vmList) {
         ExecutionTimeMeasurer.start("optimizeAllocationTotal");
 
         ExecutionTimeMeasurer.start("optimizeAllocationHostSelection");

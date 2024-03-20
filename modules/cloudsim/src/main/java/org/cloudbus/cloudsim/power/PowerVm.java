@@ -80,8 +80,8 @@ public class PowerVm extends Vm {
 	}
 
 	@Override
-	public double updateGuestProcessing(final double currentTime, final List<Double> mipsShare) {
-		double time = super.updateGuestProcessing(currentTime, mipsShare);
+	public double updateCloudletsProcessing(final double currentTime, final List<Double> mipsShare) {
+		double time = super.updateCloudletsProcessing(currentTime, mipsShare);
 		if (currentTime > getPreviousTime() && (currentTime - 0.1) % getSchedulingInterval() == 0) {
 			double utilization = getTotalUtilizationOfCpu(getCloudletScheduler().getPreviousTime());
 			if (CloudSim.clock() != 0 || utilization != 0) {

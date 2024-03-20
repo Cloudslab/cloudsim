@@ -116,7 +116,7 @@ public class ContainerVm extends Vm implements HostEntity {
      * @post $none
      */
     @Override
-    public double updateGuestProcessing(double currentTime, List<Double> mipsShare) {
+    public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
 //        Log.printLine("Vm: update Vms Processing at " + currentTime);
         if (mipsShare != null && !getGuestList().isEmpty()) {
             double smallerTime = Double.MAX_VALUE;
@@ -124,7 +124,7 @@ public class ContainerVm extends Vm implements HostEntity {
 //            Log.printLine("The VM list size is:...." + getContainerList().size());
 
             for (GuestEntity container : getGuestList()) {
-                double time = container.updateGuestProcessing(currentTime, getContainerScheduler().getAllocatedMipsForGuest(container));
+                double time = container.updateCloudletsProcessing(currentTime, getContainerScheduler().getAllocatedMipsForGuest(container));
                 if (time > 0.0 && time < smallerTime) {
                     smallerTime = time;
                 }
@@ -137,6 +137,29 @@ public class ContainerVm extends Vm implements HostEntity {
 //            return getContainerScheduler().updateVmProcessing(currentTime, mipsShare);
 //        }
         return 0.0;
+    }
+
+    public double updateGuestsProcessing(double currentTime) {
+        double smallerTime = Double.MAX_VALUE;
+//        Log.printLine("ContainerVm: update Vms Processing");
+//        Log.printLine("The VM list size is:...." + getContainerList().size());
+
+        for (GuestEntity container : getGuestList()) {
+            double time = container.updateCloudletsProcessing(currentTime, getContainerScheduler().getAllocatedMipsForGuest(container));
+            if (time > 0.0 && time < smallerTime) {
+                smallerTime = time;
+            }
+            double totalRequestedMips = container.getCurrentRequestedTotalMips();
+            double totalAllocatedMips = getContainerScheduler().getTotalAllocatedMipsForGuest(container);
+            container.addStateHistoryEntry(
+                    currentTime,
+                    totalAllocatedMips,
+                    totalRequestedMips,
+                    (container.isInMigration() && !getGuestsMigratingIn().contains(container)));
+        }
+        //Log.printLine("Vm: The Smaller time is:......" + smallerTime);
+
+        return smallerTime;
     }
 
     /**
@@ -258,7 +281,7 @@ public class ContainerVm extends Vm implements HostEntity {
      *
      * @param container the vm
      */
-    public void addMigratingInContainer(Container container) {
+    public void addMigratingInGuest(Container container) {
 //        Log.printLine("ContainerVm: addMigratingInContainer:......");
         container.setInMigration(true);
 
@@ -296,41 +319,18 @@ public class ContainerVm extends Vm implements HostEntity {
         }
     }
 
-    public double updateGuestsProcessing(double currentTime) {
-        double smallerTime = Double.MAX_VALUE;
-//        Log.printLine("ContainerVm: update Vms Processing");
-//        Log.printLine("The VM list size is:...." + getContainerList().size());
-
-        for (GuestEntity container : getGuestList()) {
-            double time = container.updateGuestProcessing(currentTime, getContainerScheduler().getAllocatedMipsForGuest(container));
-            if (time > 0.0 && time < smallerTime) {
-                smallerTime = time;
-            }
-            double totalRequestedMips = container.getCurrentRequestedTotalMips();
-            double totalAllocatedMips = getContainerScheduler().getTotalAllocatedMipsForGuest(container);
-            container.addStateHistoryEntry(
-                    currentTime,
-                    totalAllocatedMips,
-                    totalRequestedMips,
-                    (container.isInMigration() && !getGuestsMigratingIn().contains(container)));
-        }
-        //Log.printLine("Vm: The Smaller time is:......" + smallerTime);
-
-        return smallerTime;
-    }
-
     /**
      * Removes the migrating in vm.
      *
-     * @param container the container
+     * @param guest the container
      */
-    public void removeMigratingInContainer(Container container) {
-        guestDeallocate(container);
-        getGuestsMigratingIn().remove(container);
-        getGuestList().remove(container);
-        Log.printLine("ContainerVm# "+getId()+"removeMigratingInContainer:......" + container.getId() + "   Is deleted from the list");
-        getContainerScheduler().getGuestsMigratingIn().remove(container.getUid());
-        container.setInMigration(false);
+    public void removeMigratingInGuest(GuestEntity guest) {
+        guestDeallocate(guest);
+        getGuestsMigratingIn().remove(guest);
+        getGuestList().remove(guest);
+        Log.printLine("ContainerVm# "+getId()+"removeMigratingInContainer:......" + guest.getId() + "   Is deleted from the list");
+        getContainerScheduler().getGuestsMigratingIn().remove(guest.getUid());
+        guest.setInMigration(false);
     }
 
     /**
@@ -397,7 +397,7 @@ public class ContainerVm extends Vm implements HostEntity {
      */
     public void guestDestroyAll() {
 //        Log.printLine("ContainerVm: Destroy all Containers");
-        containerDeallocateAll();
+        guestDeallocateAll();
         for (GuestEntity container : getGuestList()) {
             container.setHost(null);
             setSize(getSize() + container.getSize());
@@ -424,7 +424,7 @@ public class ContainerVm extends Vm implements HostEntity {
     /**
      * Deallocate all vmList for the container.
      */
-    protected void containerDeallocateAll() {
+    protected void guestDeallocateAll() {
 //        Log.printLine("ContainerVm: Deallocate all the Vms......");
         getContainerRamProvisioner().deallocateRamForAllGuests();
         getContainerBwProvisioner().deallocateBwForAllGuests();
@@ -474,10 +474,9 @@ public class ContainerVm extends Vm implements HostEntity {
         return getHost().getDatacenter();
     }
 
-    // TODO: Remo Andreoli: PLACEHOLDER, TO BE REMOVED
     @Override
     public VmScheduler getGuestScheduler() {
-        return null;
+        return containerScheduler;
     }
 
     /**

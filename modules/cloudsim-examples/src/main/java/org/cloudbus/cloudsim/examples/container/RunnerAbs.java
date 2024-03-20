@@ -263,11 +263,11 @@ public abstract class RunnerAbs {
         ContainerAllocationPolicy containerAllocationPolicy;
         if (containerAllocationPolicyName == "Simple") {
 
-            containerAllocationPolicy = new PowerContainerAllocationPolicySimple(); // DVFS policy without VM migrations
+            containerAllocationPolicy = new PowerContainerAllocationPolicySimple(vmList); // DVFS policy without VM migrations
         } else {
 
             ContainerPlacementPolicy placementPolicy = getContainerPlacementPolicy(containerAllocationPolicyName);
-            containerAllocationPolicy = new ContainerAllocationPolicyRS(placementPolicy); // DVFS policy without VM migrations
+            containerAllocationPolicy = new ContainerAllocationPolicyRS(vmList, placementPolicy); // DVFS policy without VM migrations
         }
 
         return containerAllocationPolicy;

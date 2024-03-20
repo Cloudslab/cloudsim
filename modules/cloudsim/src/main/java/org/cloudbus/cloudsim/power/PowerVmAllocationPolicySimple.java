@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * A simple VM allocation policy that does <b>not</b> perform any optimization on VM allocation.
@@ -48,7 +49,7 @@ public class PowerVmAllocationPolicySimple extends PowerVmAllocationPolicyAbstra
          * @return 
          */
 	@Override
-	public List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList) {
+	public List<Map<String, Object>> optimizeAllocation(List<? extends GuestEntity> vmList) {
                 ////TODO It is better to return an empty map in order to avoid NullPointerException or extra null checks
 		// This policy does not optimize the VM allocation
 		return null;

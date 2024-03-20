@@ -1,51 +1,47 @@
 package org.cloudbus.cloudsim.container.resourceAllocators;
 
 import org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicy;
-import org.cloudbus.cloudsim.container.core.Container;
 import org.cloudbus.cloudsim.container.core.ContainerVm;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 
 import java.util.*;
 
 /**
  * Created by sareh on 16/12/15.
+ * Modified by Remo Andreoli (March 2024)
  */
-public class ContainerAllocationPolicyRS extends  PowerContainerAllocationPolicySimple{
+public class ContainerAllocationPolicyRS extends  ContainerAllocationPolicySimple {
     /** The vm table. */
 
 
     private ContainerPlacementPolicy containerPlacementPolicy;
 
 
-    public ContainerAllocationPolicyRS(ContainerPlacementPolicy containerPlacementPolicy1) {
-        super();
+    public ContainerAllocationPolicyRS(List<? extends HostEntity> list, ContainerPlacementPolicy containerPlacementPolicy1) {
+        super(list);
         setContainerPlacementPolicy(containerPlacementPolicy1);
     }
 
 
     @Override
-    public ContainerVm findVmForContainer(Container container) {
-
+    public HostEntity findHostForGuest(GuestEntity guest) {
         Set<ContainerVm> excludedVmList = new HashSet<>();
         int tries = 0;
-        boolean found = false;
+
         do{
-
-            ContainerVm containerVm = getContainerPlacementPolicy().getContainerVm(getContainerVmList(), container,excludedVmList);
+            ContainerVm containerVm = getContainerPlacementPolicy().getContainerVm(getHostList(), guest, excludedVmList);
             if(containerVm == null){
-
                 return null;
             }
-            if (containerVm.isSuitableForGuest(container)) {
-                found = true;
+
+            if (containerVm.isSuitableForGuest(guest)) {
                 return containerVm;
+            } else {
+                excludedVmList.add(containerVm);
+                tries ++;
             }
-            else {
-                    excludedVmList.add(containerVm);
-                    tries ++;
-                }
-
-            } while (!found & tries < getContainerVmList().size());
-
+            } while (tries < getHostList().size());
         return null;
     }
 

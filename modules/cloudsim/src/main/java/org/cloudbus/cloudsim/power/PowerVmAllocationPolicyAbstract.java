@@ -56,6 +56,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 		return allocateHostForGuest(guest, findHostForVm(guest));
 	}
 
+	@Override
 	public boolean allocateHostForGuest(GuestEntity guest, HostEntity host) {
 		if (host == null) {
 			Log.formatLine("%.2f: No suitable host found for VM #" + guest.getId() + "\n", CloudSim.clock());

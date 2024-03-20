@@ -74,7 +74,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletScheduler {
 	}
 
 	@Override
-	public double updateCloudletProcessing(double currentTime, List<Double> mipsShare) {
+	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
                 /*//TODO Method to long. Several "extract method" refactorings may be performed.*/
 		setCurrentMipsShare(mipsShare);
 		// update

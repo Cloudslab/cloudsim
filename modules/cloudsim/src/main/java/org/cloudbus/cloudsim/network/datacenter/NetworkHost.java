@@ -99,7 +99,7 @@ public class NetworkHost extends Host {
 		// insert in each vm packet recieved
 		recvpackets();
 		for (GuestEntity vm : super.getGuestList()) {
-			double time = vm.updateGuestProcessing(currentTime, getGuestScheduler()
+			double time = vm.updateCloudletsProcessing(currentTime, getGuestScheduler()
 					.getAllocatedMipsForGuest(vm));
 			if (time > 0.0 && time < smallerTime) {
 				smallerTime = time;
@@ -167,7 +167,7 @@ public class NetworkHost extends Host {
 		}
 		if (flag) {
                     for (GuestEntity vm : super.getGuestList()) {
-                        vm.updateGuestProcessing(CloudSim.clock(), getGuestScheduler().getAllocatedMipsForGuest(vm));
+                        vm.updateCloudletsProcessing(CloudSim.clock(), getGuestScheduler().getAllocatedMipsForGuest(vm));
                     }
 		}
 

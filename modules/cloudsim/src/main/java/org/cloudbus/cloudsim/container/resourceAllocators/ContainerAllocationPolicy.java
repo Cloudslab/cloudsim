@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.cloudbus.cloudsim.container.core.Container;
+import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.container.core.ContainerVm;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 
 /**
  * ContainerAllocationPolicy is an abstract class that represents the provisioning policy of vms to
@@ -29,38 +31,39 @@ public abstract class ContainerAllocationPolicy {
 		/**
 		 * The Vm list.
 		 */
-		private List<? extends ContainerVm> containerVmList;
+		private List<? extends HostEntity> containerVmList;
 
 		/**
-		 * Allocates a new ContainerAllocationPolicy object.
+		 * Creates a new VmAllocationPolicy object.
 		 *
+		 * @param list Host entities available in a {@link ContainerDatacenter}
 		 * @pre $none
 		 * @post $none
 		 */
-		public ContainerAllocationPolicy() {
-			setContainerVmList(new ArrayList<>());
+		public ContainerAllocationPolicy(List<? extends HostEntity> list) {
+			setHostList(list);
 		}
 
 		/**
-		 * Allocates a host for a given VM. The host to be allocated is the one that was already
-		 * reserved.
+		 * Allocates a host for a given guest entity.
 		 *
-		 * @param container virtual machine which the host is reserved to
+		 * @param guest the guest entity to allocate a host to
 		 * @return $true if the host could be allocated; $false otherwise
 		 * @pre $none
 		 * @post $none
 		 */
-		public abstract boolean allocateVmForContainer(Container container,List<ContainerVm> containerVmList);
+		public abstract boolean allocateHostForGuest(GuestEntity guest);
 
 		/**
-		 * Allocates a specified host for a given VM.
+		 * Allocates a specified host for a given guest entity.
 		 *
-		 * @param vm virtual machine which the host is reserved to
+		 * @param guest
+		 * @param host  host entity which the guest is reserved to
 		 * @return $true if the host could be allocated; $false otherwise
 		 * @pre $none
 		 * @post $none
 		 */
-		public abstract boolean allocateVmForContainer(Container container, ContainerVm vm);
+		public abstract boolean allocateHostForGuest(GuestEntity guest, HostEntity host);
 
 		/**
 		 * Optimize allocation of the VMs according to current utilization.
@@ -70,44 +73,59 @@ public abstract class ContainerAllocationPolicy {
 		 //     * @param time             the time
 		 * @return the array list< hash map< string, object>>
 		 */
-		public abstract List<Map<String, Object>> optimizeAllocation(List<? extends Container> containerList);
+		public abstract List<Map<String, Object>> optimizeAllocation(List<? extends GuestEntity> containerList);
 
 		/**
 		 * Releases the host used by a VM.
 		 *
-		 * @param container the container
+		 * @param guest the container
 		 * @pre $none
 		 * @post $none
 		 */
-		public abstract void deallocateVmForContainer(Container container);
+		public abstract void deallocateHostForGuest(GuestEntity guest);
+
+		/**
+		 * Find host for guest entity.
+		 *
+		 * @param guest the guest
+		 * @return the host
+		 */
+		public HostEntity findHostForGuest(GuestEntity guest) {
+			for (HostEntity host : getHostList()) {
+				if (host.isSuitableForGuest(guest)) {
+					return host;
+				}
+			}
+			return null;
+		}
 
 		/**
 		 * Get the host that is executing the given VM belonging to the given user.
 		 *
-		 * @param container the container
+		 * @param guest the container
 		 * @return the Host with the given vmID and userID; $null if not found
 		 * @pre $none
 		 * @post $none
 		 */
-		public abstract ContainerVm getContainerVm(Container container);
+		public abstract HostEntity getHost(GuestEntity guest);
 
 		/**
 		 * Get the host that is executing the given VM belonging to the given user.
 		 *
-		 * @param containerId   the vm id
-		 * @param userId the user id
+		 * @param containerId the vm id
+		 * @param userId      the user id
 		 * @return the Host with the given vmID and userID; $null if not found
 		 * @pre $none
 		 * @post $none
 		 */
-		public abstract ContainerVm getContainerVm(int containerId, int userId);
+		public abstract HostEntity getHost(int containerId, int userId);
 
 		/**
 		 * Sets the host list.
 		 *
 		 * @param containerVmList the new host list
 		 */
-		protected void setContainerVmList(List<? extends ContainerVm> containerVmList) {
+		protected void setHostList(List<? extends HostEntity> containerVmList) {
 			this.containerVmList = containerVmList;
 		}
 
@@ -117,7 +135,7 @@ public abstract class ContainerAllocationPolicy {
 		 * @return the host list
 		 */
 		@SuppressWarnings("unchecked")
-		public <T extends ContainerVm> List<T> getContainerVmList() {
+		public <T extends ContainerVm> List<T> getHostList() {
 			return (List<T>) this.containerVmList;
 		}
 

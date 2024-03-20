@@ -234,7 +234,7 @@ public class CloudSimExample2 {
 	        Datacenter datacenter = null;
 	        try {
 				datacenter = new ContainerDatacenter(name, characteristics, new VmAllocationPolicySimple(hostList),
-						new ContainerAllocationPolicySimple(),
+						new ContainerAllocationPolicySimple(hostList),
 						storageList, 0, "e1", "e2");
 	        } catch (Exception e) {
 	            e.printStackTrace();

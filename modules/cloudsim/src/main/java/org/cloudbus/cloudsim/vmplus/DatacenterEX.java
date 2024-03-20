@@ -79,7 +79,7 @@ public class DatacenterEX extends Datacenter {
             // vm.setBeingInstantiated(false);
             // }
 
-            vm.updateGuestProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
+            vm.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
                     .getAllocatedMipsForGuest(vm));
         }
 

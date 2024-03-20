@@ -22,6 +22,7 @@ import java.util.Map;
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
 public abstract class VmAllocationPolicy {
@@ -53,8 +54,8 @@ public abstract class VmAllocationPolicy {
 	/**
 	 * Allocates a specified host for a given VM.
 	 *
-	 * @param guest virtual machine which the host is reserved to
-	 * @param host  host to allocate the the given VM
+	 * @param guest guest entity which the host entity is reserved to
+	 * @param host  host entity to allocate the given guest entity
 	 * @return $true if the host could be allocated; $false otherwise
 	 * @pre $none
 	 * @post $none
@@ -73,7 +74,7 @@ public abstract class VmAllocationPolicy {
          * or have clear documentation. The only sublcass is the {@link VmAllocationPolicySimple}. 
          * 
 	 */
-	public abstract List<Map<String, Object>> optimizeAllocation(List<? extends Vm> vmList);
+	public abstract List<Map<String, Object>> optimizeAllocation(List<? extends GuestEntity> vmList);
 
 	/**
 	 * Releases the host used by a VM.
@@ -83,6 +84,21 @@ public abstract class VmAllocationPolicy {
 	 * @post $none
 	 */
 	public abstract void deallocateHostForGuest(GuestEntity guest);
+
+	/**
+	 * Find host for guest entity.
+	 *
+	 * @param guest the guest
+	 * @return the host
+	 */
+	public HostEntity findHostForGuest(GuestEntity guest) {
+		for (HostEntity host : getHostList()) {
+			if (host.isSuitableForGuest(guest)) {
+				return host;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Get the host that is executing the given VM.

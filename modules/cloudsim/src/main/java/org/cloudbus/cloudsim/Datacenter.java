@@ -416,7 +416,7 @@ public class Datacenter extends SimEntity {
 				vm.setBeingInstantiated(false);
 			}
 
-			vm.updateGuestProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
+			vm.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
 					.getAllocatedMipsForGuest(vm));
 		}
 
@@ -1104,7 +1104,7 @@ public class Datacenter extends SimEntity {
 	 * @return the vm list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Vm> List<T> getVmList() {
+	public <T extends GuestEntity> List<T> getVmList() {
 		return (List<T>) vmList;
 	}
 

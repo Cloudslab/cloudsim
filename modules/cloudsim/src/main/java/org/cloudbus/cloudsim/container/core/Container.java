@@ -210,9 +210,9 @@ public class Container implements GuestEntity {
      * @pre currentTime >= 0
      * @post $none
      */
-    public double updateGuestProcessing(double currentTime, List<Double> mipsShare) {
+    public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
         if (mipsShare != null) {
-            return getCloudletScheduler().updateCloudletProcessing(currentTime, mipsShare);
+            return getCloudletScheduler().updateCloudletsProcessing(currentTime, mipsShare);
         }
         return 0.0;
     }
