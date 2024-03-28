@@ -5,7 +5,6 @@ package org.cloudbus.cloudsim.container.resourceAllocators;
 
 
 import org.cloudbus.cloudsim.container.core.Container;
-import org.cloudbus.cloudsim.container.core.ContainerVm;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -69,7 +68,7 @@ public class ContainerAllocationPolicySimple extends ContainerAllocationPolicy {
 					}
 				}
 
-				ContainerVm containerVm = getHostList().get(idx);
+				HostEntity containerVm = getHostList().get(idx);
 				if (allocateHostForGuest(guest, containerVm)) { // if vm were succesfully created in the host
 					freePesTmp.clear();
 					return true;

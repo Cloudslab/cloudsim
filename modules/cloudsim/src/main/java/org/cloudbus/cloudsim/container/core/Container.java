@@ -444,4 +444,8 @@ public class Container implements GuestEntity {
     public void setHost(HostEntity vm) {
         this.vm = vm;
     }
+
+    public double getTotalMips() {
+        return getMips() * getNumberOfPes();
+    }
 }

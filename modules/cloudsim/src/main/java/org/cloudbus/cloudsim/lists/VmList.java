@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim.lists;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * VmList is a collection of operations on lists of VMs.
@@ -47,13 +48,16 @@ public class VmList {
          * effect on the entire project and in the creation of simulations
          * that has to be priorly assessed.
 	 */
-	public static <T extends Vm> T getById(List<T> vmList, int id) {
+	public static <T extends GuestEntity> T getById(List<T> vmList, int id) {
+		return vmList.stream().filter(vm -> vm.getId() == id).findFirst().orElse(null);
+
+		/** Old, imperative implementation
 		for (T vm : vmList) {
 			if (vm.getId() == id) {
 				return vm;
 			}
 		}
-		return null;
+		return null; */
 	}
 
 	/**
@@ -66,13 +70,16 @@ public class VmList {
 	 * @pre $none
 	 * @post $none
 	 */
-	public static <T extends Vm> T getByIdAndUserId(List<T> vmList, int id, int userId) {
+	public static <T extends GuestEntity> T getByIdAndUserId(List<T> vmList, int id, int userId) {
+		return vmList.stream().filter(container -> container.getId() == id && container.getUserId() == userId)
+				.findFirst().orElse(null);
+
+		/** Old, imperative implementation
 		for (T vm : vmList) {
 			if (vm.getId() == id && vm.getUserId() == userId) {
 				return vm;
 			}
 		}
-		return null;
+		return null; */
 	}
-
 }

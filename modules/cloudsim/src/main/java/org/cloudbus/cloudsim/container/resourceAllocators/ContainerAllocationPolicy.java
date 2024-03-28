@@ -135,7 +135,7 @@ public abstract class ContainerAllocationPolicy {
 		 * @return the host list
 		 */
 		@SuppressWarnings("unchecked")
-		public <T extends ContainerVm> List<T> getHostList() {
+		public <T extends HostEntity> List<T> getHostList() {
 			return (List<T>) this.containerVmList;
 		}
 

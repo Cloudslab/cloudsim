@@ -2,6 +2,8 @@ package org.cloudbus.cloudsim.container.core;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.VmAbstract;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
@@ -59,17 +61,17 @@ public class ContainerHostDynamicWorkload extends Host {
             setUtilizationMips(0);
             double hostTotalRequestedMips = 0;
 
-            List<ContainerVm> containerVms = getGuestList();
+            List<GuestEntity> containerVms = getGuestList();
 
-            for (ContainerVm containerVm : containerVms) {
+            for (GuestEntity containerVm : containerVms) {
                 getGuestScheduler().deallocatePesForGuest(containerVm);
             }
 
-            for (ContainerVm  containerVm : containerVms) {
+            for (GuestEntity  containerVm : containerVms) {
                 getGuestScheduler().allocatePesForGuest(containerVm, containerVm.getCurrentRequestedMips());
             }
 
-            for (ContainerVm containerVm : containerVms) {
+            for (GuestEntity containerVm : containerVms) {
                 double totalRequestedMips = containerVm.getCurrentRequestedTotalMips();
                 double totalAllocatedMips = getGuestScheduler().getTotalAllocatedMipsForGuest(containerVm);
 
@@ -138,11 +140,11 @@ public class ContainerHostDynamicWorkload extends Host {
          *
          * @return the completed vms
          */
-        public List<ContainerVm> getCompletedVms() {
-            List<ContainerVm> vmsToRemove = new ArrayList<>();
-            List<ContainerVm> containerVms = getGuestList();
+        public List<VmAbstract> getCompletedVms() {
+            List<VmAbstract> vmsToRemove = new ArrayList<>();
+            List<VmAbstract> containerVms = getGuestList();
 
-            for (ContainerVm containerVm : containerVms) {
+            for (VmAbstract containerVm : containerVms) {
                 if (containerVm.isInMigration()) {
                     continue;
                 }
@@ -153,7 +155,7 @@ public class ContainerHostDynamicWorkload extends Host {
 //              if (containerVm.getCurrentRequestedTotalMips() == 0) {
 //                    vmsToRemove.add(containerVm);
 //                }
-                if(containerVm.getNumberOfContainers()==0 ){
+                if(containerVm.getNumberOfGuests()==0 ){
                     vmsToRemove.add(containerVm);
                 }
             }
@@ -167,13 +169,12 @@ public class ContainerHostDynamicWorkload extends Host {
      *
      * @return the completed vms
      */
-    public int getNumberofContainers() {
+    public int getNumberOfGuests() {
         int numberofContainers = 0;
-        List<ContainerVm> containerVms = getGuestList();
 
-        for (ContainerVm containerVm : containerVms) {
-            numberofContainers += containerVm.getNumberOfContainers();
-            Log.print("The number of containers in VM# " + containerVm.getId()+"is: "+ containerVm.getNumberOfContainers());
+        for (Vm containerVm : this.<Vm>getGuestList()) {
+            numberofContainers += containerVm.getNumberOfGuests();
+            Log.print("The number of containers in VM# " + containerVm.getId()+"is: "+ containerVm.getNumberOfGuests());
             Log.printLine();
         }
         return numberofContainers;
@@ -194,11 +195,11 @@ public class ContainerHostDynamicWorkload extends Host {
         /**
          * Gets the max utilization among by all PEs allocated to the VM.
          *
-         * @param vm the vm
+         * @param guest the vm
          * @return the utilization
          */
-        public double getMaxUtilizationAmongVmsPes(ContainerVm vm) {
-            return PeList.getMaxUtilizationAmongVmsPes(getPeList(), vm);
+        public double getMaxUtilizationAmongGuestsPes(GuestEntity guest) {
+            return PeList.getMaxUtilizationAmongVmsPes(getPeList(), guest);
         }
 
         /**

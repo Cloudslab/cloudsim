@@ -25,7 +25,7 @@ import java.util.List;
  * Created by sareh on 9/07/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public class ContainerVm extends Vm implements HostEntity {
+public class ContainerVm extends Vm {
 
     /**
      * The Cloudlet scheduler.
@@ -134,7 +134,7 @@ public class ContainerVm extends Vm implements HostEntity {
             return smallerTime;
         }
 //        if (mipsShare != null) {
-//            return getContainerScheduler().updateVmProcessing(currentTime, mipsShare);
+//            return getGuestScheduler().updateVmProcessing(currentTime, mipsShare);
 //        }
         return 0.0;
     }
@@ -272,7 +272,7 @@ public class ContainerVm extends Vm implements HostEntity {
      *
      * @param containerScheduler the new vm scheduler
      */
-    protected void setContainerScheduler(VmScheduler containerScheduler) {
+    public void setContainerScheduler(VmScheduler containerScheduler) {
         this.containerScheduler = containerScheduler;
     }
 
@@ -450,12 +450,21 @@ public class ContainerVm extends Vm implements HostEntity {
     }
 
     /**
+     * Gets the pes number.
+     *
+     * @return the pes number
+     */
+    public int getNumberOfPes() {
+        return getPeList().size();
+    }
+
+    /**
      * Gets the free pes number.
      *
      * @return the free pes number
      */
     public int getNumberOfFreePes() {
-//        Log.printLine("ContainerVm: get the free Pes......" + ContainerPeList.getNumberOfFreePes(getPeList()));
+//        Log.printLine("ContainerVm: get the free Pes......" + PeList.getNumberOfFreePes(getPeList()));
         return PeList.getNumberOfFreePes(getPeList());
     }
 
@@ -465,7 +474,7 @@ public class ContainerVm extends Vm implements HostEntity {
      * @return the total mips
      */
     public double getTotalMips() {
-//        Log.printLine("ContainerVm: get the total mips......" + ContainerPeList.getTotalMips(getPeList()));
+//        Log.printLine("ContainerVm: get the total mips......" + PeList.getTotalMips(getPeList()));
         return PeList.getTotalMips(getPeList());
     }
 
@@ -593,38 +602,6 @@ public class ContainerVm extends Vm implements HostEntity {
 
 
     /**
-     * Gets the pe list.
-     *
-     * @param <T> the generic type
-     * @return the pe list
-     */
-    public <T extends Pe> List<T> getPeList() {
-        return (List<T>) peList;
-    }
-
-    /**
-     * Sets the pe list.
-     *
-     * @param <T>    the generic type
-     * @param peList the new pe list
-     */
-    protected <T extends Pe> void setPeList(List<T> peList) {
-        this.peList = peList;
-    }
-
-    /**
-     * Gets the container list.
-     *
-     * @param <T> the generic type
-     * @return the container list
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends GuestEntity> List<T> getGuestList() {
-        return (List<T>) containerList;
-    }
-
-
-    /**
      * Checks if is failed.
      *
      * @return true, if is failed
@@ -745,7 +722,7 @@ public class ContainerVm extends Vm implements HostEntity {
         return true;
     }
 
-    public int getNumberOfContainers() {
+    public int getNumberOfGuests() {
         int c =0;
         for(GuestEntity container: getGuestList()){
             if(!getGuestsMigratingIn().contains(container)){
@@ -763,6 +740,3 @@ public class ContainerVm extends Vm implements HostEntity {
         this.inWaiting = inWaiting;
     }
 }
-
-
-

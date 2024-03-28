@@ -15,6 +15,7 @@ import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.network.datacenter.EdgeSwitch;
 import org.cloudbus.cloudsim.network.datacenter.NetDatacenterBroker;
 import org.cloudbus.cloudsim.network.datacenter.NetworkConstants;
@@ -294,7 +295,7 @@ public class TestExample {
 			// (i/Constants.AggSwitchPort)].downlinkswitches.add(edgeswitch[i]);
 		}
 
-		for (Host hs : dc.getHostList()) {
+		for (HostEntity hs : dc.getHostList()) {
 			NetworkHost hs1 = (NetworkHost) hs;
 			hs1.bandwidth = NetworkConstants.BandWidthEdgeHost;
 			int switchnum = (int) (hs.getId() / NetworkConstants.EdgeSwitchPort);

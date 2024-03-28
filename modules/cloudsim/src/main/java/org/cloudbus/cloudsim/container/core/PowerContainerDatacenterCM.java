@@ -3,9 +3,7 @@ package org.cloudbus.cloudsim.container.core;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
-import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 import org.cloudbus.cloudsim.power.PowerHost;
 
@@ -72,12 +70,12 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                 int previousContainerMigrationCount = getContainerMigrationCount();
                 int previousVmMigrationCount = getVmMigrationCount();
                 if (migrationMap != null) {
-                    List<ContainerVm> vmList = new ArrayList<>();
+                    List<HostEntity> vmList = new ArrayList<>();
                     for (Map<String, Object> migrate : migrationMap) {
                         if (migrate.containsKey("container")) {
                             Container container = (Container) migrate.get("container");
-                            ContainerVm targetVm = (ContainerVm) migrate.get("vm");
-                            ContainerVm oldVm = (ContainerVm) container.getHost(); // TODO: Remo Andreoli: change to HostEntity?
+                            HostEntity targetVm = (HostEntity) migrate.get("vm");
+                            HostEntity oldVm = container.getHost();
                             if (oldVm == null) {
                                 Log.formatLine(
                                         "%.2f: Migration of Container #%d to Vm #%d is started",
@@ -148,7 +146,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 
                             }
                         } else {
-                            ContainerVm vm = (ContainerVm) migrate.get("vm");
+                            GuestEntity vm = (GuestEntity) migrate.get("vm");
                             PowerHost targetHost = (PowerHost) migrate.get("host");
                             PowerHost oldHost = (PowerHost) vm.getHost();
 
@@ -235,7 +233,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 //    here we override the method
         if (ev.getData() instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) ev.getData();
-            ContainerVm containerVm = (ContainerVm) map.get("vm");
+            VmAbstract containerVm = (Vm) map.get("vm");
             Host host = (Host) map.get("host");
             boolean result = getVmAllocationPolicy().allocateHostForGuest(containerVm, host);
 //                set the containerVm in waiting state

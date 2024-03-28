@@ -545,6 +545,10 @@ public class Host implements HostEntity {
 		return (List<T>) vmList;
 	}
 
+	public int getNumberOfGuests() {
+		return getGuestList().size();
+	}
+
 	/**
 	 * Sets the storage.
 	 * 
@@ -562,6 +566,12 @@ public class Host implements HostEntity {
 	public boolean isFailed() {
 		return failed;
 	}
+
+	/** TODO: Remo Andreoli: Not in use, what to do with this? */
+	@Override
+	public boolean isInWaiting() { return false; }
+	@Override
+	public void setInWaiting(boolean inWaiting) {}
 
 	/**
 	 * Sets the PEs of the host to a FAILED status. NOTE: <tt>resName</tt> is used for debugging

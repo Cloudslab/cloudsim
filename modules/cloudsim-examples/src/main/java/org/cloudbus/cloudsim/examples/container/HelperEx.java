@@ -3,14 +3,9 @@ package org.cloudbus.cloudsim.examples.container;
 import com.opencsv.CSVWriter;
 import com.opencsv.ICSVWriter;
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPeProvisionerSimple;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstract;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
-import org.cloudbus.cloudsim.container.schedulers.ContainerSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -107,10 +102,10 @@ public class HelperEx {
             //            int vmType = 1;
 
             for (int j = 0; j < ConstantsExamples.VM_PES[vmType]; ++j) {
-                peList.add(new ContainerPe(j, new ContainerPeProvisionerSimple((double) ConstantsExamples.VM_MIPS[vmType])));
+                peList.add(new Pe(j, new PeProvisionerSimple((double) ConstantsExamples.VM_MIPS[vmType])));
             }
             containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, (double) ConstantsExamples.VM_MIPS[vmType], (int) ConstantsExamples.VM_RAM[vmType],
-                    ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen", new ContainerSchedulerTimeSharedOverSubscription(peList),
+                    ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen", new VmSchedulerTimeSharedOverSubscription(peList),
                     new RamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
                     new BwProvisionerSimple(ConstantsExamples.VM_BW), peList, ConstantsExamples.SCHEDULING_INTERVAL));
 

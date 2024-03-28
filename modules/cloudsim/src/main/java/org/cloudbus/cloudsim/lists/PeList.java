@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
@@ -72,8 +71,7 @@ public class PeList {
 	 * @post $none
 	 */
 	public static <T extends Pe> int getTotalMips(List<T> peList) {
-		int totalMips = peList.stream().mapToInt(Pe::getMips).sum();
-		return totalMips;
+		return peList.stream().mapToInt(Pe::getMips).sum();
 	}
 
 	/**
@@ -135,8 +133,7 @@ public class PeList {
 	 * @post $result >= 0
 	 */
 	public static <T extends Pe> int getNumberOfFreePes(List<T> peList) {
-		int cnt = (int) peList.stream().filter(pe -> pe.getStatus() == Pe.FREE).count();
-		return cnt;
+		return (int) peList.stream().filter(pe -> pe.getStatus() == Pe.FREE).count();
 	}
 
 	/**
@@ -168,8 +165,7 @@ public class PeList {
 	 * @post $result >= 0
 	 */
 	public static <T extends Pe> int getNumberOfBusyPes(List<T> peList) {
-		int cnt = (int) peList.stream().filter(pe -> pe.getStatus() == Pe.BUSY).count();
-		return cnt;
+		return (int) peList.stream().filter(pe -> pe.getStatus() == Pe.BUSY).count();
 	}
 
 	/**

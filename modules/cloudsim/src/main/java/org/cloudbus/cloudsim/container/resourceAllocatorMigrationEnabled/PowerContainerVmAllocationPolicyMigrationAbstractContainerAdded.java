@@ -1,24 +1,19 @@
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
-import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
-import org.cloudbus.cloudsim.container.lists.*;
 import org.cloudbus.cloudsim.container.resourceAllocators.PowerContainerAllocationPolicy;
-import org.cloudbus.cloudsim.container.schedulers.ContainerSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.utils.RandomGen;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
+import org.cloudbus.cloudsim.power.lists.PowerVmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -189,7 +184,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
         List<Map<String, Object>> migrationMap = new LinkedList<>();
 
-        PowerContainerList.sortByCpuUtilization(containersToMigrate);
+        PowerVmList.sortByCpuUtilization(containersToMigrate);
         for (Container container : containersToMigrate) {
             Map<String, Object> allocationMap = findHostForGuest(container, excludedHosts, false);
 
@@ -522,7 +517,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         PowerContainerVm vm = new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, vmMips[vmType],
                 (int) vmRam[vmType],
                 vmBw, vmSize, "Xen",
-                new ContainerSchedulerTimeSharedOverSubscription(peList),
+                new VmSchedulerTimeSharedOverSubscription(peList),
                 new RamProvisionerSimple(vmRam[vmType]),
                 new BwProvisionerSimple(vmBw), peList, 300);
         return vm;

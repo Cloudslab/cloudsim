@@ -15,17 +15,12 @@ package org.cloudbus.cloudsim.examples.container;
  */
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerBwProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPe;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerRamProvisionerSimple;
-import org.cloudbus.cloudsim.container.containerProvisioners.ContainerPeProvisionerSimple;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyFirstFit;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.PowerContainerAllocationPolicySimple;
-import org.cloudbus.cloudsim.container.schedulers.ContainerSchedulerTimeSharedOverSubscription;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
@@ -294,7 +289,7 @@ public class ContainerCloudSimExample1 {
             containerVms.add(new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId,
                     ConstantsExamples.VM_MIPS[vmType], ConstantsExamples.VM_RAM[vmType],
                     ConstantsExamples.VM_BW, ConstantsExamples.VM_SIZE, "Xen",
-                    new ContainerSchedulerTimeSharedOverSubscription(peList),
+                    new VmSchedulerTimeShared(peList),
                     new RamProvisionerSimple(ConstantsExamples.VM_RAM[vmType]),
                     new BwProvisionerSimple(ConstantsExamples.VM_BW),
                     peList, ConstantsExamples.SCHEDULING_INTERVAL));

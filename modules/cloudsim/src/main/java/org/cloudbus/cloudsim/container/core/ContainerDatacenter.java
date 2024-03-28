@@ -204,7 +204,7 @@ public class ContainerDatacenter extends Datacenter {
      * @post $none
      */
     protected void processVmCreate(SimEvent ev, boolean ack) {
-        ContainerVm containerVm = (ContainerVm) ev.getData();
+        GuestEntity containerVm = (GuestEntity) ev.getData();
 
         boolean result = getVmAllocationPolicy().allocateHostForGuest(containerVm);
 
@@ -328,7 +328,7 @@ public class ContainerDatacenter extends Datacenter {
         Map<String, Object> migrate = (HashMap<String, Object>) tmp;
 
         Container container = (Container) migrate.get("container");
-        ContainerVm containerVm = (ContainerVm) migrate.get("vm");
+        HostEntity containerVm = (HostEntity) migrate.get("vm");
 
         getContainerAllocationPolicy().deallocateHostForGuest(container);
         if(containerVm.getGuestsMigratingIn().contains(container)){
@@ -548,7 +548,7 @@ public class ContainerDatacenter extends Datacenter {
             double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());
 
             HostEntity host = getVmAllocationPolicy().getHost(vmId, userId);
-            HostEntity vm = (HostEntity) host.getGuest(vmId, userId);
+            VmAbstract vm = (VmAbstract) host.getGuest(vmId, userId);
             Container container = (Container) vm.getGuest(containerId, userId);
             double estimatedFinishTime = container.getCloudletScheduler().cloudletSubmit(cl, fileTransferTime);
 
@@ -590,7 +590,7 @@ public class ContainerDatacenter extends Datacenter {
      * @post $none
      */
     protected void processCloudletResume(int cloudletId, int userId, int vmId, int containerId, boolean ack) {
-        HostEntity containerVm = (HostEntity) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
+        VmAbstract containerVm = (VmAbstract) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
         double eventTime = containerVm.getGuest(containerId, userId)
                                       .getCloudletScheduler().cloudletResume(cloudletId);
 
@@ -626,7 +626,7 @@ public class ContainerDatacenter extends Datacenter {
      * @post $none
      */
     protected void processCloudletPause(int cloudletId, int userId, int vmId, int containerId, boolean ack) {
-        HostEntity containerVm = (HostEntity) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
+        VmAbstract containerVm = (VmAbstract) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
         boolean status = containerVm.getGuest(containerId, userId)
                 .getCloudletScheduler().cloudletPause(cloudletId);
 
@@ -670,7 +670,7 @@ public class ContainerDatacenter extends Datacenter {
      */
     protected void checkCloudletCompletion() {
         for (HostEntity host : getVmAllocationPolicy().getHostList()) {
-            for (HostEntity vm : host.<ContainerVm>getGuestList()) {
+            for (VmAbstract vm : host.<VmAbstract>getGuestList()) {
                 for (GuestEntity container : vm.getGuestList()) {
                     while (container.getCloudletScheduler().isFinishedCloudlets()) {
                         Cloudlet cl = container.getCloudletScheduler().getNextFinishedCloudlet();

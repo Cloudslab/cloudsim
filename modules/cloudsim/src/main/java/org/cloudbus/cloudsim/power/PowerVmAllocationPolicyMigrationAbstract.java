@@ -212,8 +212,10 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 			Log.printLine();
 		}
 
-		return migrationMap;
-	}
+        excludedHostsForFindingUnderUtilizedHost.clear();
+        excludedHostsForFindingNewVmPlacement.clear();
+        return migrationMap;
+    }
 
 	/**
 	 * Prints the over utilized hosts.

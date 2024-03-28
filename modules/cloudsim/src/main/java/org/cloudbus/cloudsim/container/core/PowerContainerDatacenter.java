@@ -5,10 +5,7 @@ package org.cloudbus.cloudsim.container.core;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
-import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 import org.cloudbus.cloudsim.power.PowerHost;
 
@@ -129,7 +126,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
                 int previousMigrationCount = getVmMigrationCount();
                 if (migrationMap != null) {
                     for (Map<String, Object> migrate : migrationMap) {
-                        ContainerVm vm = (ContainerVm) migrate.get("vm");
+                        GuestEntity vm = (GuestEntity) migrate.get("vm");
                         PowerHost targetHost = (PowerHost) migrate.get("host");
                         PowerHost oldHost = (PowerHost) vm.getHost();
 
@@ -370,7 +367,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
      */
     protected boolean isInMigration() {
         boolean result = false;
-        for (ContainerVm vm : this.<ContainerVm>getVmList()) {
+        for (VmAbstract vm : this.<VmAbstract>getVmList()) {
             if (vm.isInMigration()) {
                 result = true;
                 break;
@@ -500,18 +497,16 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
     public void updateNumberOfVmsContainers() {
         setNumberOfVms(0);
         setNumberOfContainers(0);
-        List<ContainerVm> temp= new ArrayList<>();
+        List<VmAbstract> temp= new ArrayList<>();
 
-        for(Host host : getHostList()) {
-            List<ContainerVm> containerVms = host.getGuestList();
-            for (ContainerVm vm : containerVms) {
+        for(HostEntity host : getHostList()) {
+            for (VmAbstract vm : host.<VmAbstract>getGuestList()) {
                 if (!temp.contains(vm)) {
                     int tempNumbers = this.getNumberOfVms() + 1;
                     setNumberOfVms(tempNumbers);
-                    tempNumbers = this.getNumberOfContainers() + vm.getNumberOfContainers();
+                    tempNumbers = this.getNumberOfContainers() + vm.getNumberOfGuests();
                     setNumberOfContainers(tempNumbers);
                     temp.add(vm);
-
                 }
             }
             }

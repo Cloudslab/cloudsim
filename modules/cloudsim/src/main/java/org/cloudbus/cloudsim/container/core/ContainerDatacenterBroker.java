@@ -1,7 +1,6 @@
 package org.cloudbus.cloudsim.container.core;
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.lists.ContainerList;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
@@ -144,7 +143,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
                 Log.printConcatLine("Error : Where is the VM");}
             else{
             getContainersToVmsMap().put(containerId, vmId);
-            getContainersCreatedList().add(ContainerList.getById(getContainerList(), containerId));
+            getContainersCreatedList().add(VmList.getById(getContainerList(), containerId));
 
 //            ContainerVm p= VmList.getById(getVmsCreatedList(), vmId);
             int hostId = VmList.getById(getVmsCreatedList(), vmId).getHost().getId();
@@ -153,7 +152,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
                     , ", On Host#", hostId);
             setContainersCreated(getContainersCreated()+1);}
         } else {
-            //Container container = ContainerList.getById(getContainerList(), containerId);
+            //Container container = VmList.getById(getContainerList(), containerId);
             Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Failed Creation of Container #", containerId);
         }
 

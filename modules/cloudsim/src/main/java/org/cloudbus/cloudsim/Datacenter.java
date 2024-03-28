@@ -51,7 +51,7 @@ public class Datacenter extends SimEntity {
 	private List<Storage> storageList;
 
 	/** The vm list. */
-	private List<? extends Vm> vmList;
+	private List<? extends GuestEntity> vmList;
 
 	/** The scheduling delay to process each datacenter received event. */
 	private double schedulingInterval;
@@ -92,7 +92,7 @@ public class Datacenter extends SimEntity {
 		setVmList(new ArrayList<>());
 		setSchedulingInterval(schedulingInterval);
 
-		for (Host host : getCharacteristics().getHostList()) {
+		for (HostEntity host : getCharacteristics().getHostList()) {
 			host.setDatacenter(this);
 		}
 
@@ -392,7 +392,7 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void processVmCreate(SimEvent ev, boolean ack) {
-		Vm vm = (Vm) ev.getData();
+		GuestEntity vm = (GuestEntity) ev.getData();
 
 		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm);
 
@@ -435,7 +435,7 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void processVmDestroy(SimEvent ev, boolean ack) {
-		Vm vm = (Vm) ev.getData();
+		GuestEntity vm = (GuestEntity) ev.getData();
 		getVmAllocationPolicy().deallocateHostForGuest(vm);
 
 		if (ack) {
@@ -470,8 +470,8 @@ public class Datacenter extends SimEntity {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> migrate = (HashMap<String, Object>) tmp;
 
-		Vm vm = (Vm) migrate.get("vm");
-		Host host = (Host) migrate.get("host");
+		GuestEntity vm = (GuestEntity) migrate.get("vm");
+		HostEntity host = (HostEntity) migrate.get("host");
 		
 		//destroy VM in src host
 		getVmAllocationPolicy().deallocateHostForGuest(vm);
@@ -599,7 +599,7 @@ public class Datacenter extends SimEntity {
 
 			// the cloudlet will migrate from one vm to another does the destination VM exist?
 			if (destId == getId()) {
-				Vm vm = (Vm) getVmAllocationPolicy().getHost(vmDestId, userId).getGuest(vmDestId,userId);
+				GuestEntity vm = (GuestEntity) getVmAllocationPolicy().getHost(vmDestId, userId).getGuest(vmDestId,userId);
 				if (vm == null) {
 					failed = true;
 				} else {
@@ -685,7 +685,7 @@ public class Datacenter extends SimEntity {
 			double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());
 
 			HostEntity host = getVmAllocationPolicy().getHost(vmId, userId);
-			Vm vm = (Vm) host.getGuest(vmId, userId);
+			GuestEntity vm = host.getGuest(vmId, userId);
 			CloudletScheduler scheduler = vm.getCloudletScheduler();
 			double estimatedFinishTime = scheduler.cloudletSubmit(cl, fileTransferTime);
 
@@ -833,10 +833,8 @@ public class Datacenter extends SimEntity {
 		// R: for term is to allow loop at simulation start. Otherwise, one initial
 		// simulation step is skipped and schedulers are not properly initialized
 		if (CloudSim.clock() < 0.111 || CloudSim.clock() >= getLastProcessTime() + CloudSim.getMinTimeBetweenEvents()) {
-			List<? extends Host> list = getVmAllocationPolicy().getHostList();
 			double smallerTime = Double.MAX_VALUE;
-			// for each host...
-			for (Host host : list) {
+			for (HostEntity host : getVmAllocationPolicy().getHostList()) {
 				// inform VMs to update processing
 				double time = host.updateGuestsProcessing(CloudSim.clock());
 				// what time do we expect that the next cloudlet will finish?
@@ -863,9 +861,8 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void checkCloudletCompletion() {
-		List<? extends Host> list = getVmAllocationPolicy().getHostList();
-		for (Host host : list) {
-			for (Vm vm : host.<Vm>getGuestList()) {
+		for (HostEntity host : getVmAllocationPolicy().getHostList()) {
+			for (GuestEntity vm : host.getGuestList()) {
 				while (vm.getCloudletScheduler().isFinishedCloudlets()) {
 					Cloudlet cl = vm.getCloudletScheduler().getNextFinishedCloudlet();
 					if (cl != null) {
@@ -1004,7 +1001,7 @@ public class Datacenter extends SimEntity {
 	 * @return the host list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Host> List<T> getHostList() {
+	public <T extends HostEntity> List<T> getHostList() {
 		return getCharacteristics().getHostList();
 	}
 
@@ -1113,7 +1110,7 @@ public class Datacenter extends SimEntity {
 	 * 
 	 * @param vmList the new vm list
 	 */
-	protected <T extends Vm> void setVmList(List<T> vmList) {
+	protected <T extends GuestEntity> void setVmList(List<T> vmList) {
 		this.vmList = vmList;
 	}
 

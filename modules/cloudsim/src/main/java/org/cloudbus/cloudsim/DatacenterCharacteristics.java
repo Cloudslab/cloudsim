@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.lists.PeList;
 
@@ -42,7 +43,7 @@ public class DatacenterCharacteristics {
 	private String os;
 
 	/** The hosts owned by the datacenter. */
-	private List<? extends Host> hostList;
+	private List<? extends HostEntity> hostList;
 
 	/** The time zone, defined as the difference from GMT. */
 	private double timeZone;
@@ -188,8 +189,8 @@ public class DatacenterCharacteristics {
 	 * @post $result >= -1
          * //TODO It considers that all PEs of all PM have the same MIPS capacity,
          * what is not ensured because it is possible to add PMs of different configurations
-         * to a datacenter. Even for the {@link Host} it is possible
-         * to add Pe's of different capacities through the {@link Host#peList} attribute.
+         * to a datacenter. Even for the {@link HostEntity} it is possible
+         * to add Pe's of different capacities through the {@link HostEntity#peList} attribute.
 	 */
 	public int getMipsOfOnePe() {
 		if (getHostList().size() == 0) {
@@ -275,7 +276,7 @@ public class DatacenterCharacteristics {
 			// But different PMs in a Cluster can have different rating
 			case DatacenterCharacteristics.SPACE_SHARED:
 			case DatacenterCharacteristics.OTHER_POLICY_DIFFERENT_RATING:
-				for (Host host : getHostList()) {
+				for (HostEntity host : getHostList()) {
 					mips += host.getTotalMips();
 				}
 			break;
@@ -407,7 +408,7 @@ public class DatacenterCharacteristics {
 	 */
 	public int getNumberOfFailedHosts() {
 		int numberOfFailedHosts = 0;
-		for (Host host : getHostList()) {
+		for (HostEntity host : getHostList()) {
 			if (host.isFailed()) {
 				numberOfFailedHosts++;
 			}
@@ -557,7 +558,7 @@ public class DatacenterCharacteristics {
          * //TODO check this warning below
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Host> List<T> getHostList() {
+	public <T extends HostEntity> List<T> getHostList() {
 		return (List<T>) hostList;
 	}
 
@@ -567,7 +568,7 @@ public class DatacenterCharacteristics {
 	 * @param <T> the generic type
 	 * @param hostList the new host list
 	 */
-	protected <T extends Host> void setHostList(List<T> hostList) {
+	protected <T extends HostEntity> void setHostList(List<T> hostList) {
 		this.hostList = hostList;
 	}
 

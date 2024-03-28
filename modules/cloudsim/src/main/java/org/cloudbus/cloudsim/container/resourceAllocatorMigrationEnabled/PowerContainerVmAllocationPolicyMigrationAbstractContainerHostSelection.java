@@ -4,7 +4,6 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
-import org.cloudbus.cloudsim.container.lists.PowerContainerList;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -200,7 +199,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             List<? extends GuestEntity> containersToMigrate,
             Set<? extends HostEntity> excludedHosts) {
         List<Map<String, Object>> migrationMap = new LinkedList<>();
-        PowerContainerList.sortByCpuUtilization(containersToMigrate);
+        PowerVmList.sortByCpuUtilization(containersToMigrate);
         for (GuestEntity container : containersToMigrate) {
             Map<String, Object> allocatedMap = findHostForGuest(container, excludedHosts, true);
             if (allocatedMap.get("vm") != null && allocatedMap.get("host")!= null) {
