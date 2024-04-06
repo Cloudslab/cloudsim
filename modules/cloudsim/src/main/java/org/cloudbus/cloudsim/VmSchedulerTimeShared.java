@@ -119,7 +119,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 
 	/**
 	 * Update allocation of VMs on PEs.
-         * @too The method is too long and may be refactored to make clearer its
+         * @todo The method is too long and may be refactored to make clearer its
          * responsibility.
 	 */
 	protected void updatePeProvisioning() {

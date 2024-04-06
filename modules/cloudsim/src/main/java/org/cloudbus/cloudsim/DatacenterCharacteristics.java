@@ -120,7 +120,7 @@ public class DatacenterCharacteristics {
 			String architecture,
 			String os,
 			String vmm,
-			List<? extends Host> hostList,
+			List<? extends HostEntity> hostList,
 			double timeZone,
 			double costPerSec,
 			double costPerMem,

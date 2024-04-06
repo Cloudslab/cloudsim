@@ -127,7 +127,7 @@ public class CloudSimExample7 {
 			vmlist = createVM(brokerId, 5, 0); //creating 5 vms
 			cloudletList = createCloudlet(brokerId, 10, 0); // creating 10 cloudlets
 
-			broker.submitVmList(vmlist);
+			broker.submitGuestList(vmlist);
 			broker.submitCloudletList(cloudletList);
 
 			// A thread that will create a new broker at 200 clock time
@@ -159,7 +159,7 @@ public class CloudSimExample7 {
 				vmlist = createVM(brokerId1, 5, 100); //creating 5 vms
 				cloudletList = createCloudlet(brokerId1, 10, 100); // creating 10 cloudlets
 
-				broker1.submitVmList(vmlist);
+				broker1.submitGuestList(vmlist);
 				broker1.submitCloudletList(cloudletList);
 
 				CloudSim.resumeSimulation();

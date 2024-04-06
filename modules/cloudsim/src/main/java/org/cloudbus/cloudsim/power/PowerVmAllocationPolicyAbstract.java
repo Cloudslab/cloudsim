@@ -40,20 +40,20 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	/** The map map where each key is a VM id and
          * each value is the host where the VM is placed. */
-	private final Map<String, Host> vmTable = new HashMap<>();
+	private final Map<String, HostEntity> vmTable = new HashMap<>();
 
 	/**
 	 * Instantiates a new PowerVmAllocationPolicyAbstract.
 	 * 
 	 * @param list the list
 	 */
-	public PowerVmAllocationPolicyAbstract(List<? extends Host> list) {
+	public PowerVmAllocationPolicyAbstract(List<? extends HostEntity> list) {
 		super(list);
 	}
 
 	@Override
 	public boolean allocateHostForGuest(GuestEntity guest) {
-		return allocateHostForGuest(guest, findHostForVm(guest));
+		return allocateHostForGuest(guest, findHostForGuest(guest));
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 			return false;
 		}
 		if (host.guestCreate(guest)) { // if vm has been succesfully created in the host
-			getVmTable().put(guest.getUid(), (Host) host); // TODO: Remo Andreoli: change all to HostEntity
+			getVmTable().put(guest.getUid(), host);
 			Log.formatLine(
 					"%.2f: VM #" + guest.getId() + " has been allocated to the host #" + host.getId(),
 					CloudSim.clock());
@@ -75,24 +75,9 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 		return false;
 	}
 
-	/**
-	 * Finds the first host that has enough resources to host a given VM.
-	 * 
-	 * @param vm the vm to find a host for it
-	 * @return the first host found that can host the VM
-	 */
-	public PowerHost findHostForVm(GuestEntity vm) {
-		for (PowerHost host : this.<PowerHost> getHostList()) {
-			if (host.isSuitableForGuest(vm)) {
-				return host;
-			}
-		}
-		return null;
-	}
-
 	@Override
 	public void deallocateHostForGuest(GuestEntity guest) {
-		Host host = getVmTable().remove(guest.getUid());
+		HostEntity host = getVmTable().remove(guest.getUid());
 		if (host != null) {
 			host.guestDestroy(guest);
 		}
@@ -113,7 +98,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 	 * 
 	 * @return the vm table
 	 */
-	public Map<String, Host> getVmTable() {
+	public Map<String, HostEntity> getVmTable() {
 		return vmTable;
 	}
 

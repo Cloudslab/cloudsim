@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
 import org.cloudbus.cloudsim.vmplus.vm.VMex;
 
@@ -36,9 +37,9 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
     }
 
     @Override
-    public BigDecimal bill(final List<? extends Vm> vms) {
+    public BigDecimal bill(final List<? extends GuestEntity> vms) {
         BigDecimal result = BigDecimal.ZERO;
-        for (Vm vm : vms) {
+        for (GuestEntity vm : vms) {
             if (vm instanceof VMex) {
                 VMex vmEx = (VMex) vm;
                 if (shouldBillVm(vmEx)) {
@@ -52,9 +53,9 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
     }
 
     @Override
-    public BigDecimal bill(final List<? extends Vm> vms, double before) {
+    public BigDecimal bill(final List<? extends GuestEntity> vms, double before) {
         BigDecimal result = BigDecimal.ZERO;
-        for (Vm vm : vms) {
+        for (GuestEntity vm : vms) {
             if (vm instanceof VMex vmEx) {
                 if (shouldBillVm(vmEx)) {
                     result = result.add(billSingleVmUntil(vmEx, before));

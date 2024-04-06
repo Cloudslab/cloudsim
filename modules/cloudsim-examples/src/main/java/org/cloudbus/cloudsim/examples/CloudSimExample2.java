@@ -31,7 +31,6 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.container.core.ContainerDatacenter;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicySimple;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -117,7 +116,7 @@ public class CloudSimExample2 {
 	            	vmlist.add(vm2);
 
 	            	//submit vm list to the broker
-	            	broker.submitVmList(vmlist);
+	            	broker.submitGuestList(vmlist);
 
 
 	            	//Fifth step: Create two Cloudlets
@@ -226,7 +225,7 @@ public class CloudSimExample2 {
 	        Datacenter datacenter = null;
 	        try {
 				datacenter = new ContainerDatacenter(name, characteristics, new VmAllocationPolicySimple(hostList),
-						new ContainerAllocationPolicySimple(hostList),
+						new VmAllocationPolicySimple(hostList),
 						storageList, 0, "e1", "e2");
 	        } catch (Exception e) {
 	            e.printStackTrace();

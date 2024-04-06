@@ -395,7 +395,6 @@ public class Datacenter extends SimEntity {
 		GuestEntity vm = (GuestEntity) ev.getData();
 
 		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm);
-
 		if (ack) {
 			int[] data = new int[3];
 			data[0] = getId();
@@ -419,7 +418,6 @@ public class Datacenter extends SimEntity {
 			vm.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
 					.getAllocatedMipsForGuest(vm));
 		}
-
 	}
 
 	/**
@@ -674,8 +672,7 @@ public class Datacenter extends SimEntity {
 			}
 
 			// process this Cloudlet to this CloudResource
-			cl.setResourceParameter(
-                                getId(), getCharacteristics().getCostPerSecond(), 
+			cl.setResourceParameter(getId(), getCharacteristics().getCostPerSecond(),
                                 getCharacteristics().getCostPerBw());
 
 			int userId = cl.getUserId();

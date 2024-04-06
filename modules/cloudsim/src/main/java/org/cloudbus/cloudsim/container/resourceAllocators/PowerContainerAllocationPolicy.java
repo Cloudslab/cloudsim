@@ -1,11 +1,11 @@
 package org.cloudbus.cloudsim.container.resourceAllocators;
 
 import org.cloudbus.cloudsim.container.core.Container;
-import org.cloudbus.cloudsim.container.core.ContainerVm;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
+import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyAbstract;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +13,11 @@ import java.util.Map;
 
 /**
  * Created by sareh on 16/07/15.
+ * Modified by Remo Andreoli (March 2024)
+ *
+ * TODO: Remo Andreoli: I don't know how to reconcile this file for deduplication
  */
-public abstract class PowerContainerAllocationPolicy extends ContainerAllocationPolicy{
+public abstract class PowerContainerAllocationPolicy extends PowerVmAllocationPolicyAbstract {
 
         /** The container table. */
         private final Map<String, HostEntity> containerTable = new HashMap<>();
@@ -97,6 +100,3 @@ public abstract class PowerContainerAllocationPolicy extends ContainerAllocation
         }
 
     }
-
-
-

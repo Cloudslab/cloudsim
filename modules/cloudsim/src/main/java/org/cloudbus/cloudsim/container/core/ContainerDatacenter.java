@@ -3,7 +3,6 @@ package org.cloudbus.cloudsim.container.core;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.*;
 
@@ -22,7 +21,7 @@ public class ContainerDatacenter extends Datacenter {
      */
     @Setter
     @Getter
-    private ContainerAllocationPolicy containerAllocationPolicy;
+    private VmAllocationPolicy containerAllocationPolicy;
 
     /**
      * The container list.
@@ -55,7 +54,7 @@ public class ContainerDatacenter extends Datacenter {
             String name,
             DatacenterCharacteristics characteristics,
             VmAllocationPolicy vmAllocationPolicy,
-            ContainerAllocationPolicy containerAllocationPolicy,
+            VmAllocationPolicy containerAllocationPolicy,
             List<Storage> storageList,
             double schedulingInterval, String experimentName, String logAddress) throws Exception {
         super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
@@ -102,37 +101,28 @@ public class ContainerDatacenter extends Datacenter {
             boolean result = getContainerAllocationPolicy().allocateHostForGuest(container);
             if (ack) {
                 int[] data = new int[3];
+                data[0] = getId();
                 data[1] = container.getId();
                 if (result) {
                     data[2] = CloudSimTags.TRUE;
                 } else {
                     data[2] = CloudSimTags.FALSE;
                 }
-                if (result) {
-                    HostEntity containerVm = getContainerAllocationPolicy().getHost(container);
-                    data[0] = containerVm.getId();
-                    if(containerVm.getId() == -1){
 
-                        Log.printConcatLine("The ContainerVM ID is not known (-1) !");
-                    }
-//                    Log.printConcatLine("Assigning the container#" + container.getUid() + "to VM #" + containerVm.getUid());
-                    getContainerList().add(container);
-                    if (container.isBeingInstantiated()) {
-                        container.setBeingInstantiated(false);
-                    }
-
-                    container.updateCloudletsProcessing(CloudSim.clock(), getContainerAllocationPolicy().getHost(container).getGuestScheduler().getAllocatedMipsForGuest(container));
-                } else {
-                    data[0] = -1;
-                    //notAssigned.add(container);
-                    Log.printLine(String.format("Couldn't find a vm to host the container #%s", container.getUid()));
-
-                }
                 send(ev.getSource(), CloudSim.getMinTimeBetweenEvents(), containerCloudSimTags.CONTAINER_CREATE_ACK, data);
+            }
+            if (result) {
+                getContainerList().add(container);
 
+                if (container.isBeingInstantiated()) {
+                    container.setBeingInstantiated(false);
+                }
+
+                container.updateCloudletsProcessing(CloudSim.clock(), getContainerAllocationPolicy().getHost(container).getGuestScheduler().getAllocatedMipsForGuest(container));
+            } else {
+                Log.printLine(String.format("Datacenter.containerAllocator: Couldn't find a vm to host the container #%s", container.getUid()));
             }
         }
-
     }
 
     /**
@@ -192,121 +182,6 @@ public class ContainerDatacenter extends Datacenter {
 
         int tag = CloudSimTags.CLOUDLET_STATUS;
         sendNow(userId, tag, array);
-    }
-
-    /**
-     * Process the event for a User/Broker who wants to create a VM in this PowerDatacenter. This
-     * PowerDatacenter will then send the status back to the User/Broker.
-     *
-     * @param ev  a Sim_event object
-     * @param ack the ack
-     * @pre ev != null
-     * @post $none
-     */
-    protected void processVmCreate(SimEvent ev, boolean ack) {
-        GuestEntity containerVm = (GuestEntity) ev.getData();
-
-        boolean result = getVmAllocationPolicy().allocateHostForGuest(containerVm);
-
-        if (ack) {
-            int[] data = new int[3];
-            data[0] = getId();
-            data[1] = containerVm.getId();
-
-            if (result) {
-                data[2] = CloudSimTags.TRUE;
-            } else {
-                data[2] = CloudSimTags.FALSE;
-            }
-            send(containerVm.getUserId(), CloudSim.getMinTimeBetweenEvents(), CloudSimTags.VM_CREATE_ACK, data);
-        }
-
-        if (result) {
-            getVmList().add(containerVm);
-
-            if (containerVm.isBeingInstantiated()) {
-                containerVm.setBeingInstantiated(false);
-            }
-
-            containerVm.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(containerVm).getGuestScheduler()
-                    .getAllocatedMipsForGuest(containerVm));
-        }
-
-    }
-
-    /**
-     * Process the event for a User/Broker who wants to destroy a VM previously created in this
-     * PowerDatacenter. This PowerDatacenter may send, upon request, the status back to the
-     * User/Broker.
-     *
-     * @param ev  a Sim_event object
-     * @param ack the ack
-     * @pre ev != null
-     * @post $none
-     */
-    protected void processVmDestroy(SimEvent ev, boolean ack) {
-        GuestEntity containerVm = (GuestEntity) ev.getData();
-        getVmAllocationPolicy().deallocateHostForGuest(containerVm);
-
-        if (ack) {
-            int[] data = new int[3];
-            data[0] = getId();
-            data[1] = containerVm.getId();
-            data[2] = CloudSimTags.TRUE;
-
-            sendNow(containerVm.getUserId(), CloudSimTags.VM_DESTROY_ACK, data);
-        }
-
-        getVmList().remove(containerVm);
-    }
-
-    /**
-     * Process the event for a User/Broker who wants to migrate a VM. This PowerDatacenter will
-     * then send the status back to the User/Broker.
-     *
-     * @param ev a Sim_event object
-     * @pre ev != null
-     * @post $none
-     */
-    protected void processVmMigrate(SimEvent ev, boolean ack) {
-        Object tmp = ev.getData();
-        if (!(tmp instanceof Map<?, ?>)) {
-            throw new ClassCastException("The data object must be Map<String, Object>");
-        }
-
-        @SuppressWarnings("unchecked")
-        Map<String, Object> migrate = (HashMap<String, Object>) tmp;
-
-        GuestEntity containerVm = (GuestEntity) migrate.get("vm");
-        Host host = (Host) migrate.get("host");
-
-        getVmAllocationPolicy().deallocateHostForGuest(containerVm);
-        host.removeMigratingInGuest(containerVm);
-        boolean result = getVmAllocationPolicy().allocateHostForGuest(containerVm, host);
-        if (!result) {
-            Log.printLine("[Datacenter.processVmMigrate] VM allocation to the destination host failed");
-            System.exit(0);
-        }
-
-        if (ack) {
-            int[] data = new int[3];
-            data[0] = getId();
-            data[1] = containerVm.getId();
-
-            if (result) {
-                data[2] = CloudSimTags.TRUE;
-            } else {
-                data[2] = CloudSimTags.FALSE;
-            }
-            sendNow(ev.getSource(), CloudSimTags.VM_CREATE_ACK, data);
-        }
-
-        Log.formatLine(
-                "%.2f: Migration of VM #%d to Host #%d is completed",
-                CloudSim.clock(),
-                containerVm.getId(),
-                host.getId());
-        containerVm.setInMigration(false);
     }
 
     /**
@@ -590,9 +465,10 @@ public class ContainerDatacenter extends Datacenter {
      * @post $none
      */
     protected void processCloudletResume(int cloudletId, int userId, int vmId, int containerId, boolean ack) {
-        VmAbstract containerVm = (VmAbstract) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
-        double eventTime = containerVm.getGuest(containerId, userId)
-                                      .getCloudletScheduler().cloudletResume(cloudletId);
+        double eventTime = ((VmAbstract) getVmAllocationPolicy().getHost(vmId, userId)
+                            .getGuest(vmId, userId))
+                            .getGuest(containerId, userId)
+                            .getCloudletScheduler().cloudletResume(cloudletId);
 
         boolean status = false;
         if (eventTime > 0.0) { // if this cloudlet is in the exec queue

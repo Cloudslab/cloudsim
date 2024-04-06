@@ -131,7 +131,7 @@ public class CloudSimExample8 {
 			vmList = createVM(brokerId, 5, 0); //creating 5 vms
 			cloudletList = createCloudlet(brokerId, 10, 0); // creating 10 cloudlets
 
-			broker.submitVmList(vmList);
+			broker.submitGuestList(vmList);
 			broker.submitCloudletList(cloudletList);
 
 			// Fifth step: Starts the simulation
@@ -305,7 +305,7 @@ public class CloudSimExample8 {
 				setVmList(createVM(getBroker().getId(), 5, 100)); //creating 5 vms
 				setCloudletList(createCloudlet(getBroker().getId(), 10, 100)); // creating 10 cloudlets
 
-				broker.submitVmList(getVmList());
+				broker.submitGuestList(getVmList());
 				broker.submitCloudletList(getCloudletList());
 
 				CloudSim.resumeSimulation();

@@ -1,9 +1,6 @@
 package org.cloudbus.cloudsim.examples.container;
 
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerPlacementPolicies.*;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyCor;
@@ -13,13 +10,12 @@ import org.cloudbus.cloudsim.container.hostSelectionPolicies.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMC;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicyRS;
-import org.cloudbus.cloudsim.container.resourceAllocators.PowerContainerAllocationPolicySimple;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -170,7 +166,7 @@ public abstract class RunnerAbs {
 
     protected abstract void init(String var1, double overBookingFactor);
 
-    protected void start(String experimentName, String outputFolder, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy) {
+    protected void start(String experimentName, String outputFolder, VmAllocationPolicy vmAllocationPolicy, VmAllocationPolicy containerAllocationPolicy) {
         System.out.println("Starting " + experimentName);
 
         try {
@@ -181,7 +177,7 @@ public abstract class RunnerAbs {
 //            PowerContainerDatacenter e = (PowerContainerDatacenter) HelperEx.createDatacenter("Datacenter", PowerContainerDatacenter.class, hostList, vmAllocationPolicy, containerAllocationPolicy);
             // not needed: vmAllocationPolicy.setDatacenter(e);
             e.setDisableVmMigrations(false);
-            broker.submitVmList(vmList);
+            broker.submitGuestList(vmList);
             broker.submitContainerList(containerList);
             broker.submitCloudletList(cloudletList.subList(0, containerList.size()));
             CloudSim.terminateSimulation(86400.0D);
@@ -259,11 +255,11 @@ public abstract class RunnerAbs {
         return vmAllocationPolicy;
     }
 
-    protected ContainerAllocationPolicy getContainerAllocationPolicy(String containerAllocationPolicyName) {
-        ContainerAllocationPolicy containerAllocationPolicy;
+    protected VmAllocationPolicy getContainerAllocationPolicy(String containerAllocationPolicyName) {
+        VmAllocationPolicy containerAllocationPolicy;
         if (containerAllocationPolicyName == "Simple") {
 
-            containerAllocationPolicy = new PowerContainerAllocationPolicySimple(vmList); // DVFS policy without VM migrations
+            containerAllocationPolicy = new PowerVmAllocationPolicySimple(vmList); // DVFS policy without VM migrations
         } else {
 
             ContainerPlacementPolicy placementPolicy = getContainerPlacementPolicy(containerAllocationPolicyName);

@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.vmplus.billing;
 
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface IVmBillingPolicy {
      *            - the vms to bill. Must not be empty
      * @return the cost for the specified vms.
      */
-    BigDecimal bill(final List<? extends Vm> vms);
+    BigDecimal bill(final List<? extends GuestEntity> vms);
 
     /**
      * Returns the cost for the specified vms before a specified moment in time.
@@ -31,7 +32,7 @@ public interface IVmBillingPolicy {
      * @param before
      * @return
      */
-    BigDecimal bill(final List<? extends Vm> vms, double before);
+    BigDecimal bill(final List<? extends GuestEntity> vms, double before);
 
     /**
      * Returns the next charging time.

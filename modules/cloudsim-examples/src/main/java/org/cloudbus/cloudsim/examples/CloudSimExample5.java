@@ -103,8 +103,8 @@ public class CloudSimExample5 {
 			vmlist2.add(vm2);
 
 			//submit vm list to the broker
-			broker1.submitVmList(vmlist1);
-			broker2.submitVmList(vmlist2);
+			broker1.submitGuestList(vmlist1);
+			broker2.submitGuestList(vmlist2);
 
 			//Fifth step: Create two Cloudlets
 			cloudletList1 = new ArrayList<>();

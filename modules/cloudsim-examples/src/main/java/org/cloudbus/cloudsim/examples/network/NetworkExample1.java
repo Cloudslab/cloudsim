@@ -92,7 +92,7 @@ public class NetworkExample1 {
 			vmlist.add(vm1);
 
 			//submit vm list to the broker
-			broker.submitVmList(vmlist);
+			broker.submitGuestList(vmlist);
 
 
 			//Fifth step: Create one Cloudlet

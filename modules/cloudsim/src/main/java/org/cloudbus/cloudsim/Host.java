@@ -132,13 +132,13 @@ public class Host implements HostEntity {
 				System.exit(0);
 			}
 
-			if (!getRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
+			if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
 				Log.printConcatLine("[VmScheduler.addMigratingInVm] Allocation of VM #", guest.getId(), " to Host #",
 						getId(), " failed by RAM");
 				System.exit(0);
 			}
 
-			if (!getBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
+			if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
 				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + guest.getId() + " to Host #"
 						+ getId() + " failed by BW");
 				System.exit(0);
@@ -185,8 +185,8 @@ public class Host implements HostEntity {
 			if (!getGuestScheduler().getGuestsMigratingIn().contains(vm.getUid())) {
 				getGuestScheduler().getGuestsMigratingIn().add(vm.getUid());
 			}
-			getRamProvisioner().allocateRamForGuest(vm, vm.getCurrentRequestedRam());
-			getBwProvisioner().allocateBwForGuest(vm, vm.getCurrentRequestedBw());
+			getGuestRamProvisioner().allocateRamForGuest(vm, vm.getCurrentRequestedRam());
+			getGuestBwProvisioner().allocateBwForGuest(vm, vm.getCurrentRequestedBw());
 			getGuestScheduler().allocatePesForGuest(vm, vm.getCurrentRequestedMips());
 			setStorage(getStorage() - vm.getSize());
 		}
@@ -202,7 +202,7 @@ public class Host implements HostEntity {
 	public boolean isSuitableForGuest(GuestEntity guest) {
 		return (getGuestScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips()
 				&& getGuestScheduler().getAvailableMips() >= guest.getCurrentRequestedTotalMips()
-				&& getRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getBwProvisioner()
+				&& getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
 				.isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
 	}
 
@@ -216,29 +216,29 @@ public class Host implements HostEntity {
 	 */
 	public boolean guestCreate(GuestEntity guest) {
 		if (getStorage() < guest.getSize()) {
-			Log.printConcatLine("[VmScheduler.vmCreate] Allocation of VM #", guest.getId(), " to Host #", getId(),
-					" failed by storage");
+			Log.formatLine("%.2f: [VmScheduler.vmCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
+					" failed by storage", CloudSim.clock());
 			return false;
 		}
 
-		if (!getRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
-			Log.printConcatLine("[VmScheduler.vmCreate] Allocation of VM #", guest.getId(), " to Host #", getId(),
-					" failed by RAM");
+		if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
+			Log.formatLine("%.2f: [VmScheduler.vmCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
+					" failed by RAM", CloudSim.clock());
 			return false;
 		}
 
-		if (!getBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
-			Log.printConcatLine("[VmScheduler.vmCreate] Allocation of VM #", guest.getId(), " to Host #", getId(),
-					" failed by BW");
-			getRamProvisioner().deallocateRamForGuest(guest);
+		if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
+			Log.formatLine("%.2f: [VmScheduler.vmCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
+					" failed by BW", CloudSim.clock());
+			getGuestRamProvisioner().deallocateRamForGuest(guest);
 			return false;
 		}
 
 		if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
-			Log.printConcatLine("[VmScheduler.vmCreate] Allocation of VM #", guest.getId(), " to Host #", getId(),
-					" failed by MIPS");
-			getRamProvisioner().deallocateRamForGuest(guest);
-			getBwProvisioner().deallocateBwForGuest(guest);
+			Log.formatLine("%.2f: [VmScheduler.vmCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
+					" failed by MIPS", CloudSim.clock());
+			getGuestRamProvisioner().deallocateRamForGuest(guest);
+			getGuestBwProvisioner().deallocateBwForGuest(guest);
 			return false;
 		}
 
@@ -284,8 +284,8 @@ public class Host implements HostEntity {
 	 * @param guest the VM
 	 */
 	protected void guestDeallocate(GuestEntity guest) {
-		getRamProvisioner().deallocateRamForGuest(guest);
-		getBwProvisioner().deallocateBwForGuest(guest);
+		getGuestRamProvisioner().deallocateRamForGuest(guest);
+		getGuestBwProvisioner().deallocateBwForGuest(guest);
 		getGuestScheduler().deallocatePesForGuest(guest);
 		setStorage(getStorage() + guest.getSize());
 	}
@@ -294,8 +294,8 @@ public class Host implements HostEntity {
 	 * Deallocate all resources of all VMs.
 	 */
 	protected void guestDeallocateAll() {
-		getRamProvisioner().deallocateRamForAllGuests();
-		getBwProvisioner().deallocateBwForAllGuests();
+		getGuestRamProvisioner().deallocateRamForAllGuests();
+		getGuestBwProvisioner().deallocateBwForAllGuests();
 		getGuestScheduler().deallocatePesForAllGuests();
 	}
 
@@ -342,6 +342,11 @@ public class Host implements HostEntity {
 	 */
 	public double getTotalMips() {
 		return PeList.getTotalMips(getPeList());
+	}
+
+	// Instantiated by default
+	public boolean isBeingInstantiated() {
+		return false;
 	}
 
 	/**
@@ -416,7 +421,7 @@ public class Host implements HostEntity {
 	 * @post $result > 0
 	 */
 	public long getBw() {
-		return getBwProvisioner().getBw();
+		return getGuestBwProvisioner().getBw();
 	}
 
 	/**
@@ -427,7 +432,7 @@ public class Host implements HostEntity {
 	 * @post $result > 0
 	 */
 	public int getRam() {
-		return getRamProvisioner().getRam();
+		return getGuestRamProvisioner().getRam();
 	}
 
 	/**
@@ -464,7 +469,7 @@ public class Host implements HostEntity {
 	 * 
 	 * @return the ram provisioner
 	 */
-	public RamProvisioner getRamProvisioner() {
+	public RamProvisioner getGuestRamProvisioner() {
 		return ramProvisioner;
 	}
 
@@ -482,7 +487,7 @@ public class Host implements HostEntity {
 	 * 
 	 * @return the bw provisioner
 	 */
-	public BwProvisioner getBwProvisioner() {
+	public BwProvisioner getGuestBwProvisioner() {
 		return bwProvisioner;
 	}
 
@@ -600,20 +605,6 @@ public class Host implements HostEntity {
 		this.failed = failed;
 		PeList.setStatusFailed(getPeList(), failed);
 		return true;
-	}
-
-	/**
-	 * Sets the particular Pe status on the host.
-	 * 
-	 * @param peId the pe id
-	 * @param status Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
-	 * @return <tt>true</tt> if the Pe status has changed, <tt>false</tt> otherwise (Pe id might not
-	 *         be exist)
-	 * @pre peID >= 0
-	 * @post $none
-	 */
-	public boolean setPeStatus(int peId, int status) {
-		return PeList.setPeStatus(getPeList(), peId, status);
 	}
 
 	/**

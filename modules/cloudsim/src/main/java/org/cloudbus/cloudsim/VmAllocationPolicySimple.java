@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -30,14 +33,18 @@ import org.cloudbus.cloudsim.core.HostEntity;
 public class VmAllocationPolicySimple extends VmAllocationPolicy {
 
 	/** The map between each VM and its allocated host.
-         * The map key is a VM UID and the value is the allocated host for that VM. */
-	private Map<String, HostEntity> vmTable;
+	 * The map key is a VM UID and the value is the allocated host for that VM.
+	 */
+	@Getter @Setter(AccessLevel.PROTECTED)
+	private Map<String, HostEntity> guestTable;
 
 	/** The map between each VM and the number of Pes used. 
          * The map key is a VM UID and the value is the number of used Pes for that VM. */
+	@Getter(AccessLevel.PROTECTED) @Setter(AccessLevel.PROTECTED)
 	private Map<String, Integer> usedPes;
 
 	/** The number of free Pes for each host from {@link #getHostList() }. */
+	@Getter(AccessLevel.PROTECTED) @Setter(AccessLevel.PROTECTED)
 	private List<Integer> freePes;
 
 	/**
@@ -47,13 +54,13 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 	 * @pre $none
 	 * @post $none
 	 */
-	public VmAllocationPolicySimple(List<? extends Host> list) {
+	public VmAllocationPolicySimple(List<? extends HostEntity> list) {
 		super(list);
 		setFreePes(new ArrayList<>());
 		for (HostEntity host : getHostList()) {
 			getFreePes().add(host.getNumberOfPes());
 		}
-		setVmTable(new HashMap<>());
+		setGuestTable(new HashMap<>());
 		setUsedPes(new HashMap<>());
 	}
 
@@ -70,7 +77,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		int tries = 0;
 		List<Integer> freePesTmp = new ArrayList<>(getFreePes());
 
-		if (!getVmTable().containsKey(guest.getUid())) { // if this vm was not created
+		if (!getGuestTable().containsKey(guest.getUid())) { // if this vm was not created
 			do {// we still trying until we find a host or until we try all of them
 				int moreFree = Integer.MIN_VALUE;
 				int idx = -1;
@@ -84,7 +91,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 				}
 
 				HostEntity host = getHostList().get(idx);
-				if (allocateHostForGuest(guest, host)) { // if vm were succesfully created in the host
+				if (allocateHostForGuest(guest, host)) { //guest is successfully created in the host
 					freePesTmp.clear();
 					return true;
 				} else {
@@ -101,8 +108,22 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 
 	@Override
 	public boolean allocateHostForGuest(GuestEntity guest, HostEntity host) {
-		if (host.guestCreate(guest)) { // if vm has been succesfully created in the host
-			getVmTable().put(guest.getUid(), host);
+		if (host == guest) { // cannot be hosted on itself (VmAbstract edge-case)
+			Log.formatLine(
+					"%.2f: [Datacenter.vmAllocator]: Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+host.getClassName()+" #"+host.getId()+" failed (cannot be allocated on itself)",
+					CloudSim.clock());
+			return false;
+		}
+
+		if (host.isBeingInstantiated()){ // cannot be hosted by an unallocated host (VmAbstract edge-case)
+			Log.formatLine(
+					"%.2f: [Datacenter.vmAllocator]: Allocation of "+guest.getClassName()+" # "+guest.getId()+" to "+host.getClassName()+" #"+host.getId()+" failed because the host entity is not instantiated",
+					CloudSim.clock());
+			return false;
+		}
+
+		if (host.guestCreate(guest)) { // if vm has been successfully created in the host
+			getGuestTable().put(guest.getUid(), host);
 
 			int requiredPes = guest.getNumberOfPes();
 			int idx = getHostList().indexOf(host);
@@ -110,7 +131,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 			getFreePes().set(idx, getFreePes().get(idx) - requiredPes);
 
 			Log.formatLine(
-					"%.2f: VM #" + guest.getId() + " has been allocated to the host #" + host.getId(),
+					"%.2f: [Datacenter.vmAllocator]: "+guest.getClassName()+" #" + guest.getId() + " has been allocated to "+host.getClassName()+" #" + host.getId(),
 					CloudSim.clock());
 			return true;
 		}
@@ -123,7 +144,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 
 	@Override
 	public void deallocateHostForGuest(GuestEntity guest) {
-		HostEntity host = getVmTable().remove(guest.getUid());
+		HostEntity host = getGuestTable().remove(guest.getUid());
 		int idx = getHostList().indexOf(host);
 		int pes = getUsedPes().remove(guest.getUid());
 		if (host != null) {
@@ -134,65 +155,11 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 
 	@Override
 	public HostEntity getHost(GuestEntity guest) {
-		return getVmTable().get(guest.getUid());
+		return getGuestTable().get(guest.getUid());
 	}
 
 	@Override
 	public HostEntity getHost(int vmId, int userId) {
-		return getVmTable().get(Vm.getUid(userId, vmId));
-	}
-
-	/**
-	 * Gets the vm table.
-	 * 
-	 * @return the vm table
-	 */
-	public Map<String, HostEntity> getVmTable() {
-		return vmTable;
-	}
-
-	/**
-	 * Sets the vm table.
-	 * 
-	 * @param vmTable the vm table
-	 */
-	protected void setVmTable(Map<String, HostEntity> vmTable) {
-		this.vmTable = vmTable;
-	}
-
-	/**
-	 * Gets the used pes.
-	 * 
-	 * @return the used pes
-	 */
-	protected Map<String, Integer> getUsedPes() {
-		return usedPes;
-	}
-
-	/**
-	 * Sets the used pes.
-	 * 
-	 * @param usedPes the used pes
-	 */
-	protected void setUsedPes(Map<String, Integer> usedPes) {
-		this.usedPes = usedPes;
-	}
-
-	/**
-	 * Gets the free pes.
-	 * 
-	 * @return the free pes
-	 */
-	protected List<Integer> getFreePes() {
-		return freePes;
-	}
-
-	/**
-	 * Sets the free pes.
-	 * 
-	 * @param freePes the new free pes
-	 */
-	protected void setFreePes(List<Integer> freePes) {
-		this.freePes = freePes;
+		return getGuestTable().get(Vm.getUid(userId, vmId));
 	}
 }

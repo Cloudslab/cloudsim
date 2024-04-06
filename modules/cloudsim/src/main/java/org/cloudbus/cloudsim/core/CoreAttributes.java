@@ -20,4 +20,20 @@ public interface CoreAttributes {
      * @return the total mips
      */
     double getTotalMips();
+
+    /**
+     * Gets the simplified class name of the object. Mostly used for debug / log purposes.
+     * @return the simplified classname
+     */
+    default String getClassName() {
+        return this.getClass().getSimpleName();
+    }
+
+    /**
+     * Checks if entity is being instantiated. Some entities (such as a VmAbstract object) need to be instantiated before
+     * they can act as host entities.
+     *
+     * @return true, if guest is being instantiated
+     */
+    boolean isBeingInstantiated();
 }

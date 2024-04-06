@@ -1,5 +1,6 @@
 package org.cloudbus.cloudsim.container.resourceAllocators;
 
+import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicy;
 import org.cloudbus.cloudsim.container.core.ContainerVm;
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -11,7 +12,7 @@ import java.util.*;
  * Created by sareh on 16/12/15.
  * Modified by Remo Andreoli (March 2024)
  */
-public class ContainerAllocationPolicyRS extends  ContainerAllocationPolicySimple {
+public class ContainerAllocationPolicyRS extends VmAllocationPolicySimple {
     /** The vm table. */
 
 

@@ -14,6 +14,7 @@ import java.util.Map;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 
 /**
  * A simple VM allocation policy that does <b>not</b> perform any optimization on VM allocation.
@@ -38,7 +39,7 @@ public class PowerVmAllocationPolicySimple extends PowerVmAllocationPolicyAbstra
 	 * 
 	 * @param list the list
 	 */
-	public PowerVmAllocationPolicySimple(List<? extends Host> list) {
+	public PowerVmAllocationPolicySimple(List<? extends HostEntity> list) {
 		super(list);
 	}
 

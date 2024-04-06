@@ -106,7 +106,7 @@ public class CloudSimExample1 {
 			vmlist.add(vm);
 
 			// submit vm list to the broker
-			broker.submitVmList(vmlist);
+			broker.submitGuestList(vmlist);
 
 			// Fifth step: Create one Cloudlet
 			cloudletList = new ArrayList<>();
@@ -118,8 +118,7 @@ public class CloudSimExample1 {
 			long outputSize = 300;
 			UtilizationModel utilizationModel = new UtilizationModelFull();
 
-			Cloudlet cloudlet = 
-                                new Cloudlet(id, length, pesNumber, fileSize, 
+			Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize,
                                         outputSize, utilizationModel, utilizationModel, 
                                         utilizationModel);
 			cloudlet.setUserId(brokerId);

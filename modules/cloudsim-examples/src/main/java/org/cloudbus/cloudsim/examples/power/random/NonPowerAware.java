@@ -67,7 +67,7 @@ public class NonPowerAware {
 
 			datacenter.setDisableMigrations(true);
 
-			broker.submitVmList(vmList);
+			broker.submitGuestList(vmList);
 			broker.submitCloudletList(cloudletList);
 
 			CloudSim.terminateSimulation(Constants.SIMULATION_LIMIT);

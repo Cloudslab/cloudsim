@@ -3,7 +3,6 @@ package org.cloudbus.cloudsim.container.core;
 //import cloudSimGr.containerCloudSim.Experiments.HelperEx;
 //import cloudSimGr.containerCloudSim.Experiments.Paper1.RunnerAbs;
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
 import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
@@ -71,7 +70,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
             String name,
             DatacenterCharacteristics characteristics,
             VmAllocationPolicy vmAllocationPolicy,
-            ContainerAllocationPolicy containerAllocationPolicy,
+            VmAllocationPolicy containerAllocationPolicy,
             List<Storage> storageList,
             double schedulingInterval, String experimentName, String logAddress) throws Exception {
         super(name, characteristics, vmAllocationPolicy, containerAllocationPolicy, storageList, schedulingInterval, experimentName, logAddress);

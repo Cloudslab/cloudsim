@@ -195,25 +195,26 @@ public class CloudSimTags {
 	public static final int CLOUDLET_MOVE_ACK = BASE + 30;
 
 	/**
-	 * Denotes a request to create a new VM in a {@link Datacenter} with acknowledgement 
-         * information sent by the Datacenter.
+	 * Denotes a request to create a new VM in a {@link Datacenter}
+	 * with acknowledgement information sent by the Datacenter.
 	 */
 	public static final int VM_CREATE = BASE + 31;
 
 	/**
 	 * Denotes a request to create a new VM in a {@link Datacenter} 
-         * with acknowledgement information sent by the Datacenter.
+	 * without acknowledgement information sent by the Datacenter.
 	 */
 	public static final int VM_CREATE_ACK = BASE + 32;
 
 	/**
 	 * Denotes a request to destroy a new VM in a {@link Datacenter}.
+	 * without acknowledgement information sent by the Datacener.
 	 */
 	public static final int VM_DESTROY = BASE + 33;
 
 	/**
 	 * Denotes a request to destroy a new VM in a {@link Datacenter} 
-         * with acknowledgement information sent by the Datacener.
+	 * with acknowledgement information sent by the Datacener.
 	 */
 	public static final int VM_DESTROY_ACK = BASE + 34;
 

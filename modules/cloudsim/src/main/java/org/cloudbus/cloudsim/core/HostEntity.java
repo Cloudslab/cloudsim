@@ -2,8 +2,9 @@ package org.cloudbus.cloudsim.core;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.lists.PeList;
+import org.cloudbus.cloudsim.provisioners.BwProvisioner;
+import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 /**
@@ -188,7 +189,7 @@ public interface HostEntity extends CoreAttributes {
      *
      * @return the guests migrating in
      */
-    List<GuestEntity> getGuestsMigratingIn();
+    <T extends GuestEntity> List<T> getGuestsMigratingIn();
 
     /**
      * Gets the data center of the host.
@@ -210,6 +211,34 @@ public interface HostEntity extends CoreAttributes {
      * @return the guest entity scheduler
      */
     VmScheduler getGuestScheduler();
+
+    /**
+     * Gets the bw provisioner.
+     *
+     * @return the bw provisioner
+     */
+    BwProvisioner getGuestBwProvisioner();
+
+    /**
+     * Gets the ram provisioner.
+     *
+     * @return the ram provisioner
+     */
+    RamProvisioner getGuestRamProvisioner();
+
+    /**
+     * Sets the particular Pe status on the host entity.
+     *
+     * @param peId the pe id
+     * @param status Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
+     * @return <tt>true</tt> if the Pe status has changed, <tt>false</tt> otherwise (Pe id might not
+     *         be exist)
+     * @pre peID >= 0
+     * @post $none
+     */
+    default boolean setPeStatus(int peId, int status) {
+        return PeList.setPeStatus(getPeList(), peId, status);
+    }
 
     /**
      * Checks if the host is suitable for a guest entity, i.e, it has enough resources

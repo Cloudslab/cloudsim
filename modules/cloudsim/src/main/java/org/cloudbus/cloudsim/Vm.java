@@ -117,13 +117,13 @@ public class Vm implements VmAbstract {
 	@Setter @Getter
 	private boolean beingInstantiated;
 
-	/** The ram provisioner for nested guest entities. */
+	/** The ram provisioner for (nested) guest entities. */
 	@Setter @Getter
-	private RamProvisioner containerRamProvisioner;
+	private RamProvisioner guestRamProvisioner;
 
-	/** The bw provisioner for nested guest entities. */
+	/** The bw provisioner for (nested) guest entities. */
 	@Setter @Getter
-	private BwProvisioner containerBwProvisioner;
+	private BwProvisioner guestBwProvisioner;
 
 	/** The pe list for nested guest entities. */
 	@Setter @Getter
@@ -254,8 +254,8 @@ public class Vm implements VmAbstract {
 		setGuestScheduler(guestScheduler);
 
 		setPeList(peList);
-		setContainerRamProvisioner(containerRamProvisioner);
-		setContainerBwProvisioner(containerBwProvisioner);
+		setGuestRamProvisioner(containerRamProvisioner);
+		setGuestBwProvisioner(containerBwProvisioner);
 	}
 
 	/**
@@ -455,13 +455,13 @@ public class Vm implements VmAbstract {
 				System.exit(0);
 			}
 
-			if (!getContainerRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
+			if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
 				Log.printConcatLine("[GuestScheduler.addMigratingInContainer] Allocation of VM #", guest.getId(), " to Host #",
 						getId(), " failed by RAM");
 				System.exit(0);
 			}
 
-			if (!getContainerBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
+			if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
 				Log.printLine("[GuestScheduler.addMigratingInContainer] Allocation of VM #" + guest.getId() + " to Host #"
 						+ getId() + " failed by BW");
 				System.exit(0);
@@ -507,8 +507,8 @@ public class Vm implements VmAbstract {
 			if (!getGuestScheduler().getGuestsMigratingIn().contains(container.getUid())) {
 				getGuestScheduler().getGuestsMigratingIn().add(container.getUid());
 			}
-			getContainerRamProvisioner().allocateRamForGuest(container, container.getCurrentRequestedRam());
-			getContainerBwProvisioner().allocateBwForGuest(container, container.getCurrentRequestedBw());
+			getGuestRamProvisioner().allocateRamForGuest(container, container.getCurrentRequestedRam());
+			getGuestBwProvisioner().allocateBwForGuest(container, container.getCurrentRequestedBw());
 			getGuestScheduler().allocatePesForGuest(container, container.getCurrentRequestedMips());
 			setSize(getSize() - container.getSize());
 		}
@@ -523,7 +523,7 @@ public class Vm implements VmAbstract {
 	public boolean isSuitableForGuest(GuestEntity guest) {
 
 		return (getGuestScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips()&& getGuestScheduler().getAvailableMips() >= guest.getTotalMips()
-				&& getContainerRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getContainerBwProvisioner()
+				&& getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
 				.isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
 	}
 
@@ -538,7 +538,7 @@ public class Vm implements VmAbstract {
 		if (guest != null) {
 			guestDeallocate(guest);
 			getGuestList().remove(guest);
-			Log.printLine("Vm# "+getId()+" guestDestroy:......" + guest.getId() + "Is deleted from the list");
+			Log.printLine(getClassName()+" # "+getId()+" guestDestroy: "+guest.getClassName()+" #"+guest.getId()+" is deleted from the list");
 
 			while(getGuestList().contains(guest)){
 				Log.printConcatLine("The container", guest.getId(), " is still here");
@@ -569,8 +569,8 @@ public class Vm implements VmAbstract {
 	 * @param guest the container
 	 */
 	protected void guestDeallocate(GuestEntity guest) {
-		getContainerRamProvisioner().deallocateRamForGuest(guest);
-		getContainerBwProvisioner().deallocateBwForGuest(guest);
+		getGuestRamProvisioner().deallocateRamForGuest(guest);
+		getGuestBwProvisioner().deallocateBwForGuest(guest);
 		getGuestScheduler().deallocatePesForGuest(guest);
 		setSize(getSize() + guest.getSize());
 	}
@@ -579,8 +579,8 @@ public class Vm implements VmAbstract {
 	 * Deallocate all vmList for the container.
 	 */
 	protected void guestDeallocateAll() {
-		getContainerRamProvisioner().deallocateRamForAllGuests();
-		getContainerBwProvisioner().deallocateBwForAllGuests();
+		getGuestRamProvisioner().deallocateRamForAllGuests();
+		getGuestBwProvisioner().deallocateBwForAllGuests();
 		getGuestScheduler().deallocatePesForAllGuests();
 	}
 
@@ -624,24 +624,24 @@ public class Vm implements VmAbstract {
 			return false;
 		}
 
-		if (!getContainerRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
+		if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
 			Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
 					" failed by RAM");
 			return false;
 		}
 
-		if (!getContainerBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
+		if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
 			Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
 					" failed by BW");
-			getContainerRamProvisioner().deallocateRamForGuest(guest);
+			getGuestRamProvisioner().deallocateRamForGuest(guest);
 			return false;
 		}
 
 		if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
 			Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
 					" failed by MIPS");
-			getContainerRamProvisioner().deallocateRamForGuest(guest);
-			getContainerBwProvisioner().deallocateBwForGuest(guest);
+			getGuestRamProvisioner().deallocateRamForGuest(guest);
+			getGuestBwProvisioner().deallocateBwForGuest(guest);
 			return false;
 		}
 
@@ -702,7 +702,9 @@ public class Vm implements VmAbstract {
 	}
 
 	public void setDatacenter(Datacenter datacenter) {
-		getHost().setDatacenter(datacenter);
+		if (!isBeingInstantiated()) { // wait for the Vm to be bound to a host
+			getHost().setDatacenter(datacenter);
+		}
 	}
 
 	/**
@@ -760,20 +762,6 @@ public class Vm implements VmAbstract {
 		this.failed = failed;
 		PeList.setStatusFailed(getPeList(), failed);
 		return true;
-	}
-
-	/**
-	 * Sets the particular Pe status on this Machine.
-	 *
-	 * @param peId   the pe id
-	 * @param status Pe status, either <tt>Pe.FREE</tt> or <tt>Pe.BUSY</tt>
-	 * @return <tt>true</tt> if the Pe status has changed, <tt>false</tt> otherwise (Pe id might not
-	 * be exist)
-	 * @pre peID >= 0
-	 * @post $none
-	 */
-	public boolean setPeStatus(int peId, int status) {
-		return PeList.setPeStatus(getPeList(), peId, status);
 	}
 
 	/**

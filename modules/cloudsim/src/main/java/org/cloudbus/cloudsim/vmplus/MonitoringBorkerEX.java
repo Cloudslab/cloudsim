@@ -3,6 +3,7 @@ package org.cloudbus.cloudsim.vmplus;
 import org.cloudbus.cloudsim.ResCloudlet;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.vmplus.disk.HddCloudlet;
 import org.cloudbus.cloudsim.vmplus.disk.HddResCloudlet;
@@ -175,7 +176,7 @@ public class MonitoringBorkerEX extends DatacenterBrokerEX {
     private void recordUtil() {
         double currTime = CloudSim.clock();
         Map<Integer, double[]> vmsUtil = new LinkedHashMap<>();
-        for (Vm vm : getVmList()) {
+        for (GuestEntity vm : getGuestList()) {
             if (vm instanceof MonitoredVMex) {
                 vmsUtil.put(vm.getId(), ((MonitoredVMex) vm).getAveragedUtil());
             }
@@ -195,7 +196,7 @@ public class MonitoringBorkerEX extends DatacenterBrokerEX {
     }
 
     protected void measureUtil() {
-        for (Vm vm : getVmList()) {
+        for (GuestEntity vm : getGuestList()) {
             if (vm instanceof MonitoredVMex) {
                 updateUtil(((MonitoredVMex) vm));
             }

@@ -19,13 +19,12 @@ import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
 import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyFirstFit;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
-import org.cloudbus.cloudsim.container.resourceAllocators.PowerContainerAllocationPolicySimple;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
+import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -125,7 +124,7 @@ public class ContainerCloudSimExample1 {
              *
              */
 
-            ContainerAllocationPolicy containerAllocationPolicy = new PowerContainerAllocationPolicySimple(vmList);
+            VmAllocationPolicy containerAllocationPolicy = new PowerVmAllocationPolicySimple(vmList);
 
             /**
              * 7-  Defining the VM selection Policy. This policy determines which VMs should be selected for migration
@@ -167,7 +166,7 @@ public class ContainerCloudSimExample1 {
              */
             broker.submitCloudletList(cloudletList.subList(0, containerList.size()));
             broker.submitContainerList(containerList);
-            broker.submitVmList(vmList);
+            broker.submitGuestList(vmList);
             /**
              * 12- Determining the simulation termination time according to the cloudlet's workload.
              */
@@ -346,7 +345,7 @@ public class ContainerCloudSimExample1 {
     public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass,
                                                        List<Host> hostList,
                                                        VmAllocationPolicy vmAllocationPolicy,
-                                                       ContainerAllocationPolicy containerAllocationPolicy,
+                                                       VmAllocationPolicy containerAllocationPolicy,
                                                        String experimentName, double schedulingInterval, String logAddress, double VMStartupDelay,
                                                        double ContainerStartupDelay) throws Exception {
         String arch = "x86";

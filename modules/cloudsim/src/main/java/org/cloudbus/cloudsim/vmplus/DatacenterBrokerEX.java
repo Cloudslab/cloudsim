@@ -6,6 +6,7 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.vmplus.billing.IVmBillingPolicy;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
@@ -171,11 +172,11 @@ public class DatacenterBrokerEX extends DatacenterBroker {
             int[] data = (int[]) ev.getData();
             int vmId = data[1];
 
-            Vm vm = VmList.getById(getVmList(), vmId);
+            Vm vm = VmList.getById(getGuestList(), vmId);
             if (vm.isBeingInstantiated()) {
                 vm.setBeingInstantiated(false);
             }
-            processVmCreate(ev);
+            processVmCreateAck(ev);
         } else {
             super.processEvent(ev);
         }
@@ -279,7 +280,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
             case CloudSimTags.VM_DESTROY_ACK -> processVMDestroy(ev);
             case BROKER_DESTROY_VMS_NOW -> destroyVMList((List<Vm>) ev.getData());
             case BROKER_SUBMIT_VMS_NOW -> {
-                submitVmList((List<Vm>) ev.getData());
+                submitGuestList((List<Vm>) ev.getData());
                 // TODO Is the following valid when multiple data centres are
                 // handled with a single broker?
                 for (int nextDatacenterId : getDatacenterIdsList()) {
@@ -299,7 +300,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      * Terminates the broker, releases all its resources and state.
      */
     public void closeDownBroker() {
-        for (Vm vm : getVmList()) {
+        for (GuestEntity vm : getGuestList()) {
             finilizeVM(vm);
         }
         clearDatacenters();
@@ -313,13 +314,13 @@ public class DatacenterBrokerEX extends DatacenterBroker {
         int result = data[2];
 
         if (result == CloudSimTags.TRUE) {
-            Vm vm = VmList.getById(getVmsCreatedList(), vmId);
+            Vm vm = VmList.getById(getGuestsCreatedList(), vmId);
 
             // One more ack. to consider
             incrementVmDesctructsAcks();
 
             // Remove the vm from the created list
-            getVmsCreatedList().remove(vm);
+            getGuestsCreatedList().remove(vm);
             finilizeVM(vm);
 
             // Kill all cloudlets associated with this VM
@@ -347,7 +348,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
 
     }
 
-    private void finilizeVM(final Vm vm) {
+    private void finilizeVM(final GuestEntity vm) {
         if (vm instanceof VMex vmEX) {
             if (vmEX.getStatus() != VMStatus.TERMINATED) {
                 vmEX.setStatus(VMStatus.TERMINATED);
@@ -409,9 +410,9 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      */
     public BigDecimal bill(final Integer... datacenterIds) {
         Set<Integer> dcIds = new HashSet<>(Arrays.asList(datacenterIds));
-        List<Vm> toBill = new ArrayList<>();
+        List<GuestEntity> toBill = new ArrayList<>();
 
-        for (Vm vm : getVmList()) {
+        for (GuestEntity vm : getGuestList()) {
             if (dcIds.isEmpty() || dcIds.contains(getVmsToDatacentersMap().get(vm.getId()))) {
                 toBill.add(vm);
             }

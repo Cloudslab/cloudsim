@@ -166,7 +166,7 @@ public abstract class RunnerAbstract {
 
 			datacenter.setDisableMigrations(false);
 
-			broker.submitVmList(vmList);
+			broker.submitGuestList(vmList);
 			broker.submitCloudletList(cloudletList);
 
 			CloudSim.terminateSimulation(Constants.SIMULATION_LIMIT);

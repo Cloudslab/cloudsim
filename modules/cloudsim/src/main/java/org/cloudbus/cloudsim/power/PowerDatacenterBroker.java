@@ -42,7 +42,7 @@ public class PowerDatacenterBroker extends DatacenterBroker {
 	}
 
 	@Override
-	protected void processVmCreate(SimEvent ev) {
+	protected void processVmCreateAck(SimEvent ev) {
 		int[] data = (int[]) ev.getData();
 		int result = data[2];
 
@@ -53,7 +53,7 @@ public class PowerDatacenterBroker extends DatacenterBroker {
 					+ " failed in Datacenter #" + datacenterId);
 			System.exit(0);
 		}
-		super.processVmCreate(ev);
+		super.processVmCreateAck(ev);
 	}
 
 }

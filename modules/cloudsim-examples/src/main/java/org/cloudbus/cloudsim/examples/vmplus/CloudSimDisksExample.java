@@ -109,7 +109,7 @@ public class CloudSimDisksExample {
         Vm vm2 = new HddVm("Test", broker.getId(), VM_MIPS, HOST_MIOPS, 1, VM_RAM, VM_BW, VM_SIZE, VMM,
                 new HddCloudletSchedulerTimeShared(), new Integer[] { disk2.getId() });
 
-        broker.submitVmList(Arrays.asList(vm1_1, vm1_2, vm2));
+        broker.submitGuestList(Arrays.asList(vm1_1, vm1_2, vm2));
 
         // Step 8: Create 4 jobs, associate them to VMs and send them to the
         // broker. Each job uses one of the 4 data items.

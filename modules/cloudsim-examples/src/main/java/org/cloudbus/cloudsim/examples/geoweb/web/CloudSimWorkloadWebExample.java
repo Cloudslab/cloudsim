@@ -101,7 +101,7 @@ public class CloudSimWorkloadWebExample {
 	    vmlist.addAll(balancer.getDbBalancer().getVMs());
 
 	    // submit vm list to the broker
-	    broker.submitVmList(vmlist);
+	    broker.submitGuestList(vmlist);
 
 	    List<StatWorkloadGenerator> workloads = generateWorkloads();
 	    broker.addWorkloadGenerators(workloads, balancer.getAppId());

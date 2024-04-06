@@ -100,7 +100,7 @@ public class NetworkExample2 {
 			vmlist.add(vm2);
 
 			//submit vm list to the broker
-			broker.submitVmList(vmlist);
+			broker.submitGuestList(vmlist);
 
 
 			//Fifth step: Create two Cloudlets

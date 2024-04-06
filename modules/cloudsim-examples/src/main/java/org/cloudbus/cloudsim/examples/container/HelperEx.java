@@ -5,7 +5,6 @@ import com.opencsv.ICSVWriter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstract;
-import org.cloudbus.cloudsim.container.resourceAllocators.ContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -155,7 +154,7 @@ public class HelperEx {
     }
 
     //    // Data Center
-//    public static PowerContainerDatacenter createDatacenter(String name, List<Host> hostList, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy) throws Exception {
+//    public static PowerContainerDatacenter createDatacenter(String name, List<Host> hostList, VmAllocationPolicy vmAllocationPolicy, VmAllocationPolicy containerAllocationPolicy) throws Exception {
 //        String arch = "x86";
 //        String os = "Linux";
 //        String vmm = "Xen";
@@ -172,7 +171,7 @@ public class HelperEx {
 //        return datacenter;
 //    }
     // Data Center
-//    public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass, List<Host> hostList, VmAllocationPolicy vmAllocationPolicy, ContainerAllocationPolicy containerAllocationPolicy, String experimentName, String logAddress) throws Exception {
+//    public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass, List<Host> hostList, VmAllocationPolicy vmAllocationPolicy, VmAllocationPolicy containerAllocationPolicy, String experimentName, String logAddress) throws Exception {
 //        String arch = "x86";
 //        String os = "Linux";
 //        String vmm = "Xen";
@@ -188,7 +187,7 @@ public class HelperEx {
 //                    String.class,
 //                    DatacenterCharacteristics.class,
 //                    VmAllocationPolicy.class,
-//                    ContainerAllocationPolicy.class,
+//                    VmAllocationPolicy.class,
 //                    List.class,
 //                    Double.TYPE, String.class, String.class
 //            ).newInstance(
@@ -226,7 +225,7 @@ public class HelperEx {
     public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass,
                                                        List<Host> hostList,
                                                        VmAllocationPolicy vmAllocationPolicy,
-                                                       ContainerAllocationPolicy containerAllocationPolicy,
+                                                       VmAllocationPolicy containerAllocationPolicy,
                                                        String experimentName, double schedulingInterval, String logAddress, double VMStartupDelay,
                                                        double ContainerStartupDelay) throws Exception {
         String arch = "x86";
@@ -859,7 +858,7 @@ public class HelperEx {
                                        String experimentName,
                                        boolean outputInCsv,
                                        String outputFolder) throws IOException {
-        List<ContainerVm> vms = broker.getVmsCreatedList();
+        List<ContainerVm> vms = broker.getGuestsCreatedList();
         List<Container>  containers = broker.getContainersCreatedList();
         Log.enable();
         List<Host> hosts = datacenter.getHostList();

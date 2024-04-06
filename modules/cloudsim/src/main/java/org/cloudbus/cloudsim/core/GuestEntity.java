@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.core;
 
 import org.cloudbus.cloudsim.CloudletScheduler;
+import org.cloudbus.cloudsim.Host;
 
 import java.util.List;
 
@@ -86,7 +87,7 @@ public interface GuestEntity extends CoreAttributes {
      * @pre $none
      * @post $result != null
      */
-    HostEntity getHost();
+    <T extends HostEntity> T getHost();
 
     /**
      * Gets the host bw.
@@ -165,7 +166,7 @@ public interface GuestEntity extends CoreAttributes {
      * @pre host != $null
      * @post $none
      */
-    void setHost(HostEntity host);
+    <T extends HostEntity> void setHost(T host);
 
     /**
      * Sets the current allocated ram.
@@ -211,11 +212,4 @@ public interface GuestEntity extends CoreAttributes {
      * @return true, if is in migration
      */
     boolean isInMigration();
-
-    /**
-     * Checks if guest entity is being instantiated.
-     *
-     * @return true, if guest is being instantiated
-     */
-    boolean isBeingInstantiated();
 }

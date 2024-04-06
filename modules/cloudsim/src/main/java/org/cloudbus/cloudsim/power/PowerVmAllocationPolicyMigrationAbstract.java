@@ -288,7 +288,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	}
 
 	@Override
-	public PowerHost findHostForVm(GuestEntity vm) {
+	public PowerHost findHostForGuest(GuestEntity vm) {
 		Set<HostEntity> excludedHosts = new HashSet<>();
 		if (vm.getHost() != null) {
 			excludedHosts.add(vm.getHost());

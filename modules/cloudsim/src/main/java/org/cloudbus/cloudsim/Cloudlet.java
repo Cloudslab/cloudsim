@@ -208,16 +208,14 @@ public class Cloudlet {
     /**
      * The id of the vm that is planned to execute the cloudlet.
      */
-    @lombok.Setter
-    @Getter
+    @Setter @Getter
     protected int vmId;
 
     /**
      * The id of the container is planned to execute the cloudlet.
      * It may be -1, if containers are not in use
      */
-    @Setter
-    @Getter
+    @Setter @Getter
     protected int containerId = -1;
     
     /**
