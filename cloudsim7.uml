@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.cloudbus.cloudsim.Storage</OriginalElement>
+  <nodes>
+    <node x="856.0" y="441.5">org.cloudbus.cloudsim.provisioners.RamProvisioner</node>
+    <node x="1170.5" y="441.5">org.cloudbus.cloudsim.core.CloudInformationService</node>
+    <node x="161.0" y="121.5">org.cloudbus.cloudsim.core.CoreAttributes</node>
+    <node x="1825.5" y="441.5">org.cloudbus.cloudsim.DatacenterBroker</node>
+    <node x="1071.5" y="881.5">org.cloudbus.cloudsim.provisioners.PeProvisionerSimple</node>
+    <node x="1516.0" y="441.5">org.cloudbus.cloudsim.core.CloudSimShutdown</node>
+    <node x="2000.5" y="881.5">org.cloudbus.cloudsim.VmSchedulerTimeSharedOverSubscription</node>
+    <node x="-208.5" y="881.5">org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload</node>
+    <node x="1105.0" y="741.5">org.cloudbus.cloudsim.provisioners.PeProvisioner</node>
+    <node x="2308.0" y="441.5">org.cloudbus.cloudsim.VmScheduler</node>
+    <node x="245.0" y="441.5">org.cloudbus.cloudsim.VmAllocationPolicySimple</node>
+    <node x="1278.5" y="261.5">org.cloudbus.cloudsim.VmAllocationPolicy</node>
+    <node x="-178.0" y="741.5">org.cloudbus.cloudsim.CloudletSchedulerTimeShared</node>
+    <node x="789.0" y="741.5">org.cloudbus.cloudsim.provisioners.BwProvisionerSimple</node>
+    <node x="176.0" y="261.5">org.cloudbus.cloudsim.core.GuestEntity</node>
+    <node x="235.0" y="741.5">org.cloudbus.cloudsim.CloudletSchedulerSpaceShared</node>
+    <node x="-264.5" y="441.5">org.cloudbus.cloudsim.core.VmAbstract</node>
+    <node x="2187.5" y="741.5">org.cloudbus.cloudsim.VmSchedulerTimeShared</node>
+    <node x="602.5" y="441.5">org.cloudbus.cloudsim.provisioners.BwProvisioner</node>
+    <node x="1579.5" y="881.5">org.cloudbus.cloudsim.HostDynamicWorkload</node>
+    <node x="1670.5" y="741.5">org.cloudbus.cloudsim.Host</node>
+    <node x="1567.0" y="261.5">org.cloudbus.cloudsim.core.SimEntity</node>
+    <node x="401.5" y="261.5">org.cloudbus.cloudsim.core.HostEntity</node>
+    <node x="658.5" y="741.5">org.cloudbus.cloudsim.Vm</node>
+    <node x="-37.5" y="441.5">org.cloudbus.cloudsim.CloudletScheduler</node>
+    <node x="893.0" y="881.5">org.cloudbus.cloudsim.Cloudlet</node>
+    <node x="2023.0" y="261.5">org.cloudbus.cloudsim.DatacenterCharacteristics</node>
+    <node x="2099.0" y="441.5">org.cloudbus.cloudsim.Datacenter</node>
+    <node x="1820.5" y="741.5">org.cloudbus.cloudsim.VmSchedulerSpaceShared</node>
+    <node x="1342.5" y="741.5">org.cloudbus.cloudsim.provisioners.RamProvisionerSimple</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.cloudbus.cloudsim.provisioners.PeProvisionerSimple" target="org.cloudbus.cloudsim.provisioners.PeProvisioner" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Vm" target="org.cloudbus.cloudsim.provisioners.BwProvisioner" relationship="TO_ONE">
+      <point x="23.75" y="-18.5" />
+      <point x="729.75" y="720.0" />
+      <point x="726.0" y="720.0" />
+      <point x="726.0" y="620.0" />
+      <point x="766.0" y="620.0" />
+      <point x="766.0" y="500.0" />
+      <point x="757.75" y="500.0" />
+      <point x="51.75" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.DatacenterBroker" target="org.cloudbus.cloudsim.core.SimEntity" relationship="GENERALIZATION">
+      <point x="-60.25" y="-18.5" />
+      <point x="1885.75" y="420.0" />
+      <point x="1646.0" y="420.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Host" target="org.cloudbus.cloudsim.provisioners.RamProvisioner" relationship="TO_ONE">
+      <point x="-27.75" y="-18.5" />
+      <point x="1698.25" y="720.0" />
+      <point x="1666.0" y="720.0" />
+      <point x="1666.0" y="580.0" />
+      <point x="906.0" y="580.0" />
+      <point x="906.0" y="500.0" />
+      <point x="911.0" y="500.0" />
+      <point x="-55.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.CloudInformationService" target="org.cloudbus.cloudsim.core.SimEntity" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1326.0" y="420.0" />
+      <point x="1646.0" y="420.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.CloudSimShutdown" target="org.cloudbus.cloudsim.core.SimEntity" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.provisioners.BwProvisionerSimple" target="org.cloudbus.cloudsim.provisioners.BwProvisioner" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="926.0" y="680.0" />
+      <point x="654.25" y="680.0" />
+      <point x="-51.75" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.VmSchedulerTimeShared" target="org.cloudbus.cloudsim.VmScheduler" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="2346.0" y="520.0" />
+      <point x="2455.0" y="520.0" />
+      <point x="49.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.VmAllocationPolicySimple" target="org.cloudbus.cloudsim.core.HostEntity" relationship="TO_MANY">
+      <point x="80.5" y="-18.5" />
+      <point x="486.5" y="420.0" />
+      <point x="486.0" y="420.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.VmAbstract" target="org.cloudbus.cloudsim.core.HostEntity" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="-174.0" y="420.0" />
+      <point x="226.0" y="420.0" />
+      <point x="226.0" y="340.0" />
+      <point x="429.66666666666663" y="340.0" />
+      <point x="-56.33333333333333" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.VmAbstract" target="org.cloudbus.cloudsim.core.GuestEntity" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="-174.0" y="420.0" />
+      <point x="226.0" y="420.0" />
+      <point x="226.0" y="340.0" />
+      <point x="221.0" y="340.0" />
+      <point x="-45.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.VmSchedulerTimeSharedOverSubscription" target="org.cloudbus.cloudsim.VmSchedulerTimeShared" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="2246.0" y="860.0" />
+      <point x="2346.0" y="860.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Host" target="org.cloudbus.cloudsim.VmScheduler" relationship="TO_ONE">
+      <point x="-27.75" y="-18.5" />
+      <point x="1698.25" y="720.0" />
+      <point x="1666.0" y="720.0" />
+      <point x="1666.0" y="560.0" />
+      <point x="1626.0" y="560.0" />
+      <point x="1626.0" y="500.0" />
+      <point x="2357.0" y="500.0" />
+      <point x="-49.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Host" target="org.cloudbus.cloudsim.provisioners.BwProvisioner" relationship="TO_ONE">
+      <point x="-27.75" y="-18.5" />
+      <point x="1698.25" y="720.0" />
+      <point x="1666.0" y="720.0" />
+      <point x="1666.0" y="600.0" />
+      <point x="766.0" y="600.0" />
+      <point x="766.0" y="500.0" />
+      <point x="757.75" y="500.0" />
+      <point x="51.75" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Vm" target="org.cloudbus.cloudsim.VmScheduler" relationship="TO_ONE">
+      <point x="23.75" y="-18.5" />
+      <point x="729.75" y="720.0" />
+      <point x="726.0" y="720.0" />
+      <point x="726.0" y="700.0" />
+      <point x="1626.0" y="700.0" />
+      <point x="1626.0" y="500.0" />
+      <point x="2357.0" y="500.0" />
+      <point x="-49.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload" target="org.cloudbus.cloudsim.CloudletSchedulerTimeShared" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Host" target="org.cloudbus.cloudsim.Datacenter" relationship="TO_ONE">
+      <point x="-27.75" y="-18.5" />
+      <point x="1698.25" y="720.0" />
+      <point x="1666.0" y="720.0" />
+      <point x="1666.0" y="520.0" />
+      <point x="2186.0" y="520.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Vm" target="org.cloudbus.cloudsim.core.GuestEntity" relationship="TO_MANY">
+      <point x="23.75" y="-18.5" />
+      <point x="729.75" y="720.0" />
+      <point x="726.0" y="720.0" />
+      <point x="726.0" y="520.0" />
+      <point x="826.0" y="520.0" />
+      <point x="826.0" y="420.0" />
+      <point x="1106.0" y="420.0" />
+      <point x="1106.0" y="320.0" />
+      <point x="311.0" y="320.0" />
+      <point x="45.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.HostDynamicWorkload" target="org.cloudbus.cloudsim.Host" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Vm" target="org.cloudbus.cloudsim.CloudletScheduler" relationship="TO_ONE">
+      <point x="23.75" y="-18.5" />
+      <point x="729.75" y="720.0" />
+      <point x="726.0" y="720.0" />
+      <point x="726.0" y="520.0" />
+      <point x="147.75" y="520.0" />
+      <point x="61.75" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.HostEntity" target="org.cloudbus.cloudsim.core.CoreAttributes" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="486.0" y="240.0" />
+      <point x="266.0" y="240.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.CloudletSchedulerSpaceShared" target="org.cloudbus.cloudsim.CloudletScheduler" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="426.0" y="720.0" />
+      <point x="26.0" y="720.0" />
+      <point x="26.0" y="500.0" />
+      <point x="24.25" y="500.0" />
+      <point x="-61.75" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Host" target="org.cloudbus.cloudsim.core.GuestEntity" relationship="TO_MANY">
+      <point x="-27.75" y="-18.5" />
+      <point x="1698.25" y="720.0" />
+      <point x="1666.0" y="720.0" />
+      <point x="1666.0" y="520.0" />
+      <point x="1106.0" y="520.0" />
+      <point x="1106.0" y="320.0" />
+      <point x="311.0" y="320.0" />
+      <point x="45.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Vm" target="org.cloudbus.cloudsim.provisioners.RamProvisioner" relationship="TO_ONE">
+      <point x="23.75" y="-18.5" />
+      <point x="729.75" y="720.0" />
+      <point x="726.0" y="720.0" />
+      <point x="726.0" y="660.0" />
+      <point x="906.0" y="660.0" />
+      <point x="906.0" y="500.0" />
+      <point x="911.0" y="500.0" />
+      <point x="-55.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.provisioners.RamProvisionerSimple" target="org.cloudbus.cloudsim.provisioners.RamProvisioner" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1486.0" y="720.0" />
+      <point x="1021.0" y="720.0" />
+      <point x="55.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Host" target="org.cloudbus.cloudsim.core.HostEntity" relationship="REALIZATION">
+      <point x="27.75" y="-18.5" />
+      <point x="1753.75" y="540.0" />
+      <point x="1146.0" y="540.0" />
+      <point x="1146.0" y="400.0" />
+      <point x="542.3333333333333" y="400.0" />
+      <point x="56.333333333333314" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Vm" target="org.cloudbus.cloudsim.core.VmAbstract" relationship="REALIZATION">
+      <point x="-23.75" y="-18.5" />
+      <point x="682.25" y="700.0" />
+      <point x="-174.0" y="700.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.VmSchedulerSpaceShared" target="org.cloudbus.cloudsim.VmScheduler" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1986.0" y="720.0" />
+      <point x="2346.0" y="720.0" />
+      <point x="2346.0" y="520.0" />
+      <point x="2455.0" y="520.0" />
+      <point x="49.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.CloudletSchedulerTimeShared" target="org.cloudbus.cloudsim.CloudletScheduler" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="6.0" y="720.0" />
+      <point x="26.0" y="720.0" />
+      <point x="26.0" y="500.0" />
+      <point x="24.25" y="500.0" />
+      <point x="-61.75" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Datacenter" target="org.cloudbus.cloudsim.DatacenterCharacteristics" relationship="TO_ONE">
+      <point x="43.5" y="-18.5" />
+      <point x="2229.5" y="420.0" />
+      <point x="2226.0" y="420.0" />
+      <point x="2226.0" y="320.0" />
+      <point x="2186.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Vm" target="org.cloudbus.cloudsim.core.HostEntity" relationship="TO_ONE">
+      <point x="23.75" y="-18.5" />
+      <point x="729.75" y="720.0" />
+      <point x="726.0" y="720.0" />
+      <point x="726.0" y="520.0" />
+      <point x="586.0" y="520.0" />
+      <point x="586.0" y="420.0" />
+      <point x="486.0" y="420.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Datacenter" target="org.cloudbus.cloudsim.core.SimEntity" relationship="GENERALIZATION">
+      <point x="-43.5" y="-18.5" />
+      <point x="2142.5" y="420.0" />
+      <point x="1646.0" y="420.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Datacenter" target="org.cloudbus.cloudsim.VmAllocationPolicy" relationship="TO_ONE">
+      <point x="43.5" y="-18.5" />
+      <point x="2229.5" y="420.0" />
+      <point x="2226.0" y="420.0" />
+      <point x="2226.0" y="340.0" />
+      <point x="1469.75" y="340.0" />
+      <point x="63.75" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.GuestEntity" target="org.cloudbus.cloudsim.core.CoreAttributes" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.VmAllocationPolicySimple" target="org.cloudbus.cloudsim.VmAllocationPolicy" relationship="GENERALIZATION">
+      <point x="-80.5" y="-18.5" />
+      <point x="325.5" y="360.0" />
+      <point x="1342.25" y="360.0" />
+      <point x="-63.75" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.DatacenterBroker" target="org.cloudbus.cloudsim.DatacenterCharacteristics" relationship="TO_MANY">
+      <point x="60.25" y="-18.5" />
+      <point x="2006.25" y="400.0" />
+      <point x="2186.0" y="400.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.4917562724014337" showDependencies="true" x="1130.0" y="530.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
