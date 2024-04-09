@@ -819,7 +819,7 @@ public class Datacenter extends SimEntity {
 
 	/**
 	 * Updates processing of each cloudlet running in this Datacenter. It is necessary because
-	 * Hosts and VirtualMachines are simple objects, not entities. So, they don't receive events and
+	 * Hosts and VirtualMachines are simple objects, not sim entities. So, they don't receive events and
 	 * updating cloudlets inside them must be called from the outside.
 	 * 
 	 * @pre $none

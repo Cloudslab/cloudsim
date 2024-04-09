@@ -34,17 +34,6 @@ public interface HostEntity extends CoreAttributes {
     double updateGuestsProcessing(double currentTime);
 
     /**
-     * Allocates PEs for a guest entity.
-     *
-     * @param guest     the guest
-     * @param mipsShare the list of MIPS share to be allocated to the guest
-     * @return $true if this policy allows a new guest in the host, $false otherwise
-     * @pre $none
-     * @post $none
-     */
-    boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShare);
-
-    /**
      * Try to allocate resources to a new Guest in the Host.
      *
      * @param guest Guest entity being started
@@ -52,7 +41,39 @@ public interface HostEntity extends CoreAttributes {
      * @pre $none
      * @post $none
      */
-    boolean guestCreate(GuestEntity guest);
+    default boolean guestCreate(GuestEntity guest) {
+        if (getStorage() < guest.getSize()) {
+            Log.formatLine("%.2f: [GuestScheduler.ContainerCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
+                    " failed by storage", CloudSim.clock());
+            return false;
+        }
+
+        if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
+            Log.formatLine("%.2f: [GuestScheduler.ContainerCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
+                    " failed by RAM", CloudSim.clock());
+            return false;
+        }
+
+        if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
+            Log.formatLine("%.2f: [GuestScheduler.ContainerCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
+                    " failed by BW", CloudSim.clock());
+            getGuestRamProvisioner().deallocateRamForGuest(guest);
+            return false;
+        }
+
+        if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
+            Log.formatLine("%.2f: [GuestScheduler.ContainerCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
+                    " failed by MIPS", CloudSim.clock());
+            getGuestRamProvisioner().deallocateRamForGuest(guest);
+            getGuestBwProvisioner().deallocateBwForGuest(guest);
+            return false;
+        }
+
+        setStorage(getStorage() - guest.getSize());
+        getGuestList().add(guest);
+        guest.setHost(this);
+        return true;
+    }
 
     /**
      * Destroys a guest running in the host.
@@ -61,46 +82,144 @@ public interface HostEntity extends CoreAttributes {
      * @pre $none
      * @post $none
      */
-    void guestDestroy(GuestEntity guest);
+    default void guestDestroy(GuestEntity guest) {
+        if (guest != null) {
+            guestDeallocate(guest);
+            getGuestList().remove(guest);
+            Log.printLine(getClassName()+" # "+getId()+" guestDestroy: "+guest.getClassName()+" #"+guest.getId()+" is deleted from the list");
+
+            while(getGuestList().contains(guest)){ // TODO: Remo Andreoli: Do I really need this?
+                Log.printConcatLine(guest.getClassName()+" #"+guest.getId(), " is still not deallocated yet; Polling...");
+            }
+            guest.setHost(null);
+        }
+    }
 
     /**
-     * Destroys all VMs running in the host.
+     * Deallocate all resources of a guest entity from the host.
+     *
+     * @param guest the guest
+     */
+    default void guestDeallocate(GuestEntity guest) {
+        getGuestRamProvisioner().deallocateRamForGuest(guest);
+        getGuestBwProvisioner().deallocateBwForGuest(guest);
+        getGuestScheduler().deallocatePesForGuest(guest);
+        guest.setHost(null);
+        setStorage(getStorage() + guest.getSize());
+    }
+
+    /**
+     * Destroys all guest entities running in the host.
      *
      * @pre $none
      * @post $none
      */
-    void guestDestroyAll();
+    default void guestDestroyAll() {
+        getGuestRamProvisioner().deallocateRamForAllGuests();
+        getGuestBwProvisioner().deallocateBwForAllGuests();
+        getGuestScheduler().deallocatePesForAllGuests();
+
+        for (GuestEntity guest : getGuestList()) {
+            guest.setHost(null);
+            setStorage(getStorage() + guest.getSize());
+        }
+
+        getGuestList().clear();
+    }
 
     /**
      * Reallocate migrating in vms. Gets the VM in the migrating in queue
      * and allocate them on the host.
      */
-    void reallocateMigratingInGuests();
+    default void reallocateMigratingInGuests() {
+        for (GuestEntity guest : getGuestsMigratingIn()) {
+            if (!getGuestList().contains(guest)) {
+                getGuestList().add(guest);
+            }
+            if (!getGuestScheduler().getGuestsMigratingIn().contains(guest.getUid())) {
+                getGuestScheduler().getGuestsMigratingIn().add(guest.getUid());
+            }
+            getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam());
+            getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw());
+            getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips());
+            setStorage(getStorage() - guest.getSize());
+        }
+    }
 
     /**
      * Removes a migrating in guest entity.
      *
      * @param guest the guest
      */
-    void removeMigratingInGuest(GuestEntity guest);
+    default void removeMigratingInGuest(GuestEntity guest) {
+        guestDeallocate(guest);
+        getGuestsMigratingIn().remove(guest);
+        getGuestList().remove(guest);
+        Log.printLine(getClassName()+" # "+getId()+" removeMigratingInGuest: "+guest.getClassName()+" #"+guest.getId()+" is deleted from the list");
+        getGuestScheduler().getGuestsMigratingIn().remove(guest.getUid());
+        guest.setInMigration(false);
+    }
 
     /**
      * Adds a VM migrating into the current (dstHost) host.
      *
      * @param guest the vm
      */
-    void addMigratingInGuest(GuestEntity guest);
+    default void addMigratingInGuest(GuestEntity guest) {
+        guest.setInMigration(true);
+
+        if (!getGuestsMigratingIn().contains(guest)) {
+            if (getStorage() < guest.getSize()) {
+                Log.printConcatLine("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
+                        getId()+" failed by storage");
+                System.exit(0);
+            }
+
+            if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
+                Log.printConcatLine("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
+                        getId()+" failed by RAM");
+                System.exit(0);
+            }
+
+            if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
+                Log.printConcatLine("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
+                        getId()+" failed by BW");
+                System.exit(0);
+            }
+
+            getGuestScheduler().getGuestsMigratingIn().add(guest.getUid());
+            if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
+                Log.printConcatLine("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
+                        getId()+" failed by MIPS");
+                System.exit(0);
+            }
+
+            setStorage(getStorage() - guest.getSize());
+
+            getGuestsMigratingIn().add(guest);
+            getGuestList().add(guest);
+            updateGuestsProcessing(CloudSim.clock());
+            guest.getHost().updateGuestsProcessing(CloudSim.clock());
+        }
+    }
 
     /**
-     * Gets a VM by its id and user.
+     * Gets a guest entity allocated in the host by its ID and user.
      *
-     * @param vmId   the vm id
-     * @param userId ID of VM's owner
-     * @return the virtual machine object, $null if not found
+     * @param guestId the guest ID
+     * @param userId ID of guest's owner
+     * @return the guest entity object, $null if not found
      * @pre $none
      * @post $none
      */
-    GuestEntity getGuest(int vmId, int userId);
+    default GuestEntity getGuest(int guestId, int userId) {
+        for (GuestEntity guest : getGuestList()) {
+            if (guest.getId() == guestId && guest.getUserId() == userId) {
+                return guest;
+            }
+        }
+        return null;
+    }
 
     /**
      * Gets the guest list.
@@ -112,11 +231,12 @@ public interface HostEntity extends CoreAttributes {
 
     /**
      * Gets the number of guest entities hosted by this host entity.
-     *
+     * TODO: Remo Andreoli: Maybe "return getGuestList().size()" is a better default
      * @return the number of guest entities
      */
-    int getNumberOfGuests();
-
+    default int getNumberOfGuests() {
+        return (int) getGuestList().stream().filter(guest -> !getGuestsMigratingIn().contains(guest)).count();
+    }
     /**
      * Gets the host bw.
      *
@@ -239,6 +359,13 @@ public interface HostEntity extends CoreAttributes {
     default boolean setPeStatus(int peId, int status) {
         return PeList.setPeStatus(getPeList(), peId, status);
     }
+
+    /**
+     * Sets the storage.
+     *
+     * @param storage the new storage
+     */
+    void setStorage(long storage);
 
     /**
      * Checks if the host is suitable for a guest entity, i.e, it has enough resources

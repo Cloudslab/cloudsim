@@ -1,9 +1,7 @@
 package org.cloudbus.cloudsim.container.core;
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
@@ -99,8 +97,8 @@ public class ContainerVm extends Vm {
         setPeList(peList);
         setContainerScheduler(containerScheduler);
 
-        setContainerRamProvisioner(containerRamProvisioner);
-        setContainerBwProvisioner(containerBwProvisioner);
+        setGuestRamProvisioner(containerRamProvisioner);
+        setGuestBwProvisioner(containerBwProvisioner);
     }
 
 
@@ -277,82 +275,6 @@ public class ContainerVm extends Vm {
     }
 
     /**
-     * Adds the migrating in vm.
-     *
-     * @param container the vm
-     */
-    public void addMigratingInGuest(Container container) {
-//        Log.printLine("ContainerVm: addMigratingInContainer:......");
-        container.setInMigration(true);
-
-        if (!getGuestsMigratingIn().contains(container)) {
-            if (getSize() < container.getSize()) {
-                Log.printConcatLine("[GuestScheduler.addMigratingInContainer] Allocation of VM #", container.getId(), " to Host #",
-                        getId(), " failed by storage");
-                System.exit(0);
-            }
-
-            if (!getContainerRamProvisioner().allocateRamForGuest(container, container.getCurrentRequestedRam())) {
-                Log.printConcatLine("[GuestScheduler.addMigratingInContainer] Allocation of VM #", container.getId(), " to Host #",
-                        getId(), " failed by RAM");
-                System.exit(0);
-            }
-
-            if (!getContainerBwProvisioner().allocateBwForGuest(container, container.getCurrentRequestedBw())) {
-                Log.printLine("[GuestScheduler.addMigratingInContainer] Allocation of VM #" + container.getId() + " to Host #"
-                        + getId() + " failed by BW");
-                System.exit(0);
-            }
-
-            getContainerScheduler().getGuestsMigratingIn().add(container.getUid());
-            if (!getContainerScheduler().allocatePesForGuest(container, container.getCurrentRequestedMips())) {
-                Log.printLine(String.format("[GuestScheduler.addMigratingInContainer] Allocation of VM #%d to Host #%d failed by MIPS", container.getId(), getId()));
-                System.exit(0);
-            }
-
-            setSize(getSize() - container.getSize());
-
-            getGuestsMigratingIn().add(container);
-            getGuestList().add(container);
-            updateGuestsProcessing(CloudSim.clock());
-            container.getHost().updateGuestsProcessing(CloudSim.clock());
-        }
-    }
-
-    /**
-     * Removes the migrating in vm.
-     *
-     * @param guest the container
-     */
-    public void removeMigratingInGuest(GuestEntity guest) {
-        guestDeallocate(guest);
-        getGuestsMigratingIn().remove(guest);
-        getGuestList().remove(guest);
-        Log.printLine("ContainerVm# "+getId()+"removeMigratingInContainer:......" + guest.getId() + "   Is deleted from the list");
-        getContainerScheduler().getGuestsMigratingIn().remove(guest.getUid());
-        guest.setInMigration(false);
-    }
-
-    /**
-     * Reallocate migrating in containers.
-     */
-    public void reallocateMigratingInGuests() {
-//        Log.printLine("ContainerVm: re alocating MigratingInContainer:......");
-        for (GuestEntity container : getGuestsMigratingIn()) {
-            if (!getGuestList().contains(container)) {
-                getGuestList().add(container);
-            }
-            if (!getContainerScheduler().getGuestsMigratingIn().contains(container.getUid())) {
-                getContainerScheduler().getGuestsMigratingIn().add(container.getUid());
-            }
-            getContainerRamProvisioner().allocateRamForGuest(container, container.getCurrentRequestedRam());
-            getContainerBwProvisioner().allocateBwForGuest(container, container.getCurrentRequestedBw());
-            getContainerScheduler().allocatePesForGuest(container, container.getCurrentRequestedMips());
-            setSize(getSize() - container.getSize());
-        }
-    }
-
-    /**
      * Checks if is suitable for container.
      *
      * @param guest the container
@@ -361,92 +283,8 @@ public class ContainerVm extends Vm {
     public boolean isSuitableForGuest(GuestEntity guest) {
 
         return (getContainerScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips()&& getContainerScheduler().getAvailableMips() >= guest.getTotalMips()
-                && getContainerRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getContainerBwProvisioner()
+                && getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
                 .isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
-    }
-
-       /**
-        * Destroys a container running in the VM.
-        *
-        * @param guest the container
-        * @pre $none
-        * @post $none
-        */
-    public void guestDestroy(GuestEntity guest) {
-        //Log.printLine("Vm:  Destroy Container:.... " + container.getId());
-        if (guest != null) {
-            guestDeallocate(guest);
-//            Log.printConcatLine("The Container To remove is :   ", container.getId(), "Size before removing is ", getContainerList().size(), "  vm ID is: ", getId());
-            getGuestList().remove(guest);
-            Log.printLine("ContainerVm# "+getId()+" containerDestroy:......" + guest.getId() + "Is deleted from the list");
-
-//            Log.printConcatLine("Size after removing", getContainerList().size());
-            while(getGuestList().contains(guest)){
-                Log.printConcatLine("The container", guest.getId(), " is still here");
-//                getContainerList().remove(container);
-            }
-            guest.setHost(null);
-        }
-    }
-
-    /**
-     * Destroys all containers running in the VM.
-     *
-     * @pre $none
-     * @post $none
-     */
-    public void guestDestroyAll() {
-//        Log.printLine("ContainerVm: Destroy all Containers");
-        guestDeallocateAll();
-        for (GuestEntity container : getGuestList()) {
-            container.setHost(null);
-            setSize(getSize() + container.getSize());
-        }
-//        Log.printLine("ContainerVm# "+getId()+" : containerDestroyAll:...... the whole list is cleared ");
-
-        getGuestList().clear();
-
-    }
-
-    /**
-     * Deallocate all VMList for the container.
-     *
-     * @param guest the container
-     */
-    protected void guestDeallocate(GuestEntity guest) {
-//        Log.printLine("ContainerVm: Deallocated the VM:......" + vm.getId());
-        getContainerRamProvisioner().deallocateRamForGuest(guest);
-        getContainerBwProvisioner().deallocateBwForGuest(guest);
-        getContainerScheduler().deallocatePesForGuest(guest);
-        setSize(getSize() + guest.getSize());
-    }
-
-    /**
-     * Deallocate all vmList for the container.
-     */
-    protected void guestDeallocateAll() {
-//        Log.printLine("ContainerVm: Deallocate all the Vms......");
-        getContainerRamProvisioner().deallocateRamForAllGuests();
-        getContainerBwProvisioner().deallocateBwForAllGuests();
-        getContainerScheduler().deallocatePesForAllGuests();
-    }
-
-    /**
-     * Returns a container object.
-     *
-     * @param containerId the container id
-     * @param userId      ID of container's owner
-     * @return the container object, $null if not found
-     * @pre $none
-     * @post $none
-     */
-    public GuestEntity getGuest(int containerId, int userId) {
-        for (GuestEntity container : getGuestList()) {
-            if (container.getId() == containerId && container.getUserId() == userId) {
-                return container;
-            }
-        }
-        return null;
     }
 
     /**
@@ -486,32 +324,6 @@ public class ContainerVm extends Vm {
     @Override
     public VmScheduler getGuestScheduler() {
         return containerScheduler;
-    }
-
-    /**
-     * Allocates PEs for a VM.
-     *
-     * @param guest     the vm
-     * @param mipsShare the mips share
-     * @return $true if this policy allows a new VM in the host, $false otherwise
-     * @pre $none
-     * @post $none
-     */
-    public boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShare) {
-        //Log.printLine("ContainerVm: allocate Pes for Container:......" + container.getId());
-        return getContainerScheduler().allocatePesForGuest(guest, mipsShare);
-    }
-
-    /**
-     * Releases PEs allocated to a container.
-     *
-     * @param guest the container
-     * @pre $none
-     * @post $none
-     */
-    public void deallocatePesForGuest(GuestEntity guest) {
-        //Log.printLine("ContainerVm: deallocate Pes for Container:......" + container.getId());
-        getContainerScheduler().deallocatePesForGuest(guest);
     }
 
     /**
@@ -565,8 +377,7 @@ public class ContainerVm extends Vm {
      * @post $result > 0
      */
     public long getBw() {
-        //Log.printLine("ContainerVm: Get BW:......" + getContainerBwProvisioner().getBw());
-        return getContainerBwProvisioner().getBw();
+        return getGuestBwProvisioner().getBw();
     }
 
     /**
@@ -577,20 +388,16 @@ public class ContainerVm extends Vm {
      * @post $result > 0
      */
     public int getRam() {
-        //Log.printLine("ContainerVm: Get Ram:......" + getContainerRamProvisioner().getRam());
-
-        return getContainerRamProvisioner().getRam();
+        return getGuestRamProvisioner().getRam();
     }
 
     /**
-     * TODO: Remo Andreoli: I'm not sure if this is alright
-     * @return
+     * TODO: Remo Andreoli: I'm not sure if this is alright, but I need it for compatibility reasons with default guestCreate()
      */
-    @Override
     public long getStorage() {
         return getSize();
     }
-
+    public void setStorage(long storage) { setSize(storage); }
     /**
      * Gets the VM scheduler.
      *
@@ -662,74 +469,21 @@ public class ContainerVm extends Vm {
         return containersMigratingIn;
     }
 
-    public RamProvisioner getContainerRamProvisioner() {
+    public RamProvisioner getGuestRamProvisioner() {
         return containerRamProvisioner;
     }
 
-    public void setContainerRamProvisioner(RamProvisioner containerRamProvisioner) {
+    public void setGuestRamProvisioner(RamProvisioner containerRamProvisioner) {
         this.containerRamProvisioner = containerRamProvisioner;
     }
 
 
-    public BwProvisioner getContainerBwProvisioner() {
+    public BwProvisioner getGuestBwProvisioner() {
         return containerBwProvisioner;
     }
 
-    public void setContainerBwProvisioner(BwProvisioner containerBwProvisioner) {
+    public void setGuestBwProvisioner(BwProvisioner containerBwProvisioner) {
         this.containerBwProvisioner = containerBwProvisioner;
-    }
-
-    /**
-     * Allocates PEs and memory to a new container in the VM.
-     *
-     * @param guest container being started
-     * @return $true if the container could be started in the VM; $false otherwise
-     * @pre $none
-     * @post $none
-     */
-    public boolean guestCreate(GuestEntity guest) {
-//        Log.printLine("Host: Create VM???......" + container.getId());
-        if (getSize() < guest.getSize()) {
-            Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
-                    " failed by storage");
-            return false;
-        }
-
-        if (!getContainerRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
-            Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
-                    " failed by RAM");
-            return false;
-        }
-
-        if (!getContainerBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
-            Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
-                    " failed by BW");
-            getContainerRamProvisioner().deallocateRamForGuest(guest);
-            return false;
-        }
-
-        if (!getContainerScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
-            Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
-                    " failed by MIPS");
-            getContainerRamProvisioner().deallocateRamForGuest(guest);
-            getContainerBwProvisioner().deallocateBwForGuest(guest);
-            return false;
-        }
-
-        setSize(getSize() - guest.getSize());
-        getGuestList().add(guest);
-        guest.setHost(this);
-        return true;
-    }
-
-    public int getNumberOfGuests() {
-        int c =0;
-        for(GuestEntity container: getGuestList()){
-            if(!getGuestsMigratingIn().contains(container)){
-                c++;
-            }
-        }
-        return c;
     }
 
     public boolean isInWaiting() {

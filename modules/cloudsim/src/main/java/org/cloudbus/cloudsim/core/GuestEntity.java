@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.core;
 
 import org.cloudbus.cloudsim.CloudletScheduler;
-import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.VmStateHistoryEntry;
 
 import java.util.List;
 
@@ -35,18 +35,22 @@ public interface GuestEntity extends CoreAttributes {
     List<Double> getCurrentRequestedMips();
 
     /**
-     * Gets the current requested total mips.
+     * Gets the current requested total mips (i.e., sum of mips for each virtual PE).
      *
      * @return the current requested total mips
      */
-    double getCurrentRequestedTotalMips();
+    default double getCurrentRequestedTotalMips() {
+        return getCurrentRequestedMips().stream().mapToDouble(Double::doubleValue).sum();
+    }
 
     /**
      * Gets the current requested max mips among all virtual PEs.
      *
      * @return the current requested max mips
      */
-    double getCurrentRequestedMaxMips();
+    default double getCurrentRequestedMaxMips() {
+        return getCurrentRequestedMips().stream().mapToDouble(Double::doubleValue).max().orElse(0);
+    }
 
     /**
      * Gets the current requested bw.
@@ -71,14 +75,28 @@ public interface GuestEntity extends CoreAttributes {
     double getTotalUtilizationOfCpu(double time);
 
     /**
-     * Adds a VM state history entry.
+     * Adds state history entry to the guest entity.
      *
      * @param time the time
      * @param allocatedMips the allocated mips
      * @param requestedMips the requested mips
      * @param isInMigration the is in migration
      */
-    void addStateHistoryEntry(double time, double allocatedMips, double requestedMips, boolean isInMigration);
+    default void addStateHistoryEntry(double time, double allocatedMips, double requestedMips, boolean isInMigration) {
+        VmStateHistoryEntry newState = new VmStateHistoryEntry(
+                time,
+                allocatedMips,
+                requestedMips,
+                isInMigration);
+        if (!getStateHistory().isEmpty()) {
+            VmStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
+            if (previousState.getTime() == time) {
+                getStateHistory().set(getStateHistory().size() - 1, newState);
+                return;
+            }
+        }
+        getStateHistory().add(newState);
+    }
 
     /**
      * Gets the host that runs this guest.
@@ -153,6 +171,16 @@ public interface GuestEntity extends CoreAttributes {
      * @return string uid
      */
     String getUid();
+
+    /** The mips allocation history.
+     * TODO Instead of using a list, this attribute would be
+     * a map, where the key can be the history time
+     * and the value the history itself.
+     * By this way, if one wants to get the history for a given
+     * time, he/she doesn't have to iterate over the entire list
+     * to find the desired entry.
+     */
+    List<VmStateHistoryEntry> getStateHistory();
 
     /**
      * Gets the Cloudlet scheduler.

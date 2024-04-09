@@ -10,7 +10,6 @@ package org.cloudbus.cloudsim;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.core.VmAbstract;
@@ -279,8 +278,8 @@ public class Vm implements VmAbstract {
 			}
 
 			// Cloudlets hosted in nested guests (if any)
-			for (GuestEntity container : getGuestList()) {
-				double time2 = container.updateCloudletsProcessing(currentTime, getGuestScheduler().getAllocatedMipsForGuest(container));
+			for (GuestEntity guest : getGuestList()) {
+				double time2 = guest.updateCloudletsProcessing(currentTime, getGuestScheduler().getAllocatedMipsForGuest(guest));
 				if (time2 > 0.0 && time2 < smallerTime) {
 					smallerTime = time2;
 				}
@@ -294,66 +293,44 @@ public class Vm implements VmAbstract {
 	public double updateGuestsProcessing(double currentTime) {
 		double smallerTime = Double.MAX_VALUE;
 
-		for (GuestEntity container : getGuestList()) {
-			double time = container.updateCloudletsProcessing(currentTime, getGuestScheduler().getAllocatedMipsForGuest(container));
+		for (GuestEntity guest : getGuestList()) {
+			double time = guest.updateCloudletsProcessing(currentTime, getGuestScheduler().getAllocatedMipsForGuest(guest));
 			if (time > 0.0 && time < smallerTime) {
 				smallerTime = time;
 			}
-			double totalRequestedMips = container.getCurrentRequestedTotalMips();
-			double totalAllocatedMips = getGuestScheduler().getTotalAllocatedMipsForGuest(container);
-			container.addStateHistoryEntry(
+			double totalRequestedMips = guest.getCurrentRequestedTotalMips();
+			double totalAllocatedMips = getGuestScheduler().getTotalAllocatedMipsForGuest(guest);
+			guest.addStateHistoryEntry(
 					currentTime,
 					totalAllocatedMips,
 					totalRequestedMips,
-					(container.isInMigration() && !getGuestsMigratingIn().contains(container)));
+					(guest.isInMigration() && !getGuestsMigratingIn().contains(guest)));
 		}
 
 		return smallerTime;
 	}
 
 	/**
-	 * Gets the current requested mips.
+	 * Gets the current requested mips .
 	 *
-	 * TODO: Remo Andreoli: Don't know yet how to reconcile with containerVm.getCurrentRequestedMips()
 	 * @return the current requested mips
 	 */
 	public List<Double> getCurrentRequestedMips() {
-		List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
+		List<Double> currentRequestedMips;
+
 		if (isBeingInstantiated()) {
-			currentRequestedMips = new ArrayList<>();
+			currentRequestedMips = new ArrayList<>(getNumberOfPes());
 			for (int i = 0; i < getNumberOfPes(); i++) {
 				currentRequestedMips.add(getMips());
 			}
-		}
-		return currentRequestedMips;
-	}
-
-	/**
-	 * Gets the current requested total mips.
-	 * 
-	 * @return the current requested total mips
-	 */
-	public double getCurrentRequestedTotalMips() {
-		double totalRequestedMips = 0;
-		for (double mips : getCurrentRequestedMips()) {
-			totalRequestedMips += mips;
-		}
-		return totalRequestedMips;
-	}
-
-	/**
-	 * Gets the current requested max mips among all virtual PEs.
-	 * 
-	 * @return the current requested max mips
-	 */
-	public double getCurrentRequestedMaxMips() {
-		double maxMips = 0;
-		for (double mips : getCurrentRequestedMips()) {
-			if (mips > maxMips) {
-				maxMips = mips;
+		} else { // TODO: Remo Andreoli: verify if valid
+			currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
+			for (GuestEntity guest : getGuestList()) {
+				currentRequestedMips.addAll(guest.getCurrentRequestedMips());
 			}
 		}
-		return maxMips;
+
+		return currentRequestedMips;
 	}
 
 	/**
@@ -367,8 +344,8 @@ public class Vm implements VmAbstract {
 		}
 
 		long requestedBwTemp = (long) (getCloudletScheduler().getCurrentRequestedUtilizationOfBw() * getBw());
-		for (GuestEntity container : getGuestList()) {
-			requestedBwTemp += container.getCurrentRequestedBw();
+		for (GuestEntity guest : getGuestList()) {
+			requestedBwTemp += guest.getCurrentRequestedBw();
 		}
 
 		return requestedBwTemp;
@@ -385,8 +362,8 @@ public class Vm implements VmAbstract {
 		}
 
 		int requestedRamTemp = (int) (getCloudletScheduler().getCurrentRequestedUtilizationOfRam() * getRam());
-		for (GuestEntity container : getGuestList()) {
-			requestedRamTemp += container.getCurrentRequestedRam();
+		for (GuestEntity guest : getGuestList()) {
+			requestedRamTemp += guest.getCurrentRequestedRam();
 		}
 
 		return requestedRamTemp;
@@ -400,8 +377,8 @@ public class Vm implements VmAbstract {
 	 */
 	public double getTotalUtilizationOfCpu(double time) {
 		double TotalUtilizationOfCpuTemp = getCloudletScheduler().getTotalUtilizationOfCpu(time);
-		for (GuestEntity container : getGuestList()) {
-			TotalUtilizationOfCpuTemp += container.getTotalUtilizationOfCpu(time);
+		for (GuestEntity guest : getGuestList()) {
+			TotalUtilizationOfCpuTemp += guest.getTotalUtilizationOfCpu(time);
 		}
 
 		return TotalUtilizationOfCpuTemp;
@@ -419,7 +396,7 @@ public class Vm implements VmAbstract {
 	}
 
 	/**
-	 * Returns the MIPS share of each Pe that is allocated to a given container.
+	 * Returns the MIPS share of each Pe that is allocated to a given guest entity.
 	 *
 	 * @param guest the guest entity
 	 * @return an array containing the amount of MIPS of each pe that is available to the guest
@@ -441,241 +418,17 @@ public class Vm implements VmAbstract {
 	}
 
 	/**
-	 * Adds the migrating in guest.
+	 * Checks if is suitable for the guest entity.
 	 *
-	 * @param guest the guest entity
-	 */
-	public void addMigratingInGuest(GuestEntity guest) {
-		guest.setInMigration(true);
-
-		if (!getGuestsMigratingIn().contains(guest)) {
-			if (getSize() < guest.getSize()) {
-				Log.printConcatLine("[GuestScheduler.addMigratingInContainer] Allocation of VM #", guest.getId(), " to Host #",
-						getId(), " failed by storage");
-				System.exit(0);
-			}
-
-			if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
-				Log.printConcatLine("[GuestScheduler.addMigratingInContainer] Allocation of VM #", guest.getId(), " to Host #",
-						getId(), " failed by RAM");
-				System.exit(0);
-			}
-
-			if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
-				Log.printLine("[GuestScheduler.addMigratingInContainer] Allocation of VM #" + guest.getId() + " to Host #"
-						+ getId() + " failed by BW");
-				System.exit(0);
-			}
-
-			getGuestScheduler().getGuestsMigratingIn().add(guest.getUid());
-			if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
-				Log.printLine(String.format("[GuestScheduler.addMigratingInContainer] Allocation of VM #%d to Host #%d failed by MIPS", guest.getId(), getId()));
-				System.exit(0);
-			}
-
-			setSize(getSize() - guest.getSize());
-
-			getGuestsMigratingIn().add(guest);
-			getGuestList().add(guest);
-			updateGuestsProcessing(CloudSim.clock());
-			guest.getHost().updateGuestsProcessing(CloudSim.clock());
-		}
-	}
-
-	/**
-	 * Removes the migrating in vm.
-	 *
-	 * @param guest the container
-	 */
-	public void removeMigratingInGuest(GuestEntity guest) {
-		guestDeallocate(guest);
-		getGuestsMigratingIn().remove(guest);
-		getGuestList().remove(guest);
-		Log.printLine("Vm# "+getId()+"removeMigratingInGuest:......" + guest.getId() + "   Is deleted from the list");
-		getGuestScheduler().getGuestsMigratingIn().remove(guest.getUid());
-		guest.setInMigration(false);
-	}
-
-	/**
-	 * Reallocate migrating in containers.
-	 */
-	public void reallocateMigratingInGuests() {
-		for (GuestEntity container : getGuestsMigratingIn()) {
-			if (!getGuestList().contains(container)) {
-				getGuestList().add(container);
-			}
-			if (!getGuestScheduler().getGuestsMigratingIn().contains(container.getUid())) {
-				getGuestScheduler().getGuestsMigratingIn().add(container.getUid());
-			}
-			getGuestRamProvisioner().allocateRamForGuest(container, container.getCurrentRequestedRam());
-			getGuestBwProvisioner().allocateBwForGuest(container, container.getCurrentRequestedBw());
-			getGuestScheduler().allocatePesForGuest(container, container.getCurrentRequestedMips());
-			setSize(getSize() - container.getSize());
-		}
-	}
-
-	/**
-	 * Checks if is suitable for container.
-	 *
-	 * @param guest the container
-	 * @return true, if is suitable for container
+	 * @param guest
+	 * @return true, if is suitable for guest entity
 	 */
 	public boolean isSuitableForGuest(GuestEntity guest) {
 
-		return (getGuestScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips()&& getGuestScheduler().getAvailableMips() >= guest.getTotalMips()
+		return (getGuestScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips()
+				&& getGuestScheduler().getAvailableMips() >= guest.getTotalMips()
 				&& getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
 				.isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
-	}
-
-	/**
-	 * Destroys a container running in the VM.
-	 *
-	 * @param guest the container
-	 * @pre $none
-	 * @post $none
-	 */
-	public void guestDestroy(GuestEntity guest) {
-		if (guest != null) {
-			guestDeallocate(guest);
-			getGuestList().remove(guest);
-			Log.printLine(getClassName()+" # "+getId()+" guestDestroy: "+guest.getClassName()+" #"+guest.getId()+" is deleted from the list");
-
-			while(getGuestList().contains(guest)){
-				Log.printConcatLine("The container", guest.getId(), " is still here");
-			}
-			guest.setHost(null);
-		}
-	}
-
-	/**
-	 * Destroys all containers running in the VM.
-	 *
-	 * @pre $none
-	 * @post $none
-	 */
-	public void guestDestroyAll() {
-		guestDeallocateAll();
-		for (GuestEntity container : getGuestList()) {
-			container.setHost(null);
-			setSize(getSize() + container.getSize());
-		}
-
-		getGuestList().clear();
-	}
-
-	/**
-	 * Deallocate all VMList for the container.
-	 *
-	 * @param guest the container
-	 */
-	protected void guestDeallocate(GuestEntity guest) {
-		getGuestRamProvisioner().deallocateRamForGuest(guest);
-		getGuestBwProvisioner().deallocateBwForGuest(guest);
-		getGuestScheduler().deallocatePesForGuest(guest);
-		setSize(getSize() + guest.getSize());
-	}
-
-	/**
-	 * Deallocate all vmList for the container.
-	 */
-	protected void guestDeallocateAll() {
-		getGuestRamProvisioner().deallocateRamForAllGuests();
-		getGuestBwProvisioner().deallocateBwForAllGuests();
-		getGuestScheduler().deallocatePesForAllGuests();
-	}
-
-	/**
-	 * Allocates PEs for a VM.
-	 *
-	 * @param guest     the vm
-	 * @param mipsShare the mips share
-	 * @return $true if this policy allows a new VM in the host, $false otherwise
-	 * @pre $none
-	 * @post $none
-	 */
-	public boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShare) {
-		return getGuestScheduler().allocatePesForGuest(guest, mipsShare);
-	}
-
-	/**
-	 * Releases PEs allocated to a container.
-	 *
-	 * @param guest the container
-	 * @pre $none
-	 * @post $none
-	 */
-	public void deallocatePesForGuest(GuestEntity guest) {
-		getGuestScheduler().deallocatePesForGuest(guest);
-	}
-
-	/**
-	 * Allocates PEs and memory to a new container in the VM.
-	 *
-	 * @param guest container being started
-	 * @return $true if the container could be started in the VM; $false otherwise
-	 * @pre $none
-	 * @post $none
-	 */
-	public boolean guestCreate(GuestEntity guest) {
-//        Log.printLine("Host: Create VM???......" + container.getId());
-		if (getSize() < guest.getSize()) {
-			Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
-					" failed by storage");
-			return false;
-		}
-
-		if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
-			Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
-					" failed by RAM");
-			return false;
-		}
-
-		if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
-			Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
-					" failed by BW");
-			getGuestRamProvisioner().deallocateRamForGuest(guest);
-			return false;
-		}
-
-		if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
-			Log.printConcatLine("[GuestScheduler.ContainerCreate] Allocation of Container #", guest.getId(), " to VM #", getId(),
-					" failed by MIPS");
-			getGuestRamProvisioner().deallocateRamForGuest(guest);
-			getGuestBwProvisioner().deallocateBwForGuest(guest);
-			return false;
-		}
-
-		setSize(getSize() - guest.getSize());
-		getGuestList().add(guest);
-		guest.setHost(this);
-		return true;
-	}
-
-	public int getNumberOfGuests() {
-		int c =0;
-		for(GuestEntity container: getGuestList()){
-			if(!getGuestsMigratingIn().contains(container)){
-				c++;
-			}
-		}
-		return c;
-	}
-	/**
-	 * Returns a container object.
-	 *
-	 * @param containerId the container id
-	 * @param userId      ID of container's owner
-	 * @return the container object, $null if not found
-	 * @pre $none
-	 * @post $none
-	 */
-	public GuestEntity getGuest(int containerId, int userId) {
-		for (GuestEntity container : getGuestList()) {
-			if (container.getId() == containerId && container.getUserId() == userId) {
-				return container;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -690,12 +443,12 @@ public class Vm implements VmAbstract {
 	}
 
 	/**
-	 * TODO: Remo Andreoli: I'm not sure if this is alright
-	 * @return
+	 * TODO: Remo Andreoli: I'm not sure if this is alright, but I need it for compatibility reasons with default guestCreate()
 	 */
 	public long getStorage() {
 		return getSize();
 	}
+	public void setStorage(long storage) { setSize(storage); }
 
 	public Datacenter getDatacenter() {
 		return getHost().getDatacenter();
@@ -705,34 +458,6 @@ public class Vm implements VmAbstract {
 		if (!isBeingInstantiated()) { // wait for the Vm to be bound to a host
 			getHost().setDatacenter(datacenter);
 		}
-	}
-
-	/**
-	 * Adds a VM state history entry.
-	 * 
-	 * @param time the time
-	 * @param allocatedMips the allocated mips
-	 * @param requestedMips the requested mips
-	 * @param isInMigration the is in migration
-	 */
-	public void addStateHistoryEntry(
-			double time,
-			double allocatedMips,
-			double requestedMips,
-			boolean isInMigration) {
-		VmStateHistoryEntry newState = new VmStateHistoryEntry(
-				time,
-				allocatedMips,
-				requestedMips,
-				isInMigration);
-		if (!getStateHistory().isEmpty()) {
-			VmStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
-			if (previousState.getTime() == time) {
-				getStateHistory().set(getStateHistory().size() - 1, newState);
-				return;
-			}
-		}
-		getStateHistory().add(newState);
 	}
 
 	/**

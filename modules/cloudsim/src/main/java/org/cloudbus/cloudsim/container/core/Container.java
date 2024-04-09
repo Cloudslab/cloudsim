@@ -217,25 +217,6 @@ public class Container implements GuestEntity {
         return 0.0;
     }
 
-
-    /**
-     * Gets the current requested total mips.
-     *
-     * @return the current requested total mips
-     */
-    public double getCurrentRequestedTotalMips() {
-        return getCurrentRequestedMips().stream().mapToDouble(mips -> mips).sum();
-    }
-
-    /**
-     * Gets the current requested max mips among all virtual PEs.
-     *
-     * @return the current requested max mips
-     */
-    public double getCurrentRequestedMaxMips() {
-        return getCurrentRequestedMips().stream().mapToDouble(mips -> mips).filter(mips -> mips >= 0).max().orElse(0);
-    }
-
     /**
      * Gets the current requested bw.
      *
@@ -321,35 +302,6 @@ public class Container implements GuestEntity {
     public void setBeingInstantiated(boolean beingInstantiated) {
         this.beingInstantiated = beingInstantiated;
     }
-
-    /**
-     * Adds the state history entry.
-     *
-     * @param time          the time
-     * @param allocatedMips the allocated mips
-     * @param requestedMips the requested mips
-     * @param isInMigration the is in migration
-     */
-    public void addStateHistoryEntry(
-            double time,
-            double allocatedMips,
-            double requestedMips,
-            boolean isInMigration) {
-        VmStateHistoryEntry newState = new VmStateHistoryEntry(
-                time,
-                allocatedMips,
-                requestedMips,
-                isInMigration);
-        if (!getStateHistory().isEmpty()) {
-            VmStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
-            if (previousState.getTime() == time) {
-                getStateHistory().set(getStateHistory().size() - 1, newState);
-                return;
-            }
-        }
-        getStateHistory().add(newState);
-    }
-
 
     /**
      * Gets the utilization MAD in MIPS.

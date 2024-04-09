@@ -63,11 +63,12 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 		for (Double mips : mipsShare) {
 			if (mips <= pe.getMips()) {
 				selectedPes.add(pe);
+				totalMips += mips;
+
 				if (!peIterator.hasNext()) {
 					break;
 				}
 				pe = peIterator.next();
-				totalMips += mips;
 			}
 		}
 		if (mipsShare.size() > selectedPes.size()) {
@@ -79,6 +80,8 @@ public class VmSchedulerSpaceShared extends VmScheduler {
 		getPeAllocationMap().put(guest.getUid(), selectedPes);
 		getMipsMap().put(guest.getUid(), mipsShare);
 		setAvailableMips(getAvailableMips() - totalMips);
+		guest.setCurrentAllocatedMips(mipsShare);
+
 		return true;
 	}
 

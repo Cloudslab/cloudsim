@@ -128,16 +128,16 @@ public class NetworkVmAllocationPolicy extends VmAllocationPolicy {
 			allocatedMipsForVm = vm.getHost().getAllocatedMipsForGuest(vm);
 		}
 
-		if (!host.allocatePesForGuest(vm, vm.getCurrentRequestedMips())) {
+		if (!host.getGuestScheduler().allocatePesForGuest(vm, vm.getCurrentRequestedMips())) {
 			return -1;
 		}
 
 		double maxUtilization = host.getMaxUtilizationAmongVmsPes(vm);
 
-		host.deallocatePesForGuest(vm);
+		host.getGuestScheduler().deallocatePesForGuest(vm);
 
 		if (allocatedHost != null && allocatedMipsForVm != null) {
-			vm.getHost().allocatePesForGuest(vm, allocatedMipsForVm);
+			vm.getHost().getGuestScheduler().allocatePesForGuest(vm, allocatedMipsForVm);
 		}
 
 		return maxUtilization;

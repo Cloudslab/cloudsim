@@ -10,7 +10,6 @@ package org.cloudbus.cloudsim;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.lists.PeList;
@@ -118,81 +117,6 @@ public class Host implements HostEntity {
 	}
 
 	/**
-	 * Adds a VM migrating into the current (dstHost) host.
-	 *
-	 * @param guest the vm
-	 */
-	public void addMigratingInGuest(GuestEntity guest) {
-		guest.setInMigration(true);
-
-		if (!getGuestsMigratingIn().contains(guest)) {
-			if (getStorage() < guest.getSize()) {
-				Log.printConcatLine("[VmScheduler.addMigratingInVm] Allocation of VM #", guest.getId(), " to Host #",
-						getId(), " failed by storage");
-				System.exit(0);
-			}
-
-			if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
-				Log.printConcatLine("[VmScheduler.addMigratingInVm] Allocation of VM #", guest.getId(), " to Host #",
-						getId(), " failed by RAM");
-				System.exit(0);
-			}
-
-			if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
-				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + guest.getId() + " to Host #"
-						+ getId() + " failed by BW");
-				System.exit(0);
-			}
-
-			getGuestScheduler().getGuestsMigratingIn().add(guest.getUid());
-			if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
-				Log.printLine("[VmScheduler.addMigratingInVm] Allocation of VM #" + guest.getId() + " to Host #"
-						+ getId() + " failed by MIPS");
-				System.exit(0);
-			}
-
-			setStorage(getStorage() - guest.getSize());
-
-			getGuestsMigratingIn().add(guest);
-			getGuestList().add(guest);
-			updateGuestsProcessing(CloudSim.clock());
-			guest.getHost().updateGuestsProcessing(CloudSim.clock());
-		}
-	}
-
-	/**
-	 * Removes a migrating in vm.
-	 *
-	 * @param guest the vm
-	 */
-	public void removeMigratingInGuest(GuestEntity guest) {
-		guestDeallocate(guest);
-		getGuestsMigratingIn().remove(guest);
-		getGuestList().remove(guest);
-		getGuestScheduler().getGuestsMigratingIn().remove(guest.getUid());
-		guest.setInMigration(false);
-	}
-
-	/**
-	 * Reallocate migrating in vms. Gets the VM in the migrating in queue
-         * and allocate them on the host.
-	 */
-	public void reallocateMigratingInGuests() {
-		for (GuestEntity vm : getGuestsMigratingIn()) {
-			if (!getGuestList().contains(vm)) {
-				getGuestList().add(vm);
-			}
-			if (!getGuestScheduler().getGuestsMigratingIn().contains(vm.getUid())) {
-				getGuestScheduler().getGuestsMigratingIn().add(vm.getUid());
-			}
-			getGuestRamProvisioner().allocateRamForGuest(vm, vm.getCurrentRequestedRam());
-			getGuestBwProvisioner().allocateBwForGuest(vm, vm.getCurrentRequestedBw());
-			getGuestScheduler().allocatePesForGuest(vm, vm.getCurrentRequestedMips());
-			setStorage(getStorage() - vm.getSize());
-		}
-	}
-
-	/**
 	 * Checks if the host is suitable for vm. If it has enough resources
 	 * to attend the VM.
 	 *
@@ -204,117 +128,6 @@ public class Host implements HostEntity {
 				&& getGuestScheduler().getAvailableMips() >= guest.getCurrentRequestedTotalMips()
 				&& getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
 				.isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
-	}
-
-	/**
-	 * Try to allocate resources to a new VM in the Host.
-	 *
-	 * @param guest Vm being started
-	 * @return $true if the VM could be started in the host; $false otherwise
-	 * @pre $none
-	 * @post $none
-	 */
-	public boolean guestCreate(GuestEntity guest) {
-		if (getStorage() < guest.getSize()) {
-			Log.formatLine("%.2f: [VmScheduler.vmCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
-					" failed by storage", CloudSim.clock());
-			return false;
-		}
-
-		if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
-			Log.formatLine("%.2f: [VmScheduler.vmCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
-					" failed by RAM", CloudSim.clock());
-			return false;
-		}
-
-		if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
-			Log.formatLine("%.2f: [VmScheduler.vmCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
-					" failed by BW", CloudSim.clock());
-			getGuestRamProvisioner().deallocateRamForGuest(guest);
-			return false;
-		}
-
-		if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
-			Log.formatLine("%.2f: [VmScheduler.vmCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
-					" failed by MIPS", CloudSim.clock());
-			getGuestRamProvisioner().deallocateRamForGuest(guest);
-			getGuestBwProvisioner().deallocateBwForGuest(guest);
-			return false;
-		}
-
-		setStorage(getStorage() - guest.getSize());
-		getGuestList().add(guest);
-		guest.setHost(this);
-		return true;
-	}
-
-	/**
-	 * Destroys a VM running in the host.
-	 *
-	 * @param guest the VM
-	 * @pre $none
-	 * @post $none
-	 */
-	public void guestDestroy(GuestEntity guest) {
-		if (guest != null) {
-			guestDeallocate(guest);
-			getGuestList().remove(guest);
-			guest.setHost(null);
-		}
-	}
-
-	/**
-	 * Destroys all VMs running in the host.
-	 * 
-	 * @pre $none
-	 * @post $none
-	 */
-	public void guestDestroyAll() {
-		guestDeallocateAll();
-		for (GuestEntity vm : getGuestList()) {
-			vm.setHost(null);
-			setStorage(getStorage() + vm.getSize());
-		}
-		getGuestList().clear();
-	}
-
-	/**
-	 * Deallocate all resources of a VM.
-	 *
-	 * @param guest the VM
-	 */
-	protected void guestDeallocate(GuestEntity guest) {
-		getGuestRamProvisioner().deallocateRamForGuest(guest);
-		getGuestBwProvisioner().deallocateBwForGuest(guest);
-		getGuestScheduler().deallocatePesForGuest(guest);
-		setStorage(getStorage() + guest.getSize());
-	}
-
-	/**
-	 * Deallocate all resources of all VMs.
-	 */
-	protected void guestDeallocateAll() {
-		getGuestRamProvisioner().deallocateRamForAllGuests();
-		getGuestBwProvisioner().deallocateBwForAllGuests();
-		getGuestScheduler().deallocatePesForAllGuests();
-	}
-
-	/**
-	 * Gets a VM by its id and user.
-	 *
-	 * @param vmId   the vm id
-	 * @param userId ID of VM's owner
-	 * @return the virtual machine object, $null if not found
-	 * @pre $none
-	 * @post $none
-	 */
-	public GuestEntity getGuest(int vmId, int userId) {
-		for (GuestEntity vm : getGuestList()) {
-			if (vm.getId() == vmId && vm.getUserId() == userId) {
-				return vm;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -347,30 +160,6 @@ public class Host implements HostEntity {
 	// Instantiated by default
 	public boolean isBeingInstantiated() {
 		return false;
-	}
-
-	/**
-	 * Allocates PEs for a VM.
-	 *
-	 * @param guest     the vm
-	 * @param mipsShare the list of MIPS share to be allocated to the VM
-	 * @return $true if this policy allows a new VM in the host, $false otherwise
-	 * @pre $none
-	 * @post $none
-	 */
-	public boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShare) {
-		return getGuestScheduler().allocatePesForGuest(guest, mipsShare);
-	}
-
-	/**
-	 * Releases PEs allocated to a VM.
-	 *
-	 * @param guest the vm
-	 * @pre $none
-	 * @post $none
-	 */
-	public void deallocatePesForGuest(GuestEntity guest) {
-		getGuestScheduler().deallocatePesForGuest(guest);
 	}
 
 	/**
@@ -550,16 +339,12 @@ public class Host implements HostEntity {
 		return (List<T>) vmList;
 	}
 
-	public int getNumberOfGuests() {
-		return getGuestList().size();
-	}
-
 	/**
 	 * Sets the storage.
 	 * 
 	 * @param storage the new storage
 	 */
-	protected void setStorage(long storage) {
+	public void setStorage(long storage) {
 		this.storage = storage;
 	}
 

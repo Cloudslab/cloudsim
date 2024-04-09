@@ -89,7 +89,7 @@ public class HddHost extends Host {
         if (allocatednOfCPUFlag && !allocationOfHDD) {
             getGuestRamProvisioner().deallocateRamForGuest(hddVm);
             getGuestBwProvisioner().deallocateBwForGuest(hddVm);
-            deallocatePesForGuest(hddVm);
+            getGuestScheduler().deallocatePesForGuest(hddVm);
             getHddIOScheduler().deallocatePesForGuest(hddVm);
             hddVm.setHost(prevHost);
         }
