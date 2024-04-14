@@ -31,7 +31,7 @@ public interface HostEntity extends CoreAttributes {
      * return 0. It has to be checked if there is a reason for this
      * difference.}
      */
-    double updateGuestsProcessing(double currentTime);
+    double updateCloudletsProcessing(double currentTime);
 
     /**
      * Try to allocate resources to a new Guest in the Host.
@@ -198,8 +198,8 @@ public interface HostEntity extends CoreAttributes {
 
             getGuestsMigratingIn().add(guest);
             getGuestList().add(guest);
-            updateGuestsProcessing(CloudSim.clock());
-            guest.getHost().updateGuestsProcessing(CloudSim.clock());
+            updateCloudletsProcessing(CloudSim.clock());
+            guest.getHost().updateCloudletsProcessing(CloudSim.clock());
         }
     }
 

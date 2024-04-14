@@ -94,7 +94,7 @@ public class NetworkHost extends Host {
 	}
 
 	@Override
-	public double updateGuestsProcessing(double currentTime) {
+	public double updateCloudletsProcessing(double currentTime) {
 		double smallerTime = Double.MAX_VALUE;
 		// insert in each vm packet recieved
 		recvpackets();

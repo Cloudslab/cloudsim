@@ -102,7 +102,7 @@ public class Host implements HostEntity {
          * return 0. It has to be checked if there is a reason for this
          * difference.}
 	 */
-	public double updateGuestsProcessing(double currentTime) {
+	public double updateCloudletsProcessing(double currentTime) {
 		double smallerTime = Double.MAX_VALUE;
 
 		for (GuestEntity vm : getGuestList()) {

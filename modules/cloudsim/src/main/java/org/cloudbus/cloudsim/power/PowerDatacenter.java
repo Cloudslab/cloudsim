@@ -179,7 +179,7 @@ public class PowerDatacenter extends Datacenter {
 		for (PowerHost host : this.<PowerHost> getHostList()) {
 			Log.printLine();
 
-			double time = host.updateGuestsProcessing(currentTime); // inform VMs to update processing
+			double time = host.updateCloudletsProcessing(currentTime); // inform VMs to update processing
 			if (time < minTime) {
 				minTime = time;
 			}

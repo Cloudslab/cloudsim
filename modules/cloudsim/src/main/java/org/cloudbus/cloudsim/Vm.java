@@ -22,9 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Represents a Virtual Machine (VM) that runs inside a Host, sharing a hostList with other VMs. It processes
- * cloudlets. This processing happens according to a policy, defined by the CloudletScheduler. Each
- * VM has a owner, which can submit cloudlets to the VM to execute them.
+ * Represents a Virtual Machine (VM) that runs inside a Host, sharing a hostList with other VMs. It can have nested
+ * guest entities running inside. It processes cloudlets. This processing happens according to a policy,
+ * defined by the CloudletScheduler. Each VM has a owner, which can submit cloudlets to the VM to execute them.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
@@ -290,7 +290,12 @@ public class Vm implements VmAbstract {
 		return 0.0;
 	}
 
-	public double updateGuestsProcessing(double currentTime) {
+	/**
+	 * Requests updating of cloudlets' processing within the (possibly nested) guests running in this host.
+	 * @param currentTime the current time
+	 * @return
+	 */
+	public double updateCloudletsProcessing(double currentTime) {
 		double smallerTime = Double.MAX_VALUE;
 
 		for (GuestEntity guest : getGuestList()) {

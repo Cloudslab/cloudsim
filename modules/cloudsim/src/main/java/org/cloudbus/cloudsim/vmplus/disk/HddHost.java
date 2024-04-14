@@ -54,7 +54,7 @@ public class HddHost extends Host {
      * @see org.cloudbus.cloudsim.Host#updateVmsProcessing(double)
      */
     @Override
-    public double updateGuestsProcessing(final double currentTime) {
+    public double updateCloudletsProcessing(final double currentTime) {
         double smallerTime = Double.MAX_VALUE;
 
         for (HddVm vm : this.getGuestList()) {

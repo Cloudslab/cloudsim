@@ -107,7 +107,7 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 			for (PowerHost host : this.<PowerHost> getHostList()) {
 				Log.formatLine("\n%.2f: Host #%d", CloudSim.clock(), host.getId());
 
-				double time = host.updateGuestsProcessing(currentTime); // inform VMs to update
+				double time = host.updateCloudletsProcessing(currentTime); // inform VMs to update
 																		// processing
 				if (time < minTime) {
 					minTime = time;

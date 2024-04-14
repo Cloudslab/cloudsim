@@ -55,8 +55,8 @@ public class ContainerHostDynamicWorkload extends Host {
          * @see cloudsim.Host#updateVmsProcessing(double)
          */
         @Override
-        public double updateGuestsProcessing(double currentTime) {
-            double smallerTime = super.updateGuestsProcessing(currentTime);
+        public double updateCloudletsProcessing(double currentTime) {
+            double smallerTime = super.updateCloudletsProcessing(currentTime);
             setPreviousUtilizationMips(getUtilizationMips());
             setUtilizationMips(0);
             double hostTotalRequestedMips = 0;

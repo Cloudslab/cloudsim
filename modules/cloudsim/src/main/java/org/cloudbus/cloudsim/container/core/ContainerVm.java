@@ -137,7 +137,7 @@ public class ContainerVm extends Vm {
         return 0.0;
     }
 
-    public double updateGuestsProcessing(double currentTime) {
+    public double updateCloudletsProcessing(double currentTime) {
         double smallerTime = Double.MAX_VALUE;
 //        Log.printLine("ContainerVm: update Vms Processing");
 //        Log.printLine("The VM list size is:...." + getContainerList().size());

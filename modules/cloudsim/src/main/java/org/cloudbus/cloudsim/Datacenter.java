@@ -833,7 +833,7 @@ public class Datacenter extends SimEntity {
 			double smallerTime = Double.MAX_VALUE;
 			for (HostEntity host : getVmAllocationPolicy().getHostList()) {
 				// inform VMs to update processing
-				double time = host.updateGuestsProcessing(CloudSim.clock());
+				double time = host.updateCloudletsProcessing(CloudSim.clock());
 				// what time do we expect that the next cloudlet will finish?
 				if (time < smallerTime) {
 					smallerTime = time;
