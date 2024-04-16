@@ -30,12 +30,10 @@ import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
-import org.cloudbus.cloudsim.container.core.ContainerDatacenter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
-import org.cloudbus.cloudsim.vmplus.vm.VMex;
 
 
 /**
@@ -95,21 +93,7 @@ public class CloudSimExample2 {
 	            	Vm vm1 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 	            	vmid++;
-					//Vm vm2 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
-
-					VMex vm2 = new VMex("T", brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
-					/*ArrayList<Pe> peList = new ArrayList<>();
-					for (int j = 0; j < pesNumber; ++j) {
-						peList.add(new Pe(j,
-								new PeProvisionerSimple(mips)));
-					}
-					ContainerVm vm2 = new ContainerVm(vmid, brokerId, mips, ram, bw, size, vmm, new VmSchedulerTimeShared(peList),
-																			  new RamProvisionerSimple(ram),
-																			  new BwProvisionerSimple(bw),
-																			  peList);*/
-
-					System.out.println("vm1: "+(vm1 instanceof Vm)+" "+(vm1 instanceof VMex));
-					System.out.println("vm2: "+(vm2 instanceof Vm)+" "+(vm2 instanceof VMex));
+	            	Vm vm2 = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 
 	            	//add the VMs to the vmList
 	            	vmlist.add(vm1);
@@ -224,9 +208,7 @@ public class CloudSimExample2 {
 	        // 6. Finally, we need to create a PowerDatacenter object.
 	        Datacenter datacenter = null;
 	        try {
-				datacenter = new ContainerDatacenter(name, characteristics, new VmAllocationPolicySimple(hostList),
-						new VmAllocationPolicySimple(hostList),
-						storageList, 0, "e1", "e2");
+	            datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(hostList), storageList, 0);
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
