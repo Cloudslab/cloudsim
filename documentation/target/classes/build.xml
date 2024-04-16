@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<!--
+
+July 2010
+
+Build file or Makefile for CloudSim.
+
+Note:
+
+  Make sure you have installed 'ant' and put the location of it into
+  your path so you can access it anywhere.
+  'ant' can be downloadable from http://ant.apache.org/
+
+Usage:
+
+  * Type 'ant' to compile all cloudsim source files, put them into the
+    classes/ directory and to create a cloudsim-new.jar file in the jars/ directory
+
+  * Type 'ant clean' to delete all the compiled classes and the classes/
+    directory itself. The generated cloudsim-new.jar is not deleted.
+
+Note:
+
+  * You need to set up PATH for ant in Windows and/or Unix.
+
+Acknowledgement:
+  Thank to Uros Cibej for providing this file and instruction on
+  how to use it.
+
+-->
+
+
+<project name="CloudSim" basedir="." default="makejar">
+    <description>
+            This is the build file for CloudSim
+    </description>
+
+    <!-- location to store Java classes -->
+    <property name="class.dir" location="./classes" />
+
+    <!-- location to store CloudSim source files -->
+    <property name="src.dir" location="./sources" />
+
+    <!-- location to store jar files -->
+    <property name="jar.dir" location="./jars" />
+
+    <!-- classpath declaration -->
+    <path id="classpath">
+        <fileset dir="./jars">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <target name="prepare">
+        <mkdir dir="${class.dir}" />
+    </target>
+
+    <!-- rule to compile CloudSim source files -->
+    <target name="build" depends="prepare">
+        <javac srcdir="${src.dir}" destdir="${class.dir}" includeantruntime="false">
+ 		<classpath refid="classpath"/>
+	</javac>
+    </target>
+
+    <!-- Rule for making a jar file.
+
+         Note:
+
+           * The new jar file is named as "cloudsim-new.jar" to avoid overriding
+             the existing jar file.
+
+           * The new jar file only contains cloudsim classes only.
+    -->
+
+    <target name="makejar" depends="build">
+        <echo>Compiling a new jar file, named: "cloudsim-new.jar".</echo>
+        <echo>This jar file contains CloudSim classes only.</echo>
+        <jar destfile="${jar.dir}/cloudsim-new.jar" basedir="${class.dir}" />
+    </target>
+
+    <target name="clean" description="clean up" >
+        <delete dir="${class.dir}" />
+    </target>
+
+</project>
