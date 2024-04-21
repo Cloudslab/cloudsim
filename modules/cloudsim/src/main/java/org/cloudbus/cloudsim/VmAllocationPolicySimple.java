@@ -15,6 +15,10 @@ import java.util.Map;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * VmAllocationPolicySimple is an VmAllocationPolicy that chooses, as the host for a VM, the host
  * with less PEs in use. It is therefore a Worst Fit policy, allocating VMs into the 
@@ -25,6 +29,8 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @since CloudSim Toolkit 1.0
  */
 public class VmAllocationPolicySimple extends VmAllocationPolicy {
+	private static final Logger logger = Logger.getLogger(YourSimulationClass.class.getName());
+
 
 	/** The map between each VM and its allocated host.
          * The map key is a VM UID and the value is the allocated host for that VM. */
@@ -99,7 +105,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 				}
 				tries++;
 			} while (!result && tries < getFreePes().size());
-
+			logger.info("VM #" + vm.getId() + " queied for work");
 		}
 
 		return result;
@@ -107,6 +113,11 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 
 	@Override
 	public void deallocateHostForVm(Vm vm) {
+		ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.INFO);
+        logger.setLevel(Level.INFO);
+        logger.addHandler(consoleHandler);
+
 		Host host = getVmTable().remove(vm.getUid());
 		int idx = getHostList().indexOf(host);
 		int pes = getUsedPes().remove(vm.getUid());
@@ -114,6 +125,7 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 			host.vmDestroy(vm);
 			getFreePes().set(idx, getFreePes().get(idx) + pes);
 		}
+		logger.info("VM #" + vm.getId() + " destroyed");
 	}
 
 	@Override

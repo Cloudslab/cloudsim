@@ -13,8 +13,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-public class ContainerCloudletSchedulerDynamicWorkload extends ContainerCloudletSchedulerTimeShared {
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+public class ContainerCloudletSchedulerDynamicWorkload extends ContainerCloudletSchedulerTimeShared {
+        private static final Logger logger = Logger.getLogger(YourSimulationClass.class.getName());
         /** The mips. */
         private double mips;
 
@@ -123,6 +127,11 @@ public class ContainerCloudletSchedulerDynamicWorkload extends ContainerCloudlet
          */
         @Override
         public double cloudletSubmit(Cloudlet cl, double fileTransferTime) {
+            ConsoleHandler consoleHandler = new ConsoleHandler();
+            consoleHandler.setLevel(Level.INFO);
+            logger.setLevel(Level.INFO);
+            logger.addHandler(consoleHandler);
+
             ResCloudlet rcl = new ResCloudlet(cl);
             rcl.setCloudletStatus(Cloudlet.INEXEC);
 
@@ -132,6 +141,8 @@ public class ContainerCloudletSchedulerDynamicWorkload extends ContainerCloudlet
 
             getCloudletExecList().add(rcl);
             return getEstimatedFinishTime(rcl, getPreviousTime());
+            
+            logger.info("Cloud #" + cl.getCloudletId() + " queued. Time loading files: " + fileTransferTime);
         }
 
         /**

@@ -60,7 +60,37 @@ public class Log {
 			print(String.valueOf(message));
 		}
 	}
+	public static void log(String message) {
+        logger.log(logLevel, message);
+    }
 
+    /**
+     * Logs CPU usage information.
+     *
+     * @param cpuUsage The CPU usage to be logged.
+     */
+    public static void logCpuUsage(double cpuUsage) {
+        log("CPU Usage: " + cpuUsage);
+    }
+
+    /**
+     * Logs memory usage information.
+     *
+     * @param memoryUsage The memory usage to be logged.
+     */
+    public static void logMemoryUsage(double memoryUsage) {
+        log("Memory Usage: " + memoryUsage);
+    }
+
+    /**
+     * Logs electricity usage information.
+     *
+     * @param electricityUsage The electricity usage to be logged.
+     */
+    public static void logElectricityUsage(double electricityUsage) {
+        log("Electricity Usage: " + electricityUsage);
+    }
+	
 	/**
 	 * Prints a message and a new line.
 	 * 
