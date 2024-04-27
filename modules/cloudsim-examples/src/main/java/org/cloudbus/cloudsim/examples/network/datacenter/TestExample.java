@@ -65,7 +65,7 @@ public class TestExample {
 
 			// submit vm list to the broker
 
-			broker.submitVmList(vmlist);
+			broker.submitGuestList(vmlist);
 
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();

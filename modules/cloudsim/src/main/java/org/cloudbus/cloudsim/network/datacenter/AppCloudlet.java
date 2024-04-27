@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim.network.datacenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -27,15 +28,13 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * </ul>
  * 
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
- * 
- * //TODO If it is an application/cloudlet, it would extend the Cloudlet class.
- * In the case of Cloudlet class has more attributes and methods than
- * required by this class, a common interface would be created.
+ *
  * 
  * //TODO The attributes have to be defined as private.
  */
-public class AppCloudlet {
+public class AppCloudlet extends Cloudlet {
 
 	public int type;
 
@@ -44,7 +43,7 @@ public class AppCloudlet {
         /**
          * The list of {@link NetworkCloudlet} that this AppCloudlet represents.
          */
-	public ArrayList<NetworkCloudlet> clist;
+	public ArrayList<NetworkCloudlet> cloudletList;
 
         /**
          * This attribute doesn't appear to be used.
@@ -77,23 +76,24 @@ public class AppCloudlet {
          */
 	public double exeTime;
 
-        /**
-         * This attribute doesn't appear to be used.
-         */
+	/**
+	 * This attribute doesn't appear to be used.
+	 */
 	public int requestclass;
 
-        public static final int APP_MC = 1;
+	public static final int APP_MC = 1;
 
 	public static final int APP_Workflow = 3;
 
 	public AppCloudlet(int type, int appID, double deadline, int numbervm, int userId) {
-		super();
+		//TODO: Remo Andreoli: Generalise constructor
+		super(appID, 0, 0, 0, 0, new UtilizationModelFull(), new UtilizationModelFull(), new UtilizationModelFull());
 		this.type = type;
 		this.appID = appID;
 		this.deadline = deadline;
 		this.numbervm = numbervm;
 		this.userId = userId;
-		clist = new ArrayList<>();
+		cloudletList = new ArrayList<>();
 	}
 
 	/**
@@ -107,6 +107,7 @@ public class AppCloudlet {
          * inside the example package. As an example, it make senses the
          * hard-coded values.
 	 */
+
 	public void createCloudletList(List<Integer> vmIdList) {
 		for (int i = 0; i < numbervm; i++) {
 			long length = 4;
@@ -131,7 +132,7 @@ public class AppCloudlet {
 			cl.setUserId(userId);
 			cl.submittime = CloudSim.clock();
 			cl.currStagenum = -1;
-			clist.add(cl);
+			cloudletList.add(cl);
 
 		}
 		// based on type

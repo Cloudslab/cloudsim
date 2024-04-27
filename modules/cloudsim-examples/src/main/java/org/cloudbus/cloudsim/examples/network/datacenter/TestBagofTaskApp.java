@@ -64,7 +64,7 @@ public class TestBagofTaskApp extends AppCloudlet {
     			cl.stages.add(new TaskStage(NetworkConstants.WAIT_SEND, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, vmIdList.get(0),t));
     		}
     		
-    		clist.add(cl);    			
+    		cloudletList.add(cl);
     	}	
 	}
 	
