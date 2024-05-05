@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import lombok.Getter;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.*;
 
@@ -43,6 +43,7 @@ import org.cloudbus.cloudsim.core.*;
  * </ul>
  * 
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  */
 public class NetworkDatacenter extends Datacenter {
@@ -105,6 +106,16 @@ public class NetworkDatacenter extends Datacenter {
 		Switchlist = new HashMap<>();
 	}
 
+	protected void processVmCreate(SimEvent ev, boolean ack) {
+		super.processVmCreate(ev, ack);
+		GuestEntity vm = (GuestEntity) ev.getData();
+
+		if (vm.getHost() != null) {
+			VmToSwitchid.put(vm.getId(), ((NetworkHost) vm.getHost()).sw.getId());
+			VmtoHostlist.put(vm.getId(), vm.getHost().getId());
+		}
+	}
+
 	/**
 	 * Gets a map of all EdgeSwitches in the Datacenter network. 
          * One can design similar functions for other type of switches.
@@ -115,36 +126,12 @@ public class NetworkDatacenter extends Datacenter {
 	public Map<Integer, Switch> getEdgeSwitch() {
 		Map<Integer, Switch> edgeswitch = new HashMap<>();
 		for (Entry<Integer, Switch> es : Switchlist.entrySet()) {
-			if (es.getValue().level == NetworkConstants.EDGE_LEVEL) {
+			if (es.getValue().level == NetworkTags.EDGE_LEVEL) {
 				edgeswitch.put(es.getKey(), es.getValue());
 			}
 		}
 		return edgeswitch;
 
-	}
-
-	/**
-	 * Creates the given VM within the NetworkDatacenter. 
-         * It can be directly accessed by Datacenter Broker which manages allocation of Cloudlets.
-	 * 
-         * @param vm
-         * @return true if the VW was created successfully, false otherwise
-	 */
-	public boolean processVmCreateNetwork(Vm vm) {
-
-		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm);
-
-		if (result) {
-			VmToSwitchid.put(vm.getId(), ((NetworkHost) vm.getHost()).sw.getId());
-			VmtoHostlist.put(vm.getId(), vm.getHost().getId());
-			System.out.println(vm.getId() + " VM is created on " + vm.getHost().getId());
-
-			getVmList().add(vm);
-
-			vm.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
-					.getAllocatedMipsForGuest(vm));
-		}
-		return result;
 	}
 
 	@Override
@@ -199,7 +186,8 @@ public class NetworkDatacenter extends Datacenter {
 			CloudletScheduler scheduler = vm.getCloudletScheduler();
 			double estimatedFinishTime = scheduler.cloudletSubmit(cl, fileTransferTime);
 
-			if (estimatedFinishTime > 0.0) { // if this cloudlet is in the exec
+			// if this cloudlet is in the exec
+			if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) {
 				// time to process the cloudlet
 				estimatedFinishTime += fileTransferTime;
 				send(getId(), estimatedFinishTime, CloudSimTags.VM_DATACENTER_EVENT);

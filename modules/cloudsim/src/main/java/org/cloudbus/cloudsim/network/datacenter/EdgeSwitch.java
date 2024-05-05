@@ -10,7 +10,6 @@ package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -31,6 +30,7 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
  * </ul>
  * 
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  */
 public class EdgeSwitch extends Switch {
@@ -44,15 +44,15 @@ public class EdgeSwitch extends Switch {
 	 * @param level At which level the switch is with respect to hosts.
 	 * @param dc The Datacenter where the switch is connected to
 	 */
-	public EdgeSwitch(String name, int level, NetworkDatacenter dc) {
-		super(name, level, dc);
+	public EdgeSwitch(String name, double numport, int level, double switching_delay, double downlinkbandwidth, double uplinkbandwidth, NetworkDatacenter dc) {
+		super(name, numport, level, switching_delay, downlinkbandwidth, uplinkbandwidth, dc);
 		hostlist = new HashMap<>();
 		uplinkswitchpktlist = new HashMap<>();
 		packetTohost = new HashMap<>();
-		uplinkbandwidth = NetworkConstants.BandWidthEdgeAgg;
-		downlinkbandwidth = NetworkConstants.BandWidthEdgeHost;
-		switching_delay = NetworkConstants.SwitchingDelayEdge;
-		numport = NetworkConstants.EdgeSwitchPort;
+		//uplinkbandwidth = NetworkConstants.BandWidthEdgeAgg;
+		//downlinkbandwidth = NetworkConstants.BandWidthEdgeHost;
+		//switching_delay = NetworkConstants.SwitchingDelayEdge;
+		//numport = NetworkConstants.EdgeSwitchPort;
 		uplinkswitches = new ArrayList<>();
 	}
 

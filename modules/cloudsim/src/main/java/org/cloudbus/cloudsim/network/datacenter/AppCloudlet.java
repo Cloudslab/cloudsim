@@ -9,12 +9,9 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
-import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
  * AppCloudlet class represents an application which user submit for execution within a datacenter. It
@@ -43,7 +40,7 @@ public class AppCloudlet extends Cloudlet {
         /**
          * The list of {@link NetworkCloudlet} that this AppCloudlet represents.
          */
-	public ArrayList<NetworkCloudlet> cloudletList;
+	public ArrayList<NetworkCloudlet> cList;
 
         /**
          * This attribute doesn't appear to be used.
@@ -53,62 +50,26 @@ public class AppCloudlet extends Cloudlet {
          */
 	public double deadline;
 
-        /**
-         * This attribute doesn't appear to be used.
-         */
-	public double accuracy;
-
-        /**
-         * Number of VMs the AppCloudlet can use.
-         * //TODO the attribute would be renamed to numberOfVMs or something
-         * like that.
-         */
-	public int numbervm;
-
-        /**
-         * Id of the AppCloudlet's owner.
-         */
-	public int userId;
-
-        /**
-         * //TODO It would be "execTime". This attribute is very strange.
-         * The the todo in the TestBagofTaskApp class.
-         */
-	public double exeTime;
-
-	/**
-	 * This attribute doesn't appear to be used.
-	 */
-	public int requestclass;
-
 	public static final int APP_MC = 1;
 
 	public static final int APP_Workflow = 3;
 
-	public AppCloudlet(int type, int appID, double deadline, int numbervm, int userId) {
-		//TODO: Remo Andreoli: Generalise constructor
-		super(appID, 0, 0, 0, 0, new UtilizationModelFull(), new UtilizationModelFull(), new UtilizationModelFull());
+	public AppCloudlet(int type, int appID, double deadline, int userId) {
+		// Access these parameters from within cList, NOT the appCloudlet object
+		super(appID, -1, -1, -1, -1, null, null, null);
 		this.type = type;
 		this.appID = appID;
 		this.deadline = deadline;
-		this.numbervm = numbervm;
-		this.userId = userId;
-		cloudletList = new ArrayList<>();
+		setUserId(userId);
+		cList = new ArrayList<>();
 	}
 
 	/**
 	 * An example of creating APPcloudlet
 	 * 
 	 * @param vmIdList VMs where Cloudlet will be executed
-         * //TODO This method is very strange too. It creates the internal cloudlet list
-         * with cloudlets of hard-coded defined attributes, such as
-         * fileSize, outputSize and length, what doesn't make sense.
-         * If this class is to be an example, it should be 
-         * inside the example package. As an example, it make senses the
-         * hard-coded values.
 	 */
-
-	public void createCloudletList(List<Integer> vmIdList) {
+	/*public void createCloudletList(List<Integer> vmIdList) {
 		for (int i = 0; i < numbervm; i++) {
 			long length = 4;
 			long fileSize = 300;
@@ -129,13 +90,13 @@ public class AppCloudlet extends Cloudlet {
 					utilizationModel);
 			// setting the owner of these Cloudlets
 			NetworkConstants.currentCloudletId++;
-			cl.setUserId(userId);
+			cl.setUserId(getUserId());
 			cl.submittime = CloudSim.clock();
 			cl.currStagenum = -1;
-			cloudletList.add(cl);
+			cList.add(cl);
 
 		}
 		// based on type
 
-	}
+	}*/
 }

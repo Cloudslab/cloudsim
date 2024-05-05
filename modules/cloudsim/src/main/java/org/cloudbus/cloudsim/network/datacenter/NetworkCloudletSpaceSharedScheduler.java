@@ -91,11 +91,11 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			// if packet received change the status of job and update the time.
 			//
 			if ((cl.currStagenum != -1)) {
-				if (cl.currStagenum == NetworkConstants.FINISH) {
+				if (cl.currStagenum == NetworkTags.FINISH) {
 					break;
 				}
 				TaskStage st = cl.stages.get(cl.currStagenum);
-				if (st.type == NetworkConstants.EXECUTION) {
+				if (st.type == NetworkTags.EXECUTION) {
 
 					// update the time
 					cl.timespentInStage = Math.round(CloudSim.clock() - cl.timetostartStage);
@@ -104,7 +104,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 						// change the stage
 					}
 				}
-				if (st.type == NetworkConstants.WAIT_RECV) {
+				if (st.type == NetworkTags.WAIT_RECV) {
 					List<HostPacket> pktlist = pktrecv.get(st.peer);
 					List<HostPacket> pkttoremove = new ArrayList<>();
 					if (pktlist != null) {
@@ -130,14 +130,14 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				cl.currStagenum = 0;
 				cl.timetostartStage = CloudSim.clock();
 
-				if (cl.stages.get(0).type == NetworkConstants.EXECUTION) {
-					NetDatacenterBroker.linkDC.schedule(
-							NetDatacenterBroker.linkDC.getId(),
+				if (cl.stages.get(0).type == NetworkTags.EXECUTION) {
+					NetworkDatacenterBroker.linkDC.schedule(
+							NetworkDatacenterBroker.linkDC.getId(),
 							cl.stages.get(0).time,
 							CloudSimTags.VM_DATACENTER_EVENT);
 				} else {
-					NetDatacenterBroker.linkDC.schedule(
-							NetDatacenterBroker.linkDC.getId(),
+					NetworkDatacenterBroker.linkDC.schedule(
+							NetworkDatacenterBroker.linkDC.getId(),
 							0.0001,
 							CloudSimTags.VM_DATACENTER_EVENT);
 					// /sendstage///
@@ -157,7 +157,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			// rounding issue...
-			if (((NetworkCloudlet) (rcl.getCloudlet())).currStagenum == NetworkConstants.FINISH) {
+			if (((NetworkCloudlet) (rcl.getCloudlet())).currStagenum == NetworkTags.FINISH) {
 				// stage is changed and packet to send
 				((NetworkCloudlet) (rcl.getCloudlet())).finishtime = CloudSim.clock();
 				toRemove.add(rcl);
@@ -215,12 +215,12 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 		cl.timetostartStage = CloudSim.clock();
 		int currstage = cl.currStagenum;
 		if (currstage >= (cl.stages.size() - 1)) {
-			cl.currStagenum = NetworkConstants.FINISH;
+			cl.currStagenum = NetworkTags.FINISH;
 		} else {
 			cl.currStagenum = currstage + 1;
 			int i = 0;
 			for (i = cl.currStagenum; i < cl.stages.size(); i++) {
-				if (cl.stages.get(i).type == NetworkConstants.WAIT_SEND) {
+				if (cl.stages.get(i).type == NetworkTags.WAIT_SEND) {
 					HostPacket pkt = new HostPacket(
 							cl.getVmId(),
 							cl.stages.get(i).peer,
@@ -241,17 +241,17 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				}
 
 			}
-			NetDatacenterBroker.linkDC.schedule(
-					NetDatacenterBroker.linkDC.getId(),
+			NetworkDatacenterBroker.linkDC.schedule(
+					NetworkDatacenterBroker.linkDC.getId(),
 					0.0001,
 					CloudSimTags.VM_DATACENTER_EVENT);
 			if (i == cl.stages.size()) {
-				cl.currStagenum = NetworkConstants.FINISH;
+				cl.currStagenum = NetworkTags.FINISH;
 			} else {
 				cl.currStagenum = i;
-				if (cl.stages.get(i).type == NetworkConstants.EXECUTION) {
-					NetDatacenterBroker.linkDC.schedule(
-							NetDatacenterBroker.linkDC.getId(),
+				if (cl.stages.get(i).type == NetworkTags.EXECUTION) {
+					NetworkDatacenterBroker.linkDC.schedule(
+							NetworkDatacenterBroker.linkDC.getId(),
 							cl.stages.get(i).time,
 							CloudSimTags.VM_DATACENTER_EVENT);
 				}
@@ -259,11 +259,5 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			}
 		}
 
-	}
-
-	@Override
-	public double cloudletSubmit(Cloudlet cloudlet) {
-		cloudletSubmit(cloudlet, 0);
-		return 0;
 	}
 }

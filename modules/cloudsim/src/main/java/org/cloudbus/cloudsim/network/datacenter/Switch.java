@@ -10,7 +10,6 @@ package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -99,15 +98,6 @@ public class Switch extends SimEntity {
          */
 	public double downlinkbandwidth;
 
-        /**
-         * The latency of the network where the switch is connected to.
-         * //TODO Its value is being defined by a constant, but not every subclass
-         * is setting the attribute accordingly.
-         * The constants should be used as default values, but the class
-         * should have a setter for this attribute.
-         */
-	public double latency;
-
 	public double numport;
 
         /**
@@ -122,7 +112,7 @@ public class Switch extends SimEntity {
 
 	/** Something is running on these hosts. 
          * //TODO The attribute doesn't appear to be used */
-	public SortedMap<Double, List<NetworkVm>> fintimelistVM = new TreeMap<>();
+	public SortedMap<Double, List<Vm>> fintimelistVM = new TreeMap<>();
 
         /**
          * List of  received packets.
@@ -137,12 +127,7 @@ public class Switch extends SimEntity {
          * The time the switch spends to process a received packet.
          * This time is considered constant no matter how many packets 
          * the switch have to process.
-         * 
-         * //TODO The value of this attribute is being defined by
-         * constants such as {@link NetworkConstants#SwitchingDelayRoot},
-         * but not all sub classes are setting a value to it.
-         * The constants should be used as default values, but the class
-         * should have a setter for this attribute.
+         *
          */
 	public double switching_delay;
 
@@ -150,11 +135,17 @@ public class Switch extends SimEntity {
          * A map of VMs connected to this switch.
          * //TODO The list doesn't appear to be updated (VMs added to it) anywhere.
          */
-	public Map<Integer, NetworkVm> Vmlist = new HashMap<>();
+	public Map<Integer, Vm> Vmlist = new HashMap<>();
 
-	public Switch(String name, int level, NetworkDatacenter dc) {
+	public Switch(String name, double numport, int level, double switching_delay, double downlinkbandwidth, double uplinkbandwidth, NetworkDatacenter dc) {
 		super(name);
 		this.level = level;
+		this.numport = numport;
+
+		this.switching_delay = switching_delay;
+		this.downlinkbandwidth = downlinkbandwidth;
+		this.uplinkbandwidth = uplinkbandwidth;
+
 		this.dc = dc;
 	}
 
@@ -212,8 +203,8 @@ public class Switch extends SimEntity {
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
 		int recvVMid = hspkt.pkt.reciever;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
-		schedule(getId(), latency, CloudSimTags.Network_Event_send);
-		if (level == NetworkConstants.EDGE_LEVEL) {
+		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
+		if (level == NetworkTags.EDGE_LEVEL) {
 			// packet is to be recieved by host
 			int hostid = dc.VmtoHostlist.get(recvVMid);
 			hspkt.recieverhostid = hostid;
@@ -221,7 +212,7 @@ public class Switch extends SimEntity {
 			pktlist.add(hspkt);
 			return;
 		}
-		if (level == NetworkConstants.Agg_LEVEL) {
+		if (level == NetworkTags.AGGR_LEVEL) {
 			// packet is coming from root so need to be sent to edgelevel swich
 			// find the id for edgelevel switch
 			int switchid = dc.VmToSwitchid.get(recvVMid);
@@ -247,7 +238,7 @@ public class Switch extends SimEntity {
 		int recvVMid = hspkt.pkt.reciever;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
-		if (level == NetworkConstants.EDGE_LEVEL) {
+		if (level == NetworkTags.EDGE_LEVEL) {
 			// packet is recieved from host
 			// packet is to be sent to aggregate level or to another host in the
 			// same level
@@ -270,7 +261,7 @@ public class Switch extends SimEntity {
 			pktlist.add(hspkt);
 			return;
 		}
-		if (level == NetworkConstants.Agg_LEVEL) {
+		if (level == NetworkTags.AGGR_LEVEL) {
 			// packet is coming from edge level router so need to be sent to
 			// either root or another edge level swich
 			// find the id for edgelevel switch
@@ -292,7 +283,7 @@ public class Switch extends SimEntity {
 				pktlist.add(hspkt);
 			}
 		}
-		if (level == NetworkConstants.ROOT_LEVEL) {
+		if (level == NetworkTags.ROOT_LEVEL) {
 			// get id of edge router
 			int edgeswitchid = dc.VmToSwitchid.get(recvVMid);
 			// search which aggregate switch has it
@@ -427,10 +418,12 @@ public class Switch extends SimEntity {
          * 
          * @param numVMReq The number of free VMs to get.
          * @return the list of free VMs.
+		 *
+		 * TODO: Remo Andreoli: This is never used, remove?
          */
-	protected List<NetworkVm> getfreeVmlist(int numVMReq) {
-		List<NetworkVm> freehostls = new ArrayList<>();
-		for (Entry<Integer, NetworkVm> et : Vmlist.entrySet()) {
+	/*protected List<Vm> getfreeVmlist(int numVMReq) {
+		List<Vm> freehostls = new ArrayList<>();
+		for (Entry<Integer, Vm> et : Vmlist.entrySet()) {
 			if (et.getValue().isFree()) {
 				freehostls.add(et.getValue());
 			}
@@ -440,7 +433,7 @@ public class Switch extends SimEntity {
 		}
 
 		return freehostls;
-	}
+	}*/
 
         /**
          * Gets a list with a given number of free hosts.

@@ -29,6 +29,7 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
  * </ul>
  * 
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  */
 public class RootSwitch extends Switch {
@@ -41,14 +42,14 @@ public class RootSwitch extends Switch {
 	 * @param level At which level the switch is with respect to hosts.
 	 * @param dc The Datacenter where the switch is connected to
 	 */
-	public RootSwitch(String name, int level, NetworkDatacenter dc) {
-		super(name, level, dc);
+	public RootSwitch(String name, double numport, int level, double switching_delay, double downlinkbandwidth, double uplinkbandwidth, NetworkDatacenter dc) {
+		super(name, numport, level, switching_delay, downlinkbandwidth, uplinkbandwidth, dc);
 		downlinkswitchpktlist = new HashMap<>();
 		downlinkswitches = new ArrayList<>();
 
-		downlinkbandwidth = NetworkConstants.BandWidthAggRoot;
-		latency = NetworkConstants.SwitchingDelayRoot;
-		numport = NetworkConstants.RootSwitchPort;
+		//downlinkbandwidth = NetworkConstants.BandWidthAggRoot;
+		//latency = NetworkConstants.SwitchingDelayRoot;
+		//numport = NetworkConstants.RootSwitchPort;
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class RootSwitch extends Switch {
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 
-		if (level == NetworkConstants.ROOT_LEVEL) {
+		if (level == NetworkTags.ROOT_LEVEL) {
 			// get id of edge router
 			int edgeswitchid = dc.VmToSwitchid.get(recvVMid);
 			// search which aggregate switch has it

@@ -29,6 +29,7 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
  * </ul>
  *  
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
 public class AggregateSwitch extends Switch {
@@ -41,14 +42,16 @@ public class AggregateSwitch extends Switch {
 	 * @param level At which level the switch is with respect to hosts.
 	 * @param dc The Datacenter where the switch is connected to
 	 */
-	public AggregateSwitch(String name, int level, NetworkDatacenter dc) {
-		super(name, level, dc);
+	public AggregateSwitch(String name, int numport, int level, double switching_delay, double downlinkbandwidth, double uplinkbandwidth, NetworkDatacenter dc) {
+		super(name, numport, level, switching_delay, downlinkbandwidth, uplinkbandwidth, dc);
 		downlinkswitchpktlist = new HashMap<>();
 		uplinkswitchpktlist = new HashMap<>();
-		uplinkbandwidth = NetworkConstants.BandWidthAggRoot;
-		downlinkbandwidth = NetworkConstants.BandWidthEdgeAgg;
-		latency = NetworkConstants.SwitchingDelayAgg;
-		numport = NetworkConstants.AggSwitchPort;
+
+		//uplinkbandwidth = NetworkConstants.BandWidthAggRoot;
+		//downlinkbandwidth = NetworkConstants.BandWidthEdgeAgg;
+
+		//latency = NetworkConstants.SwitchingDelayAgg;
+		//numport = NetworkConstants.AggSwitchPort;
 		uplinkswitches = new ArrayList<>();
 		downlinkswitches = new ArrayList<>();
 	}
@@ -63,9 +66,9 @@ public class AggregateSwitch extends Switch {
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
 		int recvVMid = hspkt.pkt.reciever;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
-		schedule(getId(), latency, CloudSimTags.Network_Event_send);
+		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 
-		if (level == NetworkConstants.Agg_LEVEL) {
+		if (level == NetworkTags.AGGR_LEVEL) {
 			// packet is coming from root so need to be sent to edgelevel swich
 			// find the id for edgelevel switch
 			int switchid = dc.VmToSwitchid.get(recvVMid);
@@ -88,7 +91,7 @@ public class AggregateSwitch extends Switch {
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 
-		if (level == NetworkConstants.Agg_LEVEL) {
+		if (level == NetworkTags.AGGR_LEVEL) {
 			// packet is coming from edge level router so need to be sent to
 			// either root or another edge level swich
 			// find the id for edgelevel switch

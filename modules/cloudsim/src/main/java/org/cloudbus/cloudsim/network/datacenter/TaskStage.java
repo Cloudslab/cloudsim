@@ -22,12 +22,11 @@ package org.cloudbus.cloudsim.network.datacenter;
  * </ul>
  * 
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  * //TODO Attributes should be defined as private.
  */
 public class TaskStage {
-	int vpeer;
-
         /**
          * The task type, either {@link NetworkConstants#EXECUTION}, 
          * {@link NetworkConstants#WAIT_SEND} or {@link NetworkConstants#WAIT_RECV}.
@@ -49,9 +48,12 @@ public class TaskStage {
         /** Memory used by the task. */
 	long memory;
 
-        /** From whom data needed to be received or sent. */
+        /** Vm from whom data needed to be received or sent (depending on the stage type). */
 	int peer;
 
+	/** Cloudlet from whom data needed to be received or sent (depending on the stage type). */
+	int vpeer;
+	
 	public TaskStage(int type, double data, double time, double stageid, long memory, int peer, int vpeer) {
 		super();
 		this.type = type;
