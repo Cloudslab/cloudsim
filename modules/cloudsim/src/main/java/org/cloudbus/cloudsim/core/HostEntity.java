@@ -13,7 +13,7 @@ import java.util.List;
  * management of guest entities (e.g., creation and destruction of Vms or containers).
  *
  * @author Remo Andreoli
- * @since CloudSim Toolkit 6.0
+ * @since CloudSim Toolkit 7.0
  */
 public interface HostEntity extends CoreAttributes {
     /**

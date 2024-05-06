@@ -11,7 +11,7 @@ import java.util.List;
  * can submit cloudlets to the guests to execute them.
  *
  * @author Remo Andreoli
- * @since CloudSim Toolkit 6.0
+ * @since CloudSim Toolkit 7.0
  */
 public interface GuestEntity extends CoreAttributes {
     /**
