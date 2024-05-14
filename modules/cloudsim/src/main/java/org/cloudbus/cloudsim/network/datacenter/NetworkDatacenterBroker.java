@@ -155,8 +155,8 @@ public class NetworkDatacenterBroker extends DatacenterBroker {
 				}
 
 				if (!Log.isDisabled()) {
-					Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Sending cloudlet ",
-							cloudlet.getCloudletId(), " to " + vm.getClassName() + " #", vm.getId());
+					Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Sending ", cloudlet.getClass().getSimpleName(),
+							" #", cloudlet.getCloudletId(), " to " + vm.getClassName() + " #", vm.getId());
 				}
 
 				cloudlet.setVmId(vm.getId());

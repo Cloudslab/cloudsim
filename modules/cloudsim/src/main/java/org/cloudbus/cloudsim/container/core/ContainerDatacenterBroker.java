@@ -282,8 +282,8 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //            }
 //
             if (!Log.isDisabled()) {
-                Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Sending cloudlet ",
-                        cloudlet.getCloudletId(), " to VM #", cloudlet.getContainerId());
+                Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Sending ", cloudlet.getClass().getSimpleName(),
+                        " #", cloudlet.getCloudletId(), " to VM #", cloudlet.getContainerId());
             }
 
 
