@@ -134,12 +134,12 @@ public class NetworkDatacenterBroker extends DatacenterBroker {
 			for (Cloudlet cloudlet : appCloudlet.cList) {
 				GuestEntity vm;
 				// if user didn't bind this cloudlet and it has not been executed yet
-				if (cloudlet.getVmId() == -1) {
+				if (cloudlet.getGuestId() == -1) {
 					vm = getGuestsCreatedList().get(vmIndex);
 				} else { // submit to the specific vm
-					vm = VmList.getById(getGuestsCreatedList(), cloudlet.getVmId());
+					vm = VmList.getById(getGuestsCreatedList(), cloudlet.getGuestId());
 					if (vm == null) { // vm was not created
-						vm = VmList.getById(getGuestList(), cloudlet.getVmId()); // check if exists in the submitted list
+						vm = VmList.getById(getGuestList(), cloudlet.getGuestId()); // check if exists in the submitted list
 
 						if (!Log.isDisabled()) {
 							if (vm != null) {
@@ -159,7 +159,7 @@ public class NetworkDatacenterBroker extends DatacenterBroker {
 							" #", cloudlet.getCloudletId(), " to " + vm.getClassName() + " #", vm.getId());
 				}
 
-				cloudlet.setVmId(vm.getId());
+				cloudlet.setGuestId(vm.getId());
 				sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
 				cloudletsSubmitted++;
 				vmIndex = (vmIndex + 1) % getGuestsCreatedList().size();

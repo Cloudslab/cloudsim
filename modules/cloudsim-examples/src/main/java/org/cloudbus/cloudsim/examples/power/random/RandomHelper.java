@@ -68,7 +68,7 @@ public class RandomHelper {
 						utilizationModelNull);
 			}
 			cloudlet.setUserId(brokerId);
-			cloudlet.setVmId(i);
+			cloudlet.setGuestId(i);
 			list.add(cloudlet);
 		}
 

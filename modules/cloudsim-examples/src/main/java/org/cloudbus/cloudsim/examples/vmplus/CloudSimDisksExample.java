@@ -119,10 +119,10 @@ public class CloudSimDisksExample {
         HddCloudlet cloudlet_XX = new HddCloudlet(VM_MIPS * 2, HOST_MIOPS, 5, broker.getId(), false, dataItem_2_2);
         HddCloudlet cloudlet2_1 = new HddCloudlet(VM_MIPS, HOST_MIOPS * 2, 5, broker.getId(), false, dataItem_2_2);
 
-        cloudlet1_1.setVmId(vm1_1.getId());
-        cloudlet1_2.setVmId(vm1_2.getId());
-        cloudlet_XX.setVmId(vm1_2.getId()); // Should fail - data is not there
-        cloudlet2_1.setVmId(vm2.getId());
+        cloudlet1_1.setGuestId(vm1_1.getId());
+        cloudlet1_2.setGuestId(vm1_2.getId());
+        cloudlet_XX.setGuestId(vm1_2.getId()); // Should fail - data is not there
+        cloudlet2_1.setGuestId(vm2.getId());
 
         broker.submitCloudletList(Arrays.asList(cloudlet1_1, cloudlet1_2, cloudlet_XX, cloudlet2_1));
 

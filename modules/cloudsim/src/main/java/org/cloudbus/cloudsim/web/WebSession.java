@@ -191,7 +191,7 @@ public class WebSession {
             currentAppServerCloudLet = result.asCloudlet;
             currentDBServerCloudLets = result.dbCloudlets;
 
-            currentAppServerCloudLet.setVmId(appVmId);
+            currentAppServerCloudLet.setGuestId(appVmId);
             if (assignToServer(dbBalancer, currentDBServerCloudLets)) {
 
                 currentAppServerCloudLet.setSessionId(getSessionId());
@@ -457,7 +457,7 @@ public class WebSession {
             final Collection<? extends WebCloudlet> cloudlets) {
         for (WebCloudlet cl : cloudlets) {
             dbBalancer.allocateToServer(cl);
-            if (cl.getVmId() < 0) {
+            if (cl.getGuestId() < 0) {
                 return false;
             }
         }

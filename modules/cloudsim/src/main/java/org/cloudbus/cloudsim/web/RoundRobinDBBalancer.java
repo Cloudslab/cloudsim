@@ -75,11 +75,11 @@ public class RoundRobinDBBalancer extends BaseDBLoadBalancer {
             }
             int idx = dataItemToCounter.get(cloudlet.getData().getId());
             idx = idx < suitable.size() ? idx : 0;
-            cloudlet.setVmId(suitable.get(idx).getId());
+            cloudlet.setGuestId(suitable.get(idx).getId());
             dataItemToCounter.put(cloudlet.getData().getId(), idx + 1);
 
             // If the cloudlet has not yet been assigned a VM
-            if (cloudlet.getVmId() == -1) {
+            if (cloudlet.getGuestId() == -1) {
                 CustomLog.printf("Cloudlet %d could not be assigned a DB VM, since no VM has its data item %d",
                         cloudlet.getCloudletId(), cloudlet.getData().getId());
 

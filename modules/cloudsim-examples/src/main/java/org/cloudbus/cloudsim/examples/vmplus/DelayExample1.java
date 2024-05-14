@@ -77,7 +77,7 @@ public class DelayExample1 {
         Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel,
                 utilizationModel, utilizationModel);
         cloudlet.setUserId(broker.getId());
-        cloudlet.setVmId(vmid);
+        cloudlet.setGuestId(vmid);
 
         // submit cloudlet list to the broker with 10 sec Delay
         broker.submitCloudletList(Arrays.asList(cloudlet), 10);

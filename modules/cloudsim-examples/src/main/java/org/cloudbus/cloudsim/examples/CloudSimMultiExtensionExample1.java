@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * A simple example showing the use of containers (ContainerCloudSim) and Vms (base CloudSim) in the same contexts.
@@ -130,14 +129,14 @@ public class CloudSimMultiExtensionExample1 {
                                         outputSize, utilizationModel, utilizationModel, 
                                         utilizationModel);
 			cloudlet.setUserId(brokerId);
-			//cloudlet.setVmId(2);
+			//cloudlet.setGuestId(2);
 			cloudletList.add(cloudlet);
 
 			cloudlet = new Cloudlet(1, length, pesNumber, fileSize,
 					outputSize, utilizationModel, utilizationModel,
 					utilizationModel);
 			cloudlet.setUserId(brokerId);
-			//cloudlet.setVmId(2);
+			//cloudlet.setGuestId(2);
 			cloudletList.add(cloudlet);
 
 
@@ -239,7 +238,7 @@ public class CloudSimMultiExtensionExample1 {
 				Log.print("SUCCESS");
 
 				Log.printLine(indent + indent + cloudlet.getResourceId()
-						+ indent + indent + indent + cloudlet.getVmId()
+						+ indent + indent + indent + cloudlet.getGuestId()
 						+ indent + indent
 						+ dft.format(cloudlet.getActualCPUTime()) + indent
 						+ indent + dft.format(cloudlet.getExecStartTime())

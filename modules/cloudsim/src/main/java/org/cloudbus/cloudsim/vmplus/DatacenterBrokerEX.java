@@ -325,7 +325,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
 
             // Kill all cloudlets associated with this VM
             for (Cloudlet cloudlet : getCloudletSubmittedList()) {
-                if (!cloudlet.isFinished() && vmId == cloudlet.getVmId()) {
+                if (!cloudlet.isFinished() && vmId == cloudlet.getGuestId()) {
                     try {
                         vm.getCloudletScheduler().cloudletCancel(cloudlet.getCloudletId());
                         cloudlet.setCloudletStatus(Cloudlet.FAILED_RESOURCE_UNAVAILABLE);

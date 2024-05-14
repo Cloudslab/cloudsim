@@ -99,15 +99,15 @@ public class TimeSharedProblemDetector {
 
 			Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 			cloudlet.setUserId(brokerId);
-			cloudlet.setVmId(vmid);
+			cloudlet.setGuestId(vmid);
 			
 			Cloudlet cloudlet1 = new Cloudlet(1, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 			cloudlet1.setUserId(brokerId);
-			cloudlet1.setVmId(1);
+			cloudlet1.setGuestId(1);
 			
 			Cloudlet cloudlet2 = new Cloudlet(2, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 			cloudlet2.setUserId(brokerId);
-			cloudlet2.setVmId(2);
+			cloudlet2.setGuestId(2);
 			
 
 			// add the cloudlet to the list
@@ -250,7 +250,7 @@ public class TimeSharedProblemDetector {
 				Log.print("SUCCESS");
 
 				Log.printLine(indent + indent + cloudlet.getResourceId()
-						+ indent + indent + indent + cloudlet.getVmId()
+						+ indent + indent + indent + cloudlet.getGuestId()
 						+ indent + indent
 						+ dft.format(cloudlet.getActualCPUTime()) + indent
 						+ indent + dft.format(cloudlet.getExecStartTime())

@@ -529,7 +529,7 @@ public class Datacenter extends SimEntity {
 				Cloudlet cl = (Cloudlet) ev.getData();
 				cloudletId = cl.getCloudletId();
 				userId = cl.getUserId();
-				vmId = cl.getVmId();
+				vmId = cl.getGuestId();
 			} catch (Exception e) {
 				Log.printConcatLine(super.getName(), ": Error in processing Cloudlet");
 				Log.printLine(e.getMessage());
@@ -593,7 +593,7 @@ public class Datacenter extends SimEntity {
 			}
 
 			// prepare cloudlet for migration
-			cl.setVmId(vmDestId);
+			cl.setGuestId(vmDestId);
 
 			// the cloudlet will migrate from one vm to another does the destination VM exist?
 			if (destId == getId()) {
@@ -676,7 +676,7 @@ public class Datacenter extends SimEntity {
                                 getCharacteristics().getCostPerBw());
 
 			int userId = cl.getUserId();
-			int vmId = cl.getVmId();
+			int vmId = cl.getGuestId();
 
 			// time to transfer the files
 			double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());

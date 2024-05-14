@@ -54,14 +54,14 @@ public class SimpleDBBalancer extends BaseDBLoadBalancer implements IDBBalancer 
         label: for (HddVm vm : getVMs()) {
             for (HddPe hdd : vm.getHost().getHddList()) {
                 if (vm.getHddsIds().contains(hdd.getId()) && hdd.containsDataItem(cloudlet.getData().getId())) {
-                    cloudlet.setVmId(vm.getId());
+                    cloudlet.setGuestId(vm.getId());
                     break label;
                 }
             }
         }
 
         // If the cloudlet has not yet been assigned a VM
-        if (cloudlet.getVmId() == -1) {
+        if (cloudlet.getGuestId() == -1) {
             CustomLog.printf("Cloudlet %d could not be assigned a DB VM, since no VM has its data item %d",
                     cloudlet.getCloudletId(), cloudlet.getData().getId());
 

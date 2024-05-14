@@ -26,7 +26,7 @@ public class PerformanceLoggingWebBroker extends WebBroker {
     public static final List<? extends Class<?>> HEADER_TYPES = Arrays.asList(Double.class, Integer.class,
             Double.class, Double.class, Double.class);
 
-    public static final List<String> HEADER_NAMES = Arrays.asList("time", "vmId", "percentCPU", "percentIO",
+    public static final List<String> HEADER_NAMES = Arrays.asList("time", "guestId", "percentCPU", "percentIO",
             "percentRAM");
 
     public boolean headerPrinted = false;

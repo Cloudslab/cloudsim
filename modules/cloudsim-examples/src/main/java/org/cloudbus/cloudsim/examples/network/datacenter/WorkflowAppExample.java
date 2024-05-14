@@ -267,7 +267,7 @@ public class WorkflowAppExample {
 			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
 				Log.print("SUCCESS");
 				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
-						+ cloudlet.getVmId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
+						+ cloudlet.getGuestId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
 						+ indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent
 						+ dft.format(cloudlet.getFinishTime()));
 			}
@@ -355,7 +355,7 @@ public class WorkflowAppExample {
 		cla.setUserId(appCloudlet.getUserId());
 		cla.submittime = CloudSim.clock();
 		cla.currStagenum = -1;
-		cla.setVmId(vmIdList.get(i));
+		cla.setGuestId(vmIdList.get(i));
 
 		// first stage: big computation
 		cla.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 0, memory, vmIdList.get(0), cla.getCloudletId()));
@@ -378,7 +378,7 @@ public class WorkflowAppExample {
 		clb.setUserId(appCloudlet.getUserId());
 		clb.submittime = CloudSim.clock();
 		clb.currStagenum = -1;
-		clb.setVmId(vmIdList.get(i));
+		clb.setGuestId(vmIdList.get(i));
 
 		// first stage: big computation
 
@@ -410,7 +410,7 @@ public class WorkflowAppExample {
 		clc.setUserId(appCloudlet.getUserId());
 		clc.submittime = CloudSim.clock();
 		clc.currStagenum = -1;
-		clc.setVmId(vmIdList.get(i));
+		clc.setGuestId(vmIdList.get(i));
 
 		// first stage: big computation
 		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 0, memory, vmIdList.get(0), cla.getCloudletId()));

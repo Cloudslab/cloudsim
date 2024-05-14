@@ -113,7 +113,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 						if (it.hasNext()) {
 							pkt = it.next();
 							// Asumption packet will not arrive in the same cycle
-							if (pkt.reciever == cl.getVmId()) {
+							if (pkt.reciever == cl.getGuestId()) {
 								pkt.recievetime = CloudSim.clock();
 								st.time = CloudSim.clock() - pkt.sendtime;
 								changetonextstage(cl, st);
@@ -222,19 +222,19 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			for (i = cl.currStagenum; i < cl.stages.size(); i++) {
 				if (cl.stages.get(i).type == NetworkTags.WAIT_SEND) {
 					HostPacket pkt = new HostPacket(
-							cl.getVmId(),
+							cl.getGuestId(),
 							cl.stages.get(i).peer,
 							cl.stages.get(i).data,
 							CloudSim.clock(),
 							-1,
 							cl.getCloudletId(),
 							cl.stages.get(i).vpeer);
-					List<HostPacket> pktlist = pkttosend.get(cl.getVmId());
+					List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
 					if (pktlist == null) {
 						pktlist = new ArrayList<>();
 					}
 					pktlist.add(pkt);
-					pkttosend.put(cl.getVmId(), pktlist);
+					pkttosend.put(cl.getGuestId(), pktlist);
 
 				} else {
 					break;

@@ -275,7 +275,7 @@ public class BagOfTaskAppExample {
 			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
 				Log.print("SUCCESS");
 				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
-						+ cloudlet.getVmId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
+						+ cloudlet.getGuestId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
 						+ indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent
 						+ dft.format(cloudlet.getFinishTime()));
 			}
@@ -370,7 +370,7 @@ public class BagOfTaskAppExample {
 			cl.setUserId(appCloudlet.getUserId());
 			cl.submittime=CloudSim.clock();
 			cl.currStagenum=-1;
-			cl.setVmId(vmIdList.get(i));
+			cl.setGuestId(vmIdList.get(i));
 			//compute and send data to node 0
 			cl.stages.add(new TaskStage(NetworkTags.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime/numberVm, stgId++, memory, vmIdList.get(0),cl.getCloudletId()));
 

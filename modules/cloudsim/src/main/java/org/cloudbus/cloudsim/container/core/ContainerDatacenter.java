@@ -268,7 +268,7 @@ public class ContainerDatacenter extends Datacenter {
                 Cloudlet cl = (Cloudlet) ev.getData();
                 cloudletId = cl.getCloudletId();
                 userId = cl.getUserId();
-                vmId = cl.getVmId();
+                vmId = cl.getGuestId();
                 containerId = cl.getContainerId();
             } catch (Exception e) {
                 Log.printConcatLine(super.getName(), ": Error in processing Cloudlet");
@@ -336,7 +336,7 @@ public class ContainerDatacenter extends Datacenter {
             }
 
             // prepare cloudlet for migration
-            cl.setVmId(vmDestId);
+            cl.setGuestId(vmDestId);
 
             // the cloudlet will migrate from one vm to another does the destination VM exist?
             if (destId == getId()) {
@@ -416,7 +416,7 @@ public class ContainerDatacenter extends Datacenter {
                     .getCostPerBw());
 
             int userId = cl.getUserId();
-            int vmId = cl.getVmId();
+            int vmId = cl.getGuestId();
             int containerId = cl.getContainerId();
 
             // time to transfer the files

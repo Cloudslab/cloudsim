@@ -206,16 +206,17 @@ public class Cloudlet {
     public static final int FAILED_RESOURCE_UNAVAILABLE = 9;
 
     /**
-     * The id of the vm that is planned to execute the cloudlet.
+     * The id of the guest entity that is planned to execute the cloudlet.
      */
     @Setter @Getter
-    protected int vmId;
+    protected int guestId;
 
     /**
      * The id of the container is planned to execute the cloudlet.
      * It may be -1, if containers are not in use
      */
     @Setter @Getter
+    // TODO: Remo Andreoli: to be deprecated in favor of guestId
     protected int containerId = -1;
     
     /**
@@ -299,7 +300,7 @@ public class Cloudlet {
                 utilizationModelRam,
                 utilizationModelBw,
                 false);
-        vmId = -1;
+        guestId = -1;
         accumulatedBwCost = 0;
         costPerBw = 0;
         requiredFiles = new LinkedList<>();
@@ -349,7 +350,7 @@ public class Cloudlet {
                 utilizationModelRam,
                 utilizationModelBw,
                 record);
-        vmId = -1;
+        guestId = -1;
         accumulatedBwCost = 0.0;
         costPerBw = 0.0;
 
@@ -399,7 +400,7 @@ public class Cloudlet {
                 utilizationModelRam,
                 utilizationModelBw,
                 false);
-        vmId = -1;
+        guestId = -1;
         accumulatedBwCost = 0.0;
         costPerBw = 0.0;
 
@@ -459,7 +460,7 @@ public class Cloudlet {
         index = -1;
         this.record = record;
 
-        vmId = -1;
+        guestId = -1;
         accumulatedBwCost = 0.0;
         costPerBw = 0.0;
 

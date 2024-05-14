@@ -122,7 +122,7 @@ public class CloudSimExample1 {
                                         outputSize, utilizationModel, utilizationModel, 
                                         utilizationModel);
 			cloudlet.setUserId(brokerId);
-			cloudlet.setVmId(vmid);
+			cloudlet.setGuestId(vmid);
 
 			// add the cloudlet to the list
 			cloudletList.add(cloudlet);
@@ -262,7 +262,7 @@ public class CloudSimExample1 {
 				Log.print("SUCCESS");
 
 				Log.printLine(indent + indent + cloudlet.getResourceId()
-						+ indent + indent + indent + cloudlet.getVmId()
+						+ indent + indent + indent + cloudlet.getGuestId()
 						+ indent + indent
 						+ dft.format(cloudlet.getActualCPUTime()) + indent
 						+ indent + dft.format(cloudlet.getExecStartTime())

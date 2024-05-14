@@ -309,7 +309,7 @@ public class CloudSimExample7 {
             if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
                 Log.print("SUCCESS");
 
-                Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
+                Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getGuestId() +
                         indent + indent + indent + dft.format(cloudlet.getActualCPUTime()) +
                         indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent + indent + dft.format(cloudlet.getFinishTime()));
             }

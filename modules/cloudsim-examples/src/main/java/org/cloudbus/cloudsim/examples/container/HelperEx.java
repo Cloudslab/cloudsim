@@ -56,7 +56,7 @@ public class HelperEx {
                     }
 
                     cloudlet.setUserId(brokerId);
-                    //            cloudlet.setVmId(i);
+                    //            cloudlet.setGuestId(i);
                     cloudletList.add(cloudlet);
                     createdCloudlets += 1;
                 } else {

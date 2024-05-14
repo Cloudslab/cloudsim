@@ -399,8 +399,8 @@ public class WebBroker extends MonitoringBorkerEX {
             detailsBuffer.append(String.format(
                     "Cloudlet %d on %s VM/Server %d has status %s ",
                     wc.getCloudletId(),
-                    wc.getVmId() == sess.getAppVmId() ? "AS" : "DB",
-                    wc.getVmId(),
+                    wc.getGuestId() == sess.getAppVmId() ? "AS" : "DB",
+                    wc.getGuestId(),
                     wc.getCloudletStatusString() == null ? String.valueOf(wc.getStatus()) : wc
                             .getCloudletStatusString()));
         }

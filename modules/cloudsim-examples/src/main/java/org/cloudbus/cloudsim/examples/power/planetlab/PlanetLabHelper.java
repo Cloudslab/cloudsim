@@ -63,7 +63,7 @@ public class PlanetLabHelper {
 				System.exit(0);
 			}
 			cloudlet.setUserId(brokerId);
-			cloudlet.setVmId(i);
+			cloudlet.setGuestId(i);
 			list.add(cloudlet);
 		}
 

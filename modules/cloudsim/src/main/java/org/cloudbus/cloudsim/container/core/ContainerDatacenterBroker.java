@@ -248,10 +248,10 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //                    bindCloudletToContainer(cloudlet.getCloudletId(), containerId);
                 if(getContainersToVmsMap().get(cloudlet.getContainerId()) != null) {
                     int vmId = getContainersToVmsMap().get(cloudlet.getContainerId());
-//                    bindCloudletToVm(cloudlet.getCloudletId(), vmId);
-                    cloudlet.setVmId(vmId);
-//                    if(cloudlet.getVmId() != vmId){
-//                        Log.printConcatLine("The cloudlet Vm Id is ", cloudlet.getVmId(), "It should be", vmId);
+//                    bindCloudletToVm(cloudlet.getCloudletId(), guestId);
+                    cloudlet.setGuestId(vmId);
+//                    if(cloudlet.getGuestId() != guestId){
+//                        Log.printConcatLine("The cloudlet Vm Id is ", cloudlet.getGuestId(), "It should be", guestId);
 //
 //                    }
                     containerIndex++;
@@ -264,14 +264,14 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 
                 //Log.printLine("Container Id" + containerId);
 
-                //Log.printConcatLine("VM ID is: ",cloudlet.getVmId(), "Container ID:", cloudlet.getContainerId(), "cloudletId:", cloudlet.getCloudletId());
+                //Log.printConcatLine("VM ID is: ",cloudlet.getGuestId(), "Container ID:", cloudlet.getContainerId(), "cloudletId:", cloudlet.getCloudletId());
 
-//                cloudlet.setVmId(v.getId());
+//                cloudlet.setGuestId(v.getId());
                 // if user didn't bind this cloudlet and it has not been executed yet
 //            if (cloudlet.getContainerId() == -1) {
 //                Log.print("User has forgotten to bound the cloudlet to container");
 //            } else { // submit to the specific vm
-//                vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
+//                vm = VmList.getById(getVmsCreatedList(), cloudlet.getGuestId());
 //                if (vm == null) { // vm was not created
 //                    if (!Log.isDisabled()) {
 //                        Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
@@ -294,10 +294,10 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //        for (Cloudlet cloudlet : getCloudletList()) {
 //            ContainerVm vm;
 //            // if user didn't bind this cloudlet and it has not been executed yet
-//            if (cloudlet.getVmId() == -1) {
+//            if (cloudlet.getGuestId() == -1) {
 //                vm = getVmsCreatedList().get(vmIndex);
 //            } else { // submit to the specific vm
-//                vm = VmList.getById(getVmsCreatedList(), cloudlet.getVmId());
+//                vm = VmList.getById(getVmsCreatedList(), cloudlet.getGuestId());
 //                if (vm == null) { // vm was not created
 //                    if (!Log.isDisabled()) {
 //                        Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
@@ -312,7 +312,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //                        cloudlet.getCloudletId(), " to VM #", vm.getId());
 //            }
 //
-//            cloudlet.setVmId(vm.getId());
+//            cloudlet.setGuestId(vm.getId());
 //            sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
 //            cloudletsSubmitted++;
 //            vmIndex = (vmIndex + 1) % getVmsCreatedList().size();

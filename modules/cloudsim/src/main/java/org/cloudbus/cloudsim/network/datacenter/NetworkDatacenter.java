@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Getter;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.Datacenter;
@@ -176,7 +175,7 @@ public class NetworkDatacenter extends Datacenter {
 					.getCostPerBw());
 
 			int userId = cl.getUserId();
-			int vmId = cl.getVmId();
+			int vmId = cl.getGuestId();
 
 			// time to transfer the files
 			double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());

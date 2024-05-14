@@ -57,7 +57,7 @@ public class HddDataCenter extends DatacenterEX {
             HddCloudlet cl = (HddCloudlet) ev.getData();
 
             int userId = cl.getUserId();
-            int vmId = cl.getVmId();
+            int vmId = cl.getGuestId();
 
             HddHost host = (HddHost) getVmAllocationPolicy().getHost(vmId, userId);
             HddVm vm = (HddVm) host.getGuest(vmId, userId);
