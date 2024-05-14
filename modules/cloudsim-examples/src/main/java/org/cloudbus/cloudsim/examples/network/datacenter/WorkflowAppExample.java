@@ -339,7 +339,8 @@ public class WorkflowAppExample {
 		int memory = 100;
 		UtilizationModel utilizationModel = new UtilizationModelFull();
 		int i = 0;
-		// Task A
+
+		// Define cloudlets
 		NetworkCloudlet cla = new NetworkCloudlet(
 				NetworkConstants.currentCloudletId,
 				0,
@@ -356,13 +357,9 @@ public class WorkflowAppExample {
 		cla.submittime = CloudSim.clock();
 		cla.currStagenum = -1;
 		cla.setGuestId(vmIdList.get(i));
-
-		// first stage: big computation
-		cla.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 0, memory, vmIdList.get(0), cla.getCloudletId()));
-		cla.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 1, memory, vmIdList.get(2), cla.getCloudletId() + 2));
 		appCloudlet.cList.add(cla);
 		i++;
-		// Task B
+
 		NetworkCloudlet clb = new NetworkCloudlet(
 				NetworkConstants.currentCloudletId,
 				0,
@@ -379,22 +376,9 @@ public class WorkflowAppExample {
 		clb.submittime = CloudSim.clock();
 		clb.currStagenum = -1;
 		clb.setGuestId(vmIdList.get(i));
-
-		// first stage: big computation
-
-		clb.stages.add(new TaskStage(
-				NetworkTags.EXECUTION,
-				0,
-				800,
-				0,
-				memory,
-				vmIdList.get(1),
-				clb.getCloudletId()));
-		clb.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 1, memory, vmIdList.get(2), clb.getCloudletId() + 1));
 		appCloudlet.cList.add(clb);
 		i++;
 
-		// Task C
 		NetworkCloudlet clc = new NetworkCloudlet(
 				NetworkConstants.currentCloudletId,
 				0,
@@ -411,20 +395,21 @@ public class WorkflowAppExample {
 		clc.submittime = CloudSim.clock();
 		clc.currStagenum = -1;
 		clc.setGuestId(vmIdList.get(i));
-
-		// first stage: big computation
-		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 0, memory, vmIdList.get(0), cla.getCloudletId()));
-		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 1, memory, vmIdList.get(1), cla.getCloudletId() + 1));
-		clc.stages.add(new TaskStage(
-				NetworkTags.EXECUTION,
-				0,
-				800,
-				1,
-				memory,
-				vmIdList.get(2),
-				clc.getCloudletId()));
-
 		appCloudlet.cList.add(clc);
+
+		// Configure task stages within the cloudlets
+		//
+		cla.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 0, memory, cla));
+		cla.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 1, memory, clc));
+
+		//
+		clb.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 0, memory, clb));
+		clb.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 1, memory, clc));
+
+		//
+		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 0, memory, cla));
+		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 1, memory, clb));
+		clc.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 1, memory, clc));
 	}
 
 	private static void CreateNetwork(NetworkDatacenter dc) {

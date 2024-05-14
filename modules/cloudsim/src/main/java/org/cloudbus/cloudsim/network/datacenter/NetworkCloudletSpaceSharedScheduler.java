@@ -105,7 +105,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 					}
 				}
 				if (st.type == NetworkTags.WAIT_RECV) {
-					List<HostPacket> pktlist = pktrecv.get(st.peer);
+					List<HostPacket> pktlist = pktrecv.get(st.cl.getGuestId());
 					List<HostPacket> pkttoremove = new ArrayList<>();
 					if (pktlist != null) {
 						Iterator<HostPacket> it = pktlist.iterator();
@@ -223,12 +223,12 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				if (cl.stages.get(i).type == NetworkTags.WAIT_SEND) {
 					HostPacket pkt = new HostPacket(
 							cl.getGuestId(),
-							cl.stages.get(i).peer,
+							cl.stages.get(i).cl.getGuestId(),
 							cl.stages.get(i).data,
 							CloudSim.clock(),
 							-1,
 							cl.getCloudletId(),
-							cl.stages.get(i).vpeer);
+							cl.stages.get(i).cl.getCloudletId());
 					List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
 					if (pktlist == null) {
 						pktlist = new ArrayList<>();

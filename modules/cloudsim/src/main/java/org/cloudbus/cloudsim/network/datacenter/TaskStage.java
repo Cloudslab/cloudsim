@@ -48,20 +48,17 @@ public class TaskStage {
         /** Memory used by the task. */
 	long memory;
 
-        /** Vm from whom data needed to be received or sent (depending on the stage type). */
-	int peer;
-
-	/** Cloudlet from whom data needed to be received or sent (depending on the stage type). */
-	int vpeer;
+	/** Cloudlet where processing is done (if type == EXECUTION), or
+	 * from whom data need to be received (if type == WAIT_RECV) or sent to (if type == WAIT_SEND). */
+	NetworkCloudlet cl;
 	
-	public TaskStage(int type, double data, double time, double stageid, long memory, int peer, int vpeer) {
+	public TaskStage(int type, double data, double time, double stageid, long memory, NetworkCloudlet cl) {
 		super();
 		this.type = type;
 		this.data = data;
 		this.time = time;
 		this.stageid = stageid;
 		this.memory = memory;
-		this.peer = peer;
-		this.vpeer = vpeer;
+		this.cl = cl;
 	}
 }

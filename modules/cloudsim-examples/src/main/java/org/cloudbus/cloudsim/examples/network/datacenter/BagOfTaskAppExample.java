@@ -27,8 +27,7 @@ public class BagOfTaskAppExample {
 
 	private static NetworkDatacenterBroker broker;
 
-	private static int numberVm;
-	private static int execTime;
+	private static int numberVm = 4;
 
 	/**
 	 * Creates main() to run this example.
@@ -324,16 +323,6 @@ public class BagOfTaskAppExample {
 
 		for(int appId = 0; appId < apps; appId++) {
 			AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, appId, 0, broker.getId());
-			execTime = 100;
-
-			if (app.deadline > execTime /2) {
-				numberVm = 2;
-			} else if (app.deadline > (execTime /2)/4) {
-				numberVm = 4;
-			} else {
-				numberVm = 4;
-			}
-
 			cloudletList.add(app);
 
 			// Randomly select vm ids for the cloudlets within the app
@@ -356,33 +345,35 @@ public class BagOfTaskAppExample {
 
 	static private void createTaskList(AppCloudlet appCloudlet, List<Integer> vmIdList) {
 		//basically, each task runs the simulation and then data is consolidated in one task
-		double executionTime = execTime;
+		long executionTime = (long) 100 / numberVm;
 		long memory = 1000;
 		long fileSize = NetworkConstants.FILE_SIZE;
 		long outputSize = NetworkConstants.OUTPUT_SIZE;
 		int pesNumber = NetworkConstants.PES_NUMBER;
 		int stgId=0;
-		int t=NetworkConstants.currentCloudletId;
+
+		// First cloudlet (i=0) is the gatherer
 		for(int i=0;i<numberVm;i++){
 			UtilizationModel utilizationModel = new UtilizationModelFull();
-			NetworkCloudlet cl = new NetworkCloudlet(NetworkConstants.currentCloudletId, (long) (executionTime/numberVm), pesNumber, fileSize, outputSize, memory, utilizationModel, utilizationModel, utilizationModel);
+			NetworkCloudlet cl = new NetworkCloudlet(NetworkConstants.currentCloudletId, executionTime, pesNumber, fileSize, outputSize, memory, utilizationModel, utilizationModel, utilizationModel);
 			NetworkConstants.currentCloudletId++;
 			cl.setUserId(appCloudlet.getUserId());
 			cl.submittime=CloudSim.clock();
 			cl.currStagenum=-1;
 			cl.setGuestId(vmIdList.get(i));
-			//compute and send data to node 0
-			cl.stages.add(new TaskStage(NetworkTags.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime/numberVm, stgId++, memory, vmIdList.get(0),cl.getCloudletId()));
-
-			//0 has an extra stage of waiting for results; others send
-			if (i==0){
-				for(int j=1;j<numberVm;j++)
-					cl.stages.add(new TaskStage(NetworkTags.WAIT_RECV, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, vmIdList.get(j),cl.getCloudletId()+j));
-			} else {
-				cl.stages.add(new TaskStage(NetworkTags.WAIT_SEND, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, vmIdList.get(0),t));
-			}
-
 			appCloudlet.cList.add(cl);
+		}
+
+		//Configure stages
+		NetworkCloudlet gatherer = appCloudlet.cList.get(0);
+		gatherer.stages.add(new TaskStage(NetworkTags.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime, stgId++, memory, gatherer));
+		for(int i=1;i<numberVm;i++) {
+			NetworkCloudlet worker = appCloudlet.cList.get(i);
+
+			worker.stages.add(new TaskStage(NetworkTags.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime, stgId++, memory, worker));
+			worker.stages.add(new TaskStage(NetworkTags.WAIT_SEND, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, gatherer));
+
+			gatherer.stages.add(new TaskStage(NetworkTags.WAIT_RECV, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, worker));
 		}
 	}
 
