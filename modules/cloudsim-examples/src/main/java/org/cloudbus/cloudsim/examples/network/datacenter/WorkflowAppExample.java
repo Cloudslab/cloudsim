@@ -351,7 +351,6 @@ public class WorkflowAppExample {
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
-		cla.numStage = 2;
 		NetworkConstants.currentCloudletId++;
 		cla.setUserId(appCloudlet.getUserId());
 		cla.submittime = CloudSim.clock();
@@ -370,7 +369,6 @@ public class WorkflowAppExample {
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
-		clb.numStage = 2;
 		NetworkConstants.currentCloudletId++;
 		clb.setUserId(appCloudlet.getUserId());
 		clb.submittime = CloudSim.clock();
@@ -389,7 +387,6 @@ public class WorkflowAppExample {
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
-		clc.numStage = 2;
 		NetworkConstants.currentCloudletId++;
 		clc.setUserId(appCloudlet.getUserId());
 		clc.submittime = CloudSim.clock();
@@ -409,7 +406,7 @@ public class WorkflowAppExample {
 		//
 		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 0, memory, cla));
 		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 1, memory, clb));
-		clc.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 1, memory, clc));
+		clc.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 2, memory, clc));
 	}
 
 	private static void CreateNetwork(NetworkDatacenter dc) {

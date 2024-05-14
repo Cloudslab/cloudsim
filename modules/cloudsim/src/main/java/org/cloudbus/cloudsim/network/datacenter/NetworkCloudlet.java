@@ -39,10 +39,7 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 	public double finishtime; 
 
         /** Execution time for cloudlet. */
-	public double exetime; 
-
-        /** Number of cloudlet's stages . */
-	public double numStage;
+	public double exetime;
 
         /** Current stage of cloudlet execution. */
 	public int currStagenum; 
@@ -99,6 +96,8 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 		this.memory = memory;
 		stages = new ArrayList<>();
 	}
+
+	public int getNumberOfStages() { return stages.size(); }
 
 	@Override
 	public int compareTo(NetworkCloudlet arg0) {
