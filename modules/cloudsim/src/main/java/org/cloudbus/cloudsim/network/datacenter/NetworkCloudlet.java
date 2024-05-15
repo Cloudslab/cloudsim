@@ -57,7 +57,7 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
         */
 	public Map<Double, HostPacket> timeCommunicate;
 
-        /** All stages which cloudlet execution. */
+        /** All sequential stages that the cloudlet executes. */
 	public ArrayList<TaskStage> stages; 
         
         /**
