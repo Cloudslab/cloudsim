@@ -312,6 +312,15 @@ public interface HostEntity extends CoreAttributes {
     <T extends GuestEntity> List<T> getGuestsMigratingIn();
 
     /**
+     * Gets the maximum utilization among the PEs of a given guest entity.
+     * @param guest The guest to get its PEs maximum utilization
+     * @return The maximum utilization among the PEs of the guest.
+     */
+    default double getMaxUtilizationAmongGuestsPes(GuestEntity guest) {
+        return PeList.getMaxUtilizationAmongGuestsPes(getPeList(), guest);
+    }
+
+    /**
      * Gets the data center of the host.
      *
      * @return the data center where the host runs

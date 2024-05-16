@@ -164,16 +164,6 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	/**
-	 * Gets the max utilization percentage among by all PEs allocated to a VM.
-	 * 
-	 * @param vm the vm
-	 * @return the max utilization percentage of the VM
-	 */
-	public double getMaxUtilizationAmongVmsPes(Vm vm) {
-		return PeList.getMaxUtilizationAmongVmsPes(getPeList(), vm);
-	}
-
-	/**
 	 * Gets the utilization of memory (in absolute values).
 	 * 
 	 * @return the utilization of memory

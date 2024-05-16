@@ -193,16 +193,6 @@ public class ContainerHostDynamicWorkload extends Host {
         }
 
         /**
-         * Gets the max utilization among by all PEs allocated to the VM.
-         *
-         * @param guest the vm
-         * @return the utilization
-         */
-        public double getMaxUtilizationAmongGuestsPes(GuestEntity guest) {
-            return PeList.getMaxUtilizationAmongVmsPes(getPeList(), guest);
-        }
-
-        /**
          * Gets the utilization of memory.
          *
          * @return the utilization of memory

@@ -110,15 +110,15 @@ public class PeListTest {
 	}
 
 	@Test
-	public void testGetMaxUtilizationAmongVmsPes() {
+	public void testGetMaxUtilizationAmongGuestsPes() {
 		Vm vm0 = new Vm(0, 0, MIPS / 2, 1, 0, 0, 0, "", null);
 		Vm vm1 = new Vm(1, 0, MIPS / 2, 1, 0, 0, 0, "", null);
 
 		assertTrue(peList.get(0).getPeProvisioner().allocateMipsForGuest(vm0, MIPS / 3));
 		assertTrue(peList.get(1).getPeProvisioner().allocateMipsForGuest(vm1, MIPS / 5));
 
-		assertEquals((MIPS / 3) / MIPS, PeList.getMaxUtilizationAmongVmsPes(peList, vm0), 0.001);
-		assertEquals((MIPS / 5) / MIPS, PeList.getMaxUtilizationAmongVmsPes(peList, vm1), 0.001);
+		assertEquals((MIPS / 3) / MIPS, PeList.getMaxUtilizationAmongGuestsPes(peList, vm0), 0.001);
+		assertEquals((MIPS / 5) / MIPS, PeList.getMaxUtilizationAmongGuestsPes(peList, vm1), 0.001);
 	}
 
 }

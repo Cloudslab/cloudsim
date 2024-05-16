@@ -184,14 +184,4 @@ public class NetworkHost extends Host {
 		}
 		packetTosendGlobal.clear();
 	}
-
-        /**
-         * Gets the maximum utilization among the PEs of a given VM.
-         * @param vm The VM to get its PEs maximum utilization
-         * @return The maximum utilization among the PEs of the VM.
-         */
-	public double getMaxUtilizationAmongVmsPes(GuestEntity vm) {
-		return PeList.getMaxUtilizationAmongVmsPes(getPeList(), vm);
-	}
-
 }

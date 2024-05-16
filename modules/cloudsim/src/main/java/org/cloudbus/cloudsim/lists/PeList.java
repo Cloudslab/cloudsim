@@ -93,15 +93,15 @@ public class PeList {
 
 	/**
 	 * Gets the max utilization percentage among all PEs allocated to a VM.
-	 * 
-	 * @param vm the vm to get the maximum utilization percentage
+	 *
 	 * @param peList the pe list
+	 * @param guest  the vm to get the maximum utilization percentage
 	 * @return the max utilization percentage
 	 */
-	public static <T extends Pe> double getMaxUtilizationAmongVmsPes(List<T> peList, GuestEntity vm) {
+	public static <T extends Pe> double getMaxUtilizationAmongGuestsPes(List<T> peList, GuestEntity guest) {
 		double maxUtilization = 0;
 		for (Pe pe : peList) {
-			if (pe.getPeProvisioner().getAllocatedMipsForGuest(vm) == null) {
+			if (pe.getPeProvisioner().getAllocatedMipsForGuest(guest) == null) {
 				continue;
 			}
 			double utilization = pe.getPeProvisioner().getUtilization();
