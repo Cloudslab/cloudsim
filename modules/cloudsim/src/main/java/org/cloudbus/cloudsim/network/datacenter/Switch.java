@@ -147,6 +147,15 @@ public class Switch extends SimEntity {
 		this.uplinkbandwidth = uplinkbandwidth;
 
 		this.dc = dc;
+
+		hostlist = new HashMap<>();
+		packetTohost = new HashMap<>();
+
+		downlinkswitchpktlist = new HashMap<>();
+		uplinkswitchpktlist = new HashMap<>();
+
+		downlinkswitches = new ArrayList<>();
+		uplinkswitches = new ArrayList<>();
 	}
 
 	@Override
@@ -159,13 +168,12 @@ public class Switch extends SimEntity {
 	public void processEvent(SimEvent ev) {
 		// Log.printLine(CloudSim.clock()+"[Broker]: event received:"+ev.getTag());
 		switch (ev.getTag()) {
-			// Resource characteristics request
-			case CloudSimTags.Network_Event_UP ->
-					// process the packet from down switch or host
-					processpacket_up(ev);
-			case CloudSimTags.Network_Event_DOWN ->
-					// process the packet from uplink
-					processpacket_down(ev);
+			// process the packet from down switch or host
+			case CloudSimTags.Network_Event_UP -> processpacket_up(ev);
+
+			// process the packet from uplink
+			case CloudSimTags.Network_Event_DOWN -> processpacket_down(ev);
+
 			case CloudSimTags.Network_Event_send -> processpacketforward(ev);
 			case CloudSimTags.Network_Event_Host -> processhostpacket(ev);
 
@@ -238,8 +246,9 @@ public class Switch extends SimEntity {
 		int recvVMid = hspkt.pkt.reciever;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
+
 		if (level == NetworkTags.EDGE_LEVEL) {
-			// packet is recieved from host
+			// packet is received from host
 			// packet is to be sent to aggregate level or to another host in the
 			// same level
 
@@ -261,7 +270,7 @@ public class Switch extends SimEntity {
 			pktlist.add(hspkt);
 			return;
 		}
-		if (level == NetworkTags.AGGR_LEVEL) {
+		else if (level == NetworkTags.AGGR_LEVEL) {
 			// packet is coming from edge level router so need to be sent to
 			// either root or another edge level swich
 			// find the id for edgelevel switch
@@ -283,7 +292,7 @@ public class Switch extends SimEntity {
 				pktlist.add(hspkt);
 			}
 		}
-		if (level == NetworkTags.ROOT_LEVEL) {
+		else if (level == NetworkTags.ROOT_LEVEL) {
 			// get id of edge router
 			int edgeswitchid = dc.VmToSwitchid.get(recvVMid);
 			// search which aggregate switch has it
@@ -303,6 +312,8 @@ public class Switch extends SimEntity {
 				pktlist.add(hspkt);
 			}
 		}
+
+		// TODO: Remo Andreoli: Error?
 	}
         
         /**

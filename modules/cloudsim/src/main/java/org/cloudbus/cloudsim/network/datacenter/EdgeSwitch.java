@@ -46,14 +46,10 @@ public class EdgeSwitch extends Switch {
 	 */
 	public EdgeSwitch(String name, double numport, int level, double switching_delay, double downlinkbandwidth, double uplinkbandwidth, NetworkDatacenter dc) {
 		super(name, numport, level, switching_delay, downlinkbandwidth, uplinkbandwidth, dc);
-		hostlist = new HashMap<>();
-		uplinkswitchpktlist = new HashMap<>();
-		packetTohost = new HashMap<>();
 		//uplinkbandwidth = NetworkConstants.BandWidthEdgeAgg;
 		//downlinkbandwidth = NetworkConstants.BandWidthEdgeHost;
 		//switching_delay = NetworkConstants.SwitchingDelayEdge;
 		//numport = NetworkConstants.EdgeSwitchPort;
-		uplinkswitches = new ArrayList<>();
 	}
 
 	@Override
@@ -69,7 +65,7 @@ public class EdgeSwitch extends Switch {
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 
-		// packet is recieved from host
+		// packet is received from host
 		// packet is to be sent to aggregate level or to another host in the same level
 
 		int hostid = dc.VmtoHostlist.get(recvVMid);

@@ -42,18 +42,12 @@ public class AggregateSwitch extends Switch {
 	 * @param level At which level the switch is with respect to hosts.
 	 * @param dc The Datacenter where the switch is connected to
 	 */
-	public AggregateSwitch(String name, int numport, int level, double switching_delay, double downlinkbandwidth, double uplinkbandwidth, NetworkDatacenter dc) {
+	public AggregateSwitch(String name, double numport, int level, double switching_delay, double downlinkbandwidth, double uplinkbandwidth, NetworkDatacenter dc) {
 		super(name, numport, level, switching_delay, downlinkbandwidth, uplinkbandwidth, dc);
-		downlinkswitchpktlist = new HashMap<>();
-		uplinkswitchpktlist = new HashMap<>();
-
 		//uplinkbandwidth = NetworkConstants.BandWidthAggRoot;
 		//downlinkbandwidth = NetworkConstants.BandWidthEdgeAgg;
-
 		//latency = NetworkConstants.SwitchingDelayAgg;
 		//numport = NetworkConstants.AggSwitchPort;
-		uplinkswitches = new ArrayList<>();
-		downlinkswitches = new ArrayList<>();
 	}
 
 	@Override
