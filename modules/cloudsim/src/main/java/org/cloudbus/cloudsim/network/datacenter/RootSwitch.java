@@ -61,7 +61,7 @@ public class RootSwitch extends Switch {
 		// add packet in the switch list
 
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		int recvVMid = hspkt.pkt.reciever;
+		int recvVMid = hspkt.pkt.receiverVmId;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 

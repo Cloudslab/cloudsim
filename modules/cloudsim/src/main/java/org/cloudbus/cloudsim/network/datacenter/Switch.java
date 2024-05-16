@@ -192,7 +192,7 @@ public class Switch extends SimEntity {
 	protected void processhostpacket(SimEvent ev) {
 		// Send packet to host
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		NetworkHost hs = hostlist.get(hspkt.recieverhostid);
+		NetworkHost hs = hostlist.get(hspkt.receiverHostId);
 		hs.packetrecieved.add(hspkt);
 	}
 
@@ -209,13 +209,13 @@ public class Switch extends SimEntity {
 		// add packet in the host list
 		// int src=ev.getSource();
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		int recvVMid = hspkt.pkt.reciever;
+		int recvVMid = hspkt.pkt.receiverVmId;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 		if (level == NetworkTags.EDGE_LEVEL) {
 			// packet is to be recieved by host
 			int hostid = dc.VmtoHostlist.get(recvVMid);
-			hspkt.recieverhostid = hostid;
+			hspkt.receiverHostId = hostid;
 			List<NetworkPacket> pktlist = packetTohost.computeIfAbsent(hostid, k -> new ArrayList<>());
 			pktlist.add(hspkt);
 			return;
@@ -243,7 +243,7 @@ public class Switch extends SimEntity {
 		//
 		// int src=ev.getSource();
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		int recvVMid = hspkt.pkt.reciever;
+		int recvVMid = hspkt.pkt.receiverVmId;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 
@@ -254,7 +254,7 @@ public class Switch extends SimEntity {
 
 			int hostid = dc.VmtoHostlist.get(recvVMid);
 			NetworkHost hs = hostlist.get(hostid);
-			hspkt.recieverhostid = hostid;
+			hspkt.receiverHostId = hostid;
 			if (hs != null) {
 				// packet to be sent to host connected to the switch
 				List<NetworkPacket> pktlist = packetTohost.computeIfAbsent(hostid, k -> new ArrayList<>());
@@ -395,7 +395,7 @@ public class Switch extends SimEntity {
 				if (!hspktlist.isEmpty()) {
 					double avband = downlinkbandwidth / hspktlist.size();
 					for (NetworkPacket hspkt : hspktlist) {
-						// hspkt.recieverhostid=tosend;
+						// hspkt.receiverHostId=tosend;
 						// hs.packetrecieved.add(hspkt);
 						this.send(getId(), hspkt.pkt.data / avband, CloudSimTags.Network_Event_Host, hspkt);
 					}

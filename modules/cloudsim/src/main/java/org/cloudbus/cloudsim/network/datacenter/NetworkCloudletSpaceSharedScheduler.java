@@ -105,7 +105,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 					}
 				}
 				if (st.type == NetworkTags.WAIT_RECV) {
-					List<HostPacket> pktlist = pktrecv.get(st.cl.getGuestId());
+					List<HostPacket> pktlist = pktrecv.get(st.targetCloudlet.getGuestId());
 					List<HostPacket> pkttoremove = new ArrayList<>();
 					if (pktlist != null) {
 						Iterator<HostPacket> it = pktlist.iterator();
@@ -113,9 +113,9 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 						if (it.hasNext()) {
 							pkt = it.next();
 							// Asumption packet will not arrive in the same cycle
-							if (pkt.reciever == cl.getGuestId()) {
-								pkt.recievetime = CloudSim.clock();
-								st.time = CloudSim.clock() - pkt.sendtime;
+							if (pkt.receiverVmId == cl.getGuestId()) {
+								pkt.recvTime = CloudSim.clock();
+								st.time = CloudSim.clock() - pkt.sendTime;
 								changetonextstage(cl, st);
 								pkttoremove.add(pkt);
 							}

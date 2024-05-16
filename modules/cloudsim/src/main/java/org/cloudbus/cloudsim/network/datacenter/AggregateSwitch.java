@@ -9,7 +9,6 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -58,7 +57,7 @@ public class AggregateSwitch extends Switch {
 		// add packet in the switch list
 		// add packet in the host list
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		int recvVMid = hspkt.pkt.reciever;
+		int recvVMid = hspkt.pkt.receiverVmId;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 
@@ -81,7 +80,7 @@ public class AggregateSwitch extends Switch {
 		//
 		// int src=ev.getSource();
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		int recvVMid = hspkt.pkt.reciever;
+		int recvVMid = hspkt.pkt.receiverVmId;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
 

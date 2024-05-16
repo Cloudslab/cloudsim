@@ -117,12 +117,12 @@ public class NetworkHost extends Host {
 	 */
 	private void recvpackets() {
 		for (NetworkPacket hs : packetrecieved) {
-			hs.pkt.recievetime = CloudSim.clock();
+			hs.pkt.recvTime = CloudSim.clock();
 
 			// insert the packet in recievedlist of VM
-			Vm vm = VmList.getById(getGuestList(), hs.pkt.reciever);
+			Vm vm = VmList.getById(getGuestList(), hs.pkt.receiverVmId);
 			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
-					.computeIfAbsent(hs.pkt.sender, k -> new ArrayList<>());
+					.computeIfAbsent(hs.pkt.senderVmId, k -> new ArrayList<>());
 
 			pktlist.add(hs.pkt);
 
@@ -141,7 +141,7 @@ public class NetworkHost extends Host {
                         List<HostPacket> pktlist = es.getValue();
                         for (HostPacket pkt : pktlist) {
                                 NetworkPacket hpkt = new NetworkPacket(getId(), pkt);
-                                Vm vm2 = VmList.getById(this.getGuestList(), hpkt.recievervmid);
+                                Vm vm2 = VmList.getById(this.getGuestList(), hpkt.receiverVmId);
                                 if (vm2 != null) {
                                         packetTosendLocal.add(hpkt);
                                 } else {
@@ -156,13 +156,13 @@ public class NetworkHost extends Host {
 
 		for (NetworkPacket hs : packetTosendLocal) {
                     flag = true;
-                    hs.stime = hs.rtime;
-                    hs.pkt.recievetime = CloudSim.clock();
+                    hs.sendTime = hs.recvTime;
+                    hs.pkt.recvTime = CloudSim.clock();
                     // insertthe packet in recievedlist
-                    Vm vm = VmList.getById(getGuestList(), hs.pkt.reciever);
+                    Vm vm = VmList.getById(getGuestList(), hs.pkt.receiverVmId);
 
 			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
-					.computeIfAbsent(hs.pkt.sender, k -> new ArrayList<>());
+					.computeIfAbsent(hs.pkt.senderVmId, k -> new ArrayList<>());
 			pktlist.add(hs.pkt);
 		}
 		if (flag) {

@@ -30,22 +30,22 @@ public class HostPacket {
         /**
          * Id of the sender VM.
          */
-	int sender;
+	int senderVmId;
 
         /**
          * Id of the receiver VM.
          */
-	int reciever;
+	int receiverVmId;
         
         /**
          * Id of the sender cloudlet.
          */
-	int virtualsendid;
+	int senderCloudletId;
 
         /**
          * Id of the receiver cloudlet.
          */
-        int virtualrecvid;
+        int receiverCloudletId;
 
         /**
          * The length of the data being sent (in bytes).
@@ -55,26 +55,26 @@ public class HostPacket {
         /**
          * The time the packet was sent.
          */
-	double sendtime;
+	double sendTime;
 
         /**
          * The time the packet was received.
          */
-	double recievetime;
+	double recvTime;
 
 	public HostPacket(NetworkCloudlet cl, int taskStageId) {
 			// Vm-level info
-			sender = cl.getGuestId();
-			reciever = cl.stages.get(taskStageId).cl.getGuestId();
+			senderVmId = cl.getGuestId();
+			receiverVmId = cl.stages.get(taskStageId).targetCloudlet.getGuestId();
 
 			// Cloudlet-level info
-			virtualsendid = cl.getCloudletId();
-			virtualrecvid = cl.stages.get(taskStageId).cl.getCloudletId();
+			senderCloudletId = cl.getCloudletId();
+			receiverCloudletId = cl.stages.get(taskStageId).targetCloudlet.getCloudletId();
 
 			// packet info
 			data = cl.stages.get(taskStageId).data;
 
-			sendtime = CloudSim.clock();
-			recievetime = -1;
+			sendTime = CloudSim.clock();
+			recvTime = -1;
 	}
 }

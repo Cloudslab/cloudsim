@@ -50,7 +50,7 @@ public class TaskStage {
 
 	/** Cloudlet where processing is done (if type == EXECUTION), or
 	 * from whom data need to be received (if type == WAIT_RECV) or sent to (if type == WAIT_SEND). */
-	NetworkCloudlet cl;
+	NetworkCloudlet targetCloudlet;
 	
 	public TaskStage(int type, double data, double time, double stageid, long memory, NetworkCloudlet cl) {
 		super();
@@ -59,6 +59,6 @@ public class TaskStage {
 		this.time = time;
 		this.stageid = stageid;
 		this.memory = memory;
-		this.cl = cl;
+		this.targetCloudlet = cl;
 	}
 }

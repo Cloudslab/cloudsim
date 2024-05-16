@@ -116,8 +116,8 @@ public class AppCloudlet extends Cloudlet {
 			long memory = 256;
 			int pesNumber = 4;
 			UtilizationModel utilizationModel = new UtilizationModelFull();
-			// HPCCloudlet cl=new HPCCloudlet();
-			NetworkCloudlet cl = new NetworkCloudlet(
+			// HPCCloudlet targetCloudlet=new HPCCloudlet();
+			NetworkCloudlet targetCloudlet = new NetworkCloudlet(
 					NetworkConstants.currentCloudletId,
 					length,
 					pesNumber,
@@ -129,10 +129,10 @@ public class AppCloudlet extends Cloudlet {
 					utilizationModel);
 			// setting the owner of these Cloudlets
 			NetworkConstants.currentCloudletId++;
-			cl.setUserId(getUserId());
-			cl.submittime = CloudSim.clock();
-			cl.currStagenum = -1;
-			cList.add(cl);
+			targetCloudlet.setUserId(getUserId());
+			targetCloudlet.submittime = CloudSim.clock();
+			targetCloudlet.currStagenum = -1;
+			cList.add(targetCloudlet);
 
 		}
 		// based on type
