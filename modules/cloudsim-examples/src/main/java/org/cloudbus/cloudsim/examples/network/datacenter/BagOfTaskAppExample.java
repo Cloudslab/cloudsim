@@ -393,7 +393,6 @@ public class BagOfTaskAppExample {
 
 		for (HostEntity hs : dc.getHostList()) {
 			NetworkHost hs1 = (NetworkHost) hs;
-			hs1.bandwidth = NetworkConstants.BandWidthEdgeHost;
 			int switchnum = (int) (hs.getId() / NetworkConstants.EdgeSwitchPort);
 			edgeswitch[switchnum].hostlist.put(hs.getId(), hs1);
 			dc.HostToSwitchid.put(hs.getId(), edgeswitch[switchnum].getId());

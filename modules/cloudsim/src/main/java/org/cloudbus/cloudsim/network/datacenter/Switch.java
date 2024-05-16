@@ -193,7 +193,7 @@ public class Switch extends SimEntity {
 		// Send packet to host
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
 		NetworkHost hs = hostlist.get(hspkt.receiverHostId);
-		hs.packetrecieved.add(hspkt);
+		hs.pktReceived.add(hspkt);
 	}
 
 	/**
@@ -396,7 +396,7 @@ public class Switch extends SimEntity {
 					double avband = downlinkbandwidth / hspktlist.size();
 					for (NetworkPacket hspkt : hspktlist) {
 						// hspkt.receiverHostId=tosend;
-						// hs.packetrecieved.add(hspkt);
+						// hs.pktReceived.add(hspkt);
 						this.send(getId(), hspkt.pkt.data / avband, CloudSimTags.Network_Event_Host, hspkt);
 					}
 					hspktlist.clear();

@@ -383,7 +383,6 @@ public class DiamondAppMultiExtensionExample {
 
 		// Attach to hosts
 		for (NetworkHost netHost : dc.<NetworkHost>getHostList()) {
-			netHost.bandwidth = NetworkConstants.BandWidthEdgeHost;
 			edgeSwitch.hostlist.put(netHost.getId(), netHost);
 			dc.HostToSwitchid.put(netHost.getId(), edgeSwitch.getId());
 			netHost.sw = edgeSwitch;

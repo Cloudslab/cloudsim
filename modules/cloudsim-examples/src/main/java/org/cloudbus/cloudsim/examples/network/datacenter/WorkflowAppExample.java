@@ -418,7 +418,6 @@ public class WorkflowAppExample {
 
 		for (HostEntity hs : dc.getHostList()) {
 			NetworkHost hs1 = (NetworkHost) hs;
-			hs1.bandwidth = NetworkConstants.BandWidthEdgeHost;
 
 			edgeswitch.hostlist.put(hs.getId(), hs1);
 			dc.HostToSwitchid.put(hs.getId(), edgeswitch.getId());
