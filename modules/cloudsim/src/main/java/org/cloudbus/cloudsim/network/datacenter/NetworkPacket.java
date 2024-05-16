@@ -42,23 +42,13 @@ public class NetworkPacket {
 
     /**
      * Id of the sender VM.
-     * //TODO Isn't this data at {@link #pkt}?
      */
     int sendervmid;
 
     /**
      * Id of the receiver VM.
-     * //TODO Isn't this data at {@link #pkt}?
      */
     int recievervmid;
-
-    /**
-     * Id of the sender cloudlet.
-     * //TODO This field is not needed, since its value is being
-     * get from a {@link HostPacket} instance at {@link NetworkHost#sendpackets()}.
-     * So, such a data can be got form the {@link #pkt} attribute.
-     */
-    int cloudletid;
 
     /** Time when the packet was sent. */
     double stime;
@@ -66,13 +56,16 @@ public class NetworkPacket {
     /** Time when the packet was received. */
     double rtime;
 
-    public NetworkPacket(int id, HostPacket pkt2, int vmid, int cloudletid) {
-            pkt = pkt2;
-            sendervmid = vmid;
-            this.cloudletid = cloudletid;
-            senderhostid = id;
-            stime = pkt.sendtime;
-            recievervmid = pkt2.reciever;
+    public NetworkPacket(int hostId, HostPacket pkt) {
+        this.pkt = pkt;
 
+        senderhostid = hostId;
+        recieverhostid = -1; // still unknown
+
+        sendervmid = pkt.sender;
+        recievervmid = pkt.reciever;
+
+        stime = pkt.sendtime;
+        rtime = -1;
     }
 }

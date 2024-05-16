@@ -221,14 +221,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			int i = 0;
 			for (i = cl.currStagenum; i < cl.stages.size(); i++) {
 				if (cl.stages.get(i).type == NetworkTags.WAIT_SEND) {
-					HostPacket pkt = new HostPacket(
-							cl.getGuestId(),
-							cl.stages.get(i).cl.getGuestId(),
-							cl.stages.get(i).data,
-							CloudSim.clock(),
-							-1,
-							cl.getCloudletId(),
-							cl.stages.get(i).cl.getCloudletId());
+					HostPacket pkt = new HostPacket(cl, i);
 					List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
 					if (pktlist == null) {
 						pktlist = new ArrayList<>();

@@ -8,6 +8,8 @@
 
 package org.cloudbus.cloudsim.network.datacenter;
 
+import org.cloudbus.cloudsim.core.CloudSim;
+
 /**
  * HostPacket represents the packet that travels through the virtual network within a Host.
  * It contains information about cloudlets which are communicating.
@@ -20,6 +22,7 @@ package org.cloudbus.cloudsim.network.datacenter;
  * </ul>
  * 
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  * //TODO Attributes should be private
  */
@@ -59,21 +62,19 @@ public class HostPacket {
          */
 	double recievetime;
 
-	public HostPacket(
-			int sender,
-			int reciever,
-			double data,
-			double sendtime,
-			double recievetime,
-			int vsnd,
-			int vrvd) {
-		super();
-		this.sender = sender;
-		this.reciever = reciever;
-		this.data = data;
-		this.sendtime = sendtime;
-		this.recievetime = recievetime;
-		virtualrecvid = vrvd;
-		virtualsendid = vsnd;
+	public HostPacket(NetworkCloudlet cl, int taskStageId) {
+			// Vm-level info
+			sender = cl.getGuestId();
+			reciever = cl.stages.get(taskStageId).cl.getGuestId();
+
+			// Cloudlet-level info
+			virtualsendid = cl.getCloudletId();
+			virtualrecvid = cl.stages.get(taskStageId).cl.getCloudletId();
+
+			// packet info
+			data = cl.stages.get(taskStageId).data;
+
+			sendtime = CloudSim.clock();
+			recievetime = -1;
 	}
 }

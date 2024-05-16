@@ -140,7 +140,7 @@ public class NetworkHost extends Host {
                                     .getCloudletScheduler()).pkttosend.entrySet()) {
                         List<HostPacket> pktlist = es.getValue();
                         for (HostPacket pkt : pktlist) {
-                                NetworkPacket hpkt = new NetworkPacket(getId(), pkt, vm.getId(), pkt.sender);
+                                NetworkPacket hpkt = new NetworkPacket(getId(), pkt);
                                 Vm vm2 = VmList.getById(this.getGuestList(), hpkt.recievervmid);
                                 if (vm2 != null) {
                                         packetTosendLocal.add(hpkt);
