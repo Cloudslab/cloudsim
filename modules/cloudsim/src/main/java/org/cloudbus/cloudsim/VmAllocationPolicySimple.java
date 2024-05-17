@@ -78,6 +78,10 @@ public class VmAllocationPolicySimple extends VmAllocationPolicy {
 		List<Integer> freePesTmp = new ArrayList<>(getFreePes());
 
 		if (!getGuestTable().containsKey(guest.getUid())) { // if this vm was not created
+			if (guest.getHost() != null) {
+                return allocateHostForGuest(guest, guest.getHost());
+			}
+
 			do {// we still trying until we find a host or until we try all of them
 				int moreFree = Integer.MIN_VALUE;
 				int idx = -1;

@@ -645,7 +645,7 @@ public class Datacenter extends SimEntity {
 			// checks whether this Cloudlet has finished or not
 			if (cl.isFinished()) {
 				String name = CloudSim.getEntityName(cl.getUserId());
-				Log.printConcatLine(getName(), ": Warning - Cloudlet #", cl.getCloudletId(), " owned by ", name,
+				Log.printConcatLine(getName(), ": Warning - ",cl.getClass().getSimpleName()," #", cl.getCloudletId(), " owned by ", name,
 						" is already completed/finished.");
 				Log.printLine("Therefore, it is not being executed again");
 				Log.printLine();
@@ -690,6 +690,9 @@ public class Datacenter extends SimEntity {
 			if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) {
 				estimatedFinishTime += fileTransferTime;
 				send(getId(), estimatedFinishTime, CloudSimTags.VM_DATACENTER_EVENT);
+			} else {
+				Log.printConcatLine(CloudSim.clock(), ": [",getName(), "]: Warning - ", cl.getClass().getSimpleName()," #", cl.getCloudletId(),
+						" is paused because not enough free PEs on ", vm.getClassName(), " #", vm.getId());
 			}
 
 			if (ack) {
