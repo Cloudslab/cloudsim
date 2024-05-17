@@ -50,7 +50,7 @@ public class NetworkDatacenter extends Datacenter {
          * A map between VMs and Switches, where each key
          * is a VM id and the corresponding value is the id of the switch where the VM is connected to.
          */
-	public Map<Integer, Integer> VmToSwitchid = new HashMap<>();
+	public Map<Integer, Integer> VmToSwitchid;
 
         /**
          * A map between hosts and Switches, where each key
@@ -132,88 +132,4 @@ public class NetworkDatacenter extends Datacenter {
 		return edgeswitch;
 
 	}
-
-	@Override
-	protected void processCloudletSubmit(SimEvent ev, boolean ack) {
-		updateCloudletProcessing();
-
-		try {
-			// gets the Cloudlet object
-			Cloudlet cl = (Cloudlet) ev.getData();
-
-			// checks whether this Cloudlet has finished or not
-			if (cl.isFinished()) {
-				String name = CloudSim.getEntityName(cl.getUserId());
-				Log.printConcatLine(getName(), ": Warning - Cloudlet #", cl.getCloudletId(), " owned by ", name,
-						" is already completed/finished.");
-				Log.printLine("Therefore, it is not being executed again");
-				Log.printLine();
-
-				// NOTE: If a Cloudlet has finished, then it won't be processed.
-				// So, if ack is required, this method sends back a result.
-				// If ack is not required, this method don't send back a result.
-				// Hence, this might cause CloudSim to be hanged since waiting
-				// for this Cloudlet back.
-				if (ack) {
-					int[] data = new int[3];
-					data[0] = getId();
-					data[1] = cl.getCloudletId();
-					data[2] = CloudSimTags.FALSE;
-
-					// unique tag = operation tag
-					int tag = CloudSimTags.CLOUDLET_SUBMIT_ACK;
-					sendNow(cl.getUserId(), tag, data);
-				}
-
-				sendNow(cl.getUserId(), CloudSimTags.CLOUDLET_RETURN, cl);
-
-				return;
-			}
-
-			// process this Cloudlet to this CloudResource
-			cl.setResourceParameter(getId(), getCharacteristics().getCostPerSecond(), getCharacteristics()
-					.getCostPerBw());
-
-			int userId = cl.getUserId();
-			int vmId = cl.getGuestId();
-
-			// time to transfer the files
-			double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());
-
-			HostEntity host = getVmAllocationPolicy().getHost(vmId, userId);
-			GuestEntity vm = host.getGuest(vmId, userId);
-			CloudletScheduler scheduler = vm.getCloudletScheduler();
-			double estimatedFinishTime = scheduler.cloudletSubmit(cl, fileTransferTime);
-
-			// if this cloudlet is in the exec
-			if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) {
-				// time to process the cloudlet
-				estimatedFinishTime += fileTransferTime;
-				send(getId(), estimatedFinishTime, CloudSimTags.VM_DATACENTER_EVENT);
-
-				// event to update the stages
-				send(getId(), 0.0001, CloudSimTags.VM_DATACENTER_EVENT);
-			}
-
-			if (ack) {
-				int[] data = new int[3];
-				data[0] = getId();
-				data[1] = cl.getCloudletId();
-				data[2] = CloudSimTags.TRUE;
-
-				// unique tag = operation tag
-				int tag = CloudSimTags.CLOUDLET_SUBMIT_ACK;
-				sendNow(cl.getUserId(), tag, data);
-			}
-		} catch (ClassCastException c) {
-			Log.printLine(getName() + ".processCloudletSubmit(): " + "ClassCastException error.");
-			c.printStackTrace();
-		} catch (Exception e) {
-			Log.printLine(getName() + ".processCloudletSubmit(): " + "Exception error.");
-			e.printStackTrace();
-		}
-
-		checkCloudletCompletion();
-	}
-
 }
