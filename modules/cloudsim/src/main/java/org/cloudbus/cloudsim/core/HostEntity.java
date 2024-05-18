@@ -61,6 +61,7 @@ public interface HostEntity extends CoreAttributes {
             return false;
         }
 
+        // NOTE: this calls peProvisioner.allocateMipsForGuest
         if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
             Log.formatLine("%.2f: [GuestScheduler.ContainerCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
                     " failed by MIPS", CloudSim.clock());

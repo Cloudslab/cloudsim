@@ -111,7 +111,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 			mipsShareAllocated.add(mipsRequested);
 		}
 
-		getMipsMap().put(vmUid, mipsShareAllocated);
+		getMipsMapAllocated().put(vmUid, mipsShareAllocated);
 		setAvailableMips(getAvailableMips() - totalRequestedMips);
 
 		return true;
@@ -128,12 +128,12 @@ public class VmSchedulerTimeShared extends VmScheduler {
 			pe.getPeProvisioner().deallocateMipsForAllGuests();
 		}
 
-		Iterator<Pe> peIterator = getPeList().iterator();
+		Iterator<? extends Pe> peIterator = getPeList().iterator();
 		Pe pe = peIterator.next();
 		PeProvisioner peProvisioner = pe.getPeProvisioner();
 		double availableMips = peProvisioner.getAvailableMips();
 
-		for (Map.Entry<String, List<Double>> entry : getMipsMap().entrySet()) {
+		for (Map.Entry<String, List<Double>> entry : getMipsMapAllocated().entrySet()) {
 			String vmUid = entry.getKey();
 			getPeMap().put(vmUid, new LinkedList<>());
 
@@ -168,17 +168,17 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	public void deallocatePesForGuest(GuestEntity guest) {
 		getMipsMapRequested().remove(guest.getUid());
 		setPesInUse(0);
-		getMipsMap().clear();
+		getMipsMapAllocated().clear();
 		setAvailableMips(PeList.getTotalMips(getPeList()));
 
 		for (Pe pe : getPeList()) {
 			pe.getPeProvisioner().deallocateMipsForGuest(guest);
 		}
 
+		// Re-allocate to remaining guests
 		for (Map.Entry<String, List<Double>> entry : getMipsMapRequested().entrySet()) {
 			allocatePesForGuest(entry.getKey(), entry.getValue());
 		}
-
 		updatePeProvisioning();
 	}
 

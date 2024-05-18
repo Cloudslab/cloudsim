@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 
@@ -30,32 +33,33 @@ import org.cloudbus.cloudsim.lists.PeList;
 public abstract class VmScheduler {
 
 	/** The PEs of the host where the scheduler is associated. */
+	@Getter @Setter(AccessLevel.PROTECTED)
 	private List<? extends Pe> peList;
 
 	/** The map of VMs to PEs, where each key is a VM id and each value is 
          * a list of PEs allocated to that VM. */
+	@Getter @Setter(AccessLevel.PROTECTED)
 	private Map<String, List<Pe>> peMap;
 
 	/** The map of VMs to MIPS, were each key is a VM id and each value is 
          * the currently allocated MIPS from the respective PE to that VM. 
          * The PEs where the MIPS capacity is get are defined
          * in the {@link #peMap}.
-         * 
-         * //TODO subclasses such as {@link VmSchedulerTimeShared} have an
-         * {@link VmSchedulerTimeShared#mipsMapRequested} attribute that
-         * may be confused with this one. So, the name of this one
-         * may be changed to something such as allocatedMipsMap
          */
-	private Map<String, List<Double>> mipsMap;
+	@Getter @Setter(AccessLevel.PROTECTED)
+	private Map<String, List<Double>> mipsMapAllocated;
 
 	/** The total available MIPS that can be allocated on demand for VMs. */
-	private double availableMips;
+	@Getter @Setter(AccessLevel.PROTECTED)
+    private double availableMips;
 
 	/** The VMs migrating in the host (arriving). It is the list of VM ids */
-	private List<String> vmsMigratingIn;
+	@Getter @Setter(AccessLevel.PROTECTED)
+	private List<String> guestsMigratingIn;
 
 	/** The VMs migrating out the host (departing). It is the list of VM ids */
-	private List<String> vmsMigratingOut;
+	@Getter @Setter(AccessLevel.PROTECTED)
+	private List<String> guestsMigratingOut;
 
 	/**
 	 * Creates a new VmScheduler.
@@ -67,7 +71,7 @@ public abstract class VmScheduler {
 	public VmScheduler(List<? extends Pe> pelist) {
 		setPeList(pelist);
 		setPeMap(new HashMap<>());
-		setMipsMap(new HashMap<>());
+		setMipsMapAllocated(new HashMap<>());
 		setAvailableMips(PeList.getTotalMips(getPeList()));
 		setGuestsMigratingIn(new ArrayList<>());
 		setGuestsMigratingOut(new ArrayList<>());
@@ -77,12 +81,12 @@ public abstract class VmScheduler {
 	 * Requests the allocation of PEs for a VM.
 	 *
 	 * @param guest     the vm
-	 * @param mipsShare the list of MIPS share to be allocated to a VM
+	 * @param mipsShareRequested the list of MIPS share to be allocated to a VM
 	 * @return $true if this policy allows a new VM in the host, $false otherwise
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShare);
+	public abstract boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShareRequested);
 
 	/**
 	 * Releases PEs allocated to a VM. After that, the PEs may be used
@@ -102,7 +106,7 @@ public abstract class VmScheduler {
 	 * @post $none
 	 */
 	public void deallocatePesForAllGuests() {
-		getMipsMap().clear();
+		getMipsMapAllocated().clear();
 		setAvailableMips(PeList.getTotalMips(getPeList()));
 		for (Pe pe : getPeList()) {
 			pe.getPeProvisioner().deallocateMipsForAllGuests();
@@ -128,7 +132,7 @@ public abstract class VmScheduler {
 	 * @post $none
 	 */
 	public List<Double> getAllocatedMipsForGuest(GuestEntity guest) {
-		return getMipsMap().get(guest.getUid());
+		return getMipsMapAllocated().get(guest.getUid());
 	}
 
 	/**
@@ -185,118 +189,4 @@ public abstract class VmScheduler {
 		}
 		return getPeList().get(0).getMips();
 	}
-
-	/**
-	 * Gets the pe list.
-	 * 
-	 * @param <T> the generic type
-	 * @return the pe list
-         * //TODO The warning have to be checked
-         * 
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends Pe> List<T> getPeList() {
-		return (List<T>) peList;
-	}
-
-	/**
-	 * Sets the pe list.
-	 * 
-	 * @param <T> the generic type
-	 * @param peList the pe list
-	 */
-	protected <T extends Pe> void setPeList(List<T> peList) {
-		this.peList = peList;
-	}
-
-	/**
-	 * Gets the mips map.
-	 * 
-	 * @return the mips map
-	 */
-	protected Map<String, List<Double>> getMipsMap() {
-		return mipsMap;
-	}
-
-	/**
-	 * Sets the mips map.
-	 * 
-	 * @param mipsMap the mips map
-	 */
-	protected void setMipsMap(Map<String, List<Double>> mipsMap) {
-		this.mipsMap = mipsMap;
-	}
-
-	/**
-	 * Gets the free mips.
-	 * 
-	 * @return the free mips
-	 */
-	public double getAvailableMips() {
-		return availableMips;
-	}
-
-	/**
-	 * Sets the free mips.
-	 * 
-	 * @param availableMips the new free mips
-	 */
-	protected void setAvailableMips(double availableMips) {
-		this.availableMips = availableMips;
-	}
-
-	/**
-	 * Gets the vms migrating out.
-	 * 
-	 * @return the vms in migration
-	 */
-	public List<String> getGuestsMigratingOut() {
-		return vmsMigratingOut;
-	}
-
-	/**
-	 * Sets the vms migrating out.
-	 * 
-	 * @param vmsInMigration the new vms migrating out
-	 */
-	protected void setGuestsMigratingOut(List<String> vmsInMigration) {
-		vmsMigratingOut = vmsInMigration;
-	}
-
-	/**
-	 * Gets the vms migrating in.
-	 * 
-	 * @return the vms migrating in
-	 */
-	public List<String> getGuestsMigratingIn() {
-		return vmsMigratingIn;
-	}
-
-	/**
-	 * Sets the vms migrating in.
-	 * 
-	 * @param vmsMigratingIn the new vms migrating in
-	 */
-	protected void setGuestsMigratingIn(List<String> vmsMigratingIn) {
-		this.vmsMigratingIn = vmsMigratingIn;
-	}
-
-	/**
-	 * Gets the pe map.
-	 * 
-	 * @return the pe map
-	 */
-	public Map<String, List<Pe>> getPeMap() {
-		return peMap;
-	}
-
-	/**
-	 * Sets the pe map.
-	 * 
-	 * @param peMap the pe map
-	 */
-	protected void setPeMap(Map<String, List<Pe>> peMap) {
-		this.peMap = peMap;
-	}
-
 }

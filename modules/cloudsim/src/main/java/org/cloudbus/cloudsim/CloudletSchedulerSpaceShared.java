@@ -10,6 +10,7 @@ package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 
@@ -51,7 +52,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	@Override
 	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
 		setCurrentMipsShare(mipsShare);
-		double timeSpam = currentTime - getPreviousTime(); // time since last update
+		double timeSpan = currentTime - getPreviousTime(); // time since last update
 		double capacity = 0.0;
 		int cpus = 0;
 
@@ -67,7 +68,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		// each machine in the exec list has the same amount of cpu
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			rcl.updateCloudletFinishedSoFar(
-                                (long) (capacity * timeSpam * rcl.getNumberOfPes() * Consts.MILLION));
+                                (long) (capacity * timeSpan * rcl.getNumberOfPes() * Consts.MILLION));
 		}
 
 		// no more cloudlets in this scheduler
@@ -300,17 +301,16 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	@Override
 	public double cloudletSubmit(Cloudlet cloudlet, double fileTransferTime) {
 		// it can go to the exec list
-		if ((currentCpus - usedPes) >= cloudlet.getNumberOfPes()) {
-			ResCloudlet rcl = new ResCloudlet(cloudlet);
-			rcl.setCloudletStatus(Cloudlet.INEXEC);
+        ResCloudlet rcl = new ResCloudlet(cloudlet);
+        if ((currentCpus - usedPes) >= cloudlet.getNumberOfPes()) {
+            rcl.setCloudletStatus(Cloudlet.INEXEC);
 			for (int i = 0; i < cloudlet.getNumberOfPes(); i++) {
 				rcl.setMachineAndPeId(0, i);
 			}
 			getCloudletExecList().add(rcl);
 			usedPes += cloudlet.getNumberOfPes();
 		} else {// no enough free PEs: go to the waiting queue
-			ResCloudlet rcl = new ResCloudlet(cloudlet);
-			rcl.setCloudletStatus(Cloudlet.QUEUED);
+            rcl.setCloudletStatus(Cloudlet.QUEUED);
 			getCloudletWaitingList().add(rcl);
 			return 0.0;
 		}
