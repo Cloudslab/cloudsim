@@ -22,7 +22,11 @@ public final class NetworkTags {
 	public static final int WAIT_RECV = 2;
 	public static final int FINISH = -2;
 
-	/** Switch level in datacenter topology. */
+	/** Switch level in datacenter topology.
+	 * Root switch connects the Datacenter to external network.
+	 * Aggregate switches reside in-between the root switch and the edge switches.
+	 * Edge switches have their downlink ports connected to hosts.
+	 */
 	public static final int ROOT_LEVEL = 0;
 	public static final int AGGR_LEVEL = 1;
 	public static final int EDGE_LEVEL = 2;

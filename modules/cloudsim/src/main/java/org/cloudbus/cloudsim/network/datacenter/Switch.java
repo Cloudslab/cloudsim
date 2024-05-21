@@ -26,8 +26,19 @@ import org.cloudbus.cloudsim.core.predicates.PredicateType;
 import org.cloudbus.cloudsim.lists.VmList;
 
 /**
- * Represents a Network Switch.
- * //TODO attributes should be private
+ * This class represents a Network Switch in a Datacenter network.
+ * It interacts with other switches in order to exchange packets.
+ *
+ * <br/>Please refer to following publication for more details:<br/>
+ * <ul>
+ * <li><a href="http://dx.doi.org/10.1109/UCC.2011.24">Saurabh Kumar Garg and Rajkumar Buyya, NetworkCloudSim: Modelling Parallel Applications in Cloud
+ * Simulations, Proceedings of the 4th IEEE/ACM International Conference on Utility and Cloud
+ * Computing (UCC 2011, IEEE CS Press, USA), Melbourne, Australia, December 5-7, 2011.</a>
+ * </ul>
+ *
+ * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
+ * @since CloudSim Toolkit 3.0
  */
 public class Switch extends SimEntity {
 
@@ -38,12 +49,6 @@ public class Switch extends SimEntity {
          * The level (layer) of the switch in the network topology.
          */
 	public int level;
-
-        /**
-         * The id of the datacenter where the switch is connected to.
-         * //TODO It doesn't appear to be used
-         */
-	public int datacenterid;
 
         /**
          * Map of packets sent to switches on the uplink,
@@ -83,12 +88,6 @@ public class Switch extends SimEntity {
 	public Map<Integer, List<NetworkPacket>> packetTohost;
 
         /**
-         * The switch type: edge switch or aggregation switch.
-         * //TODO should be an enum
-         */
-	int type;
-
-        /**
          * Bandwitdh of uplink.
          */
 	public double uplinkbandwidth;
@@ -100,10 +99,9 @@ public class Switch extends SimEntity {
 
 	public double numport;
 
-        /**
-         * The datacenter where the switch is connected to.
-         * //TODO It doesn't appear to be used
-         */
+	/**
+	 * The datacenter where the switch is connected to.
+	 */
 	public NetworkDatacenter dc;
 
 	/** Something is running on these hosts. 
@@ -119,10 +117,6 @@ public class Switch extends SimEntity {
          */
 	public ArrayList<NetworkPacket> pktlist = new ArrayList<>();
 
-	/** 
-         * //TODO The attribute doesn't appear to be used */
-	public List<Vm> BagofTaskVm = new ArrayList<>();
-
         /**
          * The time the switch spends to process a received packet.
          * This time is considered constant no matter how many packets 
@@ -130,12 +124,6 @@ public class Switch extends SimEntity {
          *
          */
 	public double switching_delay;
-
-        /**
-         * A map of VMs connected to this switch.
-         * //TODO The list doesn't appear to be updated (VMs added to it) anywhere.
-         */
-	public Map<Integer, Vm> Vmlist = new HashMap<>();
 
 	public Switch(String name, double numport, int level, double switching_delay, double downlinkbandwidth, double uplinkbandwidth, NetworkDatacenter dc) {
 		super(name);
@@ -218,9 +206,7 @@ public class Switch extends SimEntity {
 			hspkt.receiverHostId = hostid;
 			List<NetworkPacket> pktlist = packetTohost.computeIfAbsent(hostid, k -> new ArrayList<>());
 			pktlist.add(hspkt);
-			return;
-		}
-		if (level == NetworkTags.AGGR_LEVEL) {
+		} else if (level == NetworkTags.AGGR_LEVEL) {
 			// packet is coming from root so need to be sent to edgelevel swich
 			// find the id for edgelevel switch
 			int switchid = dc.VmToSwitchid.get(recvVMid);
@@ -256,7 +242,7 @@ public class Switch extends SimEntity {
 			NetworkHost hs = hostlist.get(hostid);
 			hspkt.receiverHostId = hostid;
 			if (hs != null) {
-				// packet to be sent to host connected to the switch
+				// packet to be sent to host directly connected to the switch
 				List<NetworkPacket> pktlist = packetTohost.computeIfAbsent(hostid, k -> new ArrayList<>());
 				pktlist.add(hspkt);
 				return;
@@ -268,7 +254,6 @@ public class Switch extends SimEntity {
 			Switch sw = uplinkswitches.get(0);
 			List<NetworkPacket> pktlist = uplinkswitchpktlist.computeIfAbsent(sw.getId(), k -> new ArrayList<>());
 			pktlist.add(hspkt);
-			return;
 		}
 		else if (level == NetworkTags.AGGR_LEVEL) {
 			// packet is coming from edge level router so need to be sent to
@@ -334,9 +319,6 @@ public class Switch extends SimEntity {
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_UP));
 		schedule(getId(), switching_delay, CloudSimTags.Network_Event_UP);
 		pktlist.add((NetworkPacket) ev.getData());
-
-		// add the packet in the list
-
 	}
 
         /**
@@ -344,12 +326,12 @@ public class Switch extends SimEntity {
          * the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
          * This method should be overridden by subclasses in other to process
          * new defined events.
-         *  
-         * //TODO the method should be protected to allow sub classes to override it,
-         * once it does nothing here.
+         *
          */
 	private void processOtherEvent(SimEvent ev) {
-
+		if (ev == null) {
+			Log.printConcatLine(getName(), ".processOtherEvent(): Error - an event is null.");
+		}
 	}
 
 	/**
@@ -379,6 +361,7 @@ public class Switch extends SimEntity {
 				int tosend = es.getKey();
 				List<NetworkPacket> hspktlist = es.getValue();
 				if (!hspktlist.isEmpty()) {
+					// sharing bandwidth between packets
 					double avband = uplinkbandwidth / hspktlist.size();
 					for (NetworkPacket hspkt : hspktlist) {
 						double delay = 1000 * hspkt.pkt.data / avband;
@@ -395,8 +378,6 @@ public class Switch extends SimEntity {
 				if (!hspktlist.isEmpty()) {
 					double avband = downlinkbandwidth / hspktlist.size();
 					for (NetworkPacket hspkt : hspktlist) {
-						// hspkt.receiverHostId=tosend;
-						// hs.pktReceived.add(hspkt);
 						this.send(getId(), hspkt.pkt.data / avband, CloudSimTags.Network_Event_Host, hspkt);
 					}
 					hspktlist.clear();

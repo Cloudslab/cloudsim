@@ -412,7 +412,7 @@ public class WorkflowAppExample {
 	private static void CreateNetwork(NetworkDatacenter dc) {
 
 		// Edge Switch
-		EdgeSwitch edgeswitch = new EdgeSwitch("Edge0", NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
+		Switch edgeswitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 		dc.Switchlist.put(edgeswitch.getId(), edgeswitch);
 

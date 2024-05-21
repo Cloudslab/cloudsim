@@ -380,10 +380,10 @@ public class BagOfTaskAppExample {
 	private static void CreateNetwork(int numhost, NetworkDatacenter dc) {
 
 		// Edge Switch
-		EdgeSwitch[] edgeswitch = new EdgeSwitch[1];
+		Switch[] edgeswitch = new Switch[1];
 
 		for (int i = 0; i < 1; i++) {
-			edgeswitch[i] = new EdgeSwitch("Edge" + i, NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
+			edgeswitch[i] = new Switch("Edge" + i, NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 			// edgeswitch[i].uplinkswitches.add(null);
 			dc.Switchlist.put(edgeswitch[i].getId(), edgeswitch[i]);

@@ -374,7 +374,7 @@ public class DiamondAppMultiExtensionExample {
 
 	private static void CreateNetwork(NetworkDatacenter dc) {
 		// Create switch
-		EdgeSwitch edgeSwitch = new EdgeSwitch("Edge0", NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
+		Switch edgeSwitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 			// edgeswitch[i].uplinkswitches.add(null);
 		dc.Switchlist.put(edgeSwitch.getId(), edgeSwitch);
