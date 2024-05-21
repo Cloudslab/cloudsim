@@ -377,15 +377,13 @@ public class DiamondAppMultiExtensionExample {
 		Switch edgeSwitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 			// edgeswitch[i].uplinkswitches.add(null);
-		dc.Switchlist.put(edgeSwitch.getId(), edgeSwitch);
+		dc.registerSwitch(edgeSwitch);
 		// aggswitch[(int)
 		// (i/Constants.AggSwitchPort)].downlinkswitches.add(edgeswitch[i]);
 
 		// Attach to hosts
 		for (NetworkHost netHost : dc.<NetworkHost>getHostList()) {
-			edgeSwitch.hostlist.put(netHost.getId(), netHost);
-			dc.HostToSwitchid.put(netHost.getId(), edgeSwitch.getId());
-			netHost.sw = edgeSwitch;
+			dc.attachSwitchToHost(edgeSwitch, netHost);
 		}
 
 	}

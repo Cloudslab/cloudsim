@@ -261,15 +261,15 @@ public class CloudSimTags {
 	 */
 	public static final int VM_BROKER_EVENT = BASE + 42;
 
-	public static final int Network_Event_UP = BASE + 43;
+	public static final int NETWORK_PKT_UP = BASE + 43;
 
-	public static final int Network_Event_send = BASE + 44;
+	public static final int NETWORK_PKT_FORWARD = BASE + 44;
 
-	public static final int RESOURCE_Register = BASE + 45;
+	public static final int NETWORK_ATTACH_HOST = BASE + 45;
 
-	public static final int Network_Event_DOWN = BASE + 46;
+	public static final int NETWORK_PKT_DOWN = BASE + 46;
 
-	public static final int Network_Event_Host = BASE + 47;
+	public static final int NETWORK_PKT_REACHED = BASE + 47;
 
 	public static final int NextCycle = BASE + 48;
 

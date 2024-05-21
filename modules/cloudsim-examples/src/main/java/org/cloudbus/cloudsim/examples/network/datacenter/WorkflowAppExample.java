@@ -414,14 +414,10 @@ public class WorkflowAppExample {
 		// Edge Switch
 		Switch edgeswitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
-		dc.Switchlist.put(edgeswitch.getId(), edgeswitch);
+		dc.registerSwitch(edgeswitch);
 
-		for (HostEntity hs : dc.getHostList()) {
-			NetworkHost hs1 = (NetworkHost) hs;
-
-			edgeswitch.hostlist.put(hs.getId(), hs1);
-			dc.HostToSwitchid.put(hs.getId(), edgeswitch.getId());
-			hs1.sw = edgeswitch;
+		for (NetworkHost hs : dc.<NetworkHost>getHostList()) {
+			dc.attachSwitchToHost(edgeswitch, hs);
 		}
 
 	}

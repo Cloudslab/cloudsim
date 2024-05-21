@@ -386,20 +386,19 @@ public class BagOfTaskAppExample {
 			edgeswitch[i] = new Switch("Edge" + i, NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 			// edgeswitch[i].uplinkswitches.add(null);
-			dc.Switchlist.put(edgeswitch[i].getId(), edgeswitch[i]);
+			dc.registerSwitch(edgeswitch[i]);
+
 			// aggswitch[(int)
 			// (i/Constants.AggSwitchPort)].downlinkswitches.add(edgeswitch[i]);
 		}
 
-		for (HostEntity hs : dc.getHostList()) {
-			NetworkHost hs1 = (NetworkHost) hs;
+		for (NetworkHost hs : dc.<NetworkHost>getHostList()) {
 			int switchnum = (int) (hs.getId() / NetworkConstants.EdgeSwitchPort);
-			edgeswitch[switchnum].hostlist.put(hs.getId(), hs1);
-			dc.HostToSwitchid.put(hs.getId(), edgeswitch[switchnum].getId());
-			hs1.sw = edgeswitch[switchnum];
-			List<NetworkHost> hslist = hs1.sw.fintimelistHost.computeIfAbsent(0D, k -> new ArrayList<>());
-			hslist.add(hs1);
 
+			dc.attachSwitchToHost(edgeswitch[switchnum], hs);
+
+			List<NetworkHost> hslist = hs.sw.fintimelistHost.computeIfAbsent(0D, k -> new ArrayList<>());
+			hslist.add(hs);
 		}
 	}
 }

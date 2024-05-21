@@ -149,6 +149,6 @@ public class NetworkHost extends Host {
 		NetworkTags.totaldatatransfer += npkt.pkt.data;
 
 		// send to switch with delay
-		CloudSim.send(getDatacenter().getId(), sw.getId(), delay, CloudSimTags.Network_Event_UP, npkt);
+		CloudSim.send(getDatacenter().getId(), sw.getId(), delay, CloudSimTags.NETWORK_PKT_UP, npkt);
 	}
 }

@@ -18,10 +18,7 @@ import java.util.TreeMap;
 
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
-import org.cloudbus.cloudsim.core.SimEntity;
-import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 import org.cloudbus.cloudsim.lists.VmList;
 
@@ -157,16 +154,19 @@ public class Switch extends SimEntity {
 		// Log.printLine(CloudSim.clock()+"[Broker]: event received:"+ev.getTag());
 		switch (ev.getTag()) {
 			// process the packet from down switch or host
-			case CloudSimTags.Network_Event_UP -> processpacket_up(ev);
+			case CloudSimTags.NETWORK_PKT_UP -> processpacket_up(ev);
 
 			// process the packet from uplink
-			case CloudSimTags.Network_Event_DOWN -> processpacket_down(ev);
+			case CloudSimTags.NETWORK_PKT_DOWN -> processpacket_down(ev);
 
-			case CloudSimTags.Network_Event_send -> processpacketforward(ev);
-			case CloudSimTags.Network_Event_Host -> processhostpacket(ev);
+			// forward packet to an host
+			case CloudSimTags.NETWORK_PKT_FORWARD -> processpacketforward(ev);
 
-			// Resource characteristics answer
-			case CloudSimTags.RESOURCE_Register -> registerHost(ev);
+			// Store packet in host
+			case CloudSimTags.NETWORK_PKT_REACHED -> processhostpacket(ev);
+
+			// Resource characteristics answer (@TODO: Remo Andreoli: not in use)
+			case CloudSimTags.NETWORK_ATTACH_HOST -> registerHost(ev);
 
 			// other unknown tags are processed by this method
 			default -> processOtherEvent(ev);
@@ -198,8 +198,8 @@ public class Switch extends SimEntity {
 		// int src=ev.getSource();
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
 		int recvVMid = hspkt.pkt.receiverVmId;
-		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
-		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
+		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.NETWORK_PKT_FORWARD));
+		schedule(getId(), switching_delay, CloudSimTags.NETWORK_PKT_FORWARD);
 		if (level == NetworkTags.EDGE_LEVEL) {
 			// packet is to be recieved by host
 			int hostid = dc.VmtoHostlist.get(recvVMid);
@@ -230,8 +230,8 @@ public class Switch extends SimEntity {
 		// int src=ev.getSource();
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
 		int recvVMid = hspkt.pkt.receiverVmId;
-		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_send));
-		schedule(getId(), switching_delay, CloudSimTags.Network_Event_send);
+		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.NETWORK_PKT_FORWARD));
+		schedule(getId(), switching_delay, CloudSimTags.NETWORK_PKT_FORWARD);
 
 		if (level == NetworkTags.EDGE_LEVEL) {
 			// packet is received from host
@@ -298,12 +298,13 @@ public class Switch extends SimEntity {
 			}
 		}
 
-		// TODO: Remo Andreoli: Error?
+		throw new IllegalStateException("Unknown switch level " + level);
 	}
         
         /**
          * Register a host that is connected to the switch.
-         * @param ev 
+         * @param ev
+		 *
          */
 	private void registerHost(SimEvent ev) {
 		NetworkHost hs = (NetworkHost) ev.getData();
@@ -316,8 +317,8 @@ public class Switch extends SimEntity {
          */
 	protected void processpacket(SimEvent ev) {
 		// send packet to itself with switching delay (discarding other)
-		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.Network_Event_UP));
-		schedule(getId(), switching_delay, CloudSimTags.Network_Event_UP);
+		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.NETWORK_PKT_UP));
+		schedule(getId(), switching_delay, CloudSimTags.NETWORK_PKT_UP);
 		pktlist.add((NetworkPacket) ev.getData());
 	}
 
@@ -350,7 +351,7 @@ public class Switch extends SimEntity {
 					for (NetworkPacket hspkt : hspktlist) {
 						double delay = 1000 * hspkt.pkt.data / avband;
 
-						this.send(tosend, delay, CloudSimTags.Network_Event_DOWN, hspkt);
+						this.send(tosend, delay, CloudSimTags.NETWORK_PKT_DOWN, hspkt);
 					}
 					hspktlist.clear();
 				}
@@ -366,7 +367,7 @@ public class Switch extends SimEntity {
 					for (NetworkPacket hspkt : hspktlist) {
 						double delay = 1000 * hspkt.pkt.data / avband;
 
-						this.send(tosend, delay, CloudSimTags.Network_Event_UP, hspkt);
+						this.send(tosend, delay, CloudSimTags.NETWORK_PKT_UP, hspkt);
 					}
 					hspktlist.clear();
 				}
@@ -378,7 +379,7 @@ public class Switch extends SimEntity {
 				if (!hspktlist.isEmpty()) {
 					double avband = downlinkbandwidth / hspktlist.size();
 					for (NetworkPacket hspkt : hspktlist) {
-						this.send(getId(), hspkt.pkt.data / avband, CloudSimTags.Network_Event_Host, hspkt);
+						this.send(getId(), hspkt.pkt.data / avband, CloudSimTags.NETWORK_PKT_REACHED, hspkt);
 					}
 					hspktlist.clear();
 				}

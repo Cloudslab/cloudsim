@@ -13,11 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletScheduler;
+import lombok.Getter;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.*;
@@ -62,7 +60,8 @@ public class NetworkDatacenter extends Datacenter {
          * A map of datacenter switches where each key is a switch id
          * and the corresponding value is the switch itself.
          */
-	public Map<Integer, Switch> Switchlist;
+	@Getter
+	private Map<Integer, Switch> SwitchList;
 
         /**
          * A map between VMs and Hosts, where each key
@@ -102,7 +101,7 @@ public class NetworkDatacenter extends Datacenter {
 		VmToSwitchid = new HashMap<>();
 		HostToSwitchid = new HashMap<>();
 		VmtoHostlist = new HashMap<>();
-		Switchlist = new HashMap<>();
+		SwitchList = new HashMap<>();
 	}
 
 	protected void processVmCreate(SimEvent ev, boolean ack) {
@@ -124,12 +123,70 @@ public class NetworkDatacenter extends Datacenter {
 	 */
 	public Map<Integer, Switch> getEdgeSwitch() {
 		Map<Integer, Switch> edgeswitch = new HashMap<>();
-		for (Entry<Integer, Switch> es : Switchlist.entrySet()) {
+		for (Entry<Integer, Switch> es : SwitchList.entrySet()) {
 			if (es.getValue().level == NetworkTags.EDGE_LEVEL) {
 				edgeswitch.put(es.getKey(), es.getValue());
 			}
 		}
 		return edgeswitch;
 
+	}
+
+	public void registerSwitch(Switch sw) {
+		if (!getSwitchList().containsKey(sw.getId())) {
+			getSwitchList().put(sw.getId(), sw);
+		}
+	}
+
+	public void attachSwitchToHost(Switch sw, NetworkHost netHost) {
+		if (!getSwitchList().containsKey(sw.getId()) || !getHostList().contains(netHost)) {
+			throw new IllegalArgumentException("Switch or Host are not part of this Datacenter");
+		}
+
+		if (sw.level != NetworkTags.EDGE_LEVEL) {
+			throw new IllegalArgumentException("Switch is not at the edge level");
+		}
+
+		sw.hostlist.put(netHost.getId(), netHost);
+		sendNow(sw.getId(), CloudSimTags.NETWORK_ATTACH_HOST, netHost);
+		HostToSwitchid.put(netHost.getId(), sw.getId());
+		netHost.sw = sw;
+	}
+
+	public void attachSwitchToSwitch(Switch sw1, Switch sw2) {
+		if (!getSwitchList().containsKey(sw1.getId()) || !getSwitchList().containsKey(sw2.getId())) {
+			throw new IllegalArgumentException("One or both switches are not part of this Datacenter");
+		}
+
+		// Switches are already connected
+		if (sw1.downlinkSwitches.contains(sw2) || sw1.uplinkSwitches.contains(sw2)) {
+			return;
+		}
+
+		if (sw1.level == Switch.SwitchLevel.EDGE_LEVEL) {
+			if (sw2.level != Switch.SwitchLevel.AGGR_LEVEL) {
+				throw new IllegalArgumentException("Edge switch can only be attached to Aggregate switch");
+			} else {
+				sw1.uplinkSwitches.add(sw2);
+				sw2.downlinkSwitches.add(sw1);
+			}
+		} else if (sw1.level == Switch.SwitchLevel.AGGR_LEVEL) {
+			if (sw2.level == Switch.SwitchLevel.ROOT_LEVEL) {
+				sw1.uplinkSwitches.add(sw2);
+				sw2.downlinkSwitches.add(sw1);
+			} else if (sw2.level == Switch.SwitchLevel.EDGE_LEVEL) {
+				sw1.downlinkSwitches.add(sw2);
+				sw2.uplinkSwitches.add(sw1);
+			} else {
+				throw new IllegalArgumentException("Cannot attach to switch of same level");
+			}
+		} else { // root-level sw1
+			if (sw2.level != Switch.SwitchLevel.AGGR_LEVEL) {
+				throw new IllegalArgumentException("Root switch can only be attached to Aggregate switch");
+			} else {
+				sw1.downlinkSwitches.add(sw2);
+				sw2.uplinkSwitches.add(sw1);
+			}
+		}
 	}
 }
