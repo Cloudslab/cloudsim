@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.examples.vmplus;
+package org.cloudbus.cloudsim.examples;
 
 /*
  * Title:        CloudSim Toolkit
@@ -11,24 +11,21 @@ package org.cloudbus.cloudsim.examples.vmplus;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.distributions.ExponentialDistr;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
-import org.cloudbus.cloudsim.vmplus.DatacenterBrokerEX;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
- * A simple example showing how to create a data center with one host and run one cloudlet on it.
+ * A simple example showing the 2 cloudlet scheduling models: time-shared and space-shared.
  *
  * @author Remo Andreoli
  */
-public class RealisticCloudletArrivalExample {
+public class CloudSimExample9 {
+	/** The cloudlet list. */
+	private static List<Cloudlet> cloudletList;
 	/** The vmlist. */
 	private static List<Vm> vmlist;
 
@@ -38,7 +35,7 @@ public class RealisticCloudletArrivalExample {
 	 * @param args the args
 	 */
 	public static void main(String[] args) {
-		Log.printLine("Starting RealisticCloudletArrivalExample...");
+		Log.printLine("Starting CloudSimExample9...");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called before creating any entities.
@@ -54,52 +51,87 @@ public class RealisticCloudletArrivalExample {
 			Datacenter datacenter0 = createDatacenter("Datacenter_0");
 
 			// Third step: Create Broker
-			DatacenterBrokerEX broker = createBroker();
+			DatacenterBroker broker = createBroker();
 			int brokerId = broker.getId();
 
 			// Fourth step: Create one virtual machine
 			vmlist = new ArrayList<>();
 
 			// VM description
-			int vmid = 0;
 			int mips = 1000;
 			long size = 10000; // image size (MB)
-			int ram = 512; // vm memory (MB)
+			int ram = 512; // tVm memory (MB)
 			long bw = 1000;
 			int pesNumber = 1; // number of cpus
 			String vmm = "Xen"; // VMM name
 
-			// create VM
-			Vm vm = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+			// create time-sharing VM
+			vmlist.add(new Vm(0, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared()));
 
-			// add the VM to the vmList
-			vmlist.add(vm);
+			// create space-sharing VM
+			vmlist.add(new Vm(1, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared()));
 
 			// submit vm list to the broker
 			broker.submitGuestList(vmlist);
 
-			// Realistic cloudlet arrival
-			ExponentialDistr distr = new ExponentialDistr(5, 1000);
+			// Fifth step: Create one Cloudlet
+			cloudletList = new ArrayList<>();
 
 			// Cloudlet properties
 			int id = 0;
-			long length = 400000;
+			long length = 1000;
 			long fileSize = 300;
 			long outputSize = 300;
 			UtilizationModel utilizationModel = new UtilizationModelFull();
 
-			for (int i=0; i<50; i++) {
-				List<Cloudlet> cloudletList = new ArrayList<>();;
-				Cloudlet cloudlet = new Cloudlet(i, length, pesNumber, fileSize,
-						outputSize, utilizationModel, utilizationModel,
-						utilizationModel);
-				cloudlet.setUserId(brokerId);
+			Cloudlet cloudlet1 = new Cloudlet(id, 10000, pesNumber, fileSize,
+                                        outputSize, utilizationModel, utilizationModel, 
+                                        utilizationModel);
+			cloudlet1.setUserId(brokerId);
+			cloudlet1.setGuestId(0);
+			cloudletList.add(cloudlet1);
+			id++;
 
-				cloudletList.add(cloudlet);
+			Cloudlet cloudlet2 = new Cloudlet(id, 100000, pesNumber, fileSize,
+					outputSize, utilizationModel, utilizationModel,
+					utilizationModel);
+			cloudlet2.setUserId(brokerId);
+			cloudlet2.setGuestId(0);
+			cloudletList.add(cloudlet2);
+			id++;
 
-				// submit cloudlet list to the broker
-				broker.submitCloudletList(cloudletList, distr.sample());
-			}
+			Cloudlet cloudlet3 = new Cloudlet(id, 1000000, pesNumber, fileSize,
+					outputSize, utilizationModel, utilizationModel,
+					utilizationModel);
+			cloudlet3.setUserId(brokerId);
+			cloudlet3.setGuestId(0);
+			cloudletList.add(cloudlet3);
+			id++;
+
+			Cloudlet cloudlet4 = new Cloudlet(id, 10000, pesNumber, fileSize,
+					outputSize, utilizationModel, utilizationModel,
+					utilizationModel);
+			cloudlet4.setUserId(brokerId);
+			cloudlet4.setGuestId(1);
+			cloudletList.add(cloudlet4);
+			id++;
+
+			Cloudlet cloudlet5 = new Cloudlet(id, 100000, pesNumber, fileSize,
+					outputSize, utilizationModel, utilizationModel,
+					utilizationModel);
+			cloudlet5.setUserId(brokerId);
+			cloudlet5.setGuestId(1);
+			cloudletList.add(cloudlet5);
+			id++;
+
+			Cloudlet cloudlet6 = new Cloudlet(id, 1000000, pesNumber, fileSize,
+					outputSize, utilizationModel, utilizationModel,
+					utilizationModel);
+			cloudlet6.setUserId(brokerId);
+			cloudlet6.setGuestId(1);
+			cloudletList.add(cloudlet6);
+			// submit cloudlet list to the broker
+			broker.submitCloudletList(cloudletList);
 
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();
@@ -108,9 +140,11 @@ public class RealisticCloudletArrivalExample {
 
 			//Final step: Print results when simulation is over
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
+			newList.sort(Comparator.comparing(Cloudlet::getCloudletId));
+
 			printCloudletList(newList);
 
-			Log.printLine("RealisticCloudletArrivalExample finished!");
+			Log.printLine("CloudSimExample9 finished!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.printLine("Unwanted errors happen");
@@ -142,21 +176,31 @@ public class RealisticCloudletArrivalExample {
 
 		// 4. Create Host with its id and list of PEs and add them to the list
 		// of machines
-		int hostId = 0;
 		int ram = 2048; // host memory (MB)
 		long storage = 1000000; // host storage
 		int bw = 10000;
 
 		hostList.add(
 			new Host(
-				hostId,
+				0,
 				new RamProvisionerSimple(ram),
 				new BwProvisionerSimple(bw),
 				storage,
 				peList,
 				new VmSchedulerTimeShared(peList)
 			)
-		); // This is our machine
+		);
+
+		hostList.add(
+				new Host(
+						1,
+						new RamProvisionerSimple(ram),
+						new BwProvisionerSimple(bw),
+						storage,
+						peList,
+						new VmSchedulerTimeShared(peList)
+				)
+		);
 
 		// 5. Create a DatacenterCharacteristics object that stores the
 		// properties of a data center: architecture, OS, list of
@@ -197,10 +241,10 @@ public class RealisticCloudletArrivalExample {
 	 *
 	 * @return the datacenter broker
 	 */
-	private static DatacenterBrokerEX createBroker() {
-		DatacenterBrokerEX broker = null;
+	private static DatacenterBroker createBroker() {
+		DatacenterBroker broker = null;
 		try {
-			broker = new DatacenterBrokerEX("Broker", 1000000);
+			broker = new DatacenterBroker("Broker");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
