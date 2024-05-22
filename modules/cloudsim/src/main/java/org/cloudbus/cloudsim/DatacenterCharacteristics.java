@@ -265,7 +265,7 @@ public class DatacenterCharacteristics {
 		switch (getAllocationPolicy()) {
                         // Assuming all PEs in all PMs have same rating.
                         /*//TODO But it is possible to add PMs of different configurations
-                            in a hostlist attached to a DatacenterCharacteristic attribute
+                            in a hostList attached to a DatacenterCharacteristic attribute
                             of a Datacenter*/
 			case DatacenterCharacteristics.TIME_SHARED:
 			case DatacenterCharacteristics.OTHER_POLICY_SAME_RATING:

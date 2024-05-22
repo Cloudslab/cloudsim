@@ -385,11 +385,11 @@ public class BagOfTaskAppExample {
 		for (int i = 0; i < 1; i++) {
 			edgeswitch[i] = new Switch("Edge" + i, NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
-			// edgeswitch[i].uplinkswitches.add(null);
+			// edgeswitch[i].uplinkSwitches.add(null);
 			dc.registerSwitch(edgeswitch[i]);
 
 			// aggswitch[(int)
-			// (i/Constants.AggSwitchPort)].downlinkswitches.add(edgeswitch[i]);
+			// (i/Constants.AggSwitchPort)].downlinkSwitches.add(edgeswitch[i]);
 		}
 
 		for (NetworkHost hs : dc.<NetworkHost>getHostList()) {

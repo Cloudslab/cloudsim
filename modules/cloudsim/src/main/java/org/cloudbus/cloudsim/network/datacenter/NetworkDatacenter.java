@@ -147,7 +147,7 @@ public class NetworkDatacenter extends Datacenter {
 			throw new IllegalArgumentException("Switch is not at the edge level");
 		}
 
-		sw.hostlist.put(netHost.getId(), netHost);
+		sw.hostList.put(netHost.getId(), netHost);
 		sendNow(sw.getId(), CloudSimTags.NETWORK_ATTACH_HOST, netHost);
 		HostToSwitchid.put(netHost.getId(), sw.getId());
 		netHost.sw = sw;
