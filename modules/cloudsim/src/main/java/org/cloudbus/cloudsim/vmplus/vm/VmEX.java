@@ -14,11 +14,11 @@ import java.util.Objects;
  * and metadata.
  * 
  * @author nikolay.grozev
- * 
+ * @author Remo Andreoli
  */
-public class VMex extends Vm {
+public class VmEX extends Vm {
 
-    private VMStatus status;
+    private VmStatus status;
     private final VMMetadata metadata;
 
     private final String name;
@@ -41,8 +41,8 @@ public class VMex extends Vm {
      * @param vmm
      * @param cloudletScheduler
      */
-    public VMex(final String name, final int userId, final double mips, final int numberOfPes, final int ram,
-            final long bw, final long size, final String vmm, final CloudletScheduler cloudletScheduler) {
+    public VmEX(final String name, final int userId, final double mips, final int numberOfPes, final int ram,
+                final long bw, final long size, final String vmm, final CloudletScheduler cloudletScheduler) {
         this(name, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler, new VMMetadata());
 
     }
@@ -62,9 +62,9 @@ public class VMex extends Vm {
      * @param cloudletScheduler
      * @param metadata
      */
-    public VMex(final String name, final int userId, final double mips, final int numberOfPes, final int ram,
-            final long bw, final long size, final String vmm, final CloudletScheduler cloudletScheduler,
-            final VMMetadata metadata) {
+    public VmEX(final String name, final int userId, final double mips, final int numberOfPes, final int ram,
+                final long bw, final long size, final String vmm, final CloudletScheduler cloudletScheduler,
+                final VMMetadata metadata) {
         super(Id.pollId(Vm.class), userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler);
         this.name = name;
         this.metadata = metadata;
@@ -77,19 +77,19 @@ public class VMex extends Vm {
 
     @Override
     public void setBeingInstantiated(final boolean beingInstantiated) {
-        if (status != null && status != VMStatus.INITIALISING) {
+        if (status != null && status != VmStatus.INITIALISING) {
             throw new IllegalStateException("The initiated status can not be set if the VM is in " + status.name()
                     + " state.");
         }
 
         super.setBeingInstantiated(beingInstantiated);
-        setStatus(super.isBeingInstantiated() ? VMStatus.INITIALISING : VMStatus.RUNNING);
+        setStatus(super.isBeingInstantiated() ? VmStatus.INITIALISING : VmStatus.RUNNING);
     }
 
     @Override
     public boolean isBeingInstantiated() {
-        if ((super.isBeingInstantiated() && status != null && status != VMStatus.INITIALISING)
-                || (!super.isBeingInstantiated() && status == VMStatus.INITIALISING)) {
+        if ((super.isBeingInstantiated() && status != null && status != VmStatus.INITIALISING)
+                || (!super.isBeingInstantiated() && status == VmStatus.INITIALISING)) {
             throw new IllegalStateException("The initiated states are not in synch. state: " + status.name()
                     + " init flag:" + super.isBeingInstantiated());
         }
@@ -101,7 +101,7 @@ public class VMex extends Vm {
      * 
      * @return the status of the VM.
      */
-    public VMStatus getStatus() {
+    public VmStatus getStatus() {
         return status;
     }
 
@@ -110,12 +110,12 @@ public class VMex extends Vm {
      * terminated state, and the init state is attempted to be set it will not
      * be possible to set the state. In case the state can not be set and
      * {@link IllegalStateException} is thrown. The logic about which state
-     * transitions are possible is implemented in {@link VMStatus}.
+     * transitions are possible is implemented in {@link VmStatus}.
      * 
      * @param status
      *            - the new status to set. Must not be null.
      */
-    public void setStatus(final VMStatus status) {
+    public void setStatus(final VmStatus status) {
         switch (status) {
             case INITIALISING -> setSubmissionTime(getCurrentTime());
             case RUNNING -> setStartTime(getCurrentTime());
@@ -124,7 +124,7 @@ public class VMex extends Vm {
         }
 
         this.status = status;
-        super.setBeingInstantiated(VMStatus.INITIALISING == status);
+        super.setBeingInstantiated(VmStatus.INITIALISING == status);
     }
 
     /**
@@ -232,7 +232,7 @@ public class VMex extends Vm {
      * @return if the VM is finished returns its lifetime period. Otherwise - 0;
      */
     public double getLifeDuration() {
-        if (!EnumSet.of(VMStatus.INITIALISING, VMStatus.RUNNING).contains(getStatus())) {
+        if (!EnumSet.of(VmStatus.INITIALISING, VmStatus.RUNNING).contains(getStatus())) {
             return getEndTime() - getStartTime();
         } else {
             return 0;
@@ -259,12 +259,12 @@ public class VMex extends Vm {
      *            - must not be null. Must be a valid scheduler.
      * @return a deep copy of this VM.
      */
-    public VMex clone(final CloudletScheduler scheduler) {
-        if (!getClass().equals(VMex.class)) {
+    public VmEX clone(final CloudletScheduler scheduler) {
+        if (!getClass().equals(VmEX.class)) {
             throw new IllegalStateException("The operation is undefined for subclass: " + getClass().getCanonicalName());
         }
 
-        VMex result = new VMex(getName(), getUserId(), getMips(), getNumberOfPes(), getRam(), getBw(), getSize(),
+        VmEX result = new VmEX(getName(), getUserId(), getMips(), getNumberOfPes(), getRam(), getBw(), getSize(),
                 getVmm(), scheduler, getMetadata().clone());
         return result;
     }

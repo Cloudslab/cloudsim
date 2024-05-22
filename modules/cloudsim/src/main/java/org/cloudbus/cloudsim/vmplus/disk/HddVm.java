@@ -3,9 +3,9 @@ package org.cloudbus.cloudsim.vmplus.disk;
 import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.vmplus.VmSchedulerMapVmsToPes;
-import org.cloudbus.cloudsim.vmplus.vm.MonitoredVMex;
+import org.cloudbus.cloudsim.vmplus.vm.MonitoredVmEX;
 import org.cloudbus.cloudsim.vmplus.vm.VMMetadata;
-import org.cloudbus.cloudsim.vmplus.vm.VMStatus;
+import org.cloudbus.cloudsim.vmplus.vm.VmStatus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author nikolay.grozev
  * 
  */
-public class HddVm extends MonitoredVMex {
+public class HddVm extends MonitoredVmEX {
 
     /** The IO MIPS. */
     private double ioMips;
@@ -250,7 +250,7 @@ public class HddVm extends MonitoredVMex {
     public void setOutOfMemory(final boolean outOfMemory) {
         this.outOfMemory = outOfMemory;
         if (outOfMemory) {
-            setStatus(VMStatus.TERMINATED);
+            setStatus(VmStatus.TERMINATED);
         }
     }
 

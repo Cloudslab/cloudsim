@@ -2,8 +2,8 @@ package org.cloudbus.cloudsim.vmplus.billing;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.vmplus.vm.VMStatus;
-import org.cloudbus.cloudsim.vmplus.vm.VMex;
+import org.cloudbus.cloudsim.vmplus.vm.VmStatus;
+import org.cloudbus.cloudsim.vmplus.vm.VmEX;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -32,19 +32,19 @@ public class GoogleOnDemandPolicy extends BaseCustomerVmBillingPolicy {
     }
 
     @Override
-    public BigDecimal billSingleVm(final VMex vm) {
+    public BigDecimal billSingleVm(final VmEX vm) {
         double timeAfterBoot = vm.getTimeAfterBooting();
         return computeBill(vm, timeAfterBoot);
     }
 
     @Override
-    public BigDecimal billSingleVmUntil(VMex vm, double endTime) {
+    public BigDecimal billSingleVmUntil(VmEX vm, double endTime) {
         double time = vm.getEndTime() < 0 || vm.getEndTime() > endTime ? endTime - vm.getStartTime() : vm
                 .getTimeAfterBooting();
         return computeBill(vm, time);
     }
 
-    public BigDecimal computeBill(final VMex vm, double duration) {
+    public BigDecimal computeBill(final VmEX vm, double duration) {
         BigDecimal pricePerMin = null;
         try {
             pricePerMin = prices.get(keyOf(vm)).divide(BigDecimal.valueOf(60), RoundingMode.HALF_UP);
@@ -64,7 +64,7 @@ public class GoogleOnDemandPolicy extends BaseCustomerVmBillingPolicy {
     @Override
     public double nexChargeTime(final Vm vm) {
         double result = -1;
-        if (vm instanceof VMex vmex && ((VMex) vm).getStatus() == VMStatus.RUNNING) {
+        if (vm instanceof VmEX vmex && ((VmEX) vm).getStatus() == VmStatus.RUNNING) {
             double elapsedTime = getCurrentTime() - vmex.getStartTime();
             result = vmex.getStartTime() + MINUTE * Math.max(10, (int) (elapsedTime / MINUTE) + 1);
         }

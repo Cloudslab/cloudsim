@@ -5,7 +5,7 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
-import org.cloudbus.cloudsim.vmplus.MonitoringBorkerEX;
+import org.cloudbus.cloudsim.vmplus.MonitoringBrokerEX;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
 import org.cloudbus.cloudsim.web.ILoadBalancer;
 import org.cloudbus.cloudsim.web.SessionFailedException;
@@ -25,7 +25,7 @@ import java.util.logging.Level;
  * @author nikolay.grozev
  * 
  */
-public class WebBroker extends MonitoringBorkerEX {
+public class WebBroker extends MonitoringBrokerEX {
 
     // FIXME find a better way to get an unused tag instead of hardcoding
     protected static final int TIMER_TAG = BROKER_MEASURE_UTIL_NOW + 20;

@@ -2,9 +2,9 @@ package org.cloudbus.cloudsim.vmplus.delay;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.vmplus.billing.BaseCustomerVmBillingPolicy;
-import org.cloudbus.cloudsim.vmplus.vm.VMex;
+import org.cloudbus.cloudsim.vmplus.vm.VmEX;
 import org.uncommons.maths.number.NumberGenerator;
 import org.uncommons.maths.random.GaussianGenerator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
@@ -32,7 +32,7 @@ import java.util.Random;
  * @author nikolay.grozev
  * 
  */
-public class GaussianByTypeBootDelay implements IVMBootDelayDistribution {
+public class GaussianByTypeBootDelay implements IVmBootDelayDistribution {
 
     private final double defaultValue;
     private final Map<Pair<String, String>, NumberGenerator<Double>> delayGenerators = new HashMap<>();
@@ -70,7 +70,6 @@ public class GaussianByTypeBootDelay implements IVMBootDelayDistribution {
      *            of VMs which are not present in this mapping is considered 0.
      * @param seed
      *            - a seed for the generator. If null, then no seed is used.
-     * @param defaultVal
      */
     public GaussianByTypeBootDelay(final Map<Pair<String, String>, Pair<Double, Double>> delayDefs, final byte[] seed) {
         this(delayDefs, seed, 0);
@@ -85,7 +84,6 @@ public class GaussianByTypeBootDelay implements IVMBootDelayDistribution {
      * @param seedGen
      *            - the seed generator to use. If null or erronous, then default
      *            seed gen policy is used.
-     * @param defaultVal
      */
     public GaussianByTypeBootDelay(final Map<Pair<String, String>, Pair<Double, Double>> delayDefs,
             final SeedGenerator seedGen) {
@@ -147,9 +145,9 @@ public class GaussianByTypeBootDelay implements IVMBootDelayDistribution {
     }
 
     @Override
-    public double getDelay(final Vm vm) {
+    public double getDelay(final GuestEntity guest) {
         double result = defaultValue;
-        if (vm instanceof VMex vmex) {
+        if (guest instanceof VmEX vmex) {
             NumberGenerator<Double> gaussianGenerator = null;
             Pair<String, String> key = BaseCustomerVmBillingPolicy.keyOf(vmex);
             Pair<String, String> partialKey1 = ImmutablePair.of(vmex.getMetadata().getType(), null);

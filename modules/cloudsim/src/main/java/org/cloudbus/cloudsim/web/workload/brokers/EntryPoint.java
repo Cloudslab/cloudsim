@@ -3,7 +3,7 @@ package org.cloudbus.cloudsim.web.workload.brokers;
 import org.cloudbus.cloudsim.vmplus.disk.HddVm;
 import org.cloudbus.cloudsim.geolocation.IGeolocationService;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.vm.VMStatus;
+import org.cloudbus.cloudsim.vmplus.vm.VmStatus;
 import org.cloudbus.cloudsim.web.ILoadBalancer;
 import org.cloudbus.cloudsim.web.WebSession;
 
@@ -178,7 +178,7 @@ public class EntryPoint extends BaseEntryPoint implements IEntryPoint {
                 for (HddVm vm : lb.getAppServers()) {
                     double cpuUtil = vm.getCPUUtil();
                     double ramUtil = vm.getRAMUtil();
-                    if (vm.getStatus() == VMStatus.RUNNING && srvToNumSessions.containsKey(vm.getId())
+                    if (vm.getStatus() == VmStatus.RUNNING && srvToNumSessions.containsKey(vm.getId())
                             && (cpuUtil > 0.05 && ramUtil > 0)) {
                         numRunning++;
                         int numSessions = srvToNumSessions.get(vm.getId());
@@ -214,8 +214,8 @@ public class EntryPoint extends BaseEntryPoint implements IEntryPoint {
                 boolean result = true;
                 ILoadBalancer lb = b.getLoadBalancers().get(appId);
                 for (HddVm db : lb.getDbBalancer().getVMs()) {
-                    if (db.getStatus() == VMStatus.INITIALISING
-                            || (db.getStatus() == VMStatus.RUNNING && db.getCPUUtil() < OVERLOAD_UTIL
+                    if (db.getStatus() == VmStatus.INITIALISING
+                            || (db.getStatus() == VmStatus.RUNNING && db.getCPUUtil() < OVERLOAD_UTIL
                                     && db.getRAMUtil() < OVERLOAD_UTIL && db.getDiskUtil() < OVERLOAD_UTIL)) {
                         result = false;
                         break;

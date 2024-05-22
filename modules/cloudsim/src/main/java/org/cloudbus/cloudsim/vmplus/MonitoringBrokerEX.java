@@ -1,14 +1,13 @@
 package org.cloudbus.cloudsim.vmplus;
 
 import org.cloudbus.cloudsim.ResCloudlet;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.vmplus.disk.HddCloudlet;
 import org.cloudbus.cloudsim.vmplus.disk.HddResCloudlet;
 import org.cloudbus.cloudsim.vmplus.disk.HddVm;
-import org.cloudbus.cloudsim.vmplus.vm.MonitoredVMex;
+import org.cloudbus.cloudsim.vmplus.vm.MonitoredVmEX;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -17,7 +16,7 @@ import java.util.Map;
 
 /**
  * A broker which measures the utilisation of its VMs. This broker only measures
- * the utilisation of vms of type {@link MonitoredVMex}. VMs of other types are
+ * the utilisation of vms of type {@link MonitoredVmEX}. VMs of other types are
  * processed as usual, and their utilisation is not measured.
  * 
  * <br>
@@ -29,7 +28,7 @@ import java.util.Map;
  * @author nikolay.grozev
  * 
  */
-public class MonitoringBorkerEX extends DatacenterBrokerEX {
+public class MonitoringBrokerEX extends DatacenterBrokerEX {
 
     // FIXME find a better way to get an unused tag instead of hardcoding ...
     protected static final int BROKER_MEASURE_UTIL_NOW = BROKER_DESTROY_ITSELF_NOW + 20;
@@ -72,8 +71,8 @@ public class MonitoringBorkerEX extends DatacenterBrokerEX {
      * @throws Exception
      *             - from the superclass.
      */
-    public MonitoringBorkerEX(final String name, final double lifeLength, final double monitoringPeriod,
-            final double autoScalePeriod) throws Exception {
+    public MonitoringBrokerEX(final String name, final double lifeLength, final double monitoringPeriod,
+                              final double autoScalePeriod) throws Exception {
         super(name, lifeLength);
         this.monitoringPeriod = monitoringPeriod <= 0 ? -1 : Math.max(monitoringPeriod,
                 CloudSim.getMinTimeBetweenEvents());
@@ -177,8 +176,8 @@ public class MonitoringBorkerEX extends DatacenterBrokerEX {
         double currTime = CloudSim.clock();
         Map<Integer, double[]> vmsUtil = new LinkedHashMap<>();
         for (GuestEntity vm : getGuestList()) {
-            if (vm instanceof MonitoredVMex) {
-                vmsUtil.put(vm.getId(), ((MonitoredVMex) vm).getAveragedUtil());
+            if (vm instanceof MonitoredVmEX) {
+                vmsUtil.put(vm.getId(), ((MonitoredVmEX) vm).getAveragedUtil());
             }
         }
         recordedUtilisations.put(currTime, vmsUtil);
@@ -197,13 +196,13 @@ public class MonitoringBorkerEX extends DatacenterBrokerEX {
 
     protected void measureUtil() {
         for (GuestEntity vm : getGuestList()) {
-            if (vm instanceof MonitoredVMex) {
-                updateUtil(((MonitoredVMex) vm));
+            if (vm instanceof MonitoredVmEX) {
+                updateUtil(((MonitoredVmEX) vm));
             }
         }
     }
 
-    protected void updateUtil(final MonitoredVMex vm) {
+    protected void updateUtil(final MonitoredVmEX vm) {
         if (monitoringPeriod <= 0 || vm.getCloudletScheduler().getCloudletExecList().isEmpty()) {
             vm.updatePerformance(0, 0, 0);
         } else {

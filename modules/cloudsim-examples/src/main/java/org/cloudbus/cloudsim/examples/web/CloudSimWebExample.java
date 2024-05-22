@@ -99,7 +99,7 @@ public class CloudSimWebExample {
             List<WebSession> sessions = generateRandomSessions(broker, 100);
             
             // Submit the sessions with 1 sec delay, to wait for the VMs to boot.
-            // NOTE: if you have a delay policy (see IVMBootDelayDistribution) you may
+            // NOTE: if you have a delay policy (see IVmBootDelayDistribution) you may
             // need to delay the submission with more.
             broker.submitSessionsAtTime(sessions, balancer.getAppId(), 1);
 

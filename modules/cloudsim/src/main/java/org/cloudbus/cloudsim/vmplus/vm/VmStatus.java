@@ -11,7 +11,7 @@ import java.util.Set;
  * @author nikolay.grozev
  * 
  */
-public enum VMStatus {
+public enum VmStatus {
 
     /** The VM is booting. */
     INITIALISING(),
@@ -20,9 +20,9 @@ public enum VMStatus {
     /** The VM has been terminated. */
     TERMINATED(RUNNING, INITIALISING);
 
-    private final Set<VMStatus> validPrevStates = new HashSet<>();
+    private final Set<VmStatus> validPrevStates = new HashSet<>();
 
-    VMStatus(final VMStatus... statuses) {
+    VmStatus(final VmStatus... statuses) {
         validPrevStates.addAll(Arrays.asList(statuses));
     }
 
@@ -33,7 +33,7 @@ public enum VMStatus {
      *            - the new status to check. Must not be null.
      * @return if the param status can be a successor of this status.
      */
-    public boolean isValidNextState(final VMStatus stat) {
+    public boolean isValidNextState(final VmStatus stat) {
         return stat.validPrevStates.contains(this);
     }
 

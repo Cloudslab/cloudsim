@@ -2,7 +2,7 @@ package org.cloudbus.cloudsim.web;
 
 import org.cloudbus.cloudsim.vmplus.disk.HddVm;
 import org.cloudbus.cloudsim.vmplus.util.Id;
-import org.cloudbus.cloudsim.vmplus.vm.VMStatus;
+import org.cloudbus.cloudsim.vmplus.vm.VmStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,7 @@ public abstract class BaseWebLoadBalancer implements ILoadBalancer {
     public List<HddVm> getRunningAppServers() {
         List<HddVm> result = new ArrayList<>();
         for (HddVm vm : getAppServers()) {
-            if (vm.getStatus() == VMStatus.RUNNING) {
+            if (vm.getStatus() == VmStatus.RUNNING) {
                 result.add(vm);
             }
         }

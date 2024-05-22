@@ -5,7 +5,7 @@ import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.vmplus.DatacenterEX;
-import org.cloudbus.cloudsim.vmplus.delay.IVMBootDelayDistribution;
+import org.cloudbus.cloudsim.vmplus.delay.IVmBootDelayDistribution;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class HddDataCenter extends DatacenterEX {
 
     public HddDataCenter(final String name, final DatacenterCharacteristics characteristics,
                          final VmAllocationPolicy vmAllocationPolicy, final List<Storage> storageList,
-                         final double schedulingInterval, IVMBootDelayDistribution delayDistribution) throws Exception {
+                         final double schedulingInterval, IVmBootDelayDistribution delayDistribution) throws Exception {
         super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval, delayDistribution);
     }
 

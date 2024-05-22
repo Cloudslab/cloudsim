@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.vmplus.delay;
 
-import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
  * Defines the boot delay of a VM as a constant.
@@ -8,7 +8,7 @@ import org.cloudbus.cloudsim.Vm;
  * @author nikolay.grozev
  * 
  */
-public class ConstantVMBootDelay implements IVMBootDelayDistribution {
+public class ConstantVmBootDelay implements IVmBootDelayDistribution {
 
     private final double delay;
 
@@ -18,12 +18,12 @@ public class ConstantVMBootDelay implements IVMBootDelayDistribution {
      * @param delay
      *            - the constant delay. Must not be negative.
      */
-    public ConstantVMBootDelay(final double delay) {
+    public ConstantVmBootDelay(final double delay) {
         this.delay = delay;
     }
 
     @Override
-    public double getDelay(final Vm vm) {
+    public double getDelay(final GuestEntity guest) {
         return delay;
     }
 }

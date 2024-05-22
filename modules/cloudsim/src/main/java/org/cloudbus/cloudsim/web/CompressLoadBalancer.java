@@ -3,7 +3,7 @@ package org.cloudbus.cloudsim.web;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.vmplus.disk.HddVm;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.vm.MonitoredVMex;
+import org.cloudbus.cloudsim.vmplus.vm.MonitoredVmEX;
 import org.cloudbus.cloudsim.web.workload.brokers.WebBroker;
 
 import java.util.*;
@@ -149,7 +149,7 @@ public class CompressLoadBalancer extends BaseWebLoadBalancer implements ILoadBa
         return result;
     }
 
-    private static class CPUUtilisationComparator implements Comparator<MonitoredVMex> {
+    private static class CPUUtilisationComparator implements Comparator<MonitoredVmEX> {
 
         private Set<Integer> usedASServers;
 
@@ -158,7 +158,7 @@ public class CompressLoadBalancer extends BaseWebLoadBalancer implements ILoadBa
         }
 
         @Override
-        public int compare(final MonitoredVMex vm1, final MonitoredVMex vm2) {
+        public int compare(final MonitoredVmEX vm1, final MonitoredVmEX vm2) {
             if (!usedASServers.contains(vm1.getId()) && !usedASServers.contains(vm2.getId())) {
                 return 0;
             } else if (!usedASServers.contains(vm1.getId())) {

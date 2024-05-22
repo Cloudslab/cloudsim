@@ -399,12 +399,7 @@ public class Datacenter extends SimEntity {
 			int[] data = new int[3];
 			data[0] = getId();
 			data[1] = vm.getId();
-
-			if (result) {
-				data[2] = CloudSimTags.TRUE;
-			} else {
-				data[2] = CloudSimTags.FALSE;
-			}
+			data[2] = result ? CloudSimTags.TRUE : CloudSimTags.FALSE;
 			send(vm.getUserId(), CloudSim.getMinTimeBetweenEvents(), CloudSimTags.VM_CREATE_ACK, data);
 		}
 

@@ -10,8 +10,8 @@ import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.vmplus.billing.IVmBillingPolicy;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.vm.VMStatus;
-import org.cloudbus.cloudsim.vmplus.vm.VMex;
+import org.cloudbus.cloudsim.vmplus.vm.VmStatus;
+import org.cloudbus.cloudsim.vmplus.vm.VmEX;
 import org.cloudbus.cloudsim.lists.VmList;
 
 import java.math.BigDecimal;
@@ -25,7 +25,7 @@ import java.util.logging.Level;
  * (iii) predefined "life length" of the broker; (iv) billing.
  * 
  * @author nikolay.grozev
- * 
+ * @author Remo Andreoli
  */
 public class DatacenterBrokerEX extends DatacenterBroker {
 
@@ -74,6 +74,10 @@ public class DatacenterBrokerEX extends DatacenterBroker {
     public DatacenterBrokerEX(final String name, final double lifeLength) throws Exception {
         super(name);
         this.lifeLength = lifeLength;
+    }
+
+    public DatacenterBrokerEX(final String name) throws Exception {
+        this(name, -1);
     }
 
     /**
@@ -172,7 +176,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
             int[] data = (int[]) ev.getData();
             int vmId = data[1];
 
-            Vm vm = VmList.getById(getGuestList(), vmId);
+            GuestEntity vm = VmList.getById(getGuestList(), vmId);
             if (vm.isBeingInstantiated()) {
                 vm.setBeingInstantiated(false);
             }
@@ -314,7 +318,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
         int result = data[2];
 
         if (result == CloudSimTags.TRUE) {
-            Vm vm = VmList.getById(getGuestsCreatedList(), vmId);
+            GuestEntity vm = VmList.getById(getGuestsCreatedList(), vmId);
 
             // One more ack. to consider
             incrementVmDesctructsAcks();
@@ -349,9 +353,9 @@ public class DatacenterBrokerEX extends DatacenterBroker {
     }
 
     private void finilizeVM(final GuestEntity vm) {
-        if (vm instanceof VMex vmEX) {
-            if (vmEX.getStatus() != VMStatus.TERMINATED) {
-                vmEX.setStatus(VMStatus.TERMINATED);
+        if (vm instanceof VmEX vmEX) {
+            if (vmEX.getStatus() != VmStatus.TERMINATED) {
+                vmEX.setStatus(VmStatus.TERMINATED);
             }
         }
     }
@@ -368,7 +372,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
         }
 
         int requestedVmTerminations = 0;
-        for (final Vm vm : vms) {
+        for (final GuestEntity vm : vms) {
             if (vm.getHost() == null || vm.getHost().getDatacenter() == null) {
                 Log.print("VM %d has not been assigned in a valid way and can not be terminated.".formatted(vm.getId()));
                 continue;

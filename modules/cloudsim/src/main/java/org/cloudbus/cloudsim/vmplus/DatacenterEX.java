@@ -5,9 +5,10 @@ import lombok.Setter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
-import org.cloudbus.cloudsim.vmplus.delay.ConstantVMBootDelay;
-import org.cloudbus.cloudsim.vmplus.delay.IVMBootDelayDistribution;
+import org.cloudbus.cloudsim.vmplus.delay.ConstantVmBootDelay;
+import org.cloudbus.cloudsim.vmplus.delay.IVmBootDelayDistribution;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +17,7 @@ import java.util.Objects;
  * Extended datacenter, that allows for VM booting delays to be modeled.
  * 
  * @author nikolay.grozev
+ * @author Remo Andreoli
  * 
  */
 public class DatacenterEX extends Datacenter {
@@ -25,7 +27,7 @@ public class DatacenterEX extends Datacenter {
 
     @Setter
     @Getter
-    private IVMBootDelayDistribution delayDistribution = new ConstantVMBootDelay(0);
+    private IVmBootDelayDistribution delayDistribution = new ConstantVmBootDelay(0);
 
     public DatacenterEX(String name, DatacenterCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy,
                         List<Storage> storageList, double schedulingInterval) throws Exception {
@@ -33,7 +35,7 @@ public class DatacenterEX extends Datacenter {
     }
 
     public DatacenterEX(String name, DatacenterCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy,
-                        List<Storage> storageList, double schedulingInterval, IVMBootDelayDistribution delayDistribution)
+                        List<Storage> storageList, double schedulingInterval, IVmBootDelayDistribution delayDistribution)
             throws Exception {
         super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
         this.delayDistribution = delayDistribution;
@@ -42,7 +44,7 @@ public class DatacenterEX extends Datacenter {
     @Override
     protected void processOtherEvent(final SimEvent ev) {
         if (ev.getTag() == DATACENTER_BOOT_VM_TAG) {
-            Vm vm = (Vm) ev.getData();
+            GuestEntity vm = (GuestEntity) ev.getData();
             if (vm.isBeingInstantiated()) {
                 vm.setBeingInstantiated(false);
             }
@@ -57,10 +59,9 @@ public class DatacenterEX extends Datacenter {
      */
     @Override
     protected void processVmCreate(final SimEvent ev, final boolean ack) {
-        Vm vm = (Vm) ev.getData();
+        GuestEntity vm = (GuestEntity) ev.getData();
 
         boolean result = getVmAllocationPolicy().allocateHostForGuest(vm);
-
         double delay = delayDistribution.getDelay(vm);
         if (ack) {
             int[] data = new int[3];
@@ -75,9 +76,7 @@ public class DatacenterEX extends Datacenter {
 
             getVmList().add(vm);
 
-            // if (vm.isBeingInstantiated()) {
-            // vm.setBeingInstantiated(false);
-            // }
+            // May not be instantiated yet
 
             vm.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
                     .getAllocatedMipsForGuest(vm));

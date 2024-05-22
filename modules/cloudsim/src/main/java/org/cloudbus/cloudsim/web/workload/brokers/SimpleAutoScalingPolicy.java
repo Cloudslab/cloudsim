@@ -2,11 +2,11 @@ package org.cloudbus.cloudsim.web.workload.brokers;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.vmplus.IAutoscalingPolicy;
-import org.cloudbus.cloudsim.vmplus.MonitoringBorkerEX;
+import org.cloudbus.cloudsim.vmplus.MonitoringBrokerEX;
 import org.cloudbus.cloudsim.vmplus.disk.HddCloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.vmplus.disk.HddVm;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.vm.VMStatus;
+import org.cloudbus.cloudsim.vmplus.vm.VmStatus;
 import org.cloudbus.cloudsim.web.ILoadBalancer;
 
 import java.util.EnumSet;
@@ -43,7 +43,7 @@ public class SimpleAutoScalingPolicy implements IAutoscalingPolicy {
     }
 
     @Override
-    public void scale(MonitoringBorkerEX broker) {
+    public void scale(MonitoringBrokerEX broker) {
         double currentTime = CloudSim.clock();
         boolean performScaling = lastActionTime < 0 || lastActionTime + coolDownPeriod < currentTime;
 
@@ -56,7 +56,7 @@ public class SimpleAutoScalingPolicy implements IAutoscalingPolicy {
             int count = 0;
             HddVm candidateToStop = null;
             for (HddVm vm : loadBalancer.getAppServers()) {
-                if (!EnumSet.of(VMStatus.INITIALISING, VMStatus.RUNNING).contains(vm.getStatus())) {
+                if (!EnumSet.of(VmStatus.INITIALISING, VmStatus.RUNNING).contains(vm.getStatus())) {
                     continue;
                 }
                 avgCPU += vm.getCPUUtil();

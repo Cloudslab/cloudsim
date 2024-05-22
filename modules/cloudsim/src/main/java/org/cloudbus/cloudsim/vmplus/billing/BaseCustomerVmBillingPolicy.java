@@ -6,7 +6,7 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.vm.VMex;
+import org.cloudbus.cloudsim.vmplus.vm.VmEX;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -40,13 +40,13 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
     public BigDecimal bill(final List<? extends GuestEntity> vms) {
         BigDecimal result = BigDecimal.ZERO;
         for (GuestEntity vm : vms) {
-            if (vm instanceof VMex) {
-                VMex vmEx = (VMex) vm;
+            if (vm instanceof VmEX) {
+                VmEX vmEx = (VmEX) vm;
                 if (shouldBillVm(vmEx)) {
                     result = result.add(billSingleVm(vmEx));
                 }
             } else {
-                CustomLog.printConcat("Unable to bill VM", vm.getId(), " as it is not of type ", VMex.class.getName());
+                CustomLog.printConcat("Unable to bill VM", vm.getId(), " as it is not of type ", VmEX.class.getName());
             }
         }
         return result;
@@ -56,12 +56,12 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
     public BigDecimal bill(final List<? extends GuestEntity> vms, double before) {
         BigDecimal result = BigDecimal.ZERO;
         for (GuestEntity vm : vms) {
-            if (vm instanceof VMex vmEx) {
+            if (vm instanceof VmEX vmEx) {
                 if (shouldBillVm(vmEx)) {
                     result = result.add(billSingleVmUntil(vmEx, before));
                 }
             } else {
-                CustomLog.printConcat("Unable to bill VM", vm.getId(), " as it is not of type ", VMex.class.getName());
+                CustomLog.printConcat("Unable to bill VM", vm.getId(), " as it is not of type ", VmEX.class.getName());
             }
         }
         return result;
@@ -75,7 +75,7 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
      *            - the vm to check for.
      * @return if the VM should be billed.
      */
-    public boolean shouldBillVm(final VMex vm) {
+    public boolean shouldBillVm(final VmEX vm) {
         return keyOf(vm) != null;
     }
 
@@ -86,7 +86,7 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
      *            - the vm
      * @return the bill for a single VM.
      */
-    public abstract BigDecimal billSingleVm(final VMex vm);
+    public abstract BigDecimal billSingleVm(final VmEX vm);
 
     /**
      * Returns the accummulated bill for a single VM before a specified time.
@@ -96,7 +96,7 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
      * @param endTime
      * @return the bill for a single VM.
      */
-    public abstract BigDecimal billSingleVmUntil(final VMex vm, double endTime);
+    public abstract BigDecimal billSingleVmUntil(final VmEX vm, double endTime);
 
     /**
      * Returns the current simulation time. Can be overridden for test purposes.
@@ -107,7 +107,7 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
         return CloudSim.clock();
     }
 
-    public static ImmutablePair<String, String> keyOf(final VMex vm) {
+    public static ImmutablePair<String, String> keyOf(final VmEX vm) {
         if (vm.getMetadata() != null) {
             return ImmutablePair.of(vm.getMetadata().getType(), vm.getMetadata().getOS());
         }
@@ -117,8 +117,8 @@ public abstract class BaseCustomerVmBillingPolicy implements IVmBillingPolicy {
     @Override
     public BigDecimal normalisedCostPerMinute(final Vm vm) {
         BigDecimal result = BigDecimal.valueOf(-1);
-        if (vm instanceof VMex) {
-            Pair<String, String> key = keyOf((VMex) vm);
+        if (vm instanceof VmEX) {
+            Pair<String, String> key = keyOf((VmEX) vm);
             try {
                 result = prices.containsKey(key) ? prices.get(key).divide(BigDecimal.valueOf(60d), RoundingMode.HALF_UP) : result;
             } catch (ArithmeticException ex) {

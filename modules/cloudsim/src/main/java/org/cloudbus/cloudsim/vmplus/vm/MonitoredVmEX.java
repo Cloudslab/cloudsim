@@ -19,7 +19,7 @@ import java.util.List;
  * @author nikolay.grozev
  * 
  */
-public class MonitoredVMex extends VMex {
+public class MonitoredVmEX extends VmEX {
 
     private final double summaryPeriodLength;
 
@@ -45,9 +45,9 @@ public class MonitoredVMex extends VMex {
      *            - the historical period, used to determine the utilisation at
      *            runtime.
      */
-    public MonitoredVMex(final String name, final int userId, final double mips, final int numberOfPes, int ram,
-            final long bw, final long size, final String vmm, final CloudletScheduler cloudletScheduler,
-            final double summaryPeriodLength) {
+    public MonitoredVmEX(final String name, final int userId, final double mips, final int numberOfPes, int ram,
+                         final long bw, final long size, final String vmm, final CloudletScheduler cloudletScheduler,
+                         final double summaryPeriodLength) {
         super(name, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler);
         this.summaryPeriodLength = summaryPeriodLength;
     }
@@ -70,9 +70,9 @@ public class MonitoredVMex extends VMex {
      *            - the historical period, used to determine the utilisation at
      *            runtime.
      */
-    public MonitoredVMex(final String name, final int userId, final double mips, final int numberOfPes, final int ram,
-            final long bw, final long size, final String vmm, final CloudletScheduler cloudletScheduler,
-            final VMMetadata metadata, final double summaryPeriodLength) {
+    public MonitoredVmEX(final String name, final int userId, final double mips, final int numberOfPes, final int ram,
+                         final long bw, final long size, final String vmm, final CloudletScheduler cloudletScheduler,
+                         final VMMetadata metadata, final double summaryPeriodLength) {
         super(name, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler, metadata);
         this.summaryPeriodLength = summaryPeriodLength;
     }
@@ -173,12 +173,12 @@ public class MonitoredVMex extends VMex {
     }
 
     @Override
-    public MonitoredVMex clone(final CloudletScheduler scheduler) {
-        if (!getClass().equals(MonitoredVMex.class)) {
+    public MonitoredVmEX clone(final CloudletScheduler scheduler) {
+        if (!getClass().equals(MonitoredVmEX.class)) {
             throw new IllegalStateException("The operation is undefined for subclass: " + getClass().getCanonicalName());
         }
 
-        MonitoredVMex result = new MonitoredVMex(getName(), getUserId(), getMips(), getNumberOfPes(), getRam(),
+        MonitoredVmEX result = new MonitoredVmEX(getName(), getUserId(), getMips(), getNumberOfPes(), getRam(),
                 getBw(), getSize(), getVmm(), scheduler, getMetadata().clone(), getSummaryPeriodLength());
         return result;
     }

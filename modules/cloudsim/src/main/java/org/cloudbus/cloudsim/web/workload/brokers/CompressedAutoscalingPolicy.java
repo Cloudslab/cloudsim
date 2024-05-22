@@ -2,12 +2,12 @@ package org.cloudbus.cloudsim.web.workload.brokers;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.vmplus.IAutoscalingPolicy;
-import org.cloudbus.cloudsim.vmplus.MonitoringBorkerEX;
+import org.cloudbus.cloudsim.vmplus.MonitoringBrokerEX;
 import org.cloudbus.cloudsim.vmplus.billing.IVmBillingPolicy;
 import org.cloudbus.cloudsim.vmplus.disk.HddCloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.vmplus.disk.HddVm;
 import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.vm.VMStatus;
+import org.cloudbus.cloudsim.vmplus.vm.VmStatus;
 import org.cloudbus.cloudsim.web.ILoadBalancer;
 
 import java.util.*;
@@ -40,7 +40,7 @@ public class CompressedAutoscalingPolicy implements IAutoscalingPolicy {
     }
 
     @Override
-    public void scale(final MonitoringBorkerEX broker) {
+    public void scale(final MonitoringBrokerEX broker) {
         if (broker instanceof WebBroker webBroker) {
             ILoadBalancer loadBalancer = webBroker.getLoadBalancers().get(appId);
             Set<Integer> usedASServers = webBroker.getUsedASServers();
@@ -53,7 +53,7 @@ public class CompressedAutoscalingPolicy implements IAutoscalingPolicy {
             boolean debug = true;
             debugSB.setLength(0);
             for (HddVm vm : loadBalancer.getAppServers()) {
-                if (!EnumSet.of(VMStatus.INITIALISING, VMStatus.RUNNING).contains(vm.getStatus())) {
+                if (!EnumSet.of(VmStatus.INITIALISING, VmStatus.RUNNING).contains(vm.getStatus())) {
                     continue;
                 }
                 numAS++;
@@ -103,7 +103,7 @@ public class CompressedAutoscalingPolicy implements IAutoscalingPolicy {
                 freeVms.sort(new CloudPriceComparator(webBroker.getVMBillingPolicy()));
                 for (int i = 0; i < numVmsToStop; i++) {
                     double billTime = webBroker.getVMBillingPolicy().nexChargeTime(freeVms.get(i));
-                    if (freeVms.get(i).getStatus() == VMStatus.RUNNING && billTime - CloudSim.clock() < delta
+                    if (freeVms.get(i).getStatus() == VmStatus.RUNNING && billTime - CloudSim.clock() < delta
                             && toStop.size() < numAS - 1) {
                         toStop.add(freeVms.get(i));
                     } else {
