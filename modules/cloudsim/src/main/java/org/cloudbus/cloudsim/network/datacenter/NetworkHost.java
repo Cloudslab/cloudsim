@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmScheduler;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
@@ -85,7 +84,7 @@ public class NetworkHost extends Host {
 			hs.pkt.recvTime = CloudSim.clock();
 
 			// insert the packet in receivedlist of VM
-			Vm vm = VmList.getById(getGuestList(), hs.pkt.receiverVmId);
+			GuestEntity vm = VmList.getById(getGuestList(), hs.pkt.receiverVmId);
 			List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) vm.getCloudletScheduler()).pktrecv
 					.computeIfAbsent(hs.pkt.senderVmId, k -> new ArrayList<>());
 
@@ -106,16 +105,30 @@ public class NetworkHost extends Host {
 		for (GuestEntity senderVm : super.getGuestList()) {
 			Map<Integer, List<HostPacket>> pkttosend = ((NetworkCloudletSpaceSharedScheduler) senderVm
 															.getCloudletScheduler()).pkttosend;
+			int totalPkts = pkttosend.values().stream().mapToInt(List::size).sum();
 			for (Entry<Integer, List<HostPacket>> es : pkttosend.entrySet()) {
 				List<HostPacket> pktlist = es.getValue();
 				for (HostPacket hpkt : pktlist) {
 					NetworkPacket npkt = new NetworkPacket(getId(), hpkt);
-					GuestEntity targetVm = VmList.getById(this.getGuestList(), npkt.receiverVmId);
-					if (targetVm != null) { // send locally to Vm, no network delay
-							flag = true;
-							sendPacketLocally(npkt, targetVm);
+					GuestEntity receiverVm = VmList.getById(this.getGuestList(), npkt.receiverVmId);
+					if (receiverVm != null) { // send locally to Vm, no network delay
+						flag = true;
+
+						npkt.sendTime = npkt.recvTime;
+						npkt.pkt.recvTime = CloudSim.clock();
+
+						// insert the packet in receivedlist on targetVm
+						((NetworkCloudletSpaceSharedScheduler) receiverVm.getCloudletScheduler()).pktrecv
+								.computeIfAbsent(npkt.pkt.senderVmId, k -> new ArrayList<>()).add(npkt.pkt);
 					} else { // send to edge switch, as target VM is hosted on another host
-							sendPacketGlobally(npkt, pkttosend);
+						// Assumption: no overprovisioning of Vm's bandwidths
+						double avband = (double) senderVm.getBw() / totalPkts;
+						double delay = (1000 * npkt.pkt.data) / avband;
+
+						NetworkTags.totaldatatransfer += npkt.pkt.data;
+
+						// send to switch with delay
+						CloudSim.send(getDatacenter().getId(), sw.getId(), delay, CloudSimTags.NETWORK_PKT_UP, npkt);
 					}
 				}
 				pktlist.clear();
@@ -127,28 +140,5 @@ public class NetworkHost extends Host {
 				vm.updateCloudletsProcessing(CloudSim.clock(), getGuestScheduler().getAllocatedMipsForGuest(vm));
 			}
 		}
-	}
-
-	private void sendPacketLocally(NetworkPacket npkt, GuestEntity targetVm) {
-		npkt.sendTime = npkt.recvTime;
-		npkt.pkt.recvTime = CloudSim.clock();
-		// insert the packet in receivedlist
-		List<HostPacket> pktlist = ((NetworkCloudletSpaceSharedScheduler) targetVm.getCloudletScheduler()).pktrecv
-				.computeIfAbsent(npkt.pkt.senderVmId, k -> new ArrayList<>());
-		pktlist.add(npkt.pkt);
-	}
-
-	private void sendPacketGlobally(NetworkPacket npkt, Map<Integer, List<HostPacket>> pkttosend) {
-		GuestEntity senderVm = VmList.getById(this.getGuestList(), npkt.senderVmId);
-		int totalPkts = pkttosend.values().stream().mapToInt(List::size).sum();
-
-		// Assumption: no overprovisioning of Vm's bandwidths
-		double avband = (double) senderVm.getBw() / totalPkts;
-		double delay = (1000 * npkt.pkt.data) / avband;
-
-		NetworkTags.totaldatatransfer += npkt.pkt.data;
-
-		// send to switch with delay
-		CloudSim.send(getDatacenter().getId(), sw.getId(), delay, CloudSimTags.NETWORK_PKT_UP, npkt);
 	}
 }
