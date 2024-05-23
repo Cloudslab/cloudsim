@@ -362,7 +362,7 @@ public class Switch extends SimEntity {
 			if (!hspktlist.isEmpty()) {
 				double avband = downlinkBw / hspktlist.size();
 				for (NetworkPacket hspkt : hspktlist) {
-					double delay = hspkt.pkt.data / avband;
+					double delay = 1000 * hspkt.pkt.data / avband;
 					this.send(getId(), delay, CloudSimTags.NETWORK_PKT_REACHED, hspkt);
 				}
 				hspktlist.clear();
