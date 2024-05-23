@@ -90,12 +90,12 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			// CHECK WHETHER IT IS WAITING FOR THE PACKET
 			// if packet received change the status of job and update the time.
 			//
-			if ((cl.currStagenum != -1)) {
-				if (cl.currStagenum == NetworkTags.FINISH) {
+			if (cl.currStagenum != -1) {
+				if (cl.currStagenum == -2) {
 					break;
 				}
 				TaskStage st = cl.stages.get(cl.currStagenum);
-				if (st.type == NetworkTags.EXECUTION) {
+				if (st.type == TaskStage.TaskStageStatus.EXECUTION) {
 
 					// update the time
 					cl.timespentInStage = Math.round(CloudSim.clock() - cl.timetostartStage);
@@ -104,7 +104,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 						// change the stage
 					}
 				}
-				if (st.type == NetworkTags.WAIT_RECV) {
+				if (st.type == TaskStage.TaskStageStatus.WAIT_RECV) {
 					List<HostPacket> pktlist = pktrecv.get(st.targetCloudlet.getGuestId());
 					List<HostPacket> pkttoremove = new ArrayList<>();
 					if (pktlist != null) {
@@ -130,7 +130,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				cl.currStagenum = 0;
 				cl.timetostartStage = CloudSim.clock();
 
-				if (cl.stages.get(0).type == NetworkTags.EXECUTION) {
+				if (cl.stages.get(0).type == TaskStage.TaskStageStatus.EXECUTION) {
 					NetworkDatacenterBroker.linkDC.schedule(
 							NetworkDatacenterBroker.linkDC.getId(),
 							cl.stages.get(0).time,
@@ -157,7 +157,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			// rounding issue...
-			if (((NetworkCloudlet) (rcl.getCloudlet())).currStagenum == NetworkTags.FINISH) {
+			if (((NetworkCloudlet) (rcl.getCloudlet())).currStagenum == -2) {
 				// stage is changed and packet to send
 				((NetworkCloudlet) (rcl.getCloudlet())).finishtime = CloudSim.clock();
 				toRemove.add(rcl);
@@ -213,14 +213,14 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 	private void changetonextstage(NetworkCloudlet cl, TaskStage st) {
 		cl.timespentInStage = 0;
 		cl.timetostartStage = CloudSim.clock();
-		int currstage = cl.currStagenum;
-		if (currstage >= (cl.stages.size() - 1)) {
-			cl.currStagenum = NetworkTags.FINISH;
+
+		if (cl.currStagenum >= (cl.stages.size() - 1)) {
+			cl.currStagenum = -2;
 		} else {
-			cl.currStagenum = currstage + 1;
+			cl.currStagenum = cl.currStagenum + 1;
 			int i = 0;
 			for (i = cl.currStagenum; i < cl.stages.size(); i++) {
-				if (cl.stages.get(i).type == NetworkTags.WAIT_SEND) {
+				if (cl.stages.get(i).type == TaskStage.TaskStageStatus.WAIT_SEND) {
 					HostPacket pkt = new HostPacket(cl, i);
 					List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
 					if (pktlist == null) {
@@ -239,10 +239,10 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 					0.0001,
 					CloudSimTags.VM_DATACENTER_EVENT);
 			if (i == cl.stages.size()) {
-				cl.currStagenum = NetworkTags.FINISH;
+				cl.currStagenum = -2;
 			} else {
 				cl.currStagenum = i;
-				if (cl.stages.get(i).type == NetworkTags.EXECUTION) {
+				if (cl.stages.get(i).type == TaskStage.TaskStageStatus.EXECUTION) {
 					NetworkDatacenterBroker.linkDC.schedule(
 							NetworkDatacenterBroker.linkDC.getId(),
 							cl.stages.get(i).time,

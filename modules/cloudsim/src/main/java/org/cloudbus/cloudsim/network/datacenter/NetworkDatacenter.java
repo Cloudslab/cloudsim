@@ -124,7 +124,7 @@ public class NetworkDatacenter extends Datacenter {
 	public Map<Integer, Switch> getEdgeSwitch() {
 		Map<Integer, Switch> edgeswitch = new HashMap<>();
 		for (Entry<Integer, Switch> es : SwitchList.entrySet()) {
-			if (es.getValue().level == NetworkTags.EDGE_LEVEL) {
+			if (es.getValue().level == Switch.SwitchLevel.EDGE_LEVEL) {
 				edgeswitch.put(es.getKey(), es.getValue());
 			}
 		}
@@ -143,7 +143,7 @@ public class NetworkDatacenter extends Datacenter {
 			throw new IllegalArgumentException("Switch or Host are not part of this Datacenter");
 		}
 
-		if (sw.level != NetworkTags.EDGE_LEVEL) {
+		if (sw.level != Switch.SwitchLevel.EDGE_LEVEL) {
 			throw new IllegalArgumentException("Switch is not at the edge level");
 		}
 

@@ -125,7 +125,7 @@ public class NetworkHost extends Host {
 						double avband = (double) senderVm.getBw() / totalPkts;
 						double delay = (1000 * npkt.pkt.data) / avband;
 
-						NetworkTags.totaldatatransfer += npkt.pkt.data;
+						NetworkGlobals.totaldatatransfer += npkt.pkt.data;
 
 						// send to switch with delay
 						CloudSim.send(getDatacenter().getId(), sw.getId(), delay, CloudSimTags.NETWORK_PKT_UP, npkt);

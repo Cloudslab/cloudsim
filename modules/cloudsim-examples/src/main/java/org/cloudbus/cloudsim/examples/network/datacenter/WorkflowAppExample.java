@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.distributions.UniformDistr;
 import org.cloudbus.cloudsim.network.datacenter.*;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -74,7 +73,7 @@ public class WorkflowAppExample {
 			printCloudletList(newList);
 			System.out.println("numberofcloudlet " + newList.size() + " Cached "
 					+ NetworkDatacenterBroker.cachedcloudlet + " Data transfered "
-					+ NetworkTags.totaldatatransfer);
+					+ NetworkGlobals.totaldatatransfer);
 
 			Log.printLine("CloudSimExample1 finished!");
 		} catch (Exception e) {
@@ -396,23 +395,23 @@ public class WorkflowAppExample {
 
 		// Configure task stages within the cloudlets
 		//
-		cla.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 0, memory, cla));
-		cla.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 1, memory, clc));
+		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, 0, 800, 0, memory, cla));
+		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, 0, 1, memory, clc));
 
 		//
-		clb.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 0, memory, clb));
-		clb.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 1, memory, clc));
+		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, 0, 800, 0, memory, clb));
+		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, 0, 1, memory, clc));
 
 		//
-		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 0, memory, cla));
-		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 1, memory, clb));
-		clc.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 800, 2, memory, clc));
+		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, 1000, 0, 0, memory, cla));
+		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, 1000, 0, 1, memory, clb));
+		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, 0, 800, 2, memory, clc));
 	}
 
 	private static void CreateNetwork(NetworkDatacenter dc) {
 
 		// Edge Switch
-		Switch edgeswitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
+		Switch edgeswitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, Switch.SwitchLevel.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 		dc.registerSwitch(edgeswitch);
 

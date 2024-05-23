@@ -10,9 +10,7 @@ package org.cloudbus.cloudsim.network.datacenter;
 
 /**
  * TaskStage represents various stages a {@link NetworkCloudlet} can have during execution. 
- * Four stage types which are possible: {@link NetworkConstants#EXECUTION}, 
- * {@link NetworkConstants#WAIT_SEND}, {@link NetworkConstants#WAIT_RECV}, 
- * {@link NetworkConstants#FINISH}.
+ * Four stage types which are possible: EXECUTION, WAIT_SEND, WAIT_RECV,and FINISH.
  * 
  * <br/>Please refer to following publication for more details:<br/>
  * <ul>
@@ -27,12 +25,16 @@ package org.cloudbus.cloudsim.network.datacenter;
  * //TODO Attributes should be defined as private.
  */
 public class TaskStage {
+	public enum TaskStageStatus {
+		EXECUTION,
+		WAIT_SEND,
+		WAIT_RECV,
+		FINISH;
+	}
         /**
-         * The task type, either {@link NetworkConstants#EXECUTION}, 
-         * {@link NetworkConstants#WAIT_SEND} or {@link NetworkConstants#WAIT_RECV}.
-         * //TODO It would be used enum instead of int constants.
+         * The task type
          */
-	int type;
+	TaskStageStatus type;
 
         /**
          * The data length generated for the task (in bytes).
@@ -52,7 +54,7 @@ public class TaskStage {
 	 * from whom data need to be received (if type == WAIT_RECV) or sent to (if type == WAIT_SEND). */
 	NetworkCloudlet targetCloudlet;
 	
-	public TaskStage(int type, double data, double time, double stageid, long memory, NetworkCloudlet cl) {
+	public TaskStage(TaskStageStatus type, double data, double time, double stageid, long memory, NetworkCloudlet cl) {
 		super();
 		this.type = type;
 		this.data = data;

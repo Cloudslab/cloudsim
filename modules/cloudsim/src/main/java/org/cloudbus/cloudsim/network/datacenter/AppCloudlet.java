@@ -71,8 +71,8 @@ public class AppCloudlet extends Cloudlet {
 	 */
 	public List<NetworkCloudlet> getSourceCloudlets() {
 		return cList.stream()
-					.filter(networkCloudlet -> networkCloudlet.stages.get(0).type != NetworkTags.WAIT_RECV)
-					.filter(networkCloudlet -> networkCloudlet.stages.get(0).type != NetworkTags.WAIT_SEND)
+					.filter(networkCloudlet -> networkCloudlet.stages.get(0).type != TaskStage.TaskStageStatus.WAIT_RECV)
+					.filter(networkCloudlet -> networkCloudlet.stages.get(0).type != TaskStage.TaskStageStatus.WAIT_SEND)
 					.toList();
 	}
 
@@ -82,8 +82,8 @@ public class AppCloudlet extends Cloudlet {
 	 */
 	public List<NetworkCloudlet> getSinkCloudlets() {
 		return cList.stream()
-				.filter(networkCloudlet -> networkCloudlet.stages.get(networkCloudlet.stages.size()-1).type != NetworkTags.WAIT_RECV)
-				.filter(networkCloudlet -> networkCloudlet.stages.get(networkCloudlet.stages.size()-1).type != NetworkTags.WAIT_SEND)
+				.filter(networkCloudlet -> networkCloudlet.stages.get(networkCloudlet.stages.size()-1).type != TaskStage.TaskStageStatus.WAIT_RECV)
+				.filter(networkCloudlet -> networkCloudlet.stages.get(networkCloudlet.stages.size()-1).type != TaskStage.TaskStageStatus.WAIT_SEND)
 				.toList();
 	}
 

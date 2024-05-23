@@ -85,7 +85,7 @@ public class DiamondAppMultiExtensionExample {
 			printCloudletList(newList);
 			System.out.println("numberofcloudlet " + newList.size() + " Cached "
 					+ NetworkDatacenterBroker.cachedcloudlet + " Data transfered "
-					+ NetworkTags.totaldatatransfer);
+					+ NetworkGlobals.totaldatatransfer);
 
 			Log.printLine("DiamondAppExample finished!");
 		} catch (Exception e) {
@@ -352,29 +352,29 @@ public class DiamondAppMultiExtensionExample {
 
 		// Configure task stages within the cloudlets
 		//
-		cla.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 1000, 0, memory, cla));
-		cla.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 1, memory, clb));
-		cla.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 2, memory, clc));
+		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 1000, 0, memory, cla));
+		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, -1, 1, memory, clb));
+		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, -1, 2, memory, clc));
 
 		//
-		clb.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 0, memory, cla));
-		clb.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 1000, 1, memory, clb));
-		clb.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 2, memory, cld));
+		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, 0, memory, cla));
+		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 1000, 1, memory, clb));
+		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, -1, 2, memory, cld));
 
 		//
-		clc.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 0, memory, cla));
-		clc.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 1000, 1, memory, clc));
-		clc.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, 0, 2, memory, cld));
+		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, 0, memory, cla));
+		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 2000, 1, memory, clc));
+		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, -1, 2, memory, cld));
 
 		//
-		cld.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 0, memory, clb));
-		cld.stages.add(new TaskStage(NetworkTags.WAIT_RECV, 1000, 0, 1, memory, clc));
-		cld.stages.add(new TaskStage(NetworkTags.EXECUTION, 0, 1000, 2, memory, cld));
+		cld.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, 0, memory, clb));
+		cld.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, 1, memory, clc));
+		cld.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 1000, 2, memory, cld));
 	}
 
 	private static void CreateNetwork(NetworkDatacenter dc) {
 		// Create switch
-		Switch edgeSwitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
+		Switch edgeSwitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, Switch.SwitchLevel.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 			// edgeswitch[i].uplinkSwitches.add(null);
 		dc.registerSwitch(edgeSwitch);

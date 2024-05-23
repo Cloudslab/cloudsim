@@ -38,6 +38,18 @@ import org.cloudbus.cloudsim.lists.VmList;
  * @since CloudSim Toolkit 3.0
  */
 public class Switch extends SimEntity {
+	/** Switch level in datacenter topology.
+	 * -) Root switch connects the Datacenter to external network.
+	 * -) Aggregate switches reside in-between the root switch and the edge switches.
+	 * -) Edge switches have their downlink ports connected to hosts.
+	 *
+	 * Note that the order of the values within the enum is significant
+	 */
+	public enum SwitchLevel {
+		EDGE_LEVEL,
+		AGGR_LEVEL,
+		ROOT_LEVEL;
+	}
 
 	/** The switch id */
 	public int id;
@@ -45,7 +57,7 @@ public class Switch extends SimEntity {
         /**
          * The level (layer) of the switch in the network topology.
          */
-	public int level;
+	public SwitchLevel level;
 
         /**
          * Map of packets sent to switches on the uplink,
@@ -122,7 +134,7 @@ public class Switch extends SimEntity {
          */
 	public double switchingDelay;
 
-	public Switch(String name, double numPort, int level, double switchingDelay, double downlinkBw, double uplinkBw, NetworkDatacenter dc) {
+	public Switch(String name, double numPort, SwitchLevel level, double switchingDelay, double downlinkBw, double uplinkBw, NetworkDatacenter dc) {
 		super(name);
 		this.level = level;
 		this.numPort = numPort;
@@ -201,12 +213,12 @@ public class Switch extends SimEntity {
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.NETWORK_PKT_FORWARD));
 		schedule(getId(), switchingDelay, CloudSimTags.NETWORK_PKT_FORWARD);
 
-		if (level == NetworkTags.EDGE_LEVEL) {
+		if (level == SwitchLevel.EDGE_LEVEL) {
 			// packet is to be recieved by host
 			int hostid = dc.VmtoHostlist.get(recvVMid);
 			hspkt.receiverHostId = hostid;
 			pktsToHosts.computeIfAbsent(hostid, k -> new ArrayList<>()).add(hspkt);;
-		} else if (level == NetworkTags.AGGR_LEVEL) {
+		} else if (level == SwitchLevel.AGGR_LEVEL) {
 			// packet is coming from root so need to be sent to edgelevel swich
 			// find the id for edgelevel switch
 			int switchId = dc.VmToSwitchid.get(recvVMid);
@@ -232,7 +244,7 @@ public class Switch extends SimEntity {
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.NETWORK_PKT_FORWARD));
 		schedule(getId(), switchingDelay, CloudSimTags.NETWORK_PKT_FORWARD);
 
-		if (level == NetworkTags.EDGE_LEVEL) {
+		if (level == SwitchLevel.EDGE_LEVEL) {
 			// packet is received from host
 			// packet is to be sent to aggregate level or to another host in the
 			// same level
@@ -251,7 +263,7 @@ public class Switch extends SimEntity {
 			Switch sw = uplinkSwitches.get(0);
 			pktsToUplinkSwitches.computeIfAbsent(sw.getId(), k -> new ArrayList<>()).add(hspkt);
 		}
-		else if (level == NetworkTags.AGGR_LEVEL) {
+		else if (level == SwitchLevel.AGGR_LEVEL) {
 			// packet is coming from edge level router so need to be sent to
 			// either root or another edge level swich
 			// find the id for edgelevel switch
@@ -264,7 +276,7 @@ public class Switch extends SimEntity {
 				pktsToUplinkSwitches.computeIfAbsent(sw.getId(), k -> new ArrayList<>()).add(hspkt);
 			}
 		}
-		else if (level == NetworkTags.ROOT_LEVEL) {
+		else if (level == SwitchLevel.ROOT_LEVEL) {
 			// get id of edge router
 			int edgeswitchid = dc.VmToSwitchid.get(recvVMid);
 			// search which aggregate switch has it

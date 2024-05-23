@@ -2,7 +2,6 @@ package org.cloudbus.cloudsim.examples.network.datacenter;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.distributions.UniformDistr;
 import org.cloudbus.cloudsim.network.datacenter.*;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -77,7 +76,7 @@ public class BagOfTaskAppExample {
 			printCloudletList(newList);
 			System.out.println("numberofcloudlet " + newList.size() + " Cached "
 					+ NetworkDatacenterBroker.cachedcloudlet + " Data transfered "
-					+ NetworkTags.totaldatatransfer);
+					+ NetworkGlobals.totaldatatransfer);
 
 			Log.printLine("CloudSimExample1 finished!");
 		} catch (Exception e) {
@@ -366,14 +365,14 @@ public class BagOfTaskAppExample {
 
 		//Configure stages
 		NetworkCloudlet gatherer = appCloudlet.cList.get(0);
-		gatherer.stages.add(new TaskStage(NetworkTags.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime, stgId++, memory, gatherer));
+		gatherer.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime, stgId++, memory, gatherer));
 		for(int i=1;i<numberVm;i++) {
 			NetworkCloudlet worker = appCloudlet.cList.get(i);
 
-			worker.stages.add(new TaskStage(NetworkTags.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime, stgId++, memory, worker));
-			worker.stages.add(new TaskStage(NetworkTags.WAIT_SEND, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, gatherer));
+			worker.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime, stgId++, memory, worker));
+			worker.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, gatherer));
 
-			gatherer.stages.add(new TaskStage(NetworkTags.WAIT_RECV, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, worker));
+			gatherer.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, worker));
 		}
 	}
 
@@ -383,7 +382,7 @@ public class BagOfTaskAppExample {
 		Switch[] edgeswitch = new Switch[1];
 
 		for (int i = 0; i < 1; i++) {
-			edgeswitch[i] = new Switch("Edge" + i, NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
+			edgeswitch[i] = new Switch("Edge" + i, NetworkConstants.EdgeSwitchPort, Switch.SwitchLevel.EDGE_LEVEL,
 					NetworkConstants.SwitchingDelayEdge, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 			// edgeswitch[i].uplinkSwitches.add(null);
 			dc.registerSwitch(edgeswitch[i]);

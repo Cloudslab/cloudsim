@@ -84,7 +84,7 @@ public class TandemAppExample {
 			printCloudletList(newList);
 			System.out.println("numberofcloudlet " + newList.size() + " Cached "
 					+ NetworkDatacenterBroker.cachedcloudlet + " Data transfered "
-					+ NetworkTags.totaldatatransfer);
+					+ NetworkGlobals.totaldatatransfer);
 
 			Log.printLine("DiamondAppExample finished!");
 		} catch (Exception e) {
@@ -296,17 +296,17 @@ public class TandemAppExample {
 
 		// Configure task stages within the cloudlets
 		//
-		cla.stages.add(new TaskStage(NetworkTags.EXECUTION, -1, 1000, 0, memory, cla));
-		cla.stages.add(new TaskStage(NetworkTags.WAIT_SEND, 1000, -1, 1, memory, clb));
+		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 1000, 0, memory, cla));
+		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, -1, 1, memory, clb));
 
 		//
-		clb.stages.add(new TaskStage(NetworkTags.WAIT_RECV, -1, 0, 0, memory, cla));
-		clb.stages.add(new TaskStage(NetworkTags.EXECUTION, -1, 1000, 1, memory, clb));
+		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, 0, memory, cla));
+		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 1000, 1, memory, clb));
 	}
 
 	private static void CreateNetwork(NetworkDatacenter dc) {
 		// Create ToR switch
-		Switch ToRSwitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, NetworkTags.EDGE_LEVEL,
+		Switch ToRSwitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, Switch.SwitchLevel.EDGE_LEVEL,
 					0, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 
 		dc.registerSwitch(ToRSwitch);

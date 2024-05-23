@@ -100,7 +100,7 @@ public class NetworkDatacenterBroker extends DatacenterBroker {
 		getCloudletReceivedList().add(cloudlet);
 		cloudletsSubmitted--;
 		// all cloudlets executed
-		if (getCloudletList().size() == 0 && cloudletsSubmitted == 0 && iteration > NetworkTags.MAX_ITERATION) {
+		if (getCloudletList().size() == 0 && cloudletsSubmitted == 0 && iteration > NetworkGlobals.MAX_ITERATION) {
 			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": All Cloudlets executed. Finishing...");
 			clearDatacenters();
 			finishExecution();
