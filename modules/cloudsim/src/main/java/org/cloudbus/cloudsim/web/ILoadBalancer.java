@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.web;
 
-import org.cloudbus.cloudsim.vmplus.disk.HddVm;
+import org.cloudbus.cloudsim.EX.disk.HddVm;
 
 import java.util.List;
 

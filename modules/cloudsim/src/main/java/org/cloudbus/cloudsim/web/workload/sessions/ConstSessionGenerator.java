@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.web.workload.sessions;
 
-import org.cloudbus.cloudsim.vmplus.disk.DataItem;
+import org.cloudbus.cloudsim.EX.disk.DataItem;
 import org.cloudbus.cloudsim.web.*;
 import org.uncommons.maths.number.ConstantGenerator;
 import org.uncommons.maths.number.NumberGenerator;

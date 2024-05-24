@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.web.workload;
 
-import org.cloudbus.cloudsim.vmplus.util.CustomLog;
+import org.cloudbus.cloudsim.EX.util.CustomLog;
 import org.cloudbus.cloudsim.web.WebSession;
 import org.cloudbus.cloudsim.web.workload.freq.FrequencyFunction;
 import org.cloudbus.cloudsim.web.workload.sessions.ISessionGenerator;

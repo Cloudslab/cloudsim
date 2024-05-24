@@ -1,11 +1,11 @@
 package org.cloudbus.cloudsim.web;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.vmplus.disk.HddVm;
-import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.util.Id;
-import org.cloudbus.cloudsim.vmplus.util.TextUtil;
-import org.cloudbus.cloudsim.vmplus.util.Textualize;
+import org.cloudbus.cloudsim.EX.disk.HddVm;
+import org.cloudbus.cloudsim.EX.util.CustomLog;
+import org.cloudbus.cloudsim.EX.util.Id;
+import org.cloudbus.cloudsim.EX.util.TextUtil;
+import org.cloudbus.cloudsim.EX.util.Textualize;
 
 import java.util.*;
 import java.util.logging.Level;

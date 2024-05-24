@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.web;
 
-import org.cloudbus.cloudsim.vmplus.disk.DataItem;
-import org.cloudbus.cloudsim.vmplus.disk.HddCloudlet;
-import org.cloudbus.cloudsim.vmplus.util.Textualize;
+import org.cloudbus.cloudsim.EX.disk.DataItem;
+import org.cloudbus.cloudsim.EX.disk.HddCloudlet;
+import org.cloudbus.cloudsim.EX.util.Textualize;
 
 /**
  * A web cloudlet is a cloudlet, which is a part of a web session. Usually it is

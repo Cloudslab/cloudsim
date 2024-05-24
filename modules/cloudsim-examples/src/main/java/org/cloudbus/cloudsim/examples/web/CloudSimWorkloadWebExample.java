@@ -11,9 +11,9 @@ package org.cloudbus.cloudsim.examples.web;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.vmplus.disk.*;
-import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.util.TextUtil;
+import org.cloudbus.cloudsim.EX.disk.*;
+import org.cloudbus.cloudsim.EX.util.CustomLog;
+import org.cloudbus.cloudsim.EX.util.TextUtil;
 import org.cloudbus.cloudsim.web.ILoadBalancer;
 import org.cloudbus.cloudsim.web.SimpleDBBalancer;
 import org.cloudbus.cloudsim.web.SimpleWebLoadBalancer;

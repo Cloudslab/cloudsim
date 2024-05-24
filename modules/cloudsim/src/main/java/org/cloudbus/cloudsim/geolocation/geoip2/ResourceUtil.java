@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.geolocation.geoip2;
 
 import com.google.common.base.Preconditions;
-import org.cloudbus.cloudsim.vmplus.util.CustomLog;
+import org.cloudbus.cloudsim.EX.util.CustomLog;
 
 import java.io.File;
 import java.io.FileInputStream;

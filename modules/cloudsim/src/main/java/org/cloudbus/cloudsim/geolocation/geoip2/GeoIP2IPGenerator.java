@@ -5,7 +5,7 @@ import com.opencsv.CSVReader;
 import org.cloudbus.cloudsim.geolocation.BaseIPGenerator;
 import org.cloudbus.cloudsim.geolocation.IPGenerator;
 import org.cloudbus.cloudsim.geolocation.IPUtil;
-import org.cloudbus.cloudsim.vmplus.util.CustomLog;
+import org.cloudbus.cloudsim.EX.util.CustomLog;
 
 import java.io.*;
 import java.util.*;

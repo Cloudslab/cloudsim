@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.web;
 
-import org.cloudbus.cloudsim.vmplus.disk.HddVm;
-import org.cloudbus.cloudsim.vmplus.util.Id;
-import org.cloudbus.cloudsim.vmplus.vm.VmStatus;
+import org.cloudbus.cloudsim.EX.disk.HddVm;
+import org.cloudbus.cloudsim.EX.util.Id;
+import org.cloudbus.cloudsim.EX.vm.VmStatus;
 
 import java.util.ArrayList;
 import java.util.List;

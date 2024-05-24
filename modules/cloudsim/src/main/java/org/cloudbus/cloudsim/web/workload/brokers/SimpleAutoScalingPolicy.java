@@ -1,12 +1,12 @@
 package org.cloudbus.cloudsim.web.workload.brokers;
 
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.vmplus.IAutoscalingPolicy;
-import org.cloudbus.cloudsim.vmplus.MonitoringBrokerEX;
-import org.cloudbus.cloudsim.vmplus.disk.HddCloudletSchedulerTimeShared;
-import org.cloudbus.cloudsim.vmplus.disk.HddVm;
-import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.vm.VmStatus;
+import org.cloudbus.cloudsim.EX.IAutoscalingPolicy;
+import org.cloudbus.cloudsim.EX.MonitoringBrokerEX;
+import org.cloudbus.cloudsim.EX.disk.HddCloudletSchedulerTimeShared;
+import org.cloudbus.cloudsim.EX.disk.HddVm;
+import org.cloudbus.cloudsim.EX.util.CustomLog;
+import org.cloudbus.cloudsim.EX.vm.VmStatus;
 import org.cloudbus.cloudsim.web.ILoadBalancer;
 
 import java.util.EnumSet;

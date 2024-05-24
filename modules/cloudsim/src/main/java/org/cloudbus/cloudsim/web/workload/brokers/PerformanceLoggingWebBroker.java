@@ -3,10 +3,10 @@ package org.cloudbus.cloudsim.web.workload.brokers;
 import org.cloudbus.cloudsim.ResCloudlet;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEvent;
-import org.cloudbus.cloudsim.vmplus.disk.HddResCloudlet;
-import org.cloudbus.cloudsim.vmplus.disk.HddVm;
-import org.cloudbus.cloudsim.vmplus.util.CustomLog;
-import org.cloudbus.cloudsim.vmplus.util.TextUtil;
+import org.cloudbus.cloudsim.EX.disk.HddResCloudlet;
+import org.cloudbus.cloudsim.EX.disk.HddVm;
+import org.cloudbus.cloudsim.EX.util.CustomLog;
+import org.cloudbus.cloudsim.EX.util.TextUtil;
 import org.cloudbus.cloudsim.web.ILoadBalancer;
 
 import java.util.Arrays;
