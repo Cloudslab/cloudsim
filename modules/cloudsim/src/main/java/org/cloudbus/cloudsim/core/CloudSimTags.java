@@ -271,8 +271,6 @@ public class CloudSimTags {
 
 	public static final int NETWORK_PKT_REACHED = BASE + 47;
 
-	public static final int NextCycle = BASE + 48;
-
 	/** Private Constructor. */
 	private CloudSimTags() {
 		throw new UnsupportedOperationException("CloudSimTags cannot be instantiated");

@@ -83,8 +83,7 @@ public class DiamondAppMultiExtensionExample {
 			// Final step: Print results when simulation is over
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
-			System.out.println("numberofcloudlet " + newList.size() + " Cached "
-					+ NetworkDatacenterBroker.cachedcloudlet + " Data transfered "
+			System.out.println("numberofcloudlet " + newList.size() + " Data transfered "
 					+ NetworkGlobals.totaldatatransfer);
 
 			Log.printLine("DiamondAppExample finished!");
@@ -178,7 +177,7 @@ public class DiamondAppMultiExtensionExample {
 	private static NetworkDatacenterBroker createBroker() {
 		NetworkDatacenterBroker broker = null;
 		try {
-			broker = new NetworkDatacenterBroker("Broker", 10);
+			broker = new NetworkDatacenterBroker("Broker");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

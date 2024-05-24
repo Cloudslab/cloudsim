@@ -32,14 +32,7 @@ import org.cloudbus.cloudsim.lists.VmList;
  * different class hierarchy, such as UserDatacenterBroker and ProviderDatacenterBroker.
  */
 public class NetworkDatacenterBroker extends DatacenterBroker {
-	/** The number of submitted cloudlets. */
-	private int cloudletsSubmitted;
-
 	public static NetworkDatacenter linkDC;
-
-	public static int cachedcloudlet = 0;
-
-	public static int iteration;
 
 	/**
 	 * Creates a new DatacenterBroker object.
@@ -51,68 +44,12 @@ public class NetworkDatacenterBroker extends DatacenterBroker {
 	 * @pre name != null
 	 * @post $none
 	 */
-	public NetworkDatacenterBroker(String name, int iteration) throws Exception {
+	public NetworkDatacenterBroker(String name) throws Exception {
 		super(name);
-		this.iteration = iteration;
 	}
 
 	public static void setLinkDC(NetworkDatacenter alinkDC) {
 		linkDC = alinkDC;
-	}
-
-	/**
-	 * Processes events available for this Broker.
-	 * 
-	 * @param ev a SimEvent object
-	 * 
-	 * @pre ev != null
-	 * @post $none
-	 */
-	@Override
-	public void processEvent(SimEvent ev) {
-		switch (ev.getTag()) {
-			case CloudSimTags.NextCycle -> createVmsInDatacenter(linkDC.getId());
-
-			// other (potentially unknown tags) are processed by the base class
-			default -> super.processEvent(ev);
-		}
-	}
-
-	/**
-	 * Processes the ack received due to a request for VM creation.
-	 * 
-	 * @param ev a SimEvent object
-	 * 
-	 * @pre ev != null
-	 * @post $none
-	 */
-
-	/**
-	 * Processes a cloudlet return event.
-	 * 
-	 * @param ev a SimEvent object
-	 * 
-	 * @pre ev != $null
-	 * @post $none
-	 */
-	protected void processCloudletReturn(SimEvent ev) {
-		Cloudlet cloudlet = (Cloudlet) ev.getData();
-		getCloudletReceivedList().add(cloudlet);
-		cloudletsSubmitted--;
-		// all cloudlets executed
-		if (getCloudletList().size() == 0 && cloudletsSubmitted == 0 && iteration > NetworkGlobals.MAX_ITERATION) {
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": All Cloudlets executed. Finishing...");
-			clearDatacenters();
-			finishExecution();
-		} else { // some cloudlets haven't finished yet
-			if (getCloudletList().size() > 0 && cloudletsSubmitted == 0) {
-				// all the cloudlets sent finished. It means that some bount
-				// cloudlet is waiting its VM be created
-				clearDatacenters();
-				createVmsInDatacenter(0);
-			}
-
-		}
 	}
 
 	@Override
