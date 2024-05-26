@@ -269,7 +269,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      * @param delay
      *            - the delay.
      */
-    public void submitCloudletList(List<Cloudlet> cloudlets, double delay) {
+    public void submitCloudletList(List<? extends Cloudlet> cloudlets, double delay) {
         if (started) {
             send(getId(), delay, BROKER_CLOUDLETS_NOW, cloudlets);
         } else {
