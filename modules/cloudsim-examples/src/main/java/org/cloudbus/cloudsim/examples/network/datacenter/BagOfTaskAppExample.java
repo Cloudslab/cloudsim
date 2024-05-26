@@ -24,7 +24,7 @@ public class BagOfTaskAppExample {
 
 	private static NetworkDatacenter datacenter;
 
-	private static NetworkDatacenterBroker broker;
+	private static DatacenterBroker broker;
 
 	private static int numberVm = 4;
 
@@ -53,8 +53,6 @@ public class BagOfTaskAppExample {
 
 			// Third step: Create Broker
 			broker = createBroker();
-			NetworkDatacenterBroker.setLinkDC(datacenter);
-			// broker.setLinkDC(datacenter0);
 			// Fifth step: Create one Cloudlet
 
 			vmList = CreateVMs(datacenter.getId());
@@ -64,7 +62,7 @@ public class BagOfTaskAppExample {
 			// submit vm list to the broker
 
 			broker.submitGuestList(vmList);
-			broker.submitCloudletList(appCloudletList);
+			broker.submitCloudletList(appCloudletList.get(0).cList);
 
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();
@@ -237,10 +235,10 @@ public class BagOfTaskAppExample {
 	 * 
 	 * @return the datacenter broker
 	 */
-	private static NetworkDatacenterBroker createBroker() {
-		NetworkDatacenterBroker broker = null;
+	private static DatacenterBroker createBroker() {
+		DatacenterBroker broker = null;
 		try {
-			broker = new NetworkDatacenterBroker("Broker");
+			broker = new DatacenterBroker("Broker");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -355,7 +353,7 @@ public class BagOfTaskAppExample {
 			UtilizationModel utilizationModel = new UtilizationModelFull();
 			NetworkCloudlet cl = new NetworkCloudlet(NetworkConstants.currentCloudletId, executionTime, pesNumber, fileSize, outputSize, memory, utilizationModel, utilizationModel, utilizationModel);
 			NetworkConstants.currentCloudletId++;
-			cl.setUserId(appCloudlet.getUserId());
+			cl.setUserId(broker.getId());
 			cl.submittime=CloudSim.clock();
 			cl.currStagenum=-1;
 			cl.setGuestId(vmIdList.get(i));

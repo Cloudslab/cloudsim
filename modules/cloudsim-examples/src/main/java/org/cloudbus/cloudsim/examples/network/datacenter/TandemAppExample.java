@@ -21,11 +21,9 @@ public class TandemAppExample {
 
 	private static List<NetworkHost> hostList = new ArrayList<>();
 
-	private static List<AppCloudlet> appCloudletList;
-
 	private static NetworkDatacenter datacenter;
 
-	private static NetworkDatacenterBroker broker;
+	private static DatacenterBroker broker;
 
 	private static final int numberOfHosts = 2;
 	private static final int numberOfVms = 4;
@@ -61,18 +59,18 @@ public class TandemAppExample {
 
 			// Third step: Create Broker
 			broker = createBroker();
-			NetworkDatacenterBroker.setLinkDC(datacenter);
-			// broker.setLinkDC(datacenter0);
+
 			// Fifth step: Create one Cloudlet
 
 			guestList = CreateVMs(datacenter.getId());
 
-			appCloudletList = CreateAppCloudlets(1);
+			AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, 0, 2000, broker.getId());
+			createTaskList(app);
 
 			// submit vm list to the broker
 
 			broker.submitGuestList(guestList);
-			broker.submitCloudletList(appCloudletList);
+			broker.submitCloudletList(app.cList);
 
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();
@@ -169,10 +167,10 @@ public class TandemAppExample {
 	 * 
 	 * @return the datacenter broker
 	 */
-	private static NetworkDatacenterBroker createBroker() {
-		NetworkDatacenterBroker broker = null;
+	private static DatacenterBroker createBroker() {
+		DatacenterBroker broker = null;
 		try {
-			broker = new NetworkDatacenterBroker("Broker");
+			broker = new DatacenterBroker("Broker");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -239,19 +237,6 @@ public class TandemAppExample {
 		return vmList;
 	}
 
-	private static ArrayList<AppCloudlet> CreateAppCloudlets(int apps) {
-		ArrayList<AppCloudlet> cloudletList = new ArrayList<>();
-
-		for(int appId = 0; appId < apps; appId++) {
-			AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, appId, 2000, broker.getId());
-			createTaskList(app);
-
-			cloudletList.add(app);
-		}
-
-		return cloudletList;
-	}
-
 	static private void createTaskList(AppCloudlet appCloudlet) {
 		long fileSize = NetworkConstants.FILE_SIZE;
 		long outputSize = NetworkConstants.OUTPUT_SIZE;
@@ -270,7 +255,7 @@ public class TandemAppExample {
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
-		cla.setUserId(appCloudlet.getUserId());
+		cla.setUserId(broker.getId());
 		cla.submittime = CloudSim.clock();
 		cla.currStagenum = -1;
 		cla.setGuestId(guestList.get(0).getId());
@@ -287,7 +272,7 @@ public class TandemAppExample {
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
-		clb.setUserId(appCloudlet.getUserId());
+		clb.setUserId(broker.getId());
 		clb.submittime = CloudSim.clock();
 		clb.currStagenum = -1;
 		clb.setGuestId(guestList.get(1).getId());

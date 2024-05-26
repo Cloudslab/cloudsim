@@ -24,7 +24,7 @@ public class WorkflowAppExample {
 
 	private static NetworkDatacenter datacenter;
 
-	private static NetworkDatacenterBroker broker;
+	private static DatacenterBroker broker;
 	/**
 	 * Creates main() to run this example.
 	 * 
@@ -50,18 +50,17 @@ public class WorkflowAppExample {
 
 			// Third step: Create Broker
 			broker = createBroker();
-			NetworkDatacenterBroker.setLinkDC(datacenter);
-			// broker.setLinkDC(datacenter0);
+
 			// Fifth step: Create one Cloudlet
 
 			vmList = CreateVMs(datacenter.getId());
 
-			appCloudletList = CreateAppCloudlets(1);
+			AppCloudlet app = CreateAppCloudlet();
 
 			// submit vm list to the broker
 
 			broker.submitGuestList(vmList);
-			broker.submitCloudletList(appCloudletList);
+			broker.submitCloudletList(app.cList);
 
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();
@@ -230,10 +229,10 @@ public class WorkflowAppExample {
 	 * 
 	 * @return the datacenter broker
 	 */
-	private static NetworkDatacenterBroker createBroker() {
-		NetworkDatacenterBroker broker = null;
+	private static DatacenterBroker createBroker() {
+		DatacenterBroker broker = null;
 		try {
-			broker = new NetworkDatacenterBroker("Broker");
+			broker = new DatacenterBroker("Broker");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -308,27 +307,22 @@ public class WorkflowAppExample {
 		return vmList;
 	}
 
-	private static ArrayList<AppCloudlet> CreateAppCloudlets(int apps) {
-		ArrayList<AppCloudlet> cloudletList = new ArrayList<>();
+	private static AppCloudlet CreateAppCloudlet() {
 		UniformDistr ufrnd = new UniformDistr(0, vmList.size(), 5);
 
-		for(int appId = 0; appId < apps; appId++) {
-			AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, appId, 0, broker.getId());
-			cloudletList.add(app);
+		AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, 0, 0, broker.getId());
 
-			// Randomly select vm ids for the cloudlets within the app
-			List<Integer> vmIds = new ArrayList<>();
-			for (int i = 0; i < 3; i++) {
-				vmIds.add((int) ufrnd.sample());
-			}
-
-			if (!vmIds.isEmpty()) {
-				createTaskList(app, vmIds);
-			}
-
+		// Randomly select vm ids for the cloudlets within the app
+		List<Integer> vmIds = new ArrayList<>();
+		for (int i = 0; i < 3; i++) {
+			vmIds.add((int) ufrnd.sample());
 		}
 
-		return cloudletList;
+		if (!vmIds.isEmpty()) {
+			createTaskList(app, vmIds);
+		}
+
+		return app;
 	}
 
 	static private void createTaskList(AppCloudlet appCloudlet, List<Integer> vmIdList) {
@@ -350,7 +344,7 @@ public class WorkflowAppExample {
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
-		cla.setUserId(appCloudlet.getUserId());
+		cla.setUserId(broker.getId());
 		cla.submittime = CloudSim.clock();
 		cla.currStagenum = -1;
 		cla.setGuestId(vmIdList.get(i));
@@ -368,7 +362,7 @@ public class WorkflowAppExample {
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
-		clb.setUserId(appCloudlet.getUserId());
+		clb.setUserId(broker.getId());
 		clb.submittime = CloudSim.clock();
 		clb.currStagenum = -1;
 		clb.setGuestId(vmIdList.get(i));
@@ -386,7 +380,7 @@ public class WorkflowAppExample {
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
-		clc.setUserId(appCloudlet.getUserId());
+		clc.setUserId(broker.getId());
 		clc.submittime = CloudSim.clock();
 		clc.currStagenum = -1;
 		clc.setGuestId(vmIdList.get(i));

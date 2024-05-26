@@ -18,7 +18,6 @@ import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerSpaceShared;
 import org.cloudbus.cloudsim.ResCloudlet;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
 
 /**
  * CloudletSchedulerSpaceShared implements a policy of scheduling performed by a virtual machine
@@ -129,19 +128,6 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			} else {
 				cl.currStagenum = 0;
 				cl.timetostartStage = CloudSim.clock();
-
-				if (cl.stages.get(0).type == TaskStage.TaskStageStatus.EXECUTION) {
-					NetworkDatacenterBroker.linkDC.schedule(
-							NetworkDatacenterBroker.linkDC.getId(),
-							cl.stages.get(0).time,
-							CloudSimTags.VM_DATACENTER_EVENT);
-				} else {
-					NetworkDatacenterBroker.linkDC.schedule(
-							NetworkDatacenterBroker.linkDC.getId(),
-							0.0001,
-							CloudSimTags.VM_DATACENTER_EVENT);
-					// /sendstage///
-				}
 			}
 
 		}
@@ -234,21 +220,10 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				}
 
 			}
-			NetworkDatacenterBroker.linkDC.schedule(
-					NetworkDatacenterBroker.linkDC.getId(),
-					0.0001,
-					CloudSimTags.VM_DATACENTER_EVENT);
 			if (i == cl.stages.size()) {
 				cl.currStagenum = -2;
 			} else {
 				cl.currStagenum = i;
-				if (cl.stages.get(i).type == TaskStage.TaskStageStatus.EXECUTION) {
-					NetworkDatacenterBroker.linkDC.schedule(
-							NetworkDatacenterBroker.linkDC.getId(),
-							cl.stages.get(i).time,
-							CloudSimTags.VM_DATACENTER_EVENT);
-				}
-
 			}
 		}
 

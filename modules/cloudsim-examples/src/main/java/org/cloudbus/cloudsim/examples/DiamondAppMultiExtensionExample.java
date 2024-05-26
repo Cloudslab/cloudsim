@@ -22,11 +22,9 @@ public class DiamondAppMultiExtensionExample {
 	/** The guestList. */
 	private static List<GuestEntity> guestList;
 
-	private static List<AppCloudlet> appCloudletList;
-
 	private static NetworkDatacenter datacenter;
 
-	private static NetworkDatacenterBroker broker;
+	private static DatacenterBroker broker;
 
 	private static int numberOfHosts = 4;
 	private static int numberOfVms = 4;
@@ -62,18 +60,18 @@ public class DiamondAppMultiExtensionExample {
 
 			// Third step: Create Broker
 			broker = createBroker();
-			NetworkDatacenterBroker.setLinkDC(datacenter);
-			// broker.setLinkDC(datacenter0);
+
 			// Fifth step: Create one Cloudlet
 
 			guestList = CreateVMs(datacenter.getId());
 
-			appCloudletList = CreateAppCloudlets(1);
+			AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, 0, 0, broker.getId());
+			createTaskList(app);
 
 			// submit vm list to the broker
 
 			broker.submitGuestList(guestList);
-			broker.submitCloudletList(appCloudletList);
+			broker.submitCloudletList(app.cList);
 
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();
@@ -174,10 +172,10 @@ public class DiamondAppMultiExtensionExample {
 	 * 
 	 * @return the datacenter broker
 	 */
-	private static NetworkDatacenterBroker createBroker() {
-		NetworkDatacenterBroker broker = null;
+	private static DatacenterBroker createBroker() {
+		DatacenterBroker broker = null;
 		try {
-			broker = new NetworkDatacenterBroker("Broker");
+			broker = new DatacenterBroker("Broker");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -261,19 +259,6 @@ public class DiamondAppMultiExtensionExample {
 		return vmList;
 	}
 
-	private static ArrayList<AppCloudlet> CreateAppCloudlets(int apps) {
-		ArrayList<AppCloudlet> cloudletList = new ArrayList<>();
-
-		for(int appId = 0; appId < apps; appId++) {
-			AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, appId, 0, broker.getId());
-			createTaskList(app);
-
-			cloudletList.add(app);
-		}
-
-		return cloudletList;
-	}
-
 	static private void createTaskList(AppCloudlet appCloudlet) {
 		long fileSize = NetworkConstants.FILE_SIZE;
 		long outputSize = NetworkConstants.OUTPUT_SIZE;
@@ -292,7 +277,7 @@ public class DiamondAppMultiExtensionExample {
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
-		cla.setUserId(appCloudlet.getUserId());
+		cla.setUserId(broker.getId());
 		cla.submittime = CloudSim.clock();
 		cla.currStagenum = -1;
 		cla.setGuestId(guestList.get(0).getId());
@@ -309,7 +294,7 @@ public class DiamondAppMultiExtensionExample {
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
-		clb.setUserId(appCloudlet.getUserId());
+		clb.setUserId(broker.getId());
 		clb.submittime = CloudSim.clock();
 		clb.currStagenum = -1;
 		clb.setGuestId(guestList.get(1).getId());
@@ -326,7 +311,7 @@ public class DiamondAppMultiExtensionExample {
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
-		clc.setUserId(appCloudlet.getUserId());
+		clc.setUserId(broker.getId());
 		clc.submittime = CloudSim.clock();
 		clc.currStagenum = -1;
 		clc.setGuestId(guestList.get(2).getId());
@@ -343,7 +328,7 @@ public class DiamondAppMultiExtensionExample {
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
-		cld.setUserId(appCloudlet.getUserId());
+		cld.setUserId(broker.getId());
 		cld.currStagenum = -1;
 		cld.setGuestId(guestList.get(3).getId());
 		appCloudlet.cList.add(cld);
