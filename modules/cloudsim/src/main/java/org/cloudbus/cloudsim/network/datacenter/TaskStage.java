@@ -8,6 +8,9 @@
 
 package org.cloudbus.cloudsim.network.datacenter;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * TaskStage represents various stages a {@link NetworkCloudlet} can have during execution. 
  * Four stage types which are possible: EXECUTION, WAIT_SEND, WAIT_RECV,and FINISH.
@@ -22,7 +25,6 @@ package org.cloudbus.cloudsim.network.datacenter;
  * @author Saurabh Kumar Garg
  * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
- * //TODO Attributes should be defined as private.
  */
 public class TaskStage {
 	public enum TaskStageStatus {
@@ -31,35 +33,44 @@ public class TaskStage {
 		WAIT_RECV,
 		FINISH;
 	}
-        /**
-         * The task type
-         */
-	TaskStageStatus type;
 
-        /**
-         * The data length generated for the task (in bytes).
-        */
-	double data;
+	/**
+	 * The task type
+	 */
+	@Getter
+	private TaskStageStatus type;
 
-        /** Execution time for this stage. */
-	double time;
+	/**
+	 * The data length generated for the task (in bytes).
+	*/
+	@Getter
+	private double data;
 
-        /** Stage (task) id. */
-	double stageid;
+	/** Execution time for this stage.
+	 * @NOTE: this variable is modified at run-time
+	 */
+	@Getter @Setter
+	private double time;
 
-        /** Memory used by the task. */
-	long memory;
+	/** Stage (task) id. */
+	@Getter
+	private final double stageId;
+
+	/** Memory used by the task. */
+	@Getter
+	private long memory;
 
 	/** Cloudlet where processing is done (if type == EXECUTION), or
 	 * from whom data need to be received (if type == WAIT_RECV) or sent to (if type == WAIT_SEND). */
-	NetworkCloudlet targetCloudlet;
+	@Getter
+	private NetworkCloudlet targetCloudlet;
 	
-	public TaskStage(TaskStageStatus type, double data, double time, double stageid, long memory, NetworkCloudlet cl) {
+	public TaskStage(TaskStageStatus type, double data, double time, double stageId, long memory, NetworkCloudlet cl) {
 		super();
 		this.type = type;
 		this.data = data;
 		this.time = time;
-		this.stageid = stageid;
+		this.stageId = stageId;
 		this.memory = memory;
 		this.targetCloudlet = cl;
 	}

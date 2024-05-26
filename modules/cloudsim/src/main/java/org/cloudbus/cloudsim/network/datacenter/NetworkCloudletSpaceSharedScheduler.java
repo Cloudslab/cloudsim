@@ -94,17 +94,17 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 					break;
 				}
 				TaskStage st = cl.stages.get(cl.currStagenum);
-				if (st.type == TaskStage.TaskStageStatus.EXECUTION) {
+				if (st.getType() == TaskStage.TaskStageStatus.EXECUTION) {
 
 					// update the time
 					cl.timespentInStage = Math.round(CloudSim.clock() - cl.timetostartStage);
-					if (cl.timespentInStage >= st.time) {
+					if (cl.timespentInStage >= st.getTime()) {
 						changetonextstage(cl, st);
 						// change the stage
 					}
 				}
-				if (st.type == TaskStage.TaskStageStatus.WAIT_RECV) {
-					List<HostPacket> pktlist = pktrecv.get(st.targetCloudlet.getGuestId());
+				if (st.getType() == TaskStage.TaskStageStatus.WAIT_RECV) {
+					List<HostPacket> pktlist = pktrecv.get(st.getTargetCloudlet().getGuestId());
 					List<HostPacket> pkttoremove = new ArrayList<>();
 					if (pktlist != null) {
 						Iterator<HostPacket> it = pktlist.iterator();
@@ -114,7 +114,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 							// Asumption packet will not arrive in the same cycle
 							if (pkt.receiverVmId == cl.getGuestId()) {
 								pkt.recvTime = CloudSim.clock();
-								st.time = CloudSim.clock() - pkt.sendTime;
+								st.setTime(CloudSim.clock() - pkt.sendTime);
 								changetonextstage(cl, st);
 								pkttoremove.add(pkt);
 							}
@@ -204,9 +204,9 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			cl.currStagenum = -2;
 		} else {
 			cl.currStagenum = cl.currStagenum + 1;
-			int i = 0;
+			int i;
 			for (i = cl.currStagenum; i < cl.stages.size(); i++) {
-				if (cl.stages.get(i).type == TaskStage.TaskStageStatus.WAIT_SEND) {
+				if (cl.stages.get(i).getType() == TaskStage.TaskStageStatus.WAIT_SEND) {
 					HostPacket pkt = new HostPacket(cl, i);
 					List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
 					if (pktlist == null) {

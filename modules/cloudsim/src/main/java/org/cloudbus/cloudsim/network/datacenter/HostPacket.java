@@ -65,14 +65,14 @@ public class HostPacket {
 	public HostPacket(NetworkCloudlet cl, int taskStageId) {
 			// Vm-level info
 			senderVmId = cl.getGuestId();
-			receiverVmId = cl.stages.get(taskStageId).targetCloudlet.getGuestId();
+			receiverVmId = cl.stages.get(taskStageId).getTargetCloudlet().getGuestId();
 
 			// Cloudlet-level info
 			senderCloudletId = cl.getCloudletId();
-			receiverCloudletId = cl.stages.get(taskStageId).targetCloudlet.getCloudletId();
+			receiverCloudletId = cl.stages.get(taskStageId).getTargetCloudlet().getCloudletId();
 
 			// packet info
-			data = cl.stages.get(taskStageId).data;
+			data = cl.stages.get(taskStageId).getData();
 
 			sendTime = CloudSim.clock();
 			recvTime = -1;
