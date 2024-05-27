@@ -76,7 +76,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 				toRemove.clear();
 				for (ResCloudlet rcl : getCloudletWaitingList()) {
 					if ((currentCPUs - usedPes) >= rcl.getNumberOfPes()) {
-						rcl.setCloudletStatus(Cloudlet.INEXEC);
+						rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
 						for (int k = 0; k < rcl.getNumberOfPes(); k++) {
 							rcl.setMachineAndPeId(0, i);
 						}
@@ -97,12 +97,10 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 			if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
 				estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
 			}
-
 			if (estimatedFinishTime < nextEvent) {
 				nextEvent = estimatedFinishTime;
 			}
 		}
-
 		setPreviousTime(currentTime);
 		return nextEvent;
 	}
@@ -122,7 +120,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 			// it can go to the exec list
 			if ((currentCPUs - usedPes) >= rcl.getNumberOfPes()) {
-				rcl.setCloudletStatus(Cloudlet.INEXEC);
+				rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
 				for (int i = 0; i < rcl.getNumberOfPes(); i++) {
 					rcl.setMachineAndPeId(0, i);
 				}
@@ -137,7 +135,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 				// calculate the expected time for cloudlet completion
 				return getEstimatedFinishTime(rcl, CloudSim.clock());
 			} else {// no enough free PEs: go to the waiting queue
-				rcl.setCloudletStatus(Cloudlet.QUEUED);
+				rcl.setCloudletStatus(Cloudlet.CloudletStatus.QUEUED);
 
 				long size = rcl.getRemainingCloudletLength();
 				size *= rcl.getNumberOfPes();
@@ -155,14 +153,14 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	public double cloudletSubmit(Cloudlet cloudlet, double fileTransferTime) {
         ResCloudlet rcl = new ResCloudlet(cloudlet);
         if ((currentCPUs - usedPes) >= cloudlet.getNumberOfPes()) { // it can go to the exec list
-            rcl.setCloudletStatus(Cloudlet.INEXEC);
+            rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
 			for (int i = 0; i < cloudlet.getNumberOfPes(); i++) {
 				rcl.setMachineAndPeId(0, i);
 			}
 			getCloudletExecList().add(rcl);
 			usedPes += cloudlet.getNumberOfPes();
 		} else {// no enough free PEs: go to the waiting queue
-            rcl.setCloudletStatus(Cloudlet.QUEUED);
+            rcl.setCloudletStatus(Cloudlet.CloudletStatus.QUEUED);
 			getCloudletWaitingList().add(rcl);
 			return 0.0;
 		}

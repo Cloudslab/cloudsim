@@ -356,7 +356,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
             if (rcl.isDone()) {
                 cloudletFinish(rcl);
             } else {
-                rcl.setCloudletStatus(HddCloudlet.PAUSED);
+                rcl.setCloudletStatus(Cloudlet.CloudletStatus.PAUSED);
                 getCloudletPausedList().add(rcl);
             }
             return true;
@@ -375,7 +375,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void cloudletFinish(final ResCloudlet rcl) {
-        rcl.setCloudletStatus(HddCloudlet.SUCCESS);
+        rcl.setCloudletStatus(Cloudlet.CloudletStatus.SUCCESS);
         rcl.finalizeCloudlet();
         getCloudletFinishedList().add(rcl);
     }
@@ -396,7 +396,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
 
         if (position >= 0) {
             HddResCloudlet rgl = this.<HddResCloudlet> getCloudletPausedList().remove(position);
-            rgl.setCloudletStatus(HddCloudlet.INEXEC);
+            rgl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
             getCloudletExecList().add(rgl);
 
             // calculate the expected time for cloudlet completion
@@ -434,7 +434,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
         HddCloudlet hddCloudlet = (HddCloudlet) cloudlet;
 
         HddResCloudlet rcl = new HddResCloudlet(hddCloudlet);
-        rcl.setCloudletStatus(HddCloudlet.INEXEC);
+        rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
         for (int i = 0; i < hddCloudlet.getNumberOfPes(); i++) {
             rcl.setMachineAndPeId(0, i);
         }
@@ -536,7 +536,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
                 .hasNext();) {
             HddResCloudlet hddResCloudlet = iter.next();
             iter.remove();
-            hddResCloudlet.setCloudletStatus(Cloudlet.FAILED);
+            hddResCloudlet.setCloudletStatus(Cloudlet.CloudletStatus.FAILED);
             ((List) cloudletFailedList).add(hddResCloudlet);
         }
 
@@ -544,7 +544,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
                 .hasNext();) {
             HddResCloudlet hddResCloudlet = iter.next();
             iter.remove();
-            hddResCloudlet.setCloudletStatus(Cloudlet.FAILED);
+            hddResCloudlet.setCloudletStatus(Cloudlet.CloudletStatus.FAILED);
             ((List) cloudletFailedList).add(hddResCloudlet);
         }
     }
@@ -553,7 +553,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
     private void failCloudlet(final HddResCloudlet hddResCloudlet) {
         getCloudletExecList().remove(hddResCloudlet);
         getCloudletFailedList().remove(hddResCloudlet);
-        hddResCloudlet.setCloudletStatus(Cloudlet.FAILED);
+        hddResCloudlet.setCloudletStatus(Cloudlet.CloudletStatus.FAILED);
         ((List) cloudletFailedList).add(hddResCloudlet);
     }
 
@@ -576,7 +576,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void addFailedCloudlet(final HddCloudlet cl) throws Exception {
-        cl.setCloudletStatus(Cloudlet.FAILED);
+        cl.setCloudletStatus(Cloudlet.CloudletStatus.FAILED);
         getCloudletFailedList().add(new HddResCloudlet(cl));
     }
 

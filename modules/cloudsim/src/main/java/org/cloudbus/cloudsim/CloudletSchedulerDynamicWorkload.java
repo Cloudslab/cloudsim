@@ -119,7 +119,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	@Override
 	public double cloudletSubmit(Cloudlet cl, double fileTransferTime) {
 		ResCloudlet rcl = new ResCloudlet(cl);
-		rcl.setCloudletStatus(Cloudlet.INEXEC);
+		rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
 
 		for (int i = 0; i < cl.getNumberOfPes(); i++) {
 			rcl.setMachineAndPeId(0, i);

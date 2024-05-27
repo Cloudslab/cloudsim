@@ -321,7 +321,7 @@ public class Datacenter extends SimEntity {
 		int cloudletId = 0;
 		int userId = 0;
 		int vmId = 0;
-		int status = -1;
+		Cloudlet.CloudletStatus status;
 
 		try {
 			// if a sender using cloudletXXX() methods
@@ -357,7 +357,7 @@ public class Datacenter extends SimEntity {
 		int[] array = new int[3];
 		array[0] = getId();
 		array[1] = cloudletId;
-		array[2] = status;
+		array[2] = status.ordinal();
 
 		int tag = CloudSimTags.CLOUDLET_STATUS;
 		sendNow(userId, tag, array);
@@ -578,7 +578,7 @@ public class Datacenter extends SimEntity {
 			failed = true;
 		} else {
 			// has the cloudlet already finished?
-			if (cl.getCloudletStatusString() == "Success") {// if yes, send it back to user
+			if (cl.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {// if yes, send it back to user
 				int[] data = new int[3];
 				data[0] = getId();
 				data[1] = cloudletId;

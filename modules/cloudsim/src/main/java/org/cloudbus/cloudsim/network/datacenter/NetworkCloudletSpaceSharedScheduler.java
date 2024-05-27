@@ -146,7 +146,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				toRemove.clear();
 				for (ResCloudlet rcl : getCloudletWaitingList()) {
 					if ((currentCPUs - usedPes) >= rcl.getNumberOfPes()) {
-						rcl.setCloudletStatus(Cloudlet.INEXEC);
+						rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
 						for (int k = 0; k < rcl.getNumberOfPes(); k++) {
 							rcl.setMachineAndPeId(0, i);
 						}

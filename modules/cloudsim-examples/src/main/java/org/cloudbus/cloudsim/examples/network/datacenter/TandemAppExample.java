@@ -196,7 +196,7 @@ public class TandemAppExample {
 		for (Cloudlet cloudlet : list) {
 			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-			if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
+			if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
 				Log.print("SUCCESS");
 				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
 						+ cloudlet.getGuestId() + indent + indent + dft.format(cloudlet.getActualCPUTime())

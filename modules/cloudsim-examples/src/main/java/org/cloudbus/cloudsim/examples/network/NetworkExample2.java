@@ -269,7 +269,7 @@ public class NetworkExample2 {
             cloudlet = value;
             Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-            if (cloudlet.getStatus() == Cloudlet.SUCCESS) {
+            if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
                 Log.print("SUCCESS");
 
                 DecimalFormat dft = new DecimalFormat("###.##");

@@ -255,7 +255,7 @@ public class ContainerCloudSimExample1 {
             cloudlet = containerCloudlet;
             Log.print(indent + cloudlet.getCloudletId() + indent + indent);
 
-            if (cloudlet.getCloudletStatusString() == "Success") {
+            if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
                 Log.print("SUCCESS");
 
                 Log.printLine(indent + indent + cloudlet.getResourceId()

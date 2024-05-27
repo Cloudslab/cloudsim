@@ -132,7 +132,7 @@ public abstract class CloudletScheduler {
 			if (rcl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(rcl);
 			} else {
-				rcl.setCloudletStatus(HddCloudlet.CANCELED);
+				rcl.setCloudletStatus(Cloudlet.CloudletStatus.CANCELED);
 			}
 			return rcl.getCloudlet();
 		}
@@ -168,7 +168,7 @@ public abstract class CloudletScheduler {
 			if (rcl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(rcl);
 			} else {
-				rcl.setCloudletStatus(Cloudlet.PAUSED);
+				rcl.setCloudletStatus(Cloudlet.CloudletStatus.PAUSED);
 				getCloudletPausedList().add(rcl);
 			}
 			return true;
@@ -182,7 +182,7 @@ public abstract class CloudletScheduler {
 			if (rcl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(rcl);
 			} else {
-				rcl.setCloudletStatus(Cloudlet.PAUSED);
+				rcl.setCloudletStatus(Cloudlet.CloudletStatus.PAUSED);
 				getCloudletPausedList().add(rcl);
 			}
 			return true;
@@ -208,7 +208,7 @@ public abstract class CloudletScheduler {
 	 * @post $none
 	 */
 	public void cloudletFinish(ResCloudlet rcl) {
-		rcl.setCloudletStatus(Cloudlet.SUCCESS);
+		rcl.setCloudletStatus(Cloudlet.CloudletStatus.SUCCESS);
 		rcl.finalizeCloudlet();
 		getCloudletFinishedList().add(rcl);
 	}
@@ -220,10 +220,9 @@ public abstract class CloudletScheduler {
 	 * @return status of the cloudlet, -1 if cloudlet not found
 	 * @pre $none
 	 * @post $none
-         * 
-         * //TODO cloudlet status should be an enum
+	 *
 	 */
-	public int getCloudletStatus(final int cloudletId) {
+	public Cloudlet.CloudletStatus getCloudletStatus(final int cloudletId) {
 		int position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
 		if (position >= 0) {
 			return getCloudletExecList().get(position).getCloudletStatus();
@@ -239,7 +238,7 @@ public abstract class CloudletScheduler {
 			return getCloudletWaitingList().get(position).getCloudletStatus();
 		}
 
-		return -1;
+		throw new RuntimeException("cloudlet doesn't not exist");
 	}
 
 	/**

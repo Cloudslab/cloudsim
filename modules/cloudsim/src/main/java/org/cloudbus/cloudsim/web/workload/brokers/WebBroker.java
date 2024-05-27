@@ -401,8 +401,7 @@ public class WebBroker extends MonitoringBrokerEX {
                     wc.getCloudletId(),
                     wc.getGuestId() == sess.getAppVmId() ? "AS" : "DB",
                     wc.getGuestId(),
-                    wc.getCloudletStatusString() == null ? String.valueOf(wc.getStatus()) : wc
-                            .getCloudletStatusString()));
+                    wc.getCloudletStatusString()));
         }
 
         CustomLog.printf("Broker(%s): Session %d with metadata %s has failed. Details: %s", this, sess.getSessionId(),

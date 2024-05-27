@@ -139,7 +139,7 @@ public class CloudletSchedulerSingleServiceTest {
 		vmScheduler.cloudletSubmit(cloudlet, 0);
 		vmScheduler.cloudletFinish(new ResCloudlet(cloudlet));
 
-		assertEquals(Cloudlet.SUCCESS, vmScheduler.getCloudletStatus(0));
+		assertEquals(Cloudlet.CloudletStatus.SUCCESS, vmScheduler.getCloudletStatus(0));
 		assertTrue(vmScheduler.isFinishedCloudlets());
 		assertSame(cloudlet, vmScheduler.getNextFinishedCloudlet());
 	}

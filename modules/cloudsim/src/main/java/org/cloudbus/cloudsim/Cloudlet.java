@@ -17,15 +17,49 @@ import lombok.Setter;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * Cloudlet is an extension to the cloudlet. It stores, despite all the
+ * Cloudlet is a user activity to be deployed on a Cloud Resource. It stores, despite all the
  * information encapsulated in the Cloudlet, the ID of the VM running it.
  *
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
- * //TODO The documentation is wrong. Cloudlet isn't extending any class.
  */
 public class Cloudlet {
+    public enum CloudletStatus {
+        /** The Cloudlet has been created and added to the CloudletList object. */
+        CREATED,
+
+        /** The Cloudlet has been assigned to a CloudResource object to be executed as planned. */
+        READY,
+
+        /** The Cloudlet has moved to a Cloud node. */
+        QUEUED,
+
+        /** The Cloudlet is in execution in a Cloud node. */
+        INEXEC,
+
+        /** The Cloudlet has been executed successfully. */
+        SUCCESS,
+
+        /** The Cloudlet has failed. */
+        FAILED,
+
+        /** The Cloudlet has been canceled. */
+        CANCELED,
+
+        /** The Cloudlet has been paused. It can be resumed by changing the status into RESUMED. */
+        PAUSED,
+
+        /** The Cloudlet has been resumed from PAUSED state. */
+        RESUMED,
+
+        /** The cloudlet has failed due to a resource failure.*/
+        FAILED_RESOURCE_UNAVAILABLE;
+        public static final CloudletStatus[] values = values();
+        // @NOTE: Convert an int to enum with CloudletStatus.values[i] (mind the array bounds)
+    }
+
 
     /**
      * The cloudlet ID.
@@ -79,11 +113,9 @@ public class Cloudlet {
 
     /**
      * The execution status of this Cloudlet.
-     * <p>
-     * //TODO It would be an enum, to avoid using int constants.
      */
     @Getter
-    private int status;
+    private CloudletStatus status;
 
     /**
      * The execution start time of this Cloudlet. With new functionalities, such
@@ -151,60 +183,6 @@ public class Cloudlet {
      * The format of decimal numbers.
      */
     private DecimalFormat num;
-
-    // //////////////////////////////////////////
-    // Below are CONSTANTS attributes
-    /**
-     * The Cloudlet has been created and added to the CloudletList object.
-     */
-    public static final int CREATED = 0;
-
-    /**
-     * The Cloudlet has been assigned to a CloudResource object to be executed
-     * as planned.
-     */
-    public static final int READY = 1;
-
-    /**
-     * The Cloudlet has moved to a Cloud node.
-     */
-    public static final int QUEUED = 2;
-
-    /**
-     * The Cloudlet is in execution in a Cloud node.
-     */
-    public static final int INEXEC = 3;
-
-    /**
-     * The Cloudlet has been executed successfully.
-     */
-    public static final int SUCCESS = 4;
-
-    /**
-     * The Cloudlet has failed.
-     */
-    public static final int FAILED = 5;
-
-    /**
-     * The Cloudlet has been canceled.
-     */
-    public static final int CANCELED = 6;
-
-    /**
-     * The Cloudlet has been paused. It can be resumed by changing the status
-     * into <tt>RESUMED</tt>.
-     */
-    public static final int PAUSED = 7;
-
-    /**
-     * The Cloudlet has been resumed from <tt>PAUSED</tt> state.
-     */
-    public static final int RESUMED = 8;
-
-    /**
-     * The cloudlet has failed due to a resource failure.
-     */
-    public static final int FAILED_RESOURCE_UNAVAILABLE = 9;
 
     /**
      * The id of the guest entity that is planned to execute the cloudlet.
@@ -441,7 +419,7 @@ public class Cloudlet {
             final UtilizationModel utilizationModelBw,
             final boolean record) {
         userId = -1;          // to be set by a Broker or user
-        status = CREATED;
+        status = CloudletStatus.CREATED;
         this.cloudletId = cloudletId;
         numberOfPes = pesNumber;
 
@@ -963,47 +941,22 @@ public class Cloudlet {
      * Sets the execution status code of this Cloudlet.
      *
      * @param newStatus the status code of this Cloudlet
-     * @throws Exception Invalid range of Cloudlet status
-     * @pre newStatus >= 0 && newStatus <= 8
-     * @ post $none
-     * <p>
-     * //TODO It has to throw an specific (unckecked) exception
      */
-    public void setCloudletStatus(final int newStatus) throws Exception {
+    public void setCloudletStatus(final CloudletStatus newStatus) {
         // if the new status is same as current one, then ignore the rest
         if (status == newStatus) {
             return;
         }
 
-        // throws an exception if the new status is outside the range
-        if (newStatus < Cloudlet.CREATED || newStatus > Cloudlet.FAILED_RESOURCE_UNAVAILABLE) {
-            throw new Exception(
-                    "Cloudlet.setCloudletStatus() : Error - Invalid integer range for Cloudlet status.");
-        }
-
-        if (newStatus == Cloudlet.SUCCESS) {
+        if (newStatus == CloudletStatus.SUCCESS) {
             execFinishTime = CloudSim.clock();
         }
 
         if (record) {
-            write("Sets Cloudlet status from " + getCloudletStatusString() + " to "
-                    + Cloudlet.getStatusString(newStatus));
+            write("Sets Cloudlet status from " + getCloudletStatusString() + " to " + newStatus.toString());
         }
 
         status = newStatus;
-    }
-
-    /**
-     * Gets the status code of this Cloudlet.
-     *
-     * @return the status code of this Cloudlet
-     * @pre $none
-     * @post $result >= 0
-     * @deprecated Use the getter {@link #getStatus()} instead
-     */
-    @Deprecated
-    public int getCloudletStatus() {
-        return status;
     }
 
     /**
@@ -1015,36 +968,7 @@ public class Cloudlet {
      * @post $none
      */
     public String getCloudletStatusString() {
-        return Cloudlet.getStatusString(status);
-    }
-
-    /**
-     * Gets the string representation of the given Cloudlet status code.
-     *
-     * @param status the Cloudlet status code
-     * @return the Cloudlet status code as a string or <tt>null</tt> if the
-     * status code is unknown
-     * @pre $none
-     * @post $none
-     */
-    public static String getStatusString(final int status) {
-        String statusString = null;
-        switch (status) {
-            case Cloudlet.CREATED -> statusString = "Created";
-            case Cloudlet.READY -> statusString = "Ready";
-            case Cloudlet.INEXEC -> statusString = "InExec";
-            case Cloudlet.SUCCESS -> statusString = "Success";
-            case Cloudlet.QUEUED -> statusString = "Queued";
-            case Cloudlet.FAILED -> statusString = "Failed";
-            case Cloudlet.CANCELED -> statusString = "Canceled";
-            case Cloudlet.PAUSED -> statusString = "Paused";
-            case Cloudlet.RESUMED -> statusString = "Resumed";
-            case Cloudlet.FAILED_RESOURCE_UNAVAILABLE -> statusString = "Failed_resource_unavailable";
-            default -> {
-            }
-        }
-
-        return statusString;
+        return status.toString();
     }
 
     /**

@@ -127,7 +127,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 				if (rcl.getRemainingCloudletLength() == 0) {
 					cloudletFinish(rcl);
 				} else {
-					rcl.setCloudletStatus(Cloudlet.CANCELED);
+					rcl.setCloudletStatus(Cloudlet.CloudletStatus.CANCELED);
 				}
 				return rcl.getCloudlet();
 			}
@@ -136,7 +136,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		// Now, looks in the paused queue
 		for (ResCloudlet rcl : getCloudletPausedList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				rcl.setCloudletStatus(Cloudlet.CANCELED);
+				rcl.setCloudletStatus(Cloudlet.CloudletStatus.CANCELED);
 				getCloudletPausedList().remove(rcl);
 				return rcl.getCloudlet();
 			}
@@ -145,7 +145,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		// Finally, looks in the waiting list
 		for (ResCloudlet rcl : getCloudletWaitingList()) {
 			if (rcl.getCloudletId() == cloudletId) {
-				rcl.setCloudletStatus(Cloudlet.CANCELED);
+				rcl.setCloudletStatus(Cloudlet.CloudletStatus.CANCELED);
 				getCloudletWaitingList().remove(rcl);
 				return rcl.getCloudlet();
 			}
@@ -160,7 +160,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		int position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
 		if (position >= 0) {
 			ResCloudlet rcl = getCloudletPausedList().remove(position);
-			rcl.setCloudletStatus(Cloudlet.INEXEC);
+			rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
 			getCloudletExecList().add(rcl);
 
 			// calculate the expected time for cloudlet completion
@@ -173,7 +173,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	@Override
 	public double cloudletSubmit(Cloudlet cloudlet, double fileTransferTime) {
 		ResCloudlet rcl = new ResCloudlet(cloudlet);
-		rcl.setCloudletStatus(Cloudlet.INEXEC);
+		rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
 		for (int i = 0; i < cloudlet.getNumberOfPes(); i++) {
 			rcl.setMachineAndPeId(0, i);
 		}

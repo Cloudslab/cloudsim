@@ -46,8 +46,8 @@ import java.util.logging.Level;
         "Complete", "Failed", "SourceIP", "ServerIP" })
 public class WebSession {
 
-    private static final Set<Integer> FAIL_CLOUDLET_STATES = new HashSet<>(Arrays.asList(Cloudlet.FAILED,
-            Cloudlet.FAILED_RESOURCE_UNAVAILABLE, Cloudlet.CANCELED));
+    private static final Set<Cloudlet.CloudletStatus> FAIL_CLOUDLET_STATES = new HashSet<>(Arrays.asList(Cloudlet.CloudletStatus.FAILED,
+            Cloudlet.CloudletStatus.FAILED_RESOURCE_UNAVAILABLE, Cloudlet.CloudletStatus.CANCELED));
 
     private final IGenerator<? extends WebCloudlet> appServerCloudLets;
     private final IGenerator<? extends Collection<? extends WebCloudlet>> dbServerCloudLets;
