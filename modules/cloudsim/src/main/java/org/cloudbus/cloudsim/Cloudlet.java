@@ -710,9 +710,7 @@ public class Cloudlet {
             return cloudletLength;
         }
 
-        final long finish = resList.get(index).finishedSoFar;
-        return Math.min(finish, cloudletLength);
-
+        return Math.min(resList.get(index).finishedSoFar, cloudletLength);
     }
 
     /**
@@ -728,15 +726,8 @@ public class Cloudlet {
             return false;
         }
 
-        boolean completed = false;
-
         // if result is 0 or -ve then this Cloudlet has finished
-        final long finish = resList.get(index).finishedSoFar;
-        final long result = cloudletLength - finish;
-        if (result <= 0.0) {
-            completed = true;
-        }
-        return completed;
+        return cloudletLength - resList.get(index).finishedSoFar <= 0.0;
     }
 
     /**
@@ -756,8 +747,7 @@ public class Cloudlet {
             return;
         }
 
-        final Resource res = resList.get(index);
-        res.finishedSoFar = length;
+        resList.get(index).finishedSoFar = length;
 
         if (record) {
             write("Sets the length's finished so far to " + length);
@@ -866,8 +856,7 @@ public class Cloudlet {
             return;
         }
 
-        final Resource res = resList.get(index);
-        res.submissionTime = clockTime;
+        resList.get(index).submissionTime = clockTime;
 
         if (record) {
             write("Sets the submission time to " + num.format(clockTime));
