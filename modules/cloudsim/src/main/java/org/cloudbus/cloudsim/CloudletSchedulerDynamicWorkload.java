@@ -117,11 +117,6 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	}
 
 	@Override
-	public double cloudletSubmit(Cloudlet cl) {
-		return cloudletSubmit(cl, 0);
-	}
-
-	@Override
 	public double cloudletSubmit(Cloudlet cl, double fileTransferTime) {
 		ResCloudlet rcl = new ResCloudlet(cl);
 		rcl.setCloudletStatus(Cloudlet.INEXEC);
@@ -134,21 +129,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 		return getEstimatedFinishTime(rcl, getPreviousTime());
 	}
 
-	@Override
-	public void cloudletFinish(ResCloudlet rcl) {
-		rcl.setCloudletStatus(Cloudlet.SUCCESS);
-		rcl.finalizeCloudlet();
-		getCloudletFinishedList().add(rcl);
-	}
 
-	@Override
-	public double getTotalUtilizationOfCpu(double time) {
-		double totalUtilization = 0;
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			totalUtilization += rcl.getCloudlet().getUtilizationOfCpu(time);
-		}
-		return totalUtilization;
-	}
 
 	@Override
 	public List<Double> getCurrentRequestedMips() {
@@ -219,6 +200,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * @param time the time
 	 * @return the estimated finish time
 	 */
+	@Override
 	public double getEstimatedFinishTime(ResCloudlet rcl, double time) {
 		return time
 				+ ((rcl.getRemainingCloudletLength()) / getTotalCurrentAllocatedMipsForCloudlet(rcl, time));

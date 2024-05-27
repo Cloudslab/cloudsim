@@ -7,10 +7,7 @@
 
 package org.cloudbus.cloudsim.EX.disk;
 
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletScheduler;
-import org.cloudbus.cloudsim.Consts;
-import org.cloudbus.cloudsim.ResCloudlet;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.EX.util.CustomLog;
 import org.cloudbus.cloudsim.lists.ResCloudletList;
@@ -38,10 +35,10 @@ import java.util.logging.Level;
  * </ul>
  * 
  * @author nikolay.grozev
- * 
+ * @author Remo Andreoli
  * 
  */
-public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
+public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared {
 
     /** The current IO mips share. */
     private List<Double> currentIOMipsShare;
@@ -186,14 +183,11 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
             final List<Double> iopsShare, int[] disksToNumCloudlets) {
         // check finished cloudlets
         double nextEvent = Double.MAX_VALUE;
-
-        double cpuCapacity = getCPUCapacity(mipsShare);
         // int[] disksToNumCloudlets = disksToNumCloudlets();
 
         // estimate finish time of cloudlets
         for (HddResCloudlet rcl : this.<HddResCloudlet> getCloudletExecList()) {
-            double estimatedFinishCPUTime = rcl.getRemainingCloudletLength() == 0 ? Double.NaN : currentTime
-                    + (rcl.getRemainingCloudletLength() / (cpuCapacity * rcl.getNumberOfPes()));
+            double estimatedFinishCPUTime = rcl.getRemainingCloudletLength() == 0 ? Double.NaN : getEstimatedFinishTime(rcl, currentTime);
             double estimatedFinishIOTime = rcl.getRemainingCloudletIOLength() == 0 ? Double.NaN : currentTime
                     + (rcl.getRemainingCloudletIOLength() / (getIOCapacity(iopsShare, disksToNumCloudlets, rcl) * rcl
                             .getNumberOfHdds()));
@@ -343,67 +337,6 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
     // }
     // }
 
-    public double getCPUCapacity(final List<Double> mipsShare) {
-        double capacity = 0.0;
-        int cpus = 0;
-        for (Double mips : mipsShare) {
-            capacity += mips;
-            if (mips > 0.0) {
-                cpus++;
-            }
-        }
-
-        int pesInUse = 0;
-        for (HddResCloudlet rcl : this.<HddResCloudlet> getCloudletExecList()) {
-            if (rcl.getRemainingCloudletLength() != 0) {
-                pesInUse += rcl.getNumberOfPes();
-            }
-        }
-
-        capacity /= Math.max(pesInUse, cpus);
-        return capacity;
-    }
-
-    /**
-     * Cancels execution of a cloudlet.
-     * 
-     * @param cloudletId
-     *            ID of the cloudlet being cancealed
-     * @return the canceled cloudlet, $null if not found
-     * @pre $none
-     * @post $none
-     */
-    @Override
-    public HddCloudlet cloudletCancel(final int cloudletId) {
-        // First, looks in the finished queue
-        int position = ResCloudletList.getPositionById(getCloudletFinishedList(), cloudletId);
-
-        if (position >= 0) {
-            return this.<HddResCloudlet> getCloudletFinishedList().remove(position).getCloudlet();
-        }
-
-        // Then searches in the exec list
-        position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
-
-        if (position >= 0) {
-            HddResCloudlet rcl = this.<HddResCloudlet> getCloudletExecList().remove(position);
-            if (rcl.isDone()) {
-                cloudletFinish(rcl);
-            } else {
-                rcl.setCloudletStatus(HddCloudlet.CANCELED);
-            }
-            return rcl.getCloudlet();
-        }
-
-        // Now, looks in the paused queue
-        position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
-        if (position >= 0) {
-            return this.<HddResCloudlet> getCloudletPausedList().remove(position).getCloudlet();
-        }
-
-        return null;
-    }
-
     /**
      * Pauses execution of a cloudlet.
      * 
@@ -532,68 +465,6 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cloudsim.CloudletScheduler#cloudletSubmit(cloudsim.Cloudlet)
-     */
-    @Override
-    public double cloudletSubmit(final Cloudlet cloudlet) {
-        return cloudletSubmit(cloudlet, 0.0);
-    }
-
-    /**
-     * Gets the status of a cloudlet.
-     * 
-     * @param cloudletId
-     *            ID of the cloudlet
-     * @return status of the cloudlet, -1 if cloudlet not found
-     * @pre $none
-     * @post $none
-     */
-    @Override
-    public int getCloudletStatus(final int cloudletId) {
-        int position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
-        if (position >= 0) {
-            return getCloudletExecList().get(position).getCloudletStatus();
-        }
-        position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
-        if (position >= 0) {
-            return getCloudletPausedList().get(position).getCloudletStatus();
-        }
-        return -1;
-    }
-
-    /**
-     * Get utilization created by all cloudlets.
-     * 
-     * @param time
-     *            the time
-     * @return total utilization
-     */
-    @Override
-    public double getTotalUtilizationOfCpu(final double time) {
-        double totalUtilization = 0;
-        for (HddResCloudlet gl : this.<HddResCloudlet> getCloudletExecList()) {
-            totalUtilization += gl.getCloudlet().getUtilizationOfCpu(time);
-        }
-        return totalUtilization;
-    }
-
-    /**
-     * Informs about completion of some cloudlet in the VM managed by this
-     * scheduler.
-     * 
-     * @return $true if there is at least one finished cloudlet; $false
-     *         otherwise
-     * @pre $none
-     * @post $none
-     */
-    @Override
-    public boolean isFinishedCloudlets() {
-        return !getCloudletFinishedList().isEmpty();
-    }
-
     /**
      * Informs about failure of some cloudlet in the VM managed by this
      * scheduler.
@@ -602,22 +473,6 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
      */
     public boolean isFailedCloudlets() {
         return !getCloudletFailedList().isEmpty();
-    }
-
-    /**
-     * Returns the next cloudlet in the finished list, $null if this list is
-     * empty.
-     * 
-     * @return a finished cloudlet
-     * @pre $none
-     * @post $none
-     */
-    @Override
-    public HddCloudlet getNextFinishedCloudlet() {
-        if (!getCloudletFinishedList().isEmpty()) {
-            return this.<HddResCloudlet> getCloudletFinishedList().remove(0).getCloudlet();
-        }
-        return null;
     }
 
     /**
@@ -631,43 +486,6 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
             return getCloudletFailedList().remove(0).getCloudlet();
         }
         return null;
-    }
-
-    /**
-     * Returns the number of cloudlets runnning in the virtual machine.
-     * 
-     * @return number of cloudlets runnning
-     * @pre $none
-     * @post $none
-     */
-    @Override
-    public int runningCloudlets() {
-        return getCloudletExecList().size();
-    }
-
-    /**
-     * Returns one cloudlet to migrate to another vm.
-     * 
-     * @return one running cloudlet
-     * @pre $none
-     * @post $none
-     */
-    @Override
-    public Cloudlet migrateCloudlet() {
-        HddResCloudlet rgl = this.<HddResCloudlet> getCloudletExecList().remove(0);
-        rgl.finalizeCloudlet();
-        return rgl.getCloudlet();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see cloudsim.CloudletScheduler#getCurrentRequestedMips()
-     */
-    @Override
-    public List<Double> getCurrentRequestedMips() {
-        List<Double> mipsShare = new ArrayList<>();
-        return mipsShare;
     }
 
     /*
@@ -705,38 +523,6 @@ public class HddCloudletSchedulerTimeShared extends CloudletScheduler {
     public double getTotalCurrentRequestedMipsForCloudlet(final ResCloudlet rcl, final double time) {
         // TODO Auto-generated method stub
         return 0.0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.cloudbus.cloudsim.CloudletScheduler#getCurrentRequestedUtilizationOfRam
-     * ()
-     */
-    @Override
-    public double getCurrentRequestedUtilizationOfRam() {
-        double ram = 0;
-        for (ResCloudlet cloudlet : cloudletExecList) {
-            ram += cloudlet.getCloudlet().getUtilizationOfRam(CloudSim.clock());
-        }
-        return ram;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.cloudbus.cloudsim.CloudletScheduler#getCurrentRequestedUtilizationOfBw
-     * ()
-     */
-    @Override
-    public double getCurrentRequestedUtilizationOfBw() {
-        double bw = 0;
-        for (ResCloudlet cloudlet : cloudletExecList) {
-            bw += cloudlet.getCloudlet().getUtilizationOfBw(CloudSim.clock());
-        }
-        return bw;
     }
 
     public List<Double> getCurrentRequestedIOMips() {

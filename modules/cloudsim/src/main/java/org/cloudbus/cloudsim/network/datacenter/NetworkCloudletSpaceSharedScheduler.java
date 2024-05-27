@@ -74,7 +74,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				cpus++;
 			}
 		}
-		currentCpus = cpus;
+		currentCPUs = cpus;
 		capacity /= cpus; // average capacity of each cpu
 
 		for (ResCloudlet rcl : getCloudletExecList()) { // each machine in the
@@ -132,7 +132,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 
 		}
 
-		if (getCloudletExecList().size() == 0 && getCloudletWaitingList().size() == 0) { // no
+		if (getCloudletExecList().isEmpty() && getCloudletWaitingList().isEmpty()) { // no
 			// more cloudlets in this scheduler
 			setPreviousTime(currentTime);
 			return 0.0;
@@ -160,7 +160,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			for (int i = 0; i < finished; i++) {
 				toRemove.clear();
 				for (ResCloudlet rcl : getCloudletWaitingList()) {
-					if ((currentCpus - usedPes) >= rcl.getNumberOfPes()) {
+					if ((currentCPUs - usedPes) >= rcl.getNumberOfPes()) {
 						rcl.setCloudletStatus(Cloudlet.INEXEC);
 						for (int k = 0; k < rcl.getNumberOfPes(); k++) {
 							rcl.setMachineAndPeId(0, i);
@@ -172,14 +172,13 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 					}
 				}
 				getCloudletWaitingList().removeAll(toRemove);
-			}// for(cont)
+			}
 		}
 
 		// estimate finish time of cloudlets in the execution queue
 		double nextEvent = Double.MAX_VALUE;
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			double remainingLength = rcl.getRemainingCloudletLength();
-			double estimatedFinishTime = currentTime + (remainingLength / (capacity * rcl.getNumberOfPes()));
+			double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
 			if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
 				estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
 			}

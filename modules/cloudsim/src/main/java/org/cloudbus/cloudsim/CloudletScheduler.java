@@ -8,8 +8,14 @@
 
 package org.cloudbus.cloudsim;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.cloudbus.cloudsim.EX.disk.HddCloudlet;
+import org.cloudbus.cloudsim.EX.disk.HddResCloudlet;
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.lists.ResCloudletList;
 import org.cloudbus.cloudsim.network.datacenter.NetworkCloudletSpaceSharedScheduler;
 
 
@@ -32,6 +38,11 @@ public abstract class CloudletScheduler {
 
 	/** The list of current mips share available for the VM using the scheduler. */
 	private List<Double> currentMipsShare;
+
+	/** The number of PEs currently available for the VM using the scheduler,
+	 * according to the mips share provided to it by
+	 * {@link CloudletScheduler#updateCloudletsProcessing(double, List)} method. */
+	protected int currentCPUs;
 
 	/** The list of cloudlet waiting to be executed on the VM. */
 	protected List<? extends ResCloudlet> cloudletWaitingList;
@@ -57,6 +68,8 @@ public abstract class CloudletScheduler {
 	 */
 	public CloudletScheduler() {
 		setPreviousTime(0.0);
+		currentCPUs = 0;
+
 		cloudletWaitingList = new LinkedList<>();
 		cloudletExecList = new LinkedList<>();
 		cloudletPausedList = new LinkedList<>();
@@ -79,43 +92,103 @@ public abstract class CloudletScheduler {
 	/**
 	 * Receives an cloudlet to be executed in the VM managed by this scheduler.
 	 * 
-	 * @param gl the submited cloudlet (//TODO it's a strange param name)
+	 * @param cl the submited cloudlet
 	 * @param fileTransferTime time required to move the required files from the SAN to the VM
 	 * @return expected finish time of this cloudlet, or 0 if it is in a waiting queue
 	 * @pre gl != null
 	 * @post $none
 	 */
-	public abstract double cloudletSubmit(Cloudlet gl, double fileTransferTime);
+	public abstract double cloudletSubmit(Cloudlet cl, double fileTransferTime);
 
 	/**
-	 * Receives an cloudlet to be executed in the VM managed by this scheduler.
+	 * Receives a cloudlet to be executed in the VM managed by this scheduler.
 	 * 
-	 * @param gl the submited cloudlet
+	 * @param cl the submitted cloudlet
 	 * @return expected finish time of this cloudlet, or 0 if it is in a waiting queue
 	 * @pre gl != null
 	 * @post $none
 	 */
-	public abstract double cloudletSubmit(Cloudlet gl);
+	public double cloudletSubmit(Cloudlet cl) { return cloudletSubmit(cl, 0); }
 
 	/**
 	 * Cancels execution of a cloudlet.
 	 * 
-	 * @param clId ID of the cloudlet being canceled
+	 * @param cloudletId ID of the cloudlet being canceled
 	 * @return the canceled cloudlet, $null if not found
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract Cloudlet cloudletCancel(int clId);
+	public Cloudlet cloudletCancel(final int cloudletId) {
+		// First, looks in the finished queue
+		int position = ResCloudletList.getPositionById(getCloudletFinishedList(), cloudletId);
+		if (position >= 0) {
+			return getCloudletFinishedList().remove(position).getCloudlet();
+		}
+
+		// Then searches in the exec list
+		position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
+		if (position >= 0) {
+			ResCloudlet rcl = getCloudletExecList().remove(position);
+			if (rcl.getRemainingCloudletLength() == 0) {
+				cloudletFinish(rcl);
+			} else {
+				rcl.setCloudletStatus(HddCloudlet.CANCELED);
+			}
+			return rcl.getCloudlet();
+		}
+
+		// Now, looks in the paused queue
+		position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
+		if (position >= 0) {
+			return getCloudletPausedList().remove(position).getCloudlet();
+		}
+
+		// Finally, looks in the waiting list
+		position = ResCloudletList.getPositionById(getCloudletWaitingList(), cloudletId);
+		if (position >= 0) {
+			return getCloudletWaitingList().remove(position).getCloudlet();
+		}
+		return null;
+	}
 
 	/**
 	 * Pauses execution of a cloudlet.
 	 * 
-	 * @param clId ID of the cloudlet being paused
+	 * @param cloudletId ID of the cloudlet being paused
 	 * @return $true if cloudlet paused, $false otherwise
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean cloudletPause(int clId);
+	public boolean cloudletPause(int cloudletId) {
+		// first, looks for the cloudlet in the exec list
+		int position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
+		if (position >= 0) {
+			// moves to the paused list
+			ResCloudlet rcl = getCloudletExecList().remove(position);
+			if (rcl.getRemainingCloudletLength() == 0) {
+				cloudletFinish(rcl);
+			} else {
+				rcl.setCloudletStatus(Cloudlet.PAUSED);
+				getCloudletPausedList().add(rcl);
+			}
+			return true;
+		}
+
+		// now, look for the cloudlet in the waiting list
+		position = ResCloudletList.getPositionById(getCloudletWaitingList(), cloudletId);
+		if (position >= 0) {
+			// moves to the paused list
+			ResCloudlet rcl = getCloudletWaitingList().remove(position);
+			if (rcl.getRemainingCloudletLength() == 0) {
+				cloudletFinish(rcl);
+			} else {
+				rcl.setCloudletStatus(Cloudlet.PAUSED);
+				getCloudletPausedList().add(rcl);
+			}
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Resumes execution of a paused cloudlet.
@@ -134,19 +207,40 @@ public abstract class CloudletScheduler {
 	 * @pre rgl != $null
 	 * @post $none
 	 */
-	public abstract void cloudletFinish(ResCloudlet rcl);
+	public void cloudletFinish(ResCloudlet rcl) {
+		rcl.setCloudletStatus(Cloudlet.SUCCESS);
+		rcl.finalizeCloudlet();
+		getCloudletFinishedList().add(rcl);
+	}
 
 	/**
 	 * Gets the status of a cloudlet.
 	 * 
-	 * @param clId ID of the cloudlet
+	 * @param cloudletId ID of the cloudlet
 	 * @return status of the cloudlet, -1 if cloudlet not found
 	 * @pre $none
 	 * @post $none
          * 
          * //TODO cloudlet status should be an enum
 	 */
-	public abstract int getCloudletStatus(int clId);
+	public int getCloudletStatus(final int cloudletId) {
+		int position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
+		if (position >= 0) {
+			return getCloudletExecList().get(position).getCloudletStatus();
+		}
+
+		position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
+		if (position >= 0) {
+			return getCloudletPausedList().get(position).getCloudletStatus();
+		}
+
+		position = ResCloudletList.getPositionById(getCloudletWaitingList(), cloudletId);
+		if (position >= 0) {
+			return getCloudletWaitingList().get(position).getCloudletStatus();
+		}
+
+		return -1;
+	}
 
 	/**
 	 * Informs if there is any cloudlet that finished to execute in the VM managed by this scheduler.
@@ -156,7 +250,7 @@ public abstract class CloudletScheduler {
 	 * @post $none
          * //TODO the method name would be isThereFinishedCloudlets to be clearer
 	 */
-	public abstract boolean isFinishedCloudlets();
+	public boolean isFinishedCloudlets() { return !getCloudletFinishedList().isEmpty(); }
 
 	/**
 	 * Returns the next cloudlet in the finished list.
@@ -165,7 +259,12 @@ public abstract class CloudletScheduler {
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract Cloudlet getNextFinishedCloudlet();
+	public Cloudlet getNextFinishedCloudlet() {
+		if (!getCloudletFinishedList().isEmpty()) {
+			return getCloudletFinishedList().remove(0).getCloudlet();
+		}
+		return null;
+	}
 
 	/**
 	 * Returns the number of cloudlets running in the virtual machine.
@@ -174,7 +273,7 @@ public abstract class CloudletScheduler {
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract int runningCloudlets();
+	public int runningCloudlets(){ return getCloudletExecList().size(); }
 
 	/**
 	 * Returns one cloudlet to migrate to another vm.
@@ -183,7 +282,46 @@ public abstract class CloudletScheduler {
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract Cloudlet migrateCloudlet();
+	public Cloudlet migrateCloudlet() {
+		ResCloudlet rcl = getCloudletExecList().remove(0);
+		rcl.finalizeCloudlet();
+		return rcl.getCloudlet();
+	}
+
+	/**
+	 * Get the estimated completion time of a given cloudlet.
+	 *
+	 * @param rcl the cloudlet
+	 * @param time the time
+	 * @return the estimated finish time
+	 */
+	public double getEstimatedFinishTime(ResCloudlet rcl, double time) {
+		return time
+				+ ((rcl.getRemainingCloudletLength()) / (getCPUCapacity(getCurrentMipsShare()) * rcl.getNumberOfPes()));
+	}
+
+	/**
+	 * Gets the individual MIPS capacity available for each PE available for the scheduler,
+	 * considering that all PEs have the same capacity. The default implementation is suitable for space-shared policies.
+	 *
+	 * @param mipsShare list with MIPS share of each PE available to the scheduler
+	 * @return the capacity of each PE
+	 */
+	public double getCPUCapacity(final List<Double> mipsShare) {
+		double capacity = 0.0;
+		int cpus = 0;
+
+		for (Double mips : mipsShare) { // count the CPUs available to the VMM
+			capacity += mips;
+			if (mips > 0) {
+				cpus++;
+			}
+		}
+		currentCPUs = cpus;
+		capacity /= cpus; // average capacity of each cpu
+
+		return capacity;
+	}
 
 	/**
 	 * Gets total CPU utilization percentage of all cloudlets, according to CPU UtilizationModel of 
@@ -192,14 +330,26 @@ public abstract class CloudletScheduler {
 	 * @param time the time to get the current CPU utilization
 	 * @return total utilization
 	 */
-	public abstract double getTotalUtilizationOfCpu(double time);
+	public double getTotalUtilizationOfCpu(double time) {
+		double totalUtilization = 0;
+		for (ResCloudlet rcl : getCloudletExecList()) {
+			totalUtilization += rcl.getCloudlet().getUtilizationOfCpu(time);
+		}
+		return totalUtilization;
+	}
 
 	/**
 	 * Gets the current requested mips.
 	 * 
 	 * @return the current mips
 	 */
-	public abstract List<Double> getCurrentRequestedMips();
+	public List<Double> getCurrentRequestedMips() {
+		List<Double> mipsShare = new ArrayList<>();
+		if (getCurrentMipsShare() != null) {
+			mipsShare.addAll(getCurrentMipsShare());
+		}
+		return mipsShare;
+	}
 
 	/**
 	 * Gets the total current available mips for the Cloudlet.
@@ -242,15 +392,25 @@ public abstract class CloudletScheduler {
 	 * 
 	 * @return the current requested ram
 	 */
-	public abstract double getCurrentRequestedUtilizationOfRam();
-
+	public double getCurrentRequestedUtilizationOfRam() {
+		double ram = 0;
+		for (ResCloudlet rcl : cloudletExecList) {
+			ram += rcl.getCloudlet().getUtilizationOfRam(CloudSim.clock());
+		}
+		return ram;
+	}
 	/**
 	 * Gets the current requested bw.
 	 * 
 	 * @return the current requested bw
 	 */
-	public abstract double getCurrentRequestedUtilizationOfBw();
-
+	public double getCurrentRequestedUtilizationOfBw() {
+		double bw = 0;
+		for (ResCloudlet rcl : cloudletExecList) {
+			bw += rcl.getCloudlet().getUtilizationOfBw(CloudSim.clock());
+		}
+		return bw;
+	}
 	/**
 	 * Gets the previous time.
 	 * 
