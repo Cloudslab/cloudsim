@@ -32,45 +32,18 @@ import org.cloudbus.cloudsim.UtilizationModel;
  * of a super class and/or interface.
  */
 public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloudlet> {
-        /** Time when cloudlet will be submitted. */
-	public double submittime; 
+	/** Current stage of cloudlet execution. */
+	public int currStageNum;
 
-        /** Time when cloudlet finishes execution. */
-	public double finishtime; 
+	/** Star time of the current stage.*/
+	public double startTimeCurrStage;
 
-        /** Execution time for cloudlet. */
-	public double exetime;
+	/** Time spent in the current stage.*/
+	public double timeSpentCurrStage;
 
-        /** Current stage of cloudlet execution. */
-	public int currStagenum; 
-
-        /** Star time of the current stage. 
-         */
-	public double timetostartStage;
-
-        /** Time spent in the current stage. 
-         */
-	public double timespentInStage; 
-
-        /** 
-         * //TODO It doesn't appear to be used.
-        */
-	public Map<Double, HostPacket> timeCommunicate;
-
-        /** All sequential stages that the cloudlet executes. */
-	public ArrayList<TaskStage> stages; 
-        
-        /**
-         * Cloudlet's memory.
-         * //TODO Required, allocated, used memory?
-         * It doesn't appear to be used.
-         */
-	long memory;
-
-        /**
-         * Cloudlet's start time.
-         */
-	public double starttime;
+	/** All sequential stages that the cloudlet executes.
+	 * ASSUMPTION: array order is significant */
+	public ArrayList<TaskStage> stages;
 
 	public NetworkCloudlet(
 			int cloudletId,
@@ -78,7 +51,6 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 			int pesNumber,
 			long cloudletFileSize,
 			long cloudletOutputSize,
-			long memory,
 			UtilizationModel utilizationModelCpu,
 			UtilizationModel utilizationModelRam,
 			UtilizationModel utilizationModelBw) {
@@ -92,20 +64,42 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 				utilizationModelRam,
 				utilizationModelBw);
 
-		currStagenum = -1;
-		this.memory = memory;
+		currStageNum = -1;
 		stages = new ArrayList<>();
 	}
 
 	public int getNumberOfStages() { return stages.size(); }
 
+	public void addExecutionStage(double execTime) {
+		stages.add(
+				new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, execTime, stages.size(), this));
+		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+execTime));
+	}
+
+	public void addSendStage(double data, NetworkCloudlet receiverCl) {
+		stages.add(
+				new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, data, -1, stages.size(), receiverCl));
+
+		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+ data*transmissionTime));
+	}
+
+	public void addRecvStage(NetworkCloudlet senderCl) {
+		stages.add(
+				new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, stages.size(), senderCl));
+
+		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+ expectedWaitTime));
+	}
+
+	/** Provide statistics on the execution times of each stage */
+	public void stats() {
+		System.out.println("NetworkCloudlet #"+getCloudletId());
+		for (TaskStage stage : stages) {
+			System.out.println("	"+stage.getType().toString()+" "+Math.max(0, stage.getTime()));
+		}
+	}
+
 	@Override
 	public int compareTo(NetworkCloudlet arg0) {
 		return 0;
 	}
-
-	public double getSubmittime() {
-		return submittime;
-	}
-
 }

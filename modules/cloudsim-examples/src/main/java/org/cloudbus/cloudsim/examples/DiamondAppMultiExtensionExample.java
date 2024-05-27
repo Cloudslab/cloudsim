@@ -209,7 +209,7 @@ public class DiamondAppMultiExtensionExample {
 				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
 						+ cloudlet.getGuestId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
 						+ indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent
-						+ dft.format(cloudlet.getFinishTime()));
+						+ dft.format(cloudlet.getExecFinishTime()));
 			}
 		}
 
@@ -262,7 +262,6 @@ public class DiamondAppMultiExtensionExample {
 	static private void createTaskList(AppCloudlet appCloudlet) {
 		long fileSize = NetworkConstants.FILE_SIZE;
 		long outputSize = NetworkConstants.OUTPUT_SIZE;
-		int memory = 100;
 		UtilizationModel utilizationModel = new UtilizationModelFull();
 
 		// Define cloudlets
@@ -272,14 +271,11 @@ public class DiamondAppMultiExtensionExample {
 				1,
 				fileSize,
 				outputSize,
-				memory,
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		cla.setUserId(broker.getId());
-		cla.submittime = CloudSim.clock();
-		cla.currStagenum = -1;
 		cla.setGuestId(guestList.get(0).getId());
 		appCloudlet.cList.add(cla);
 
@@ -289,14 +285,11 @@ public class DiamondAppMultiExtensionExample {
 				1,
 				fileSize,
 				outputSize,
-				memory,
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		clb.setUserId(broker.getId());
-		clb.submittime = CloudSim.clock();
-		clb.currStagenum = -1;
 		clb.setGuestId(guestList.get(1).getId());
 		appCloudlet.cList.add(clb);
 
@@ -306,14 +299,11 @@ public class DiamondAppMultiExtensionExample {
 				1,
 				fileSize,
 				outputSize,
-				memory,
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		clc.setUserId(broker.getId());
-		clc.submittime = CloudSim.clock();
-		clc.currStagenum = -1;
 		clc.setGuestId(guestList.get(2).getId());
 		appCloudlet.cList.add(clc);
 
@@ -323,37 +313,35 @@ public class DiamondAppMultiExtensionExample {
 				1,
 				fileSize,
 				outputSize,
-				memory,
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		cld.setUserId(broker.getId());
-		cld.currStagenum = -1;
 		cld.setGuestId(guestList.get(3).getId());
 		appCloudlet.cList.add(cld);
 
 
 		// Configure task stages within the cloudlets
 		//
-		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 1000, 0, memory, cla));
-		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, -1, 1, memory, clb));
-		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, -1, 2, memory, clc));
+		cla.addExecutionStage(1000);
+		cla.addSendStage(1000, clb);
+		cla.addSendStage(1000, clc);
 
 		//
-		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, 0, memory, cla));
-		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 1000, 1, memory, clb));
-		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, -1, 2, memory, cld));
+		clb.addRecvStage(cla);
+		clb.addExecutionStage(1000);
+		clb.addSendStage(1000, cld);
 
 		//
-		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, 0, memory, cla));
-		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 2000, 1, memory, clc));
-		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, -1, 2, memory, cld));
+		clc.addRecvStage(cla);
+		clc.addExecutionStage(2000);
+		clc.addSendStage(1000, cld);
 
 		//
-		cld.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, 0, memory, clb));
-		cld.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, 1, memory, clc));
-		cld.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, 1000, 2, memory, cld));
+		clc.addRecvStage(clb);
+		clc.addRecvStage(clc);
+		clc.addExecutionStage(1000);
 	}
 
 	private static void CreateNetwork(NetworkDatacenter dc) {

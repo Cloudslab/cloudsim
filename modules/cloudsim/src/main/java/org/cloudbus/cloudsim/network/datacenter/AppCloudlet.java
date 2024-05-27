@@ -83,7 +83,7 @@ public class AppCloudlet {
 	 */
 	public double getLateness() {
 		double worstFinishTime = getSinkCloudlets().stream()
-				.mapToDouble(Cloudlet::getFinishTime).max().orElse(0.0);
+				.mapToDouble(Cloudlet::getExecFinishTime).max().orElse(0.0);
 
 		return Math.min(0, deadline - worstFinishTime);
 	}

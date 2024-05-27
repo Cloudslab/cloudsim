@@ -272,7 +272,7 @@ public class BagOfTaskAppExample {
 				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
 						+ cloudlet.getGuestId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
 						+ indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent
-						+ dft.format(cloudlet.getFinishTime()));
+						+ dft.format(cloudlet.getExecFinishTime()));
 			}
 		}
 
@@ -342,7 +342,6 @@ public class BagOfTaskAppExample {
 	static private void createTaskList(AppCloudlet appCloudlet, List<Integer> vmIdList) {
 		//basically, each task runs the simulation and then data is consolidated in one task
 		long executionTime = (long) 100 / numberVm;
-		long memory = 1000;
 		long fileSize = NetworkConstants.FILE_SIZE;
 		long outputSize = NetworkConstants.OUTPUT_SIZE;
 		int pesNumber = NetworkConstants.PES_NUMBER;
@@ -351,25 +350,22 @@ public class BagOfTaskAppExample {
 		// First cloudlet (i=0) is the gatherer
 		for(int i=0;i<numberVm;i++){
 			UtilizationModel utilizationModel = new UtilizationModelFull();
-			NetworkCloudlet cl = new NetworkCloudlet(NetworkConstants.currentCloudletId, executionTime, pesNumber, fileSize, outputSize, memory, utilizationModel, utilizationModel, utilizationModel);
+			NetworkCloudlet cl = new NetworkCloudlet(NetworkConstants.currentCloudletId, executionTime, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 			NetworkConstants.currentCloudletId++;
 			cl.setUserId(broker.getId());
-			cl.submittime=CloudSim.clock();
-			cl.currStagenum=-1;
 			cl.setGuestId(vmIdList.get(i));
 			appCloudlet.cList.add(cl);
 		}
 
 		//Configure stages
 		NetworkCloudlet gatherer = appCloudlet.cList.get(0);
-		gatherer.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime, stgId++, memory, gatherer));
+		gatherer.addExecutionStage(NetworkConstants.COMMUNICATION_LENGTH);
 		for(int i=1;i<numberVm;i++) {
 			NetworkCloudlet worker = appCloudlet.cList.get(i);
+			worker.addExecutionStage(NetworkConstants.COMMUNICATION_LENGTH);
+			worker.addSendStage(NetworkConstants.COMMUNICATION_LENGTH, gatherer);
 
-			worker.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, NetworkConstants.COMMUNICATION_LENGTH, executionTime, stgId++, memory, worker));
-			worker.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, gatherer));
-
-			gatherer.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, NetworkConstants.COMMUNICATION_LENGTH, 0, stgId++, memory, worker));
+			gatherer.addRecvStage(worker);
 		}
 	}
 

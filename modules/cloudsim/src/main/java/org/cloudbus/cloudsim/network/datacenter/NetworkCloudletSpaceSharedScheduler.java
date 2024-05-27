@@ -64,18 +64,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
                 /*//TODO Method to long. Several "extract method" refactorings may be performed.*/
 		setCurrentMipsShare(mipsShare);
-		// update
-		double capacity = 0.0;
-		int cpus = 0;
-
-		for (Double mips : mipsShare) { // count the CPUs available to the VMM
-			capacity += mips;
-			if (mips > 0) {
-				cpus++;
-			}
-		}
-		currentCPUs = cpus;
-		capacity /= cpus; // average capacity of each cpu
+		double capacity = getCPUCapacity(mipsShare);
 
 		for (ResCloudlet rcl : getCloudletExecList()) { // each machine in the
 			// exec list has the
@@ -85,21 +74,21 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 
 			// check status
 			// if execution stage
-			// update the cloudlet finishtime
+			// update the cloudlet execFinishTime
 			// CHECK WHETHER IT IS WAITING FOR THE PACKET
 			// if packet received change the status of job and update the time.
 			//
-			if (cl.currStagenum != -1) {
-				if (cl.currStagenum == -2) {
+			if (cl.currStageNum != -1) {
+				if (cl.currStageNum == -2) {
 					break;
 				}
-				TaskStage st = cl.stages.get(cl.currStagenum);
+				TaskStage st = cl.stages.get(cl.currStageNum);
 				if (st.getType() == TaskStage.TaskStageStatus.EXECUTION) {
 
 					// update the time
-					cl.timespentInStage = Math.round(CloudSim.clock() - cl.timetostartStage);
-					if (cl.timespentInStage >= st.getTime()) {
-						changetonextstage(cl, st);
+					cl.timeSpentCurrStage = Math.round(CloudSim.clock() - cl.startTimeCurrStage);
+					if (cl.timeSpentCurrStage >= st.getTime()) {
+						changetonextstage(cl);
 						// change the stage
 					}
 				}
@@ -115,7 +104,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 							if (pkt.receiverVmId == cl.getGuestId()) {
 								pkt.recvTime = CloudSim.clock();
 								st.setTime(CloudSim.clock() - pkt.sendTime);
-								changetonextstage(cl, st);
+								changetonextstage(cl);
 								pkttoremove.add(pkt);
 							}
 						}
@@ -126,8 +115,8 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				}
 
 			} else {
-				cl.currStagenum = 0;
-				cl.timetostartStage = CloudSim.clock();
+				cl.currStageNum = 0;
+				cl.startTimeCurrStage = CloudSim.clock();
 			}
 
 		}
@@ -139,16 +128,12 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 		}
 
 		// update each cloudlet
-		int finished = 0;
 		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			// rounding issue...
-			if (((NetworkCloudlet) (rcl.getCloudlet())).currStagenum == -2) {
-				// stage is changed and packet to send
-				((NetworkCloudlet) (rcl.getCloudlet())).finishtime = CloudSim.clock();
+			if (((NetworkCloudlet) (rcl.getCloudlet())).currStageNum == -2) {
 				toRemove.add(rcl);
 				cloudletFinish(rcl);
-				finished++;
 			}
 		}
 		getCloudletExecList().removeAll(toRemove);
@@ -157,7 +142,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 
 		// for each finished cloudlet, add a new one from the waiting list
 		if (!getCloudletWaitingList().isEmpty()) {
-			for (int i = 0; i < finished; i++) {
+			for (int i = 0; i < toRemove.size(); i++) {
 				toRemove.clear();
 				for (ResCloudlet rcl : getCloudletWaitingList()) {
 					if ((currentCPUs - usedPes) >= rcl.getNumberOfPes()) {
@@ -195,16 +180,16 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
          * 
          * //TODO It has to be corrected the method name case. Method too long
          * to understand what is its responsibility.*/
-	private void changetonextstage(NetworkCloudlet cl, TaskStage st) {
-		cl.timespentInStage = 0;
-		cl.timetostartStage = CloudSim.clock();
+	private void changetonextstage(NetworkCloudlet cl) {
+		cl.timeSpentCurrStage = 0;
+		cl.startTimeCurrStage = CloudSim.clock();
 
-		if (cl.currStagenum >= (cl.stages.size() - 1)) {
-			cl.currStagenum = -2;
+		if (cl.currStageNum >= (cl.stages.size() - 1)) {
+			cl.currStageNum = -2;
 		} else {
-			cl.currStagenum = cl.currStagenum + 1;
+			cl.currStageNum = cl.currStageNum + 1;
 			int i;
-			for (i = cl.currStagenum; i < cl.stages.size(); i++) {
+			for (i = cl.currStageNum; i < cl.stages.size(); i++) {
 				if (cl.stages.get(i).getType() == TaskStage.TaskStageStatus.WAIT_SEND) {
 					HostPacket pkt = new HostPacket(cl, i);
 					List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
@@ -217,12 +202,12 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				} else {
 					break;
 				}
-
 			}
+
 			if (i == cl.stages.size()) {
-				cl.currStagenum = -2;
+				cl.currStageNum = -2;
 			} else {
-				cl.currStagenum = i;
+				cl.currStageNum = i;
 			}
 		}
 

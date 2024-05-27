@@ -238,7 +238,7 @@ public class RealisticCloudletArrivalExample {
 						+ dft.format(cloudlet.getActualCPUTime()) + indent
 						+ indent + dft.format(cloudlet.getExecStartTime())
 						+ indent + indent
-						+ dft.format(cloudlet.getFinishTime()));
+						+ dft.format(cloudlet.getExecFinishTime()));
 			}
 		}
 	}

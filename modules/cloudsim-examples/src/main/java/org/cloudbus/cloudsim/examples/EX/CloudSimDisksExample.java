@@ -138,18 +138,18 @@ public class CloudSimDisksExample {
         // ...
         CloudSim.stopSimulation();
 
-        double cloudletExecTime1 = cloudlet1_1.getFinishTime() - cloudlet1_1.getExecStartTime();
-        double cloudletExecTime2 = cloudlet1_2.getFinishTime() - cloudlet1_2.getExecStartTime();
-        double cloudletExecTime3 = cloudlet_XX.getFinishTime() - cloudlet_XX.getExecStartTime();
-        double cloudletExecTime4 = cloudlet2_1.getFinishTime() - cloudlet2_1.getExecStartTime();
+        double cloudletExecTime1 = cloudlet1_1.getExecFinishTime() - cloudlet1_1.getExecStartTime();
+        double cloudletExecTime2 = cloudlet1_2.getExecFinishTime() - cloudlet1_2.getExecStartTime();
+        double cloudletExecTime3 = cloudlet_XX.getExecFinishTime() - cloudlet_XX.getExecStartTime();
+        double cloudletExecTime4 = cloudlet2_1.getExecFinishTime() - cloudlet2_1.getExecStartTime();
         CustomLog.printf("ID=%d, start=%f, end=%f, duration=%f\n", cloudlet1_1.getCloudletId(),
-                cloudlet1_1.getExecStartTime(), cloudlet1_1.getFinishTime(), cloudletExecTime1);
+                cloudlet1_1.getExecStartTime(), cloudlet1_1.getExecFinishTime(), cloudletExecTime1);
         CustomLog.printf("ID=%d, start=%f, end=%f, duration=%f\n", cloudlet1_2.getCloudletId(),
-                cloudlet1_2.getExecStartTime(), cloudlet1_2.getFinishTime(), cloudletExecTime2);
+                cloudlet1_2.getExecStartTime(), cloudlet1_2.getExecFinishTime(), cloudletExecTime2);
         CustomLog.printf("ID=%d, start=%f, end=%f, duration=%f\n", cloudlet_XX.getCloudletId(),
-                cloudlet_XX.getExecStartTime(), cloudlet_XX.getFinishTime(), cloudletExecTime3);
+                cloudlet_XX.getExecStartTime(), cloudlet_XX.getExecFinishTime(), cloudletExecTime3);
         CustomLog.printf("ID=%d, start=%f, end=%f, duration=%f\n", cloudlet2_1.getCloudletId(),
-                cloudlet2_1.getExecStartTime(), cloudlet2_1.getFinishTime(), cloudletExecTime4);
+                cloudlet2_1.getExecStartTime(), cloudlet2_1.getExecFinishTime(), cloudletExecTime4);
 
     }
 }

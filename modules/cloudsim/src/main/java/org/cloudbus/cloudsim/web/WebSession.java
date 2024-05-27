@@ -310,7 +310,7 @@ public class WebSession {
      */
     public double getFinishTime() {
         double finishAS = currentAppServerCloudLet == null || !currentAppServerCloudLet.isFinished() ? -1
-                : currentAppServerCloudLet.getFinishTime();
+                : currentAppServerCloudLet.getExecFinishTime();
         double finishDB = currentDBServerCloudLets == null || !areAllCloudletsFinished(currentDBServerCloudLets) ? -1
                 : getLatestFinishTime(currentDBServerCloudLets);
         return Math.max(0, Math.max(finishAS, finishDB));
@@ -436,8 +436,8 @@ public class WebSession {
     private static double getLatestFinishTime(final Collection<? extends WebCloudlet> cloudlets) {
         double result = -1;
         for (WebCloudlet cl : cloudlets) {
-            if (cl.getFinishTime() > result) {
-                result = cl.getFinishTime();
+            if (cl.getExecFinishTime() > result) {
+                result = cl.getExecFinishTime();
             }
         }
         return result;

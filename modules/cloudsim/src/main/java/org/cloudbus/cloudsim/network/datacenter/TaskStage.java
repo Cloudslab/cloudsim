@@ -56,22 +56,17 @@ public class TaskStage {
 	@Getter
 	private final double stageId;
 
-	/** Memory used by the task. */
-	@Getter
-	private long memory;
-
 	/** Cloudlet where processing is done (if type == EXECUTION), or
 	 * from whom data need to be received (if type == WAIT_RECV) or sent to (if type == WAIT_SEND). */
 	@Getter
 	private NetworkCloudlet targetCloudlet;
 	
-	public TaskStage(TaskStageStatus type, double data, double time, double stageId, long memory, NetworkCloudlet cl) {
+	public TaskStage(TaskStageStatus type, double data, double time, double stageId, NetworkCloudlet cl) {
 		super();
 		this.type = type;
 		this.data = data;
 		this.time = time;
 		this.stageId = stageId;
-		this.memory = memory;
 		this.targetCloudlet = cl;
 	}
 }

@@ -240,7 +240,7 @@ public class NetworkExample4 {
                 DecimalFormat dft = new DecimalFormat("###.##");
                 Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getGuestId() +
                         indent + indent + dft.format(cloudlet.getActualCPUTime()) + indent + indent + dft.format(cloudlet.getExecStartTime()) +
-                        indent + indent + dft.format(cloudlet.getFinishTime()));
+                        indent + indent + dft.format(cloudlet.getExecFinishTime()));
             }
         }
 

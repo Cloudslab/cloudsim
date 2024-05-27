@@ -96,7 +96,8 @@ public class Cloudlet {
     /**
      * The time where this Cloudlet completes.
      */
-    private double finishTime;
+    @Getter
+    private double execFinishTime;
 
     /**
      * The ID of a reservation made for this cloudlet.
@@ -443,8 +444,9 @@ public class Cloudlet {
         status = CREATED;
         this.cloudletId = cloudletId;
         numberOfPes = pesNumber;
+
         execStartTime = 0.0;
-        finishTime = -1.0;    // meaning this Cloudlet hasn't finished yet
+        execFinishTime = -1.0;    // meaning this Cloudlet hasn't finished yet
         classType = 0;
         netToS = 0;
 
@@ -980,7 +982,7 @@ public class Cloudlet {
         }
 
         if (newStatus == Cloudlet.SUCCESS) {
-            finishTime = CloudSim.clock();
+            execFinishTime = CloudSim.clock();
         }
 
         if (record) {
@@ -1266,18 +1268,6 @@ public class Cloudlet {
         return null;
     }
 
-    /**
-     * Gets the finish time of this Cloudlet in a CloudResource.
-     *
-     * @return the finish or completion time of this Cloudlet or <tt>-1</tt> if
-     * not finished yet.
-     * @pre $none
-     * @post $result >= -1
-     */
-    public double getFinishTime() {
-        return finishTime;
-    }
-
     // //////////////////////// PROTECTED METHODS //////////////////////////////
 
     /**
@@ -1320,7 +1310,7 @@ public class Cloudlet {
      * @post $none
      */
     public double getActualCPUTime() {
-        return getFinishTime() - getExecStartTime();
+        return getExecFinishTime() - getExecStartTime();
     }
 
     /**

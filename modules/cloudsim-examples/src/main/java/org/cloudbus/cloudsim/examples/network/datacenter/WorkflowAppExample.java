@@ -266,7 +266,7 @@ public class WorkflowAppExample {
 				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
 						+ cloudlet.getGuestId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
 						+ indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent
-						+ dft.format(cloudlet.getFinishTime()));
+						+ dft.format(cloudlet.getExecFinishTime()));
 			}
 		}
 
@@ -328,7 +328,6 @@ public class WorkflowAppExample {
 	static private void createTaskList(AppCloudlet appCloudlet, List<Integer> vmIdList) {
 		long fileSize = NetworkConstants.FILE_SIZE;
 		long outputSize = NetworkConstants.OUTPUT_SIZE;
-		int memory = 100;
 		UtilizationModel utilizationModel = new UtilizationModelFull();
 		int i = 0;
 
@@ -339,14 +338,11 @@ public class WorkflowAppExample {
 				1,
 				fileSize,
 				outputSize,
-				memory,
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		cla.setUserId(broker.getId());
-		cla.submittime = CloudSim.clock();
-		cla.currStagenum = -1;
 		cla.setGuestId(vmIdList.get(i));
 		appCloudlet.cList.add(cla);
 		i++;
@@ -357,14 +353,11 @@ public class WorkflowAppExample {
 				1,
 				fileSize,
 				outputSize,
-				memory,
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		clb.setUserId(broker.getId());
-		clb.submittime = CloudSim.clock();
-		clb.currStagenum = -1;
 		clb.setGuestId(vmIdList.get(i));
 		appCloudlet.cList.add(clb);
 		i++;
@@ -375,30 +368,27 @@ public class WorkflowAppExample {
 				1,
 				fileSize,
 				outputSize,
-				memory,
 				utilizationModel,
 				utilizationModel,
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		clc.setUserId(broker.getId());
-		clc.submittime = CloudSim.clock();
-		clc.currStagenum = -1;
 		clc.setGuestId(vmIdList.get(i));
 		appCloudlet.cList.add(clc);
 
 		// Configure task stages within the cloudlets
 		//
-		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, 0, 800, 0, memory, cla));
-		cla.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, 0, 1, memory, clc));
+		cla.addExecutionStage(800);
+		cla.addSendStage(1000, clc);
 
 		//
-		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, 0, 800, 0, memory, clb));
-		clb.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, 1000, 0, 1, memory, clc));
+		clb.addExecutionStage(800);
+		clb.addSendStage(1000, clc);
 
 		//
-		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, 1000, 0, 0, memory, cla));
-		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, 1000, 0, 1, memory, clb));
-		clc.stages.add(new TaskStage(TaskStage.TaskStageStatus.EXECUTION, 0, 800, 2, memory, clc));
+		clc.addRecvStage(cla);
+		clc.addRecvStage(clb);
+		clc.addExecutionStage(800);
 	}
 
 	private static void CreateNetwork(NetworkDatacenter dc) {
