@@ -40,12 +40,22 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
 		setCurrentMipsShare(mipsShare);
 		double timeSpan = currentTime - getPreviousTime(); // time since last update
-		double capacity = getCPUCapacity(mipsShare);
 
 		// each machine in the exec list has the same amount of cpu
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			rcl.updateCloudletFinishedSoFar((long) (capacity * timeSpan * rcl.getNumberOfPes() * Consts.MILLION));
+			rcl.updateCloudletFinishedSoFar((long) (timeSpan *
+					getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime) * Consts.MILLION));
 		}
+
+		// check finished cloudlets
+		List<ResCloudlet> toRemove = new ArrayList<>();
+		for (ResCloudlet rcl : getCloudletExecList()) {
+			if (rcl.getRemainingCloudletLength() == 0) { // finished: remove from the list
+				toRemove.add(rcl);
+				cloudletFinish(rcl);
+			}
+		}
+		getCloudletExecList().removeAll(toRemove);
 
 		// no more cloudlets in this scheduler
 		if (getCloudletExecList().isEmpty() && getCloudletWaitingList().isEmpty()) {
@@ -53,24 +63,13 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 			return 0.0;
 		}
 
-		// check finished cloudlets
-		List<ResCloudlet> toRemove = new ArrayList<>();
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getRemainingCloudletLength() == 0) {// finished: remove from the list
-				toRemove.add(rcl);
-				cloudletFinish(rcl);
-			}
-		}
-		getCloudletExecList().removeAll(toRemove);
-
-		// estimate finish time of cloudlets
+		// estimate finish time of cloudlets in the execution queue
 		double nextEvent = Double.MAX_VALUE;
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
 			if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
 				estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
 			}
-
 			if (estimatedFinishTime < nextEvent) {
 				nextEvent = estimatedFinishTime;
 			}
@@ -111,50 +110,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	}
 
 	@Override
-	public Cloudlet cloudletCancel(int cloudletId) {
-		// First, looks in the finished queue
-		for (ResCloudlet rcl : getCloudletFinishedList()) {
-			if (rcl.getCloudletId() == cloudletId) {
-				getCloudletFinishedList().remove(rcl);
-				return rcl.getCloudlet();
-			}
-		}
-
-		// Then searches in the exec list
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getCloudletId() == cloudletId) {
-				getCloudletExecList().remove(rcl);
-				if (rcl.getRemainingCloudletLength() == 0) {
-					cloudletFinish(rcl);
-				} else {
-					rcl.setCloudletStatus(Cloudlet.CloudletStatus.CANCELED);
-				}
-				return rcl.getCloudlet();
-			}
-		}
-
-		// Now, looks in the paused queue
-		for (ResCloudlet rcl : getCloudletPausedList()) {
-			if (rcl.getCloudletId() == cloudletId) {
-				rcl.setCloudletStatus(Cloudlet.CloudletStatus.CANCELED);
-				getCloudletPausedList().remove(rcl);
-				return rcl.getCloudlet();
-			}
-		}
-
-		// Finally, looks in the waiting list
-		for (ResCloudlet rcl : getCloudletWaitingList()) {
-			if (rcl.getCloudletId() == cloudletId) {
-				rcl.setCloudletStatus(Cloudlet.CloudletStatus.CANCELED);
-				getCloudletWaitingList().remove(rcl);
-				return rcl.getCloudlet();
-			}
-		}
-
-		return null;
-	}
-
-	@Override
 	public double cloudletResume(int cloudletId) {
 		// look for the cloudlet in the paused list
 		int position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
@@ -192,22 +147,19 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return cloudlet.getCloudletLength() / capacity;
 	}
 
+	// Simple policy, there is no real scheduling involved
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
-            /*//TODO It isn't being used any the the given parameters.*/
-            return getCPUCapacity(getCurrentMipsShare());
+		return getCPUCapacity(mipsShare) * rcl.getNumberOfPes();
 	}
 
 	@Override
 	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
-                ////TODO The method is not implemented, in fact
-		return 0.0;
+		return getTotalCurrentAvailableMipsForCloudlet(rcl, getCurrentMipsShare());
 	}
 
 	@Override
 	public double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time) {
-                ////TODO The method is not implemented, in fact
-		// TODO Auto-generated method stub
-		return 0.0;
+		return getTotalCurrentAvailableMipsForCloudlet(rcl, getCurrentMipsShare());
 	}
 }

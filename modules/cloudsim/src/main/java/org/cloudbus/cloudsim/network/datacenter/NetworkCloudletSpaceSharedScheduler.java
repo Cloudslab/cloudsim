@@ -88,8 +88,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 					// update the time
 					cl.timeSpentCurrStage = Math.round(CloudSim.clock() - cl.startTimeCurrStage);
 					if (cl.timeSpentCurrStage >= st.getTime()) {
-						changetonextstage(cl);
-						// change the stage
+						goToNextStage(cl);
 					}
 				}
 				if (st.getType() == TaskStage.TaskStageStatus.WAIT_RECV) {
@@ -104,7 +103,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 							if (pkt.receiverVmId == cl.getGuestId()) {
 								pkt.recvTime = CloudSim.clock();
 								st.setTime(CloudSim.clock() - pkt.sendTime);
-								changetonextstage(cl);
+								goToNextStage(cl);
 								pkttoremove.add(pkt);
 							}
 						}
@@ -121,43 +120,43 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 
 		}
 
-		if (getCloudletExecList().isEmpty() && getCloudletWaitingList().isEmpty()) { // no
-			// more cloudlets in this scheduler
-			setPreviousTime(currentTime);
-			return 0.0;
-		}
-
-		// update each cloudlet
+		// check finished cloudlets
 		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			// rounding issue...
-			if (((NetworkCloudlet) (rcl.getCloudlet())).currStageNum == -2) {
+			if (rcl.getCloudlet().isFinished()) {
 				toRemove.add(rcl);
 				cloudletFinish(rcl);
 			}
 		}
 		getCloudletExecList().removeAll(toRemove);
+
+		// no more cloudlets in this scheduler
+		if (getCloudletExecList().isEmpty() && getCloudletWaitingList().isEmpty()) {
+			setPreviousTime(currentTime);
+			return 0.0;
+		}
+
 		// add all the CloudletExecList in waitingList.
 		// sort the waitinglist
+		// @TODO: Remo Andreoli: Missing ???
 
 		// for each finished cloudlet, add a new one from the waiting list
 		if (!getCloudletWaitingList().isEmpty()) {
-			for (int i = 0; i < toRemove.size(); i++) {
-				toRemove.clear();
-				for (ResCloudlet rcl : getCloudletWaitingList()) {
-					if ((currentCPUs - usedPes) >= rcl.getNumberOfPes()) {
-						rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
-						for (int k = 0; k < rcl.getNumberOfPes(); k++) {
-							rcl.setMachineAndPeId(0, i);
-						}
-						getCloudletExecList().add(rcl);
-						usedPes += rcl.getNumberOfPes();
-						toRemove.add(rcl);
-						break;
-					}
+			int finished = toRemove.size();
+			List<ResCloudlet> toUnpause = getCloudletWaitingList().stream()
+							.filter(rcl -> (currentCPUs - usedPes) >= rcl.getNumberOfPes()).limit(finished).toList();
+
+			for (ResCloudlet rcl : toUnpause) {
+				rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
+				for (int k = 0; k < rcl.getNumberOfPes(); k++) {
+					rcl.setMachineAndPeId(0, k);
 				}
-				getCloudletWaitingList().removeAll(toRemove);
+				getCloudletExecList().add(rcl);
+				usedPes += rcl.getNumberOfPes();
 			}
+
+			getCloudletWaitingList().removeAll(toUnpause);
 		}
 
 		// estimate finish time of cloudlets in the execution queue
@@ -171,16 +170,16 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				nextEvent = estimatedFinishTime;
 			}
 		}
+
 		setPreviousTime(currentTime);
 		return nextEvent;
 	}
 
         /**
          * Changes a cloudlet to the next stage.
-         * 
-         * //TODO It has to be corrected the method name case. Method too long
-         * to understand what is its responsibility.*/
-	private void changetonextstage(NetworkCloudlet cl) {
+         *
+		 */
+	private void goToNextStage(NetworkCloudlet cl) {
 		cl.timeSpentCurrStage = 0;
 		cl.startTimeCurrStage = CloudSim.clock();
 

@@ -280,6 +280,8 @@ public abstract class CloudletScheduler {
 	 * @return one running cloudlet
 	 * @pre $none
 	 * @post $none
+	 *
+	 * @TODO: Remo Andreoli: No clue why it's removing the first element
 	 */
 	public Cloudlet migrateCloudlet() {
 		ResCloudlet rcl = getCloudletExecList().remove(0);
@@ -296,7 +298,7 @@ public abstract class CloudletScheduler {
 	 */
 	public double getEstimatedFinishTime(ResCloudlet rcl, double time) {
 		return time
-				+ ((rcl.getRemainingCloudletLength()) / (getCPUCapacity(getCurrentMipsShare()) * rcl.getNumberOfPes()));
+				+ ((rcl.getRemainingCloudletLength()) / getTotalCurrentAllocatedMipsForCloudlet(rcl, time));
 	}
 
 	/**
