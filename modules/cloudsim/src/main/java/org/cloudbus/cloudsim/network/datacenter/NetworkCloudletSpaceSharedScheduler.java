@@ -124,7 +124,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			// rounding issue...
-			if (rcl.getCloudlet().isFinished()) {
+			if (((NetworkCloudlet) rcl.getCloudlet()).currStageNum == -2) {
 				toRemove.add(rcl);
 				cloudletFinish(rcl);
 			}
@@ -175,40 +175,29 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 		return nextEvent;
 	}
 
-        /**
-         * Changes a cloudlet to the next stage.
-         *
-		 */
+	/**
+	 * Changes a cloudlet to the next stage.
+	 *
+	 */
 	private void goToNextStage(NetworkCloudlet cl) {
 		cl.timeSpentCurrStage = 0;
 		cl.startTimeCurrStage = CloudSim.clock();
+		cl.currStageNum++;
 
-		if (cl.currStageNum >= (cl.stages.size() - 1)) {
-			cl.currStageNum = -2;
-		} else {
-			cl.currStageNum = cl.currStageNum + 1;
-			int i;
-			for (i = cl.currStageNum; i < cl.stages.size(); i++) {
-				if (cl.stages.get(i).getType() == TaskStage.TaskStageStatus.WAIT_SEND) {
-					HostPacket pkt = new HostPacket(cl, i);
-					List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
-					if (pktlist == null) {
-						pktlist = new ArrayList<>();
-					}
-					pktlist.add(pkt);
-					pkttosend.put(cl.getGuestId(), pktlist);
-
-				} else {
-					break;
-				}
+		while(cl.currStageNum < cl.stages.size() && cl.stages.get(cl.currStageNum).getType() == TaskStage.TaskStageStatus.WAIT_SEND) {
+			HostPacket pkt = new HostPacket(cl, cl.currStageNum);
+			List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
+			if (pktlist == null) {
+				pktlist = new ArrayList<>();
 			}
+			pktlist.add(pkt);
+			pkttosend.put(cl.getGuestId(), pktlist);
 
-			if (i == cl.stages.size()) {
-				cl.currStageNum = -2;
-			} else {
-				cl.currStageNum = i;
-			}
+			cl.currStageNum++;
 		}
 
+		if (cl.currStageNum >= cl.stages.size()) {
+			cl.currStageNum = -2;
+		}
 	}
 }
