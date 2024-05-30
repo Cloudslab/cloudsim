@@ -78,14 +78,16 @@ public class AppCloudlet {
 
 	/**
 	 * Compute the lateness of the appCloudlet in function of the specified deadline.
-	 * A negative value express a deadline miss
+	 * A negative value express a deadline miss, a positive value express an early finish
 	 * @return lateness
 	 */
 	public double getLateness() {
+		double worstStartTime = getSinkCloudlets().stream()
+				.mapToDouble(Cloudlet::getExecStartTime).max().orElse(0.0);
 		double worstFinishTime = getSinkCloudlets().stream()
 				.mapToDouble(Cloudlet::getExecFinishTime).max().orElse(0.0);
 
-		return Math.min(0, deadline - worstFinishTime);
+		return deadline - (worstFinishTime - worstStartTime);
 	}
 
 	public boolean isDeadlineMissed() {
