@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.cloudbus.cloudsim.EX.disk.HddCloudlet;
-import org.cloudbus.cloudsim.EX.disk.HddResCloudlet;
+import lombok.Getter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.ResCloudletList;
+import org.cloudbus.cloudsim.network.datacenter.NetworkCloudlet;
 import org.cloudbus.cloudsim.network.datacenter.NetworkCloudletSpaceSharedScheduler;
 
 
@@ -36,13 +36,11 @@ public abstract class CloudletScheduler {
 	/** The previous time. */
 	private double previousTime;
 
-	/** The list of current mips share available for the VM using the scheduler. */
+	/** The list of current mips share available for the VM using the scheduler.
+	 * It is provided by {@link CloudletScheduler#updateCloudletsProcessing(double, List)} method.
+	 * at every simulation step. */
+	@Getter
 	private List<Double> currentMipsShare;
-
-	/** The number of PEs currently available for the VM using the scheduler,
-	 * according to the mips share provided to it by
-	 * {@link CloudletScheduler#updateCloudletsProcessing(double, List)} method. */
-	protected int currentCPUs;
 
 	/** The list of cloudlet waiting to be executed on the VM. */
 	protected List<? extends ResCloudlet> cloudletWaitingList;
@@ -61,14 +59,13 @@ public abstract class CloudletScheduler {
 
 	/**
 	 * Creates a new CloudletScheduler object. 
-         * A CloudletScheduler must be created before starting the actual simulation.
+	 * A CloudletScheduler must be created before starting the actual simulation.
 	 * 
 	 * @pre $none
 	 * @post $none
 	 */
 	public CloudletScheduler() {
 		setPreviousTime(0.0);
-		currentCPUs = 0;
 
 		cloudletWaitingList = new LinkedList<>();
 		cloudletExecList = new LinkedList<>();
@@ -87,7 +84,84 @@ public abstract class CloudletScheduler {
 	 * @pre currentTime >= 0
 	 * @post $none
 	 */
-	public abstract double updateCloudletsProcessing(double currentTime, List<Double> mipsShare);
+	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
+		setCurrentMipsShare(mipsShare);
+
+		// Update cloudlets in exec list
+		for (ResCloudlet rcl : getCloudletExecList()) {
+			updateExecutingCloudlet(rcl, currentTime, null);
+		}
+
+		// Remove finished cloudlets
+		// @TODO: Remo Andreoli: ugly instanceof check; fix it
+		List<ResCloudlet> toRemove = new ArrayList<>();
+		for (ResCloudlet rcl : getCloudletExecList()) {
+			boolean finishCheck;
+			if (rcl.getCloudlet() instanceof NetworkCloudlet ncl) {
+				finishCheck = (ncl.currStageNum != -1 && ncl.currStageNum >= ncl.stages.size());
+			} else {
+				finishCheck = (rcl.getRemainingCloudletLength() == 0);
+			}
+
+			if (finishCheck) {
+				toRemove.add(rcl);
+				cloudletFinish(rcl);
+			}
+		}
+		getCloudletExecList().removeAll(toRemove);
+
+
+		if (getCloudletExecList().isEmpty() && getCloudletWaitingList().isEmpty()) {
+			setPreviousTime(currentTime);
+			return 0.0;
+		}
+
+
+		// Update cloudlets in waiting list, if any
+		updateWaitingCloudlets(currentTime, toRemove.size());
+
+		// estimate finish time of cloudlets in the execution queue
+		double nextEvent = Double.MAX_VALUE;
+		for (ResCloudlet rcl : getCloudletExecList()) {
+			double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
+			if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
+				estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
+			}
+			if (estimatedFinishTime < nextEvent) {
+				nextEvent = estimatedFinishTime;
+			}
+		}
+
+		setPreviousTime(currentTime);
+		return nextEvent;
+	}
+
+	/**
+	 * Update a cloudlet currently in execution.
+	 * <p>
+	 * This default implementation is suitable for trivial scheduling policies, such as the basic implementation of
+	 * space-shared and time-shared scheduling.
+	 * Each cloudlet in the exec list has the same amount of cpu
+	 *
+	 * @param rcl
+	 * @param currentTime
+	 * @param info        Any data you may need to implement the update logic
+	 */
+	protected void updateExecutingCloudlet(ResCloudlet rcl, double currentTime, Object info) {
+		double timeSpan = currentTime - getPreviousTime(); // time since last update
+
+			rcl.updateCloudletFinishedSoFar((long) (timeSpan *
+					getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime) * Consts.MILLION));
+	}
+
+	/**
+	 * Update the cloudlets currently waiting to execute.
+	 * The default implementation is suitable for time-shared scheduling.
+	 *
+	 * @param currentTime
+	 * @param info        info Any data you may need to implement the update logic
+	 */
+	protected void updateWaitingCloudlets(double currentTime, Object info){}
 
 	/**
 	 * Receives an cloudlet to be executed in the VM managed by this scheduler.
@@ -302,29 +376,6 @@ public abstract class CloudletScheduler {
 	}
 
 	/**
-	 * Gets the individual MIPS capacity available for each PE available for the scheduler,
-	 * considering that all PEs have the same capacity. The default implementation is suitable for space-shared policies.
-	 *
-	 * @param mipsShare list with MIPS share of each PE available to the scheduler
-	 * @return the capacity of each PE
-	 */
-	public double getCPUCapacity(final List<Double> mipsShare) {
-		double capacity = 0.0;
-		int cpus = 0;
-
-		for (Double mips : mipsShare) { // count the CPUs available to the VMM
-			capacity += mips;
-			if (mips > 0) {
-				cpus++;
-			}
-		}
-		currentCPUs = cpus;
-		capacity /= cpus; // average capacity of each cpu
-
-		return capacity;
-	}
-
-	/**
 	 * Gets total CPU utilization percentage of all cloudlets, according to CPU UtilizationModel of 
          * each one.
 	 * 
@@ -436,16 +487,26 @@ public abstract class CloudletScheduler {
 	 * @param currentMipsShare the new current mips share
 	 */
 	protected void setCurrentMipsShare(List<Double> currentMipsShare) {
-		this.currentMipsShare = currentMipsShare;
+		this.currentMipsShare = currentMipsShare.stream().filter(mips -> mips > 0).toList();
 	}
 
 	/**
-	 * Gets the current mips share.
-	 * 
-	 * @return the current mips share
+	 * The number of PEs currently available for the VM using the scheduler,
+	 * according to the current mips share provided
 	 */
-	public List<Double> getCurrentMipsShare() {
-		return currentMipsShare;
+	public int getCurrentPEs() {
+		return currentMipsShare.size();
+	}
+
+	/** Get the individual MIPS capacity available for each cloudlet, according to the number of
+	 *  available PE provided by the current mip share.
+	 * 	@ASSUMPTION: all PEs have the same capacity.
+	 */
+	public double getCurrentCapacity(List<Double> mipsShare) {
+		List<Double> validMips = mipsShare.stream().filter(mips -> mips > 0).toList();
+		int cpus = validMips.size();
+
+        return validMips.stream().mapToDouble(Double::doubleValue).sum() / cpus;
 	}
 
 	/**

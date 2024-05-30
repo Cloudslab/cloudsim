@@ -131,9 +131,8 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
             return 0.0;
         }
 
-        double timeSpam = currentTime - getPreviousTime();
+        double timeSpan = currentTime - getPreviousTime();
 
-        double cpuCapacity = getCPUCapacity(mipsShare);
         int[] disksToNumCloudlets = disksToNumCloudlets();
         int[] disksToNumCopy = Arrays.copyOf(disksToNumCloudlets, disksToNumCloudlets.length);
         for (ListIterator<HddResCloudlet> iter = this.<HddResCloudlet> getCloudletExecList().listIterator(); iter
@@ -141,8 +140,8 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
             HddResCloudlet rcl = iter.next();
             //This shared value means the value that cpu has been allocated completely for this cloudlet.
             // so the cpu has been working equal this value for duration of the time
-            long cpuFinishedSoFar = (long) (cpuCapacity * timeSpam * rcl.getNumberOfPes() * Consts.MILLION);
-            long ioFinishedSoFar = (long) (getIOCapacity(iopsShare, disksToNumCloudlets, rcl) * timeSpam
+            long cpuFinishedSoFar = (long) (timeSpan * getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime) * Consts.MILLION);
+            long ioFinishedSoFar = (long) (getIOCapacity(iopsShare, disksToNumCloudlets, rcl) * timeSpan
                     * rcl.getNumberOfHdds() * Consts.MILLION);
 
             rcl.updateCloudletFinishedSoFar(cpuFinishedSoFar, ioFinishedSoFar);
@@ -395,19 +394,19 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
         int position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
 
         if (position >= 0) {
-            HddResCloudlet rgl = this.<HddResCloudlet> getCloudletPausedList().remove(position);
-            rgl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
-            getCloudletExecList().add(rgl);
+            HddResCloudlet rcl = this.<HddResCloudlet> getCloudletPausedList().remove(position);
+            rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
+            getCloudletExecList().add(rcl);
 
             // calculate the expected time for cloudlet completion
             // first: how many PEs do we have?
 
-            double remainingLength = rgl.getRemainingCloudletLength();
-            double remainingIOLength = rgl.getRemainingCloudletIOLength();
+            double remainingLength = rcl.getRemainingCloudletLength();
+            double remainingIOLength = rcl.getRemainingCloudletIOLength();
             double estimatedFinishCPUTime = remainingLength == 0 ? Double.NaN : CloudSim.clock()
-                    + (remainingLength / (getCPUCapacity(getCurrentMipsShare()) * rgl.getNumberOfPes()));
+                    + (remainingLength / getTotalCurrentAllocatedMipsForCloudlet(rcl, CloudSim.clock()));
             double estimatedFinishIOTime = remainingIOLength == 0 ? Double.NaN : CloudSim.clock()
-                    + (remainingIOLength / (getIOCapacity(getCurrentIOMipsShare(), disksToNumCloudlets(), rgl) * rgl
+                    + (remainingIOLength / (getIOCapacity(getCurrentIOMipsShare(), disksToNumCloudlets(), rcl) * rcl
                             .getNumberOfHdds()));
 
             return nanMin(estimatedFinishCPUTime, estimatedFinishIOTime);
@@ -445,14 +444,15 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
             // use the current capacity to estimate the extra amount of
             // time to file transferring. It must be added to the cloudlet
             // length
-            double extraSize = getCPUCapacity(getCurrentMipsShare()) * fileTransferTime;
+            double cpuCapacity = getCurrentCapacity(getCurrentMipsShare());
+            double extraSize = cpuCapacity * fileTransferTime;
             long cpuLength = (long) (hddCloudlet.getCloudletLength() + extraSize);
             long ioLength = hddCloudlet.getCloudletIOLength();
             hddCloudlet.setCloudletLength(cpuLength);
             hddCloudlet.setCloudletIOLength(ioLength);
 
             double cpuEst = hddCloudlet.getCloudletLength() == 0 ? Double.NaN : hddCloudlet.getCloudletLength()
-                    / getCPUCapacity(getCurrentMipsShare());
+                    / cpuCapacity;
             double ioEst = hddCloudlet.getCloudletIOLength() == 0 ? Double.NaN : hddCloudlet.getCloudletIOLength()
                     / getIOCapacity(getCurrentIOMipsShare(), disksToNumCloudlets(), rcl);
 
@@ -486,43 +486,6 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
             return getCloudletFailedList().remove(0).getCloudlet();
         }
         return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cloudsim.CloudletScheduler#getTotalCurrentAvailableMipsForCloudlet(cloudsim
-     * .ResCloudlet, java.util.List)
-     */
-    @Override
-    public double getTotalCurrentAvailableMipsForCloudlet(final ResCloudlet rcl, final List<Double> mipsShare) {
-        return getCPUCapacity(getCurrentMipsShare());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cloudsim.CloudletScheduler#getTotalCurrentAllocatedMipsForCloudlet(cloudsim
-     * .ResCloudlet, double)
-     */
-    @Override
-    public double getTotalCurrentAllocatedMipsForCloudlet(final ResCloudlet rcl, final double time) {
-        return 0.0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * cloudsim.CloudletScheduler#getTotalCurrentRequestedMipsForCloudlet(cloudsim
-     * .ResCloudlet, double)
-     */
-    @Override
-    public double getTotalCurrentRequestedMipsForCloudlet(final ResCloudlet rcl, final double time) {
-        // TODO Auto-generated method stub
-        return 0.0;
     }
 
     public List<Double> getCurrentRequestedIOMips() {

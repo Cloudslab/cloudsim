@@ -61,118 +61,55 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 	}
 
 	@Override
-	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
-                /*//TODO Method to long. Several "extract method" refactorings may be performed.*/
-		setCurrentMipsShare(mipsShare);
-		double capacity = getCPUCapacity(mipsShare);
+	protected void updateExecutingCloudlet(ResCloudlet rcl, double currentTime, Object info) {
+		// @TODO: Remo Andreoli: ugly instanceof check; fix it
+		if (!(rcl.getCloudlet() instanceof NetworkCloudlet ncl)) {
+			super.updateExecutingCloudlet(rcl, currentTime, info);
+			return;
+		}
 
-		for (ResCloudlet rcl : getCloudletExecList()) { // each machine in the
-			// exec list has the
-			// same amount of cpu
+        if (ncl.currStageNum >= ncl.stages.size()) {
+			return;
+		}
 
-			NetworkCloudlet cl = (NetworkCloudlet) rcl.getCloudlet();
+		if (ncl.currStageNum == -1) {
+			ncl.currStageNum = 0;
+			ncl.startTimeCurrStage = CloudSim.clock();
+		}
 
-			// check status
-			// if execution stage
-			// update the cloudlet execFinishTime
-			// CHECK WHETHER IT IS WAITING FOR THE PACKET
-			// if packet received change the status of job and update the time.
-			//
-			if (cl.currStageNum != -1) {
-				if (cl.currStageNum == -2) {
-					break;
-				}
-				TaskStage st = cl.stages.get(cl.currStageNum);
-				if (st.getType() == TaskStage.TaskStageStatus.EXECUTION) {
+		// if execution stage, update the cloudlet execFinishTime
+		// CHECK WHETHER IT IS WAITING FOR THE PACKET
+		// if packet received change the status of job and update the time.
+		TaskStage st = ncl.stages.get(ncl.currStageNum);
+		if (st.getType() == TaskStage.TaskStageStatus.EXECUTION) {
 
-					// update the time
-					cl.timeSpentCurrStage = Math.round(CloudSim.clock() - cl.startTimeCurrStage);
-					if (cl.timeSpentCurrStage >= st.getTime()) {
-						goToNextStage(cl);
+			// update the time
+			ncl.timeSpentCurrStage = Math.round(CloudSim.clock() - ncl.startTimeCurrStage);
+			if (ncl.timeSpentCurrStage >= st.getTime()) {
+				goToNextStage(ncl);
+			}
+		}
+		if (st.getType() == TaskStage.TaskStageStatus.WAIT_RECV) {
+			List<HostPacket> pktlist = pktrecv.get(st.getTargetCloudlet().getGuestId());
+			List<HostPacket> pkttoremove = new ArrayList<>();
+			if (pktlist != null) {
+				Iterator<HostPacket> it = pktlist.iterator();
+				HostPacket pkt;
+				if (it.hasNext()) {
+					pkt = it.next();
+					// Assumption: packet will not arrive in the same cycle
+					if (pkt.receiverVmId == ncl.getGuestId()) {
+						pkt.recvTime = CloudSim.clock();
+						st.setTime(CloudSim.clock() - pkt.sendTime);
+						goToNextStage(ncl);
+						pkttoremove.add(pkt);
 					}
 				}
-				if (st.getType() == TaskStage.TaskStageStatus.WAIT_RECV) {
-					List<HostPacket> pktlist = pktrecv.get(st.getTargetCloudlet().getGuestId());
-					List<HostPacket> pkttoremove = new ArrayList<>();
-					if (pktlist != null) {
-						Iterator<HostPacket> it = pktlist.iterator();
-						HostPacket pkt = null;
-						if (it.hasNext()) {
-							pkt = it.next();
-							// Asumption packet will not arrive in the same cycle
-							if (pkt.receiverVmId == cl.getGuestId()) {
-								pkt.recvTime = CloudSim.clock();
-								st.setTime(CloudSim.clock() - pkt.sendTime);
-								goToNextStage(cl);
-								pkttoremove.add(pkt);
-							}
-						}
-						pktlist.removeAll(pkttoremove);
-						// if(pkt!=null)
-						// else wait for recieving the packet
-					}
-				}
-
-			} else {
-				cl.currStageNum = 0;
-				cl.startTimeCurrStage = CloudSim.clock();
-			}
-
-		}
-
-		// check finished cloudlets
-		List<ResCloudlet> toRemove = new ArrayList<>();
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			// rounding issue...
-			if (((NetworkCloudlet) rcl.getCloudlet()).currStageNum == -2) {
-				toRemove.add(rcl);
-				cloudletFinish(rcl);
+				pktlist.removeAll(pkttoremove);
+				// if(pkt!=null)
+				// else wait for recieving the packet
 			}
 		}
-		getCloudletExecList().removeAll(toRemove);
-
-		// no more cloudlets in this scheduler
-		if (getCloudletExecList().isEmpty() && getCloudletWaitingList().isEmpty()) {
-			setPreviousTime(currentTime);
-			return 0.0;
-		}
-
-		// add all the CloudletExecList in waitingList.
-		// sort the waitinglist
-		// @TODO: Remo Andreoli: Missing ???
-
-		// for each finished cloudlet, add a new one from the waiting list
-		if (!getCloudletWaitingList().isEmpty()) {
-			int finished = toRemove.size();
-			List<ResCloudlet> toUnpause = getCloudletWaitingList().stream()
-							.filter(rcl -> (currentCPUs - usedPes) >= rcl.getNumberOfPes()).limit(finished).toList();
-
-			for (ResCloudlet rcl : toUnpause) {
-				rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
-				for (int k = 0; k < rcl.getNumberOfPes(); k++) {
-					rcl.setMachineAndPeId(0, k);
-				}
-				getCloudletExecList().add(rcl);
-				usedPes += rcl.getNumberOfPes();
-			}
-
-			getCloudletWaitingList().removeAll(toUnpause);
-		}
-
-		// estimate finish time of cloudlets in the execution queue
-		double nextEvent = Double.MAX_VALUE;
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
-			if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
-				estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
-			}
-			if (estimatedFinishTime < nextEvent) {
-				nextEvent = estimatedFinishTime;
-			}
-		}
-
-		setPreviousTime(currentTime);
-		return nextEvent;
 	}
 
 	/**
@@ -182,8 +119,8 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 	private void goToNextStage(NetworkCloudlet cl) {
 		cl.timeSpentCurrStage = 0;
 		cl.startTimeCurrStage = CloudSim.clock();
-		cl.currStageNum++;
 
+		cl.currStageNum++;
 		while(cl.currStageNum < cl.stages.size() && cl.stages.get(cl.currStageNum).getType() == TaskStage.TaskStageStatus.WAIT_SEND) {
 			HostPacket pkt = new HostPacket(cl, cl.currStageNum);
 			List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
@@ -194,10 +131,6 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			pkttosend.put(cl.getGuestId(), pktlist);
 
 			cl.currStageNum++;
-		}
-
-		if (cl.currStageNum >= cl.stages.size()) {
-			cl.currStageNum = -2;
 		}
 	}
 }

@@ -8,7 +8,6 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -43,38 +42,13 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		usedPes = 0;
 	}
 
-	@Override
-	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
-		setCurrentMipsShare(mipsShare);
-		double timeSpan = currentTime - getPreviousTime(); // time since last update
-
-		// each machine in the exec list has the same amount of cpu
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			rcl.updateCloudletFinishedSoFar((long) (timeSpan *
-					getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime) * Consts.MILLION));
-		}
-
-		// check finished cloudlets
-		List<ResCloudlet> toRemove = new ArrayList<>();
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getRemainingCloudletLength() == 0) { // finished: remove from the list
-				toRemove.add(rcl);
-				cloudletFinish(rcl);
-			}
-		}
-		getCloudletExecList().removeAll(toRemove);
-
-		// no more cloudlets in this scheduler
-		if (getCloudletExecList().isEmpty() && getCloudletWaitingList().isEmpty()) {
-			setPreviousTime(currentTime);
-			return 0.0;
-		}
-
+	protected void updateWaitingCloudlets(double currentTime, Object info) {
 		// for each finished cloudlet, add a new one from the waiting list
+		int finished = (int) info;
+
 		if (!getCloudletWaitingList().isEmpty()) {
-			int finished = toRemove.size();
 			List<ResCloudlet> toUnpause = getCloudletWaitingList().stream()
-							.filter(rcl -> (currentCPUs - usedPes) >= rcl.getNumberOfPes()).limit(finished).toList();
+							.filter(rcl -> (getCurrentPEs() - usedPes) >= rcl.getNumberOfPes()).limit(finished).toList();
 
 			for (ResCloudlet rcl : toUnpause) {
 				rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
@@ -87,21 +61,6 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 			getCloudletWaitingList().removeAll(toUnpause);
 		}
-
-		// estimate finish time of cloudlets in the execution queue
-		double nextEvent = Double.MAX_VALUE;
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
-			if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
-				estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
-			}
-			if (estimatedFinishTime < nextEvent) {
-				nextEvent = estimatedFinishTime;
-			}
-		}
-
-		setPreviousTime(currentTime);
-		return nextEvent;
 	}
 
 	@Override
@@ -112,7 +71,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 			ResCloudlet rcl = getCloudletPausedList().remove(position);
 
 			// it can go to the exec list
-			if ((currentCPUs - usedPes) >= rcl.getNumberOfPes()) {
+			if ((getCurrentPEs() - usedPes) >= rcl.getNumberOfPes()) {
 				rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
 				for (int i = 0; i < rcl.getNumberOfPes(); i++) {
 					rcl.setMachineAndPeId(0, i);
@@ -145,7 +104,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	@Override
 	public double cloudletSubmit(Cloudlet cloudlet, double fileTransferTime) {
         ResCloudlet rcl = new ResCloudlet(cloudlet);
-        if ((currentCPUs - usedPes) >= cloudlet.getNumberOfPes()) { // it can go to the exec list
+        if ((getCurrentPEs() - usedPes) >= cloudlet.getNumberOfPes()) { // it can go to the exec list
             rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
 			for (int i = 0; i < cloudlet.getNumberOfPes(); i++) {
 				rcl.setMachineAndPeId(0, i);
@@ -159,7 +118,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		}
 
 		// calculate the expected time for cloudlet completion
-		double capacity = getCPUCapacity(getCurrentMipsShare());
+		double capacity = getCurrentCapacity(getCurrentMipsShare());
 
 		// use the current capacity to estimate the extra amount of
 		// time to file transferring. It must be added to the cloudlet length
@@ -195,7 +154,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	// Simple policy, there is no real scheduling involved
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
-		return getCPUCapacity(mipsShare) * rcl.getNumberOfPes();
+		return getCurrentCapacity(mipsShare) * rcl.getNumberOfPes();
 	}
 
 	@Override

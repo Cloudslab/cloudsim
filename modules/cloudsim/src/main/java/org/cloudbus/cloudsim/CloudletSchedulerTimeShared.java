@@ -7,7 +7,6 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -37,79 +36,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	}
 
 	@Override
-	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
-		setCurrentMipsShare(mipsShare);
-		double timeSpan = currentTime - getPreviousTime(); // time since last update
-
-		// each machine in the exec list has the same amount of cpu
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			rcl.updateCloudletFinishedSoFar((long) (timeSpan *
-					getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime) * Consts.MILLION));
-		}
-
-		// check finished cloudlets
-		List<ResCloudlet> toRemove = new ArrayList<>();
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getRemainingCloudletLength() == 0) { // finished: remove from the list
-				toRemove.add(rcl);
-				cloudletFinish(rcl);
-			}
-		}
-		getCloudletExecList().removeAll(toRemove);
-
-		// no more cloudlets in this scheduler
-		if (getCloudletExecList().isEmpty() && getCloudletWaitingList().isEmpty()) {
-			setPreviousTime(currentTime);
-			return 0.0;
-		}
-
-		// estimate finish time of cloudlets in the execution queue
-		double nextEvent = Double.MAX_VALUE;
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
-			if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
-				estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
-			}
-			if (estimatedFinishTime < nextEvent) {
-				nextEvent = estimatedFinishTime;
-			}
-		}
-
-		setPreviousTime(currentTime);
-		return nextEvent;
-	}
-
-	/**
-	 * Gets the individual MIPS capacity available for each PE available for the scheduler,
-         * considering that all PEs have the same capacity.
-	 * 
-	 * @param mipsShare list with MIPS share of each PE available to the scheduler
-	 * @return the capacity of each PE
-	 */
-	@Override
-	public double getCPUCapacity(final List<Double> mipsShare) {
-		double capacity = 0.0;
-		int cpus = 0;
-		for (Double mips : mipsShare) {
-			capacity += mips;
-			if (mips > 0.0) {
-				cpus++;
-			}
-		}
-		currentCPUs = cpus;
-
-		int pesInUse = 0;
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getRemainingCloudletLength() != 0) {
-				pesInUse += rcl.getNumberOfPes();
-			}
-		}
-
-		capacity /= Math.max(pesInUse, currentCPUs);
-		return capacity;
-	}
-
-	@Override
 	public double cloudletResume(int cloudletId) {
 		// look for the cloudlet in the paused list
 		int position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
@@ -136,8 +62,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		getCloudletExecList().add(rcl);
 
 		// calculate the expected time for cloudlet completion
-		double capacity = getCPUCapacity(getCurrentMipsShare());
-
+		double capacity = getCurrentCapacity(getCurrentMipsShare());
 		// use the current capacity to estimate the extra amount of
 		// time to file transferring. It must be added to the cloudlet length
 		double extraSize = capacity * fileTransferTime;
@@ -147,10 +72,27 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return cloudlet.getCloudletLength() / capacity;
 	}
 
+	@Override
+	public double getCurrentCapacity(List<Double> mipsShare) {
+		List<Double> validMips = mipsShare.stream().filter(mips -> mips > 0).toList();
+		int cpus = validMips.size();
+		double capacity = validMips.stream().mapToDouble(Double::doubleValue).sum();
+
+		int pesInUse = 0;
+		for (ResCloudlet rcl : getCloudletExecList()) {
+			if (rcl.getRemainingCloudletLength() > 0) {
+				pesInUse += rcl.getNumberOfPes();
+			}
+		}
+
+		capacity /= Math.max(pesInUse, cpus);
+		return capacity;
+	}
+
 	// Simple policy, there is no real scheduling involved
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
-		return getCPUCapacity(mipsShare) * rcl.getNumberOfPes();
+		return getCurrentCapacity(mipsShare) * rcl.getNumberOfPes();
 	}
 
 	@Override
