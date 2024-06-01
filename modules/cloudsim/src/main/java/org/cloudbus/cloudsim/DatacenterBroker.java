@@ -415,7 +415,7 @@ public class DatacenterBroker extends SimEntity {
 
 	@Override
 	public void shutdownEntity() {
-		Log.printConcatLine(getName(), " is shutting down...");
+		Log.printConcatLine(CloudSim.clock(), ": ", getName(), " is shutting down...");
 	}
 
 	@Override
