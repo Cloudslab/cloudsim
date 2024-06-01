@@ -73,6 +73,9 @@ public class DatacenterBroker extends SimEntity {
          * is a datacenter id and each value is its characteristics.. */
 	protected Map<Integer, DatacenterCharacteristics> datacenterCharacteristicsList;
 
+	/** Next guest to which send the cloudlet */
+	private int guestIndex = 0;
+
 	/**
 	 * Created a new DatacenterBroker object.
 	 * 
@@ -344,13 +347,12 @@ public class DatacenterBroker extends SimEntity {
          * @see #submitCloudletList(java.util.List) 
 	 */
 	protected void submitCloudlets() {
-		int vmIndex = 0;
 		List<Cloudlet> successfullySubmitted = new ArrayList<>();
 		for (Cloudlet cloudlet : getCloudletList()) {
 			GuestEntity vm;
 			// if user didn't bind this cloudlet and it has not been executed yet
 			if (cloudlet.getGuestId() == -1) {
-				vm = getGuestsCreatedList().get(vmIndex);
+				vm = getGuestsCreatedList().get(guestIndex);
 			} else { // submit to the specific vm
 				vm = VmList.getById(getGuestsCreatedList(), cloudlet.getGuestId());
 				if (vm == null) { // vm was not created
@@ -377,7 +379,7 @@ public class DatacenterBroker extends SimEntity {
 			cloudlet.setGuestId(vm.getId());
 			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
 			cloudletsSubmitted++;
-			vmIndex = (vmIndex + 1) % getGuestsCreatedList().size();
+			guestIndex = (guestIndex + 1) % getGuestsCreatedList().size();
 			getCloudletSubmittedList().add(cloudlet);
 			successfullySubmitted.add(cloudlet);
 		}
