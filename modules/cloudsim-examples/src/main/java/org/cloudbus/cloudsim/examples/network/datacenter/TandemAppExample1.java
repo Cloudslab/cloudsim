@@ -1,10 +1,8 @@
 package org.cloudbus.cloudsim.examples.network.datacenter;
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.EX.DatacenterBrokerEX;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.distributions.ExponentialDistr;
 import org.cloudbus.cloudsim.network.datacenter.*;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -12,25 +10,23 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
-public class TandemAppExample2 {
+public class TandemAppExample1 {
 
 	private static List<GuestEntity> guestList;
 
-	private static List<NetworkHost> hostList;
-
-	private static List<AppCloudlet> appCloudletList;
+	private static List<NetworkHost> hostList = new ArrayList<>();
 
 	private static NetworkDatacenter datacenter;
 
-	private static DatacenterBrokerEX broker;
+	private static DatacenterBroker broker;
 
 	private static final int numberOfHosts = 2;
 	private static final int numberOfVms = 4;
-
-	// Realistic cloudlet arrival
-    private static ExponentialDistr distr;
 
 	/**
 	 * Example of tandem DAG: A ---> B
@@ -39,7 +35,6 @@ public class TandemAppExample2 {
 	 * 									 Host0    Host1
 	 * 						   			VM0 VM2  VM1 VM3
 	 *
-	 * and realistic cloudlet arrivals, sampled from exponential distribution.
 	 * Depending on the cloudlet placement, the network may be used or not.
 	 * 
 	 * @param args the args
@@ -47,11 +42,9 @@ public class TandemAppExample2 {
 	 */
 	public static void main(String[] args) {
 
-		Log.printLine("Starting TandemAppExample2...");
+		Log.printLine("Starting TandemAppExample1...");
 
 		try {
-			distr = new ExponentialDistr(5, 1000);
-
 			int num_user = 1; // number of cloud users
 			Calendar calendar = Calendar.getInstance();
 			boolean trace_flag = false; // mean trace events
@@ -64,22 +57,20 @@ public class TandemAppExample2 {
 			// list one of them to run a CloudSim simulation
 			datacenter = createDatacenter("Datacenter_0");
 
-			// Third step: Create Broker (Make sure the broker stays alive the whole time)
-			broker = new DatacenterBrokerEX("Broker", 1000000);
+			// Third step: Create Broker
+			broker = new DatacenterBroker("Broker");
+
+			// Fifth step: Create one Cloudlet
 
 			guestList = CreateVMs(datacenter.getId());
 
-			appCloudletList = new ArrayList<>();
-			for(int i = 0; i < 5; i++) {
-				AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, i, 2000, broker.getId());
-				createTaskList(app);
-				appCloudletList.add(app);
-
-				broker.submitCloudletList(app.cList, distr.sample());
-			}
+			AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, 0, 2000, broker.getId());
+			createTaskList(app);
 
 			// submit vm list to the broker
+
 			broker.submitGuestList(guestList);
+			broker.submitCloudletList(app.cList);
 
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();
@@ -92,7 +83,7 @@ public class TandemAppExample2 {
 			System.out.println("numberofcloudlet " + newList.size() + " Data transfered "
 					+ NetworkGlobals.totaldatatransfer);
 
-			Log.printLine("TandemAppExample2 finished!");
+			Log.printLine("TandemAppExample1 finished!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.printLine("Unwanted errors happen");
@@ -112,12 +103,11 @@ public class TandemAppExample2 {
 		// In this example, it will have only one core.
 		// List<Pe> peList = new ArrayList<Pe>();
 
-		int mips = 10;
+		int mips = 100000;
 		int ram = 2048; // host memory (MB)
 		long storage = 1000000; // host storage
 		int bw = 100000;
 
-		hostList = new ArrayList<>();
 		for (int i=0; i<numberOfHosts; i++) {
 			List<Pe> peList = new ArrayList<>();
 			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
@@ -248,7 +238,7 @@ public class TandemAppExample2 {
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		cla.setUserId(broker.getId());
-		//cla.setGuestId(guestList.get(0).getId());
+		cla.setGuestId(guestList.get(0).getId());
 		appCloudlet.cList.add(cla);
 
 		NetworkCloudlet clb = new NetworkCloudlet(
@@ -262,7 +252,7 @@ public class TandemAppExample2 {
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		clb.setUserId(broker.getId());
-		//clb.setGuestId(guestList.get(1).getId());
+		clb.setGuestId(guestList.get(1).getId());
 		appCloudlet.cList.add(clb);
 
 		// Configure task stages within the cloudlets

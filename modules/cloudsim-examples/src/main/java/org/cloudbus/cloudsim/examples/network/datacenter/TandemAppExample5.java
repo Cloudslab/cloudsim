@@ -12,46 +12,59 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
-public class TandemAppExample2 {
+public class TandemAppExample5 {
 
 	private static List<GuestEntity> guestList;
 
 	private static List<NetworkHost> hostList;
 
+	private static NetworkDatacenter datacenter;
+
 	private static List<AppCloudlet> appCloudletList;
 
-	private static NetworkDatacenter datacenter;
+	private static List<Cloudlet> noisyCloudletList;
 
 	private static DatacenterBrokerEX broker;
 
-	private static final int numberOfHosts = 2;
-	private static final int numberOfVms = 4;
+	private static final int numberOfHosts = 4;
+	private static final int numberOfVms = 8;
+
+	private static final int numberOfPeriodicActivations = 4;
+	private static final int numberOfNoisyCloudlets = 100;
 
 	// Realistic cloudlet arrival
-    private static ExponentialDistr distr;
+	private static ExponentialDistr distr;
 
+	private static int deadline = 3100;
+	private static int period = deadline;
 	/**
-	 * Example of tandem DAG: A ---> B
-	 * with Datacenter configuration:        switch
-	 * 								   		 /	 \
-	 * 									 Host0    Host1
-	 * 						   			VM0 VM2  VM1 VM3
+	 * Example of periodic tandem DAG: A ---> B
+	 * with noisy cloudlets (with realistic arrival sampled from exponential distribution).
+	 * with Datacenter configuration:
+*                                                Agg. Switch
+* 										         /        \
+* 										ToR switch        ToR switch
+* 								   		 /	 \  		   /	 \
+* 									 Host0    Host1     Host2    Host3
+	 * 						   		VM0 VM4  VM1 VM5   VM2 VM6  VM3 VM7
 	 *
-	 * and realistic cloudlet arrivals, sampled from exponential distribution.
+	 *
 	 * Depending on the cloudlet placement, the network may be used or not.
 	 * 
 	 * @param args the args
 	 * @author Remo Andreoli
 	 */
 	public static void main(String[] args) {
+		distr = new ExponentialDistr(5, 1000);
 
-		Log.printLine("Starting TandemAppExample2...");
+		Log.printLine("Starting TandemAppExample5...");
 
 		try {
-			distr = new ExponentialDistr(5, 1000);
-
 			int num_user = 1; // number of cloud users
 			Calendar calendar = Calendar.getInstance();
 			boolean trace_flag = false; // mean trace events
@@ -63,19 +76,31 @@ public class TandemAppExample2 {
 			// Datacenters are the resource providers in CloudSim. We need at
 			// list one of them to run a CloudSim simulation
 			datacenter = createDatacenter("Datacenter_0");
-
+			
 			// Third step: Create Broker (Make sure the broker stays alive the whole time)
 			broker = new DatacenterBrokerEX("Broker", 1000000);
 
 			guestList = CreateVMs(datacenter.getId());
 
 			appCloudletList = new ArrayList<>();
-			for(int i = 0; i < 5; i++) {
-				AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, i, 2000, broker.getId());
+
+			for (int i = 0; i < numberOfPeriodicActivations; i++) {
+				AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, i, deadline, broker.getId());
 				createTaskList(app);
 				appCloudletList.add(app);
 
-				broker.submitCloudletList(app.cList, distr.sample());
+				broker.submitCloudletList(app.cList, 0.02 + i*period);
+			}
+
+			noisyCloudletList = new ArrayList<>();
+			UtilizationModel u = new UtilizationModelFull();
+			for (int i = 0; i < numberOfNoisyCloudlets; i++) {
+				Cloudlet cloudlet = new Cloudlet(1000+i, 1000, 1, 1, 1, u, u, u);
+				cloudlet.setUserId(broker.getId());
+				//cloudlet.setGuestId(0);
+
+				noisyCloudletList.add(cloudlet);
+				broker.submitCloudletList(List.of(cloudlet), distr.sample());
 			}
 
 			// submit vm list to the broker
@@ -92,7 +117,7 @@ public class TandemAppExample2 {
 			System.out.println("numberofcloudlet " + newList.size() + " Data transfered "
 					+ NetworkGlobals.totaldatatransfer);
 
-			Log.printLine("TandemAppExample2 finished!");
+			Log.printLine("TandemAppExample5 finished!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.printLine("Unwanted errors happen");
@@ -248,7 +273,7 @@ public class TandemAppExample2 {
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		cla.setUserId(broker.getId());
-		//cla.setGuestId(guestList.get(0).getId());
+		cla.setGuestId(guestList.get(0).getId());
 		appCloudlet.cList.add(cla);
 
 		NetworkCloudlet clb = new NetworkCloudlet(
@@ -262,7 +287,7 @@ public class TandemAppExample2 {
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		clb.setUserId(broker.getId());
-		//clb.setGuestId(guestList.get(1).getId());
+		clb.setGuestId(guestList.get(2).getId());
 		appCloudlet.cList.add(clb);
 
 		// Configure task stages within the cloudlets
@@ -276,16 +301,27 @@ public class TandemAppExample2 {
 	}
 
 	private static void CreateNetwork(NetworkDatacenter dc) {
-		// Create ToR switch
-		Switch ToRSwitch = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, Switch.SwitchLevel.EDGE_LEVEL,
+		Switch ToRSwitch1 = new Switch("Edge0", NetworkConstants.EdgeSwitchPort, Switch.SwitchLevel.EDGE_LEVEL,
 					0, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
+		Switch ToRSwitch2 = new Switch("Edge1", NetworkConstants.EdgeSwitchPort, Switch.SwitchLevel.EDGE_LEVEL,
+				0, NetworkConstants.BandWidthEdgeHost, NetworkConstants.BandWidthEdgeAgg, dc);
 
-		dc.registerSwitch(ToRSwitch);
+		Switch AggrSwitch = new Switch("Aggr0", NetworkConstants.AggSwitchPort, Switch.SwitchLevel.AGGR_LEVEL,
+				0, NetworkConstants.BandWidthEdgeAgg, NetworkConstants.BandWidthEdgeAgg, dc);
+
+		dc.registerSwitch(ToRSwitch1);
+		dc.registerSwitch(ToRSwitch2);
+		dc.registerSwitch(AggrSwitch);
+
+		dc.attachSwitchToSwitch(ToRSwitch1, AggrSwitch);
+		dc.attachSwitchToSwitch(ToRSwitch2, AggrSwitch);
 
 		// Attach to hosts
-		for (NetworkHost netHost : dc.<NetworkHost>getHostList()) {
-			dc.attachSwitchToHost(ToRSwitch, netHost);
-		}
+		List<NetworkHost> netHosts = dc.getHostList();
+		dc.attachSwitchToHost(ToRSwitch1, netHosts.get(0));
+		dc.attachSwitchToHost(ToRSwitch1, netHosts.get(1));
 
+		dc.attachSwitchToHost(ToRSwitch2, netHosts.get(2));
+		dc.attachSwitchToHost(ToRSwitch2, netHosts.get(3));
 	}
 }
