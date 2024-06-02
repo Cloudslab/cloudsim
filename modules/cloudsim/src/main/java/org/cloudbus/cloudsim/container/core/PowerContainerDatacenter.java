@@ -158,7 +158,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
                     }
 
                 }
-                Log.printConcatLine(CloudSim.clock(), ": The number of Migrations is:  ", getVmMigrationCount() - previousMigrationCount);
+                Log.printlnConcat(CloudSim.clock(), ": The number of Migrations is:  ", getVmMigrationCount() - previousMigrationCount);
 //                String[] msg={Double.toString (CloudSim.clock()), Integer.toString (getVmMigrationCount() - previousMigrationCount)  } ;                   // <--declared statement
 //                try {
 //                    getVmMigrationWriter().writeTofile(msg);
@@ -203,11 +203,11 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         double timeDiff = currentTime - getLastProcessTime();
         double timeFrameDatacenterEnergy = 0.0;
 
-        Log.printLine("\n\n--------------------------------------------------------------\n\n");
+        Log.println("\n\n--------------------------------------------------------------\n\n");
         Log.formatLine("Power data center: New resource usage for the time frame starting at %.2f:", currentTime);
 
         for (PowerHost host : this.<PowerHost>getHostList()) {
-            Log.printLine();
+            Log.println();
 
             double time = host.updateCloudletsProcessing(currentTime); // inform VMs to update processing
             if (time < minTime) {
@@ -236,7 +236,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
                         timeDiff);
                 timeFrameDatacenterEnergy += timeFrameHostEnergy;
 
-                Log.printLine();
+                Log.println();
                 Log.formatLine(
                         "%.2f: [Host #%d] utilization at %.2f was %.2f%%, now is %.2f%%",
                         currentTime,
@@ -277,7 +277,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
             for (GuestEntity vm : host.getCompletedVms()) {
                 getVmAllocationPolicy().deallocateHostForGuest(vm);
                 getVmList().remove(vm);
-                Log.printLine(String.format("VM #%d has been deallocated from host #%d", vm.getId(), host.getId()));
+                Log.println(String.format("VM #%d has been deallocated from host #%d", vm.getId(), host.getId()));
             }
             if(host.getGuestList().size() !=0){
 
@@ -291,11 +291,11 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         int numberOfContainers = getNumberOfContainers();
         /** Check how many containers are in the system up and running*/
         Log.print(String.format("The number of Containers Up and running is %d", numberOfContainers));
-        Log.printLine();
+        Log.println();
         Log.print(String.format("The number of Vms Up and running is %d", numberOfActiveVms));
-        Log.printLine();
+        Log.println();
         Log.print(String.format("The number of Hosts Up and running is %d", numberOfActiveHosts));
-        Log.printLine();
+        Log.println();
 
         setLastProcessTime(currentTime);
         return minTime;

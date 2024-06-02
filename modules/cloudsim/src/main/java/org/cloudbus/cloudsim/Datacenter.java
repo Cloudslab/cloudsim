@@ -103,7 +103,7 @@ public class Datacenter extends SimEntity {
 		}
 		
 		if(getCharacteristics().getNumberOfPes()==0 && getCharacteristics().getHostList().size() == 0) {
-			Log.printLine(name+": inter-cloud networking topology created...");
+			Log.println(name+": inter-cloud networking topology created...");
 		}
 
 		// stores id of this class
@@ -344,13 +344,13 @@ public class Datacenter extends SimEntity {
 				status = getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId,userId)
 						.getCloudletScheduler().getCloudletStatus(cloudletId);
 			} catch (Exception e) {
-				Log.printConcatLine(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
-				Log.printLine(e.getMessage());
+				Log.printlnConcat(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
+				Log.println(e.getMessage());
 				return;
 			}
 		} catch (Exception e) {
-			Log.printConcatLine(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
-			Log.printLine(e.getMessage());
+			Log.printlnConcat(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
+			Log.println(e.getMessage());
 			return;
 		}
 
@@ -376,7 +376,7 @@ public class Datacenter extends SimEntity {
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			Log.printConcatLine(getName(), ".processOtherEvent(): Error - an event is null.");
+			Log.printlnConcat(getName(), ".processOtherEvent(): Error - an event is null.");
 		}
 	}
 
@@ -471,7 +471,7 @@ public class Datacenter extends SimEntity {
 		host.removeMigratingInGuest(vm);
 		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm, host);
 		if (!result) {
-			Log.printLine("[Datacenter.processVmMigrate] VM allocation to the destination host failed");
+			Log.println("[Datacenter.processVmMigrate] VM allocation to the destination host failed");
 			System.exit(0);
 		}
 
@@ -526,13 +526,13 @@ public class Datacenter extends SimEntity {
 				userId = cl.getUserId();
 				vmId = cl.getGuestId();
 			} catch (Exception e) {
-				Log.printConcatLine(super.getName(), ": Error in processing Cloudlet");
-				Log.printLine(e.getMessage());
+				Log.printlnConcat(super.getName(), ": Error in processing Cloudlet");
+				Log.println(e.getMessage());
 				return;
 			}
 		} catch (Exception e) {
-			Log.printConcatLine(super.getName(), ": Error in processing a Cloudlet.");
-			Log.printLine(e.getMessage());
+			Log.printlnConcat(super.getName(), ": Error in processing a Cloudlet.");
+			Log.println(e.getMessage());
 			return;
 		}
 
@@ -640,10 +640,10 @@ public class Datacenter extends SimEntity {
 			// checks whether this Cloudlet has finished or not
 			if (cl.isFinished()) {
 				String name = CloudSim.getEntityName(cl.getUserId());
-				Log.printConcatLine(getName(), ": Warning - ",cl.getClass().getSimpleName()," #", cl.getCloudletId(), " owned by ", name,
+				Log.printlnConcat(getName(), ": Warning - ",cl.getClass().getSimpleName()," #", cl.getCloudletId(), " owned by ", name,
 						" is already completed/finished.");
-				Log.printLine("Therefore, it is not being executed again");
-				Log.printLine();
+				Log.println("Therefore, it is not being executed again");
+				Log.println();
 
 				// NOTE: If a Cloudlet has finished, then it won't be processed.
 				// So, if ack is required, this method sends back a result.
@@ -686,7 +686,7 @@ public class Datacenter extends SimEntity {
 				estimatedFinishTime += fileTransferTime;
 				send(getId(), estimatedFinishTime, CloudSimTags.VM_DATACENTER_EVENT);
 			} else {
-				Log.printConcatLine(CloudSim.clock(), ": [",getName(), "]: Warning - ", cl.getClass().getSimpleName()," #", cl.getCloudletId(),
+				Log.printlnConcat(CloudSim.clock(), ": [",getName(), "]: Warning - ", cl.getClass().getSimpleName()," #", cl.getCloudletId(),
 						" is paused because not enough free PEs on ", vm.getClassName(), " #", vm.getId());
 			}
 
@@ -701,10 +701,10 @@ public class Datacenter extends SimEntity {
 				sendNow(cl.getUserId(), tag, data);
 			}
 		} catch (ClassCastException c) {
-			Log.printLine(getName() + ".processCloudletSubmit(): " + "ClassCastException error.");
+			Log.println(getName() + ".processCloudletSubmit(): " + "ClassCastException error.");
 			c.printStackTrace();
 		} catch (Exception e) {
-			Log.printLine(getName() + ".processCloudletSubmit(): " + "Exception error.");
+			Log.println(getName() + ".processCloudletSubmit(): " + "Exception error.");
 			e.printStackTrace();
 		}
 
@@ -970,12 +970,12 @@ public class Datacenter extends SimEntity {
 
 	@Override
 	public void shutdownEntity() {
-		Log.printConcatLine(CloudSim.clock(), ": ", getName(), " is shutting down...");
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), " is shutting down...");
 	}
 
 	@Override
 	public void startEntity() {
-		Log.printConcatLine(getName(), " is starting...");
+		Log.printlnConcat(getName(), " is starting...");
 		// this resource should register to regional CIS.
 		// However, if not specified, then register to system CIS (the
 		// default CloudInformationService) entity.

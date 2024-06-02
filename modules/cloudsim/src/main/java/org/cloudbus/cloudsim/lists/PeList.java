@@ -187,7 +187,7 @@ public class PeList {
 			boolean failed) {
 		String status = failed ? "FAILED" : "WORKING";
 
-		Log.printConcatLine(resName, " - Machine: ", hostId, " is ", status);
+		Log.printlnConcat(resName, " - Machine: ", hostId, " is ", status);
 
 		setStatusFailed(peList, failed);
 	}

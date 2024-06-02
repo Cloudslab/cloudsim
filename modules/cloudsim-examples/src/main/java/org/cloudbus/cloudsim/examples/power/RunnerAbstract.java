@@ -173,7 +173,7 @@ public abstract class RunnerAbstract {
 			double lastClock = CloudSim.startSimulation();
 
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
-			Log.printLine("Received " + newList.size() + " cloudlets");
+			Log.println("Received " + newList.size() + " cloudlets");
 
 			CloudSim.stopSimulation();
 
@@ -187,11 +187,11 @@ public abstract class RunnerAbstract {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			Log.println("The simulation has been terminated due to an unexpected error");
 			System.exit(0);
 		}
 
-		Log.printLine("Finished " + experimentName);
+		Log.println("Finished " + experimentName);
 	}
 
 	/**

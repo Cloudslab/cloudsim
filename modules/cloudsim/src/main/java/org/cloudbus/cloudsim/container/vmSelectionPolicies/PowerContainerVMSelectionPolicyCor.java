@@ -103,7 +103,7 @@ public class PowerContainerVMSelectionPolicyCor extends PowerContainerVmSelectio
         }
 
         if (id == -1) {
-            Log.printConcatLine("Problem with correlation list.");
+            Log.printlnConcat("Problem with correlation list.");
         }
 
         return migratableContainerVMs.get(id);

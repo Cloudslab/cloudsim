@@ -100,7 +100,7 @@ public class PowerContainerSelectionPolicyCor extends PowerContainerSelectionPol
         }
 
         if (id == -1) {
-            Log.printConcatLine("Problem with correlation list.");
+            Log.printlnConcat("Problem with correlation list.");
         }
 
         return migratableContainers.get(id);

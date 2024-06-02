@@ -231,12 +231,12 @@ public class CloudInformationService extends SimEntity {
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			Log.printConcatLine("CloudInformationService.processOtherEvent(): ",
+			Log.printlnConcat("CloudInformationService.processOtherEvent(): ",
 					"Unable to handle a request since the event is null.");
 			return;
 		}
 
-		Log.printLine("CloudInformationSevice.processOtherEvent(): " + "Unable to handle a request from "
+		Log.println("CloudInformationSevice.processOtherEvent(): " + "Unable to handle a request from "
 				+ CloudSim.getEntityName(ev.getSource()) + " with event tag = " + ev.getTag());
 	}
 
@@ -287,7 +287,7 @@ public class CloudInformationService extends SimEntity {
 	 * @post $none
 	 */
 	private void notifyAllEntity() {
-		Log.printConcatLine(CloudSim.clock(), ":", super.getName(), ": Notify all CloudSim entities for shutting down.");
+		Log.printlnConcat(CloudSim.clock(), ":", super.getName(), ": Notify all CloudSim entities for shutting down.");
 
 		signalShutdown(resList);
 		signalShutdown(gisList);

@@ -183,18 +183,18 @@ public abstract class RunnerAbs {
             CloudSim.terminateSimulation(86400.0D);
             double lastClock = CloudSim.startSimulation();
             List<Cloudlet> newList = broker.getCloudletReceivedList();
-            Log.printLine("Received " + newList.size() + " cloudlets");
+            Log.println("Received " + newList.size() + " cloudlets");
             CloudSim.stopSimulation();
 
 //            HelperEx.printResults(e, broker.getVmsCreatedList(),broker.getContainersCreatedList() ,lastClock, experimentName, true, outputFolder);
             HelperEx.printResultsNew(e, broker, lastClock, experimentName, true, outputFolder);
         } catch (Exception var8) {
             var8.printStackTrace();
-            Log.printLine("The simulation has been terminated due to an unexpected error");
+            Log.println("The simulation has been terminated due to an unexpected error");
             System.exit(0);
         }
 
-        Log.printLine("Finished " + experimentName);
+        Log.println("Finished " + experimentName);
     }
 
     protected String getExperimentName(String... args) {

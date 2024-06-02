@@ -56,7 +56,7 @@ public class NetworkExample3 {
 	 */
 	public static void main(String[] args) {
 
-		Log.printLine("Starting NetworkExample3...");
+		Log.println("Starting NetworkExample3...");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -169,11 +169,11 @@ public class NetworkExample3 {
 			Log.print("=============> User "+brokerId2+"    ");
 			printCloudletList(newList2);
 
-			Log.printLine("NetworkExample3 finished!");
+			Log.println("NetworkExample3 finished!");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			Log.println("The simulation has been terminated due to an unexpected error");
 		}
 	}
 
@@ -266,9 +266,9 @@ public class NetworkExample3 {
 		Cloudlet cloudlet;
 
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent +
+		Log.println();
+		Log.println("========== OUTPUT ==========");
+		Log.println("Cloudlet ID" + indent + "STATUS" + indent +
 				"Data center ID" + indent + "VM ID" + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
         for (Cloudlet value : list) {
@@ -279,7 +279,7 @@ public class NetworkExample3 {
                 Log.print("SUCCESS");
 
                 DecimalFormat dft = new DecimalFormat("###.##");
-                Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getGuestId() +
+                Log.println(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getGuestId() +
                         indent + indent + dft.format(cloudlet.getActualCPUTime()) + indent + indent + dft.format(cloudlet.getExecStartTime()) +
                         indent + indent + dft.format(cloudlet.getExecFinishTime()));
             }

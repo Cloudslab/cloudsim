@@ -71,7 +71,7 @@ public class ContainerCloudSimExample1 {
      */
 
     public static void main(String[] args) {
-        Log.printLine("Starting ContainerCloudSimExample1...");
+        Log.println("Starting ContainerCloudSimExample1...");
 
         try {
             /**
@@ -185,10 +185,10 @@ public class ContainerCloudSimExample1 {
             List<Cloudlet> newList = broker.getCloudletReceivedList();
             printCloudletList(newList);
 
-            Log.printLine("ContainerCloudSimExample1 finished!");
+            Log.println("ContainerCloudSimExample1 finished!");
         } catch (Exception e) {
             e.printStackTrace();
-            Log.printLine("Unwanted errors happen");
+            Log.println("Unwanted errors happen");
         }
     }
 
@@ -244,9 +244,9 @@ public class ContainerCloudSimExample1 {
         Cloudlet cloudlet;
 
         String indent = "    ";
-        Log.printLine();
-        Log.printLine("========== OUTPUT ==========");
-        Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
+        Log.println();
+        Log.println("========== OUTPUT ==========");
+        Log.println("Cloudlet ID" + indent + "STATUS" + indent
                 + "Data center ID" + indent + "VM ID" + indent + "Time" + indent
                 + "Start Time" + indent + "Finish Time");
 
@@ -258,7 +258,7 @@ public class ContainerCloudSimExample1 {
             if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
                 Log.print("SUCCESS");
 
-                Log.printLine(indent + indent + cloudlet.getResourceId()
+                Log.println(indent + indent + cloudlet.getResourceId()
                         + indent + indent + indent + cloudlet.getGuestId()
                         + indent + indent
                         + dft.format(cloudlet.getActualCPUTime()) + indent

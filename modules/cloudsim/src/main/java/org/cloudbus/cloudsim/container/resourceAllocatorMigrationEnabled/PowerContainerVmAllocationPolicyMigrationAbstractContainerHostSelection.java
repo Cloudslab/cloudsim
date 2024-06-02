@@ -124,7 +124,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                 break;
             }
 
-            Log.printConcatLine("Under-utilized host: host #", underUtilizedHost.getId(), "\n");
+            Log.printlnConcat("Under-utilized host: host #", underUtilizedHost.getId(), "\n");
 
             excludedHostsForFindingUnderUtilizedHost.add(underUtilizedHost);
             excludedHostsForFindingNewContainerPlacement.add(underUtilizedHost);
@@ -140,7 +140,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                     Log.print(container.getId() + " ");
                 }
             }
-            Log.printLine();
+            Log.println();
 
             List<Map<String, Object>> newContainerPlacement = getNewContainerPlacementFromUnderUtilizedHost(
                     containersToMigrateFromUnderUtilizedHost,
@@ -155,7 +155,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             excludedHostsForFindingUnderUtilizedHost.addAll(extractHostListFromMigrationMap(newContainerPlacement));
             //The migration mapp does not have a value for container since the whole vm would be migrated.
             migrationMap.addAll(newContainerPlacement);
-            Log.printLine();
+            Log.println();
         }
 
         switchedOffHosts.clear();
@@ -204,11 +204,11 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             Map<String, Object> allocatedMap = findHostForGuest(container, excludedHosts, true);
             if (allocatedMap.get("vm") != null && allocatedMap.get("host")!= null) {
 
-                Log.printConcatLine("Container# ",container.getId(),"allocated to VM # ", ((ContainerVm)allocatedMap.get("vm")).getId()
+                Log.printlnConcat("Container# ",container.getId(),"allocated to VM # ", ((ContainerVm)allocatedMap.get("vm")).getId()
                         , " on host# ", ((Host)allocatedMap.get("host")).getId());
                 migrationMap.add(allocatedMap);
             } else {
-                Log.printLine("Not all Containers can be reallocated from the host, reallocation cancelled");
+                Log.println("Not all Containers can be reallocated from the host, reallocation cancelled");
                 allocatedMap.clear();
                 migrationMap.clear();
                 break;

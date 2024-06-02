@@ -120,7 +120,7 @@ public class ContainerDatacenter extends Datacenter {
 
                 container.updateCloudletsProcessing(CloudSim.clock(), getContainerAllocationPolicy().getHost(container).getGuestScheduler().getAllocatedMipsForGuest(container));
             } else {
-                Log.printLine(String.format("Datacenter.containerAllocator: Couldn't find a vm to host the container #%s", container.getUid()));
+                Log.println(String.format("Datacenter.containerAllocator: Couldn't find a vm to host the container #%s", container.getUid()));
             }
         }
     }
@@ -165,13 +165,13 @@ public class ContainerDatacenter extends Datacenter {
                 containerVm = (HostEntity) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
                 status = containerVm.getGuest(containerId, userId).getCloudletScheduler().getCloudletStatus(cloudletId);
             } catch (Exception e) {
-                Log.printConcatLine(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
-                Log.printLine(e.getMessage());
+                Log.printlnConcat(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
+                Log.println(e.getMessage());
                 return;
             }
         } catch (Exception e) {
-            Log.printConcatLine(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
-            Log.printLine(e.getMessage());
+            Log.printlnConcat(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
+            Log.println(e.getMessage());
             return;
         }
 
@@ -210,7 +210,7 @@ public class ContainerDatacenter extends Datacenter {
             containerVm.removeMigratingInGuest(container);}
         boolean result = getContainerAllocationPolicy().allocateHostForGuest(container, containerVm);
         if (!result) {
-            Log.printLine("[Datacenter.processContainerMigrate]Container allocation to the destination vm failed");
+            Log.println("[Datacenter.processContainerMigrate]Container allocation to the destination vm failed");
             System.exit(0);
         }
         if (containerVm.isInWaiting()){
@@ -271,13 +271,13 @@ public class ContainerDatacenter extends Datacenter {
                 vmId = cl.getGuestId();
                 containerId = cl.getContainerId();
             } catch (Exception e) {
-                Log.printConcatLine(super.getName(), ": Error in processing Cloudlet");
-                Log.printLine(e.getMessage());
+                Log.printlnConcat(super.getName(), ": Error in processing Cloudlet");
+                Log.println(e.getMessage());
                 return;
             }
         } catch (Exception e) {
-            Log.printConcatLine(super.getName(), ": Error in processing a Cloudlet.");
-            Log.printLine(e.getMessage());
+            Log.printlnConcat(super.getName(), ": Error in processing a Cloudlet.");
+            Log.println(e.getMessage());
             return;
         }
 
@@ -385,10 +385,10 @@ public class ContainerDatacenter extends Datacenter {
             // checks whether this Cloudlet has finished or not
             if (cl.isFinished()) {
                 String name = CloudSim.getEntityName(cl.getUserId());
-                Log.printConcatLine(getName(), ": Warning - Cloudlet #", cl.getCloudletId(), " owned by ", name,
+                Log.printlnConcat(getName(), ": Warning - Cloudlet #", cl.getCloudletId(), " owned by ", name,
                         " is already completed/finished.");
-                Log.printLine("Therefore, it is not being executed again");
-                Log.printLine();
+                Log.println("Therefore, it is not being executed again");
+                Log.println();
 
                 // NOTE: If a Cloudlet has finished, then it won't be processed.
                 // So, if ack is required, this method sends back a result.
@@ -444,10 +444,10 @@ public class ContainerDatacenter extends Datacenter {
                 sendNow(cl.getUserId(), tag, data);
             }
         } catch (ClassCastException c) {
-            Log.printLine(String.format("%s.processCloudletSubmit(): ClassCastException error.", getName()));
+            Log.println(String.format("%s.processCloudletSubmit(): ClassCastException error.", getName()));
             c.printStackTrace();
         } catch (Exception e) {
-            Log.printLine(String.format("%s.processCloudletSubmit(): Exception error.", getName()));
+            Log.println(String.format("%s.processCloudletSubmit(): Exception error.", getName()));
             e.printStackTrace();
         }
 

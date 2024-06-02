@@ -35,7 +35,7 @@ public class CloudSimExample9 {
 	 * @param args the args
 	 */
 	public static void main(String[] args) {
-		Log.printLine("Starting CloudSimExample9...");
+		Log.println("Starting CloudSimExample9...");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called before creating any entities.
@@ -144,10 +144,10 @@ public class CloudSimExample9 {
 
 			printCloudletList(newList);
 
-			Log.printLine("CloudSimExample9 finished!");
+			Log.println("CloudSimExample9 finished!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("Unwanted errors happen");
+			Log.println("Unwanted errors happen");
 		}
 	}
 
@@ -262,9 +262,9 @@ public class CloudSimExample9 {
 		Cloudlet cloudlet;
 
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
+		Log.println();
+		Log.println("========== OUTPUT ==========");
+		Log.println("Cloudlet ID" + indent + "STATUS" + indent
 				+ "Data center ID" + indent + "VM ID" + indent + "Time" + indent
 				+ "Start Time" + indent + "Finish Time");
 
@@ -276,7 +276,7 @@ public class CloudSimExample9 {
 			if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
 				Log.print("SUCCESS");
 
-				Log.printLine(indent + indent + cloudlet.getResourceId()
+				Log.println(indent + indent + cloudlet.getResourceId()
 						+ indent + indent + indent + cloudlet.getGuestId()
 						+ indent + indent
 						+ dft.format(cloudlet.getActualCPUTime()) + indent

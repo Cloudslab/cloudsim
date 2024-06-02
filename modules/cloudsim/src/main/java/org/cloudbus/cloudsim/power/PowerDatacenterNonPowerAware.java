@@ -74,7 +74,7 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 			double timeDiff = currentTime - getLastProcessTime();
 			double minTime = Double.MAX_VALUE;
 
-			Log.printLine("\n");
+			Log.println("\n");
 
 			for (PowerHost host : this.<PowerHost> getHostList()) {
 				Log.formatLine("%.2f: Host #%d", CloudSim.clock(), host.getId());
@@ -102,7 +102,7 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 
 			Log.formatLine("\n%.2f: Consumed energy is %.2f W*sec\n", CloudSim.clock(), timeframePower);
 
-			Log.printLine("\n\n--------------------------------------------------------------\n\n");
+			Log.println("\n\n--------------------------------------------------------------\n\n");
 
 			for (PowerHost host : this.<PowerHost> getHostList()) {
 				Log.formatLine("\n%.2f: Host #%d", CloudSim.clock(), host.getId());
@@ -123,11 +123,11 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 				for (GuestEntity vm : host.getCompletedVms()) {
 					getVmAllocationPolicy().deallocateHostForGuest(vm);
 					getVmList().remove(vm);
-					Log.printLine("VM #" + vm.getId() + " has been deallocated from host #" + host.getId());
+					Log.println("VM #" + vm.getId() + " has been deallocated from host #" + host.getId());
 				}
 			}
 
-			Log.printLine();
+			Log.println();
 
 			if (!isDisableMigrations()) {
 				List<Map<String, Object>> migrationMap = getVmAllocationPolicy().optimizeAllocation(

@@ -104,7 +104,7 @@ public class CloudSimExample8 {
 	 * Creates main() to run this example
 	 */
 	public static void main(String[] args) {
-		Log.printLine("Starting CloudSimExample8...");
+		Log.println("Starting CloudSimExample8...");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -145,12 +145,12 @@ public class CloudSimExample8 {
 
 			printCloudletList(newList);
 
-			Log.printLine("CloudSimExample8 finished!");
+			Log.println("CloudSimExample8 finished!");
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			Log.println("The simulation has been terminated due to an unexpected error");
 		}
 	}
 
@@ -263,9 +263,9 @@ public class CloudSimExample8 {
 		Cloudlet cloudlet;
 
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent +
+		Log.println();
+		Log.println("========== OUTPUT ==========");
+		Log.println("Cloudlet ID" + indent + "STATUS" + indent +
 				"Data center ID" + indent + "VM ID" + indent + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
@@ -276,7 +276,7 @@ public class CloudSimExample8 {
             if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
                 Log.print("SUCCESS");
 
-                Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getGuestId() +
+                Log.println(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getGuestId() +
                         indent + indent + indent + dft.format(cloudlet.getActualCPUTime()) +
                         indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent + indent + dft.format(cloudlet.getExecFinishTime()));
             }
@@ -313,14 +313,14 @@ public class CloudSimExample8 {
 				break;
 
 			default:
-				Log.printLine(getName() + ": unknown event type");
+				Log.println(getName() + ": unknown event type");
 				break;
 			}
 		}
 
 		@Override
 		public void startEntity() {
-			Log.printLine(super.getName()+" is starting...");
+			Log.println(super.getName()+" is starting...");
 			schedule(getId(), 200, CREATE_BROKER);
 		}
 

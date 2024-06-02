@@ -50,7 +50,7 @@ public class CustomCSVWriter {
                     CSVWriter.DEFAULT_LINE_END);
 
         } catch (IOException e) {
-            Log.printConcatLine("Couldn't find the file to write to: ", fileAddress);
+            Log.printlnConcat("Couldn't find the file to write to: ", fileAddress);
         }
 
         writer.writeNext(entries);

@@ -56,20 +56,20 @@ public class LogTest {
 	}
 
 	@Test
-	public void testPrintLine() throws IOException {
-		Log.printLine("test test");
+	public void testPrintLn() throws IOException {
+		Log.println("test test");
 		assertEquals("test test" + LINE_SEPARATOR, OUTPUT.toString());
 		OUTPUT.reset();
 
-		Log.printLine(123);
+		Log.println(123);
 		assertEquals("123" + LINE_SEPARATOR, OUTPUT.toString());
 		OUTPUT.reset();
 
-		Log.printLine(123L);
+		Log.println(123L);
 		assertEquals("123" + LINE_SEPARATOR, OUTPUT.toString());
 		OUTPUT.reset();
 
-		Log.printLine(123.0);
+		Log.println(123.0);
 		assertEquals("123.0" + LINE_SEPARATOR, OUTPUT.toString());
 		OUTPUT.reset();
 	}
@@ -122,7 +122,7 @@ public class LogTest {
 		assertEquals("test test", OUTPUT.toString());
 		OUTPUT.reset();
 
-		Log.printLine("test test");
+		Log.println("test test");
 		assertEquals("test test" + LINE_SEPARATOR, OUTPUT.toString());
 		OUTPUT.reset();
 
@@ -142,7 +142,7 @@ public class LogTest {
 		assertEquals("", OUTPUT.toString());
 		OUTPUT.reset();
 
-		Log.printLine("test test");
+		Log.println("test test");
 		assertEquals("", OUTPUT.toString());
 		OUTPUT.reset();
 
@@ -162,7 +162,7 @@ public class LogTest {
 		assertEquals("test test", OUTPUT.toString());
 		OUTPUT.reset();
 
-		Log.printLine("test test");
+		Log.println("test test");
 		assertEquals("test test" + LINE_SEPARATOR, OUTPUT.toString());
 		OUTPUT.reset();
 

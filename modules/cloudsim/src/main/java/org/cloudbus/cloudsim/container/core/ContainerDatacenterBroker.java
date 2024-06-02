@@ -132,13 +132,13 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
             getContainersCreatedList().add(guest);
 
             int hostId = VmList.getById(getGuestsCreatedList(), vm.getId()).getHost().getId();
-            Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": The Container #", containerId,
+            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": The Container #", containerId,
                      ", is created on Vm #",vm.getId()
                     , ", On Host#", hostId);
             setContainersCreated(getContainersCreated()+1);
         } else {
             //Container container = VmList.getById(getContainerList(), containerId);
-            Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Failed Creation of Container #", containerId);
+            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Failed Creation of Container #", containerId);
         }
 
         incrementContainersAcks();
@@ -162,11 +162,11 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
             getGuestList().add(containerVm);
             getVmsToDatacentersMap().put(vmId, datacenterId);
             getGuestsCreatedList().add(containerVm);
-            Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
+            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
                     " has been created in Datacenter #", datacenterId, ", Host #",
                     guest.getHost().getId());
         } else {
-            Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
+            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
                     " failed in Datacenter #", datacenterId);
         }
     }
@@ -189,12 +189,12 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 
             getVmsToDatacentersMap().put(vmId, datacenterId);
             getGuestsCreatedList().add(guest);
-            Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
+            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
                     " has been created in Datacenter #", datacenterId, ", Host #",
                     guest.getHost().getId());
             setNumberOfCreatedVMs(getNumberOfCreatedVMs()+1);
         } else {
-            Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
+            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
                     " failed in Datacenter #", datacenterId);
         }
 
@@ -282,7 +282,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //            }
 //
             if (!Log.isDisabled()) {
-                Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Sending ", cloudlet.getClass().getSimpleName(),
+                Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Sending ", cloudlet.getClass().getSimpleName(),
                         " #", cloudlet.getCloudletId(), " to VM #", cloudlet.getContainerId());
             }
 
@@ -349,7 +349,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 
                 if (cloudlet.getContainerId() != container.getId()) {
                     bindCloudletToContainer(cloudlet.getCloudletId(), container.getId());
-                    Log.printConcatLine("Binding Cloudlet: ", cloudlet.getCloudletId(), " to Container: ",container.getId());
+                    Log.printlnConcat("Binding Cloudlet: ", cloudlet.getCloudletId(), " to Container: ",container.getId());
                 }
             i++;
 

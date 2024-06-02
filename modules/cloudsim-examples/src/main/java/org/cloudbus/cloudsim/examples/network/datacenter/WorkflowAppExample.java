@@ -33,7 +33,7 @@ public class WorkflowAppExample {
 	 */
 	public static void main(String[] args) {
 
-		Log.printLine("Starting CloudSimExample1...");
+		Log.println("Starting CloudSimExample1...");
 
 		try {
 			int num_user = 1; // number of cloud users
@@ -73,10 +73,10 @@ public class WorkflowAppExample {
 			System.out.println("numberofcloudlet " + newList.size() + " Data transfered "
 					+ NetworkGlobals.totaldatatransfer);
 
-			Log.printLine("CloudSimExample1 finished!");
+			Log.println("CloudSimExample1 finished!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("Unwanted errors happen");
+			Log.println("Unwanted errors happen");
 		}
 	}
 
@@ -251,9 +251,9 @@ public class WorkflowAppExample {
 		int size = list.size();
 		Cloudlet cloudlet;
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent + "Data center ID" + indent + "VM ID"
+		Log.println();
+		Log.println("========== OUTPUT ==========");
+		Log.println("Cloudlet ID" + indent + "STATUS" + indent + "Data center ID" + indent + "VM ID"
 				+ indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
@@ -263,7 +263,7 @@ public class WorkflowAppExample {
 
 			if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
 				Log.print("SUCCESS");
-				Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent
+				Log.println(indent + indent + cloudlet.getResourceId() + indent + indent + indent
 						+ cloudlet.getGuestId() + indent + indent + dft.format(cloudlet.getActualCPUTime())
 						+ indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent
 						+ dft.format(cloudlet.getExecFinishTime()));

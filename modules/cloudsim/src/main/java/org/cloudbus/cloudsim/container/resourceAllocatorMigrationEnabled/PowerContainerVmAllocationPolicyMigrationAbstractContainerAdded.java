@@ -74,14 +74,14 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         List<? extends Container> containersToMigrate = getContainersToMigrateFromHosts(overUtilizedHosts);
         getExecutionTimeHistoryVmSelection().add(ExecutionTimeMeasurer.end("optimizeAllocationContainerSelection"));
 
-        Log.printLine("Reallocation of Containers from the over-utilized hosts:");
+        Log.println("Reallocation of Containers from the over-utilized hosts:");
         ExecutionTimeMeasurer.start("optimizeAllocationVmReallocation");
         List<Map<String, Object>> migrationMap = getPlacementForLeftContainers(containersToMigrate, new HashSet<Host>(overUtilizedHosts));
 
 
         getExecutionTimeHistoryVmReallocation().add(
                 ExecutionTimeMeasurer.end("optimizeAllocationVmReallocation"));
-        Log.printLine();
+        Log.println();
 
         migrationMap.addAll(getContainerMigrationMapFromUnderUtilizedHosts(overUtilizedHosts, migrationMap));
 
@@ -122,7 +122,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                 break;
             }
 
-            Log.printConcatLine("Under-utilized host: host #", underUtilizedHost.getId(), "\n");
+            Log.printlnConcat("Under-utilized host: host #", underUtilizedHost.getId(), "\n");
 
             excludedHostsForFindingUnderUtilizedHost.add(underUtilizedHost);
             excludedHostsForFindingNewContainerPlacement.add(underUtilizedHost);
@@ -138,7 +138,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                     Log.print(vm.getId() + " ");
                 }
             }
-            Log.printLine();
+            Log.println();
 
             List<Map<String, Object>> newVmPlacement = getNewVmPlacementFromUnderUtilizedHost(
                     vmsToMigrateFromUnderUtilizedHost,
@@ -153,7 +153,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             excludedHostsForFindingUnderUtilizedHost.addAll(extractHostListFromMigrationMap(newVmPlacement));
             //The migration mapp does not have a value for container since the whole vm would be migrated.
             migrationMap.addAll(newVmPlacement);
-            Log.printLine();
+            Log.println();
         }
 
         excludedHostsForFindingUnderUtilizedHost.clear();
@@ -190,7 +190,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
             if (allocationMap.get("host") != null && allocationMap.get("vm") != null) {
                 ContainerVm vm = (ContainerVm) allocationMap.get("vm");
-                Log.printConcatLine("Container #", container.getId(), " allocated to host #", ((PowerHost) allocationMap.get("host")).getId(), "The VM ID is #", vm.getId());
+                Log.printlnConcat("Container #", container.getId(), " allocated to host #", ((PowerHost) allocationMap.get("host")).getId(), "The VM ID is #", vm.getId());
                 Map<String, Object> migrate = new HashMap<>();
                 migrate.put("container", container);
                 migrate.put("vm", vm);
@@ -285,7 +285,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                 Map<String, Object> allocationMap = findAvailableHostForContainer(container, createdVmMap);
                 if (allocationMap.get("host") != null && allocationMap.get("vm") != null) {
                     ContainerVm vm = (ContainerVm) allocationMap.get("vm");
-                    Log.printConcatLine("Container #", container.getId(), " allocated to host #", ((PowerHost) allocationMap.get("host")).getId(), "The VM ID is #", vm.getId());
+                    Log.printlnConcat("Container #", container.getId(), " allocated to host #", ((PowerHost) allocationMap.get("host")).getId(), "The VM ID is #", vm.getId());
                     Map<String, Object> migrate = new HashMap<>();
 //                    vm.setInWaiting(true);
                     migrate.put("NewEventRequired", container);
@@ -323,7 +323,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             }
             
             if(allocateHostForGuest(vm, host)){
-                Log.printLine("The vm ID #" + vm.getId() + "will be created ");
+                Log.println("The vm ID #" + vm.getId() + "will be created ");
                 vm.setInWaiting(vmStatus);
                 return vm;
             }
@@ -701,7 +701,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                 }
             }
         }
-        Log.printLine(String.format("The length of the saved map is ....%d", getSavedAllocation().size()));
+        Log.println(String.format("The length of the saved map is ....%d", getSavedAllocation().size()));
 
     }
 
@@ -725,7 +725,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             PowerHost host = (PowerHost) map.get("host");
             if (!host.getGuestList().contains(vm)) {
                 if (!host.guestCreate(vm)) {
-                    Log.printConcatLine("Couldn't restore VM #", vm.getId(), " on host #", host.getId());
+                    Log.printlnConcat("Couldn't restore VM #", vm.getId(), " on host #", host.getId());
                     System.exit(0);
                 }
 
@@ -743,7 +743,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
                 if (!vm.getGuestList().contains(container)) {
                     if (!vm.guestCreate(container)) {
-                        Log.printConcatLine("Couldn't restore Container #", container.getId(), " on vm #", vm.getId());
+                        Log.printlnConcat("Couldn't restore Container #", container.getId(), " on vm #", vm.getId());
                         System.exit(0);
                     }
                 } else {

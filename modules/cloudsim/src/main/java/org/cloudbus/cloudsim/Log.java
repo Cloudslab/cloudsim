@@ -16,9 +16,8 @@ import java.io.OutputStream;
  * substitute the output stream by any OutputStream subclass.
  * 
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 2.0
- * //TODO To add a method to print formatted text, such as the
- * {@link String#format(java.lang.String, java.lang.Object...)} method.
  */
 public class Log {
 
@@ -66,7 +65,7 @@ public class Log {
 	 * 
 	 * @param message the message
 	 */
-	public static void printLine(String message) {
+	public static void println(String message) {
 		if (!isDisabled()) {
 			print(message + LINE_SEPARATOR);
 		}
@@ -75,7 +74,7 @@ public class Log {
 	/**
 	 * Prints an empty line.
 	 */
-	public static void printLine() {
+	public static void println() {
 		if (!isDisabled()) {
 			print(LINE_SEPARATOR);
 		}
@@ -102,13 +101,13 @@ public class Log {
 	 * 
 	 * @param messages the messages to print
 	 */
-	public static void printConcatLine(Object... messages) {
+	public static void printlnConcat(Object... messages) {
 		if (!isDisabled()) {
 			buffer.setLength(0); // Clear the buffer		    
             for (Object message : messages) {
                 buffer.append(message);
             }
-			printLine(buffer);
+			println(buffer);
 		}
 	}
 
@@ -119,9 +118,9 @@ public class Log {
 	 * 
 	 * @param message the message
 	 */
-	public static void printLine(Object message) {
+	public static void println(Object message) {
 	    if (!isDisabled()) {
-		printLine(String.valueOf(message));
+		println(String.valueOf(message));
 	    }
 	}
 
@@ -147,7 +146,7 @@ public class Log {
 	 */
 	public static void formatLine(String format, Object... args) {
 		if (!isDisabled()) {
-			printLine(String.format(format, args));
+			println(String.format(format, args));
 		}
 	}
 

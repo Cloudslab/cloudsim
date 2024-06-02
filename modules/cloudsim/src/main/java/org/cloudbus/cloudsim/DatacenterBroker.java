@@ -200,7 +200,7 @@ public class DatacenterBroker extends SimEntity {
 		setDatacenterIdsList(CloudSim.getCloudResourceList());
 		setDatacenterCharacteristicsList(new HashMap<>());
 
-		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloud Resource List received with ",
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Cloud Resource List received with ",
 				getDatacenterIdsList().size(), " resource(s)");
 
 		for (Integer datacenterId : getDatacenterIdsList()) {
@@ -226,11 +226,11 @@ public class DatacenterBroker extends SimEntity {
 		if (result == CloudSimTags.TRUE) {
 			getVmsToDatacentersMap().put(vmId, datacenterId);
 			getGuestsCreatedList().add(guest);
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
+			Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
 					" has been created in Datacenter #", datacenterId, ", "+guest.getHost().getClassName()+" #",
 					guest.getHost().getId());
 		} else {
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Creation of "+guest.getClassName()+" #", vmId,
+			Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Creation of "+guest.getClassName()+" #", vmId,
 					" failed in Datacenter #", datacenterId);
 		}
 
@@ -254,7 +254,7 @@ public class DatacenterBroker extends SimEntity {
 				if (getGuestsCreatedList().size() > 0) { // if some vm were created
 					submitCloudlets();
 				} else { // no vms created. abort
-					Log.printLine(CloudSim.clock() + ": " + getName()
+					Log.println(CloudSim.clock() + ": " + getName()
 							+ ": none of the required VMs could be created. Aborting");
 					finishExecution();
 				}
@@ -272,12 +272,12 @@ public class DatacenterBroker extends SimEntity {
 	protected void processCloudletReturn(SimEvent ev) {
 		Cloudlet cloudlet = (Cloudlet) ev.getData();
 		getCloudletReceivedList().add(cloudlet);
-		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Cloudlet #", cloudlet.getCloudletId(),
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Cloudlet #", cloudlet.getCloudletId(),
 				" return received");
-		Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": The number of finished Cloudlets is:", getCloudletReceivedList().size());
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": The number of finished Cloudlets is:", getCloudletReceivedList().size());
 		cloudletsSubmitted--;
 		if (getCloudletList().size() == 0 && cloudletsSubmitted == 0) { // all cloudlets executed
-			Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": All Cloudlets executed. Finishing...");
+			Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": All Cloudlets executed. Finishing...");
 			clearDatacenters();
 			finishExecution();
 		} else { // some cloudlets haven't finished yet
@@ -305,11 +305,11 @@ public class DatacenterBroker extends SimEntity {
 	 */
 	protected void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			Log.printConcatLine(getName(), ".processOtherEvent(): ", "Error - an event is null.");
+			Log.printlnConcat(getName(), ".processOtherEvent(): ", "Error - an event is null.");
 			return;
 		}
 
-		Log.printConcatLine(getName(), ".processOtherEvent(): Error - event unknown by this DatacenterBroker.");
+		Log.printlnConcat(getName(), ".processOtherEvent(): Error - event unknown by this DatacenterBroker.");
 	}
 
 	/**
@@ -326,7 +326,7 @@ public class DatacenterBroker extends SimEntity {
 		String datacenterName = CloudSim.getEntityName(datacenterId);
 		for (GuestEntity vm : getGuestList()) {
 			if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
-				Log.printLine(CloudSim.clock() + ": " + getName() + ": Trying to Create "+ vm.getClassName() + " #" + vm.getId()
+				Log.println(CloudSim.clock() + ": " + getName() + ": Trying to Create "+ vm.getClassName() + " #" + vm.getId()
 						+ " in " + datacenterName);
 				sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
 				requestedVms++;
@@ -360,10 +360,10 @@ public class DatacenterBroker extends SimEntity {
 
 					if(!Log.isDisabled()) {
 						if (vm != null) {
-							Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
+							Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
 									cloudlet.getCloudletId(), ": bount "+vm.getClassName()+" #"+vm.getId()+" not available");
 						} else {
-							Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
+							Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
 									cloudlet.getCloudletId(), ": bount guest entity doesn't exist");
 						}
 					}
@@ -372,7 +372,7 @@ public class DatacenterBroker extends SimEntity {
 			}
 
 			if (!Log.isDisabled()) {
-				Log.printConcatLine(CloudSim.clock(), ": ", getName(), ": Sending ", cloudlet.getClass().getSimpleName(),
+				Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Sending ", cloudlet.getClass().getSimpleName(),
 						" #", cloudlet.getCloudletId(), " to " + vm.getClassName() + " #", vm.getId());
 			}
 			
@@ -396,7 +396,7 @@ public class DatacenterBroker extends SimEntity {
 	 */
 	protected void clearDatacenters() {
 		for (GuestEntity vm : getGuestsCreatedList()) {
-			Log.printConcatLine(CloudSim.clock(), ": " + getName(), ": Destroying "+vm.getClassName()+" #", vm.getId());
+			Log.printlnConcat(CloudSim.clock(), ": " + getName(), ": Destroying "+vm.getClassName()+" #", vm.getId());
 			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.VM_DESTROY, vm);
 		}
 
@@ -415,12 +415,12 @@ public class DatacenterBroker extends SimEntity {
 
 	@Override
 	public void shutdownEntity() {
-		Log.printConcatLine(CloudSim.clock(), ": ", getName(), " is shutting down...");
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), " is shutting down...");
 	}
 
 	@Override
 	public void startEntity() {
-		Log.printConcatLine(getName(), " is starting...");
+		Log.printlnConcat(getName(), " is starting...");
 		schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST);
 	}
 

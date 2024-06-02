@@ -39,7 +39,7 @@ public class TimeSharedProblemDetector {
 	 */
 	public static void main(String[] args) {
 
-		Log.printLine("Starting CloudSimExample1...");
+		Log.println("Starting CloudSimExample1...");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -127,10 +127,10 @@ public class TimeSharedProblemDetector {
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
 
-			Log.printLine("CloudSimExample1 finished!");
+			Log.println("CloudSimExample1 finished!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			Log.println("The simulation has been terminated due to an unexpected error");
 		}
 	}
 
@@ -235,9 +235,9 @@ public class TimeSharedProblemDetector {
 		Cloudlet cloudlet;
 
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
+		Log.println();
+		Log.println("========== OUTPUT ==========");
+		Log.println("Cloudlet ID" + indent + "STATUS" + indent
 				+ "Data center ID" + indent + "VM ID" + indent + "Time" + indent
 				+ "Start Time" + indent + "Finish Time");
 
@@ -249,7 +249,7 @@ public class TimeSharedProblemDetector {
 			if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
 				Log.print("SUCCESS");
 
-				Log.printLine(indent + indent + cloudlet.getResourceId()
+				Log.println(indent + indent + cloudlet.getResourceId()
 						+ indent + indent + indent + cloudlet.getGuestId()
 						+ indent + indent
 						+ dft.format(cloudlet.getActualCPUTime()) + indent

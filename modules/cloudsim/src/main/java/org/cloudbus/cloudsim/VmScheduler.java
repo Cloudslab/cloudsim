@@ -159,7 +159,7 @@ public abstract class VmScheduler {
 	 */
 	public double getMaxAvailableMips() {
 		if (getPeList() == null) {
-			Log.printLine("Pe list is empty");
+			Log.println("Pe list is empty");
 			return 0;
 		}
 
@@ -184,7 +184,7 @@ public abstract class VmScheduler {
 	 */
 	public double getPeCapacity() {
 		if (getPeList() == null) {
-			Log.printLine("Pe list is empty");
+			Log.println("Pe list is empty");
 			return 0;
 		}
 		return getPeList().get(0).getMips();

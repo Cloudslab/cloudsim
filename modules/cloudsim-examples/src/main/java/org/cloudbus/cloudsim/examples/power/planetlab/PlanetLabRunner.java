@@ -73,7 +73,7 @@ public class PlanetLabRunner extends RunnerAbstract {
 			hostList = Helper.createHostList(PlanetLabConstants.NUMBER_OF_HOSTS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			Log.println("The simulation has been terminated due to an unexpected error");
 			System.exit(0);
 		}
 	}

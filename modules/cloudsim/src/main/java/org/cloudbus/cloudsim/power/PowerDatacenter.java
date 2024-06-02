@@ -173,11 +173,11 @@ public class PowerDatacenter extends Datacenter {
 		double timeDiff = currentTime - getLastProcessTime();
 		double timeFrameDatacenterEnergy = 0.0;
 
-		Log.printLine("\n\n--------------------------------------------------------------\n\n");
+		Log.println("\n\n--------------------------------------------------------------\n\n");
 		Log.formatLine("New resource usage for the time frame starting at %.2f:", currentTime);
 
 		for (PowerHost host : this.<PowerHost> getHostList()) {
-			Log.printLine();
+			Log.println();
 
 			double time = host.updateCloudletsProcessing(currentTime); // inform VMs to update processing
 			if (time < minTime) {
@@ -206,7 +206,7 @@ public class PowerDatacenter extends Datacenter {
 						timeDiff);
 				timeFrameDatacenterEnergy += timeFrameHostEnergy;
 
-				Log.printLine();
+				Log.println();
 				Log.formatLine(
 						"%.2f: [Host #%d] utilization at %.2f was %.2f%%, now is %.2f%%",
 						currentTime,
@@ -236,11 +236,11 @@ public class PowerDatacenter extends Datacenter {
 			for (GuestEntity vm : host.getCompletedVms()) {
 				getVmAllocationPolicy().deallocateHostForGuest(vm);
 				getVmList().remove(vm);
-				Log.printLine("VM #" + vm.getId() + " has been deallocated from host #" + host.getId());
+				Log.println("VM #" + vm.getId() + " has been deallocated from host #" + host.getId());
 			}
 		}
 
-		Log.printLine();
+		Log.println();
 
 		setLastProcessTime(currentTime);
 		return minTime;

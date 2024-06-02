@@ -87,10 +87,10 @@ public interface HostEntity extends CoreAttributes {
         if (guest != null) {
             guestDeallocate(guest);
             getGuestList().remove(guest);
-            Log.printLine(getClassName()+" # "+getId()+" guestDestroy: "+guest.getClassName()+" #"+guest.getId()+" is deleted from the list");
+            Log.println(getClassName()+" # "+getId()+" guestDestroy: "+guest.getClassName()+" #"+guest.getId()+" is deleted from the list");
 
             while(getGuestList().contains(guest)){ // TODO: Remo Andreoli: Do I really need this?
-                Log.printConcatLine(guest.getClassName()+" #"+guest.getId(), " is still not deallocated yet; Polling...");
+                Log.printlnConcat(guest.getClassName()+" #"+guest.getId(), " is still not deallocated yet; Polling...");
             }
             guest.setHost(null);
         }
@@ -156,7 +156,7 @@ public interface HostEntity extends CoreAttributes {
         guestDeallocate(guest);
         getGuestsMigratingIn().remove(guest);
         getGuestList().remove(guest);
-        Log.printLine(getClassName()+" # "+getId()+" removeMigratingInGuest: "+guest.getClassName()+" #"+guest.getId()+" is deleted from the list");
+        Log.println(getClassName()+" # "+getId()+" removeMigratingInGuest: "+guest.getClassName()+" #"+guest.getId()+" is deleted from the list");
         getGuestScheduler().getGuestsMigratingIn().remove(guest.getUid());
         guest.setInMigration(false);
     }
@@ -171,26 +171,26 @@ public interface HostEntity extends CoreAttributes {
 
         if (!getGuestsMigratingIn().contains(guest)) {
             if (getStorage() < guest.getSize()) {
-                Log.printConcatLine("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
+                Log.printlnConcat("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
                         getId()+" failed by storage");
                 System.exit(0);
             }
 
             if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
-                Log.printConcatLine("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
+                Log.printlnConcat("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
                         getId()+" failed by RAM");
                 System.exit(0);
             }
 
             if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
-                Log.printConcatLine("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
+                Log.printlnConcat("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
                         getId()+" failed by BW");
                 System.exit(0);
             }
 
             getGuestScheduler().getGuestsMigratingIn().add(guest.getUid());
             if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
-                Log.printConcatLine("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
+                Log.printlnConcat("[host.addMigratingInGuest] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+
                         getId()+" failed by MIPS");
                 System.exit(0);
             }

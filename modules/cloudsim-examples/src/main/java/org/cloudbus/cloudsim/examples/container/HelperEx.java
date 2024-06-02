@@ -403,42 +403,42 @@ public class HelperEx {
 
         } else {
             Log.setDisabled(false);
-            Log.printLine();
-            Log.printLine("Experiment name: " + experimentName);
-            Log.printLine("Number of hosts: " + numberOfHosts);
-            Log.printLine("Number of VMs: " + numberOfVms);
-            Log.printLine(String.format("Total simulation time: %.2f sec", totalSimulationTime));
-            Log.printLine(String.format("Energy consumption: %.2f kWh", energy));
+            Log.println();
+            Log.println("Experiment name: " + experimentName);
+            Log.println("Number of hosts: " + numberOfHosts);
+            Log.println("Number of VMs: " + numberOfVms);
+            Log.println(String.format("Total simulation time: %.2f sec", totalSimulationTime));
+            Log.println(String.format("Energy consumption: %.2f kWh", energy));
 //            Log.printLine(String.format("Number of VM migrations: %d", numberOfMigrations));
-            Log.printLine(String.format("SLA: %.5f%%", sla * 100));
-            Log.printLine(String.format(
+            Log.println(String.format("SLA: %.5f%%", sla * 100));
+            Log.println(String.format(
                     "SLA perf degradation due to migration: %.2f%%",
                     slaDegradationDueToMigration * 100));
-            Log.printLine(String.format("SLA time per active host: %.2f%%", slaTimePerActiveHost * 100));
-            Log.printLine(String.format("Overall SLA violation: %.2f%%", slaOverall * 100));
-            Log.printLine(String.format("Average SLA violation: %.2f%%", slaAverage * 100));
+            Log.println(String.format("SLA time per active host: %.2f%%", slaTimePerActiveHost * 100));
+            Log.println(String.format("Overall SLA violation: %.2f%%", slaOverall * 100));
+            Log.println(String.format("Average SLA violation: %.2f%%", slaAverage * 100));
             // Log.printLine(String.format("SLA time per VM with migration: %.2f%%",
             // slaTimePerVmWithMigration * 100));
             // Log.printLine(String.format("SLA time per VM without migration: %.2f%%",
             // slaTimePerVmWithoutMigration * 100));
             // Log.printLine(String.format("SLA time per host: %.2f%%", slaTimePerHost * 100));
-            Log.printLine(String.format("Number of host shutdowns: %d", numberOfHostShutdowns));
-            Log.printLine(String.format(
+            Log.println(String.format("Number of host shutdowns: %d", numberOfHostShutdowns));
+            Log.println(String.format(
                     "Mean time before a host shutdown: %.2f sec",
                     meanTimeBeforeHostShutdown));
-            Log.printLine(String.format(
+            Log.println(String.format(
                     "StDev time before a host shutdown: %.2f sec",
                     stDevTimeBeforeHostShutdown));
-            Log.printLine(String.format(
+            Log.println(String.format(
                     "Mean time before a VM migration: %.2f sec",
                     meanTimeBeforeVmMigration));
-            Log.printLine(String.format(
+            Log.println(String.format(
                     "StDev time before a VM migration: %.2f sec",
                     stDevTimeBeforeVmMigration));
-            Log.printLine(String.format(
+            Log.println(String.format(
                     "Mean time before a Container migration: %.2f sec",
                     meanTimeBeforeContainerMigration));
-            Log.printLine(String.format(
+            Log.println(String.format(
                     "StDev time before a Container migration: %.2f sec",
                     stDevTimeBeforeContainerMigration));
 
@@ -463,29 +463,29 @@ public class HelperEx {
                 double executionTimeTotalStDev = MathUtil.stDev(vmAllocationPolicy
                         .getExecutionTimeHistoryTotal());
 
-                Log.printLine(String.format(
+                Log.println(String.format(
                         "Execution time - VM selection mean: %.5f sec",
                         executionTimeVmSelectionMean));
-                Log.printLine(String.format(
+                Log.println(String.format(
                         "Execution time - VM selection stDev: %.5f sec",
                         executionTimeVmSelectionStDev));
-                Log.printLine(String.format(
+                Log.println(String.format(
                         "Execution time - host selection mean: %.5f sec",
                         executionTimeHostSelectionMean));
-                Log.printLine(String.format(
+                Log.println(String.format(
                         "Execution time - host selection stDev: %.5f sec",
                         executionTimeHostSelectionStDev));
-                Log.printLine(String.format(
+                Log.println(String.format(
                         "Execution time - VM reallocation mean: %.5f sec",
                         executionTimeVmReallocationMean));
-                Log.printLine(String.format(
+                Log.println(String.format(
                         "Execution time - VM reallocation stDev: %.5f sec",
                         executionTimeVmReallocationStDev));
-                Log.printLine(String.format("Execution time - total mean: %.5f sec", executionTimeTotalMean));
-                Log.printLine(String
+                Log.println(String.format("Execution time - total mean: %.5f sec", executionTimeTotalMean));
+                Log.println(String
                         .format("Execution time - total stDev: %.5f sec", executionTimeTotalStDev));
             }
-            Log.printLine();
+            Log.println();
         }
 
         Log.setDisabled(true);
@@ -830,25 +830,25 @@ public class HelperEx {
         for (int i = 0; i < 10; i++) {
             Host host = hosts.get(i);
 
-            Log.printLine("Host #" + host.getId());
-            Log.printLine("Time:");
+            Log.println("Host #" + host.getId());
+            Log.println("Time:");
             if (!vmAllocationPolicy.getTimeHistory().containsKey(host.getId())) {
                 continue;
             }
             for (Double time : vmAllocationPolicy.getTimeHistory().get(host.getId())) {
                 Log.format("%.2f, ", time);
             }
-            Log.printLine();
+            Log.println();
 
             for (Double utilization : vmAllocationPolicy.getUtilizationHistory().get(host.getId())) {
                 Log.format("%.2f, ", utilization);
             }
-            Log.printLine();
+            Log.println();
 
             for (Double metric : vmAllocationPolicy.getMetricHistory().get(host.getId())) {
                 Log.format("%.2f, ", metric);
             }
-            Log.printLine();
+            Log.println();
         }
     }
 

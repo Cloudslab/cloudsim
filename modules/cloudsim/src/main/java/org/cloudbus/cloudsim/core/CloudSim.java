@@ -125,8 +125,8 @@ public class CloudSim {
 			// set all the above entity IDs
 			cisId = cis.getId();
 		} catch (Exception s) {
-			Log.printLine("CloudSim.init(): The simulation has been terminated due to an unexpected error");
-			Log.printLine(s.getMessage());
+			Log.println("CloudSim.init(): The simulation has been terminated due to an unexpected error");
+			Log.println(s.getMessage());
 		}
 	}
 
@@ -179,7 +179,7 @@ public class CloudSim {
 	 * @post $none
 	 */
 	public static double startSimulation() throws NullPointerException {
-		Log.printConcatLine("Starting CloudSim version ", CLOUDSIM_VERSION_STRING);
+		Log.printlnConcat("Starting CloudSim version ", CLOUDSIM_VERSION_STRING);
 		try {
 			double clock = run();
 
@@ -340,7 +340,7 @@ public class CloudSim {
 	 * start of the simulation.
 	 */
 	protected static void initialize() {
-		Log.printLine("Initialising...");
+		Log.println("Initialising...");
 		entities = new ArrayList<>();
 		entitiesByName = new LinkedHashMap<>();
 		future = new FutureQueue();
@@ -955,7 +955,7 @@ public class CloudSim {
 	 * @param message the message
 	 */
 	private static void printMessage(String message) {
-		Log.printLine(message);
+		Log.println(message);
 	}
 
 	/**

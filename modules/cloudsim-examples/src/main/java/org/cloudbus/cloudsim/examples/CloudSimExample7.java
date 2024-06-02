@@ -102,7 +102,7 @@ public class CloudSimExample7 {
 	 * Creates main() to run this example
 	 */
 	public static void main(String[] args) {
-		Log.printLine("Starting CloudSimExample7...");
+		Log.println("Starting CloudSimExample7...");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -144,7 +144,7 @@ public class CloudSimExample7 {
 					}
 				}
 
-				Log.printLine("\n\n\n" + CloudSim.clock() + ": The simulation is paused for 5 sec \n\n");
+				Log.println("\n\n\n" + CloudSim.clock() + ": The simulation is paused for 5 sec \n\n");
 
 				try {
 					Thread.sleep(5000);
@@ -178,12 +178,12 @@ public class CloudSimExample7 {
 
 			printCloudletList(newList);
 
-			Log.printLine("CloudSimExample7 finished!");
+			Log.println("CloudSimExample7 finished!");
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			Log.printLine("The simulation has been terminated due to an unexpected error");
+			Log.println("The simulation has been terminated due to an unexpected error");
 		}
 	}
 
@@ -296,9 +296,9 @@ public class CloudSimExample7 {
 		Cloudlet cloudlet;
 
 		String indent = "    ";
-		Log.printLine();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent +
+		Log.println();
+		Log.println("========== OUTPUT ==========");
+		Log.println("Cloudlet ID" + indent + "STATUS" + indent +
 				"Data center ID" + indent + "VM ID" + indent + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
 		DecimalFormat dft = new DecimalFormat("###.##");
@@ -309,7 +309,7 @@ public class CloudSimExample7 {
             if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
                 Log.print("SUCCESS");
 
-                Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getGuestId() +
+                Log.println(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getGuestId() +
                         indent + indent + indent + dft.format(cloudlet.getActualCPUTime()) +
                         indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent + indent + dft.format(cloudlet.getExecFinishTime()));
             }

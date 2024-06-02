@@ -175,7 +175,7 @@ public class ContainerHostDynamicWorkload extends Host {
         for (Vm containerVm : this.<Vm>getGuestList()) {
             numberofContainers += containerVm.getNumberOfGuests();
             Log.print("The number of containers in VM# " + containerVm.getId()+"is: "+ containerVm.getNumberOfGuests());
-            Log.printLine();
+            Log.println();
         }
         return numberofContainers;
     }

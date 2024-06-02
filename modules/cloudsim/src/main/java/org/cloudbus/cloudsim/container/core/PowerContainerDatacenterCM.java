@@ -187,8 +187,8 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                 }
                 getContainerMigrationList().add((double) (getContainerMigrationCount() - previousContainerMigrationCount));
 
-                Log.printConcatLine(CloudSim.clock(), ": The Number Container of Migrations is:  ", getContainerMigrationCount() - previousContainerMigrationCount);
-                Log.printConcatLine(CloudSim.clock(), ": The Number of VM Migrations is:  ", getVmMigrationCount() - previousVmMigrationCount);
+                Log.printlnConcat(CloudSim.clock(), ": The Number Container of Migrations is:  ", getContainerMigrationCount() - previousContainerMigrationCount);
+                Log.printlnConcat(CloudSim.clock(), ": The Number of VM Migrations is:  ", getVmMigrationCount() - previousVmMigrationCount);
                 String[] vmMig = {Double.toString(CloudSim.clock()), Integer.toString(getVmMigrationCount() - previousVmMigrationCount)};                   // <--declared statement
                 String[] msg = {Double.toString(CloudSim.clock()), Integer.toString(getContainerMigrationCount() - previousContainerMigrationCount)};                   // <--declared statement
                 try {
@@ -254,7 +254,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
             }
 
             if (result) {
-                Log.printLine(String.format("%s VM ID #%d is created on Host #%d", CloudSim.clock(), containerVm.getId(), host.getId()));
+                Log.println(String.format("%s VM ID #%d is created on Host #%d", CloudSim.clock(), containerVm.getId(), host.getId()));
                 incrementNewlyCreatedVmsCount();
                 getVmList().add(containerVm);
 

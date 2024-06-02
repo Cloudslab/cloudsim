@@ -434,7 +434,7 @@ public class WebBroker extends MonitoringBrokerEX {
      */
     @Override
     public void startEntity() {
-        Log.printConcatLine(getName(), " is starting...");
+        Log.printlnConcat(getName(), " is starting...");
         schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST, List.of(dataCenterId));
     }
 

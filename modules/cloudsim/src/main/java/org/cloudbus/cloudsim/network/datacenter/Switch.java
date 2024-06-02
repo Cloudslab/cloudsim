@@ -157,7 +157,7 @@ public class Switch extends SimEntity {
 
 	@Override
 	public void startEntity() {
-		Log.printConcatLine(getName(), " is starting...");
+		Log.printlnConcat(getName(), " is starting...");
 		//schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST);
 	}
 
@@ -329,7 +329,7 @@ public class Switch extends SimEntity {
          */
 	private void processOtherEvent(SimEvent ev) {
 		if (ev == null) {
-			Log.printConcatLine(getName(), ".processOtherEvent(): Error - an event is null.");
+			Log.printlnConcat(getName(), ".processOtherEvent(): Error - an event is null.");
 		}
 	}
 
@@ -445,7 +445,7 @@ public class Switch extends SimEntity {
 
 	@Override
 	public void shutdownEntity() {
-		Log.printConcatLine(CloudSim.clock(), ": ", getName(), " is shutting down...");
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), " is shutting down...");
 	}
 
 }
