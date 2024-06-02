@@ -3,7 +3,7 @@ package org.cloudbus.cloudsim.container.core;
 //import cloudSimGr.containerCloudSim.Experiments.HelperEx;
 //import cloudSimGr.containerCloudSim.Experiments.Paper1.RunnerAbs;
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
+import org.cloudbus.cloudsim.container.utils.CustomCSVWriter;
 import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -51,9 +51,9 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
 
 
 
-    private CostumeCSVWriter vmMigrationWriter;
-    private CostumeCSVWriter containerMigrationWriter;
-    private CostumeCSVWriter datacenterEnergyWriter;
+    private CustomCSVWriter vmMigrationWriter;
+    private CustomCSVWriter containerMigrationWriter;
+    private CustomCSVWriter datacenterEnergyWriter;
 
     /**
      * Instantiates a new datacenter.
@@ -80,9 +80,9 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         containerMigrationAddress = String.format("%s/ContainerMigration/%s/%s.csv",getLogAddress(), getExperimentName().substring(0,index) ,getExperimentName());
         String energyConsumptionAddress = String.format("%s/EnergyConsumption/%s/%s.csv", getLogAddress(), getExperimentName().substring(0,index) ,getExperimentName()) ;
         vmMigrationAddress = String.format("%s/ContainerMigration/%s/VM-%s.csv", getLogAddress(), getExperimentName().substring(0,index) ,getExperimentName());
-        setContainerMigrationWriter(new CostumeCSVWriter(containerMigrationAddress));
-        setVmMigrationWriter(new CostumeCSVWriter(vmMigrationAddress));
-        setDatacenterEnergyWriter(new CostumeCSVWriter(energyConsumptionAddress));
+        setContainerMigrationWriter(new CustomCSVWriter(containerMigrationAddress));
+        setVmMigrationWriter(new CustomCSVWriter(vmMigrationAddress));
+        setDatacenterEnergyWriter(new CustomCSVWriter(energyConsumptionAddress));
         setPower(0.0);
         setDisableVmMigrations(false);
         setCloudletSubmitted(-1);
@@ -436,20 +436,20 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         setVmMigrationCount(getVmMigrationCount() + 1);
     }
 
-    public CostumeCSVWriter getContainerMigrationWriter() {
+    public CustomCSVWriter getContainerMigrationWriter() {
         return containerMigrationWriter;
     }
 
-    public void setContainerMigrationWriter(CostumeCSVWriter containerMigrationWriter) {
+    public void setContainerMigrationWriter(CustomCSVWriter containerMigrationWriter) {
         this.containerMigrationWriter = containerMigrationWriter;
     }
 
 
-    public CostumeCSVWriter getDatacenterEnergyWriter() {
+    public CustomCSVWriter getDatacenterEnergyWriter() {
         return datacenterEnergyWriter;
     }
 
-    public void setDatacenterEnergyWriter(CostumeCSVWriter datacenterEnergyWriter) {
+    public void setDatacenterEnergyWriter(CustomCSVWriter datacenterEnergyWriter) {
         this.datacenterEnergyWriter = datacenterEnergyWriter;
     }
 
@@ -484,11 +484,11 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
         this.containerMigrationList = containerMigrationList;
     }
 
-    public CostumeCSVWriter getVmMigrationWriter() {
+    public CustomCSVWriter getVmMigrationWriter() {
         return vmMigrationWriter;
     }
 
-    public void setVmMigrationWriter(CostumeCSVWriter vmMigrationWriter) {
+    public void setVmMigrationWriter(CustomCSVWriter vmMigrationWriter) {
         this.vmMigrationWriter = vmMigrationWriter;
     }
 

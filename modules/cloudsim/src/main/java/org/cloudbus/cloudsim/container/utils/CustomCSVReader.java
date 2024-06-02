@@ -5,50 +5,37 @@ import java.io.IOException;
 import java.util.List;
 
 import com.opencsv.CSVReader;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Run.
  *
 
  */
-public class CostumeCSVReader {
+public class CustomCSVReader {
+	@Getter @Setter
 	private static List<String[]> fileData;
 
-	public CostumeCSVReader(File inputFile) {
+	public CustomCSVReader(File inputFile) {
 		// TODO Auto-generated method stub
 		CSVReader reader = null;
-		try 
-		{
+		try {
 //			Log.printLine(inputFile);
 			//Get the CSVReader instance with specifying the delimiter to be used
 			reader = new CSVReader(new FileReader(inputFile));
-			fileData= reader.readAll();
-			
-		}
-		catch (Exception e) {
+			fileData = reader.readAll();
+
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally	{
+		} finally {
 			try {
 				reader.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
+		}
 	}
-}
-
-
-
-	public static List<String[]> getFileData() {
-		return fileData;
-	}
-
-
-
-	public static void setFileData(List<String[]> fileData) {
-		CostumeCSVReader.fileData = fileData;
-	}
- 
 }
 

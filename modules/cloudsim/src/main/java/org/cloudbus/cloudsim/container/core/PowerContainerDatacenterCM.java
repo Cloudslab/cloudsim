@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.container.core;
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.utils.CostumeCSVWriter;
+import org.cloudbus.cloudsim.container.utils.CustomCSVWriter;
 import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -22,7 +22,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
      */
     private boolean disableMigrations;
     public int containerMigrationCount;
-    private CostumeCSVWriter newlyCreatedVmWriter;
+    private CustomCSVWriter newlyCreatedVmWriter;
     private int newlyCreatedVms;
     private List<Integer> newlyCreatedVmsList;
     private final double vmStartupDelay;
@@ -38,7 +38,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
         String newlyCreatedVmsAddress;
         int index = getExperimentName().lastIndexOf("_");
         newlyCreatedVmsAddress = String.format("%s/NewlyCreatedVms/%s/%s.csv", getLogAddress(), getExperimentName().substring(0, index), getExperimentName());
-        setNewlyCreatedVmWriter(new CostumeCSVWriter(newlyCreatedVmsAddress));
+        setNewlyCreatedVmWriter(new CustomCSVWriter(newlyCreatedVmsAddress));
         setNewlyCreatedVms(0);
         setDisableMigrations(false);
         setNewlyCreatedVmsList(new ArrayList<>());
@@ -314,11 +314,11 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
         this.containerMigrationCount = containerMigrationCount;
     }
 
-    public CostumeCSVWriter getNewlyCreatedVmWriter() {
+    public CustomCSVWriter getNewlyCreatedVmWriter() {
         return newlyCreatedVmWriter;
     }
 
-    public void setNewlyCreatedVmWriter(CostumeCSVWriter newlyCreatedVmWriter) {
+    public void setNewlyCreatedVmWriter(CustomCSVWriter newlyCreatedVmWriter) {
         this.newlyCreatedVmWriter = newlyCreatedVmWriter;
     }
 

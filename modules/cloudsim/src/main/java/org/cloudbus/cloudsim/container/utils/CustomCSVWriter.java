@@ -1,6 +1,8 @@
 package org.cloudbus.cloudsim.container.utils;
 
 import com.opencsv.CSVWriter;
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.Log;
 
 import java.io.File;
@@ -10,29 +12,38 @@ import java.io.Writer;
 
 /**
  * Created by sareh on 30/07/15.
+ * Modified by Remo Andreoli, Jun 2024.
  */
-public class CostumeCSVWriter {
-    CSVWriter writer;
+public class CustomCSVWriter {
+    @Getter @Setter
     String fileAddress;
-    Writer fileWriter;
+    boolean newFileCreated = false;
 
-    public CostumeCSVWriter(String fileAddress) throws IOException {
+    CSVWriter writer;
+
+    public CustomCSVWriter(String fileAddress) throws IOException {
         File f = new File(fileAddress);
-        File parent3 = f.getParentFile();
-        if(!parent3.exists() && !parent3.mkdirs()){
-            throw new IllegalStateException("Couldn't create dir: " + parent3);
+        File parentF = f.getParentFile();
+
+        if(!parentF.exists() && !parentF.mkdirs()){
+            throw new IllegalStateException("Couldn't create dir: " + parentF);
         }
-        if(!f.exists())
-            f.createNewFile();
+
+        if(f.createNewFile()) {
+            newFileCreated = true;
+        }
+
         setFileAddress(fileAddress);
-
-
     }
 
     public void writeTofile(String[] entries) throws IOException {
+        writeTofile(entries, true);
+    }
+
+    public void writeTofile(String[] entries, boolean appendMode) throws IOException {
         // feed in your array (or convert your data to an array)
         try {
-            writer = new CSVWriter(new FileWriter(fileAddress, true),
+            writer = new CSVWriter(new FileWriter(fileAddress, appendMode),
                     ',',
                     CSVWriter.NO_QUOTE_CHARACTER,
                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
@@ -40,20 +51,15 @@ public class CostumeCSVWriter {
 
         } catch (IOException e) {
             Log.printConcatLine("Couldn't find the file to write to: ", fileAddress);
-
-
         }
+
         writer.writeNext(entries);
         writer.flush();
         writer.close();
     }
 
-    public String getFileAddress() {
-        return fileAddress;
-    }
-
-    public void setFileAddress(String fileAddress) {
-        this.fileAddress = fileAddress;
+    public boolean fileExistedAlready() {
+        return !newFileCreated;
     }
 }
 
