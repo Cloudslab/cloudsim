@@ -16,7 +16,7 @@ import org.cloudbus.cloudsim.lists.ResCloudletList;
 /**
  * CloudletSchedulerSpaceShared implements a policy of scheduling performed by a virtual machine
  * to run its {@link Cloudlet Cloudlets}.
- * It consider there will be only one cloudlet per VM. Other cloudlets will be in a waiting list.
+ * Only one cloudlet at a time, per VM, would be executing. Other cloudlets will be in a waiting list.
  * We consider that file transfer from cloudlets waiting happens before cloudlet execution. I.e.,
  * even though cloudlets must wait for CPU, data transfer happens as soon as cloudlets are
  * submitted.

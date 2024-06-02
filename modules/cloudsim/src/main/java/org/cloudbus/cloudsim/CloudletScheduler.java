@@ -143,8 +143,8 @@ public abstract class CloudletScheduler {
 	 * space-shared and time-shared scheduling.
 	 * Each cloudlet in the exec list has the same amount of cpu
 	 *
-	 * @param rcl
-	 * @param currentTime
+	 * @param rcl cloudlet
+	 * @param currentTime current simulation time
 	 * @param info        Any data you may need to implement the update logic
 	 */
 	protected void updateExecutingCloudlet(ResCloudlet rcl, double currentTime, Object info) {
@@ -158,7 +158,7 @@ public abstract class CloudletScheduler {
 	 * Update the cloudlets currently waiting to execute.
 	 * The default implementation is suitable for time-shared scheduling.
 	 *
-	 * @param currentTime
+	 * @param currentTime current simulation time
 	 * @param info        info Any data you may need to implement the update logic
 	 */
 	protected void updateWaitingCloudlets(double currentTime, Object info){}
@@ -505,8 +505,17 @@ public abstract class CloudletScheduler {
 	public double getCurrentCapacity(List<Double> mipsShare) {
 		List<Double> validMips = mipsShare.stream().filter(mips -> mips > 0).toList();
 		int cpus = validMips.size();
+		double capacity = validMips.stream().mapToDouble(Double::doubleValue).sum();
 
-        return validMips.stream().mapToDouble(Double::doubleValue).sum() / cpus;
+		int pesInUse = 0;
+		for (ResCloudlet rcl : getCloudletExecList()) {
+			if (rcl.getRemainingCloudletLength() > 0) {
+				pesInUse += rcl.getNumberOfPes();
+			}
+		}
+
+		capacity /= Math.max(pesInUse, cpus);
+		return capacity;
 	}
 
 	/**

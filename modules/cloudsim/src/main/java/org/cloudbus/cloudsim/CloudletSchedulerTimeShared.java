@@ -72,23 +72,6 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		return cloudlet.getCloudletLength() / capacity;
 	}
 
-	@Override
-	public double getCurrentCapacity(List<Double> mipsShare) {
-		List<Double> validMips = mipsShare.stream().filter(mips -> mips > 0).toList();
-		int cpus = validMips.size();
-		double capacity = validMips.stream().mapToDouble(Double::doubleValue).sum();
-
-		int pesInUse = 0;
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getRemainingCloudletLength() > 0) {
-				pesInUse += rcl.getNumberOfPes();
-			}
-		}
-
-		capacity /= Math.max(pesInUse, cpus);
-		return capacity;
-	}
-
 	// Simple policy, there is no real scheduling involved
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
