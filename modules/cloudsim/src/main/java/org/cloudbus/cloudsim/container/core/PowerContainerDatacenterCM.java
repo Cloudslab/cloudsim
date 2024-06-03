@@ -59,7 +59,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 
         // if some time passed since last processing
         if (currentTime > getLastProcessTime()) {
-            System.out.print(currentTime + " ");
+            Log.print(currentTime + " ");
 
             double minTime = updateCloudetProcessingWithoutSchedulingFutureEventsForce();
 

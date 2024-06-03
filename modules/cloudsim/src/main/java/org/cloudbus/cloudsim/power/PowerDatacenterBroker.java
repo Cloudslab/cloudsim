@@ -9,6 +9,7 @@
 package org.cloudbus.cloudsim.power;
 
 import org.cloudbus.cloudsim.DatacenterBroker;
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
@@ -49,8 +50,8 @@ public class PowerDatacenterBroker extends DatacenterBroker {
 		if (result != CloudSimTags.TRUE) {
 			int datacenterId = data[0];
 			int vmId = data[1];
-			System.out.println(CloudSim.clock() + ": " + getName() + ": Creation of VM #" + vmId
-					+ " failed in Datacenter #" + datacenterId);
+			Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
+					" failed in Datacenter #", datacenterId);
 			System.exit(0);
 		}
 		super.processVmCreateAck(ev);

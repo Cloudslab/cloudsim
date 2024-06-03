@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.container.hostSelectionPolicies;
 
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.container.utils.RandomGen;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -30,7 +31,7 @@ public class HostSelectionPolicyRandomSelection extends  HostSelectionPolicy {
                     }
                 } else {
 
-                    System.out.println("Error");
+                    Log.println("Error");
                 }
 
                 return host;

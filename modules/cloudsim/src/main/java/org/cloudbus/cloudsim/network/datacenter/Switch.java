@@ -290,7 +290,7 @@ public class Switch extends SimEntity {
 				}
 			}
 			if (aggSwtichid < 0) {
-				System.out.println(" No destination for this packet");
+				Log.println(" No destination for this packet");
 			} else {
 				pktsToDownlinkSwitches.computeIfAbsent(aggSwtichid, k -> new ArrayList<>()).add(hspkt);
 			}
