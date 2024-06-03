@@ -234,7 +234,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
 
     // private double getIOCapacity(final List<Double> mipsShare, final
     // HddResCloudlet rcl) {
-    // DataItem dataItem = rcl.getCloudlet().getData();
+    // DataItem dataItem = rcl.getCloudlet().getTaskLength();
     // double result = 0;
     // if (dataItem != null && rcl.getRemainingCloudletIOLength() > 0) {
     // List<? extends HddPe> pes = getVm().getHost().getHddList();
@@ -254,7 +254,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
     // int count = 0;
     // for (HddResCloudlet resCloudlet : this.<HddResCloudlet>
     // getCloudletExecList()) {
-    // DataItem cloudLetItem = resCloudlet.getCloudlet().getData();
+    // DataItem cloudLetItem = resCloudlet.getCloudlet().getTaskLength();
     // // Does the cloudlet use the disk
     // if (cloudLetItem != null && hdd.containsDataItem(cloudLetItem.getId())
     // && resCloudlet.getRemainingCloudletIOLength() > 0) {
@@ -323,7 +323,7 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
     // List<HddResCloudlet> finished) {
     // List<? extends HddPe> pes = getVm().getHost().getHddList();
     // for (HddResCloudlet rcl : finished) {
-    // DataItem dataItem = rcl.getCloudlet().getData();
+    // DataItem dataItem = rcl.getCloudlet().getTaskLength();
     // if (dataItem != null && rcl.getRemainingCloudletIOLength() == 0) {
     // for (int i = 0; i < pes.size(); i++) {
     // // Does the cloudlet use the disk

@@ -41,10 +41,13 @@ public class TaskStage {
 	private TaskStageStatus type;
 
 	/**
-	 * The data length generated for the task (in bytes).
+	 * The length of the task based on the type of operation performed.
+	 * It may be:
+	 * -) the execution length, in MI (type == EXECUTION)
+	 * -) the amount of data to be sent, in bytes (type == WAIT_RECV)
 	*/
 	@Getter
-	private double data;
+	private double taskLength;
 
 	/** Execution time for this stage.
 	 * @NOTE: this variable is modified at run-time
@@ -56,17 +59,23 @@ public class TaskStage {
 	@Getter
 	private final double stageId;
 
-	/** Cloudlet where processing is done (if type == EXECUTION), or
-	 * from whom data need to be received (if type == WAIT_RECV) or sent to (if type == WAIT_SEND). */
+	/**
+	 * The targeted cloudlet based on the type of operation performed by the task.
+	 * It may be:
+	 * -) The cloudlet where processing is done (type == EXECUTION)
+	 * -) The cloudlet from whom taskLength need to be received (type == WAIT_RECV)
+	 * -) The cloudlet to whom taskLength need to be sent to (type == WAIT_SEND).
+	 */
 	@Getter
 	private NetworkCloudlet targetCloudlet;
 	
-	public TaskStage(TaskStageStatus type, double data, double time, double stageId, NetworkCloudlet cl) {
+	public TaskStage(TaskStageStatus type, double taskLength, double stageId, NetworkCloudlet cl) {
 		super();
 		this.type = type;
-		this.data = data;
-		this.time = time;
+		this.taskLength = taskLength;
+		this.time = 0;
 		this.stageId = stageId;
+
 		this.targetCloudlet = cl;
 	}
 }

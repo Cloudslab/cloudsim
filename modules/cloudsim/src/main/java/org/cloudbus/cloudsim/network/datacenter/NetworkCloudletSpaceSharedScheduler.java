@@ -84,10 +84,16 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 		if (st.getType() == TaskStage.TaskStageStatus.EXECUTION) {
 
 			// update the time
-			ncl.timeSpentCurrStage = Math.round(CloudSim.clock() - ncl.startTimeCurrStage);
-			if (ncl.timeSpentCurrStage >= st.getTime()) {
+			ncl.timeSpentCurrStage = CloudSim.clock() - ncl.startTimeCurrStage;
+			if (rcl.getRemainingCloudletLength() == 0) {
+				st.setTime(ncl.timeSpentCurrStage);
 				goToNextStage(ncl);
+			} else {
+				super.updateExecutingCloudlet(rcl, currentTime, info);
 			}
+			/*if (ncl.timeSpentCurrStage >= st.getTime()) {
+				goToNextStage(ncl);
+			}*/
 		}
 		if (st.getType() == TaskStage.TaskStageStatus.WAIT_RECV) {
 			List<HostPacket> pktlist = pktrecv.get(st.getTargetCloudlet().getGuestId());

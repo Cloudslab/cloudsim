@@ -317,7 +317,7 @@ public class Switch extends SimEntity {
 		// send packet to itself with switching delay (discarding other)
 		CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.NETWORK_PKT_UP));
 		schedule(getId(), switchingDelay, CloudSimTags.NETWORK_PKT_UP);
-		pktlist.add((NetworkPacket) ev.getData());
+		pktlist.add((NetworkPacket) ev.getTaskLength());
 	}*/
 
         /**

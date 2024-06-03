@@ -9,7 +9,6 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
@@ -26,6 +25,7 @@ import org.cloudbus.cloudsim.UtilizationModel;
  * </ul>
  * 
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  * //TODO Attributes should be private
  * //TODO The different cloudlet classes should have a class hierarchy, by means
@@ -70,22 +70,38 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 
 	public int getNumberOfStages() { return stages.size(); }
 
-	public void addExecutionStage(double execTime) {
+	@Override
+	public long getCloudletLength() {
+		if (currStageNum == -1) { // not started yet
+			return (long) stages.get(0).getTaskLength();
+		}
+
+		if (currStageNum >= stages.size()) { // finished
+			return 0;
+		}
+
+		return (long) stages.get(currStageNum).getTaskLength();
+				/*return (long) stages.stream()
+				.filter(taskStage -> taskStage.getType() == TaskStage.TaskStageStatus.EXECUTION)
+				.mapToDouble(TaskStage::getTime).sum();*/
+	}
+
+	public void addExecutionStage(double execLength) {
 		stages.add(
-				new TaskStage(TaskStage.TaskStageStatus.EXECUTION, -1, execTime, stages.size(), this));
+				new TaskStage(TaskStage.TaskStageStatus.EXECUTION, execLength, stages.size(), this));
 		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+execTime));
 	}
 
 	public void addSendStage(double data, NetworkCloudlet receiverCl) {
 		stages.add(
-				new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, data, -1, stages.size(), receiverCl));
+				new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, data, stages.size(), receiverCl));
 
 		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+ data*transmissionTime));
 	}
 
 	public void addRecvStage(NetworkCloudlet senderCl) {
 		stages.add(
-				new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, -1, -1, stages.size(), senderCl));
+				new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, 0, stages.size(), senderCl));
 
 		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+ expectedWaitTime));
 	}
