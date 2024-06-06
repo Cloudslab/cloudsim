@@ -16,14 +16,16 @@ package org.cloudbus.cloudsim.examples.container;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.core.*;
-import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
-import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyFirstFit;
+import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicy;
+import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicyLeastFull;
+import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicyMinimumCorrelation;
+import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicyMostFull;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
+import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -140,7 +142,7 @@ public class ContainerCloudSimExample1 {
              * migration destination.
              *
              */
-            HostSelectionPolicy hostSelectionPolicy = new HostSelectionPolicyFirstFit();
+            PlacementPolicy hostSelectionPolicy = new PlacementPolicyMostFull();
 
             /**
              * 9- The container allocation policy  which defines the allocation of VMs to containers.
@@ -317,7 +319,7 @@ public class ContainerCloudSimExample1 {
                         new PeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));
             }
 
-            hostList.add(new PowerHostUtilizationHistory(IDs.pollId(Host.class),
+            hostList.add(new PowerHost(IDs.pollId(Host.class),
                     new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
                     new BwProvisionerSimple(1000000L), 1000000L, peList,
                     new VmSchedulerTimeSharedOverSubscription(peList),

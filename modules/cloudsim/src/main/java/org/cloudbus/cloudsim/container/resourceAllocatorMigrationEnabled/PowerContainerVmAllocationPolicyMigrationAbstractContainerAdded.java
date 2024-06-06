@@ -12,7 +12,6 @@ import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 import org.cloudbus.cloudsim.power.lists.PowerVmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -62,7 +61,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         ExecutionTimeMeasurer.start("optimizeAllocationTotal");
 
         ExecutionTimeMeasurer.start("optimizeAllocationHostSelection");
-        List<PowerHostUtilizationHistory> overUtilizedHosts = getOverUtilizedHosts();
+        List<PowerHost> overUtilizedHosts = getOverUtilizedHosts();
         getExecutionTimeHistoryHostSelection().add(
                 ExecutionTimeMeasurer.end("optimizeAllocationHostSelection"));
 
@@ -94,7 +93,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
     }
 
-    protected Collection<? extends Map<String, Object>> getContainerMigrationMapFromUnderUtilizedHosts(List<PowerHostUtilizationHistory> overUtilizedHosts, List<Map<String, Object>> previouseMap) {
+    protected Collection<? extends Map<String, Object>> getContainerMigrationMapFromUnderUtilizedHosts(List<PowerHost> overUtilizedHosts, List<Map<String, Object>> previouseMap) {
 
         List<Map<String, Object>> migrationMap = new LinkedList<>();
         List<PowerHost> switchedOffHosts = getSwitchedOffHosts();
@@ -161,9 +160,9 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         return migrationMap;
     }
 
-    private List<? extends Container> getContainersToMigrateFromHosts(List<PowerHostUtilizationHistory> overUtilizedHosts) {
+    private List<? extends Container> getContainersToMigrateFromHosts(List<PowerHost> overUtilizedHosts) {
         List<Container> containersToMigrate = new LinkedList<>();
-        for (PowerHostUtilizationHistory host : overUtilizedHosts) {
+        for (PowerHost host : overUtilizedHosts) {
             while (true) {
                 Container container = getContainerSelectionPolicy().getContainerToMigrate(host);
                 if (container == null) {
@@ -729,7 +728,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                     System.exit(0);
                 }
 
-                getVmTable().put(vm.getUid(), host);
+                getGuestTable().put(vm.getUid(), host);
             }
 //            vm.containerDestroyAll();
 //            vm.reallocateMigratingInContainers();
@@ -756,7 +755,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
                 }
                 ((PowerContainerAllocationPolicy) getDatacenter().getContainerAllocationPolicy()).
-                        getContainerTable().put(container.getUid(), vm);
+                        getGuestTable().put(container.getUid(), vm);
 //            container.setVm(vm);
 
             }

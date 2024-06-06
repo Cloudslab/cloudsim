@@ -11,7 +11,6 @@ package org.cloudbus.cloudsim.power;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.util.MathUtil;
 
@@ -108,7 +107,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 	 */
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {
-		PowerHostUtilizationHistory _host = (PowerHostUtilizationHistory) host;
+		PowerHost _host = (PowerHost) host;
 		double[] utilizationHistory = _host.getUtilizationHistory();
 		int length = 10; // we use 10 to make the regression responsive enough to latest values
 		if (utilizationHistory.length < length) {

@@ -2,7 +2,7 @@ package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.core.*;
-import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
+import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.lists.HostList;
@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection extends PowerContainerVmAllocationPolicyMigrationAbstract {
 
-    private HostSelectionPolicy hostSelectionPolicy;
+    private PlacementPolicy hostSelectionPolicy;
     private double utilizationThreshold = 0.9;
     private double underUtilizationThreshold = 0.7;
 
@@ -27,7 +27,7 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
      * @param hostList            the host list
      * @param vmSelectionPolicy   the vm selection policy
      */
-    public PowerContainerVmAllocationPolicyMigrationAbstractHostSelection(List<? extends Host> hostList, PowerContainerVmSelectionPolicy vmSelectionPolicy, HostSelectionPolicy hostSelectionPolicy, double OlThreshold, double UlThreshold) {
+    public PowerContainerVmAllocationPolicyMigrationAbstractHostSelection(List<? extends Host> hostList, PowerContainerVmSelectionPolicy vmSelectionPolicy, PlacementPolicy hostSelectionPolicy, double OlThreshold, double UlThreshold) {
         super(hostList, vmSelectionPolicy);
         setHostSelectionPolicy(hostSelectionPolicy);
         setUtilizationThreshold(OlThreshold);
@@ -47,7 +47,7 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
         boolean find = false;
         Set<HostEntity> excludedHost1 = new HashSet<>(excludedHosts);
         while (!find) {
-            HostEntity host = getHostSelectionPolicy().getHost(getHostList(), vm, excludedHost1);
+            HostEntity host = getHostSelectionPolicy().selectHost(getHostList(), vm, excludedHost1);
             if (host == null) {
                 return allocatedHost;
             }
@@ -68,11 +68,11 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
     }
 
 
-    public HostSelectionPolicy getHostSelectionPolicy() {
+    public PlacementPolicy getHostSelectionPolicy() {
         return hostSelectionPolicy;
     }
 
-    public void setHostSelectionPolicy(HostSelectionPolicy hostSelectionPolicy) {
+    public void setHostSelectionPolicy(PlacementPolicy hostSelectionPolicy) {
         this.hostSelectionPolicy = hostSelectionPolicy;
     }
 

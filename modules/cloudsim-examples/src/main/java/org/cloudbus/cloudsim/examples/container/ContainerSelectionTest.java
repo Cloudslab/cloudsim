@@ -10,6 +10,8 @@ import java.io.IOException;
  */
 public class ContainerSelectionTest {
 
+    public static int runTime = 100;
+    public static int repeat = 1;
 
     /**
      * The main method.
@@ -22,9 +24,12 @@ public class ContainerSelectionTest {
          * The experiments can be repeated for (repeat - runtime +1) times.
          * Please set these values as the arguments of the main function or set them bellow:
          */
-        int runTime = Integer.parseInt(args[0]);
-        int repeat = Integer.parseInt(args[1]);
-        for (int i = runTime ; i < repeat; ++i) {
+        if (args.length >= 2) {
+            runTime = Integer.parseInt(args[0]);
+            repeat = Integer.parseInt(args[1]);
+        }
+
+        for (int i = 0 ; i < repeat; ++i) {
             boolean enableOutput = true;
             boolean outputToFile = true;
             /**
@@ -34,7 +39,7 @@ public class ContainerSelectionTest {
             /**
              * The output folder for the logs. The log files would be located in this folder.
              */
-            String outputFolder = "~/Results";
+            String outputFolder = "/tmp/ContainerCloudSimResults";
             /**
              * The allocation policy for VMs.
              */
@@ -77,8 +82,7 @@ public class ContainerSelectionTest {
                     vmSelectionPolicy,
                     containerSelectionPolicy,
                     hostSelectionPolicy,
-                    OverBookingFactor, Integer.toString(i), outputFolder);
+                    OverBookingFactor, Integer.toString(runTime), outputFolder);
         }
-
     }
 }

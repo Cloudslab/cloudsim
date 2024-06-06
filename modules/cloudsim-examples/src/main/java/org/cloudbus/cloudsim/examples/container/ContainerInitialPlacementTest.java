@@ -11,7 +11,8 @@ import java.io.IOException;
  */
 public class ContainerInitialPlacementTest {
 
-
+    static int runTime = 100;
+    static int repeat = 1;
     /**
      * The main method.
      *
@@ -23,9 +24,11 @@ public class ContainerInitialPlacementTest {
          * The experiments can be repeated for (repeat - runtime +1) times.
          * Please set these values as the arguments of the main function or set them bellow:
          */
-        int runTime = Integer.parseInt(args[0]);
-        int repeat = Integer.parseInt(args[1]);
-        for (int i = runTime; i < repeat; ++i) {
+        if (args.length > 1) {
+            runTime = Integer.parseInt(args[0]);
+            repeat = Integer.parseInt(args[1]);
+        }
+        for (int i = 0; i < repeat; ++i) {
             boolean enableOutput = true;
             boolean outputToFile = true;
             /**
@@ -35,7 +38,7 @@ public class ContainerInitialPlacementTest {
             /**
              * The output folder for the logs. The log files would be located in this folder.
              */
-            String outputFolder = "~/Results";
+            String outputFolder = "/tmp/ContainerInitialPlacementTestResults";
             /**
              * The allocation policy for VMs.
              */
@@ -75,7 +78,7 @@ public class ContainerInitialPlacementTest {
                     vmSelectionPolicy,
                     containerSelectionPolicy,
                     hostSelectionPolicy,
-                    OverBookingFactor, Integer.toString(i), outputFolder);
+                    OverBookingFactor, Integer.toString(runTime), outputFolder);
 
         }
 

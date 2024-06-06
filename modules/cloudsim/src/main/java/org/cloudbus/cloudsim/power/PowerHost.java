@@ -13,12 +13,16 @@ import java.util.List;
 import org.cloudbus.cloudsim.HostDynamicWorkload;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.VmScheduler;
+import org.cloudbus.cloudsim.container.core.PowerContainerVm;
 import org.cloudbus.cloudsim.power.models.PowerModel;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
+import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
  * PowerHost class enables simulation of power-aware hosts.
+ * It stores its CPU utilization percentage history. The history is used by VM allocation
+ * and selection policies.
  * 
  * <br/>If you are using any algorithms, policies or workload included in the power package please cite
  * the following paper:<br/>
@@ -47,7 +51,8 @@ public class PowerHost extends HostDynamicWorkload {
 	 * @param bwProvisioner the bw provisioner
 	 * @param storage the storage capacity
 	 * @param peList the host's PEs list
-	 * @param vmScheduler the VM scheduler
+	 * @param vmScheduler the vm scheduler
+	 * @param powerModel the power consumption model
 	 */
 	public PowerHost(
 			int id,
@@ -139,4 +144,19 @@ public class PowerHost extends HostDynamicWorkload {
 		return powerModel;
 	}
 
+	/**
+	 * Gets the host CPU utilization percentage history.
+	 *
+	 * @return the host CPU utilization percentage history
+	 */
+	public double[] getUtilizationHistory() {
+		double[] utilizationHistory = new double[PowerVm.HISTORY_LENGTH];
+		double hostMips = getTotalMips();
+		for (PowerVm vm : this.<PowerVm>getGuestList()) {
+			for (int i = 0; i < vm.getUtilizationHistory().size(); i++) {
+				utilizationHistory[i] += vm.getUtilizationHistory().get(i) * vm.getMips() / hostMips;
+			}
+		}
+		return MathUtil.trimZeroTail(utilizationHistory);
+	}
 }

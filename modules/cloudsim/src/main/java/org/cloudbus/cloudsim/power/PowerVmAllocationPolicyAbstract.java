@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
@@ -40,7 +39,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	/** The map map where each key is a VM id and
          * each value is the host where the VM is placed. */
-	private final Map<String, HostEntity> vmTable = new HashMap<>();
+	private final Map<String, HostEntity> guestTable = new HashMap<>();
 
 	/**
 	 * Instantiates a new PowerVmAllocationPolicyAbstract.
@@ -63,7 +62,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 			return false;
 		}
 		if (host.guestCreate(guest)) { // if vm has been succesfully created in the host
-			getVmTable().put(guest.getUid(), host);
+			getGuestTable().put(guest.getUid(), host);
 			Log.formatLine(
 					"%.2f: VM #" + guest.getId() + " has been allocated to the host #" + host.getId(),
 					CloudSim.clock());
@@ -77,7 +76,7 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	@Override
 	public void deallocateHostForGuest(GuestEntity guest) {
-		HostEntity host = getVmTable().remove(guest.getUid());
+		HostEntity host = getGuestTable().remove(guest.getUid());
 		if (host != null) {
 			host.guestDestroy(guest);
 		}
@@ -85,12 +84,12 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 
 	@Override
 	public HostEntity getHost(GuestEntity guest) {
-		return getVmTable().get(guest.getUid());
+		return getGuestTable().get(guest.getUid());
 	}
 
 	@Override
 	public HostEntity getHost(int vmId, int userId) {
-		return getVmTable().get(Vm.getUid(userId, vmId));
+		return getGuestTable().get(Vm.getUid(userId, vmId));
 	}
 
 	/**
@@ -98,8 +97,8 @@ public abstract class PowerVmAllocationPolicyAbstract extends VmAllocationPolicy
 	 * 
 	 * @return the vm table
 	 */
-	public Map<String, HostEntity> getVmTable() {
-		return vmTable;
+	public Map<String, HostEntity> getGuestTable() {
+		return guestTable;
 	}
 
 }

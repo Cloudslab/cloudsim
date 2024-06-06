@@ -7,7 +7,6 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyAbstract;
 import org.cloudbus.cloudsim.power.lists.PowerVmList;
 import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
@@ -90,7 +89,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
         ExecutionTimeMeasurer.start("optimizeAllocationTotal");
 
         ExecutionTimeMeasurer.start("optimizeAllocationHostSelection");
-        List<PowerHostUtilizationHistory> overUtilizedHosts = getOverUtilizedHosts();
+        List<PowerHost> overUtilizedHosts = getOverUtilizedHosts();
         getExecutionTimeHistoryHostSelection().add(
                 ExecutionTimeMeasurer.end("optimizeAllocationHostSelection"));
 
@@ -126,7 +125,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @return the migration map from under utilized hosts
      */
     protected List<Map<String, Object>> getMigrationMapFromUnderUtilizedHosts(
-            List<PowerHostUtilizationHistory> overUtilizedHosts, List<Map<String, Object>> previouseMap) {
+            List<PowerHost> overUtilizedHosts, List<Map<String, Object>> previouseMap) {
         List<Map<String, Object>> migrationMap = new LinkedList<>();
         List<PowerHost> switchedOffHosts = getSwitchedOffHosts();
 
@@ -191,10 +190,10 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      *
      * @param overUtilizedHosts the over utilized hosts
      */
-    protected void printOverUtilizedHosts(List<PowerHostUtilizationHistory> overUtilizedHosts) {
+    protected void printOverUtilizedHosts(List<PowerHost> overUtilizedHosts) {
         if (!Log.isDisabled()) {
             Log.println("Over-utilized hosts:");
-            for (PowerHostUtilizationHistory host : overUtilizedHosts) {
+            for (PowerHost host : overUtilizedHosts) {
                 Log.printlnConcat("Host #", host.getId());
             }
             Log.println();
@@ -352,9 +351,9 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param overUtilizedHosts the over utilized hosts
      * @return the vms to migrate from hosts
      */
-    protected List<? extends ContainerVm> getVmsToMigrateFromHosts(List<PowerHostUtilizationHistory> overUtilizedHosts) {
+    protected List<? extends ContainerVm> getVmsToMigrateFromHosts(List<PowerHost> overUtilizedHosts) {
         List<ContainerVm> vmsToMigrate = new LinkedList<>();
-        for (PowerHostUtilizationHistory host : overUtilizedHosts) {
+        for (PowerHost host : overUtilizedHosts) {
             while (true) {
                 ContainerVm vm = getVmSelectionPolicy().getVmToMigrate(host);
                 if (vm == null) {
@@ -392,9 +391,9 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      *
      * @return the over utilized hosts
      */
-    protected List<PowerHostUtilizationHistory> getOverUtilizedHosts() {
-        List<PowerHostUtilizationHistory> overUtilizedHosts = new LinkedList<>();
-        for (PowerHostUtilizationHistory host : this.<PowerHostUtilizationHistory>getHostList()) {
+    protected List<PowerHost> getOverUtilizedHosts() {
+        List<PowerHost> overUtilizedHosts = new LinkedList<>();
+        for (PowerHost host : this.<PowerHost>getHostList()) {
             if (isHostOverUtilized(host)) {
                 overUtilizedHosts.add(host);
             }
@@ -560,7 +559,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
                 Log.printlnConcat("Couldn't restore VM #", vm.getId(), " on host #", host.getId());
                 System.exit(0);
             }
-            getVmTable().put(vm.getUid(), host);
+            getGuestTable().put(vm.getUid(), host);
         }
     }
 
@@ -707,5 +706,5 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
     }
 
 
-//    public abstract List<? extends Container> getContainersToMigrateFromHosts(List<PowerHostUtilizationHistory> overUtilizedHosts);
+//    public abstract List<? extends Container> getContainersToMigrateFromHosts(List<PowerHost> overUtilizedHosts);
 }

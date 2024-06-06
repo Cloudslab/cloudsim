@@ -2,7 +2,7 @@ package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
-import org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy;
+import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -19,7 +19,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
     public PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelectionUnderUtilizedAdded(
             List<? extends Host> hostList, PowerContainerVmSelectionPolicy vmSelectionPolicy,
-            PowerContainerSelectionPolicy containerSelectionPolicy, HostSelectionPolicy hostSelectionPolicy,
+            PowerContainerSelectionPolicy containerSelectionPolicy, PlacementPolicy hostSelectionPolicy,
             double underUtilizationThr,
             int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy, containerSelectionPolicy, hostSelectionPolicy,

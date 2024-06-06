@@ -20,7 +20,7 @@ import java.util.Map;
 public abstract class PowerContainerAllocationPolicy extends PowerVmAllocationPolicyAbstract {
 
         /** The container table. */
-        private final Map<String, HostEntity> containerTable = new HashMap<>();
+        private final Map<String, HostEntity> guestTable = new HashMap<>();
 
         /**
          * Instantiates a new power vm allocation policy abstract.
@@ -47,7 +47,7 @@ public abstract class PowerContainerAllocationPolicy extends PowerVmAllocationPo
                 return false;
             }
             if (containerVm.guestCreate(guest)) { // if vm has been succesfully created in the host
-                getContainerTable().put(guest.getUid(), containerVm);
+                getGuestTable().put(guest.getUid(), containerVm);
 //                container.setVm(containerVm);
                 Log.formatLine(
                         "%.2f: Container #" + guest.getId() + " has been allocated to the VM #" + containerVm.getId(),
@@ -66,7 +66,7 @@ public abstract class PowerContainerAllocationPolicy extends PowerVmAllocationPo
          */
         @Override
         public void deallocateHostForGuest(GuestEntity guest) {
-            HostEntity containerVm = getContainerTable().remove(guest.getUid());
+            HostEntity containerVm = getGuestTable().remove(guest.getUid());
             if (containerVm != null) {
                 containerVm.guestDestroy(guest);
             }
@@ -78,7 +78,7 @@ public abstract class PowerContainerAllocationPolicy extends PowerVmAllocationPo
          */
         @Override
         public HostEntity getHost(GuestEntity guest) {
-            return getContainerTable().get(guest.getUid());
+            return getGuestTable().get(guest.getUid());
         }
 
         /*
@@ -87,7 +87,7 @@ public abstract class PowerContainerAllocationPolicy extends PowerVmAllocationPo
          */
         @Override
         public HostEntity getHost(int containerId, int userId) {
-            return getContainerTable().get(Container.getUid(userId, containerId));
+            return getGuestTable().get(Container.getUid(userId, containerId));
         }
 
         /**
@@ -95,8 +95,8 @@ public abstract class PowerContainerAllocationPolicy extends PowerVmAllocationPo
          *
          * @return the vm table
          */
-        public Map<String, HostEntity> getContainerTable() {
-            return containerTable;
+        public Map<String, HostEntity> getGuestTable() {
+            return guestTable;
         }
 
     }

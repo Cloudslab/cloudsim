@@ -121,7 +121,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 		ExecutionTimeMeasurer.start("optimizeAllocationTotal");
 
 		ExecutionTimeMeasurer.start("optimizeAllocationHostSelection");
-		List<PowerHostUtilizationHistory> overUtilizedHosts = getOverUtilizedHosts();
+		List<PowerHost> overUtilizedHosts = getOverUtilizedHosts();
 		getExecutionTimeHistoryHostSelection().add(
 				ExecutionTimeMeasurer.end("optimizeAllocationHostSelection"));
 
@@ -157,7 +157,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @return the migration map from under utilized hosts
 	 */
 	protected List<Map<String, Object>> getMigrationMapFromUnderUtilizedHosts(
-			List<PowerHostUtilizationHistory> overUtilizedHosts) {
+			List<PowerHost> overUtilizedHosts) {
 		List<Map<String, Object>> migrationMap = new LinkedList<>();
 		List<PowerHost> switchedOffHosts = getSwitchedOffHosts();
 
@@ -222,10 +222,10 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * 
 	 * @param overUtilizedHosts the over utilized hosts
 	 */
-	protected void printOverUtilizedHosts(List<PowerHostUtilizationHistory> overUtilizedHosts) {
+	protected void printOverUtilizedHosts(List<PowerHost> overUtilizedHosts) {
 		if (!Log.isDisabled()) {
 			Log.println("Over-utilized hosts:");
-			for (PowerHostUtilizationHistory host : overUtilizedHosts) {
+			for (PowerHost host : overUtilizedHosts) {
 				Log.printlnConcat("Host #", host.getId());
 			}
 			Log.println();
@@ -378,9 +378,9 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @return the VMs to migrate from hosts
 	 */
 	protected List<? extends Vm>
-	  getVmsToMigrateFromHosts(List<PowerHostUtilizationHistory> overUtilizedHosts) {
+	  getVmsToMigrateFromHosts(List<PowerHost> overUtilizedHosts) {
 		List<Vm> vmsToMigrate = new LinkedList<>();
-		for (PowerHostUtilizationHistory host : overUtilizedHosts) {
+		for (PowerHost host : overUtilizedHosts) {
 			while (true) {
 				Vm vm = getVmSelectionPolicy().getVmToMigrate(host);
 				if (vm == null) {
@@ -417,9 +417,9 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * 
 	 * @return the over utilized hosts
 	 */
-	protected List<PowerHostUtilizationHistory> getOverUtilizedHosts() {
-		List<PowerHostUtilizationHistory> overUtilizedHosts = new LinkedList<>();
-		for (PowerHostUtilizationHistory host : this.<PowerHostUtilizationHistory> getHostList()) {
+	protected List<PowerHost> getOverUtilizedHosts() {
+		List<PowerHost> overUtilizedHosts = new LinkedList<>();
+		for (PowerHost host : this.<PowerHost> getHostList()) {
 			if (isHostOverUtilized(host)) {
 				overUtilizedHosts.add(host);
 			}
@@ -550,7 +550,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 				Log.printlnConcat("Couldn't restore VM #", vm.getId(), " on host #", host.getId());
 				System.exit(0);
 			}
-			getVmTable().put(vm.getUid(), host);
+			getGuestTable().put(vm.getUid(), host);
 		}
 	}
 

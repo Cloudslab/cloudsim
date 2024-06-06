@@ -1,12 +1,10 @@
 package org.cloudbus.cloudsim.container.containerSelectionPolicies;
 
-import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.Container;
 import org.cloudbus.cloudsim.container.core.PowerContainer;
 import org.cloudbus.cloudsim.container.utils.Correlation;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 
 import java.util.List;
 
@@ -77,9 +75,9 @@ public class PowerContainerSelectionPolicyCor extends PowerContainerSelectionPol
         int i = 0;
         double maxValue = -2.0;
         int id = -1;
-        if (host instanceof PowerHostUtilizationHistory) {
+        if (host instanceof PowerHost) {
 
-            double[] hostUtilization = ((PowerHostUtilizationHistory) host).getUtilizationHistory();
+            double[] hostUtilization = ((PowerHost) host).getUtilizationHistory();
             for (Container container : migratableContainers) {
                 double[] containerUtilization = ((PowerContainer) container).getUtilizationHistoryList();
 

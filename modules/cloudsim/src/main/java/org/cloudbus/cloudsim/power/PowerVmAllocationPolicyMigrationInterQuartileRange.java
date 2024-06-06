@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.util.MathUtil;
 
@@ -101,7 +100,7 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 	 */
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {
-		PowerHostUtilizationHistory _host = (PowerHostUtilizationHistory) host;
+		PowerHost _host = (PowerHost) host;
 		double upperThreshold = 0;
 		try {
 			upperThreshold = 1 - getSafetyParameter() * getHostUtilizationIqr(_host);
@@ -123,7 +122,7 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 	 * @param host the host
 	 * @return the host CPU utilization percentage IQR
 	 */
-	protected double getHostUtilizationIqr(PowerHostUtilizationHistory host) throws IllegalArgumentException {
+	protected double getHostUtilizationIqr(PowerHost host) throws IllegalArgumentException {
 		double[] data = host.getUtilizationHistory();
 		if (MathUtil.countNonZeroBeginning(data) >= 12) { // 12 has been suggested as a safe value
 			return MathUtil.iqr(data);

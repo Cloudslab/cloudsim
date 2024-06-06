@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.util.MathUtil;
 
@@ -111,7 +110,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	 */
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {
-		PowerHostUtilizationHistory _host = (PowerHostUtilizationHistory) host;
+		PowerHost _host = (PowerHost) host;
 		double upperThreshold = 0;
 		try {
     			upperThreshold = 1 - getSafetyParameter() * getHostUtilizationMad(_host);
@@ -133,7 +132,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	 * @param host the host
 	 * @return the host utilization MAD
 	 */
-	protected double getHostUtilizationMad(PowerHostUtilizationHistory host) throws IllegalArgumentException {
+	protected double getHostUtilizationMad(PowerHost host) throws IllegalArgumentException {
 		double[] data = host.getUtilizationHistory();
 		if (MathUtil.countNonZeroBeginning(data) >= 12) { // 12 has been suggested as a safe value
 			return MathUtil.mad(data);

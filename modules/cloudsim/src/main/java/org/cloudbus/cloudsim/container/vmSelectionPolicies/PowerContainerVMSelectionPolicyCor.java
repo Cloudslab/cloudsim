@@ -6,7 +6,6 @@ import org.cloudbus.cloudsim.container.core.PowerContainerVm;
 import org.cloudbus.cloudsim.container.utils.Correlation;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 
 import java.util.List;
 
@@ -80,9 +79,9 @@ public class PowerContainerVMSelectionPolicyCor extends PowerContainerVmSelectio
         int i = 0;
         double maxValue = -2;
         int id = -1;
-        if (host instanceof PowerHostUtilizationHistory) {
+        if (host instanceof PowerHost) {
 
-            double[] hostUtilization = ((PowerHostUtilizationHistory) host).getUtilizationHistory();
+            double[] hostUtilization = ((PowerHost) host).getUtilizationHistory();
             for (PowerContainerVm vm : migratableContainerVMs) {
                 double[] containerUtilization = vm.getUtilizationHistoryList();
 

@@ -30,7 +30,6 @@ import org.cloudbus.cloudsim.VmStateHistoryEntry;
 import org.cloudbus.cloudsim.power.PowerDatacenter;
 import org.cloudbus.cloudsim.power.PowerDatacenterBroker;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 import org.cloudbus.cloudsim.power.PowerVm;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationAbstract;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -98,7 +97,7 @@ public class Helper {
 				peList.add(new Pe(j, new PeProvisionerSimple(Constants.HOST_MIPS[hostType])));
 			}
 
-			hostList.add(new PowerHostUtilizationHistory(
+			hostList.add(new PowerHost(
 					i,
 					new RamProvisionerSimple(Constants.HOST_RAM[hostType]),
 					new BwProvisionerSimple(Constants.HOST_BW),
