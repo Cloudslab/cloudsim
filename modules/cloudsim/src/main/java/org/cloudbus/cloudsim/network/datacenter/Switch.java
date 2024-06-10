@@ -99,12 +99,12 @@ public class Switch extends SimEntity {
 	/**
          * Bandwitdh of uplink (Bytes/sec).
          */
-	public double uplinkBw;
+	public long uplinkBw;
 
         /**
          * Bandwitdh of downlink (Bytes/sec).
          */
-	public double downlinkBw;
+	public long downlinkBw;
 
 	public double numPort;
 
@@ -134,7 +134,7 @@ public class Switch extends SimEntity {
          */
 	public double switchingDelay;
 
-	public Switch(String name, double numPort, SwitchLevel level, double switchingDelay, double downlinkBw, double uplinkBw, NetworkDatacenter dc) {
+	public Switch(String name, double numPort, SwitchLevel level, double switchingDelay, long downlinkBw, long uplinkBw, NetworkDatacenter dc) {
 		super(name);
 		this.level = level;
 		this.numPort = numPort;
@@ -344,7 +344,7 @@ public class Switch extends SimEntity {
 			int tosend = es.getKey();
 			List<NetworkPacket> hspktlist = es.getValue();
 			if (!hspktlist.isEmpty()) {
-				double avband = downlinkBw / hspktlist.size();
+				double avband = (double) downlinkBw / hspktlist.size();
 				for (NetworkPacket hspkt : hspktlist) {
 					double delay = 1000 * hspkt.pkt.data / avband;
 
@@ -359,7 +359,7 @@ public class Switch extends SimEntity {
 			List<NetworkPacket> hspktlist = es.getValue();
 			if (!hspktlist.isEmpty()) {
 				// sharing bandwidth between packets
-				double avband = uplinkBw / hspktlist.size();
+				double avband = (double) uplinkBw / hspktlist.size();
 				for (NetworkPacket hspkt : hspktlist) {
 					double delay = 1000 * hspkt.pkt.data / avband;
 
@@ -372,7 +372,7 @@ public class Switch extends SimEntity {
 		for (Entry<Integer, List<NetworkPacket>> es : pktsToHosts.entrySet()) {
 			List<NetworkPacket> hspktlist = es.getValue();
 			if (!hspktlist.isEmpty()) {
-				double avband = downlinkBw / hspktlist.size();
+				double avband = (double) downlinkBw / hspktlist.size();
 				for (NetworkPacket hspkt : hspktlist) {
 					double delay = 1000 * hspkt.pkt.data / avband;
 					this.send(getId(), delay, CloudSimTags.NETWORK_PKT_REACHED, hspkt);
