@@ -31,6 +31,7 @@ import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicySimple;
 import org.cloudbus.cloudsim.VmSchedulerTimeShared;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -285,8 +286,10 @@ public class CloudSimExample8 {
 	}
 
 	public static class GlobalBroker extends SimEntity {
+		protected enum ExampleTags implements CloudSimTags {
+			CREATE_BROKER
+		}
 
-		private static final int CREATE_BROKER = 0;
 		private List<Vm> vmList;
 		private List<Cloudlet> cloudletList;
 		private DatacenterBroker broker;
@@ -297,31 +300,26 @@ public class CloudSimExample8 {
 
 		@Override
 		public void processEvent(SimEvent ev) {
-			switch (ev.getTag()) {
-			case CREATE_BROKER:
-				setBroker(createBroker(super.getName()+"_"));
+            if (ev.getTag() == ExampleTags.CREATE_BROKER) {
+                setBroker(createBroker(super.getName() + "_"));
 
-				//Create VMs and Cloudlets and send them to broker
-				setVmList(createVM(getBroker().getId(), 5, 100)); //creating 5 vms
-				setCloudletList(createCloudlet(getBroker().getId(), 10, 100)); // creating 10 cloudlets
+                //Create VMs and Cloudlets and send them to broker
+                setVmList(createVM(getBroker().getId(), 5, 100)); //creating 5 vms
+                setCloudletList(createCloudlet(getBroker().getId(), 10, 100)); // creating 10 cloudlets
 
-				broker.submitGuestList(getVmList());
-				broker.submitCloudletList(getCloudletList());
+                broker.submitGuestList(getVmList());
+                broker.submitCloudletList(getCloudletList());
 
-				CloudSim.resumeSimulation();
-
-				break;
-
-			default:
-				Log.println(getName() + ": unknown event type");
-				break;
-			}
+                CloudSim.resumeSimulation();
+            } else {
+                Log.println(getName() + ": unknown event type");
+            }
 		}
 
 		@Override
 		public void startEntity() {
 			Log.println(super.getName()+" is starting...");
-			schedule(getId(), 200, CREATE_BROKER);
+			schedule(getId(), 200, ExampleTags.CREATE_BROKER);
 		}
 
 		@Override

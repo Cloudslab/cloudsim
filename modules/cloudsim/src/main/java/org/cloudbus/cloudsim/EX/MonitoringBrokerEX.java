@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.EX;
 
 import org.cloudbus.cloudsim.ResCloudlet;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.EX.disk.HddCloudlet;
@@ -29,12 +30,6 @@ import java.util.Map;
  * 
  */
 public class MonitoringBrokerEX extends DatacenterBrokerEX {
-
-    // FIXME find a better way to get an unused tag instead of hardcoding ...
-    protected static final int BROKER_MEASURE_UTIL_NOW = BROKER_DESTROY_ITSELF_NOW + 20;
-    protected static final int BROKER_RECORD_UTIL_NOW = BROKER_MEASURE_UTIL_NOW + 1;
-    protected static final int BROKER_AUTOSCALE_NOW = BROKER_RECORD_UTIL_NOW + 1;
-
     /** The time of the first measurement. */
     private final double offset = Math.min(0.01, CloudSim.getMinTimeBetweenEvents());
     /** The period between subsequent VM utilisation measurements. */
@@ -102,9 +97,9 @@ public class MonitoringBrokerEX extends DatacenterBrokerEX {
     public void recordUtilisation(final List<Double> utilRecordTimes) {
         for (final Double delay : utilRecordTimes) {
             if (isStarted()) {
-                send(getId(), delay, BROKER_RECORD_UTIL_NOW, Boolean.FALSE);
+                send(getId(), delay, CloudSimEXTags.BROKER_RECORD_UTIL_NOW, Boolean.FALSE);
             } else {
-                presetEvent(getId(), BROKER_RECORD_UTIL_NOW, Boolean.FALSE, delay);
+                presetEvent(getId(), CloudSimEXTags.BROKER_RECORD_UTIL_NOW, Boolean.FALSE, delay);
             }
         }
     }
@@ -120,49 +115,45 @@ public class MonitoringBrokerEX extends DatacenterBrokerEX {
     public void recordUtilisationPeriodically(final double period) {
         this.utilisationRecorddDelta = Math.max(period, CloudSim.getMinTimeBetweenEvents());
         if (isStarted()) {
-            send(getId(), period, BROKER_RECORD_UTIL_NOW, Boolean.TRUE);
+            send(getId(), period, CloudSimEXTags.BROKER_RECORD_UTIL_NOW, Boolean.TRUE);
         } else {
-            presetEvent(getId(), BROKER_RECORD_UTIL_NOW, Boolean.TRUE, period);
+            presetEvent(getId(), CloudSimEXTags.BROKER_RECORD_UTIL_NOW, Boolean.TRUE, period);
         }
     }
 
     @Override
     public void processEvent(SimEvent ev) {
         if (!super.isStarted() && monitoringPeriod > 0) {
-            send(getId(), offset, BROKER_MEASURE_UTIL_NOW);
+            send(getId(), offset, CloudSimEXTags.BROKER_MEASURE_UTIL_NOW);
         }
         if (!super.isStarted() && autoScalePeriod > 0) {
-            send(getId(), offset, BROKER_AUTOSCALE_NOW);
+            send(getId(), offset, CloudSimEXTags.BROKER_AUTOSCALE_NOW);
         }
         super.processEvent(ev);
     }
 
     @Override
     protected void processOtherEvent(SimEvent ev) {
-        switch (ev.getTag()) {
-        case BROKER_MEASURE_UTIL_NOW:
+        CloudSimTags tag = ev.getTag();
+        if (tag == CloudSimEXTags.BROKER_MEASURE_UTIL_NOW) {
             if (CloudSim.clock() <= getLifeLength()) {
                 measureUtil();
-                send(getId(), monitoringPeriod, BROKER_MEASURE_UTIL_NOW);
+                send(getId(), monitoringPeriod, tag);
             }
-            break;
-        case BROKER_AUTOSCALE_NOW:
+        } else if (tag == CloudSimEXTags.BROKER_AUTOSCALE_NOW) {
             if (CloudSim.clock() <= getLifeLength()) {
                 autoscale();
-                send(getId(), autoScalePeriod, BROKER_AUTOSCALE_NOW);
+                send(getId(), autoScalePeriod, tag);
             }
-            break;
-        case BROKER_RECORD_UTIL_NOW:
+        } else if (tag == CloudSimEXTags.BROKER_RECORD_UTIL_NOW) {
             if (CloudSim.clock() <= getLifeLength()) {
                 recordUtil();
                 if (utilisationRecorddDelta > 0 && (ev.getData() instanceof Boolean) && ((Boolean) ev.getData())) {
-                    send(getId(), utilisationRecorddDelta, BROKER_RECORD_UTIL_NOW, Boolean.TRUE);
+                    send(getId(), utilisationRecorddDelta, tag, Boolean.TRUE);
                 }
             }
-            break;
-        default:
+        } else {
             super.processOtherEvent(ev);
-            break;
         }
     }
 

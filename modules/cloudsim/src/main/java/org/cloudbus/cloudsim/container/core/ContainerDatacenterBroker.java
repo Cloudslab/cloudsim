@@ -107,14 +107,18 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
      */
     @Override
     public void processEvent(SimEvent ev) {
-        switch (ev.getTag()) {
-            // New VM Creation answer (PowerContainerDatacenterCM only)
-            case containerCloudSimTags.VM_NEW_CREATE -> processNewVmCreate(ev);
-            case containerCloudSimTags.CONTAINER_CREATE_ACK -> processContainerCreate(ev);
+        CloudSimTags tag = ev.getTag();
+        // New VM Creation answer (PowerContainerDatacenterCM only)
+        if (tag == ContainerCloudSimTags.VM_NEW_CREATE) {
+            processNewVmCreate(ev);
+        } else if (tag == ContainerCloudSimTags.CONTAINER_CREATE_ACK) {
+            processContainerCreate(ev);
             // VM Creation answer
-            case CloudSimTags.VM_CREATE_ACK -> processVmCreateAck(ev);
+        } else if (tag == CloudActionTags.VM_CREATE_ACK) {
+            processVmCreateAck(ev);
             // other (potentially unknown tags) are processed by the base class
-            default -> super.processEvent(ev);
+        } else {
+            super.processEvent(ev);
         }
     }
 
@@ -255,7 +259,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //
 //                    }
                     containerIndex++;
-                    sendNow(getDatacenterIdsList().get(0), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+                    sendNow(getDatacenterIdsList().get(0), CloudActionTags.CLOUDLET_SUBMIT, cloudlet);
                     cloudletsSubmitted++;
                     getCloudletSubmittedList().add(cloudlet);
                     successfullySubmitted.add(cloudlet);
@@ -313,7 +317,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 //            }
 //
 //            cloudlet.setGuestId(vm.getId());
-//            sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+//            sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudActionTags.CLOUDLET_SUBMIT, cloudlet);
 //            cloudletsSubmitted++;
 //            vmIndex = (vmIndex + 1) % getVmsCreatedList().size();
 //            getCloudletSubmittedList().add(cloudlet);
@@ -356,7 +360,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
         }
 
         List<Container> successfullySubmitted = new ArrayList<>(getContainerList());
-        sendNow(getDatacenterIdsList().get(0), containerCloudSimTags.CONTAINER_SUBMIT, successfullySubmitted);
+        sendNow(getDatacenterIdsList().get(0), ContainerCloudSimTags.CONTAINER_SUBMIT, successfullySubmitted);
 
 //        List<Container> successfullySubmitted = new ArrayList<>();
 //        for (Container container : getContainerList()) {

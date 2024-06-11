@@ -107,8 +107,8 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
     protected void updateCloudletProcessing() {
 //        Log.printLine("Power data center is Updating the cloudlet processing");
         if (getCloudletSubmitted() == -1 || getCloudletSubmitted() == CloudSim.clock()) {
-            CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
-            schedule(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
+            CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.VM_DATACENTER_EVENT));
+            schedule(getId(), getSchedulingInterval(), CloudActionTags.VM_DATACENTER_EVENT);
             return;
         }
         double currentTime = CloudSim.clock();
@@ -153,7 +153,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
                         send(
                                 getId(),
                                 vm.getRam() / ((double) targetHost.getBw() / (2 * 8000)),
-                                CloudSimTags.VM_MIGRATE,
+                                CloudActionTags.VM_MIGRATE,
                                 migrate);
                     }
 
@@ -170,8 +170,8 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
 
             // schedules an event to the next time
             if (minTime != Double.MAX_VALUE) {
-                CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
-                send(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
+                CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.VM_DATACENTER_EVENT));
+                send(getId(), getSchedulingInterval(), CloudActionTags.VM_DATACENTER_EVENT);
             }
 
             setLastProcessTime(currentTime);
@@ -310,7 +310,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
     protected void processVmMigrate(SimEvent ev, boolean ack) {
         updateCloudetProcessingWithoutSchedulingFutureEvents();
         super.processVmMigrate(ev, ack);
-        SimEvent event = CloudSim.findFirstDeferred(getId(), new PredicateType(CloudSimTags.VM_MIGRATE));
+        SimEvent event = CloudSim.findFirstDeferred(getId(), new PredicateType(CloudActionTags.VM_MIGRATE));
         if (event == null || event.eventTime() > CloudSim.clock()) {
             updateCloudetProcessingWithoutSchedulingFutureEventsForce();
         }

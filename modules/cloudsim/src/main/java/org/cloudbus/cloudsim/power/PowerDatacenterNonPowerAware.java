@@ -16,8 +16,8 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.core.CloudActionTags;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
 
@@ -63,8 +63,8 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 	@Override
 	protected void updateCloudletProcessing() {
 		if (getCloudletSubmitted() == -1 || getCloudletSubmitted() == CloudSim.clock()) {
-			CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
-			schedule(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
+			CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.VM_DATACENTER_EVENT));
+			schedule(getId(), getSchedulingInterval(), CloudActionTags.VM_DATACENTER_EVENT);
 			return;
 		}
 		double currentTime = CloudSim.clock();
@@ -161,7 +161,7 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 						send(
 								getId(),
 								vm.getRam() / ((double) vm.getBw() / 8000) + 10,
-								CloudSimTags.VM_MIGRATE,
+								CloudActionTags.VM_MIGRATE,
 								migrate);
 					}
 				}
@@ -169,9 +169,9 @@ public class PowerDatacenterNonPowerAware extends PowerDatacenter {
 
 			// schedules an event to the next time
 			if (minTime != Double.MAX_VALUE) {
-				CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
+				CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.VM_DATACENTER_EVENT));
 				// CloudSim.cancelAll(getId(), CloudSim.SIM_ANY);
-				send(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
+				send(getId(), getSchedulingInterval(), CloudActionTags.VM_DATACENTER_EVENT);
 			}
 
 			setLastProcessTime(currentTime);

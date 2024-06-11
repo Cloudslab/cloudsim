@@ -468,7 +468,7 @@ public class CloudSim {
 		SimEvent evt;
 		if (running) {
 			// Post an event to make this entity
-			evt = new SimEvent(SimEvent.CREATE, clock, 1, 0, 0, e);
+			evt = new SimEvent(SimEvent.CREATE, clock, 1, 0, CloudActionTags.BLANK, e);
 			future.addEvent(evt);
 		}
 		if (e.getId() == -1) { // Only add once!
@@ -591,7 +591,7 @@ public class CloudSim {
 	 * @param tag the tag
 	 * @param data the data
 	 */
-	public static void send(int src, int dest, double delay, int tag, Object data) {
+	public static void send(int src, int dest, double delay, CloudSimTags tag, Object data) {
 		if (delay < 0) {
 			throw new IllegalArgumentException("Send delay can't be negative.");
 		}
@@ -612,7 +612,7 @@ public class CloudSim {
 	 * @param tag the tag
 	 * @param data the data
 	 */
-	public static void sendFirst(int src, int dest, double delay, int tag, Object data) {
+	public static void sendFirst(int src, int dest, double delay, CloudSimTags tag, Object data) {
 		if (delay < 0) {
 			throw new IllegalArgumentException("Send delay can't be negative.");
 		}
@@ -769,12 +769,15 @@ public class CloudSim {
 				if (dest < 0) {
 					throw new IllegalArgumentException("Attempt to send to a null entity detected.");
 				} else {
-					int tag = e.getTag();
+					CloudSimTags tag = e.getTag();
 					dest_ent = entities.get(dest);
 					if (dest_ent.getState() == SimEntity.WAITING) {
 						Integer destObj = dest;
 						Predicate p = waitPredicates.get(destObj);
-						if ((p == null) || (tag == 9999) || (p.match(e))) {
+
+						// @NOTE: Remo Andreoli: There use to be the condition (tag == 9999) here,
+						// but the tag value doesn't exist in previous version of CloudSim
+						if ((p == null) || (p.match(e))) {
 							dest_ent.setEventBuffer((SimEvent) e.clone());
 							dest_ent.setState(SimEntity.RUNNABLE);
 							waitPredicates.remove(destObj);

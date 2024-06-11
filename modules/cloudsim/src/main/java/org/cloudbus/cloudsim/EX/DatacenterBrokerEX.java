@@ -4,10 +4,7 @@ import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
-import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.EX.billing.IVmBillingPolicy;
 import org.cloudbus.cloudsim.EX.util.CustomLog;
 import org.cloudbus.cloudsim.EX.vm.VmStatus;
@@ -28,13 +25,6 @@ import java.util.logging.Level;
  * @author Remo Andreoli
  */
 public class DatacenterBrokerEX extends DatacenterBroker {
-
-    // FIXME find a better way to get an unused tag instead of hardcoding 123456
-    protected static final int BROKER_DESTROY_ITSELF_NOW = 123456;
-    protected static final int BROKER_DESTROY_VMS_NOW = BROKER_DESTROY_ITSELF_NOW + 1;
-    protected static final int BROKER_SUBMIT_VMS_NOW = BROKER_DESTROY_ITSELF_NOW + 2;
-    protected static final int BROKER_CLOUDLETS_NOW = BROKER_DESTROY_ITSELF_NOW + 3;
-
     /** Number of VM destructions requested. */
     private int vmDestructsRequested = 0;
 
@@ -168,11 +158,12 @@ public class DatacenterBrokerEX extends DatacenterBroker {
 
             // Tell the broker to destroy itself after its lifeline.
             if (getLifeLength() > 0) {
-                send(getId(), getLifeLength(), BROKER_DESTROY_ITSELF_NOW, null);
+                send(getId(), getLifeLength(), CloudSimEXTags.BROKER_DESTROY_ITSELF_NOW, null);
             }
         }
 
-        if (ev.getTag() == CloudSimTags.VM_CREATE_ACK) {
+        CloudSimTags tag = ev.getTag();
+        if (tag == CloudActionTags.VM_CREATE_ACK) {
             int[] data = (int[]) ev.getData();
             int vmId = data[1];
 
@@ -225,7 +216,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      * @param data
      * @param delay
      */
-    public void presetEvent(final int id, final int tag, final Object data, final double delay) {
+    public void presetEvent(final int id, final CloudSimTags tag, final Object data, final double delay) {
         presetEvents.add(new PresetEvent(id, tag, data, delay));
     }
 
@@ -237,9 +228,9 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      */
     public void createVmsAfter(List<? extends Vm> vms, double delay) {
         if (started) {
-            send(getId(), delay, BROKER_SUBMIT_VMS_NOW, vms);
+            send(getId(), delay, CloudSimEXTags.BROKER_SUBMIT_VMS_NOW, vms);
         } else {
-            presetEvent(getId(), BROKER_SUBMIT_VMS_NOW, vms, delay);
+            presetEvent(getId(), CloudSimEXTags.BROKER_SUBMIT_VMS_NOW, vms, delay);
         }
     }
 
@@ -254,9 +245,9 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      */
     public void destroyVMsAfter(final List<? extends Vm> vms, double delay) {
         if (started) {
-            send(getId(), delay, BROKER_DESTROY_VMS_NOW, vms);
+            send(getId(), delay, CloudSimEXTags.BROKER_DESTROY_VMS_NOW, vms);
         } else {
-            presetEvent(getId(), BROKER_DESTROY_VMS_NOW, vms, delay);
+            presetEvent(getId(), CloudSimEXTags.BROKER_DESTROY_VMS_NOW, vms, delay);
         }
     }
 
@@ -271,32 +262,34 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      */
     public void submitCloudletList(List<? extends Cloudlet> cloudlets, double delay) {
         if (started) {
-            send(getId(), delay, BROKER_CLOUDLETS_NOW, cloudlets);
+            send(getId(), delay, CloudSimEXTags.BROKER_CLOUDLETS_NOW, cloudlets);
         } else {
-            presetEvent(getId(), BROKER_CLOUDLETS_NOW, cloudlets, delay);
+            presetEvent(getId(), CloudSimEXTags.BROKER_CLOUDLETS_NOW, cloudlets, delay);
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected void processOtherEvent(SimEvent ev) {
-        switch (ev.getTag()) {
-            case CloudSimTags.VM_DESTROY_ACK -> processVMDestroy(ev);
-            case BROKER_DESTROY_VMS_NOW -> destroyVMList((List<Vm>) ev.getData());
-            case BROKER_SUBMIT_VMS_NOW -> {
-                submitGuestList((List<Vm>) ev.getData());
-                // TODO Is the following valid when multiple data centres are
-                // handled with a single broker?
-                for (int nextDatacenterId : getDatacenterIdsList()) {
-                    createVmsInDatacenter(nextDatacenterId);
-                }
+        CloudSimTags tag = ev.getTag();
+        if (tag == CloudActionTags.VM_DESTROY_ACK) {
+            processVMDestroy(ev);
+        } else if (tag == CloudSimEXTags.BROKER_DESTROY_VMS_NOW) {
+            destroyVMList((List<Vm>) ev.getData());
+        } else if (tag == CloudSimEXTags.BROKER_SUBMIT_VMS_NOW) {
+            submitGuestList((List<Vm>) ev.getData());
+            // TODO Is the following valid when multiple data centres are
+            // handled with a single broker?
+            for (int nextDatacenterId : getDatacenterIdsList()) {
+                createVmsInDatacenter(nextDatacenterId);
             }
-            case BROKER_CLOUDLETS_NOW -> {
-                submitCloudletList((List<Cloudlet>) ev.getData());
-                submitCloudlets();
-            }
-            case BROKER_DESTROY_ITSELF_NOW -> closeDownBroker();
-            default -> super.processOtherEvent(ev);
+        } else if (tag == CloudSimEXTags.BROKER_CLOUDLETS_NOW) {
+            submitCloudletList((List<Cloudlet>) ev.getData());
+            submitCloudlets();
+        } else if (tag == CloudSimEXTags.BROKER_DESTROY_ITSELF_NOW) {
+            closeDownBroker();
+        } else {
+            super.processOtherEvent(ev);
         }
     }
 
@@ -337,7 +330,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
                         CustomLog.logError(Level.SEVERE, e.getMessage(), e);
                     }
 
-                    sendNow(cloudlet.getUserId(), CloudSimTags.CLOUDLET_RETURN, cloudlet);
+                    sendNow(cloudlet.getUserId(), CloudActionTags.CLOUDLET_RETURN, cloudlet);
                 }
             }
 
@@ -388,7 +381,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
                     datacenterName);
 
             // Tell the data centre to destroy it
-            sendNow(datacenterId, CloudSimTags.VM_DESTROY_ACK, vm);
+            sendNow(datacenterId, CloudActionTags.VM_DESTROY_ACK, vm);
             requestedVmTerminations++;
         }
 
@@ -440,11 +433,11 @@ public class DatacenterBrokerEX extends DatacenterBroker {
      */
     protected static class PresetEvent {
         final int id;
-        final int tag;
+        final CloudSimTags tag;
         final Object data;
         final double delay;
 
-        public PresetEvent(final int id, final int tag, final Object data, final double delay) {
+        public PresetEvent(final int id, final CloudSimTags tag, final Object data, final double delay) {
             super();
             this.id = id;
             this.tag = tag;

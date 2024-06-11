@@ -46,7 +46,7 @@ public class CloudSimShutdown extends SimEntity {
 	 */
 	public CloudSimShutdown(String name, int numUser) throws Exception {
 		// NOTE: This entity doesn't use any I/O port.
-		// super(name, CloudSimTags.DEFAULT_BAUD_RATE);
+		// super(name, Consts.DEFAULT_BAUD_RATE);
 		super(name);
 		this.numUser = numUser;
 	}
@@ -67,7 +67,7 @@ public class CloudSimShutdown extends SimEntity {
 	@Override
 	public void processEvent(SimEvent ev) {
 		numUser--;
-		if (numUser == 0 || ev.getTag() == CloudSimTags.ABRUPT_END_OF_SIMULATION) {
+		if (numUser == 0 || ev.getTag() == CloudActionTags.ABRUPT_END_OF_SIMULATION) {
 			CloudSim.abruptallyTerminate();
 		}
 	}

@@ -2,12 +2,14 @@ package org.cloudbus.cloudsim.web.workload.brokers;
 
 import org.cloudbus.cloudsim.ResCloudlet;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.EX.disk.HddResCloudlet;
 import org.cloudbus.cloudsim.EX.disk.HddVm;
 import org.cloudbus.cloudsim.EX.util.CustomLog;
 import org.cloudbus.cloudsim.EX.util.TextUtil;
 import org.cloudbus.cloudsim.web.ILoadBalancer;
+import org.cloudbus.cloudsim.web.WebTags;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,9 +22,6 @@ import java.util.List;
  * 
  */
 public class PerformanceLoggingWebBroker extends WebBroker {
-
-    protected static final int LOG_TAG = UPDATE_SESSION_TAG + 1;
-
     public static final List<? extends Class<?>> HEADER_TYPES = Arrays.asList(Double.class, Integer.class,
             Double.class, Double.class, Double.class);
 
@@ -62,19 +61,18 @@ public class PerformanceLoggingWebBroker extends WebBroker {
 
     @Override
     protected void processOtherEvent(final SimEvent ev) {
-        switch (ev.getTag()) {
-        case LOG_TAG:
+        CloudSimTags tag = ev.getTag();
+
+        if (tag == WebTags.LOG_TAG) {
             if (CloudSim.clock() < getLifeLength()) {
                 logUtilisation();
-                send(getId(), logPeriod, LOG_TAG);
+                send(getId(), logPeriod, tag);
             }
-            break;
-        case TIMER_TAG:
+        } else if (tag == WebTags.TIMER_TAG) {
             if (!logStarted) {
                 logStarted = true;
-                send(getId(), offset, LOG_TAG);
+                send(getId(), offset, tag);
             }
-            break;
         }
         super.processOtherEvent(ev);
     }

@@ -51,8 +51,8 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 
         //        Log.printLine("Power data center is Updating the cloudlet processing");
         if (getCloudletSubmitted() == -1 || getCloudletSubmitted() == CloudSim.clock()) {
-            CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
-            schedule(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
+            CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.VM_DATACENTER_EVENT));
+            schedule(getId(), getSchedulingInterval(), CloudActionTags.VM_DATACENTER_EVENT);
             return;
         }
         double currentTime = CloudSim.clock();
@@ -107,14 +107,14 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                     send(
                                             getId(),
                                             vmStartupDelay,
-                                            CloudSimTags.VM_CREATE,
+                                            CloudActionTags.VM_CREATE,
                                             migrate);
                                     vmList.add(targetVm);
 
                                     send(
                                             getId(),
                                             containerStartupDelay + vmStartupDelay
-                                            , containerCloudSimTags.CONTAINER_MIGRATE,
+                                            , ContainerCloudSimTags.CONTAINER_MIGRATE,
                                             migrate);
 
                                 } else {
@@ -128,7 +128,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                     send(
                                             getId(),
                                             containerStartupDelay + vmStartupDelay
-                                            , containerCloudSimTags.CONTAINER_MIGRATE,
+                                            , ContainerCloudSimTags.CONTAINER_MIGRATE,
                                             migrate);
 
 
@@ -139,7 +139,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                                 send(
                                         getId(),
                                         containerStartupDelay,
-                                        containerCloudSimTags.CONTAINER_MIGRATE,
+                                        ContainerCloudSimTags.CONTAINER_MIGRATE,
                                         migrate);
 
 
@@ -174,7 +174,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                             send(
                                     getId(),
                                     vm.getRam() / ((double) targetHost.getBw() / (2 * 8000)),
-                                    CloudSimTags.VM_MIGRATE,
+                                    CloudActionTags.VM_MIGRATE,
                                     migrate);
                         }
 
@@ -216,8 +216,8 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 
             // schedules an event to the next time
             if (minTime != Double.MAX_VALUE) {
-                CloudSim.cancelAll(getId(), new PredicateType(CloudSimTags.VM_DATACENTER_EVENT));
-                send(getId(), getSchedulingInterval(), CloudSimTags.VM_DATACENTER_EVENT);
+                CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.VM_DATACENTER_EVENT));
+                send(getId(), getSchedulingInterval(), CloudActionTags.VM_DATACENTER_EVENT);
             }
 
             setLastProcessTime(currentTime);
@@ -250,7 +250,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                 } else {
                     data.put("result", CloudSimTags.FALSE);
                 }
-                send(2, CloudSim.getMinTimeBetweenEvents(), containerCloudSimTags.VM_NEW_CREATE, data);
+                send(2, CloudSim.getMinTimeBetweenEvents(), ContainerCloudSimTags.VM_NEW_CREATE, data);
             }
 
             if (result) {

@@ -19,6 +19,7 @@ package org.cloudbus.cloudsim;
 import java.text.DecimalFormat;
 import java.util.Vector;
 
+import org.cloudbus.cloudsim.core.CloudActionTags;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 
@@ -60,7 +61,7 @@ public class InfoPacket implements Packet {
 	/** Whether the packet is going or returning, according to 
          * constants {@link  CloudSimTags#INFOPKT_SUBMIT}
          * and {@link  CloudSimTags#INFOPKT_RETURN}. */
-	private int tag;
+	private CloudSimTags tag;
 
 	/** The number of hops. */
 	private int hopsNumber;
@@ -124,7 +125,7 @@ public class InfoPacket implements Packet {
 	 */
 	private void init() {
 		last = srcId;
-		tag = CloudSimTags.INFOPKT_SUBMIT;
+		tag = CloudActionTags.INFOPKT_SUBMIT;
 		bandwidth = -1;
 		hopsNumber = 0;
 		pingSize = size;
@@ -534,13 +535,13 @@ public class InfoPacket implements Packet {
 
 	/**
 	 * Gets the packet tag.
-	 * 
+	 *
 	 * @return this packet tag
 	 * @pre $none
 	 * @post $none
 	 */
 	@Override
-	public int getTag() {
+	public CloudSimTags getTag() {
 		return tag;
 	}
 
@@ -552,15 +553,14 @@ public class InfoPacket implements Packet {
 	 * @pre tag > 0
 	 * @post $none
 	 */
-	public boolean setTag(int tag) {
-		boolean flag = false;
-		switch (tag) {
-			case CloudSimTags.INFOPKT_SUBMIT, CloudSimTags.INFOPKT_RETURN -> {
-				this.tag = tag;
-				flag = true;
-			}
-			default -> flag = false;
-		}
+	public boolean setTag(CloudSimTags tag) {
+		boolean flag;
+        if (tag == CloudActionTags.INFOPKT_SUBMIT || tag == CloudActionTags.INFOPKT_RETURN) {
+            this.tag = tag;
+            flag = true;
+        } else {
+            flag = false;
+        }
 
 		return flag;
 	}

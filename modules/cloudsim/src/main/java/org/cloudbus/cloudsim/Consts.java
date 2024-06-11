@@ -13,6 +13,21 @@ public final class Consts {
     private Consts() {
     }
 
+    /** Denotes the default baud rate for CloudSim entities. */
+    public static final int DEFAULT_BAUD_RATE = 9600;
+
+    // ================== DataCloud constants ==================
+
+    /** Default Maximum Transmission Unit (MTU) of a link in bytes. */
+    public static final int DEFAULT_MTU = 1500;
+
+    /** The default packet size (in byte) for sending events to other entity. */
+    public static final int PKT_SIZE = DEFAULT_MTU * 100;  // in bytes
+
+    /** The default storage size (10 GB in byte). */
+    public static final int DEFAULT_STORAGE_SIZE = 10000000;
+
+
     /** One million. */
     public static final int MILLION = 1000000;
 

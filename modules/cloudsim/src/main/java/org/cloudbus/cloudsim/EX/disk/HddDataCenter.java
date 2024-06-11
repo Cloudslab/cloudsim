@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.EX.disk;
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.core.CloudSimTags;
+import org.cloudbus.cloudsim.core.CloudActionTags;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.EX.DatacenterEX;
@@ -103,7 +103,7 @@ public class HddDataCenter extends DatacenterEX {
                 while (vm.getCloudletScheduler().isFailedCloudlets()) {
                     Cloudlet cl = vm.getCloudletScheduler().getNextFailedCloudlet();
                     if (cl != null) {
-                        sendNow(cl.getUserId(), CloudSimTags.CLOUDLET_RETURN, cl);
+                        sendNow(cl.getUserId(), CloudActionTags.CLOUDLET_RETURN, cl);
                     }
                 }
             }

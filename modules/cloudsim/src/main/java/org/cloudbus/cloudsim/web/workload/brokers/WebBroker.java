@@ -2,15 +2,13 @@ package org.cloudbus.cloudsim.web.workload.brokers;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.core.CloudActionTags;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.EX.MonitoringBrokerEX;
 import org.cloudbus.cloudsim.EX.util.CustomLog;
-import org.cloudbus.cloudsim.web.ILoadBalancer;
-import org.cloudbus.cloudsim.web.SessionFailedException;
-import org.cloudbus.cloudsim.web.WebCloudlet;
-import org.cloudbus.cloudsim.web.WebSession;
+import org.cloudbus.cloudsim.web.*;
 import org.cloudbus.cloudsim.web.workload.IWorkloadGenerator;
 
 import java.util.*;
@@ -26,12 +24,6 @@ import java.util.logging.Level;
  * 
  */
 public class WebBroker extends MonitoringBrokerEX {
-
-    // FIXME find a better way to get an unused tag instead of hardcoding
-    protected static final int TIMER_TAG = BROKER_MEASURE_UTIL_NOW + 20;
-    protected static final int SUBMIT_SESSION_TAG = TIMER_TAG + 1;
-    protected static final int UPDATE_SESSION_TAG = SUBMIT_SESSION_TAG + 1;
-
     private boolean isTimerRunning = false;
     private final double stepPeriod;
     private final Map<Long, ILoadBalancer> appsToLoadBalancers = new HashMap<>();
@@ -61,7 +53,7 @@ public class WebBroker extends MonitoringBrokerEX {
      *            - the period of polling web sessions for new cloudlets.
      * @param lifeLength
      *            - the length of the simulation.
-     * @param dataCenterIds
+     * @param dataCenterId
      *            - the ids of the datacenters this broker operates with. If
      *            null all present data centers are used.
      * 
@@ -87,7 +79,7 @@ public class WebBroker extends MonitoringBrokerEX {
      *            - the period of polling web sessions for new cloudlets.
      * @param lifeLength
      *            - the length of the simulation.
-     * @param dataCenterIds
+     * @param dataCenterId
      *            - the ids of the datacenters this broker operates with. If
      *            null all present data centers are used.
      * 
@@ -151,7 +143,7 @@ public class WebBroker extends MonitoringBrokerEX {
     public void processEvent(final SimEvent ev) {
         if (!isTimerRunning) {
             isTimerRunning = true;
-            sendNow(getId(), TIMER_TAG);
+            sendNow(getId(), WebTags.TIMER_TAG);
         }
 
         super.processEvent(ev);
@@ -209,7 +201,7 @@ public class WebBroker extends MonitoringBrokerEX {
                     if (session.areVirtualMachinesReady()) {
                         updateSessions(session.getSessionId());
                     } else {
-                        send(getId(), stepPeriod, UPDATE_SESSION_TAG, session.getSessionId());
+                        send(getId(), stepPeriod, WebTags.UPDATE_SESSION_TAG, session.getSessionId());
                     }
                 }
             }
@@ -229,9 +221,9 @@ public class WebBroker extends MonitoringBrokerEX {
     public void submitSessionsAtTime(final List<WebSession> webSessions, final long loadBalancerId, final double delay) {
         Object data = new Object[] { webSessions, loadBalancerId };
         if (isTimerRunning) {
-            send(getId(), delay, SUBMIT_SESSION_TAG, data);
+            send(getId(), delay, WebTags.SUBMIT_SESSION_TAG, data);
         } else {
-            presetEvent(getId(), SUBMIT_SESSION_TAG, data, delay);
+            presetEvent(getId(), WebTags.SUBMIT_SESSION_TAG, data, delay);
         }
     }
 
@@ -300,22 +292,20 @@ public class WebBroker extends MonitoringBrokerEX {
     @SuppressWarnings("unchecked")
     @Override
     protected void processOtherEvent(final SimEvent ev) {
-        switch (ev.getTag()) {
-        case TIMER_TAG:
+        CloudSimTags tag = ev.getTag();
+
+        if (tag == WebTags.TIMER_TAG) {
             if (CloudSim.clock() < getLifeLength()) {
-                send(getId(), stepPeriod, TIMER_TAG);
+                send(getId(), stepPeriod, tag);
                 generateWorkload();
             }
-            break;
-        case SUBMIT_SESSION_TAG:
+        } else if (tag == WebTags.SUBMIT_SESSION_TAG) {
             Object[] data = (Object[]) ev.getData();
             submitSessions((List<WebSession>) data[0], (Long) data[1]);
-            break;
-        case UPDATE_SESSION_TAG:
+        } else if (tag == WebTags.UPDATE_SESSION_TAG) {
             Integer sessId = (Integer) ev.getData();
             updateSessions(sessId);
-            break;
-        default:
+        } else {
             super.processOtherEvent(ev);
         }
     }
@@ -374,7 +364,7 @@ public class WebBroker extends MonitoringBrokerEX {
                         double nextIdealTime = currTime + stepPeriod;
                         sess.notifyOfTime(nextIdealTime);
 
-                        send(getId(), stepPeriod, UPDATE_SESSION_TAG, sess.getSessionId());
+                        send(getId(), stepPeriod, WebTags.UPDATE_SESSION_TAG, sess.getSessionId());
                     }
                 } catch (SessionFailedException e) {
                     CustomLog.printf("Broker(%s): Session %d with metadata %s has failed. Details: %s", this,
@@ -435,7 +425,7 @@ public class WebBroker extends MonitoringBrokerEX {
     @Override
     public void startEntity() {
         Log.printlnConcat(getName(), " is starting...");
-        schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST, List.of(dataCenterId));
+        schedule(getId(), 0, CloudActionTags.RESOURCE_CHARACTERISTICS_REQUEST, List.of(dataCenterId));
     }
 
     @SuppressWarnings("unchecked")
@@ -445,7 +435,7 @@ public class WebBroker extends MonitoringBrokerEX {
         setDatacenterCharacteristicsList(new HashMap<>());
 
         for (Integer datacenterId : getDatacenterIdsList()) {
-            sendNow(datacenterId, CloudSimTags.RESOURCE_CHARACTERISTICS, getId());
+            sendNow(datacenterId, CloudActionTags.RESOURCE_CHARACTERISTICS, getId());
         }
     }
 

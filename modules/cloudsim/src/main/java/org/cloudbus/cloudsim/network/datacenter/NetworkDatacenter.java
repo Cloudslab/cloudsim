@@ -148,7 +148,7 @@ public class NetworkDatacenter extends Datacenter {
 		}
 
 		sw.hostList.put(netHost.getId(), netHost);
-		sendNow(sw.getId(), CloudSimTags.NETWORK_ATTACH_HOST, netHost);
+		sendNow(sw.getId(), CloudActionTags.NETWORK_ATTACH_HOST, netHost);
 		HostToSwitchid.put(netHost.getId(), sw.getId());
 		netHost.sw = sw;
 	}

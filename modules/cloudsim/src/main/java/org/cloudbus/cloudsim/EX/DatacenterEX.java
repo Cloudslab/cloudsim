@@ -3,10 +3,7 @@ package org.cloudbus.cloudsim.EX;
 import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
-import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.EX.delay.ConstantVmBootDelay;
 import org.cloudbus.cloudsim.EX.delay.IVmBootDelayDistribution;
 
@@ -21,10 +18,6 @@ import java.util.Objects;
  * 
  */
 public class DatacenterEX extends Datacenter {
-
-    // FIXME Find a better way to obtain an unused constant
-    private static final int DATACENTER_BOOT_VM_TAG = 2345678;
-
     @Setter
     @Getter
     private IVmBootDelayDistribution delayDistribution = new ConstantVmBootDelay(0);
@@ -43,7 +36,7 @@ public class DatacenterEX extends Datacenter {
 
     @Override
     protected void processOtherEvent(final SimEvent ev) {
-        if (ev.getTag() == DATACENTER_BOOT_VM_TAG) {
+        if (ev.getTag() == CloudSimEXTags.DATACENTER_BOOT_VM_TAG) {
             GuestEntity vm = (GuestEntity) ev.getData();
             if (vm.isBeingInstantiated()) {
                 vm.setBeingInstantiated(false);
@@ -68,11 +61,11 @@ public class DatacenterEX extends Datacenter {
             data[0] = getId();
             data[1] = vm.getId();
             data[2] = result ? CloudSimTags.TRUE : CloudSimTags.FALSE;
-            send(vm.getUserId(), delay, CloudSimTags.VM_CREATE_ACK, data);
+            send(vm.getUserId(), delay, CloudActionTags.VM_CREATE_ACK, data);
         }
 
         if (result) {
-            send(getId(), delay, DATACENTER_BOOT_VM_TAG, vm);
+            send(getId(), delay, CloudSimEXTags.DATACENTER_BOOT_VM_TAG, vm);
 
             getVmList().add(vm);
 

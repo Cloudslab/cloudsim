@@ -16,8 +16,8 @@ import java.util.Map.Entry;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.VmScheduler;
+import org.cloudbus.cloudsim.core.CloudActionTags;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
@@ -128,7 +128,7 @@ public class NetworkHost extends Host {
 						NetworkGlobals.totaldatatransfer += npkt.pkt.data;
 
 						// send to switch with delay
-						CloudSim.send(getDatacenter().getId(), sw.getId(), delay, CloudSimTags.NETWORK_PKT_UP, npkt);
+						CloudSim.send(getDatacenter().getId(), sw.getId(), delay, CloudActionTags.NETWORK_PKT_UP, npkt);
 					}
 				}
 				pktlist.clear();

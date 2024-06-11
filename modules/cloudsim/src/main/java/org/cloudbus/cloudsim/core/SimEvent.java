@@ -32,7 +32,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 	private int entDst;
 
 	/** The user defined type of the event. **/
-	private final int tag;
+	private final CloudSimTags tag;
 
 	/** 
          * Any data the event is carrying. 
@@ -71,12 +71,12 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 		endWaitingTime = -1.0;
 		entSrc = -1;
 		entDst = -1;
-		tag = -1;
+		tag = CloudActionTags.BLANK;
 		data = null;
 	}
 
 	// ------------------- PACKAGE LEVEL METHODS --------------------------
-	SimEvent(int evtype, double time, int src, int dest, int tag, Object edata) {
+	SimEvent(int evtype, double time, int src, int dest, CloudSimTags tag, Object edata) {
 		etype = evtype;
 		this.time = time;
 		entSrc = src;
@@ -90,7 +90,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 		this.time = time;
 		entSrc = src;
 		entDst = -1;
-		tag = -1;
+		tag = CloudActionTags.BLANK;
 		data = null;
 	}
 
@@ -183,7 +183,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 	 * 
 	 * @return The tag
 	 */
-	public int type() {
+	public CloudSimTags type() {
 		return tag;
 	}
 
@@ -201,7 +201,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 	 * 
 	 * @return The tag
 	 */
-	public int getTag() {
+	public CloudSimTags getTag() {
 		return tag;
 	}
 

@@ -149,25 +149,31 @@ public class DatacenterBroker extends SimEntity {
 
 	@Override
 	public void processEvent(SimEvent ev) {
-		switch (ev.getTag()) {
-			// Resource characteristics request
-			case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST -> processResourceCharacteristicsRequest(ev);
+		CloudSimTags tag = ev.getTag();
+        // Resource characteristics request
+        if (tag == CloudActionTags.RESOURCE_CHARACTERISTICS_REQUEST) {
+            processResourceCharacteristicsRequest(ev);
 
-			// Resource characteristics answer
-			case CloudSimTags.RESOURCE_CHARACTERISTICS -> processResourceCharacteristics(ev);
+            // Resource characteristics answer
+        } else if (tag == CloudActionTags.RESOURCE_CHARACTERISTICS) {
+            processResourceCharacteristics(ev);
 
-			// VM Creation answer
-			case CloudSimTags.VM_CREATE_ACK -> processVmCreateAck(ev);
+            // VM Creation answer
+        } else if (tag == CloudActionTags.VM_CREATE_ACK) {
+            processVmCreateAck(ev);
 
-			// A finished cloudlet returned
-			case CloudSimTags.CLOUDLET_RETURN -> processCloudletReturn(ev);
+            // A finished cloudlet returned
+        } else if (tag == CloudActionTags.CLOUDLET_RETURN) {
+            processCloudletReturn(ev);
 
-			// if the simulation finishes
-			case CloudSimTags.END_OF_SIMULATION -> shutdownEntity();
+            // if the simulation finishes
+        } else if (tag == CloudActionTags.END_OF_SIMULATION) {
+            shutdownEntity();
 
-			// other unknown tags are processed by this method
-			default -> processOtherEvent(ev);
-		}
+            // other unknown tags are processed by this method
+        } else {
+            processOtherEvent(ev);
+        }
 	}
 
 	/**
@@ -204,7 +210,7 @@ public class DatacenterBroker extends SimEntity {
 				getDatacenterIdsList().size(), " resource(s)");
 
 		for (Integer datacenterId : getDatacenterIdsList()) {
-			sendNow(datacenterId, CloudSimTags.RESOURCE_CHARACTERISTICS, getId());
+			sendNow(datacenterId, CloudActionTags.RESOURCE_CHARACTERISTICS, getId());
 		}
 	}
 
@@ -328,7 +334,7 @@ public class DatacenterBroker extends SimEntity {
 			if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
 				Log.println(CloudSim.clock() + ": " + getName() + ": Trying to Create "+ vm.getClassName() + " #" + vm.getId()
 						+ " in " + datacenterName);
-				sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
+				sendNow(datacenterId, CloudActionTags.VM_CREATE_ACK, vm);
 				requestedVms++;
 			}
 		}
@@ -377,7 +383,7 @@ public class DatacenterBroker extends SimEntity {
 			}
 			
 			cloudlet.setGuestId(vm.getId());
-			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
+			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudActionTags.CLOUDLET_SUBMIT, cloudlet);
 			cloudletsSubmitted++;
 			guestIndex = (guestIndex + 1) % getGuestsCreatedList().size();
 			getCloudletSubmittedList().add(cloudlet);
@@ -397,7 +403,7 @@ public class DatacenterBroker extends SimEntity {
 	protected void clearDatacenters() {
 		for (GuestEntity vm : getGuestsCreatedList()) {
 			Log.printlnConcat(CloudSim.clock(), ": " + getName(), ": Destroying "+vm.getClassName()+" #", vm.getId());
-			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.VM_DESTROY, vm);
+			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudActionTags.VM_DESTROY, vm);
 		}
 
 		getGuestsCreatedList().clear();
@@ -410,7 +416,7 @@ public class DatacenterBroker extends SimEntity {
 	 * @post $none
 	 */
 	protected void finishExecution() {
-		sendNow(getId(), CloudSimTags.END_OF_SIMULATION);
+		sendNow(getId(), CloudActionTags.END_OF_SIMULATION);
 	}
 
 	@Override
@@ -421,7 +427,7 @@ public class DatacenterBroker extends SimEntity {
 	@Override
 	public void startEntity() {
 		Log.printlnConcat(getName(), " is starting...");
-		schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST);
+		schedule(getId(), 0, CloudActionTags.RESOURCE_CHARACTERISTICS_REQUEST);
 	}
 
 	/**

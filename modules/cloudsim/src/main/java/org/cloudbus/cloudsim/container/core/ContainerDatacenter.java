@@ -85,12 +85,15 @@ public class ContainerDatacenter extends Datacenter {
      */
     @Override
     public void processEvent(SimEvent ev) {
-        switch (ev.getTag()) {
-            case containerCloudSimTags.CONTAINER_SUBMIT -> processContainerSubmit(ev, true);
-            case containerCloudSimTags.CONTAINER_MIGRATE -> processContainerMigrate(ev, false);
+        CloudSimTags tag = ev.getTag();
+        if (tag == ContainerCloudSimTags.CONTAINER_SUBMIT) {
+            processContainerSubmit(ev, true);
+        } else if (tag == ContainerCloudSimTags.CONTAINER_MIGRATE) {
+            processContainerMigrate(ev, false);
 
             // other (potentially unknown tags) are processed by the base class
-            default -> super.processEvent(ev);
+        } else {
+            super.processEvent(ev);
         }
     }
 
@@ -109,7 +112,7 @@ public class ContainerDatacenter extends Datacenter {
                     data[2] = CloudSimTags.FALSE;
                 }
 
-                send(ev.getSource(), CloudSim.getMinTimeBetweenEvents(), containerCloudSimTags.CONTAINER_CREATE_ACK, data);
+                send(ev.getSource(), CloudSim.getMinTimeBetweenEvents(), ContainerCloudSimTags.CONTAINER_CREATE_ACK, data);
             }
             if (result) {
                 getContainerList().add(container);
@@ -165,12 +168,12 @@ public class ContainerDatacenter extends Datacenter {
                 containerVm = (HostEntity) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
                 status = containerVm.getGuest(containerId, userId).getCloudletScheduler().getCloudletStatus(cloudletId);
             } catch (Exception e) {
-                Log.printlnConcat(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
+                Log.printlnConcat(getName(), ": Error in processing CloudActionTags.CLOUDLET_STATUS");
                 Log.println(e.getMessage());
                 return;
             }
         } catch (Exception e) {
-            Log.printlnConcat(getName(), ": Error in processing CloudSimTags.CLOUDLET_STATUS");
+            Log.printlnConcat(getName(), ": Error in processing CloudActionTags.CLOUDLET_STATUS");
             Log.println(e.getMessage());
             return;
         }
@@ -180,8 +183,7 @@ public class ContainerDatacenter extends Datacenter {
         array[1] = cloudletId;
         array[2] = status.ordinal();
 
-        int tag = CloudSimTags.CLOUDLET_STATUS;
-        sendNow(userId, tag, array);
+        sendNow(userId, CloudActionTags.CLOUDLET_STATUS, array);
     }
 
     /**
@@ -228,7 +230,7 @@ public class ContainerDatacenter extends Datacenter {
             } else {
                 data[2] = CloudSimTags.FALSE;
             }
-            sendNow(ev.getSource(), containerCloudSimTags.CONTAINER_CREATE_ACK, data);
+            sendNow(ev.getSource(), ContainerCloudSimTags.CONTAINER_CREATE_ACK, data);
         }
 
         Log.formatLine(
@@ -242,13 +244,13 @@ public class ContainerDatacenter extends Datacenter {
     /**
      * Processes a Cloudlet based on the event type.
      *
-     * @param ev   a Sim_event object
-     * @param type event type
+     * @param ev  a Sim_event object
+     * @param tag event type
      * @pre ev != null
      * @pre type > 0
      * @post $none
      */
-    protected void processCloudlet(SimEvent ev, int type) {
+    protected void processCloudlet(SimEvent ev, CloudActionTags tag) {
         int cloudletId = 0;
         int userId = 0;
         int vmId = 0;
@@ -282,12 +284,12 @@ public class ContainerDatacenter extends Datacenter {
         }
 
         // begins executing ....
-        switch (type) {
-            case CloudSimTags.CLOUDLET_CANCEL -> processCloudletCancel(cloudletId, userId, vmId, containerId);
-            case CloudSimTags.CLOUDLET_PAUSE -> processCloudletPause(cloudletId, userId, vmId, containerId, false);
-            case CloudSimTags.CLOUDLET_PAUSE_ACK -> processCloudletPause(cloudletId, userId, vmId, containerId, true);
-            case CloudSimTags.CLOUDLET_RESUME -> processCloudletResume(cloudletId, userId, vmId, containerId, false);
-            case CloudSimTags.CLOUDLET_RESUME_ACK -> processCloudletResume(cloudletId, userId, vmId, containerId, true);
+        switch (tag) {
+            case CLOUDLET_CANCEL -> processCloudletCancel(cloudletId, userId, vmId, containerId);
+            case CLOUDLET_PAUSE -> processCloudletPause(cloudletId, userId, vmId, containerId, false);
+            case CLOUDLET_PAUSE_ACK -> processCloudletPause(cloudletId, userId, vmId, containerId, true);
+            case CLOUDLET_RESUME -> processCloudletResume(cloudletId, userId, vmId, containerId, false);
+            case CLOUDLET_RESUME_ACK -> processCloudletResume(cloudletId, userId, vmId, containerId, true);
             default -> {
             }
         }
@@ -298,12 +300,12 @@ public class ContainerDatacenter extends Datacenter {
      * Process the event for a User/Broker who wants to move a Cloudlet.
      *
      * @param receivedData information about the migration
-     * @param type         event tag
+     * @param tag          event tag
      * @pre receivedData != null
      * @pre type > 0
      * @post $none
      */
-    protected void processCloudletMove(int[] receivedData, int type) {
+    protected void processCloudletMove(int[] receivedData, CloudActionTags tag) {
         updateCloudletProcessing();
 
         int[] array = receivedData;
@@ -331,8 +333,8 @@ public class ContainerDatacenter extends Datacenter {
                 data[0] = getId();
                 data[1] = cloudletId;
                 data[2] = 0;
-                sendNow(cl.getUserId(), CloudSimTags.CLOUDLET_SUBMIT_ACK, data);
-                sendNow(cl.getUserId(), CloudSimTags.CLOUDLET_RETURN, cl);
+                sendNow(cl.getUserId(), CloudActionTags.CLOUDLET_SUBMIT_ACK, data);
+                sendNow(cl.getUserId(), CloudActionTags.CLOUDLET_RETURN, cl);
             }
 
             // prepare cloudlet for migration
@@ -349,13 +351,13 @@ public class ContainerDatacenter extends Datacenter {
                     containerVm.getGuest(containerDestId, userId).getCloudletScheduler().cloudletSubmit(cl, fileTransferTime);
                 }
             } else {// the cloudlet will migrate from one resource to another
-                int tag = ((type == CloudSimTags.CLOUDLET_MOVE_ACK) ? CloudSimTags.CLOUDLET_SUBMIT_ACK
-                        : CloudSimTags.CLOUDLET_SUBMIT);
-                sendNow(destId, tag, cl);
+                CloudActionTags newTag = ((tag == CloudActionTags.CLOUDLET_MOVE_ACK) ? CloudActionTags.CLOUDLET_SUBMIT_ACK
+                        : CloudActionTags.CLOUDLET_SUBMIT);
+                sendNow(destId, newTag, cl);
             }
         }
 
-        if (type == CloudSimTags.CLOUDLET_MOVE_ACK) {// send ACK if requested
+        if (tag == CloudActionTags.CLOUDLET_MOVE_ACK) {// send ACK if requested
             int[] data = new int[3];
             data[0] = getId();
             data[1] = cloudletId;
@@ -364,7 +366,7 @@ public class ContainerDatacenter extends Datacenter {
             } else {
                 data[2] = 1;
             }
-            sendNow(cl.getUserId(), CloudSimTags.CLOUDLET_SUBMIT_ACK, data);
+            sendNow(cl.getUserId(), CloudActionTags.CLOUDLET_SUBMIT_ACK, data);
         }
     }
 
@@ -401,12 +403,10 @@ public class ContainerDatacenter extends Datacenter {
                     data[1] = cl.getCloudletId();
                     data[2] = CloudSimTags.FALSE;
 
-                    // unique tag = operation tag
-                    int tag = CloudSimTags.CLOUDLET_SUBMIT_ACK;
-                    sendNow(cl.getUserId(), tag, data);
+                    sendNow(cl.getUserId(), CloudActionTags.CLOUDLET_SUBMIT_ACK, data);
                 }
 
-                sendNow(cl.getUserId(), CloudSimTags.CLOUDLET_RETURN, cl);
+                sendNow(cl.getUserId(), CloudActionTags.CLOUDLET_RETURN, cl);
 
                 return;
             }
@@ -430,7 +430,7 @@ public class ContainerDatacenter extends Datacenter {
             // if this cloudlet is in the exec queue
             if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) {
                 estimatedFinishTime += fileTransferTime;
-                send(getId(), estimatedFinishTime, CloudSimTags.VM_DATACENTER_EVENT);
+                send(getId(), estimatedFinishTime, CloudActionTags.VM_DATACENTER_EVENT);
             }
 
             if (ack) {
@@ -439,9 +439,7 @@ public class ContainerDatacenter extends Datacenter {
                 data[1] = cl.getCloudletId();
                 data[2] = CloudSimTags.TRUE;
 
-                // unique tag = operation tag
-                int tag = CloudSimTags.CLOUDLET_SUBMIT_ACK;
-                sendNow(cl.getUserId(), tag, data);
+                sendNow(cl.getUserId(), CloudActionTags.CLOUDLET_SUBMIT_ACK, data);
             }
         } catch (ClassCastException c) {
             Log.println(String.format("%s.processCloudletSubmit(): ClassCastException error.", getName()));
@@ -474,7 +472,7 @@ public class ContainerDatacenter extends Datacenter {
         if (eventTime > 0.0) { // if this cloudlet is in the exec queue
             status = true;
             if (eventTime > CloudSim.clock()) {
-                schedule(getId(), eventTime, CloudSimTags.VM_DATACENTER_EVENT);
+                schedule(getId(), eventTime, CloudActionTags.VM_DATACENTER_EVENT);
             }
         }
 
@@ -487,7 +485,7 @@ public class ContainerDatacenter extends Datacenter {
             } else {
                 data[2] = CloudSimTags.FALSE;
             }
-            sendNow(userId, CloudSimTags.CLOUDLET_RESUME_ACK, data);
+            sendNow(userId, CloudActionTags.CLOUDLET_RESUME_ACK, data);
         }
     }
 
@@ -515,7 +513,7 @@ public class ContainerDatacenter extends Datacenter {
             } else {
                 data[2] = CloudSimTags.FALSE;
             }
-            sendNow(userId, CloudSimTags.CLOUDLET_PAUSE_ACK, data);
+            sendNow(userId, CloudActionTags.CLOUDLET_PAUSE_ACK, data);
         }
     }
 
@@ -532,7 +530,7 @@ public class ContainerDatacenter extends Datacenter {
         HostEntity containerVm = (HostEntity) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
         Cloudlet cl = containerVm.getGuest(containerId, userId)
                 .getCloudletScheduler().cloudletCancel(cloudletId);
-        sendNow(userId, CloudSimTags.CLOUDLET_CANCEL, cl);
+        sendNow(userId, CloudActionTags.CLOUDLET_CANCEL, cl);
     }
 
     /**
@@ -551,7 +549,7 @@ public class ContainerDatacenter extends Datacenter {
                     while (container.getCloudletScheduler().isFinishedCloudlets()) {
                         Cloudlet cl = container.getCloudletScheduler().getNextFinishedCloudlet();
                         if (cl != null) {
-                            sendNow(cl.getUserId(), CloudSimTags.CLOUDLET_RETURN, cl);
+                            sendNow(cl.getUserId(), CloudActionTags.CLOUDLET_RETURN, cl);
                         }
                     }
                 }

@@ -196,7 +196,7 @@ public class FileAttribute {
 	 * @return the object size (in byte)
 	 */
 	public int getAttributeSize() {
-		int length = DataCloudTags.PKT_SIZE;
+		int length = Consts.PKT_SIZE;
 		if (ownerName != null) {
 			length += ownerName.length();
 		}

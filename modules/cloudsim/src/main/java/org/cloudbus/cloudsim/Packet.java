@@ -14,6 +14,8 @@
 
 package org.cloudbus.cloudsim;
 
+import org.cloudbus.cloudsim.core.CloudSimTags;
+
 /**
  * Defines the structure for a network packet.
  * 
@@ -123,12 +125,12 @@ public interface Packet {
 	void setLast(int last);
 
 	/**
-	 * Gets this packet tag
-	 * 
-	 * @return this packet tag
-	 * @pre $none
-	 * @post $none
-	 */
-	int getTag();
+     * Gets this packet tag
+     *
+     * @return this packet tag
+     * @pre $none
+     * @post $none
+     */
+	CloudSimTags getTag();
 
 }
