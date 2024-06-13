@@ -196,7 +196,7 @@ public class DatacenterBroker extends SimEntity {
 	}
 
 	/**
-	 * Process a request for the characteristics of a PowerDatacenter.
+	 * Process a request for the characteristics of a Datacenter.
 	 * 
 	 * @param ev a SimEvent object
 	 * @pre ev != $null
@@ -207,7 +207,7 @@ public class DatacenterBroker extends SimEntity {
 		setDatacenterCharacteristicsList(new HashMap<>());
 
 		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Cloud Resource List received with ",
-				getDatacenterIdsList().size(), " resource(s)");
+				getDatacenterIdsList().size(), " datacenter(s)");
 
 		for (Integer datacenterId : getDatacenterIdsList()) {
 			sendNow(datacenterId, CloudActionTags.RESOURCE_CHARACTERISTICS, getId());
@@ -278,7 +278,7 @@ public class DatacenterBroker extends SimEntity {
 	protected void processCloudletReturn(SimEvent ev) {
 		Cloudlet cloudlet = (Cloudlet) ev.getData();
 		getCloudletReceivedList().add(cloudlet);
-		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Cloudlet #", cloudlet.getCloudletId(),
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": ", cloudlet.getClass().getSimpleName()," #", cloudlet.getCloudletId(),
 				" return received");
 		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": The number of finished Cloudlets is:", getCloudletReceivedList().size());
 		cloudletsSubmitted--;

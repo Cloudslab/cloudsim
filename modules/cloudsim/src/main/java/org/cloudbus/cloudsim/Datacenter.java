@@ -591,7 +591,7 @@ public class Datacenter extends SimEntity {
 
 			// the cloudlet will migrate from one vm to another does the destination VM exist?
 			if (destId == getId()) {
-				GuestEntity vm = (GuestEntity) getVmAllocationPolicy().getHost(vmDestId, userId).getGuest(vmDestId,userId);
+				GuestEntity vm = getVmAllocationPolicy().getHost(vmDestId, userId).getGuest(vmDestId,userId);
 				if (vm == null) {
 					failed = true;
 				} else {

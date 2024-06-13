@@ -186,7 +186,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
         } else {
 
             getCloudletReceivedList().add(cloudlet);
-            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Cloudlet ", cloudlet.getCloudletId(), " received");
+            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": ", cloudlet.getClass().getSimpleName()," #", cloudlet.getCloudletId(), " return received");
             cloudletsSubmitted--;
 
             // if (getCloudletList().size() > 0 && cloudletsSubmitted == 0) {
