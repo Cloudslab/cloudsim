@@ -253,5 +253,5 @@ public enum CloudActionTags implements CloudSimTags {
 
 	NETWORK_PKT_DOWN,
 
-	NETWORK_PKT_REACHED
+    NETWORK_PKT_REACHED_HOST
 }

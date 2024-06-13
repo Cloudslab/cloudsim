@@ -388,9 +388,6 @@ public class BagOfTaskAppExample {
 			int switchnum = (int) (hs.getId() / NetworkConstants.EdgeSwitchPort);
 
 			dc.attachSwitchToHost(edgeswitch[switchnum], hs);
-
-			List<NetworkHost> hslist = hs.sw.fintimelistHost.computeIfAbsent(0D, k -> new ArrayList<>());
-			hslist.add(hs);
 		}
 	}
 }
