@@ -956,13 +956,8 @@ public class Datacenter extends SimEntity {
 	}
 
 	@Override
-	public void shutdownEntity() {
-		Log.printlnConcat(CloudSim.clock(), ": ", getName(), " is shutting down...");
-	}
-
-	@Override
 	public void startEntity() {
-		Log.printlnConcat(getName(), " is starting...");
+		super.startEntity();
 		// this resource should register to regional CIS.
 		// However, if not specified, then register to system CIS (the
 		// default CloudInformationService) entity.

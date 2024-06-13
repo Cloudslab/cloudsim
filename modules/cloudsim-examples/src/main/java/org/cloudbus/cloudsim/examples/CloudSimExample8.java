@@ -318,7 +318,7 @@ public class CloudSimExample8 {
 
 		@Override
 		public void startEntity() {
-			Log.println(super.getName()+" is starting...");
+			super.startEntity();
 			schedule(getId(), 200, ExampleTags.CREATE_BROKER);
 		}
 

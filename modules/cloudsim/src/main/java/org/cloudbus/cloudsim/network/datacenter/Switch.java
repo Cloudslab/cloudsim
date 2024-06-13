@@ -146,7 +146,7 @@ public class Switch extends SimEntity {
 
 	@Override
 	public void startEntity() {
-		Log.printlnConcat(getName(), " is starting...");
+		super.startEntity();
 		//schedule(getId(), 0, CloudActionTags.RESOURCE_CHARACTERISTICS_REQUEST);
 	}
 
@@ -353,11 +353,6 @@ public class Switch extends SimEntity {
 				hspktlist.clear();
 			}
 		}
-	}
-
-	@Override
-	public void shutdownEntity() {
-		Log.printlnConcat(CloudSim.clock(), ": ", getName(), " is shutting down...");
 	}
 
 	// TODO: Remo Andreoli: These are never used, remove?

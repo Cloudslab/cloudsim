@@ -123,6 +123,7 @@ public class CloudInformationService extends SimEntity {
 
 	@Override
 	public void shutdownEntity() {
+		super.shutdownEntity();
 		notifyAllEntity();
 	}
 

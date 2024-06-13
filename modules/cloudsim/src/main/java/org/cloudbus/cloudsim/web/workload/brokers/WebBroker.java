@@ -424,7 +424,7 @@ public class WebBroker extends MonitoringBrokerEX {
      */
     @Override
     public void startEntity() {
-        Log.printlnConcat(getName(), " is starting...");
+        super.startEntity();
         schedule(getId(), 0, CloudActionTags.RESOURCE_CHARACTERISTICS_REQUEST, List.of(dataCenterId));
     }
 

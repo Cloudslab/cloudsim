@@ -391,7 +391,9 @@ public abstract class SimEntity implements Cloneable {
 	 * This method is invoked by the {@link CloudSim} class when the simulation is started. 
 	 * It should be responsible for starting the entity up.
 	 */
-	public abstract void startEntity();
+	public void startEntity() {
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), " is starting...");
+	}
 
 	/**
 	 * Processes events or services that are available for the entity.
@@ -407,7 +409,9 @@ public abstract class SimEntity implements Cloneable {
 	 * This method is invoked by the {@link CloudSim} before the simulation finishes. If you want
 	 * to save data in log files this is the method in which the corresponding code would be placed.
 	 */
-	public abstract void shutdownEntity();
+	public void shutdownEntity() {
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), " is shutting down...");
+	}
 
         /**
          * The run loop to process events fired during the simulation.
