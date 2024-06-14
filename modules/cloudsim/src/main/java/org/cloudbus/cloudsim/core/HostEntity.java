@@ -5,6 +5,7 @@ import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -397,4 +398,19 @@ public interface HostEntity extends CoreAttributes {
      * In waiting flag. THe host entity is waiting for guest to come.
      */
     boolean isInWaiting();
+
+    /**
+     * Gets the list of migratable VMs from a given host.
+     *
+     * @return the list of migratable VMs
+     */
+    default List<GuestEntity> getMigrableVms() {
+        List<GuestEntity> migratableVms = new ArrayList<>();
+        for (GuestEntity vm : getGuestList()) {
+            if (!vm.isInMigration()) {
+                migratableVms.add(vm);
+            }
+        }
+        return migratableVms;
+    }
 }

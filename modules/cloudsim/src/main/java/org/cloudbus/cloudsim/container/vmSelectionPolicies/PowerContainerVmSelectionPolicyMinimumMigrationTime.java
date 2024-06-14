@@ -15,7 +15,7 @@ public class PowerContainerVmSelectionPolicyMinimumMigrationTime extends  PowerC
 
     @Override
     public ContainerVm getVmToMigrate(PowerHost host) {
-        List<PowerContainerVm> migratableVms = getMigratableVms(host);
+        List<PowerContainerVm> migratableVms = getMigrableVms(host);
         if (migratableVms.isEmpty()) {
             return null;
         }

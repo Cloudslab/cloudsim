@@ -9,9 +9,12 @@
 package org.cloudbus.cloudsim.power;
 
 import java.util.List;
+import java.util.Set;
 
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 
 /**
  * A VM selection policy that selects for migration the VM with Minimum Utilization (MU)
@@ -30,26 +33,27 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
  */
-public class PowerVmSelectionPolicyMinimumUtilization extends PowerVmSelectionPolicy {
+public class PowerVmSelectionPolicyMinimumUtilization implements SelectionPolicy<GuestEntity> {
 	@Override
-	public Vm getVmToMigrate(PowerHost host) {
-		List<PowerVm> migratableVms = getMigratableVms(host);
-		if (migratableVms.isEmpty()) {
+	public GuestEntity select(List<GuestEntity> candidates, Object obj, Set<GuestEntity> excludedCandidates) {
+		if (candidates.isEmpty()) {
 			return null;
 		}
-		Vm vmToMigrate = null;
+
+		GuestEntity selectedGuest = null;
 		double minMetric = Double.MAX_VALUE;
-		for (Vm vm : migratableVms) {
+
+		for (GuestEntity vm : candidates) {
 			if (vm.isInMigration()) {
 				continue;
 			}
 			double metric = vm.getTotalUtilizationOfCpuMips(CloudSim.clock()) / vm.getMips();
 			if (metric < minMetric) {
 				minMetric = metric;
-				vmToMigrate = vm;
+				selectedGuest = vm;
 			}
 		}
-		return vmToMigrate;
-	}
+		return selectedGuest;
 
+	}
 }

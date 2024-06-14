@@ -39,7 +39,7 @@ public class PowerContainerVMSelectionPolicyCor extends PowerContainerVmSelectio
     */
     @Override
     public ContainerVm getVmToMigrate(final PowerHost host) {
-        List<PowerContainerVm> migratableVMs = getMigratableVms(host);
+        List<PowerContainerVm> migratableVMs = getMigrableVms(host);
         if (migratableVMs.isEmpty()) {
             return null;
         }

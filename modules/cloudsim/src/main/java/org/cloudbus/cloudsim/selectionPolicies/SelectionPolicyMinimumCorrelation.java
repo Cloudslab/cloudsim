@@ -25,7 +25,6 @@ public class SelectionPolicyMinimumCorrelation implements SelectionPolicy<HostEn
 
     public SelectionPolicyMinimumCorrelation(final SelectionPolicy<HostEntity> fallbackPolicy) {
         super();
-
         if (fallbackPolicy instanceof SelectionPolicyMinimumCorrelation) {
             throw new IllegalArgumentException("Cannot use same policy as the fallback policy");
         }

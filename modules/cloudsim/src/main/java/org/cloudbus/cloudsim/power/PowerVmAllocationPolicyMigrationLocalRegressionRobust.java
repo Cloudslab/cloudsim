@@ -11,6 +11,8 @@ package org.cloudbus.cloudsim.power;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
@@ -44,7 +46,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegressionRobust extends
 	 */
 	public PowerVmAllocationPolicyMigrationLocalRegressionRobust(
 			List<? extends Host> hostList,
-			PowerVmSelectionPolicy vmSelectionPolicy,
+			SelectionPolicy<GuestEntity> vmSelectionPolicy,
 			double safetyParameter,
 			double schedulingInterval,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy,
@@ -68,7 +70,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegressionRobust extends
 	 */
 	public PowerVmAllocationPolicyMigrationLocalRegressionRobust(
 			List<? extends Host> hostList,
-			PowerVmSelectionPolicy vmSelectionPolicy,
+			SelectionPolicy<GuestEntity> vmSelectionPolicy,
 			double safetyParameter,
 			double schedulingInterval,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {

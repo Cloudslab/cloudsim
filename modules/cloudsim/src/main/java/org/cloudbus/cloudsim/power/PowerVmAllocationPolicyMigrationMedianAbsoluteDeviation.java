@@ -13,6 +13,7 @@ import java.util.List;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
@@ -76,7 +77,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	 */
 	public PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(
 			List<? extends Host> hostList,
-			PowerVmSelectionPolicy vmSelectionPolicy,
+			SelectionPolicy<GuestEntity> vmSelectionPolicy,
 			double safetyParameter,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy,
 			double utilizationThreshold) {
@@ -94,7 +95,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	 */
 	public PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation(
 			List<? extends Host> hostList,
-			PowerVmSelectionPolicy vmSelectionPolicy,
+			SelectionPolicy<GuestEntity> vmSelectionPolicy,
 			double safetyParameter,
 			PowerVmAllocationPolicyMigrationAbstract fallbackVmAllocationPolicy) {
 		super(hostList, vmSelectionPolicy);

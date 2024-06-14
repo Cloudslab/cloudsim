@@ -10,8 +10,10 @@ package org.cloudbus.cloudsim.power;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
-import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 
 /**
  * A VM selection policy that randomly select VMs to migrate from a host.
@@ -29,15 +31,20 @@ import org.cloudbus.cloudsim.Vm;
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
  */
-public class PowerVmSelectionPolicyRandomSelection extends PowerVmSelectionPolicy {
-	@Override
-	public Vm getVmToMigrate(PowerHost host) {
-		List<PowerVm> migratableVms = getMigratableVms(host);
-		if (migratableVms.isEmpty()) {
-			return null;
-		}
-		int index = (new Random()).nextInt(migratableVms.size());
-		return migratableVms.get(index);
+public class PowerVmSelectionPolicyRandomSelection implements SelectionPolicy<GuestEntity> {
+	private final Random rand;
+
+	public PowerVmSelectionPolicyRandomSelection() {
+		rand = new Random();
 	}
 
+	@Override
+	public GuestEntity select(List<GuestEntity> candidates, Object obj, Set<GuestEntity> excludedCandidates) {
+		if (candidates.isEmpty()) {
+			return null;
+		}
+
+		int index = rand.nextInt(candidates.size());
+		return candidates.get(index);
+	}
 }

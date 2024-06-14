@@ -21,6 +21,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.power.lists.PowerVmList;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
 
 /**
@@ -43,7 +44,7 @@ import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
 public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocationPolicy {
 
 	/** The vm selection policy. */
-	private PowerVmSelectionPolicy vmSelectionPolicy;
+	private SelectionPolicy<GuestEntity> vmSelectionPolicy;
 
 	/** A list of maps between a VM and the host where it is place.
          * //TODO This list of map is implemented in the worst way.
@@ -101,7 +102,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 */
 	public PowerVmAllocationPolicyMigrationAbstract(
 			List<? extends Host> hostList,
-			PowerVmSelectionPolicy vmSelectionPolicy) {
+			SelectionPolicy<GuestEntity> vmSelectionPolicy) {
 		super(hostList);
 		setVmSelectionPolicy(vmSelectionPolicy);
 	}
@@ -127,13 +128,12 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 		saveAllocation();
 
 		ExecutionTimeMeasurer.start("optimizeAllocationVmSelection");
-		List<? extends Vm> vmsToMigrate = getVmsToMigrateFromHosts(overUtilizedHosts);
+		List<GuestEntity> vmsToMigrate = getVmsToMigrateFromHosts(overUtilizedHosts);
 		getExecutionTimeHistoryVmSelection().add(ExecutionTimeMeasurer.end("optimizeAllocationVmSelection"));
 
 		Log.println("Reallocation of VMs from the over-utilized hosts:");
 		ExecutionTimeMeasurer.start("optimizeAllocationVmReallocation");
-		List<Map<String, Object>> migrationMap = getNewVmPlacement(vmsToMigrate, new HashSet<Host>(
-				overUtilizedHosts));
+		List<Map<String, Object>> migrationMap = getNewVmPlacement(vmsToMigrate, new HashSet<>(overUtilizedHosts));
 		getExecutionTimeHistoryVmReallocation().add(
 				ExecutionTimeMeasurer.end("optimizeAllocationVmReallocation"));
 		Log.println();
@@ -315,11 +315,11 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * @return the new vm placement map
 	 */
 	protected List<Map<String, Object>> getNewVmPlacement(
-			List<? extends Vm> vmsToMigrate,
-			Set<? extends Host> excludedHosts) {
+			List<GuestEntity> vmsToMigrate,
+			Set<HostEntity> excludedHosts) {
 		List<Map<String, Object>> migrationMap = new LinkedList<>();
 		PowerVmList.sortByCpuUtilization(vmsToMigrate);
-		for (Vm vm : vmsToMigrate) {
+		for (GuestEntity vm : vmsToMigrate) {
 			PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
 			if (allocatedHost != null) {
 				allocatedHost.guestCreate(vm);
@@ -374,12 +374,12 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * @param overUtilizedHosts the over utilized hosts
 	 * @return the VMs to migrate from hosts
 	 */
-	protected List<? extends Vm>
+	protected List<GuestEntity>
 	  getVmsToMigrateFromHosts(List<PowerHost> overUtilizedHosts) {
-		List<Vm> vmsToMigrate = new LinkedList<>();
+		List<GuestEntity> vmsToMigrate = new LinkedList<>();
 		for (PowerHost host : overUtilizedHosts) {
 			while (true) {
-				Vm vm = getVmSelectionPolicy().getVmToMigrate(host);
+				GuestEntity vm = getVmSelectionPolicy().select(host.getMigrableVms(), host, new HashSet<>());
 				if (vm == null) {
 					break;
 				}
@@ -623,7 +623,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * 
 	 * @param vmSelectionPolicy the new vm selection policy
 	 */
-	protected void setVmSelectionPolicy(PowerVmSelectionPolicy vmSelectionPolicy) {
+	protected void setVmSelectionPolicy(SelectionPolicy<GuestEntity> vmSelectionPolicy) {
 		this.vmSelectionPolicy = vmSelectionPolicy;
 	}
 
@@ -632,7 +632,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * 
 	 * @return the vm selection policy
 	 */
-	protected PowerVmSelectionPolicy getVmSelectionPolicy() {
+	protected SelectionPolicy<GuestEntity> getVmSelectionPolicy() {
 		return vmSelectionPolicy;
 	}
 

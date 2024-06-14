@@ -27,14 +27,14 @@ public abstract class PowerContainerVmSelectionPolicy {
          * @param host the host
          * @return the migratable vms
          */
-        protected List<PowerContainerVm> getMigratableVms(PowerHost host) {
-            List<PowerContainerVm> migratableVms = new ArrayList<>();
+        protected List<PowerContainerVm> getMigrableVms(PowerHost host) {
+            List<PowerContainerVm> migrableVms = new ArrayList<>();
             for (PowerContainerVm vm : host.<PowerContainerVm> getGuestList()) {
                 if (!vm.isInMigration()) {
-                    migratableVms.add(vm);
+                    migrableVms.add(vm);
                 }
             }
-            return migratableVms;
+            return migrableVms;
         }
 
 }

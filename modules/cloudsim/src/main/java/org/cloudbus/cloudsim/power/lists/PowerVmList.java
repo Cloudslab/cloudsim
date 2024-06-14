@@ -56,5 +56,4 @@ public class PowerVmList extends VmList {
 			return bUtilization.compareTo(aUtilization);
 		});
 	}
-
 }

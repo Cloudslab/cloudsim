@@ -35,7 +35,7 @@ public class PowerContainerVmSelectionPolicyMaximumCorrelation extends PowerCont
          */
         @Override
         public ContainerVm getVmToMigrate(final PowerHost host) {
-            List<PowerContainerVm> migratableVms = getMigratableVms(host);
+            List<PowerContainerVm> migratableVms = getMigrableVms(host);
             if (migratableVms.isEmpty()) {
                 return null;
             }

@@ -19,7 +19,7 @@ public class PowerContainerVmSelectionPolicyMaximumUsage extends PowerContainerV
      */
     @Override
     public ContainerVm getVmToMigrate(PowerHost host) {
-        List<PowerContainerVm> migratableContainers = getMigratableVms(host);
+        List<PowerContainerVm> migratableContainers = getMigrableVms(host);
         if (migratableContainers.isEmpty()) {
             return null;
         }

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.power.PowerDatacenter;
 import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationAbstract;
@@ -16,11 +17,11 @@ import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegressi
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegressionRobust;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationStaticThreshold;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicy;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumUtilization;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyRandomSelection;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 
 /**
  * The Class RunnerAbstract.
@@ -223,7 +224,7 @@ public abstract class RunnerAbstract {
 			String vmSelectionPolicyName,
 			String parameterName) {
 		VmAllocationPolicy vmAllocationPolicy = null;
-		PowerVmSelectionPolicy vmSelectionPolicy = null;
+		SelectionPolicy<GuestEntity> vmSelectionPolicy = null;
 		if (!vmSelectionPolicyName.isEmpty()) {
 			vmSelectionPolicy = getVmSelectionPolicy(vmSelectionPolicyName);
 		}
@@ -304,8 +305,8 @@ public abstract class RunnerAbstract {
 	 * @param vmSelectionPolicyName the vm selection policy name
 	 * @return the vm selection policy
 	 */
-	protected PowerVmSelectionPolicy getVmSelectionPolicy(String vmSelectionPolicyName) {
-		PowerVmSelectionPolicy vmSelectionPolicy = null;
+	protected SelectionPolicy<GuestEntity> getVmSelectionPolicy(String vmSelectionPolicyName) {
+		SelectionPolicy<GuestEntity> vmSelectionPolicy = null;
 		switch (vmSelectionPolicyName) {
 			case "mc":
 				vmSelectionPolicy = new PowerVmSelectionPolicyMaximumCorrelation(
