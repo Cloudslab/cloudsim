@@ -19,11 +19,11 @@ import java.util.Set;
  *
  * @since CloudSim toolkit 7.0
  */
-public class SelectionPolicyMinimumCorrelation extends SelectionPolicy {
+public class SelectionPolicyMinimumCorrelation implements SelectionPolicy<HostEntity> {
 
-    private SelectionPolicy fallbackPolicy;
+    private SelectionPolicy<HostEntity> fallbackPolicy;
 
-    public SelectionPolicyMinimumCorrelation(final SelectionPolicy fallbackPolicy) {
+    public SelectionPolicyMinimumCorrelation(final SelectionPolicy<HostEntity> fallbackPolicy) {
         super();
 
         if (fallbackPolicy instanceof SelectionPolicyMinimumCorrelation) {
@@ -33,7 +33,7 @@ public class SelectionPolicyMinimumCorrelation extends SelectionPolicy {
     }
 
     @Override
-    public HostEntity selectHost(List<HostEntity> hostCandidates, Object obj, Set<HostEntity> excludedHostCandidates) {
+    public HostEntity select(List<HostEntity> candidates, Object obj, Set<HostEntity> excludedCandidates) {
         double[] utilizationHistory;
 
         // @TODO: Remo Andreoli: ugly, further generalisation of the concept of power is needed
@@ -48,8 +48,8 @@ public class SelectionPolicyMinimumCorrelation extends SelectionPolicy {
         Correlation correlation = new Correlation();
         double minCor = Double.MAX_VALUE;
         HostEntity selectedHost = null;
-        for (HostEntity hostCandidate : hostCandidates) {
-            if (excludedHostCandidates.contains(hostCandidate)) {
+        for (HostEntity hostCandidate : candidates) {
+            if (excludedCandidates.contains(hostCandidate)) {
                 continue;
             }
 
@@ -65,13 +65,13 @@ public class SelectionPolicyMinimumCorrelation extends SelectionPolicy {
                 }
             } else {
                 Log.printlnConcat(CloudSim.clock()+": "+getClass().getSimpleName()+": fallback activated ("+hostCandidate.getClassName()+" # "+hostCandidate.getId()+" is not power-aware)");
-                selectedHost = fallbackPolicy.selectHost(hostCandidates, obj, excludedHostCandidates);
+                selectedHost = fallbackPolicy.select(candidates, obj, excludedCandidates);
             }
         }
 
         if (selectedHost == null) {
             Log.printlnConcat(CloudSim.clock()+": "+getClass().getSimpleName()+": fallback activated (No host found)");
-            selectedHost = fallbackPolicy.selectHost(hostCandidates, obj, excludedHostCandidates);
+            selectedHost = fallbackPolicy.select(candidates, obj, excludedCandidates);
         }
         return selectedHost;
     }

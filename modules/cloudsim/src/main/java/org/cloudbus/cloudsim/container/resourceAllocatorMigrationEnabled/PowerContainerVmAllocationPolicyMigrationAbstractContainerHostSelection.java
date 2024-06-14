@@ -19,10 +19,10 @@ import java.util.*;
  */
 public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelection extends PowerContainerVmAllocationPolicyMigrationAbstractContainerAdded {
 
-    private SelectionPolicy hostSelectionPolicy;
+    private SelectionPolicy<HostEntity> hostSelectionPolicy;
 
     public PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelection(List<? extends Host> hostList, PowerContainerVmSelectionPolicy vmSelectionPolicy,
-                                                                                   PowerContainerSelectionPolicy containerSelectionPolicy, SelectionPolicy hostSelectionPolicy,
+                                                                                   PowerContainerSelectionPolicy containerSelectionPolicy, SelectionPolicy<HostEntity> hostSelectionPolicy,
                                                                                    int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy, containerSelectionPolicy, numberOfVmTypes, vmPes, vmRam, vmBw, vmSize, vmMips);
         setHostSelectionPolicy(hostSelectionPolicy);
@@ -41,7 +41,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             if(getHostList().isEmpty()){
                 return map;
             }
-            HostEntity host = getHostSelectionPolicy().selectHost(getHostList(), container, excludedHost1);
+            HostEntity host = getHostSelectionPolicy().select(getHostList(), container, excludedHost1);
             boolean findVm = false;
             List<ContainerVm> vmList = host.getGuestList();
             PowerVmList.sortByCpuUtilization(vmList);
@@ -238,7 +238,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
     while (true) {
 
-        HostEntity host = getHostSelectionPolicy().selectHost(underUtilizedHostList, container, excludedHost1);
+        HostEntity host = getHostSelectionPolicy().select(underUtilizedHostList, container, excludedHost1);
         List<ContainerVm> vmList = new ArrayList<>();
 
         for(Map<String, Object> map2:createdVm){
@@ -296,11 +296,11 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
     }
 
-    public void setHostSelectionPolicy(SelectionPolicy hostSelectionPolicy) {
+    public void setHostSelectionPolicy(SelectionPolicy<HostEntity> hostSelectionPolicy) {
         this.hostSelectionPolicy = hostSelectionPolicy;
     }
 
-    public SelectionPolicy getHostSelectionPolicy() {
+    public SelectionPolicy<HostEntity> getHostSelectionPolicy() {
         return hostSelectionPolicy;
     }
 }

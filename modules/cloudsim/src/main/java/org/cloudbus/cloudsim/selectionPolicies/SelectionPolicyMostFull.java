@@ -7,30 +7,31 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by sareh fotuhi Piraghaj on 16/12/15.
- * Modified by Remo Andreoli June (2024).
- * For Most-Full (aka Worst-Fit) policy.
+ * Created by Remo Andreoli (June 2024).
+ * Most-Full (aka Worst-Fit) policy.
+ *
+ * @since CloudSim toolkit 7.0
  */
-public class SelectionPolicyMostFull extends SelectionPolicy {
+public class SelectionPolicyMostFull implements SelectionPolicy<HostEntity> {
     @Override
-    public HostEntity selectHost(List<HostEntity> hostCandidates, Object obj, Set<HostEntity> excludedHostCandidates) {
-        double minUsage = Double.MAX_VALUE;
+    public HostEntity select(List<HostEntity> candidates, Object obj, Set<HostEntity> excludedCandidates) {
+        double minAvailable = Double.MAX_VALUE;
         HostEntity selectedHost = null;
 
-        for (HostEntity hostCandidate : hostCandidates) {
-            if (excludedHostCandidates.contains(hostCandidate)) {
+        for (HostEntity hostCandidate : candidates) {
+            if (excludedCandidates.contains(hostCandidate)) {
                 continue;
             }
 
-            double hostUsage;
+            double hostAvailable;
             if (hostCandidate instanceof PowerHost powerHost) {
-                hostUsage = powerHost.getUtilizationOfCpu();
+                hostAvailable = powerHost.getUtilizationOfCpu();
             } else {
-                hostUsage = hostCandidate.getGuestScheduler().getAvailableMips();
+                hostAvailable = hostCandidate.getGuestScheduler().getAvailableMips();
             }
 
-            if ( hostUsage < minUsage ) {
-                minUsage = hostUsage;
+            if ( hostAvailable < minAvailable ) {
+                minAvailable = hostAvailable;
                 selectedHost = hostCandidate;
             }
         }

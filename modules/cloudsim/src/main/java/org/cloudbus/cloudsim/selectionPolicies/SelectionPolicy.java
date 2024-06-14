@@ -1,25 +1,26 @@
 package org.cloudbus.cloudsim.selectionPolicies;
 
-import org.cloudbus.cloudsim.core.HostEntity;
-
 import java.util.List;
 import java.util.Set;
 
 /**
- *  Initially created by sareh fotuhi Piraghaj on 16/12/15.
- *  Completely overhauled by Remo Andreoli on June 2024.
+ *  Created by Remo Andreoli (June 2024).
  *
- *  Abstract class for writing placement policies for guest entities.
+ *  Abstract class for writing selection policies.
+ *  It is generally used for placement (select a host for a guest entity) for
+ *  migration (select a guest to migrate from a host)
+ *
+ * @since CloudSim toolkit 7.0
  */
 
-public abstract class SelectionPolicy {
+public interface SelectionPolicy<CandidateEntity> {
     /**
      * Select a host from the hostCandidates list, ignoring the hosts in the excluded list.
      *
-     * @param hostCandidates the host list
-     * @param obj For arbitrary data
-     * @param excludedHostCandidates hosts to be ignored
-     * @return the destination host to place guest
+     * @param candidates             the candidate list
+     * @param obj                    For arbitrary data
+     * @param excludedCandidates candidates to be ignored from list
+     * @return the selected entity
      */
-    public abstract HostEntity selectHost(List<HostEntity> hostCandidates, Object obj, Set<HostEntity> excludedHostCandidates);
+    CandidateEntity select(List<CandidateEntity> candidates, Object obj, Set<CandidateEntity> excludedCandidates);
 }

@@ -16,12 +16,12 @@ public class VmAllocationWithSelectionPolicy extends VmAllocationPolicy {
     /** The vm table. */
 
     @Getter @Setter
-    private SelectionPolicy selectionPolicy;
+    private SelectionPolicy<HostEntity> selectionPolicy;
 
     @Getter @Setter
     private Set<HostEntity> excludedHostCandidates;
 
-    public VmAllocationWithSelectionPolicy(List<? extends HostEntity> list, SelectionPolicy selectionPolicy) {
+    public VmAllocationWithSelectionPolicy(List<? extends HostEntity> list, SelectionPolicy<HostEntity> selectionPolicy) {
         super(list);
         setExcludedHostCandidates(new HashSet<>());
         setSelectionPolicy(selectionPolicy);
@@ -33,7 +33,7 @@ public class VmAllocationWithSelectionPolicy extends VmAllocationPolicy {
         int tries = 0;
 
         do{
-            HostEntity selectedHost = getSelectionPolicy().selectHost(getHostList(), guest, excludedHostCandidates);
+            HostEntity selectedHost = getSelectionPolicy().select(getHostList(), guest, excludedHostCandidates);
             if(selectedHost == null){
                 return null;
             }

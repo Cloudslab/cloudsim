@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection extends PowerContainerVmAllocationPolicyMigrationAbstract {
 
-    private SelectionPolicy hostSelectionPolicy;
+    private SelectionPolicy<HostEntity> hostSelectionPolicy;
     private double utilizationThreshold = 0.9;
     private double underUtilizationThreshold = 0.7;
 
@@ -27,7 +27,7 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
      * @param hostList            the host list
      * @param vmSelectionPolicy   the vm selection policy
      */
-    public PowerContainerVmAllocationPolicyMigrationAbstractHostSelection(List<? extends Host> hostList, PowerContainerVmSelectionPolicy vmSelectionPolicy, SelectionPolicy hostSelectionPolicy, double OlThreshold, double UlThreshold) {
+    public PowerContainerVmAllocationPolicyMigrationAbstractHostSelection(List<? extends Host> hostList, PowerContainerVmSelectionPolicy vmSelectionPolicy, SelectionPolicy<HostEntity> hostSelectionPolicy, double OlThreshold, double UlThreshold) {
         super(hostList, vmSelectionPolicy);
         setHostSelectionPolicy(hostSelectionPolicy);
         setUtilizationThreshold(OlThreshold);
@@ -42,12 +42,12 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
      * @param excludedHosts the excluded hosts
      * @return the power host
      */
-    public PowerHost findHostForVm(ContainerVm vm, Set<? extends Host> excludedHosts) {
+    public PowerHost findHostForGuest(ContainerVm vm, Set<? extends Host> excludedHosts) {
         PowerHost allocatedHost = null;
         boolean find = false;
         Set<HostEntity> excludedHost1 = new HashSet<>(excludedHosts);
         while (!find) {
-            HostEntity host = getHostSelectionPolicy().selectHost(getHostList(), vm, excludedHost1);
+            HostEntity host = getHostSelectionPolicy().select(getHostList(), vm, excludedHost1);
             if (host == null) {
                 return allocatedHost;
             }
@@ -68,11 +68,11 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
     }
 
 
-    public SelectionPolicy getHostSelectionPolicy() {
+    public SelectionPolicy<HostEntity> getHostSelectionPolicy() {
         return hostSelectionPolicy;
     }
 
-    public void setHostSelectionPolicy(SelectionPolicy hostSelectionPolicy) {
+    public void setHostSelectionPolicy(SelectionPolicy<HostEntity> hostSelectionPolicy) {
         this.hostSelectionPolicy = hostSelectionPolicy;
     }
 

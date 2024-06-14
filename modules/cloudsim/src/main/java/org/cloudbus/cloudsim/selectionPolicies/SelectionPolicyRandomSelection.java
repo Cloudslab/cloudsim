@@ -8,19 +8,20 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by sareh fotuhi Piraghaj on 16/12/15.
- * Modified by Remo Andreoli June (2024).
+ * Created by Remo Andreoli (June 2024).
  * For Random policy.
+ *
+ * @since CloudSim toolkit 7.0
  */
-public class SelectionPolicyRandomSelection extends SelectionPolicy {
+public class SelectionPolicyRandomSelection implements SelectionPolicy<HostEntity> {
     @Override
-    public HostEntity selectHost(List<HostEntity> hostCandidates, Object obj, Set<HostEntity> excludedHostCandidates) {
+    public HostEntity select(List<HostEntity> candidates, Object obj, Set<HostEntity> excludedCandidates) {
         HostEntity selectedHost = null;
         while (true) {
-            if (!hostCandidates.isEmpty()) {
-                int randomNum = new RandomGen().getNum(hostCandidates.size());
-                selectedHost = hostCandidates.get(randomNum);
-                if (excludedHostCandidates.contains(selectedHost)) {
+            if (!candidates.isEmpty()) {
+                int randomNum = new RandomGen().getNum(candidates.size());
+                selectedHost = candidates.get(randomNum);
+                if (excludedCandidates.contains(selectedHost)) {
                     continue;
                 }
             } else {

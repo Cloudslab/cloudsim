@@ -1,10 +1,8 @@
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
-import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.VmAllocationPolicySimpler;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -207,7 +205,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param excludedHosts the excluded hosts
      * @return the power host
      */
-    public PowerHost findHostForVm(ContainerVm vm, Set<? extends Host> excludedHosts) {
+    public PowerHost findHostForGuest(ContainerVm vm, Set<? extends Host> excludedHosts) {
         double minPower = Double.MAX_VALUE;
         PowerHost allocatedHost = null;
 
@@ -263,7 +261,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
         if (vm.getHost() != null) {
             excludedHosts.add((Host) vm.getHost());
         }
-        PowerHost hostForVm = findHostForVm(vm, excludedHosts);
+        PowerHost hostForVm = findHostForGuest(vm, excludedHosts);
         excludedHosts.clear();
 
         return hostForVm;
@@ -297,7 +295,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
         List<Map<String, Object>> migrationMap = new LinkedList<>();
         PowerVmList.sortByCpuUtilization(vmsToMigrate);
         for (ContainerVm vm : vmsToMigrate) {
-            PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
+            PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
             if (allocatedHost != null) {
                 allocatedHost.guestCreate(vm);
                 Log.printlnConcat("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
@@ -324,7 +322,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
         List<Map<String, Object>> migrationMap = new LinkedList<>();
         PowerVmList.sortByCpuUtilization(vmsToMigrate);
         for (ContainerVm vm : vmsToMigrate) {
-            PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
+            PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
             if (allocatedHost != null) {
                 allocatedHost.guestCreate(vm);
                 Log.printlnConcat("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());

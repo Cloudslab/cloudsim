@@ -9,11 +9,13 @@ import org.cloudbus.cloudsim.core.HostEntity;
 import java.util.*;
 
 /**
- * Created by Remo Andreoli June (2024).
+ * Created by Remo Andreoli (June 2024).
  * For Worst-Fit policy.
+ *
+ * @since CloudSim toolkit 7.0
  */
 
-public class SelectionPolicyWorstFit extends SelectionPolicy {
+public class SelectionPolicyWorstFit implements SelectionPolicy<HostEntity> {
     /** The map between each VM and the number of Pes used.
      * The map key is a VM UID and the value is the number of used Pes for that VM. */
     @Getter(AccessLevel.PROTECTED) @Setter(AccessLevel.PROTECTED)
@@ -24,12 +26,12 @@ public class SelectionPolicyWorstFit extends SelectionPolicy {
     private List<Integer> freePes;
 
     @Override
-    public HostEntity selectHost(List<HostEntity> hostCandidates, Object obj, Set<HostEntity> excludedHostCandidates) {
+    public HostEntity select(List<HostEntity> candidates, Object obj, Set<HostEntity> excludedCandidates) {
         int moreFree = Integer.MIN_VALUE;
         HostEntity selectedHost = null;
 
-        for (HostEntity hostCandidate : hostCandidates) {
-            if (excludedHostCandidates.contains(hostCandidate)) {
+        for (HostEntity hostCandidate : candidates) {
+            if (excludedCandidates.contains(hostCandidate)) {
                 continue;
             }
 
