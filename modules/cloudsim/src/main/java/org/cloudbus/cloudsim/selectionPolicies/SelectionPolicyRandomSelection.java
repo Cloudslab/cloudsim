@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.container.placementPolicies;
+package org.cloudbus.cloudsim.selectionPolicies;
 
 import org.cloudbus.cloudsim.container.utils.RandomGen;
 import org.cloudbus.cloudsim.Log;
@@ -12,7 +12,7 @@ import java.util.Set;
  * Modified by Remo Andreoli June (2024).
  * For Random policy.
  */
-public class PlacementPolicyRandomSelection extends PlacementPolicy {
+public class SelectionPolicyRandomSelection extends SelectionPolicy {
     @Override
     public HostEntity selectHost(List<HostEntity> hostCandidates, Object obj, Set<HostEntity> excludedHostCandidates) {
         HostEntity selectedHost = null;

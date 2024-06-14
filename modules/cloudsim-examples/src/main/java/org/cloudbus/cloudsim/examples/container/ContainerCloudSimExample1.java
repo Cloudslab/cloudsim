@@ -16,10 +16,8 @@ package org.cloudbus.cloudsim.examples.container;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.core.*;
-import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicy;
-import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicyLeastFull;
-import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicyMinimumCorrelation;
-import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicyMostFull;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyFirstFit;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
@@ -142,7 +140,7 @@ public class ContainerCloudSimExample1 {
              * migration destination.
              *
              */
-            PlacementPolicy hostSelectionPolicy = new PlacementPolicyMostFull();
+            SelectionPolicy hostSelectionPolicy = new SelectionPolicyFirstFit();
 
             /**
              * 9- The container allocation policy  which defines the allocation of VMs to containers.

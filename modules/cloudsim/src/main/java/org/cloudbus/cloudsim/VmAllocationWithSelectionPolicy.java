@@ -1,9 +1,8 @@
-package org.cloudbus.cloudsim.container.resourceAllocators;
+package org.cloudbus.cloudsim;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.cloudbus.cloudsim.VmAllocationPolicySimple;
-import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicy;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 
@@ -13,16 +12,16 @@ import java.util.*;
  * Created by sareh on 16/12/15.
  * Modified by Remo Andreoli (March 2024)
  */
-public class VmAllocationWithPlacementPolicy extends VmAllocationPolicySimple {
+public class VmAllocationWithSelectionPolicy extends VmAllocationPolicySimple {
     /** The vm table. */
 
     @Getter @Setter
-    private PlacementPolicy placementPolicy;
+    private SelectionPolicy selectionPolicy;
 
 
-    public VmAllocationWithPlacementPolicy(List<? extends HostEntity> list, PlacementPolicy placementPolicy) {
+    public VmAllocationWithSelectionPolicy(List<? extends HostEntity> list, SelectionPolicy selectionPolicy) {
         super(list);
-        setPlacementPolicy(placementPolicy);
+        setSelectionPolicy(selectionPolicy);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class VmAllocationWithPlacementPolicy extends VmAllocationPolicySimple {
         int tries = 0;
 
         do{
-            HostEntity selectedHost = getPlacementPolicy().selectHost(getHostList(), guest, excludedHostList);
+            HostEntity selectedHost = getSelectionPolicy().selectHost(getHostList(), guest, excludedHostList);
             if(selectedHost == null){
                 return null;
             }

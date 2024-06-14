@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.container.placementPolicies;
+package org.cloudbus.cloudsim.selectionPolicies;
 
 import org.cloudbus.cloudsim.core.HostEntity;
 
@@ -12,7 +12,7 @@ import java.util.Set;
  *  Abstract class for writing placement policies for guest entities.
  */
 
-public abstract class PlacementPolicy {
+public abstract class SelectionPolicy {
     /**
      * Select a host from the hostCandidates list, ignoring the hosts in the excluded list.
      *

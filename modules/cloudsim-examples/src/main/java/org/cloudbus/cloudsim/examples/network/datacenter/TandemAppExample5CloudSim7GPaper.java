@@ -2,8 +2,8 @@ package org.cloudbus.cloudsim.examples.network.datacenter;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.EX.DatacenterBrokerEX;
-import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicyLeastFull;
-import org.cloudbus.cloudsim.container.resourceAllocators.VmAllocationWithPlacementPolicy;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyLeastFull;
+import org.cloudbus.cloudsim.VmAllocationWithSelectionPolicy;
 import org.cloudbus.cloudsim.container.utils.CustomCSVWriter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -245,7 +245,7 @@ public class TandemAppExample5CloudSim7GPaper {
 			datacenter = new NetworkDatacenter(
 					name,
 					characteristics,
-					new VmAllocationWithPlacementPolicy(hostList, new PlacementPolicyLeastFull()),
+					new VmAllocationWithSelectionPolicy(hostList, new SelectionPolicyLeastFull()),
 					storageList,
 					0);
 

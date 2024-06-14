@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.container.placementPolicies;
+package org.cloudbus.cloudsim.selectionPolicies;
 
 
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -12,7 +12,7 @@ import java.util.Set;
  * For First Fit policy.
  */
 
-public class PlacementPolicyFirstFit extends PlacementPolicy {
+public class SelectionPolicyFirstFit extends SelectionPolicy {
     @Override
     public HostEntity selectHost(List<HostEntity> hostCandidates, Object obj, Set<HostEntity> excludedHostCandidates) {
         HostEntity selectedHost = null;

@@ -3,7 +3,7 @@ package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
-import org.cloudbus.cloudsim.container.placementPolicies.PlacementPolicy;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -19,10 +19,10 @@ import java.util.*;
  */
 public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelection extends PowerContainerVmAllocationPolicyMigrationAbstractContainerAdded {
 
-    private PlacementPolicy hostSelectionPolicy;
+    private SelectionPolicy hostSelectionPolicy;
 
     public PowerContainerVmAllocationPolicyMigrationAbstractContainerHostSelection(List<? extends Host> hostList, PowerContainerVmSelectionPolicy vmSelectionPolicy,
-                                                                                   PowerContainerSelectionPolicy containerSelectionPolicy, PlacementPolicy hostSelectionPolicy,
+                                                                                   PowerContainerSelectionPolicy containerSelectionPolicy, SelectionPolicy hostSelectionPolicy,
                                                                                    int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy, containerSelectionPolicy, numberOfVmTypes, vmPes, vmRam, vmBw, vmSize, vmMips);
         setHostSelectionPolicy(hostSelectionPolicy);
@@ -296,11 +296,11 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
     }
 
-    public void setHostSelectionPolicy(PlacementPolicy hostSelectionPolicy) {
+    public void setHostSelectionPolicy(SelectionPolicy hostSelectionPolicy) {
         this.hostSelectionPolicy = hostSelectionPolicy;
     }
 
-    public PlacementPolicy getHostSelectionPolicy() {
+    public SelectionPolicy getHostSelectionPolicy() {
         return hostSelectionPolicy;
     }
 }

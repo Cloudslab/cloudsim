@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.container.placementPolicies;
+package org.cloudbus.cloudsim.selectionPolicies;
 
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -11,7 +11,7 @@ import java.util.Set;
  * Modified by Remo Andreoli June (2024).
  * For Least-Full policy.
  */
-public class PlacementPolicyLeastFull extends PlacementPolicy {
+public class SelectionPolicyLeastFull extends SelectionPolicy {
     @Override
     public HostEntity selectHost(List<HostEntity> hostCandidates, Object obj, Set<HostEntity> excludedHostCandidates) {
         double maxUsage = Double.MIN_VALUE;

@@ -1,4 +1,4 @@
-package org.cloudbus.cloudsim.container.placementPolicies;
+package org.cloudbus.cloudsim.selectionPolicies;
 
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.container.core.Container;
@@ -19,14 +19,14 @@ import java.util.Set;
  *
  * @since CloudSim toolkit 7.0
  */
-public class PlacementPolicyMinimumCorrelation extends PlacementPolicy {
+public class SelectionPolicyMinimumCorrelation extends SelectionPolicy {
 
-    private PlacementPolicy fallbackPolicy;
+    private SelectionPolicy fallbackPolicy;
 
-    public PlacementPolicyMinimumCorrelation(final PlacementPolicy fallbackPolicy) {
+    public SelectionPolicyMinimumCorrelation(final SelectionPolicy fallbackPolicy) {
         super();
 
-        if (fallbackPolicy instanceof PlacementPolicyMinimumCorrelation) {
+        if (fallbackPolicy instanceof SelectionPolicyMinimumCorrelation) {
             throw new IllegalArgumentException("Cannot use same policy as the fallback policy");
         }
         setFallbackPolicy(fallbackPolicy);
@@ -42,7 +42,7 @@ public class PlacementPolicyMinimumCorrelation extends PlacementPolicy {
         } else if(obj instanceof ContainerVm) {
             utilizationHistory = ((PowerContainerVm) obj).getUtilizationHistoryList();
         } else {
-            throw new IllegalArgumentException("PlacementPolicyMinimumCorrelation.selectHost() requires a power-aware guest entity");
+            throw new IllegalArgumentException("SelectionPolicyMinimumCorrelation.selectHost() requires a power-aware guest entity");
         }
 
         Correlation correlation = new Correlation();
@@ -77,11 +77,11 @@ public class PlacementPolicyMinimumCorrelation extends PlacementPolicy {
     }
 
 
-    public PlacementPolicy getFallbackPolicy() {
+    public SelectionPolicy getFallbackPolicy() {
         return fallbackPolicy;
     }
 
-    public void setFallbackPolicy(PlacementPolicy fallbackPolicy) {
+    public void setFallbackPolicy(SelectionPolicy fallbackPolicy) {
         this.fallbackPolicy = fallbackPolicy;
     }
 

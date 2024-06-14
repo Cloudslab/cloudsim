@@ -1,7 +1,6 @@
 package org.cloudbus.cloudsim.examples.container;
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.placementPolicies.*;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyCor;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMaximumUsage;
@@ -9,11 +8,12 @@ import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMC;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized;
-import org.cloudbus.cloudsim.container.resourceAllocators.VmAllocationWithPlacementPolicy;
+import org.cloudbus.cloudsim.VmAllocationWithSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.selectionPolicies.*;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 
 import java.io.File;
@@ -217,7 +217,7 @@ public abstract class RunnerAbs {
         VmAllocationPolicy vmAllocationPolicy = null;
         PowerContainerVmSelectionPolicy vmSelectionPolicy = null;
         PowerContainerSelectionPolicy containerSelectionPolicy = null;
-        PlacementPolicy hostSelectionPolicy = null;
+        SelectionPolicy hostSelectionPolicy = null;
         if (!vmSelectionPolicyName.isEmpty() && !containerSelectionPolicyName.isEmpty() && !hostSelectionPolicyName.isEmpty()) {
             vmSelectionPolicy = this.getVmSelectionPolicy(vmSelectionPolicyName);
             containerSelectionPolicy = this.getContainerSelectionPolicy(containerSelectionPolicyName);
@@ -261,65 +261,65 @@ public abstract class RunnerAbs {
             containerAllocationPolicy = new PowerVmAllocationPolicySimple(vmList); // DVFS policy without VM migrations
         } else {
 
-            PlacementPolicy placementPolicy = getContainerPlacementPolicy(containerAllocationPolicyName);
-            containerAllocationPolicy = new VmAllocationWithPlacementPolicy(vmList, placementPolicy); // DVFS policy without VM migrations
+            SelectionPolicy selectionPolicy = getContainerPlacementPolicy(containerAllocationPolicyName);
+            containerAllocationPolicy = new VmAllocationWithSelectionPolicy(vmList, selectionPolicy); // DVFS policy without VM migrations
         }
 
         return containerAllocationPolicy;
 
     }
 
-    protected PlacementPolicy getContainerPlacementPolicy(String name) {
-        PlacementPolicy placementPolicy;
+    protected SelectionPolicy getContainerPlacementPolicy(String name) {
+        SelectionPolicy selectionPolicy;
         switch (name) {
             case "LeastFull":
-                placementPolicy = new PlacementPolicyLeastFull();
+                selectionPolicy = new SelectionPolicyLeastFull();
                 break;
             case "MostFull":
-                placementPolicy = new PlacementPolicyMostFull();
+                selectionPolicy = new SelectionPolicyMostFull();
                 break;
 
             case "FirstFit":
-                placementPolicy = new PlacementPolicyFirstFit();
+                selectionPolicy = new SelectionPolicyFirstFit();
                 break;
             case "Random":
-                placementPolicy = new PlacementPolicyRandomSelection();
+                selectionPolicy = new SelectionPolicyRandomSelection();
                 break;
             default:
-                placementPolicy = null;
+                selectionPolicy = null;
                 System.out.println("The container placement policy is not defined");
                 break;
         }
-        return placementPolicy;
+        return selectionPolicy;
     }
 
-    protected PlacementPolicy getHostSelectionPolicy(String hostSelectionPolicyName) {
+    protected SelectionPolicy getHostSelectionPolicy(String hostSelectionPolicyName) {
         Object hostSelectionPolicy = null;
         if (hostSelectionPolicyName == "FirstFit") {
 
-            hostSelectionPolicy = new PlacementPolicyFirstFit();
+            hostSelectionPolicy = new SelectionPolicyFirstFit();
 
 
         } else if (hostSelectionPolicyName == "LeastFull") {
 
-            hostSelectionPolicy = new PlacementPolicyLeastFull();
+            hostSelectionPolicy = new SelectionPolicyLeastFull();
 
 
         } else if (hostSelectionPolicyName == "MostFull") {
 
-            hostSelectionPolicy = new PlacementPolicyMostFull();
+            hostSelectionPolicy = new SelectionPolicyMostFull();
 
 
         }
 //        else if (hostSelectionPolicyName == "MinCor") {
 
-    //            hostSelectionPolicy = new PlacementPolicyMinimumCorrelation();
+    //            hostSelectionPolicy = new SelectionPolicyMinimumCorrelation();
 
 
 //        }
     else if (hostSelectionPolicyName == "RandomSelection") {
 
-            hostSelectionPolicy = new PlacementPolicyRandomSelection();
+            hostSelectionPolicy = new SelectionPolicyRandomSelection();
 
 
         }
@@ -335,7 +335,7 @@ public abstract class RunnerAbs {
             System.exit(0);
         }
 
-        return (PlacementPolicy) hostSelectionPolicy;
+        return (SelectionPolicy) hostSelectionPolicy;
     }
 
 
