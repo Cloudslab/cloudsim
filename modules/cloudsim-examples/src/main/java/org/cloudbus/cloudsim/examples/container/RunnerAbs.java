@@ -14,7 +14,6 @@ import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelec
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.selectionPolicies.*;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -258,7 +257,7 @@ public abstract class RunnerAbs {
         VmAllocationPolicy containerAllocationPolicy;
         if (containerAllocationPolicyName == "Simple") {
 
-            containerAllocationPolicy = new PowerVmAllocationPolicySimple(vmList); // DVFS policy without VM migrations
+            containerAllocationPolicy = new VmAllocationPolicySimple(vmList); // DVFS policy without VM migrations
         } else {
 
             SelectionPolicy selectionPolicy = getContainerPlacementPolicy(containerAllocationPolicyName);

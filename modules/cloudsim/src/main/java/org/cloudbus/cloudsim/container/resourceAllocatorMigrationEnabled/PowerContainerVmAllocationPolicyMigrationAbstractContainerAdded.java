@@ -3,7 +3,6 @@ package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
-import org.cloudbus.cloudsim.container.resourceAllocators.PowerContainerAllocationPolicy;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.utils.RandomGen;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
@@ -754,7 +753,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                     Log.print("The Vm is null");
 
                 }
-                ((PowerContainerAllocationPolicy) getDatacenter().getContainerAllocationPolicy()).
+                getDatacenter().getContainerAllocationPolicy().
                         getGuestTable().put(container.getUid(), vm);
 //            container.setVm(vm);
 

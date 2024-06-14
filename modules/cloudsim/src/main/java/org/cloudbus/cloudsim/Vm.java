@@ -187,7 +187,7 @@ public class Vm implements VmAbstract {
 			CloudletScheduler cloudletScheduler) {
 		setId(id);
 		setUserId(userId);
-		setUid(getUid(userId, id));
+		setUid(GuestEntity.getUid(userId, id));
 		setMips(mips);
 		setNumberOfPes(numberOfPes);
 		setRam(ram);
@@ -434,17 +434,6 @@ public class Vm implements VmAbstract {
 				&& getGuestScheduler().getAvailableMips() >= guest.getTotalMips()
 				&& getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
 				.isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
-	}
-
-	/**
-	 * Generate unique string identifier of the VM.
-	 * 
-	 * @param userId the user id
-	 * @param vmId the vm id
-	 * @return string uid
-	 */
-	public static String getUid(int userId, int vmId) {
-		return userId + "-" + vmId;
 	}
 
 	/**

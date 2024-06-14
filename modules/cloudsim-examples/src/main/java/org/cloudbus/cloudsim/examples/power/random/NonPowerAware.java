@@ -4,16 +4,12 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.DatacenterBroker;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.examples.power.Constants;
 import org.cloudbus.cloudsim.examples.power.Helper;
 import org.cloudbus.cloudsim.power.PowerDatacenterNonPowerAware;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 
 /**
  * A simulation of a heterogeneous non-power aware data center: all hosts consume maximum power all
@@ -30,6 +26,7 @@ import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
  * Issue 13, Pages: 1397-1420, John Wiley &amp; Sons, Ltd, New York, USA, 2012
  * 
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since Jan 5, 2012
  */
 public class NonPowerAware {
@@ -63,7 +60,7 @@ public class NonPowerAware {
 					"Datacenter",
 					PowerDatacenterNonPowerAware.class,
 					hostList,
-					new PowerVmAllocationPolicySimple(hostList));
+					new VmAllocationPolicySimple(hostList));
 
 			datacenter.setDisableMigrations(true);
 

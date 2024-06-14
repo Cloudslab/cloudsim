@@ -8,9 +8,15 @@
 
 package org.cloudbus.cloudsim;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +36,12 @@ public abstract class VmAllocationPolicy {
 	/** The host list. */
 	private List<? extends HostEntity> hostList;
 
+	/** The map between each guest and its allocated host.
+	 * The map key is a guest UID and the value is the allocated host for that VM.
+	 */
+	@Getter @Setter(AccessLevel.PROTECTED)
+	private Map<String, HostEntity> guestTable;
+
 	/**
 	 * Creates a new VmAllocationPolicy object.
 	 * 
@@ -39,6 +51,7 @@ public abstract class VmAllocationPolicy {
 	 */
 	public VmAllocationPolicy(List<? extends HostEntity> list) {
 		setHostList(list);
+		setGuestTable(new HashMap<>());
 	}
 
 	/**
@@ -49,7 +62,9 @@ public abstract class VmAllocationPolicy {
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocateHostForGuest(GuestEntity guest);
+	public boolean allocateHostForGuest(GuestEntity guest) {
+		return allocateHostForGuest(guest, findHostForGuest(guest));
+	}
 
 	/**
 	 * Allocates a specified host for a given VM.
@@ -60,7 +75,27 @@ public abstract class VmAllocationPolicy {
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract boolean allocateHostForGuest(GuestEntity guest, HostEntity host);
+	public boolean allocateHostForGuest(GuestEntity guest, HostEntity host) {
+		String datacenterName = host.getDatacenter().getName();
+
+		if (host == guest) { // cannot be hosted on itself (VmAbstract edge-case)
+			Log.printlnConcat(CloudSim.clock()+": "+datacenterName+".vmAllocator: Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+host.getClassName()+" #"+host.getId()+" failed (cannot be allocated on itself)");
+			return false;
+		}
+
+		if (host.isBeingInstantiated()){ // cannot be hosted by an unallocated host (VmAbstract edge-case)
+			Log.printlnConcat(CloudSim.clock()+": "+datacenterName+".vmAllocator: Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+host.getClassName()+" #"+host.getId()+" failed because the host entity is not instantiated");
+			return false;
+		}
+
+		if (host.guestCreate(guest)) { // if vm has been successfully created in the host
+			getGuestTable().put(guest.getUid(), host);
+			Log.printlnConcat(CloudSim.clock()+": "+datacenterName+".vmAllocator: .vmAllocator]: "+guest.getClassName()+" #" + guest.getId() + " has been allocated to "+host.getClassName()+" #" + host.getId());
+			return true;
+		}
+
+		return false;
+	}
 
 	/**
 	 * Optimize allocation of the VMs according to current utilization.
@@ -74,7 +109,7 @@ public abstract class VmAllocationPolicy {
          * or have clear documentation. The only sublcass is the {@link VmAllocationPolicySimple}. 
          * 
 	 */
-	public abstract List<Map<String, Object>> optimizeAllocation(List<? extends GuestEntity> vmList);
+	public List<Map<String, Object>> optimizeAllocation(List<? extends GuestEntity> vmList) { return new ArrayList<>(); }
 
 	/**
 	 * Releases the host used by a VM.
@@ -83,7 +118,12 @@ public abstract class VmAllocationPolicy {
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract void deallocateHostForGuest(GuestEntity guest);
+	public void deallocateHostForGuest(GuestEntity guest) {
+		HostEntity host = getGuestTable().remove(guest.getUid());
+		if (host != null) {
+			host.guestDestroy(guest);
+		}
+	}
 
 	/**
 	 * Find host for guest entity.
@@ -91,14 +131,7 @@ public abstract class VmAllocationPolicy {
 	 * @param guest the guest
 	 * @return the host
 	 */
-	public HostEntity findHostForGuest(GuestEntity guest) {
-		for (HostEntity host : getHostList()) {
-			if (host.isSuitableForGuest(guest)) {
-				return host;
-			}
-		}
-		return null;
-	}
+	public abstract HostEntity findHostForGuest(GuestEntity guest);
 
 	/**
 	 * Get the host that is executing the given VM.
@@ -108,7 +141,7 @@ public abstract class VmAllocationPolicy {
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract HostEntity getHost(GuestEntity guest);
+	public HostEntity getHost(GuestEntity guest) { return getGuestTable().get(guest.getUid()); }
 
 	/**
 	 * Get the host that is executing the given VM belonging to the given user.
@@ -119,7 +152,7 @@ public abstract class VmAllocationPolicy {
 	 * @pre $none
 	 * @post $none
 	 */
-	public abstract HostEntity getHost(int vmId, int userId);
+	public HostEntity getHost(int vmId, int userId) { return getGuestTable().get(GuestEntity.getUid(userId, vmId)); };
 
 	/**
 	 * Sets the host list.

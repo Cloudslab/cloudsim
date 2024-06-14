@@ -1,13 +1,13 @@
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
 import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.VmAllocationPolicySimpler;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyAbstract;
 import org.cloudbus.cloudsim.power.lists.PowerVmList;
 import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
 
@@ -17,7 +17,7 @@ import java.util.*;
  * Created by sareh on 28/07/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends PowerVmAllocationPolicyAbstract {
+public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends VmAllocationPolicySimpler {
 
     /**
      * The vm selection policy.

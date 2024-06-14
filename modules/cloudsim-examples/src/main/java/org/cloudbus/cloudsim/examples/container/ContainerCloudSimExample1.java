@@ -24,7 +24,6 @@ import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelec
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -124,7 +123,7 @@ public class ContainerCloudSimExample1 {
              *
              */
 
-            VmAllocationPolicy containerAllocationPolicy = new PowerVmAllocationPolicySimple(vmList);
+            VmAllocationPolicy containerAllocationPolicy = new VmAllocationPolicySimple(vmList);
 
             /**
              * 7-  Defining the VM selection Policy. This policy determines which VMs should be selected for migration

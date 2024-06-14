@@ -183,7 +183,7 @@ public class Container implements GuestEntity {
             CloudletScheduler containerCloudletScheduler, double schedulingInterval) {
         setId(id);
         setUserId(userId);
-        setUid(getUid(userId, id));
+        setUid(GuestEntity.getUid(userId, id));
         setMips(mips);
         setNumberOfPes(numberOfPes);
         setRam(ram);
@@ -261,18 +261,6 @@ public class Container implements GuestEntity {
     public double getTotalUtilizationOfCpuMips(double time) {
         //Log.printLine("Container: get Current getTotalUtilizationOfCpuMips"+getTotalUtilizationOfCpu(time) * getMips());
         return getTotalUtilizationOfCpu(time) * getMips();
-    }
-
-
-    /**
-     * Generate unique string identificator of the container.
-     *
-     * @param userId the user id
-     * @param containerId   the container id
-     * @return string uid
-     */
-    public static String getUid(int userId, int containerId) {
-        return userId + "-" + containerId;
     }
 
     /**

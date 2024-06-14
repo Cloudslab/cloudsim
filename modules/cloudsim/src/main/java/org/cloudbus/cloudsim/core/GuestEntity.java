@@ -172,6 +172,17 @@ public interface GuestEntity extends CoreAttributes {
      */
     String getUid();
 
+    /**
+     * Generate unique string identifier of the VM.
+     *
+     * @param userId the user id
+     * @param vmId the vm id
+     * @return string uid
+     */
+    static String getUid(int userId, int vmId) {
+        return userId + "-" + vmId;
+    }
+
     /** The mips allocation history.
      * TODO Instead of using a list, this attribute would be
      * a map, where the key can be the history time

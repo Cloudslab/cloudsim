@@ -16,10 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.HostDynamicWorkload;
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -43,7 +40,7 @@ import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
  */
-public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAllocationPolicyAbstract {
+public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocationPolicy {
 
 	/** The vm selection policy. */
 	private PowerVmSelectionPolicy vmSelectionPolicy;
@@ -242,7 +239,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	 * @param excludedHosts the excluded hosts
 	 * @return the host found to host the VM
 	 */
-	public PowerHost findHostForVm(GuestEntity vm, Set<? extends HostEntity> excludedHosts) {
+	public PowerHost findHostForGuest(GuestEntity vm, Set<? extends HostEntity> excludedHosts) {
 		double minPower = Double.MAX_VALUE;
 		PowerHost allocatedHost = null;
 
@@ -293,7 +290,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 		if (vm.getHost() != null) {
 			excludedHosts.add(vm.getHost());
 		}
-		return findHostForVm(vm, excludedHosts);
+		return findHostForGuest(vm, excludedHosts);
 	}
 
 	/**
@@ -323,7 +320,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 		List<Map<String, Object>> migrationMap = new LinkedList<>();
 		PowerVmList.sortByCpuUtilization(vmsToMigrate);
 		for (Vm vm : vmsToMigrate) {
-			PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
+			PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
 			if (allocatedHost != null) {
 				allocatedHost.guestCreate(vm);
 				Log.printlnConcat("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
@@ -350,7 +347,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 		List<Map<String, Object>> migrationMap = new LinkedList<>();
 		PowerVmList.sortByCpuUtilization(vmsToMigrate);
 		for (GuestEntity vm : vmsToMigrate) {
-			PowerHost allocatedHost = findHostForVm(vm, excludedHosts);
+			PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
 			if (allocatedHost != null) {
 				allocatedHost.guestCreate(vm);
 				Log.printlnConcat("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
