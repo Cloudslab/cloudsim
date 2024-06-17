@@ -12,6 +12,8 @@ import java.util.*;
  * Created by Remo Andreoli (June 2024).
  * For Worst-Fit policy.
  *
+ * @TODO: This allocation policy is currently not working properly, because the status of host Ps is not changed anywhere
+ *        therefore every Pe is always free. SelectionPolicyMostFull is an alternative.
  * @since CloudSim toolkit 7.0
  */
 

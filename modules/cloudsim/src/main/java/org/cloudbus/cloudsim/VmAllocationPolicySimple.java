@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.HostEntity;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyLeastFull;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyWorstFit;
 
 /**
@@ -30,6 +31,6 @@ public class VmAllocationPolicySimple extends VmAllocationWithSelectionPolicy {
 	 * @post $none
 	 */
 	public VmAllocationPolicySimple(List<? extends HostEntity> list) {
-		super(list, new SelectionPolicyWorstFit());
+		super(list, new SelectionPolicyLeastFull());
 	}
 }
