@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.examples.network.datacenter;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.EX.DatacenterBrokerEX;
+import org.cloudbus.cloudsim.container.core.Container;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyLeastFull;
 import org.cloudbus.cloudsim.VmAllocationWithSelectionPolicy;
 import org.cloudbus.cloudsim.container.utils.CustomCSVWriter;
@@ -31,7 +32,7 @@ public class TandemAppExample5CloudSim7GPaper {
 
 	public static final int numberOfHosts = 4;
 	public static final int numberOfVms = 8;
-
+	public static final int numberOfContainers = 2;
 	public static int numberOfPeriodicActivations = 1;
 	public static int numberOfNoisyCloudlets = 0;
 
@@ -76,7 +77,7 @@ public class TandemAppExample5CloudSim7GPaper {
 	 * @author Remo Andreoli
 	 */
 	public static void main(String[] args) {
-		distr = new ExponentialDistr(5, 90);
+		distr = new ExponentialDistr(5, (double) firstTaskExecLength/vmMips + (double) secondTaskExecLength/vmMips);
 
 		Log.println("Starting TandemAppExample5...");
 
@@ -88,15 +89,16 @@ public class TandemAppExample5CloudSim7GPaper {
 			// Initialize the CloudSim library
 			CloudSim.init(num_user, calendar, trace_flag);
 
-			// Second step: Create Datacenters
-			// Datacenters are the resource providers in CloudSim. We need at
-			// list one of them to run a CloudSim simulation
-            NetworkDatacenter datacenter = createDatacenter("Datacenter_0");
+			hostList = CreateHosts();
 
 			// Third step: Create Broker (Make sure the broker stays alive the whole time)
 			broker = new DatacenterBrokerEX("Broker", 1000000);
 
-			guestList = CreateVMs(datacenter.getId());
+			// Create vms
+			guestList = CreateVms();
+
+			// Create containers
+			guestList.addAll(CreateContainers());
 
 			appCloudletList = new ArrayList<>();
 
@@ -120,6 +122,10 @@ public class TandemAppExample5CloudSim7GPaper {
 				noisyCloudletList.add(cloudlet);
 				broker.submitCloudletList(List.of(cloudlet), distr.sample());
 			}
+
+			// Datacenters are the resource providers in CloudSim. We need at
+			// list one of them to run a CloudSim simulation
+			createDatacenter("Datacenter_0");
 
 			// submit vm list to the broker
 			broker.submitGuestList(guestList);
@@ -194,31 +200,6 @@ public class TandemAppExample5CloudSim7GPaper {
 	 * @return the datacenter
 	 */
 	private static NetworkDatacenter createDatacenter(String name) {
-		// 2. A Machine contains one or more PEs or CPUs/Cores.
-		// In this example, it will have only one core.
-		// List<Pe> peList = new ArrayList<Pe>();
-
-		int mips = 100000;
-		int ram = 100000; // host memory (MB)
-		long storage = 1000000; // host storage
-		long bw = 10L * 1024 * 1024 * 1024; // 10 Gbps
-
-		hostList = new ArrayList<>();
-		for (int i=0; i<numberOfHosts; i++) {
-			List<Pe> peList = new ArrayList<>();
-			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
-			peList.add(new Pe(1, new PeProvisionerSimple(mips)));
-			hostList.add(new NetworkHost(
-					i,
-					new RamProvisionerSimple(ram),
-					new BwProvisionerSimple(bw),
-					storage,
-					peList,
-					new VmSchedulerTimeShared(peList)));
-		}
-
-
-
 		String arch = "x86"; // system architecture
 		String os = "Linux"; // operating system
 		String vmm = "Xen";
@@ -287,11 +268,32 @@ public class TandemAppExample5CloudSim7GPaper {
 
 	}
 
+	private static List<NetworkHost> CreateHosts() {
+		int mips = 100000;
+		int ram = 100000; // host memory (MB)
+		long storage = 1000000; // host storage
+		long bw = 10L * 1024 * 1024 * 1024; // 10 Gbps
+
+		List<NetworkHost> hostList = new ArrayList<>();
+		for (int i=0; i<numberOfHosts; i++) {
+			List<Pe> peList = new ArrayList<>();
+			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
+			peList.add(new Pe(1, new PeProvisionerSimple(mips)));
+			hostList.add(new NetworkHost(
+					i,
+					new RamProvisionerSimple(ram),
+					new BwProvisionerSimple(bw),
+					storage,
+					peList,
+					new VmSchedulerTimeShared(peList)));
+		}
+
+		return hostList;
+	}
 	/**
 	 * Creates virtual machines in a datacenter
-	 * @param datacenterId The id of the datacenter where to create the VMs.
 	 */
-	private static ArrayList<GuestEntity> CreateVMs(int datacenterId) {
+	private static List<GuestEntity> CreateVms() {
 		ArrayList<GuestEntity> vmList = new ArrayList<>();
 
 		long size = 2048; // image size (MB)
@@ -300,6 +302,9 @@ public class TandemAppExample5CloudSim7GPaper {
 		String vmm = "Xen";
 
 		for (int i=0; i<numberOfVms; i++) {
+			List<Pe> peList = new ArrayList<>();
+			peList.add(new Pe(0, new PeProvisionerSimple(vmMips)));
+
 			vmList.add(new Vm(
 					i,
 					broker.getId(),
@@ -309,10 +314,38 @@ public class TandemAppExample5CloudSim7GPaper {
 					vmBw,
 					size,
 					vmm,
-					new NetworkCloudletSpaceSharedScheduler()));
+					new NetworkCloudletSpaceSharedScheduler(),
+					new VmSchedulerTimeShared(peList),
+					new RamProvisionerSimple(ram),
+					new BwProvisionerSimple(vmBw),
+					peList));
 		}
 
 		return vmList;
+	}
+
+	private static List<GuestEntity> CreateContainers() {
+		ArrayList<GuestEntity> containerList = new ArrayList<>();
+
+		long size = 2048; // image size (MB)
+		int ram = 4096; // vm memory (MB)
+		int pesNumber = 1;
+		String containerTechnology = "Docker";
+
+		for (int i=numberOfVms; i<numberOfVms+numberOfContainers; i++) {
+			containerList.add(new Container(
+					i,
+					broker.getId(),
+					vmMips,
+					pesNumber,
+					ram,
+					vmBw,
+					size,
+					containerTechnology,
+					new NetworkCloudletSpaceSharedScheduler(), -1));
+		}
+
+		return containerList;
 	}
 
 	static private void createTaskList(AppCloudlet appCloudlet) {
