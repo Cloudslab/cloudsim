@@ -27,8 +27,7 @@ import org.cloudbus.cloudsim.core.GuestEntity;
 public class PeProvisionerSimple extends PeProvisioner {
 
 	/** The PE map, where each key is a VM id and each value
-         * is the list of PEs (in terms of their amount of MIPS) 
-         * allocated to that VM. */
+         * is the list of in terms of their allocated amount of MIPS to that VM. */
 	private Map<String, List<Double>> peTable;
 
 	/**
@@ -64,7 +63,7 @@ public class PeProvisionerSimple extends PeProvisioner {
 		}
 
 		allocatedMips.add(mips);
-
+		
 		setAvailableMips(getAvailableMips() - mips);
 		getPeTable().put(vmUid, allocatedMips);
 

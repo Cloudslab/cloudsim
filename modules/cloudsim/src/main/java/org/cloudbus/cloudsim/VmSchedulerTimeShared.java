@@ -137,14 +137,15 @@ public class VmSchedulerTimeShared extends VmScheduler {
 			String vmUid = entry.getKey();
 			getPeMap().put(vmUid, new LinkedList<>());
 
+			// Spread mips share among the Pes
 			for (double mips : entry.getValue()) {
-				while (mips >= 0.1) {
+				while (mips >= 0.1) { // rounding error
 					if (availableMips >= mips) {
 						peProvisioner.allocateMipsForGuest(vmUid, mips);
 						getPeMap().get(vmUid).add(pe);
 						availableMips -= mips;
 						break;
-					} else {
+					} else { // next pe needed, no more space
 						peProvisioner.allocateMipsForGuest(vmUid, availableMips);
 						getPeMap().get(vmUid).add(pe);
 						mips -= availableMips;
