@@ -20,8 +20,8 @@ import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationStaticThresho
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumUtilization;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyRandomSelection;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyRandomSelection;
 
 /**
  * The Class RunnerAbstract.
@@ -319,7 +319,7 @@ public abstract class RunnerAbstract {
 				vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
 				break;
 			case "rs":
-				vmSelectionPolicy = new PowerVmSelectionPolicyRandomSelection();
+				vmSelectionPolicy = new SelectionPolicyRandomSelection<>();
 				break;
 			default:
 				System.out.println("Unknown VM selection policy: " + vmSelectionPolicyName);

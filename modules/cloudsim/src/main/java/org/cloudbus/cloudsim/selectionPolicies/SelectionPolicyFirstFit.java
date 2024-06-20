@@ -13,11 +13,11 @@ import java.util.Set;
  * @since CloudSim toolkit 7.0
  */
 
-public class SelectionPolicyFirstFit implements SelectionPolicy<HostEntity> {
+public class SelectionPolicyFirstFit<CandidateEntity> implements SelectionPolicy<CandidateEntity> {
     @Override
-    public HostEntity select(List<HostEntity> candidates, Object obj, Set<HostEntity> excludedCandidates) {
-        HostEntity selectedHost = null;
-        for (HostEntity hostCandidate : candidates) {
+    public CandidateEntity select(List<CandidateEntity> candidates, Object obj, Set<CandidateEntity> excludedCandidates) {
+        CandidateEntity selectedHost = null;
+        for (CandidateEntity hostCandidate : candidates) {
             if (excludedCandidates.contains(hostCandidate)) {
                 continue;
             }

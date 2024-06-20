@@ -280,10 +280,10 @@ public abstract class RunnerAbs {
                 break;
 
             case "FirstFit":
-                selectionPolicy = new SelectionPolicyFirstFit();
+                selectionPolicy = new SelectionPolicyFirstFit<>();
                 break;
             case "Random":
-                selectionPolicy = new SelectionPolicyRandomSelection();
+                selectionPolicy = new SelectionPolicyRandomSelection<>();
                 break;
             default:
                 selectionPolicy = null;
@@ -293,11 +293,11 @@ public abstract class RunnerAbs {
         return selectionPolicy;
     }
 
-    protected SelectionPolicy getHostSelectionPolicy(String hostSelectionPolicyName) {
+    protected SelectionPolicy<HostEntity> getHostSelectionPolicy(String hostSelectionPolicyName) {
         Object hostSelectionPolicy = null;
         if (hostSelectionPolicyName == "FirstFit") {
 
-            hostSelectionPolicy = new SelectionPolicyFirstFit();
+            hostSelectionPolicy = new SelectionPolicyFirstFit<>();
 
 
         } else if (hostSelectionPolicyName == "LeastFull") {
@@ -328,7 +328,7 @@ public abstract class RunnerAbs {
 //        } else if(vmSelectionPolicyName.equals("mu")) {
 //            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
 //        } else if(vmSelectionPolicyName.equals("rs")) {
-//            vmSelectionPolicy = new PowerVmSelectionPolicyRandomSelection();
+//            vmSelectionPolicy = new SelectionPolicyRandomSelection<>();
 //        }
         else {
             System.out.println("Unknown Host selection policy: " + hostSelectionPolicyName);
@@ -353,7 +353,7 @@ public abstract class RunnerAbs {
 //        } else if(vmSelectionPolicyName.equals("mu")) {
 //            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
 //        } else if(vmSelectionPolicyName.equals("rs")) {
-//            vmSelectionPolicy = new PowerVmSelectionPolicyRandomSelection();
+//            vmSelectionPolicy = new SelectionPolicyRandomSelection<>();
 //        }
         else {
             System.out.println("Unknown Container selection policy: " + containerSelectionPolicyName);
@@ -376,7 +376,7 @@ public abstract class RunnerAbs {
 //        } else if(vmSelectionPolicyName.equals("mu")) {
 //            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
 //        } else if(vmSelectionPolicyName.equals("rs")) {
-//            vmSelectionPolicy = new PowerVmSelectionPolicyRandomSelection();
+//            vmSelectionPolicy = new SelectionPolicyRandomSelection<>();
 //        }
         else {
             System.out.println("Unknown VM selection policy: " + vmSelectionPolicyName);

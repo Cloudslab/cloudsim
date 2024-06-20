@@ -2,7 +2,6 @@ package org.cloudbus.cloudsim.selectionPolicies;
 
 import org.cloudbus.cloudsim.container.utils.RandomGen;
 import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.core.HostEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -13,10 +12,10 @@ import java.util.Set;
  *
  * @since CloudSim toolkit 7.0
  */
-public class SelectionPolicyRandomSelection implements SelectionPolicy<HostEntity> {
+public class SelectionPolicyRandomSelection<CandidateEntity> implements SelectionPolicy<CandidateEntity> {
     @Override
-    public HostEntity select(List<HostEntity> candidates, Object obj, Set<HostEntity> excludedCandidates) {
-        HostEntity selectedHost = null;
+    public CandidateEntity select(List<CandidateEntity> candidates, Object obj, Set<CandidateEntity> excludedCandidates) {
+        CandidateEntity selectedHost = null;
         while (true) {
             if (!candidates.isEmpty()) {
                 int randomNum = new RandomGen().getNum(candidates.size());
@@ -31,4 +30,17 @@ public class SelectionPolicyRandomSelection implements SelectionPolicy<HostEntit
             return selectedHost;
         }
     }
+
+    /* Alternative without our RandomGen wrapper
+
+    @Override
+	public GuestEntity select(List<GuestEntity> candidates, Object obj, Set<GuestEntity> excludedCandidates) {
+		if (candidates.isEmpty()) {
+			return null;
+		}
+
+		int index = rand.nextInt(candidates.size());
+		return candidates.get(index);
+	}
+     */
 }

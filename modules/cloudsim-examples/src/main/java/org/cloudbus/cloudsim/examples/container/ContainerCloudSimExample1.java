@@ -140,7 +140,7 @@ public class ContainerCloudSimExample1 {
              * migration destination.
              *
              */
-            SelectionPolicy<HostEntity> hostSelectionPolicy = new SelectionPolicyFirstFit();
+            SelectionPolicy<HostEntity> hostSelectionPolicy = new SelectionPolicyFirstFit<>();
 
             /**
              * 9- The container allocation policy  which defines the allocation of VMs to containers.
