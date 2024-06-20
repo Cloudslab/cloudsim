@@ -9,10 +9,11 @@ import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerCo
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMC;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized;
 import org.cloudbus.cloudsim.VmAllocationWithSelectionPolicy;
-import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.selectionPolicies.*;
 
 import java.io.File;
@@ -214,9 +215,9 @@ public abstract class RunnerAbs {
 
     protected VmAllocationPolicy getVmAllocationPolicy(String vmAllocationPolicyName, String vmSelectionPolicyName, String containerSelectionPolicyName, String hostSelectionPolicyName) {
         VmAllocationPolicy vmAllocationPolicy = null;
-        PowerContainerVmSelectionPolicy vmSelectionPolicy = null;
+        SelectionPolicy<GuestEntity> vmSelectionPolicy = null;
         PowerContainerSelectionPolicy containerSelectionPolicy = null;
-        SelectionPolicy hostSelectionPolicy = null;
+        SelectionPolicy<HostEntity> hostSelectionPolicy = null;
         if (!vmSelectionPolicyName.isEmpty() && !containerSelectionPolicyName.isEmpty() && !hostSelectionPolicyName.isEmpty()) {
             vmSelectionPolicy = this.getVmSelectionPolicy(vmSelectionPolicyName);
             containerSelectionPolicy = this.getContainerSelectionPolicy(containerSelectionPolicyName);
@@ -363,8 +364,8 @@ public abstract class RunnerAbs {
     }
 
 
-    protected PowerContainerVmSelectionPolicy getVmSelectionPolicy(String vmSelectionPolicyName) {
-        Object vmSelectionPolicy = null;
+    protected SelectionPolicy<GuestEntity> getVmSelectionPolicy(String vmSelectionPolicyName) {
+        SelectionPolicy<GuestEntity> vmSelectionPolicy = null;
         if (vmSelectionPolicyName.equals("VmMaxC")) {
             vmSelectionPolicy = new PowerContainerVmSelectionPolicyMaximumCorrelation(new PowerContainerVmSelectionPolicyMaximumUsage());
         } else if (vmSelectionPolicyName.equals("VmMaxU")) {
@@ -382,7 +383,7 @@ public abstract class RunnerAbs {
             System.exit(0);
         }
 
-        return (PowerContainerVmSelectionPolicy) vmSelectionPolicy;
+        return vmSelectionPolicy;
     }
 
     public void setEnableOutput(boolean enableOutput) {

@@ -1,39 +1,35 @@
 package org.cloudbus.cloudsim.container.vmSelectionPolicies;
 
-import org.cloudbus.cloudsim.container.core.*;
-import org.cloudbus.cloudsim.power.PowerHost;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by sareh on 30/07/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public class PowerContainerVmSelectionPolicyMinimumMigrationTime extends  PowerContainerVmSelectionPolicy {
-
-
-
+public class PowerContainerVmSelectionPolicyMinimumMigrationTime implements SelectionPolicy<GuestEntity> {
     @Override
-    public ContainerVm getVmToMigrate(PowerHost host) {
-        List<PowerContainerVm> migratableVms = getMigrableVms(host);
-        if (migratableVms.isEmpty()) {
+    public GuestEntity select(List<GuestEntity> candidates, Object obj, Set<GuestEntity> excludedCandidates) {
+        if (candidates.isEmpty()) {
             return null;
         }
-        ContainerVm vmToMigrate = null;
+
+        GuestEntity selectedGuest = null;
         double minMetric = Double.MAX_VALUE;
-        for (ContainerVm vm : migratableVms) {
+
+        for (GuestEntity vm : candidates) {
             if (vm.isInMigration()) {
                 continue;
             }
             double metric = vm.getRam();
             if (metric < minMetric) {
                 minMetric = metric;
-                vmToMigrate = vm;
+                selectedGuest = vm;
             }
         }
-        return vmToMigrate;
+        return selectedGuest;
     }
-
-
-
 }

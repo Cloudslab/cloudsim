@@ -2,48 +2,43 @@ package org.cloudbus.cloudsim.container.vmSelectionPolicies;
 
 import org.cloudbus.cloudsim.container.core.*;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.cloudbus.cloudsim.power.PowerHost;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.util.MathUtil;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by sareh on 3/08/15.
  */
-public class PowerContainerVmSelectionPolicyMaximumCorrelation extends PowerContainerVmSelectionPolicy {
+public class PowerContainerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy<GuestEntity> {
 
 
         /** The fallback policy. */
-        private PowerContainerVmSelectionPolicy fallbackPolicy;
+        private SelectionPolicy<GuestEntity> fallbackPolicy;
 
         /**
          * Instantiates a new power vm selection policy maximum correlation.
          *
          * @param fallbackPolicy the fallback policy
          */
-        public PowerContainerVmSelectionPolicyMaximumCorrelation(final PowerContainerVmSelectionPolicy fallbackPolicy) {
+        public PowerContainerVmSelectionPolicyMaximumCorrelation(final SelectionPolicy<GuestEntity> fallbackPolicy) {
             super();
             setFallbackPolicy(fallbackPolicy);
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.cloudbus.cloudsim.experiments.power.PowerVmSelectionPolicy#
-         * getVmsToMigrate(org.cloudbus .cloudsim.power.PowerHost)
-         */
         @Override
-        public ContainerVm getVmToMigrate(final PowerHost host) {
-            List<PowerContainerVm> migratableVms = getMigrableVms(host);
-            if (migratableVms.isEmpty()) {
+        public GuestEntity select(List<GuestEntity> candidates, Object host, Set<GuestEntity> excludedCandidates) {
+            if (candidates.isEmpty()) {
                 return null;
             }
             List<Double> metrics = null;
             try {
-                metrics = getCorrelationCoefficients(getUtilizationMatrix(migratableVms));
+                metrics = getCorrelationCoefficients(getUtilizationMatrix(candidates));
             } catch (IllegalArgumentException e) { // the degrees of freedom must be greater than zero
-                return getFallbackPolicy().getVmToMigrate(host);
+                return getFallbackPolicy().select(candidates, host, excludedCandidates);
             }
             double maxMetric = Double.MIN_VALUE;
             int maxIndex = 0;
@@ -54,7 +49,7 @@ public class PowerContainerVmSelectionPolicyMaximumCorrelation extends PowerCont
                     maxIndex = i;
                 }
             }
-            return migratableVms.get(maxIndex);
+            return candidates.get(maxIndex);
         }
 
         /**
@@ -63,12 +58,18 @@ public class PowerContainerVmSelectionPolicyMaximumCorrelation extends PowerCont
          * @param vmList the host
          * @return the utilization matrix
          */
-        protected double[][] getUtilizationMatrix(final List<PowerContainerVm> vmList) {
+        protected double[][] getUtilizationMatrix(final List<GuestEntity> vmList) {
             int n = vmList.size();
+                /*//TODO It gets the min size of the history among all VMs considering
+                that different VMs can have different history sizes.
+                However, the j loop is not using the m variable
+                but the size of the vm list. If a VM list has
+                a size greater than m, it will thow an exception.
+                It as to be included a test case for that.*/
             int m = getMinUtilizationHistorySize(vmList);
             double[][] utilization = new double[n][m];
             for (int i = 0; i < n; i++) {
-                List<Double> vmUtilization = vmList.get(i).getUtilizationHistory();
+                List<Double> vmUtilization = ((PowerContainerVm) vmList.get(i)).getUtilizationHistory();
                 for (int j = 0; j < vmUtilization.size(); j++) {
                     utilization[i][j] = vmUtilization.get(j);
                 }
@@ -82,10 +83,10 @@ public class PowerContainerVmSelectionPolicyMaximumCorrelation extends PowerCont
          * @param vmList the vm list
          * @return the min utilization history size
          */
-        protected int getMinUtilizationHistorySize(final List<PowerContainerVm> vmList) {
+        protected int getMinUtilizationHistorySize(final List<GuestEntity> vmList) {
             int minSize = Integer.MAX_VALUE;
-            for (PowerContainerVm vm : vmList) {
-                int size = vm.getUtilizationHistory().size();
+            for (GuestEntity vm : vmList) {
+                int size = ((PowerContainerVm) vm).getUtilizationHistory().size();
                 if (size < minSize) {
                     minSize = size;
                 }
@@ -127,7 +128,7 @@ public class PowerContainerVmSelectionPolicyMaximumCorrelation extends PowerCont
          *
          * @return the fallback policy
          */
-        public PowerContainerVmSelectionPolicy getFallbackPolicy() {
+        public SelectionPolicy<GuestEntity> getFallbackPolicy() {
             return fallbackPolicy;
         }
 
@@ -136,10 +137,7 @@ public class PowerContainerVmSelectionPolicyMaximumCorrelation extends PowerCont
          *
          * @param fallbackPolicy the new fallback policy
          */
-        public void setFallbackPolicy(final PowerContainerVmSelectionPolicy fallbackPolicy) {
+        public void setFallbackPolicy(final SelectionPolicy<GuestEntity> fallbackPolicy) {
             this.fallbackPolicy = fallbackPolicy;
         }
-
     }
-
-

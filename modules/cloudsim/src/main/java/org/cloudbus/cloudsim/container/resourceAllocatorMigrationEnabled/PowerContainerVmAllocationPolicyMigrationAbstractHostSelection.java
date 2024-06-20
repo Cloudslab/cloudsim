@@ -2,8 +2,8 @@ package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.core.*;
+import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
-import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -27,7 +27,7 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
      * @param hostList            the host list
      * @param vmSelectionPolicy   the vm selection policy
      */
-    public PowerContainerVmAllocationPolicyMigrationAbstractHostSelection(List<? extends Host> hostList, PowerContainerVmSelectionPolicy vmSelectionPolicy, SelectionPolicy<HostEntity> hostSelectionPolicy, double OlThreshold, double UlThreshold) {
+    public PowerContainerVmAllocationPolicyMigrationAbstractHostSelection(List<? extends HostEntity> hostList, SelectionPolicy<GuestEntity> vmSelectionPolicy, SelectionPolicy<HostEntity> hostSelectionPolicy, double OlThreshold, double UlThreshold) {
         super(hostList, vmSelectionPolicy);
         setHostSelectionPolicy(hostSelectionPolicy);
         setUtilizationThreshold(OlThreshold);
@@ -42,7 +42,7 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
      * @param excludedHosts the excluded hosts
      * @return the power host
      */
-    public PowerHost findHostForGuest(ContainerVm vm, Set<? extends Host> excludedHosts) {
+    public PowerHost findHostForGuest(GuestEntity vm, Set<? extends HostEntity> excludedHosts) {
         PowerHost allocatedHost = null;
         boolean find = false;
         Set<HostEntity> excludedHost1 = new HashSet<>(excludedHosts);

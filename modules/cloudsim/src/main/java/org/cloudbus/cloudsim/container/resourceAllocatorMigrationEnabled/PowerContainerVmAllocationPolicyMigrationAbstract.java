@@ -1,12 +1,13 @@
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.power.lists.PowerVmList;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
 
 import java.util.*;
@@ -20,7 +21,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
     /**
      * The vm selection policy.
      */
-    private PowerContainerVmSelectionPolicy vmSelectionPolicy;
+    private SelectionPolicy<GuestEntity> vmSelectionPolicy;
 
     /**
      * The saved allocation.
@@ -69,8 +70,8 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param vmSelectionPolicy the vm selection policy
      */
     public PowerContainerVmAllocationPolicyMigrationAbstract(
-            List<? extends Host> hostList,
-            PowerContainerVmSelectionPolicy vmSelectionPolicy) {
+            List<? extends HostEntity> hostList,
+            SelectionPolicy<GuestEntity> vmSelectionPolicy) {
         super(hostList);
         setVmSelectionPolicy(vmSelectionPolicy);
 
@@ -96,7 +97,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
         saveAllocation();
 
         ExecutionTimeMeasurer.start("optimizeAllocationVmSelection");
-        List<? extends ContainerVm> vmsToMigrate = getVmsToMigrateFromHosts(overUtilizedHosts);
+        List<? extends GuestEntity> vmsToMigrate = getVmsToMigrateFromHosts(overUtilizedHosts);
         getExecutionTimeHistoryVmSelection().add(ExecutionTimeMeasurer.end("optimizeAllocationVmSelection"));
 
         Log.println("Reallocation of VMs from the over-utilized hosts:");
@@ -205,7 +206,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param excludedHosts the excluded hosts
      * @return the power host
      */
-    public PowerHost findHostForGuest(ContainerVm vm, Set<? extends Host> excludedHosts) {
+    public PowerHost findHostForGuest(GuestEntity vm, Set<? extends HostEntity> excludedHosts) {
         double minPower = Double.MAX_VALUE;
         PowerHost allocatedHost = null;
 
@@ -241,7 +242,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param vm   the vm
      * @return true, if is host over utilized after allocation
      */
-    protected boolean isHostOverUtilizedAfterAllocation(PowerHost host, ContainerVm vm) {
+    protected boolean isHostOverUtilizedAfterAllocation(PowerHost host, GuestEntity vm) {
         boolean isHostOverUtilizedAfterAllocation = true;
         if (host.guestCreate(vm)) {
             isHostOverUtilizedAfterAllocation = isHostOverUtilized(host);
@@ -256,7 +257,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param vm the vm
      * @return the power host
      */
-    public PowerHost findHostForVm(ContainerVm vm) {
+    public PowerHost findHostForGuest(ContainerVm vm) {
         Set<Host> excludedHosts = new HashSet<>();
         if (vm.getHost() != null) {
             excludedHosts.add((Host) vm.getHost());
@@ -290,11 +291,11 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @return the new vm placement
      */
     protected List<Map<String, Object>> getNewVmPlacement(
-            List<? extends ContainerVm> vmsToMigrate,
-            Set<? extends Host> excludedHosts) {
+            List<? extends GuestEntity> vmsToMigrate,
+            Set<? extends HostEntity> excludedHosts) {
         List<Map<String, Object>> migrationMap = new LinkedList<>();
         PowerVmList.sortByCpuUtilization(vmsToMigrate);
-        for (ContainerVm vm : vmsToMigrate) {
+        for (GuestEntity vm : vmsToMigrate) {
             PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
             if (allocatedHost != null) {
                 allocatedHost.guestCreate(vm);
@@ -349,11 +350,11 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param overUtilizedHosts the over utilized hosts
      * @return the vms to migrate from hosts
      */
-    protected List<? extends ContainerVm> getVmsToMigrateFromHosts(List<PowerHost> overUtilizedHosts) {
-        List<ContainerVm> vmsToMigrate = new LinkedList<>();
+    protected List<? extends GuestEntity> getVmsToMigrateFromHosts(List<PowerHost> overUtilizedHosts) {
+        List<GuestEntity> vmsToMigrate = new LinkedList<>();
         for (PowerHost host : overUtilizedHosts) {
             while (true) {
-                ContainerVm vm = getVmSelectionPolicy().getVmToMigrate(host);
+                GuestEntity vm = getVmSelectionPolicy().select(host.getMigrableVms(), host, Set.of());
                 if (vm == null) {
                     break;
                 }
@@ -568,7 +569,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param vm   the vm
      * @return the power after allocation
      */
-    protected double getPowerAfterAllocation(PowerHost host, ContainerVm vm) {
+    protected double getPowerAfterAllocation(PowerHost host, GuestEntity vm) {
         double power = 0;
         try {
             power = host.getPowerModel().getPower(getMaxUtilizationAfterAllocation(host, vm));
@@ -587,7 +588,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param vm   the vm
      * @return the power after allocation
      */
-    protected double getMaxUtilizationAfterAllocation(PowerHost host, ContainerVm vm) {
+    protected double getMaxUtilizationAfterAllocation(PowerHost host, GuestEntity vm) {
         double requestedTotalMips = vm.getCurrentRequestedTotalMips();
         double hostUtilizationMips = getUtilizationOfCpuMips(host);
         double hostPotentialUtilizationMips = hostUtilizationMips + requestedTotalMips;
@@ -627,7 +628,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      *
      * @param vmSelectionPolicy the new vm selection policy
      */
-    protected void setVmSelectionPolicy(PowerContainerVmSelectionPolicy vmSelectionPolicy) {
+    protected void setVmSelectionPolicy(SelectionPolicy<GuestEntity> vmSelectionPolicy) {
         this.vmSelectionPolicy = vmSelectionPolicy;
     }
 
@@ -636,7 +637,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      *
      * @return the vm selection policy
      */
-    protected PowerContainerVmSelectionPolicy getVmSelectionPolicy() {
+    protected SelectionPolicy<GuestEntity> getVmSelectionPolicy() {
         return vmSelectionPolicy;
     }
 

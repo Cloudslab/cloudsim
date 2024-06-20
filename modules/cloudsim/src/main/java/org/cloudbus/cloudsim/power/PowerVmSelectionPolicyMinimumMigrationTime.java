@@ -31,6 +31,7 @@ import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
  * @since CloudSim Toolkit 3.0
  */
 public class PowerVmSelectionPolicyMinimumMigrationTime implements SelectionPolicy<GuestEntity> {
+	// @TODO: Remo Andreoli: how does it compute the MMT???
 	@Override
 	public GuestEntity select(List<GuestEntity> candidates, Object obj, Set<GuestEntity> excludedCandidates) {
 		if (candidates.isEmpty()) {

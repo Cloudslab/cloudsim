@@ -1,43 +1,35 @@
 package org.cloudbus.cloudsim.container.vmSelectionPolicies;
 
-import org.cloudbus.cloudsim.container.core.ContainerVm;
-import org.cloudbus.cloudsim.container.core.PowerContainerVm;
-import org.cloudbus.cloudsim.power.PowerHost;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by sareh on 16/11/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public class PowerContainerVmSelectionPolicyMaximumUsage extends PowerContainerVmSelectionPolicy {
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.cloudbus.cloudsim.experiments.power.PowerVmSelectionPolicy#getVmsToMigrate(org.cloudbus
-     * .cloudsim.power.PowerHost)
-     */
+public class PowerContainerVmSelectionPolicyMaximumUsage implements SelectionPolicy<GuestEntity> {
     @Override
-    public ContainerVm getVmToMigrate(PowerHost host) {
-        List<PowerContainerVm> migratableContainers = getMigrableVms(host);
-        if (migratableContainers.isEmpty()) {
+    public GuestEntity select(List<GuestEntity> candidates, Object obj, Set<GuestEntity> excludedCandidates) {
+        if (candidates.isEmpty()) {
             return null;
         }
-        ContainerVm VmsToMigrate = null;
+
+        GuestEntity selectedGuest = null;
         double maxMetric = Double.MIN_VALUE;
-        for (ContainerVm vm : migratableContainers) {
+
+        for (GuestEntity vm : candidates) {
             if (vm.isInMigration()) {
                 continue;
             }
             double metric = vm.getCurrentRequestedTotalMips();
             if (maxMetric < metric) {
                 maxMetric = metric;
-                VmsToMigrate = vm;
+                selectedGuest = vm;
             }
         }
-//        Log.formatLine("The Container To migrate is #%d from VmID %d from host %d", containerToMigrate.getId(),containerToMigrate.getVm().getId(), host.getId());
-        return VmsToMigrate;
+        return selectedGuest;
     }
-
-
 }

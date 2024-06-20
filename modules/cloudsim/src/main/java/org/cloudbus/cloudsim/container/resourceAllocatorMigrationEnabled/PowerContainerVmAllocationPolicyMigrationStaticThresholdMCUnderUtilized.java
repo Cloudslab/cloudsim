@@ -4,8 +4,9 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.ContainerDatacenter;
 import org.cloudbus.cloudsim.container.core.ContainerVm;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
-import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.util.List;
@@ -31,8 +32,8 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtil
      */
     public PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized(
             List<? extends Host> hostList,
-            PowerContainerVmSelectionPolicy vmSelectionPolicy, PowerContainerSelectionPolicy containerSelectionPolicy,
-            SelectionPolicy hostSelectionPolicy, double utilizationThreshold, double underUtilizationThresh,
+            SelectionPolicy<GuestEntity> vmSelectionPolicy, PowerContainerSelectionPolicy containerSelectionPolicy,
+            SelectionPolicy<HostEntity> hostSelectionPolicy, double utilizationThreshold, double underUtilizationThresh,
             int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy, containerSelectionPolicy, hostSelectionPolicy,underUtilizationThresh,
         		 numberOfVmTypes, vmPes, vmRam, vmBw, vmSize, vmMips);

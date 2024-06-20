@@ -16,11 +16,12 @@ package org.cloudbus.cloudsim.examples.container;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.core.*;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyFirstFit;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.utils.IDs;
-import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.PowerHost;
@@ -123,7 +124,7 @@ public class ContainerCloudSimExample1 {
              *
              */
 
-            VmAllocationPolicy containerAllocationPolicy = new VmAllocationPolicySimple(vmList);
+            VmAllocationPolicy containerAllocationPolicy = new VmAllocationPolicySimpler(vmList);
 
             /**
              * 7-  Defining the VM selection Policy. This policy determines which VMs should be selected for migration
@@ -131,7 +132,7 @@ public class ContainerCloudSimExample1 {
              *
              */
 
-            PowerContainerVmSelectionPolicy vmSelectionPolicy = new PowerContainerVmSelectionPolicyMaximumUsage();
+            SelectionPolicy<GuestEntity> vmSelectionPolicy = new PowerContainerVmSelectionPolicyMaximumUsage();
 
 
             /**
@@ -139,7 +140,7 @@ public class ContainerCloudSimExample1 {
              * migration destination.
              *
              */
-            SelectionPolicy hostSelectionPolicy = new SelectionPolicyFirstFit();
+            SelectionPolicy<HostEntity> hostSelectionPolicy = new SelectionPolicyFirstFit();
 
             /**
              * 9- The container allocation policy  which defines the allocation of VMs to containers.

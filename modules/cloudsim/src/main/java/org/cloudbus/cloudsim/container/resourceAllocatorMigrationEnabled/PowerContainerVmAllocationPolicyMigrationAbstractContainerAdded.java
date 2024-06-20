@@ -5,7 +5,6 @@ import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainer
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.utils.RandomGen;
-import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -15,6 +14,7 @@ import org.cloudbus.cloudsim.power.lists.PowerVmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
 
 import java.util.*;
@@ -39,9 +39,9 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
     protected long vmSize;
     protected double[] vmMips;
 
-    public PowerContainerVmAllocationPolicyMigrationAbstractContainerAdded(List<? extends Host> hostList,
-    		PowerContainerVmSelectionPolicy vmSelectionPolicy, PowerContainerSelectionPolicy containerSelectionPolicy,
-           int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
+    public PowerContainerVmAllocationPolicyMigrationAbstractContainerAdded(List<? extends HostEntity> hostList,
+                                                                           SelectionPolicy<GuestEntity> vmSelectionPolicy, PowerContainerSelectionPolicy containerSelectionPolicy,
+                                                                           int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy);
 //        setDatacenter(datacenter);
         setContainerSelectionPolicy(containerSelectionPolicy);
