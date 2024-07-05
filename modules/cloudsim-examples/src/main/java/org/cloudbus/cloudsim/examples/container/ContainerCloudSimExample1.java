@@ -22,7 +22,7 @@ import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyFirstFit;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.utils.IDs;
-import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -132,7 +132,7 @@ public class ContainerCloudSimExample1 {
              *
              */
 
-            SelectionPolicy<GuestEntity> vmSelectionPolicy = new PowerContainerVmSelectionPolicyMaximumUsage();
+            SelectionPolicy<GuestEntity> vmSelectionPolicy = new SelectionPolicyMaximumUsage();
 
 
             /**

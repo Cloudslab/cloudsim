@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.util.MathUtil;
 
@@ -32,6 +33,7 @@ import org.cloudbus.cloudsim.util.MathUtil;
  * </ul>
  * 
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  */
 public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy<GuestEntity> {
@@ -51,7 +53,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy
 	}
 
 	@Override
-	public GuestEntity select(List<GuestEntity> candidates, Object obj, Set<GuestEntity> excludedCandidates) {
+	public GuestEntity select(List<GuestEntity> candidates, Object host, Set<GuestEntity> excludedCandidates) {
 		if (candidates.isEmpty()) {
 			return null;
 		}
@@ -60,7 +62,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy
 		try {
 			metrics = getCorrelationCoefficients(getUtilizationMatrix(candidates));
 		} catch (IllegalArgumentException e) { // the degrees of freedom must be greater than zero
-			return getFallbackPolicy().select(candidates, obj, excludedCandidates);
+			return getFallbackPolicy().select(candidates, host, excludedCandidates);
 		}
 		double maxMetric = Double.MIN_VALUE;
 		int maxIndex = 0;
@@ -92,7 +94,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy
 		int m = getMinUtilizationHistorySize(vmList);
 		double[][] utilization = new double[n][m];
 		for (int i = 0; i < n; i++) {
-			List<Double> vmUtilization = ((PowerVm) vmList.get(i)).getUtilizationHistory();
+			List<Double> vmUtilization = ((PowerGuestEntity) vmList.get(i)).getUtilizationHistory();
 			for (int j = 0; j < vmUtilization.size(); j++) {
 				utilization[i][j] = vmUtilization.get(j);
 			}
@@ -109,7 +111,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy
 	protected int getMinUtilizationHistorySize(final List<GuestEntity> vmList) {
 		int minSize = Integer.MAX_VALUE;
 		for (GuestEntity vm : vmList) {
-			int size = ((PowerVm) vm).getUtilizationHistory().size();
+			int size = ((PowerGuestEntity) vm).getUtilizationHistory().size();
 			if (size < minSize) {
 				minSize = size;
 			}

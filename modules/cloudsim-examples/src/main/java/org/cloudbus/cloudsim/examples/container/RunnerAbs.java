@@ -2,15 +2,15 @@ package org.cloudbus.cloudsim.examples.container;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
-import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyCor;
+import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMaximumCorrelation2;
 import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMC;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized;
 import org.cloudbus.cloudsim.VmAllocationWithSelectionPolicy;
-import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumCorrelation;
-import org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage;
+import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -342,7 +342,7 @@ public abstract class RunnerAbs {
     protected PowerContainerSelectionPolicy getContainerSelectionPolicy(String containerSelectionPolicyName) {
         Object containerSelectionPolicy = null;
         if (containerSelectionPolicyName.equals("Cor")) {
-            containerSelectionPolicy = new PowerContainerSelectionPolicyCor(new PowerContainerSelectionPolicyMaximumUsage());
+            containerSelectionPolicy = new PowerContainerSelectionPolicyMaximumCorrelation2(new PowerContainerSelectionPolicyMaximumUsage());
         } else if (containerSelectionPolicyName.equals("MaxUsage")) {
             containerSelectionPolicy = new PowerContainerSelectionPolicyMaximumUsage();
 
@@ -367,9 +367,9 @@ public abstract class RunnerAbs {
     protected SelectionPolicy<GuestEntity> getVmSelectionPolicy(String vmSelectionPolicyName) {
         SelectionPolicy<GuestEntity> vmSelectionPolicy = null;
         if (vmSelectionPolicyName.equals("VmMaxC")) {
-            vmSelectionPolicy = new PowerContainerVmSelectionPolicyMaximumCorrelation(new PowerContainerVmSelectionPolicyMaximumUsage());
+            vmSelectionPolicy = new PowerVmSelectionPolicyMaximumCorrelation(new SelectionPolicyMaximumUsage());
         } else if (vmSelectionPolicyName.equals("VmMaxU")) {
-            vmSelectionPolicy = new PowerContainerVmSelectionPolicyMaximumUsage();
+            vmSelectionPolicy = new SelectionPolicyMaximumUsage();
         }
 // else if(vmSelectionPolicyName.equals("mmt")) {
 //            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumMigrationTime();

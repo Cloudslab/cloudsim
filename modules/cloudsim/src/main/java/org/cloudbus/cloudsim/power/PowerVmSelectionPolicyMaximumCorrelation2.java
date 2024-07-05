@@ -1,11 +1,10 @@
-package org.cloudbus.cloudsim.container.vmSelectionPolicies;
+package org.cloudbus.cloudsim.power;
 
 
-import org.cloudbus.cloudsim.container.core.PowerContainerVm;
 import org.cloudbus.cloudsim.container.utils.Correlation;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.power.PowerHost;
+import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.Set;
  * Created by sareh on 16/11/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public class PowerContainerVmSelectionPolicyCor implements SelectionPolicy<GuestEntity> {
+public class PowerVmSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<GuestEntity> {
 
 
     /**
@@ -28,7 +27,7 @@ public class PowerContainerVmSelectionPolicyCor implements SelectionPolicy<Guest
      *
      * @param fallbackPolicy the fallback policy
      */
-    public PowerContainerVmSelectionPolicyCor(final SelectionPolicy<GuestEntity> fallbackPolicy) {
+    public PowerVmSelectionPolicyMaximumCorrelation2(final SelectionPolicy<GuestEntity> fallbackPolicy) {
         super();
         setFallbackPolicy(fallbackPolicy);
     }
@@ -77,7 +76,7 @@ public class PowerContainerVmSelectionPolicyCor implements SelectionPolicy<Guest
 
         double[] hostUtilization = host.getUtilizationHistory();
         for (GuestEntity vm : migratableContainerVMs) {
-            double[] containerUtilization = ((PowerContainerVm) vm).getUtilizationHistoryList();
+            double[] containerUtilization = ((PowerGuestEntity) vm).getUtilizationHistoryList();
 
             double cor = correlation.getCor(hostUtilization, containerUtilization);
             if (Double.isNaN(cor)) {

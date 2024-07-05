@@ -13,7 +13,6 @@ import java.util.Set;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 
 /**

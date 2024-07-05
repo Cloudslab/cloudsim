@@ -12,7 +12,7 @@ import java.util.List;
  * Created by sareh on 7/08/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public class PowerContainerSelectionPolicyCor extends PowerContainerSelectionPolicy {
+public class PowerContainerSelectionPolicyMaximumCorrelation2 extends PowerContainerSelectionPolicy {
     /**
      * The fallback policy.
      */
@@ -23,7 +23,7 @@ public class PowerContainerSelectionPolicyCor extends PowerContainerSelectionPol
      *
      * @param fallbackPolicy the fallback policy
      */
-    public PowerContainerSelectionPolicyCor(final PowerContainerSelectionPolicy fallbackPolicy) {
+    public PowerContainerSelectionPolicyMaximumCorrelation2(final PowerContainerSelectionPolicy fallbackPolicy) {
         super();
         setFallbackPolicy(fallbackPolicy);
     }
