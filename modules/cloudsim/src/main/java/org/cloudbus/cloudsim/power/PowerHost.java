@@ -13,7 +13,7 @@ import java.util.List;
 import org.cloudbus.cloudsim.HostDynamicWorkload;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.VmScheduler;
-import org.cloudbus.cloudsim.container.core.PowerContainerVm;
+import org.cloudbus.cloudsim.core.PowerHostEntity;
 import org.cloudbus.cloudsim.power.models.PowerModel;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
@@ -38,7 +38,7 @@ import org.cloudbus.cloudsim.util.MathUtil;
  * @author Remo Andreoli
  * @since CloudSim Toolkit 2.0
  */
-public class PowerHost extends HostDynamicWorkload {
+public class PowerHost extends HostDynamicWorkload implements PowerHostEntity {
 
 	/** The power model used by the host. */
 	private PowerModel powerModel;
@@ -82,7 +82,7 @@ public class PowerHost extends HostDynamicWorkload {
          * is critical for power consumption
 	 * @return the power consumption
 	 */
-	protected double getPower(double utilization) {
+	public double getPower(double utilization) {
 		double power = 0;
 		try {
 			power = getPowerModel().getPower(utilization);
@@ -94,44 +94,11 @@ public class PowerHost extends HostDynamicWorkload {
 	}
 
 	/**
-	 * Gets the max power that can be consumed by the host.
-	 * 
-	 * @return the max power
-	 */
-	public double getMaxPower() {
-		double power = 0;
-		try {
-			power = getPowerModel().getPower(1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		return power;
-	}
-
-	/**
-	 * Gets the energy consumption using linear interpolation of the utilization change.
-	 * 
-	 * @param fromUtilization the initial utilization percentage
-	 * @param toUtilization the final utilization percentage
-	 * @param time the time
-	 * @return the energy
-	 */
-	public double getEnergyLinearInterpolation(double fromUtilization, double toUtilization, double time) {
-		if (fromUtilization == 0) {
-			return 0;
-		}
-		double fromPower = getPower(fromUtilization);
-		double toPower = getPower(toUtilization);
-		return (fromPower + (toPower - fromPower) / 2) * time;
-	}
-
-	/**
 	 * Sets the power model.
 	 * 
 	 * @param powerModel the new power model
 	 */
-	protected void setPowerModel(PowerModel powerModel) {
+	public void setPowerModel(PowerModel powerModel) {
 		this.powerModel = powerModel;
 	}
 
@@ -150,7 +117,7 @@ public class PowerHost extends HostDynamicWorkload {
 	 * @return the host CPU utilization percentage history
 	 */
 	public double[] getUtilizationHistory() {
-		double[] utilizationHistory = new double[PowerVm.HISTORY_LENGTH];
+		double[] utilizationHistory = new double[PowerHostEntity.HISTORY_LENGTH];
 		double hostMips = getTotalMips();
 		for (PowerVm vm : this.<PowerVm>getGuestList()) {
 			for (int i = 0; i < vm.getUtilizationHistory().size(); i++) {

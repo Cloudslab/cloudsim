@@ -1,10 +1,10 @@
 package org.cloudbus.cloudsim.container.core;
 
 import org.cloudbus.cloudsim.Pe;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmScheduler;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 import org.cloudbus.cloudsim.util.MathUtil;
@@ -16,13 +16,7 @@ import java.util.List;
  * Created by sareh on 14/07/15.
  * Modified by Remo Andreoli (March 2024)
  */
-public class PowerContainerVm extends ContainerVm {
-
-    /**
-     * The Constant HISTORY_LENGTH.
-     */
-    public static final int HISTORY_LENGTH = 30;
-
+public class PowerContainerVm extends ContainerVm implements PowerGuestEntity {
     /**
      * The utilization history.
      */
@@ -78,10 +72,6 @@ public class PowerContainerVm extends ContainerVm {
      * @pre currentTime >= 0
      * @post $none
      */
-
-
-
-
     @Override
     public double updateCloudletsProcessing(final double currentTime, final List<Double> mipsShare) {
         double time = super.updateCloudletsProcessing(currentTime, mipsShare);
@@ -102,73 +92,6 @@ public class PowerContainerVm extends ContainerVm {
             setPreviousTime(currentTime);
         }
         return time;
-    }
-
-    /**
-     * Gets the utilization MAD in MIPS.
-     *
-     * @return the utilization mean in MIPS
-     */
-    public double getUtilizationMad() {
-        double mad = 0;
-        if (!getUtilizationHistory().isEmpty()) {
-            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
-            double median = MathUtil.median(getUtilizationHistory());
-            double[] deviationSum = new double[n];
-            for (int i = 0; i < n; i++) {
-                deviationSum[i] = Math.abs(median - getUtilizationHistory().get(i));
-            }
-            mad = MathUtil.median(deviationSum);
-        }
-        return mad;
-    }
-
-    /**
-     * Gets the utilization mean in percents.
-     *
-     * @return the utilization mean in MIPS
-     */
-    public double getUtilizationMean() {
-        double mean = 0;
-        if (!getUtilizationHistory().isEmpty()) {
-            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
-            for (int i = 0; i < n; i++) {
-                mean += getUtilizationHistory().get(i);
-            }
-            mean /= n;
-        }
-        return mean * getMips();
-    }
-
-    /**
-     * Gets the utilization variance in MIPS.
-     *
-     * @return the utilization variance in MIPS
-     */
-    public double getUtilizationVariance() {
-        double mean = getUtilizationMean();
-        double variance = 0;
-        if (!getUtilizationHistory().isEmpty()) {
-            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
-            for (int i = 0; i < n; i++) {
-                double tmp = getUtilizationHistory().get(i) * getMips() - mean;
-                variance += tmp * tmp;
-            }
-            variance /= n;
-        }
-        return variance;
-    }
-
-    /**
-     * Adds the utilization history value.
-     *
-     * @param utilization the utilization
-     */
-    public void addUtilizationHistoryValue(final double utilization) {
-        getUtilizationHistory().add(0, utilization);
-        if (getUtilizationHistory().size() > HISTORY_LENGTH) {
-            getUtilizationHistory().remove(HISTORY_LENGTH);
-        }
     }
 
     /**
@@ -215,16 +138,4 @@ public class PowerContainerVm extends ContainerVm {
     protected void setSchedulingInterval(final double schedulingInterval) {
         this.schedulingInterval = schedulingInterval;
     }
-
-    public double[] getUtilizationHistoryList(){
-        double[] utilizationHistoryList = new double[PowerContainerVm.HISTORY_LENGTH];
-//            if any thing happens check if you need to have mips and the trim
-        for (int i = 0; i < getUtilizationHistory().size(); i++) {
-            utilizationHistoryList[i] += getUtilizationHistory().get(i) * getMips();
-        }
-
-        return MathUtil.trimZeroTail(utilizationHistoryList);
-    }
 }
-
-
