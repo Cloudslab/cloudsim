@@ -1,13 +1,13 @@
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.utils.IDs;
 import org.cloudbus.cloudsim.container.utils.RandomGen;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
+import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.power.lists.PowerVmList;
@@ -31,7 +31,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
     /**
      * The container selection policy.
      */
-    private PowerContainerSelectionPolicy containerSelectionPolicy;
+    private SelectionPolicy<PowerGuestEntity> containerSelectionPolicy;
     protected int numberOfVmTypes;
     protected int[] vmPes;
     protected int[] vmRam;
@@ -40,7 +40,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
     protected double[] vmMips;
 
     public PowerContainerVmAllocationPolicyMigrationAbstractContainerAdded(List<? extends HostEntity> hostList,
-                                                                           SelectionPolicy<GuestEntity> vmSelectionPolicy, PowerContainerSelectionPolicy containerSelectionPolicy,
+                                                                           SelectionPolicy<GuestEntity> vmSelectionPolicy, SelectionPolicy<PowerGuestEntity> containerSelectionPolicy,
                                                                            int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy);
 //        setDatacenter(datacenter);
@@ -69,7 +69,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         saveAllocation();
 
         ExecutionTimeMeasurer.start("optimizeAllocationContainerSelection");
-        List<? extends Container> containersToMigrate = getContainersToMigrateFromHosts(overUtilizedHosts);
+        List<? extends GuestEntity> containersToMigrate = getContainersToMigrateFromHosts(overUtilizedHosts);
         getExecutionTimeHistoryVmSelection().add(ExecutionTimeMeasurer.end("optimizeAllocationContainerSelection"));
 
         Log.println("Reallocation of Containers from the over-utilized hosts:");
@@ -159,11 +159,11 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         return migrationMap;
     }
 
-    private List<? extends Container> getContainersToMigrateFromHosts(List<PowerHost> overUtilizedHosts) {
-        List<Container> containersToMigrate = new LinkedList<>();
+    private List<? extends GuestEntity> getContainersToMigrateFromHosts(List<PowerHost> overUtilizedHosts) {
+        List<GuestEntity> containersToMigrate = new LinkedList<>();
         for (PowerHost host : overUtilizedHosts) {
             while (true) {
-                Container container = getContainerSelectionPolicy().getContainerToMigrate(host);
+                GuestEntity container = getContainerSelectionPolicy().select(host.getMigrableContainers(), host, Set.of());
                 if (container == null) {
                     break;
                 }
@@ -178,12 +178,12 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
     }
 
 
-    private List<Map<String, Object>> getNewContainerPlacement(List<? extends Container> containersToMigrate, Set<? extends Host> excludedHosts) {
+    private List<Map<String, Object>> getNewContainerPlacement(List<? extends GuestEntity> containersToMigrate, Set<? extends Host> excludedHosts) {
 
         List<Map<String, Object>> migrationMap = new LinkedList<>();
 
         PowerVmList.sortByCpuUtilization(containersToMigrate);
-        for (Container container : containersToMigrate) {
+        for (GuestEntity container : containersToMigrate) {
             Map<String, Object> allocationMap = findHostForGuest(container, excludedHosts, false);
 
             if (allocationMap.get("host") != null && allocationMap.get("vm") != null) {
@@ -206,7 +206,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         return migrationMap;
     }
 
-    private List<Map<String, Object>> getPlacementForLeftContainers(List<? extends Container> containersToMigrate, Set<? extends Host> excludedHostsList) {
+    private List<Map<String, Object>> getPlacementForLeftContainers(List<? extends GuestEntity> containersToMigrate, Set<? extends Host> excludedHostsList) {
         List<Map<String, Object>> newMigrationMap = new LinkedList<>();
 
         if (containersToMigrate.size() == 0) {
@@ -785,11 +785,11 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         this.datacenter = datacenter;
     }
 
-    public PowerContainerSelectionPolicy getContainerSelectionPolicy() {
+    public SelectionPolicy<PowerGuestEntity> getContainerSelectionPolicy() {
         return containerSelectionPolicy;
     }
 
-    public void setContainerSelectionPolicy(PowerContainerSelectionPolicy containerSelectionPolicy) {
+    public void setContainerSelectionPolicy(SelectionPolicy<PowerGuestEntity> containerSelectionPolicy) {
         this.containerSelectionPolicy = containerSelectionPolicy;
     }
 

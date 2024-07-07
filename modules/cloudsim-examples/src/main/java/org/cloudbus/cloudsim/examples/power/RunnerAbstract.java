@@ -9,18 +9,10 @@ import java.util.List;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.power.PowerDatacenter;
-import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationAbstract;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationInterQuartileRange;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegression;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegressionRobust;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation;
-import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationStaticThreshold;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumUtilization;
+import org.cloudbus.cloudsim.power.*;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMinimumMigrationTime;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMinimumUtilization;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyRandomSelection;
 
 /**
@@ -305,18 +297,18 @@ public abstract class RunnerAbstract {
 	 * @param vmSelectionPolicyName the vm selection policy name
 	 * @return the vm selection policy
 	 */
-	protected SelectionPolicy<GuestEntity> getVmSelectionPolicy(String vmSelectionPolicyName) {
-		SelectionPolicy<GuestEntity> vmSelectionPolicy = null;
+	protected <T> SelectionPolicy<T> getVmSelectionPolicy(String vmSelectionPolicyName) {
+		SelectionPolicy<T> vmSelectionPolicy = null;
 		switch (vmSelectionPolicyName) {
 			case "mc":
-				vmSelectionPolicy = new PowerVmSelectionPolicyMaximumCorrelation(
-						new PowerVmSelectionPolicyMinimumMigrationTime());
+				vmSelectionPolicy = (SelectionPolicy<T>) new PowerVmSelectionPolicyMaximumCorrelation(
+						new SelectionPolicyMinimumMigrationTime());
 				break;
 			case "mmt":
-				vmSelectionPolicy = new PowerVmSelectionPolicyMinimumMigrationTime();
+				vmSelectionPolicy = (SelectionPolicy<T>) new SelectionPolicyMinimumMigrationTime();
 				break;
 			case "mu":
-				vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
+				vmSelectionPolicy = (SelectionPolicy<T>) new SelectionPolicyMinimumUtilization();
 				break;
 			case "rs":
 				vmSelectionPolicy = new SelectionPolicyRandomSelection<>();

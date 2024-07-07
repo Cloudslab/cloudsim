@@ -9,12 +9,13 @@ import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by sareh on 16/11/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public class PowerVmSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<GuestEntity> {
+public class PowerVmSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<PowerGuestEntity> {
 
 
     /**
@@ -33,17 +34,19 @@ public class PowerVmSelectionPolicyMaximumCorrelation2 implements SelectionPolic
     }
 
     @Override
-    public GuestEntity select(List<GuestEntity> candidates, Object host, Set<GuestEntity> excludedCandidates) {
+    public PowerGuestEntity select(List<PowerGuestEntity> candidates, Object host, Set<PowerGuestEntity> excludedCandidates) {
         if (candidates.isEmpty()) {
             return null;
         }
-        GuestEntity selectedGuest = getContainerVM(candidates, (PowerHost) host);
-        candidates.clear();
+        PowerGuestEntity selectedGuest = getContainerVM(candidates, (PowerHost) host);
         if (selectedGuest != null) {
 //            Log.printConcatLine("We have to migrate the container with ID", container.getId());
             return selectedGuest;
         } else {
-            return getFallbackPolicy().select(candidates, host, excludedCandidates);
+            List<GuestEntity> baseCandidates = candidates.stream().map(c -> (GuestEntity) c).toList();
+            Set<GuestEntity> baseExcludedCandidates = excludedCandidates.stream().map(xc -> (GuestEntity) xc).collect(Collectors.toSet());
+
+            return (PowerGuestEntity) getFallbackPolicy().select(baseCandidates, host, baseExcludedCandidates);
         }
     }
 
@@ -66,17 +69,17 @@ public class PowerVmSelectionPolicyMaximumCorrelation2 implements SelectionPolic
         this.fallbackPolicy = fallbackPolicy;
     }
 
-    public GuestEntity getContainerVM(List<GuestEntity> migratableContainerVMs, PowerHost host) {
+    public PowerGuestEntity getContainerVM(List<PowerGuestEntity> migrableContainerVMs, PowerHost host) {
 
-        double[] corResult = new double[migratableContainerVMs.size()];
+        double[] corResult = new double[migrableContainerVMs.size()];
         Correlation correlation = new Correlation();
         int i = 0;
         double maxValue = -2;
         int id = -1;
 
         double[] hostUtilization = host.getUtilizationHistory();
-        for (GuestEntity vm : migratableContainerVMs) {
-            double[] containerUtilization = ((PowerGuestEntity) vm).getUtilizationHistoryList();
+        for (PowerGuestEntity vm : migrableContainerVMs) {
+            double[] containerUtilization = vm.getUtilizationHistoryList();
 
             double cor = correlation.getCor(hostUtilization, containerUtilization);
             if (Double.isNaN(cor)) {
@@ -97,22 +100,6 @@ public class PowerVmSelectionPolicyMaximumCorrelation2 implements SelectionPolic
             Log.printlnConcat("Problem with correlation list.");
         }
 
-        return migratableContainerVMs.get(id);
-
+        return migrableContainerVMs.get(id);
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,10 +1,9 @@
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 
-import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
+import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.power.PowerHost;
 
@@ -32,7 +31,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMC extends 
      */
     public PowerContainerVmAllocationPolicyMigrationStaticThresholdMC(
             List<? extends HostEntity> hostList,
-            SelectionPolicy<GuestEntity> vmSelectionPolicy, PowerContainerSelectionPolicy containerSelectionPolicy,
+            SelectionPolicy<GuestEntity> vmSelectionPolicy, SelectionPolicy<PowerGuestEntity> containerSelectionPolicy,
             SelectionPolicy<HostEntity> hostSelectionPolicy, double utilizationThreshold,
             int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
         super(hostList, vmSelectionPolicy, containerSelectionPolicy, hostSelectionPolicy,

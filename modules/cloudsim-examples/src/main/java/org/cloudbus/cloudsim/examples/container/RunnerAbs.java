@@ -1,15 +1,14 @@
 package org.cloudbus.cloudsim.examples.container;
 
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy;
-import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMaximumCorrelation2;
-import org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstractHostSelection;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMC;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized;
 import org.cloudbus.cloudsim.VmAllocationWithSelectionPolicy;
+import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
+import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation2;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -216,7 +215,7 @@ public abstract class RunnerAbs {
     protected VmAllocationPolicy getVmAllocationPolicy(String vmAllocationPolicyName, String vmSelectionPolicyName, String containerSelectionPolicyName, String hostSelectionPolicyName) {
         VmAllocationPolicy vmAllocationPolicy = null;
         SelectionPolicy<GuestEntity> vmSelectionPolicy = null;
-        PowerContainerSelectionPolicy containerSelectionPolicy = null;
+        SelectionPolicy<PowerGuestEntity> containerSelectionPolicy = null;
         SelectionPolicy<HostEntity> hostSelectionPolicy = null;
         if (!vmSelectionPolicyName.isEmpty() && !containerSelectionPolicyName.isEmpty() && !hostSelectionPolicyName.isEmpty()) {
             vmSelectionPolicy = this.getVmSelectionPolicy(vmSelectionPolicyName);
@@ -324,9 +323,9 @@ public abstract class RunnerAbs {
 
         }
 // else if(vmSelectionPolicyName.equals("mmt")) {
-//            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumMigrationTime();
+//            vmSelectionPolicy = new SelectionPolicyMinimumMigrationTime();
 //        } else if(vmSelectionPolicyName.equals("mu")) {
-//            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
+//            vmSelectionPolicy = new SelectionPolicyMinimumUtilization();
 //        } else if(vmSelectionPolicyName.equals("rs")) {
 //            vmSelectionPolicy = new SelectionPolicyRandomSelection<>();
 //        }
@@ -339,19 +338,18 @@ public abstract class RunnerAbs {
     }
 
 
-    protected PowerContainerSelectionPolicy getContainerSelectionPolicy(String containerSelectionPolicyName) {
-        Object containerSelectionPolicy = null;
+    // @TODO: Remo Andreoli: is this use of generics correct?
+    protected <T> SelectionPolicy<T> getContainerSelectionPolicy(String containerSelectionPolicyName) {
+        SelectionPolicy<T> containerSelectionPolicy = null;
         if (containerSelectionPolicyName.equals("Cor")) {
-            containerSelectionPolicy = new PowerContainerSelectionPolicyMaximumCorrelation2(new PowerContainerSelectionPolicyMaximumUsage());
+            containerSelectionPolicy = (SelectionPolicy<T>) new PowerVmSelectionPolicyMaximumCorrelation2(new SelectionPolicyMaximumUsage());
         } else if (containerSelectionPolicyName.equals("MaxUsage")) {
-            containerSelectionPolicy = new PowerContainerSelectionPolicyMaximumUsage();
-
-
+            containerSelectionPolicy = (SelectionPolicy<T>) new SelectionPolicyMaximumUsage();
         }
 // else if(vmSelectionPolicyName.equals("mmt")) {
-//            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumMigrationTime();
+//            vmSelectionPolicy = new SelectionPolicyMinimumMigrationTime();
 //        } else if(vmSelectionPolicyName.equals("mu")) {
-//            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
+//            vmSelectionPolicy = new SelectionPolicyMinimumUtilization();
 //        } else if(vmSelectionPolicyName.equals("rs")) {
 //            vmSelectionPolicy = new SelectionPolicyRandomSelection<>();
 //        }
@@ -360,21 +358,21 @@ public abstract class RunnerAbs {
             System.exit(0);
         }
 
-        return (PowerContainerSelectionPolicy) containerSelectionPolicy;
+        return containerSelectionPolicy;
     }
 
-
-    protected SelectionPolicy<GuestEntity> getVmSelectionPolicy(String vmSelectionPolicyName) {
-        SelectionPolicy<GuestEntity> vmSelectionPolicy = null;
+    // @TODO: Remo Andreoli: is this use of generics correct?
+    protected <T> SelectionPolicy<T> getVmSelectionPolicy(String vmSelectionPolicyName) {
+        SelectionPolicy<T> vmSelectionPolicy = null;
         if (vmSelectionPolicyName.equals("VmMaxC")) {
-            vmSelectionPolicy = new PowerVmSelectionPolicyMaximumCorrelation(new SelectionPolicyMaximumUsage());
+            vmSelectionPolicy = (SelectionPolicy<T>) new PowerVmSelectionPolicyMaximumCorrelation(new SelectionPolicyMaximumUsage());
         } else if (vmSelectionPolicyName.equals("VmMaxU")) {
-            vmSelectionPolicy = new SelectionPolicyMaximumUsage();
+            vmSelectionPolicy = (SelectionPolicy<T>) new SelectionPolicyMaximumUsage();
         }
 // else if(vmSelectionPolicyName.equals("mmt")) {
-//            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumMigrationTime();
+//            vmSelectionPolicy = new SelectionPolicyMinimumMigrationTime();
 //        } else if(vmSelectionPolicyName.equals("mu")) {
-//            vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
+//            vmSelectionPolicy = new SelectionPolicyMinimumUtilization();
 //        } else if(vmSelectionPolicyName.equals("rs")) {
 //            vmSelectionPolicy = new SelectionPolicyRandomSelection<>();
 //        }

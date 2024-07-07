@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim.power;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -36,7 +37,7 @@ import org.cloudbus.cloudsim.util.MathUtil;
  * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  */
-public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy<GuestEntity> {
+public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy<PowerGuestEntity> {
 
 	/** The fallback VM selection policy to be used when
          * the  Maximum Correlation policy doesn't have data to be computed. */
@@ -53,7 +54,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy
 	}
 
 	@Override
-	public GuestEntity select(List<GuestEntity> candidates, Object host, Set<GuestEntity> excludedCandidates) {
+	public PowerGuestEntity select(List<PowerGuestEntity> candidates, Object host, Set<PowerGuestEntity> excludedCandidates) {
 		if (candidates.isEmpty()) {
 			return null;
 		}
@@ -62,7 +63,10 @@ public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy
 		try {
 			metrics = getCorrelationCoefficients(getUtilizationMatrix(candidates));
 		} catch (IllegalArgumentException e) { // the degrees of freedom must be greater than zero
-			return getFallbackPolicy().select(candidates, host, excludedCandidates);
+			List<GuestEntity> baseCandidates = candidates.stream().map(c -> (GuestEntity) c).toList();
+			Set<GuestEntity> baseExcludedCandidates = excludedCandidates.stream().map(xc -> (GuestEntity) xc).collect(Collectors.toSet());
+
+			return (PowerGuestEntity) getFallbackPolicy().select(baseCandidates, host, baseExcludedCandidates);
 		}
 		double maxMetric = Double.MIN_VALUE;
 		int maxIndex = 0;
@@ -83,7 +87,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy
 	 * @return the CPU utilization percentage matrix, where each line i
          * is a VM and each column j is a CPU utilization percentage history for that VM.
 	 */
-	protected double[][] getUtilizationMatrix(final List<GuestEntity> vmList) {
+	protected double[][] getUtilizationMatrix(final List<PowerGuestEntity> vmList) {
 		int n = vmList.size();
                 /*//TODO It gets the min size of the history among all VMs considering
                 that different VMs can have different history sizes.
@@ -94,7 +98,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy
 		int m = getMinUtilizationHistorySize(vmList);
 		double[][] utilization = new double[n][m];
 		for (int i = 0; i < n; i++) {
-			List<Double> vmUtilization = ((PowerGuestEntity) vmList.get(i)).getUtilizationHistory();
+			List<Double> vmUtilization = vmList.get(i).getUtilizationHistory();
 			for (int j = 0; j < vmUtilization.size(); j++) {
 				utilization[i][j] = vmUtilization.get(j);
 			}
@@ -108,10 +112,10 @@ public class PowerVmSelectionPolicyMaximumCorrelation implements SelectionPolicy
 	 * @param vmList the VM list
 	 * @return the min CPU utilization percentage history size of the VM list
 	 */
-	protected int getMinUtilizationHistorySize(final List<GuestEntity> vmList) {
+	protected int getMinUtilizationHistorySize(final List<PowerGuestEntity> vmList) {
 		int minSize = Integer.MAX_VALUE;
-		for (GuestEntity vm : vmList) {
-			int size = ((PowerGuestEntity) vm).getUtilizationHistory().size();
+		for (PowerGuestEntity vm : vmList) {
+			int size = vm.getUtilizationHistory().size();
 			if (size < minSize) {
 				minSize = size;
 			}

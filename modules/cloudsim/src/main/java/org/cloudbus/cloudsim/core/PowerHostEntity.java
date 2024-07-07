@@ -1,6 +1,12 @@
 package org.cloudbus.cloudsim.core;
 
+import org.cloudbus.cloudsim.container.core.PowerContainer;
+import org.cloudbus.cloudsim.container.core.PowerContainerVm;
+import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.power.models.PowerModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a Physical Machine (PM) that stores its CPU utilization percentage history.
@@ -82,4 +88,25 @@ public interface PowerHostEntity extends HostEntity {
         return (fromPower + (toPower - fromPower) / 2) * time;
     }
 
+    /**
+     * Gets the migratable containers.
+     *
+     * @TODO: Remo Andreoli: this should be better standardised
+     *
+     * @return the migratable containers
+     */
+    default List<PowerGuestEntity> getMigrableContainers() {
+        List<PowerGuestEntity> migrableContainers= new ArrayList<>();
+        for (VmAbstract vm : this.<VmAbstract>getGuestList()) {
+            if (!vm.isInMigration()) {
+                for (PowerGuestEntity container: vm.<PowerGuestEntity>getGuestList()){
+
+                    if(!container.isInMigration() && !vm.getGuestsMigratingIn().contains(container)){
+                        migrableContainers.add(container);}
+
+                }
+            }
+        }
+        return migrableContainers;
+    }
 }
