@@ -1,11 +1,11 @@
-package org.cloudbus.cloudsim.power;
+package org.cloudbus.cloudsim.selectionPolicies;
 
 
 import org.cloudbus.cloudsim.container.utils.Correlation;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.PowerGuestEntity;
-import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.util.List;
 import java.util.Set;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Created by sareh on 16/11/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public class PowerVmSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<PowerGuestEntity> {
+public class PowerSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<PowerGuestEntity> {
 
 
     /**
@@ -28,7 +28,7 @@ public class PowerVmSelectionPolicyMaximumCorrelation2 implements SelectionPolic
      *
      * @param fallbackPolicy the fallback policy
      */
-    public PowerVmSelectionPolicyMaximumCorrelation2(final SelectionPolicy<GuestEntity> fallbackPolicy) {
+    public PowerSelectionPolicyMaximumCorrelation2(final SelectionPolicy<GuestEntity> fallbackPolicy) {
         super();
         setFallbackPolicy(fallbackPolicy);
     }

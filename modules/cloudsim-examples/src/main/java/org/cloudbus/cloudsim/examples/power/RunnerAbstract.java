@@ -10,10 +10,7 @@ import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.power.*;
-import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMinimumMigrationTime;
-import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
-import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMinimumUtilization;
-import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyRandomSelection;
+import org.cloudbus.cloudsim.selectionPolicies.*;
 
 /**
  * The Class RunnerAbstract.
@@ -301,7 +298,7 @@ public abstract class RunnerAbstract {
 		SelectionPolicy<T> vmSelectionPolicy = null;
 		switch (vmSelectionPolicyName) {
 			case "mc":
-				vmSelectionPolicy = (SelectionPolicy<T>) new PowerVmSelectionPolicyMaximumCorrelation(
+				vmSelectionPolicy = (SelectionPolicy<T>) new PowerSelectionPolicyMaximumCorrelation(
 						new SelectionPolicyMinimumMigrationTime());
 				break;
 			case "mmt":

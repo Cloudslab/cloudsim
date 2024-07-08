@@ -7,8 +7,8 @@ import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerCo
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized;
 import org.cloudbus.cloudsim.VmAllocationWithSelectionPolicy;
 import org.cloudbus.cloudsim.core.PowerGuestEntity;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
-import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation2;
+import org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation;
+import org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation2;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMaximumUsage;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -312,7 +312,7 @@ public abstract class RunnerAbs {
         }
 //        else if (hostSelectionPolicyName == "MinCor") {
 
-    //            hostSelectionPolicy = new SelectionPolicyMinimumCorrelation();
+    //            hostSelectionPolicy = new PowerSelectionPolicyMinimumCorrelation();
 
 
 //        }
@@ -342,7 +342,7 @@ public abstract class RunnerAbs {
     protected <T> SelectionPolicy<T> getContainerSelectionPolicy(String containerSelectionPolicyName) {
         SelectionPolicy<T> containerSelectionPolicy = null;
         if (containerSelectionPolicyName.equals("Cor")) {
-            containerSelectionPolicy = (SelectionPolicy<T>) new PowerVmSelectionPolicyMaximumCorrelation2(new SelectionPolicyMaximumUsage());
+            containerSelectionPolicy = (SelectionPolicy<T>) new PowerSelectionPolicyMaximumCorrelation2(new SelectionPolicyMaximumUsage());
         } else if (containerSelectionPolicyName.equals("MaxUsage")) {
             containerSelectionPolicy = (SelectionPolicy<T>) new SelectionPolicyMaximumUsage();
         }
@@ -365,7 +365,7 @@ public abstract class RunnerAbs {
     protected <T> SelectionPolicy<T> getVmSelectionPolicy(String vmSelectionPolicyName) {
         SelectionPolicy<T> vmSelectionPolicy = null;
         if (vmSelectionPolicyName.equals("VmMaxC")) {
-            vmSelectionPolicy = (SelectionPolicy<T>) new PowerVmSelectionPolicyMaximumCorrelation(new SelectionPolicyMaximumUsage());
+            vmSelectionPolicy = (SelectionPolicy<T>) new PowerSelectionPolicyMaximumCorrelation(new SelectionPolicyMaximumUsage());
         } else if (vmSelectionPolicyName.equals("VmMaxU")) {
             vmSelectionPolicy = (SelectionPolicy<T>) new SelectionPolicyMaximumUsage();
         }
