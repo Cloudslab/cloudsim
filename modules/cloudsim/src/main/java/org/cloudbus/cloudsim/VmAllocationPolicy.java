@@ -78,12 +78,12 @@ public abstract class VmAllocationPolicy {
 	public boolean allocateHostForGuest(GuestEntity guest, HostEntity host) {
 		String datacenterName = host.getDatacenter().getName();
 
-		if (host == guest) { // cannot be hosted on itself (VmAbstract edge-case)
+		if (host == guest) { // cannot be hosted on itself (VirtualEntity edge-case)
 			Log.printlnConcat(CloudSim.clock()+": "+datacenterName+".vmAllocator: Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+host.getClassName()+" #"+host.getId()+" failed (cannot be allocated on itself)");
 			return false;
 		}
 
-		if (host.isBeingInstantiated()){ // cannot be hosted by an unallocated host (VmAbstract edge-case)
+		if (host.isBeingInstantiated()){ // cannot be hosted by an unallocated host (VirtualEntity edge-case)
 			Log.printlnConcat(CloudSim.clock()+": "+datacenterName+".vmAllocator: Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+host.getClassName()+" #"+host.getId()+" failed because the host entity is not instantiated");
 			return false;
 		}

@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
-import org.cloudbus.cloudsim.core.VmAbstract;
+import org.cloudbus.cloudsim.core.VirtualEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
@@ -31,7 +31,7 @@ import java.util.List;
  * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
-public class Vm implements VmAbstract {
+public class Vm implements VirtualEntity {
 
 	/** The VM unique id. */
 	@Getter @Setter

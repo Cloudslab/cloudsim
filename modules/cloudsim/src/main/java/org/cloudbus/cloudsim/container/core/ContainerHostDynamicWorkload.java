@@ -3,7 +3,7 @@ package org.cloudbus.cloudsim.container.core;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.core.VmAbstract;
+import org.cloudbus.cloudsim.core.VirtualEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
@@ -140,11 +140,11 @@ public class ContainerHostDynamicWorkload extends Host {
          *
          * @return the completed vms
          */
-        public List<VmAbstract> getCompletedVms() {
-            List<VmAbstract> vmsToRemove = new ArrayList<>();
-            List<VmAbstract> containerVms = getGuestList();
+        public List<VirtualEntity> getCompletedVms() {
+            List<VirtualEntity> vmsToRemove = new ArrayList<>();
+            List<VirtualEntity> containerVms = getGuestList();
 
-            for (VmAbstract containerVm : containerVms) {
+            for (VirtualEntity containerVm : containerVms) {
                 if (containerVm.isInMigration()) {
                     continue;
                 }

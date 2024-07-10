@@ -1,8 +1,5 @@
 package org.cloudbus.cloudsim.core;
 
-import org.cloudbus.cloudsim.container.core.PowerContainer;
-import org.cloudbus.cloudsim.container.core.PowerContainerVm;
-import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.power.models.PowerModel;
 
 import java.util.ArrayList;
@@ -97,7 +94,7 @@ public interface PowerHostEntity extends HostEntity {
      */
     default List<PowerGuestEntity> getMigrableContainers() {
         List<PowerGuestEntity> migrableContainers= new ArrayList<>();
-        for (VmAbstract vm : this.<VmAbstract>getGuestList()) {
+        for (VirtualEntity vm : this.<VirtualEntity>getGuestList()) {
             if (!vm.isInMigration()) {
                 for (PowerGuestEntity container: vm.<PowerGuestEntity>getGuestList()){
 

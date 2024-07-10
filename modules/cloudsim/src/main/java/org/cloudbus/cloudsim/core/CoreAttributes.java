@@ -30,7 +30,7 @@ public interface CoreAttributes {
     }
 
     /**
-     * Checks if entity is being instantiated. Some entities (such as a VmAbstract object) need to be instantiated before
+     * Checks if entity is being instantiated. Some entities (such as a VirtualEntity object) need to be instantiated before
      * they can act as host entities.
      *
      * @return true, if guest is being instantiated

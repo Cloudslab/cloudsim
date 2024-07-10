@@ -14,7 +14,7 @@ import org.cloudbus.cloudsim.container.core.Container;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
-import org.cloudbus.cloudsim.core.VmAbstract;
+import org.cloudbus.cloudsim.core.VirtualEntity;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -36,7 +36,7 @@ public class CloudSimMultiExtensionExample1 {
 	private static List<Cloudlet> cloudletList;
 
 	/** The vmlist. */
-	private static List<VmAbstract> vmlist;
+	private static List<VirtualEntity> vmlist;
 
 	/** the containerlist */
 	private static List<GuestEntity> containerlist;
@@ -86,13 +86,13 @@ public class CloudSimMultiExtensionExample1 {
 			String vmm = "Xen"; // VMM name
 
 			// create Vm (not eligible for containers)
-			//VmAbstract vm1 = new Vm(0, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared());
+			//VirtualEntity vm1 = new Vm(0, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared());
 			//vmlist.add(vm1);
 
 			// create Vm (eligible for containers)
 			peList = new ArrayList<>();
 			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
-			VmAbstract vm2 = new Vm(1, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared(),
+			VirtualEntity vm2 = new Vm(1, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared(),
 					                                                         new VmSchedulerTimeShared(peList),
 																			 new RamProvisionerSimple(ram),
 																			 new BwProvisionerSimple(bw),

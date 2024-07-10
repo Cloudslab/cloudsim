@@ -423,7 +423,7 @@ public class ContainerDatacenter extends Datacenter {
             double fileTransferTime = predictFileTransferTime(cl.getRequiredFiles());
 
             HostEntity host = getVmAllocationPolicy().getHost(vmId, userId);
-            VmAbstract vm = (VmAbstract) host.getGuest(vmId, userId);
+            VirtualEntity vm = (VirtualEntity) host.getGuest(vmId, userId);
             Container container = (Container) vm.getGuest(containerId, userId);
             double estimatedFinishTime = container.getCloudletScheduler().cloudletSubmit(cl, fileTransferTime);
 
@@ -463,7 +463,7 @@ public class ContainerDatacenter extends Datacenter {
      * @post $none
      */
     protected void processCloudletResume(int cloudletId, int userId, int vmId, int containerId, boolean ack) {
-        double eventTime = ((VmAbstract) getVmAllocationPolicy().getHost(vmId, userId)
+        double eventTime = ((VirtualEntity) getVmAllocationPolicy().getHost(vmId, userId)
                             .getGuest(vmId, userId))
                             .getGuest(containerId, userId)
                             .getCloudletScheduler().cloudletResume(cloudletId);
@@ -500,7 +500,7 @@ public class ContainerDatacenter extends Datacenter {
      * @post $none
      */
     protected void processCloudletPause(int cloudletId, int userId, int vmId, int containerId, boolean ack) {
-        VmAbstract containerVm = (VmAbstract) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
+        VirtualEntity containerVm = (VirtualEntity) getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId, userId);
         boolean status = containerVm.getGuest(containerId, userId)
                 .getCloudletScheduler().cloudletPause(cloudletId);
 
@@ -544,7 +544,7 @@ public class ContainerDatacenter extends Datacenter {
      */
     protected void checkCloudletCompletion() {
         for (HostEntity host : getVmAllocationPolicy().getHostList()) {
-            for (VmAbstract vm : host.<VmAbstract>getGuestList()) {
+            for (VirtualEntity vm : host.<VirtualEntity>getGuestList()) {
                 for (GuestEntity container : vm.getGuestList()) {
                     while (container.getCloudletScheduler().isFinishedCloudlets()) {
                         Cloudlet cl = container.getCloudletScheduler().getNextFinishedCloudlet();

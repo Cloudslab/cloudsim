@@ -232,7 +232,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 //    here we override the method
         if (ev.getData() instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) ev.getData();
-            VmAbstract containerVm = (Vm) map.get("vm");
+            VirtualEntity containerVm = (Vm) map.get("vm");
             Host host = (Host) map.get("host");
             boolean result = getVmAllocationPolicy().allocateHostForGuest(containerVm, host);
 //                set the containerVm in waiting state

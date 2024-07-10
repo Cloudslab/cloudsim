@@ -366,7 +366,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
      */
     protected boolean isInMigration() {
         boolean result = false;
-        for (VmAbstract vm : this.<VmAbstract>getVmList()) {
+        for (VirtualEntity vm : this.<VirtualEntity>getVmList()) {
             if (vm.isInMigration()) {
                 result = true;
                 break;
@@ -496,10 +496,10 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
     public void updateNumberOfVmsContainers() {
         setNumberOfVms(0);
         setNumberOfContainers(0);
-        List<VmAbstract> temp= new ArrayList<>();
+        List<VirtualEntity> temp= new ArrayList<>();
 
         for(HostEntity host : getHostList()) {
-            for (VmAbstract vm : host.<VmAbstract>getGuestList()) {
+            for (VirtualEntity vm : host.<VirtualEntity>getGuestList()) {
                 if (!temp.contains(vm)) {
                     int tempNumbers = this.getNumberOfVms() + 1;
                     setNumberOfVms(tempNumbers);
