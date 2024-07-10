@@ -9,8 +9,8 @@ import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.lists.HostList;
+import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.lists.PowerVmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -182,7 +182,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
         List<Map<String, Object>> migrationMap = new LinkedList<>();
 
-        PowerVmList.sortByCpuUtilization(containersToMigrate);
+        VmList.sortByCpuUtilization(containersToMigrate);
         for (GuestEntity container : containersToMigrate) {
             Map<String, Object> allocationMap = findHostForGuest(container, excludedHosts, false);
 

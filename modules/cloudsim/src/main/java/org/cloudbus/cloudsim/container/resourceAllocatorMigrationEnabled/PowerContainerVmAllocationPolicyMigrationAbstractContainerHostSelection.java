@@ -3,12 +3,12 @@ package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.core.PowerGuestEntity;
+import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.power.PowerHost;
-import org.cloudbus.cloudsim.power.lists.PowerVmList;
 
 import java.util.*;
 
@@ -43,7 +43,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             HostEntity host = getHostSelectionPolicy().select(getHostList(), container, excludedHost1);
             boolean findVm = false;
             List<ContainerVm> vmList = host.getGuestList();
-            PowerVmList.sortByCpuUtilization(vmList);
+            VmList.sortByCpuUtilization(vmList);
             for (int i = 0; i < vmList.size(); i++) {
                 ContainerVm vm = vmList.get(vmList.size() - 1 - i);
                 if(checkForVM){
@@ -197,7 +197,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             List<? extends GuestEntity> containersToMigrate,
             Set<? extends HostEntity> excludedHosts) {
         List<Map<String, Object>> migrationMap = new LinkedList<>();
-        PowerVmList.sortByCpuUtilization(containersToMigrate);
+        VmList.sortByCpuUtilization(containersToMigrate);
         for (GuestEntity container : containersToMigrate) {
             Map<String, Object> allocatedMap = findHostForGuest(container, excludedHosts, true);
             if (allocatedMap.get("vm") != null && allocatedMap.get("host")!= null) {
@@ -251,7 +251,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 
         boolean findVm = false;
 
-        PowerVmList.sortByCpuUtilization(vmList);
+        VmList.sortByCpuUtilization(vmList);
         for (int i = 0; i < vmList.size(); i++) {
 
             ContainerVm vm = vmList.get(vmList.size() - 1 - i);

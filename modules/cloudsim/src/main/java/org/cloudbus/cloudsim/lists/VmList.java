@@ -11,6 +11,7 @@ package org.cloudbus.cloudsim.lists;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
@@ -81,5 +82,18 @@ public class VmList {
 			}
 		}
 		return null; */
+	}
+
+	/**
+	 * Sort a given list of VMs by cpu utilization.
+	 *
+	 * @param vmList the vm list to be sorted
+	 */
+	public static <T extends GuestEntity> void sortByCpuUtilization(List<T> vmList) {
+		vmList.sort((a, b) -> {
+			Double aUtilization = a.getTotalUtilizationOfCpuMips(CloudSim.clock());
+			Double bUtilization = b.getTotalUtilizationOfCpuMips(CloudSim.clock());
+			return bUtilization.compareTo(aUtilization);
+		});
 	}
 }

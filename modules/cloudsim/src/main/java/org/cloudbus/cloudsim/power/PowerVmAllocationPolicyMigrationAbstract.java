@@ -20,7 +20,7 @@ import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
-import org.cloudbus.cloudsim.power.lists.PowerVmList;
+import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.util.ExecutionTimeMeasurer;
 
@@ -318,7 +318,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 			List<GuestEntity> vmsToMigrate,
 			Set<HostEntity> excludedHosts) {
 		List<Map<String, Object>> migrationMap = new LinkedList<>();
-		PowerVmList.sortByCpuUtilization(vmsToMigrate);
+		VmList.sortByCpuUtilization(vmsToMigrate);
 		for (GuestEntity vm : vmsToMigrate) {
 			PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
 			if (allocatedHost != null) {
@@ -345,7 +345,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 			List<? extends GuestEntity> vmsToMigrate,
 			Set<? extends HostEntity> excludedHosts) {
 		List<Map<String, Object>> migrationMap = new LinkedList<>();
-		PowerVmList.sortByCpuUtilization(vmsToMigrate);
+		VmList.sortByCpuUtilization(vmsToMigrate);
 		for (GuestEntity vm : vmsToMigrate) {
 			PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
 			if (allocatedHost != null) {
