@@ -45,7 +45,7 @@ public class Host implements HostEntity {
 	private VmScheduler vmScheduler;
 
 	/** The list of VMs assigned to the host. */
-	private final List<? extends Vm> vmList = new ArrayList<>();
+	private final List<? extends GuestEntity> guestList = new ArrayList<>();
 
 	/** The Processing Elements (PEs) of the host, that
          * represent the CPU cores of it, and thus, its processing capacity. */
@@ -336,7 +336,7 @@ public class Host implements HostEntity {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends GuestEntity> List<T> getGuestList() {
-		return (List<T>) vmList;
+		return (List<T>) guestList;
 	}
 
 	/**
