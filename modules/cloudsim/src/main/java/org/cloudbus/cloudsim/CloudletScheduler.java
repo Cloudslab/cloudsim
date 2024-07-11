@@ -57,6 +57,9 @@ public abstract class CloudletScheduler {
 	/** The list of failed cloudlets. */
 	protected List<? extends ResCloudlet> cloudletFailedList;
 
+	/** Buffer list of the latest finished cloudlets. */
+	protected List<ResCloudlet> cloudletJustFinishedList;
+
 	/**
 	 * Creates a new CloudletScheduler object. 
 	 * A CloudletScheduler must be created before starting the actual simulation.
@@ -72,6 +75,7 @@ public abstract class CloudletScheduler {
 		cloudletPausedList = new LinkedList<>();
 		cloudletFinishedList = new LinkedList<>();
 		cloudletFailedList = new LinkedList<>();
+		cloudletJustFinishedList = new ArrayList<>();
 	}
 
 	/**
@@ -94,7 +98,6 @@ public abstract class CloudletScheduler {
 
 		// Remove finished cloudlets
 		// @TODO: Remo Andreoli: ugly instanceof check; fix it
-		List<ResCloudlet> toRemove = new ArrayList<>();
 		for (ResCloudlet rcl : getCloudletExecList()) {
 			boolean finishCheck;
 			if (rcl.getCloudlet() instanceof NetworkCloudlet ncl) {
@@ -102,13 +105,13 @@ public abstract class CloudletScheduler {
 			} else {
 				finishCheck = (rcl.getRemainingCloudletLength() == 0);
 			}
-
+			
 			if (finishCheck) {
-				toRemove.add(rcl);
+				cloudletJustFinishedList.add(rcl);
 				cloudletFinish(rcl);
 			}
 		}
-		getCloudletExecList().removeAll(toRemove);
+		getCloudletExecList().removeAll(cloudletJustFinishedList);
 
 
 		if (getCloudletExecList().isEmpty() && getCloudletWaitingList().isEmpty()) {
@@ -118,7 +121,8 @@ public abstract class CloudletScheduler {
 
 
 		// Update cloudlets in waiting list, if any
-		updateWaitingCloudlets(currentTime, toRemove.size());
+		updateWaitingCloudlets(currentTime, null);
+		cloudletJustFinishedList.clear();
 
 		// estimate finish time of cloudlets in the execution queue
 		double nextEvent = Double.MAX_VALUE;
@@ -156,7 +160,7 @@ public abstract class CloudletScheduler {
 
 	/**
 	 * Update the cloudlets currently waiting to execute.
-	 * The default implementation is suitable for time-shared scheduling.
+	 * The default implementation (i.e., no-op) is suitable for time-shared scheduling.
 	 *
 	 * @param currentTime current simulation time
 	 * @param info        info Any data you may need to implement the update logic

@@ -44,7 +44,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 	protected void updateWaitingCloudlets(double currentTime, Object info) {
 		// for each finished cloudlet, add a new one from the waiting list
-		int finished = (int) info;
+		int finished = cloudletJustFinishedList.size();
 
 		if (!getCloudletWaitingList().isEmpty()) {
 			List<ResCloudlet> toUnpause = getCloudletWaitingList().stream()
