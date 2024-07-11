@@ -13,14 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
-import org.cloudbus.cloudsim.lists.VmList;
 
 /**
  * This class represents a Network Switch in a Datacenter network.
@@ -177,7 +173,7 @@ public class Switch extends SimEntity {
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
 		NetworkHost hs = hostList.get(hspkt.receiverHostId);
 
-		hs.pktReceived.add(hspkt);
+		hs.getReceivedPkts().add(hspkt);
 	}
 
 	/**
@@ -188,7 +184,7 @@ public class Switch extends SimEntity {
 	 */
 	protected void processPacketDown(SimEvent ev) {
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		int recvVMid = hspkt.pkt.receiverVmId;
+		int recvVMid = hspkt.pkt.receiverGuestId;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.NETWORK_PKT_FORWARD));
 		schedule(getId(), switchingDelay, CloudActionTags.NETWORK_PKT_FORWARD);
 
@@ -213,7 +209,7 @@ public class Switch extends SimEntity {
 	 */
 	protected void processPacketUp(SimEvent ev) {
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		int recvVMid = hspkt.pkt.receiverVmId;
+		int recvVMid = hspkt.pkt.receiverGuestId;
 
 		CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.NETWORK_PKT_FORWARD));
 		schedule(getId(), switchingDelay, CloudActionTags.NETWORK_PKT_FORWARD);

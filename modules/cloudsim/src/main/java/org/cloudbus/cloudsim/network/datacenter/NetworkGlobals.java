@@ -19,7 +19,7 @@ public final class NetworkGlobals {
 	public static final int MAX_ITERATION = 10;
 
 	/** Global counter */
-	public static int totaldatatransfer = 0;
+	public static double totaldatatransfer = 0;
 
 	/** Private Constructor. */
 	private NetworkGlobals() {

@@ -10,7 +10,7 @@ package org.cloudbus.cloudsim.network.datacenter;
 
 /**
  * NewtorkPacket represents the packet which travel from one server to another. Each packet contains
- * IDs of the sender and receiver VM which are communicating, time at which it is sent and received,
+ * IDs of the sender and receiver guest which are communicating, time at which it is sent and received,
  * type and virtual IDs of tasks.
  * 
  * <br/>Please refer to following publication for more details:<br/>
@@ -41,14 +41,14 @@ public class NetworkPacket {
     int receiverHostId;
 
     /**
-     * Id of the sender VM.
+     * Id of the sender guest.
      */
-    int senderVmId;
+    int senderGuestId;
 
     /**
-     * Id of the receiver VM.
+     * Id of the receiver guest.
      */
-    int receiverVmId;
+    int receiverGuestId;
 
     /** Time when the packet was sent. */
     double sendTime;
@@ -62,8 +62,8 @@ public class NetworkPacket {
         senderHostId = hostId;
         receiverHostId = -1; // still unknown
 
-        senderVmId = pkt.senderVmId;
-        receiverVmId = pkt.receiverVmId;
+        senderGuestId = pkt.senderGuestId;
+        receiverGuestId = pkt.receiverGuestId;
 
         sendTime = pkt.sendTime;
         recvTime = -1;

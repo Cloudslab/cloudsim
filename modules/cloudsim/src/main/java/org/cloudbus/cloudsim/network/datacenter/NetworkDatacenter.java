@@ -109,7 +109,7 @@ public class NetworkDatacenter extends Datacenter {
 		GuestEntity vm = (GuestEntity) ev.getData();
 
 		if (vm.getHost() != null) {
-			VmToSwitchid.put(vm.getId(), ((NetworkHost) vm.getHost()).sw.getId());
+			VmToSwitchid.put(vm.getId(), ((NetworkHost) vm.getHost()).getSwitch().getId());
 			VmtoHostlist.put(vm.getId(), vm.getHost().getId());
 		}
 	}
@@ -150,7 +150,7 @@ public class NetworkDatacenter extends Datacenter {
 		sw.hostList.put(netHost.getId(), netHost);
 		sendNow(sw.getId(), CloudActionTags.NETWORK_ATTACH_HOST, netHost);
 		HostToSwitchid.put(netHost.getId(), sw.getId());
-		netHost.sw = sw;
+		netHost.setSwitch(sw);
 	}
 
 	public void attachSwitchToSwitch(Switch sw1, Switch sw2) {

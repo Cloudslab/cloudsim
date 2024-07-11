@@ -27,45 +27,45 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * //TODO Attributes should be private
  */
 public class HostPacket {
-        /**
-         * Id of the sender VM.
-         */
-	int senderVmId;
+	/**
+	 * Id of the sender guest.
+	 */
+	int senderGuestId;
 
-        /**
-         * Id of the receiver VM.
-         */
-	int receiverVmId;
+	/**
+	 * Id of the receiver VM.
+	 */
+	int receiverGuestId;
         
-        /**
-         * Id of the sender cloudlet.
-         */
+	/**
+	 * Id of the sender cloudlet.
+	 */
 	int senderCloudletId;
 
-        /**
-         * Id of the receiver cloudlet.
-         */
-        int receiverCloudletId;
+	/**
+	 * Id of the receiver cloudlet.
+	 */
+	int receiverCloudletId;
 
-        /**
-         * The length of the data being sent (in bytes).
-        */        
+	/**
+	 * The length of the data being sent (in bytes).
+	*/
 	double data;
 
-        /**
-         * The time the packet was sent.
-         */
+	/**
+	 * The time the packet was sent.
+	 */
 	double sendTime;
 
-        /**
-         * The time the packet was received.
-         */
+	/**
+	 * The time the packet was received.
+	 */
 	double recvTime;
 
 	public HostPacket(NetworkCloudlet cl, int taskStageId) {
 			// Vm-level info
-			senderVmId = cl.getGuestId();
-			receiverVmId = cl.stages.get(taskStageId).getTargetCloudlet().getGuestId();
+			senderGuestId = cl.getGuestId();
+			receiverGuestId = cl.stages.get(taskStageId).getTargetCloudlet().getGuestId();
 
 			// Cloudlet-level info
 			senderCloudletId = cl.getCloudletId();

@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Getter;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerSpaceShared;
 import org.cloudbus.cloudsim.ResCloudlet;
@@ -35,17 +36,19 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * //TODO Attributes should be private
  */
 public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceShared {
-        /**
-         * The map of packets to send, where each key is a destination VM
-         * and each value is the list of packets to sent to that VM.
-         */
-	public Map<Integer, List<HostPacket>> pkttosend;
+	/**
+	 * The map of packets to send, where each key is a destination VM
+	 * and each value is the list of packets to sent to that VM.
+	 */
+	@Getter
+	private Map<Integer, List<HostPacket>> pktToSend;
 
-        /**
-         * The map of packets received, where each key is a sender VM
-         * and each value is the list of packets sent by that VM.
-         */
-	public Map<Integer, List<HostPacket>> pktrecv;
+	/**
+	 * The map of packets received, where each key is a sender VM
+	 * and each value is the list of packets sent by that VM.
+	 */
+	@Getter
+	private Map<Integer, List<HostPacket>> receivedPkts;
 
 	/**
 	 * Creates a new CloudletSchedulerSpaceShared object. 
@@ -56,8 +59,8 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 	 */
 	public NetworkCloudletSpaceSharedScheduler() {
 		super();
-		pkttosend = new HashMap<>();
-		pktrecv = new HashMap<>();
+		pktToSend = new HashMap<>();
+		receivedPkts = new HashMap<>();
 	}
 
 	@Override
@@ -96,7 +99,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 			}*/
 		}
 		if (st.getType() == TaskStage.TaskStageStatus.WAIT_RECV) {
-			List<HostPacket> pktlist = pktrecv.get(st.getTargetCloudlet().getGuestId());
+			List<HostPacket> pktlist = getReceivedPkts().get(st.getTargetCloudlet().getGuestId());
 			List<HostPacket> pkttoremove = new ArrayList<>();
 			if (pktlist != null) {
 				Iterator<HostPacket> it = pktlist.iterator();
@@ -104,7 +107,7 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 				if (it.hasNext()) {
 					pkt = it.next();
 					// Assumption: packet will not arrive in the same cycle
-					if (pkt.receiverVmId == ncl.getGuestId()) {
+					if (pkt.receiverGuestId == ncl.getGuestId()) {
 						pkt.recvTime = CloudSim.clock();
 						st.setTime(CloudSim.clock() - pkt.sendTime);
 						goToNextStage(ncl);
@@ -129,12 +132,12 @@ public class NetworkCloudletSpaceSharedScheduler extends CloudletSchedulerSpaceS
 		cl.currStageNum++;
 		while(cl.currStageNum < cl.stages.size() && cl.stages.get(cl.currStageNum).getType() == TaskStage.TaskStageStatus.WAIT_SEND) {
 			HostPacket pkt = new HostPacket(cl, cl.currStageNum);
-			List<HostPacket> pktlist = pkttosend.get(cl.getGuestId());
+			List<HostPacket> pktlist = getPktToSend().get(cl.getGuestId());
 			if (pktlist == null) {
 				pktlist = new ArrayList<>();
 			}
 			pktlist.add(pkt);
-			pkttosend.put(cl.getGuestId(), pktlist);
+			getPktToSend().put(cl.getGuestId(), pktlist);
 
 			cl.currStageNum++;
 		}
