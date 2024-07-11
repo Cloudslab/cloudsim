@@ -458,12 +458,10 @@ public class Cloudlet {
      * CloudResources. Each time a cloudlet is run on a given VM, the cloudlet's
      * execution history on each VM is registered at {@link Cloudlet#resList}
      */
-    private static class Resource {
+    public static class Resource {
 
-        /**
-         * Cloudlet's submission (arrival) time to a CloudResource.
-         */
-        public double submissionTime = 0.0;
+        /** Cloudlet's submission (arrival) time to a CloudResource. */
+        public double arrivalTime = 0.0;
 
         /**
          * The time this Cloudlet resides in a CloudResource (from arrival time
@@ -471,29 +469,19 @@ public class Cloudlet {
          */
         public double wallClockTime = 0.0;
 
-        /**
-         * The total time the Cloudlet spent being executed in a CloudResource.
-         */
+        /** The total time the Cloudlet spent being executed in a CloudResource. */
         public double actualCPUTime = 0.0;
 
-        /**
-         * Cost per second a CloudResource charge to execute this Cloudlet.
-         */
+        /** Cost per second a CloudResource charge to execute this Cloudlet. */
         public double costPerSec = 0.0;
 
-        /**
-         * Cloudlet's length finished so far.
-         */
-        public long finishedSoFar = 0;
+        /** Cloudlet's length finished so far on the CloudResource. */
+        public long cloudletFinishedSoFar = 0;
 
-        /**
-         * a CloudResource id.
-         */
+        /** CloudResource id. */
         public int resourceId = -1;
 
-        /**
-         * a CloudResource name.
-         */
+        /** CloudResource name. */
         public String resourceName = null;
 
     }
@@ -610,7 +598,7 @@ public class Cloudlet {
         }
 
         // use the latest resource submission time
-        final double subTime = resList.get(index).submissionTime;
+        final double subTime = resList.get(index).arrivalTime;
         return execStartTime - subTime;
     }
 
@@ -710,7 +698,7 @@ public class Cloudlet {
             return cloudletLength;
         }
 
-        return Math.min(resList.get(index).finishedSoFar, cloudletLength);
+        return Math.min(resList.get(index).cloudletFinishedSoFar, cloudletLength);
     }
 
     /**
@@ -727,7 +715,7 @@ public class Cloudlet {
         }
 
         // if result is 0 or -ve then this Cloudlet has finished
-        return cloudletLength - resList.get(index).finishedSoFar <= 0.0;
+        return cloudletLength - resList.get(index).cloudletFinishedSoFar <= 0.0;
     }
 
     /**
@@ -747,7 +735,7 @@ public class Cloudlet {
             return;
         }
 
-        resList.get(index).finishedSoFar = length;
+        resList.get(index).cloudletFinishedSoFar = length;
 
         if (record) {
             write("Sets the length's finished so far to " + length);
@@ -856,7 +844,7 @@ public class Cloudlet {
             return;
         }
 
-        resList.get(index).submissionTime = clockTime;
+        resList.get(index).arrivalTime = clockTime;
 
         if (record) {
             write("Sets the submission time to " + num.format(clockTime));
@@ -875,7 +863,7 @@ public class Cloudlet {
         if (index == -1) {
             return 0.0;
         }
-        return resList.get(index).submissionTime;
+        return resList.get(index).arrivalTime;
     }
 
     /**
@@ -1110,7 +1098,7 @@ public class Cloudlet {
     public long getCloudletFinishedSoFar(final int resId) {
         Resource resource = getResourceById(resId);
         if (resource != null) {
-            return resource.finishedSoFar;
+            return resource.cloudletFinishedSoFar;
         }
         return 0;
     }
@@ -1127,7 +1115,7 @@ public class Cloudlet {
     public double getSubmissionTime(final int resId) {
         Resource resource = getResourceById(resId);
         if (resource != null) {
-            return resource.submissionTime;
+            return resource.arrivalTime;
         }
         return 0.0;
     }

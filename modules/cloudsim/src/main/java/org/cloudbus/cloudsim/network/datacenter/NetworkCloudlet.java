@@ -86,6 +86,11 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 				.mapToDouble(TaskStage::getTime).sum();*/
 	}
 
+	@Override
+	public boolean isFinished() {
+		return currStageNum != -1 && currStageNum >= stages.size();
+	}
+
 	public void addExecutionStage(double execLength) {
 		stages.add(
 				new TaskStage(TaskStage.TaskStageStatus.EXECUTION, execLength, stages.size(), this));

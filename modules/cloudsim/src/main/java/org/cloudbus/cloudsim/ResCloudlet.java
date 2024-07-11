@@ -474,6 +474,7 @@ public class ResCloudlet {
 	 */
 	public void updateCloudletFinishedSoFar(long miLength) {
 		cloudletFinishedSoFar += miLength;
+		cloudlet.setCloudletFinishedSoFar(cloudletFinishedSoFar);
 	}
 
 	/**

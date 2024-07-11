@@ -97,16 +97,8 @@ public abstract class CloudletScheduler {
 		}
 
 		// Remove finished cloudlets
-		// @TODO: Remo Andreoli: ugly instanceof check; fix it
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			boolean finishCheck;
-			if (rcl.getCloudlet() instanceof NetworkCloudlet ncl) {
-				finishCheck = (ncl.currStageNum != -1 && ncl.currStageNum >= ncl.stages.size());
-			} else {
-				finishCheck = (rcl.getRemainingCloudletLength() == 0);
-			}
-			
-			if (finishCheck) {
+			if (rcl.getCloudlet().isFinished()) {
 				cloudletJustFinishedList.add(rcl);
 				cloudletFinish(rcl);
 			}
