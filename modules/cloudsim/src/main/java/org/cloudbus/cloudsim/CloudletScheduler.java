@@ -146,8 +146,8 @@ public abstract class CloudletScheduler {
 	protected void updateExecutingCloudlet(ResCloudlet rcl, double currentTime, Object info) {
 		double timeSpan = currentTime - getPreviousTime(); // time since last update
 
-			rcl.updateCloudletFinishedSoFar((long) (timeSpan *
-					getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime) * Consts.MILLION));
+		rcl.updateCloudletFinishedSoFar((long) (timeSpan *
+				getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime) * Consts.MILLION));
 	}
 
 	/**

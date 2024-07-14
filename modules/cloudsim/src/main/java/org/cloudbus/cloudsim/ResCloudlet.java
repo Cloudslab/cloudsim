@@ -19,7 +19,11 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * It contains a Cloudlet object along with its arrival time and the ID of the machine and the Pe
  * (Processing Element) allocated to it. It acts as a placeholder for maintaining the amount of
  * resource share allocated at various times for simulating any scheduling using internal events.
- * 
+ *
+ * @TODO: Remo Andreoli: This class should be removed and integrated into the Resource class (internal class of Cloudlet)
+ *                       to reduce the complexity of the code base
+ *
+ * @TODO: Remo Andreoli: every instance of Consts.MILLION seems useless, remove them
  * @author Manzur Murshed
  * @author Rajkumar Buyya
  * @since CloudSim Toolkit 1.0
@@ -34,9 +38,6 @@ public class ResCloudlet {
 
 	/** The estimation of Cloudlet finished time. */
 	private double finishedTime;
-
-	/** The length of Cloudlet finished so far. */
-	private long cloudletFinishedSoFar;
 
 	/**
 	 * Cloudlet execution start time. This attribute will only hold the latest time since a Cloudlet
@@ -209,10 +210,6 @@ public class ResCloudlet {
 		index = 0;
 		totalCompletionTime = 0.0;
 		startExecTime = 0.0;
-
-		// In case a Cloudlet has been executed partially by some other grid
-		// hostList.
-		cloudletFinishedSoFar = cloudlet.getCloudletFinishedSoFar() * Consts.MILLION;
 	}
 
 	/**
@@ -426,14 +423,7 @@ public class ResCloudlet {
 	 * @post $result >= 0
 	 */
 	public long getRemainingCloudletLength() {
-		long length = cloudlet.getCloudletTotalLength() * Consts.MILLION - cloudletFinishedSoFar;
-
-		// Remaining Cloudlet length can't be negative number.
-		if (length < 0) {
-			return 0;
-		}
-
-		return (long) Math.floor(1.0*length / Consts.MILLION);
+		return cloudlet.getRemainingCloudletLength();
 	}
 
 	/**
@@ -454,15 +444,10 @@ public class ResCloudlet {
 		double wallClockTime = CloudSim.clock() - arrivalTime;
 		cloudlet.setExecParam(wallClockTime, totalCompletionTime);
 
-		long finished = 0;
 		//if (cloudlet.getCloudletTotalLength() * Consts.MILLION < cloudletFinishedSoFar) {
 		if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
-			finished = cloudlet.getCloudletLength();
-		} else {
-			finished = cloudletFinishedSoFar / Consts.MILLION;
+			cloudlet.setCloudletFinishedSoFar(cloudlet.getCloudletLength());
 		}
-
-		cloudlet.setCloudletFinishedSoFar(finished);
 	}
 
 	/**
@@ -473,8 +458,7 @@ public class ResCloudlet {
 	 * @post $none
 	 */
 	public void updateCloudletFinishedSoFar(long miLength) {
-		cloudletFinishedSoFar += miLength;
-		cloudlet.setCloudletFinishedSoFar(cloudletFinishedSoFar);
+		cloudlet.setCloudletFinishedSoFar(cloudlet.getCloudletFinishedSoFar() + miLength);
 	}
 
 	/**

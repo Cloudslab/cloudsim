@@ -695,10 +695,10 @@ public class Cloudlet {
      */
     public long getCloudletFinishedSoFar() {
         if (index == -1) {
-            return cloudletLength;
+            return getCloudletLength();
         }
 
-        return Math.min(resList.get(index).cloudletFinishedSoFar, cloudletLength);
+        return Math.min(resList.get(index).cloudletFinishedSoFar, getCloudletLength());
     }
 
     /**
@@ -715,7 +715,7 @@ public class Cloudlet {
         }
 
         // if result is 0 or -ve then this Cloudlet has finished
-        return cloudletLength - resList.get(index).cloudletFinishedSoFar <= 0.0;
+        return getCloudletLength() - resList.get(index).cloudletFinishedSoFar <= 0.0;
     }
 
     /**
@@ -1101,6 +1101,25 @@ public class Cloudlet {
             return resource.cloudletFinishedSoFar;
         }
         return 0;
+    }
+
+    /**
+     * Gets the remaining cloudlet length that has to be execute yet,
+     * considering the {@link #getCloudletTotalLength()}.
+     *
+     * @return cloudlet length
+     * @pre $none
+     * @post $result >= 0
+     */
+    public long getRemainingCloudletLength() {
+        long length = getCloudletTotalLength() - getCloudletFinishedSoFar();
+
+        // Remaining Cloudlet length can't be negative number.
+        if (length < 0) {
+            return 0;
+        }
+
+        return (long) Math.floor(1.0*length);
     }
 
     /**
