@@ -475,6 +475,9 @@ public class Datacenter extends SimEntity {
 		//destroy VM in src host
 		getVmAllocationPolicy().deallocateHostForGuest(vm);
 		host.removeMigratingInGuest(vm);
+
+		// @TODO: Remo Andreoli: what happens to the vmId / containerId of the cloudlets hosted on the Vm?
+		// create VM in dest host
 		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm, host);
 		if (!result) {
 			Log.println("[Datacenter.processVmMigrate] VM allocation to the destination host failed");
@@ -485,7 +488,7 @@ public class Datacenter extends SimEntity {
 			int[] data = new int[3];
 			data[0] = getId();
 			data[1] = vm.getId();
-			data[2] = result ? CloudSimTags.TRUE : CloudSimTags.FALSE;
+			data[2] = CloudSimTags.TRUE;
 			sendNow(ev.getSource(), CloudActionTags.VM_CREATE_ACK, data);
 		}
 
