@@ -489,6 +489,16 @@ public class Cloudlet {
     // ////////////////////// End of Internal Class //////////////////////////
 
     /**
+     * Update the cloudlet (override this to customise the cloudlet behavior).
+     * @param info a custom object class you may need to implement the update logic
+     * @return true if the update causes a variation in cloudlet length
+     */
+
+    public boolean update(Object info) {
+        return true;
+    }
+
+    /**
      * Sets the id of the reservation made for this cloudlet.
      *
      * @param resId the reservation ID

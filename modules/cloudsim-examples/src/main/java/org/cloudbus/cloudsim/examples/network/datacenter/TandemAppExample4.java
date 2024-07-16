@@ -231,7 +231,7 @@ public class TandemAppExample4 {
 					bw,
 					size,
 					vmm,
-					new NetworkCloudletSpaceSharedScheduler()));
+					new CloudletSchedulerTimeShared()));
 		}
 
 		return vmList;

@@ -171,9 +171,11 @@ public class Switch extends SimEntity {
          */
 	protected void storePacketInHost(SimEvent ev) {
 		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		NetworkHost hs = hostList.get(hspkt.receiverHostId);
 
-		hs.getReceivedPkts().add(hspkt);
+		NetworkHost hs = hostList.get(hspkt.receiverHostId);
+		NetworkInterfaceCard nic = hs.getNics().get(hspkt.pkt.receiverCloudletId);
+
+		nic.getReceivedPkts().add(hspkt.pkt);
 	}
 
 	/**

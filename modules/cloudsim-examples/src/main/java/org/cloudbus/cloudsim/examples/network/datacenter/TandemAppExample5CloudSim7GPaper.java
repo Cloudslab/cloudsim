@@ -314,7 +314,7 @@ public class TandemAppExample5CloudSim7GPaper {
 					vmBw,
 					size,
 					vmm,
-					new NetworkCloudletSpaceSharedScheduler(),
+					new CloudletSchedulerTimeShared(),
 					new VmSchedulerTimeShared(peList),
 					new RamProvisionerSimple(ram),
 					new BwProvisionerSimple(vmBw),
@@ -342,7 +342,7 @@ public class TandemAppExample5CloudSim7GPaper {
 					vmBw,
 					size,
 					containerTechnology,
-					new NetworkCloudletSpaceSharedScheduler(), -1));
+					new CloudletSchedulerTimeShared(), -1));
 		}
 
 		return containerList;

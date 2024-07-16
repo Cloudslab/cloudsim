@@ -239,7 +239,7 @@ public class DiamondAppMultiExtensionExample {
 					bw,
 					size,
 					vmm,
-					new NetworkCloudletSpaceSharedScheduler()));
+					new CloudletSchedulerTimeShared()));
 		}
 
 		String containerManager = "Docker";
@@ -253,7 +253,7 @@ public class DiamondAppMultiExtensionExample {
 					bw,
 					size,
 					containerManager,
-					new NetworkCloudletSpaceSharedScheduler(), 0));
+					new CloudletSchedulerTimeShared(), 0));
 		}
 
 		return vmList;

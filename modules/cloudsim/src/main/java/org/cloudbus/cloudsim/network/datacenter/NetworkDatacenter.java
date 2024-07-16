@@ -104,6 +104,7 @@ public class NetworkDatacenter extends Datacenter {
 		SwitchList = new HashMap<>();
 	}
 
+	@Override
 	protected void processVmCreate(SimEvent ev, boolean ack) {
 		super.processVmCreate(ev, ack);
 		GuestEntity vm = (GuestEntity) ev.getData();
@@ -112,6 +113,19 @@ public class NetworkDatacenter extends Datacenter {
 			VmToSwitchid.put(vm.getId(), ((NetworkHost) vm.getHost()).getSwitch().getId());
 			VmtoHostlist.put(vm.getId(), vm.getHost().getId());
 		}
+	}
+
+	@Override
+	protected void processCloudletSubmit(SimEvent ev, boolean ack) {
+		super.processCloudletSubmit(ev, ack);
+
+		NetworkCloudlet ncl = (NetworkCloudlet) ev.getData();
+
+		int userId = ncl.getUserId();
+		int vmId = ncl.getGuestId();
+		NetworkHost host = (NetworkHost) getVmAllocationPolicy().getHost(vmId, userId);
+
+		host.getNics().put(ncl.getCloudletId(), ncl.getNic());
 	}
 
 	/**

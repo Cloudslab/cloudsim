@@ -305,7 +305,7 @@ public class BagOfTaskAppExample {
 					bw,
 					size,
 					vmm,
-					new NetworkCloudletSpaceSharedScheduler());
+					new CloudletSchedulerTimeShared());
 
 			vmList.add(vm);
 		}

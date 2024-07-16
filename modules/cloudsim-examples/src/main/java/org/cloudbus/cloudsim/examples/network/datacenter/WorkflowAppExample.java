@@ -299,7 +299,7 @@ public class WorkflowAppExample {
 					bw,
 					size,
 					vmm,
-					new NetworkCloudletSpaceSharedScheduler());
+					new CloudletSchedulerTimeShared());
 
 			vmList.add(vm);
 		}

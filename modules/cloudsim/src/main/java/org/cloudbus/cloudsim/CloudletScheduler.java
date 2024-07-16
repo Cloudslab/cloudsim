@@ -15,9 +15,6 @@ import java.util.List;
 import lombok.Getter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.ResCloudletList;
-import org.cloudbus.cloudsim.network.datacenter.NetworkCloudlet;
-import org.cloudbus.cloudsim.network.datacenter.NetworkCloudletSpaceSharedScheduler;
-
 
 /**
  * CloudletScheduler is an abstract class that represents the policy of scheduling performed by a
@@ -90,10 +87,14 @@ public abstract class CloudletScheduler {
 	 */
 	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
 		setCurrentMipsShare(mipsShare);
+		double timeSpan = currentTime - getPreviousTime(); // time since last update
 
 		// Update cloudlets in exec list
 		for (ResCloudlet rcl : getCloudletExecList()) {
-			updateExecutingCloudlet(rcl, currentTime, null);
+			if (rcl.getCloudlet().update(null)) {
+				rcl.updateCloudletFinishedSoFar((long) (timeSpan *
+						getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime)));
+			}
 		}
 
 		// Remove finished cloudlets
@@ -130,24 +131,6 @@ public abstract class CloudletScheduler {
 
 		setPreviousTime(currentTime);
 		return nextEvent;
-	}
-
-	/**
-	 * Update a cloudlet currently in execution.
-	 * <p>
-	 * This default implementation is suitable for trivial scheduling policies, such as the basic implementation of
-	 * space-shared and time-shared scheduling.
-	 * Each cloudlet in the exec list has the same amount of cpu
-	 *
-	 * @param rcl cloudlet
-	 * @param currentTime current simulation time
-	 * @param info        Any data you may need to implement the update logic
-	 */
-	protected void updateExecutingCloudlet(ResCloudlet rcl, double currentTime, Object info) {
-		double timeSpan = currentTime - getPreviousTime(); // time since last update
-
-		rcl.updateCloudletFinishedSoFar((long) (timeSpan *
-				getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime) * Consts.MILLION));
 	}
 
 	/**
@@ -410,7 +393,7 @@ public abstract class CloudletScheduler {
          * the resulting value can be different in every subclass,
          * but is not supposed that each subclass returns a complete different 
          * result for the same method of the superclass.
-         * In some class such as {@link NetworkCloudletSpaceSharedScheduler},
+         * In some class such as NetworkCloudletSpaceSharedScheduler (OLD CLASS),
          * the method returns the average MIPS for the available PEs,
          * in other classes such as {@link CloudletSchedulerDynamicWorkload} it returns
          * the MIPS' sum of all PEs.

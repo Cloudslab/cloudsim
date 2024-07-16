@@ -9,9 +9,15 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
  * NetworkCloudlet class extends Cloudlet to support simulation of complex applications. Each such
@@ -45,6 +51,10 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 	 * ASSUMPTION: array order is significant */
 	public ArrayList<TaskStage> stages;
 
+	/** Communication channel */
+	@Getter
+	private NetworkInterfaceCard nic;
+
 	public NetworkCloudlet(
 			int cloudletId,
 			long cloudletLength,
@@ -66,6 +76,60 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 
 		currStageNum = -1;
 		stages = new ArrayList<>();
+		nic = new NetworkInterfaceCard();
+	}
+
+	@Override
+	public boolean update(Object info) {
+		if (currStageNum >= stages.size()) {
+			return false;
+		}
+
+		if (currStageNum == -1) {
+			currStageNum = 0;
+			startTimeCurrStage = CloudSim.clock();
+		}
+
+		// if execution stage, update the cloudlet execFinishTime
+		// CHECK WHETHER IT IS WAITING FOR THE PACKET
+		// if packet received change the status of job and update the time.
+		TaskStage st = stages.get(currStageNum);
+		if (st.getType() == TaskStage.TaskStageStatus.EXECUTION) {
+			// update the time
+			timeSpentCurrStage = CloudSim.clock() - startTimeCurrStage;
+
+			if (getRemainingCloudletLength() == 0) {
+				st.setTime(timeSpentCurrStage);
+				goToNextStage();
+			} else {
+				return true;
+			}
+			/*if (ncl.timeSpentCurrStage >= st.getTime()) {
+				goToNextStage();
+			}*/
+		}
+		if (st.getType() == TaskStage.TaskStageStatus.WAIT_RECV) {
+			List<HostPacket> pkttoremove = new ArrayList<>();
+
+			Iterator<HostPacket> it = nic.getReceivedPkts().iterator();
+			HostPacket pkt;
+			if (it.hasNext()) {
+				pkt = it.next();
+				// Assumption: packet will not arrive in the same cycle
+				if (pkt.receiverGuestId == getGuestId()) {
+					pkt.recvTime = CloudSim.clock();
+					st.setTime(CloudSim.clock() - pkt.sendTime);
+					goToNextStage();
+					pkttoremove.add(pkt);
+				}
+			}
+			nic.getReceivedPkts().removeAll(pkttoremove);
+			// if(pkt!=null)
+			// else wait for receiving the packet
+			return false;
+		}
+
+		return true;
 	}
 
 	public int getNumberOfStages() { return stages.size(); }
@@ -122,5 +186,22 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 	@Override
 	public int compareTo(NetworkCloudlet arg0) {
 		return 0;
+	}
+
+	/**
+	 * Changes a cloudlet to the next stage.
+	 *
+	 */
+	private void goToNextStage() {
+		timeSpentCurrStage = 0;
+		startTimeCurrStage = CloudSim.clock();
+
+		currStageNum++;
+		while(currStageNum < stages.size() && stages.get(currStageNum).getType() == TaskStage.TaskStageStatus.WAIT_SEND) {
+			HostPacket pkt = new HostPacket(this, currStageNum);
+
+			nic.getPktsToSend().add(pkt);
+			currStageNum++;
+		}
 	}
 }

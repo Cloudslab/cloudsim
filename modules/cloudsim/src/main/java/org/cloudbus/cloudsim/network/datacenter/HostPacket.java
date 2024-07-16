@@ -32,19 +32,14 @@ public class HostPacket {
 	 */
 	int senderGuestId;
 
-	/**
-	 * Id of the receiver VM.
-	 */
+	/** Id of the receiver VM. */
 	int receiverGuestId;
-        
-	/**
-	 * Id of the sender cloudlet.
-	 */
+
+
+	/** Id of the sender cloudlet. */
 	int senderCloudletId;
 
-	/**
-	 * Id of the receiver cloudlet.
-	 */
+	/** Id of the receiver cloudlet. */
 	int receiverCloudletId;
 
 	/**
