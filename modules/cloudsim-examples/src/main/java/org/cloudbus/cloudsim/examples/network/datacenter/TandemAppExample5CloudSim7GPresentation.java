@@ -101,7 +101,7 @@ public class TandemAppExample5CloudSim7GPresentation {
 
 			// Datacenters are the resource providers in CloudSim. We need at
 			// list one of them to run a CloudSim simulation
-			createDatacenter("Datacenter_0");
+			NetworkDatacenter datacenter = createDatacenter("Datacenter_0");
 
 			// submit vm list to the broker
 			broker.submitGuestList(guestList);
@@ -115,7 +115,7 @@ public class TandemAppExample5CloudSim7GPresentation {
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
 			System.out.println("numberofcloudlet " + newList.size() + " Data transfered "
-					+ NetworkGlobals.totaldatatransfer);
+					+ datacenter.totalDataTransfer);
 
 			Log.println("TandemAppExample5 finished!");
 

@@ -44,30 +44,33 @@ import org.cloudbus.cloudsim.core.*;
  * @since CloudSim Toolkit 3.0
  */
 public class NetworkDatacenter extends Datacenter {
-        /**
-         * A map between VMs and Switches, where each key
-         * is a VM id and the corresponding value is the id of the switch where the VM is connected to.
-         */
+	/**
+	 * A map between VMs and Switches, where each key
+	 * is a VM id and the corresponding value is the id of the switch where the VM is connected to.
+	 */
 	public Map<Integer, Integer> VmToSwitchid;
 
-        /**
-         * A map between hosts and Switches, where each key
-         * is a host id and the corresponding value is the id of the switch where the host is connected to.
-         */
+	/**
+	 * A map between hosts and Switches, where each key
+	 * is a host id and the corresponding value is the id of the switch where the host is connected to.
+	 */
 	public Map<Integer, Integer> HostToSwitchid;
 
-        /**
-         * A map of datacenter switches where each key is a switch id
-         * and the corresponding value is the switch itself.
-         */
+	/**
+	 * A map of datacenter switches where each key is a switch id
+	 * and the corresponding value is the switch itself.
+	 */
 	@Getter
 	private Map<Integer, Switch> SwitchList;
 
-        /**
-         * A map between VMs and Hosts, where each key
-         * is a VM id and the corresponding value is the id of the host where the VM is placed.
-         */
+	/**
+	 * A map between VMs and Hosts, where each key
+	 * is a VM id and the corresponding value is the id of the host where the VM is placed.
+	 */
 	public Map<Integer, Integer> VmtoHostlist;
+
+	/** Total data transmitted through the network of this datacenter */
+	public double totalDataTransfer = 0;
 
 	/**
 	 * Instantiates a new NetworkDatacenter object.

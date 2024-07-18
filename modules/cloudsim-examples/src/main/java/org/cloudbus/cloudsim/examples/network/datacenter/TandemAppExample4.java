@@ -96,7 +96,7 @@ public class TandemAppExample4 {
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
 			System.out.println("numberofcloudlet " + newList.size() + " Data transfered "
-					+ NetworkGlobals.totaldatatransfer);
+					+ datacenter.totalDataTransfer);
 
 			Log.println("TandemAppExample4 finished!");
 		} catch (Exception e) {

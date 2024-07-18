@@ -82,7 +82,7 @@ public class DiamondAppMultiExtensionExample {
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 			printCloudletList(newList);
 			System.out.println("numberofcloudlet " + newList.size() + " Data transfered "
-					+ NetworkGlobals.totaldatatransfer);
+					+ datacenter.totalDataTransfer);
 
 			Log.println("DiamondAppExample finished!");
 		} catch (Exception e) {
