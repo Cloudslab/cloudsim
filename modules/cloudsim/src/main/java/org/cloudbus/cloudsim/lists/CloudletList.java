@@ -34,6 +34,28 @@ public class CloudletList {
 	}
 
 	/**
+	 * Gets a {@link Cloudlet} with a given id and owned by a given user.
+	 * This method needs a combination of Cloudlet Id and User Id because
+	 * each Cloud User might have exactly the same Cloudlet Id.
+	 *
+	 * @param cloudletId a Cloudlet Id
+	 * @param userId an User Id
+	 * @param list the list of Cloudlet
+	 * @return a Cloudlet or null if not found
+	 * @pre cloudletId >= 0
+	 * @pre userId >= 0
+	 * @post $none
+	 *
+	 * //TODO The second phrase of the class documentation is not clear.
+	 */
+	public static <T extends Cloudlet> Cloudlet getByIdAndUserId(
+			List<T> list,
+			int cloudletId,
+			int userId) {
+		return list.stream().filter(cl -> cl.getCloudletId() == cloudletId && cl.getUserId() == userId).findFirst().map(cl -> cl).orElse(null);
+	}
+
+	/**
 	 * Gets the position of a cloudlet with a given id.
          * 
 	 * @param cloudletList the list of existing cloudlets

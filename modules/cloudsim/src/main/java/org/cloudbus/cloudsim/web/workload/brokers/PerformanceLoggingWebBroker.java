@@ -1,10 +1,10 @@
 package org.cloudbus.cloudsim.web.workload.brokers;
 
-import org.cloudbus.cloudsim.ResCloudlet;
+import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.EX.disk.HddCloudlet;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.SimEvent;
-import org.cloudbus.cloudsim.EX.disk.HddResCloudlet;
 import org.cloudbus.cloudsim.EX.disk.HddVm;
 import org.cloudbus.cloudsim.EX.util.CustomLog;
 import org.cloudbus.cloudsim.EX.util.TextUtil;
@@ -19,7 +19,7 @@ import java.util.List;
  * A web broker that logs the performance indicators of the virtual machines.
  * 
  * @author nikolay.grozev
- * 
+ * @author Remo Andreoli
  */
 public class PerformanceLoggingWebBroker extends WebBroker {
     public static final List<? extends Class<?>> HEADER_TYPES = Arrays.asList(Double.class, Integer.class,
@@ -121,7 +121,7 @@ public class PerformanceLoggingWebBroker extends WebBroker {
 
     public static double evaluateCPUUtilization(final HddVm vm) {
         double sumExecCloudLets = 0;
-        for (ResCloudlet cloudlet : vm.getCloudletScheduler().getCloudletExecList()) {
+        for (Cloudlet cloudlet : vm.getCloudletScheduler().getCloudletExecList()) {
             sumExecCloudLets += cloudlet.getCloudletLength();
         }
         double vmMips = vm.getMips() * vm.getNumberOfPes();
@@ -130,8 +130,8 @@ public class PerformanceLoggingWebBroker extends WebBroker {
 
     public static double evaluateIOUtilization(final HddVm vm) {
         double sumExecCloudLets = 0;
-        for (HddResCloudlet cloudlet : vm.getCloudletScheduler().<HddResCloudlet> getCloudletExecList()) {
-            sumExecCloudLets += cloudlet.getCloudlet().getCloudletIOLength();
+        for (HddCloudlet cloudlet : vm.getCloudletScheduler().<HddCloudlet> getCloudletExecList()) {
+            sumExecCloudLets += cloudlet.getCloudletIOLength();
         }
         double vmIOMips = vm.getIoMips();
         return Math.min(1, sumExecCloudLets / vmIOMips);
@@ -139,8 +139,8 @@ public class PerformanceLoggingWebBroker extends WebBroker {
 
     public static double evaluateRAMUtilization(final HddVm vm) {
         double sumExecCloudLets = 0;
-        for (HddResCloudlet cloudlet : vm.getCloudletScheduler().<HddResCloudlet> getCloudletExecList()) {
-            sumExecCloudLets += cloudlet.getCloudlet().getRam();
+        for (HddCloudlet cloudlet : vm.getCloudletScheduler().<HddCloudlet> getCloudletExecList()) {
+            sumExecCloudLets += cloudlet.getRam();
         }
         double vmRam = vm.getRam();
         return Math.min(1, sumExecCloudLets / vmRam);

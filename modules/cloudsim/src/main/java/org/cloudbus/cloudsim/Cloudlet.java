@@ -131,6 +131,8 @@ public class Cloudlet {
     @Getter
     private double execFinishTime;
 
+    /** The total time to complete this Cloudlet. */
+    private double totalCompletionTime;
     /**
      * The ID of a reservation made for this cloudlet.
      * <p>
@@ -494,8 +496,32 @@ public class Cloudlet {
      * @return true if the update causes a variation in cloudlet length
      */
 
-    public boolean update(Object info) {
+    public boolean updateCloudlet(Object info) {
         return true;
+    }
+
+    /**
+     * Finalizes all relevant information before <tt>exiting</tt> the CloudResource entity. This
+     * method sets the final data of:
+     * <ul>
+     * <li>wall clock time, i.e. the time of this Cloudlet resides in a CloudResource (from arrival
+     * time until departure time).
+     * <li>actual CPU time, i.e. the total execution time of this Cloudlet in a CloudResource.
+     * <li>Cloudlet's finished time so far
+     * </ul>
+     *
+     * @pre $none
+     * @post $none
+     */
+    public void finalizeCloudlet() {
+        // Sets the wall clock time and actual CPU time
+        double wallClockTime = CloudSim.clock() - getSubmissionTime();
+        setExecParam(wallClockTime, totalCompletionTime);
+
+        //if (cloudlet.getCloudletTotalLength() * Consts.MILLION < cloudletFinishedSoFar) {
+        if (getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
+            setCloudletFinishedSoFar(getCloudletLength());
+        }
     }
 
     /**
@@ -729,6 +755,17 @@ public class Cloudlet {
     }
 
     /**
+     * Updates the length of cloudlet that has already been completed.
+     *
+     * @param miLength cloudlet length in Instructions (I)
+     * @pre miLength >= 0.0
+     * @post $none
+     */
+    public void updateCloudletFinishedSoFar(long miLength) {
+        setCloudletFinishedSoFar(getCloudletFinishedSoFar() + miLength);
+    }
+
+    /**
      * Sets the length of this Cloudlet that has been executed so far. This
      * method is used by ResCloudlet class when an application is decided to
      * cancel or to move this Cloudlet into different CloudResources.
@@ -737,7 +774,7 @@ public class Cloudlet {
      * @pre length >= 0.0
      * @post $none
      * @see VmAllocationPolicy
-     * @see ResCloudlet
+     * @see Cloudlet
      */
     public void setCloudletFinishedSoFar(final long length) {
         // if length is -ve then ignore
@@ -925,25 +962,58 @@ public class Cloudlet {
     }
 
     /**
-     * Sets the execution status code of this Cloudlet.
+     * Sets the execution status of the Cloudlet.
      *
-     * @param newStatus the status code of this Cloudlet
+     * @param status the Cloudlet status
+     * @return <tt>true</tt> if the new status has been set, <tt>false</tt> otherwise
+     * @pre status >= 0
+     * @post $none
      */
-    public void setCloudletStatus(final CloudletStatus newStatus) {
-        // if the new status is same as current one, then ignore the rest
-        if (status == newStatus) {
-            return;
+    public boolean setStatus(final CloudletStatus status) {
+        // gets Cloudlet's previous status
+        Cloudlet.CloudletStatus prevStatus = getStatus();
+
+        // if the status of a Cloudlet is the same as last time, then ignore
+        if (prevStatus == status) {
+            return false;
         }
 
-        if (newStatus == CloudletStatus.SUCCESS) {
+        // sets Cloudlet's current status
+        if (status == CloudletStatus.SUCCESS) {
             execFinishTime = CloudSim.clock();
         }
 
+        double clock = CloudSim.clock();
+        this.status = status;
+
         if (record) {
-            write("Sets Cloudlet status from " + getCloudletStatusString() + " to " + newStatus.toString());
+            write("Sets Cloudlet status from " + getCloudletStatusString() + " to " + status.toString());
         }
 
-        status = newStatus;
+        // if a previous Cloudlet status is INEXEC
+        if (prevStatus == Cloudlet.CloudletStatus.INEXEC) {
+            // and current status is either CANCELED, PAUSED or SUCCESS
+            if (status == Cloudlet.CloudletStatus.CANCELED || status == Cloudlet.CloudletStatus.PAUSED || status == Cloudlet.CloudletStatus.SUCCESS) {
+                // then update the Cloudlet completion time
+                totalCompletionTime += (clock - execStartTime);
+                index = 0;
+                return true;
+            }
+        }
+
+        if (prevStatus == Cloudlet.CloudletStatus.RESUMED && status == Cloudlet.CloudletStatus.SUCCESS) {
+            // then update the Cloudlet completion time
+            totalCompletionTime += (clock - execStartTime);
+            return true;
+        }
+
+        // if a Cloudlet is now in execution
+        if (status == Cloudlet.CloudletStatus.INEXEC || (prevStatus == Cloudlet.CloudletStatus.PAUSED && status == Cloudlet.CloudletStatus.RESUMED)) {
+            setExecStartTime(clock);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -1402,6 +1472,15 @@ public class Cloudlet {
      */
     public void setUtilizationModelBw(final UtilizationModel utilizationModelBw) {
         this.utilizationModelBw = utilizationModelBw;
+    }
+
+    /**
+     * Get am Unique Identifier (UID) of the cloudlet.
+     *
+     * @return The UID
+     */
+    public String getUid() {
+        return getUserId() + "-" + getCloudletId();
     }
 
     /**

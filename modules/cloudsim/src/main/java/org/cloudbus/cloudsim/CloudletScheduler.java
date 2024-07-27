@@ -14,7 +14,7 @@ import java.util.List;
 
 import lombok.Getter;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.lists.ResCloudletList;
+import org.cloudbus.cloudsim.lists.CloudletList;
 
 /**
  * CloudletScheduler is an abstract class that represents the policy of scheduling performed by a
@@ -40,22 +40,22 @@ public abstract class CloudletScheduler {
 	private List<Double> currentMipsShare;
 
 	/** The list of cloudlet waiting to be executed on the VM. */
-	protected List<? extends ResCloudlet> cloudletWaitingList;
+	protected List<? extends Cloudlet> cloudletWaitingList;
 
 	/** The list of cloudlets being executed on the VM. */
-	protected List<? extends ResCloudlet> cloudletExecList;
+	protected List<? extends Cloudlet> cloudletExecList;
 
 	/** The list of paused cloudlets. */
-	protected List<? extends ResCloudlet> cloudletPausedList;
+	protected List<? extends Cloudlet> cloudletPausedList;
 
 	/** The list of finished cloudlets. */
-	protected List<? extends ResCloudlet> cloudletFinishedList;
+	protected List<? extends Cloudlet> cloudletFinishedList;
 
 	/** The list of failed cloudlets. */
-	protected List<? extends ResCloudlet> cloudletFailedList;
+	protected List<? extends Cloudlet> cloudletFailedList;
 
 	/** Buffer list of the latest finished cloudlets. */
-	protected List<ResCloudlet> cloudletJustFinishedList;
+	protected List<Cloudlet> cloudletJustFinishedList;
 
 	/**
 	 * Creates a new CloudletScheduler object. 
@@ -90,18 +90,18 @@ public abstract class CloudletScheduler {
 		double timeSpan = currentTime - getPreviousTime(); // time since last update
 
 		// Update cloudlets in exec list
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getCloudlet().update(null)) {
-				rcl.updateCloudletFinishedSoFar((long) (timeSpan *
-						getTotalCurrentAllocatedMipsForCloudlet(rcl, currentTime)));
+		for (Cloudlet cl : getCloudletExecList()) {
+			if (cl.updateCloudlet(null)) {
+				cl.updateCloudletFinishedSoFar((long) (timeSpan *
+						getTotalCurrentAllocatedMipsForCloudlet(cl, currentTime)));
 			}
 		}
 
 		// Remove finished cloudlets
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getCloudlet().isFinished()) {
-				cloudletJustFinishedList.add(rcl);
-				cloudletFinish(rcl);
+		for (Cloudlet cl : getCloudletExecList()) {
+			if (cl.isFinished()) {
+				cloudletJustFinishedList.add(cl);
+				cloudletFinish(cl);
 			}
 		}
 		getCloudletExecList().removeAll(cloudletJustFinishedList);
@@ -119,8 +119,8 @@ public abstract class CloudletScheduler {
 
 		// estimate finish time of cloudlets in the execution queue
 		double nextEvent = Double.MAX_VALUE;
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
+		for (Cloudlet cl : getCloudletExecList()) {
+			double estimatedFinishTime = getEstimatedFinishTime(cl, currentTime);
 			if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
 				estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
 			}
@@ -173,33 +173,33 @@ public abstract class CloudletScheduler {
 	 */
 	public Cloudlet cloudletCancel(final int cloudletId) {
 		// First, looks in the finished queue
-		int position = ResCloudletList.getPositionById(getCloudletFinishedList(), cloudletId);
+		int position = CloudletList.getPositionById(getCloudletFinishedList(), cloudletId);
 		if (position >= 0) {
-			return getCloudletFinishedList().remove(position).getCloudlet();
+			return getCloudletFinishedList().remove(position);
 		}
 
 		// Then searches in the exec list
-		position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
+		position = CloudletList.getPositionById(getCloudletExecList(), cloudletId);
 		if (position >= 0) {
-			ResCloudlet rcl = getCloudletExecList().remove(position);
-			if (rcl.getRemainingCloudletLength() == 0) {
-				cloudletFinish(rcl);
+			Cloudlet cl = getCloudletExecList().remove(position);
+			if (cl.getRemainingCloudletLength() == 0) {
+				cloudletFinish(cl);
 			} else {
-				rcl.setCloudletStatus(Cloudlet.CloudletStatus.CANCELED);
+				cl.setStatus(Cloudlet.CloudletStatus.CANCELED);
 			}
-			return rcl.getCloudlet();
+			return cl;
 		}
 
 		// Now, looks in the paused queue
-		position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
+		position = CloudletList.getPositionById(getCloudletPausedList(), cloudletId);
 		if (position >= 0) {
-			return getCloudletPausedList().remove(position).getCloudlet();
+			return getCloudletPausedList().remove(position);
 		}
 
 		// Finally, looks in the waiting list
-		position = ResCloudletList.getPositionById(getCloudletWaitingList(), cloudletId);
+		position = CloudletList.getPositionById(getCloudletWaitingList(), cloudletId);
 		if (position >= 0) {
-			return getCloudletWaitingList().remove(position).getCloudlet();
+			return getCloudletWaitingList().remove(position);
 		}
 		return null;
 	}
@@ -214,29 +214,29 @@ public abstract class CloudletScheduler {
 	 */
 	public boolean cloudletPause(int cloudletId) {
 		// first, looks for the cloudlet in the exec list
-		int position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
+		int position = CloudletList.getPositionById(getCloudletExecList(), cloudletId);
 		if (position >= 0) {
 			// moves to the paused list
-			ResCloudlet rcl = getCloudletExecList().remove(position);
-			if (rcl.getRemainingCloudletLength() == 0) {
-				cloudletFinish(rcl);
+			Cloudlet cl = getCloudletExecList().remove(position);
+			if (cl.getRemainingCloudletLength() == 0) {
+				cloudletFinish(cl);
 			} else {
-				rcl.setCloudletStatus(Cloudlet.CloudletStatus.PAUSED);
-				getCloudletPausedList().add(rcl);
+				cl.setStatus(Cloudlet.CloudletStatus.PAUSED);
+				getCloudletPausedList().add(cl);
 			}
 			return true;
 		}
 
 		// now, look for the cloudlet in the waiting list
-		position = ResCloudletList.getPositionById(getCloudletWaitingList(), cloudletId);
+		position = CloudletList.getPositionById(getCloudletWaitingList(), cloudletId);
 		if (position >= 0) {
 			// moves to the paused list
-			ResCloudlet rcl = getCloudletWaitingList().remove(position);
-			if (rcl.getRemainingCloudletLength() == 0) {
-				cloudletFinish(rcl);
+			Cloudlet cl = getCloudletWaitingList().remove(position);
+			if (cl.getRemainingCloudletLength() == 0) {
+				cloudletFinish(cl);
 			} else {
-				rcl.setCloudletStatus(Cloudlet.CloudletStatus.PAUSED);
-				getCloudletPausedList().add(rcl);
+				cl.setStatus(Cloudlet.CloudletStatus.PAUSED);
+				getCloudletPausedList().add(cl);
 			}
 			return true;
 		}
@@ -256,14 +256,14 @@ public abstract class CloudletScheduler {
 	/**
 	 * Processes a finished cloudlet.
 	 * 
-	 * @param rcl finished cloudlet
+	 * @param cl finished cloudlet
 	 * @pre rgl != $null
 	 * @post $none
 	 */
-	public void cloudletFinish(ResCloudlet rcl) {
-		rcl.setCloudletStatus(Cloudlet.CloudletStatus.SUCCESS);
-		rcl.finalizeCloudlet();
-		getCloudletFinishedList().add(rcl);
+	public void cloudletFinish(Cloudlet cl) {
+		cl.setStatus(Cloudlet.CloudletStatus.SUCCESS);
+		cl.finalizeCloudlet();
+		getCloudletFinishedList().add(cl);
 	}
 
 	/**
@@ -276,19 +276,19 @@ public abstract class CloudletScheduler {
 	 *
 	 */
 	public Cloudlet.CloudletStatus getCloudletStatus(final int cloudletId) {
-		int position = ResCloudletList.getPositionById(getCloudletExecList(), cloudletId);
+		int position = CloudletList.getPositionById(getCloudletExecList(), cloudletId);
 		if (position >= 0) {
-			return getCloudletExecList().get(position).getCloudletStatus();
+			return getCloudletExecList().get(position).getStatus();
 		}
 
-		position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
+		position = CloudletList.getPositionById(getCloudletPausedList(), cloudletId);
 		if (position >= 0) {
-			return getCloudletPausedList().get(position).getCloudletStatus();
+			return getCloudletPausedList().get(position).getStatus();
 		}
 
-		position = ResCloudletList.getPositionById(getCloudletWaitingList(), cloudletId);
+		position = CloudletList.getPositionById(getCloudletWaitingList(), cloudletId);
 		if (position >= 0) {
-			return getCloudletWaitingList().get(position).getCloudletStatus();
+			return getCloudletWaitingList().get(position).getStatus();
 		}
 
 		throw new RuntimeException("cloudlet doesn't not exist");
@@ -313,7 +313,7 @@ public abstract class CloudletScheduler {
 	 */
 	public Cloudlet getNextFinishedCloudlet() {
 		if (!getCloudletFinishedList().isEmpty()) {
-			return getCloudletFinishedList().remove(0).getCloudlet();
+			return getCloudletFinishedList().remove(0);
 		}
 		return null;
 	}
@@ -337,21 +337,21 @@ public abstract class CloudletScheduler {
 	 * @TODO: Remo Andreoli: No clue why it's removing the first element
 	 */
 	public Cloudlet migrateCloudlet() {
-		ResCloudlet rcl = getCloudletExecList().remove(0);
-		rcl.finalizeCloudlet();
-		return rcl.getCloudlet();
+		Cloudlet cl = getCloudletExecList().remove(0);
+		cl.finalizeCloudlet();
+		return cl;
 	}
 
 	/**
 	 * Get the estimated completion time of a given cloudlet.
 	 *
-	 * @param rcl the cloudlet
+	 * @param cl the cloudlet
 	 * @param time the time
 	 * @return the estimated finish time
 	 */
-	public double getEstimatedFinishTime(ResCloudlet rcl, double time) {
+	public double getEstimatedFinishTime(Cloudlet cl, double time) {
 		return time
-				+ ((rcl.getRemainingCloudletLength()) / getTotalCurrentAllocatedMipsForCloudlet(rcl, time));
+				+ ((cl.getRemainingCloudletLength()) / getTotalCurrentAllocatedMipsForCloudlet(cl, time));
 	}
 
 	/**
@@ -363,8 +363,8 @@ public abstract class CloudletScheduler {
 	 */
 	public double getTotalUtilizationOfCpu(double time) {
 		double totalUtilization = 0;
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			totalUtilization += rcl.getCloudlet().getUtilizationOfCpu(time);
+		for (Cloudlet cl : getCloudletExecList()) {
+			totalUtilization += cl.getUtilizationOfCpu(time);
 		}
 		return totalUtilization;
 	}
@@ -398,25 +398,25 @@ public abstract class CloudletScheduler {
          * in other classes such as {@link CloudletSchedulerDynamicWorkload} it returns
          * the MIPS' sum of all PEs.
 	 */
-	public abstract double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare);
+	public abstract double getTotalCurrentAvailableMipsForCloudlet(Cloudlet rcl, List<Double> mipsShare);
 
 	/**
 	 * Gets the total current requested mips for a given cloudlet.
 	 * 
-	 * @param rcl the rcl
+	 * @param cl the cloudlet
 	 * @param time the time
 	 * @return the total current requested mips for the given cloudlet
 	 */
-	public abstract double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time);
+	public abstract double getTotalCurrentRequestedMipsForCloudlet(Cloudlet cl, double time);
 
 	/**
 	 * Gets the total current allocated mips for cloudlet.
 	 * 
-	 * @param rcl the rcl
+	 * @param cl the cloudlet
 	 * @param time the time
 	 * @return the total current allocated mips for cloudlet
 	 */
-	public abstract double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time);
+	public abstract double getTotalCurrentAllocatedMipsForCloudlet(Cloudlet cl, double time);
 
 	/**
 	 * Gets the current requested ram.
@@ -425,8 +425,8 @@ public abstract class CloudletScheduler {
 	 */
 	public double getCurrentRequestedUtilizationOfRam() {
 		double ram = 0;
-		for (ResCloudlet rcl : cloudletExecList) {
-			ram += rcl.getCloudlet().getUtilizationOfRam(CloudSim.clock());
+		for (Cloudlet cl : cloudletExecList) {
+			ram += cl.getUtilizationOfRam(CloudSim.clock());
 		}
 		return ram;
 	}
@@ -437,8 +437,8 @@ public abstract class CloudletScheduler {
 	 */
 	public double getCurrentRequestedUtilizationOfBw() {
 		double bw = 0;
-		for (ResCloudlet rcl : cloudletExecList) {
-			bw += rcl.getCloudlet().getUtilizationOfBw(CloudSim.clock());
+		for (Cloudlet cl : cloudletExecList) {
+			bw += cl.getUtilizationOfBw(CloudSim.clock());
 		}
 		return bw;
 	}
@@ -487,9 +487,9 @@ public abstract class CloudletScheduler {
 		double capacity = validMips.stream().mapToDouble(Double::doubleValue).sum();
 
 		int pesInUse = 0;
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			if (rcl.getRemainingCloudletLength() > 0) {
-				pesInUse += rcl.getNumberOfPes();
+		for (Cloudlet cl : getCloudletExecList()) {
+			if (cl.getRemainingCloudletLength() > 0) {
+				pesInUse += cl.getNumberOfPes();
 			}
 		}
 
@@ -504,7 +504,7 @@ public abstract class CloudletScheduler {
 	 * @return the cloudlet waiting list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ResCloudlet> List<T> getCloudletWaitingList() {
+	public <T extends Cloudlet> List<T> getCloudletWaitingList() {
 		return (List<T>) cloudletWaitingList;
 	}
 
@@ -514,7 +514,7 @@ public abstract class CloudletScheduler {
 	 * @param <T> the generic type
 	 * @param cloudletWaitingList the cloudlet waiting list
 	 */
-	protected <T extends ResCloudlet> void setCloudletWaitingList(List<T> cloudletWaitingList) {
+	protected <T extends Cloudlet> void setCloudletWaitingList(List<T> cloudletWaitingList) {
 		this.cloudletWaitingList = cloudletWaitingList;
 	}
 
@@ -525,7 +525,7 @@ public abstract class CloudletScheduler {
 	 * @return the cloudlet exec list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ResCloudlet> List<T> getCloudletExecList() {
+	public <T extends Cloudlet> List<T> getCloudletExecList() {
 		return (List<T>) cloudletExecList;
 	}
 
@@ -535,7 +535,7 @@ public abstract class CloudletScheduler {
 	 * @param <T> the generic type
 	 * @param cloudletExecList the new cloudlet exec list
 	 */
-	protected <T extends ResCloudlet> void setCloudletExecList(List<T> cloudletExecList) {
+	protected <T extends Cloudlet> void setCloudletExecList(List<T> cloudletExecList) {
 		this.cloudletExecList = cloudletExecList;
 	}
 
@@ -546,7 +546,7 @@ public abstract class CloudletScheduler {
 	 * @return the cloudlet paused list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ResCloudlet> List<T> getCloudletPausedList() {
+	public <T extends Cloudlet> List<T> getCloudletPausedList() {
 		return (List<T>) cloudletPausedList;
 	}
 
@@ -556,7 +556,7 @@ public abstract class CloudletScheduler {
 	 * @param <T> the generic type
 	 * @param cloudletPausedList the new cloudlet paused list
 	 */
-	protected <T extends ResCloudlet> void setCloudletPausedList(List<T> cloudletPausedList) {
+	protected <T extends Cloudlet> void setCloudletPausedList(List<T> cloudletPausedList) {
 		this.cloudletPausedList = cloudletPausedList;
 	}
 
@@ -567,7 +567,7 @@ public abstract class CloudletScheduler {
 	 * @return the cloudlet finished list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ResCloudlet> List<T> getCloudletFinishedList() {
+	public <T extends Cloudlet> List<T> getCloudletFinishedList() {
 		return (List<T>) cloudletFinishedList;
 	}
 
@@ -577,7 +577,7 @@ public abstract class CloudletScheduler {
 	 * @param <T> the generic type
 	 * @param cloudletFinishedList the new cloudlet finished list
 	 */
-	protected <T extends ResCloudlet> void setCloudletFinishedList(List<T> cloudletFinishedList) {
+	protected <T extends Cloudlet> void setCloudletFinishedList(List<T> cloudletFinishedList) {
 		this.cloudletFinishedList = cloudletFinishedList;
 	}
 
@@ -588,7 +588,7 @@ public abstract class CloudletScheduler {
 	 * @return the cloudlet failed list.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ResCloudlet> List<T>  getCloudletFailedList() {
+	public <T extends Cloudlet> List<T>  getCloudletFailedList() {
 		return (List<T>) cloudletFailedList;
 	}
 
@@ -598,7 +598,7 @@ public abstract class CloudletScheduler {
 	 * @param <T> the generic type
 	 * @param cloudletFailedList the new cloudlet failed list.
 	 */
-	protected <T extends ResCloudlet> void setCloudletFailedList(List<T> cloudletFailedList) {
+	protected <T extends Cloudlet> void setCloudletFailedList(List<T> cloudletFailedList) {
 		this.cloudletFailedList = cloudletFailedList;
 	}
 

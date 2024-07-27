@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.web;
 
-import org.cloudbus.cloudsim.EX.disk.HddResCloudlet;
+import org.cloudbus.cloudsim.EX.disk.HddCloudlet;
 import org.cloudbus.cloudsim.EX.disk.HddVm;
 import org.cloudbus.cloudsim.EX.util.CustomLog;
 import org.cloudbus.cloudsim.web.workload.brokers.WebBroker;
@@ -13,7 +13,7 @@ import java.util.logging.Level;
  * (in terms of CPU) application server VMs.
  * 
  * @author nikolay.grozev
- * 
+ * @author Remo Andreoli
  */
 public class SimpleWebLoadBalancer extends BaseWebLoadBalancer implements ILoadBalancer {
 
@@ -135,7 +135,7 @@ public class SimpleWebLoadBalancer extends BaseWebLoadBalancer implements ILoadB
 
     protected static double evaluateSuitability(final HddVm vm) {
         double sumExecCloudLets = 0;
-        for (HddResCloudlet cloudlet : vm.getCloudletScheduler().<HddResCloudlet> getCloudletExecList()) {
+        for (HddCloudlet cloudlet : vm.getCloudletScheduler().<HddCloudlet> getCloudletExecList()) {
             sumExecCloudLets += cloudlet.getCloudletLength();
         }
         double vmMips = vm.getMips() * vm.getNumberOfPes();

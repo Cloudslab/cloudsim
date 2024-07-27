@@ -60,17 +60,16 @@ public class CloudletSchedulerSingleServiceTest {
 		UtilizationModelStochastic utilizationModel = new UtilizationModelStochastic();
 		Cloudlet cloudlet = new Cloudlet(0, CLOUDLET_LENGTH, PES_NUMBER, CLOUDLET_FILE_SIZE, CLOUDLET_OUTPUT_SIZE,
 				utilizationModel, utilizationModel, utilizationModel);
-		ResCloudlet rcl = new ResCloudlet(cloudlet);
 
 		Map<String, Double> underAllocatedMips = new HashMap<>();
 		assertEquals(underAllocatedMips, vmScheduler.getUnderAllocatedMips());
 
-		underAllocatedMips.put(rcl.getUid(), MIPS / 2);
-		vmScheduler.updateUnderAllocatedMipsForCloudlet(rcl, MIPS / 2);
+		underAllocatedMips.put(cloudlet.getUid(), MIPS / 2);
+		vmScheduler.updateUnderAllocatedMipsForCloudlet(cloudlet, MIPS / 2);
 		assertEquals(underAllocatedMips, vmScheduler.getUnderAllocatedMips());
 
-		underAllocatedMips.put(rcl.getUid(), MIPS);
-		vmScheduler.updateUnderAllocatedMipsForCloudlet(rcl, MIPS / 2);
+		underAllocatedMips.put(cloudlet.getUid(), MIPS);
+		vmScheduler.updateUnderAllocatedMipsForCloudlet(cloudlet, MIPS / 2);
 		assertEquals(underAllocatedMips, vmScheduler.getUnderAllocatedMips());
 	}
 
@@ -137,7 +136,7 @@ public class CloudletSchedulerSingleServiceTest {
 		vmScheduler.setCurrentMipsShare(mipsShare);
 
 		vmScheduler.cloudletSubmit(cloudlet, 0);
-		vmScheduler.cloudletFinish(new ResCloudlet(cloudlet));
+		vmScheduler.cloudletFinish(cloudlet);
 
 		assertEquals(Cloudlet.CloudletStatus.SUCCESS, vmScheduler.getCloudletStatus(0));
 		assertTrue(vmScheduler.isFinishedCloudlets());
@@ -160,7 +159,6 @@ public class CloudletSchedulerSingleServiceTest {
 		Cloudlet cloudlet = new Cloudlet(0, CLOUDLET_LENGTH, PES_NUMBER, CLOUDLET_FILE_SIZE, CLOUDLET_OUTPUT_SIZE,
 				utilizationModel, utilizationModel, utilizationModel);
 		cloudlet.setResourceParameter(0, 0, 0);
-		ResCloudlet rgl = new ResCloudlet(cloudlet);
 
 		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS / 4);
@@ -168,7 +166,7 @@ public class CloudletSchedulerSingleServiceTest {
 		mipsShare.add(MIPS / 4);
 		mipsShare.add(MIPS / 4);
 
-		assertEquals(MIPS / 4.0 * PES_NUMBER, vmScheduler.getTotalCurrentAvailableMipsForCloudlet(rgl, mipsShare), 0);
+		assertEquals(MIPS / 4.0 * PES_NUMBER, vmScheduler.getTotalCurrentAvailableMipsForCloudlet(cloudlet, mipsShare), 0);
 	}
 
 	@Test
@@ -197,7 +195,6 @@ public class CloudletSchedulerSingleServiceTest {
 		Cloudlet cloudlet = new Cloudlet(0, CLOUDLET_LENGTH, PES_NUMBER, CLOUDLET_FILE_SIZE, CLOUDLET_OUTPUT_SIZE,
 				utilizationModel, utilizationModel, utilizationModel);
 		cloudlet.setResourceParameter(0, 0, 0);
-		ResCloudlet rgl = new ResCloudlet(cloudlet);
 
 		List<Double> mipsShare = new ArrayList<>();
 		mipsShare.add(MIPS / 4);
@@ -215,7 +212,7 @@ public class CloudletSchedulerSingleServiceTest {
 		}
 
 		double expectedFinishTime = (double) CLOUDLET_LENGTH * PES_NUMBER / requestedMips;
-		double actualFinishTime = vmScheduler.getEstimatedFinishTime(rgl, 0);
+		double actualFinishTime = vmScheduler.getEstimatedFinishTime(cloudlet, 0);
 
 		assertEquals(expectedFinishTime, actualFinishTime, 0);
 	}

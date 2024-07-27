@@ -64,11 +64,11 @@ public class HddDataCenter extends DatacenterEX {
             HddCloudletSchedulerTimeShared scheduler = vm.getCloudletScheduler();
 
             if (!vm.isOutOfMemory()) {
-                List<HddResCloudlet> resCloudLets = scheduler.getCloudletExecList();
+                List<HddCloudlet> cloudletExecList = scheduler.getCloudletExecList();
 
                 int vmUsedRam = 0;
-                for (HddResCloudlet res : resCloudLets) {
-                    vmUsedRam += res.getCloudlet().getRam();
+                for (HddCloudlet hddCl : cloudletExecList) {
+                    vmUsedRam += (int) hddCl.getRam();
                 }
 
                 // If we have used all of the resources of this VM

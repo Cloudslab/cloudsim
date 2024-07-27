@@ -325,7 +325,7 @@ public class DatacenterBrokerEX extends DatacenterBroker {
                 if (!cloudlet.isFinished() && vmId == cloudlet.getGuestId()) {
                     try {
                         vm.getCloudletScheduler().cloudletCancel(cloudlet.getCloudletId());
-                        cloudlet.setCloudletStatus(Cloudlet.CloudletStatus.FAILED_RESOURCE_UNAVAILABLE);
+                        cloudlet.setStatus(Cloudlet.CloudletStatus.FAILED_RESOURCE_UNAVAILABLE);
                     } catch (Exception e) {
                         CustomLog.logError(Level.SEVERE, e.getMessage(), e);
                     }

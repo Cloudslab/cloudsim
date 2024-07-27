@@ -83,16 +83,16 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 
 		double timeSpan = currentTime - getPreviousTime();
 		double nextEvent = Double.MAX_VALUE;
-		List<ResCloudlet> cloudletsToFinish = new ArrayList<>();
+		List<Cloudlet> cloudletsToFinish = new ArrayList<>();
 
-		for (ResCloudlet rcl : getCloudletExecList()) {
-			rcl.updateCloudletFinishedSoFar((long) (timeSpan
-					* getTotalCurrentAllocatedMipsForCloudlet(rcl, getPreviousTime()) * Consts.MILLION));
+		for (Cloudlet cl : getCloudletExecList()) {
+			long miLength = (long) (timeSpan * getTotalCurrentAllocatedMipsForCloudlet(cl,  getPreviousTime()));
+			cl.setCloudletFinishedSoFar(cl.getCloudletFinishedSoFar() + miLength);
 
-			if (rcl.getRemainingCloudletLength() == 0) { // finished: remove from the list
-				cloudletsToFinish.add(rcl);
+			if (cl.getRemainingCloudletLength() == 0) { // finished: remove from the list
+				cloudletsToFinish.add(cl);
 			} else { // not finish: estimate the finish time
-				double estimatedFinishTime = getEstimatedFinishTime(rcl, currentTime);
+				double estimatedFinishTime = getEstimatedFinishTime(cl, currentTime);
 				if (estimatedFinishTime - currentTime < CloudSim.getMinTimeBetweenEvents()) {
 					estimatedFinishTime = currentTime + CloudSim.getMinTimeBetweenEvents();
 				}
@@ -102,9 +102,9 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 			}
 		}
 
-		for (ResCloudlet rgl : cloudletsToFinish) {
-			getCloudletExecList().remove(rgl);
-			cloudletFinish(rgl);
+		for (Cloudlet cl : cloudletsToFinish) {
+			getCloudletExecList().remove(cl);
+			cloudletFinish(cl);
 		}
 
 		setPreviousTime(currentTime);
@@ -118,15 +118,10 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 
 	@Override
 	public double cloudletSubmit(Cloudlet cl, double fileTransferTime) {
-		ResCloudlet rcl = new ResCloudlet(cl);
-		rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
+		cl.setStatus(Cloudlet.CloudletStatus.INEXEC);
 
-		for (int i = 0; i < cl.getNumberOfPes(); i++) {
-			rcl.setMachineAndPeId(0, i);
-		}
-
-		getCloudletExecList().add(rcl);
-		return getEstimatedFinishTime(rcl, getPreviousTime());
+		getCloudletExecList().add(cl);
+		return getEstimatedFinishTime(cl, getPreviousTime());
 	}
 
 
@@ -151,15 +146,15 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	}
 
 	@Override
-	public double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time) {
-		return rcl.getCloudlet().getUtilizationOfCpu(time) * getTotalMips();
+	public double getTotalCurrentRequestedMipsForCloudlet(Cloudlet cl, double time) {
+		return cl.getUtilizationOfCpu(time) * getTotalMips();
 	}
 
 	@Override
-	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
+	public double getTotalCurrentAvailableMipsForCloudlet(Cloudlet cl, List<Double> mipsShare) {
 		double totalCurrentMips = 0.0;
 		if (mipsShare != null) {
-			int neededPEs = rcl.getNumberOfPes();
+			int neededPEs = cl.getNumberOfPes();
 			for (double mips : mipsShare) {
 				totalCurrentMips += mips;
 				neededPEs--;
@@ -172,38 +167,38 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	}
 
 	@Override
-	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
-		double totalCurrentRequestedMips = getTotalCurrentRequestedMipsForCloudlet(rcl, time);
-		double totalCurrentAvailableMips = getTotalCurrentAvailableMipsForCloudlet(rcl, getCurrentMipsShare());
+	public double getTotalCurrentAllocatedMipsForCloudlet(Cloudlet cl, double time) {
+		double totalCurrentRequestedMips = getTotalCurrentRequestedMipsForCloudlet(cl, time);
+		double totalCurrentAvailableMips = getTotalCurrentAvailableMipsForCloudlet(cl, getCurrentMipsShare());
 		return Math.min(totalCurrentRequestedMips, totalCurrentAvailableMips);
 	}
 
 	/**
 	 * Update under allocated mips for cloudlet.
 	 * 
-	 * @param rcl the rgl
+	 * @param cl the cloudlet
 	 * @param mips the mips
          * //TODO It is not clear the goal of this method. The related test case
          * doesn't make it clear too. The method doesn't appear to be used anywhere.
 	 */
-	public void updateUnderAllocatedMipsForCloudlet(ResCloudlet rcl, double mips) {
-		if (getUnderAllocatedMips().containsKey(rcl.getUid())) {
-			mips += getUnderAllocatedMips().get(rcl.getUid());
+	public void updateUnderAllocatedMipsForCloudlet(Cloudlet cl, double mips) {
+		if (getUnderAllocatedMips().containsKey(cl.getUid())) {
+			mips += getUnderAllocatedMips().get(cl.getUid());
 		}
-		getUnderAllocatedMips().put(rcl.getUid(), mips);
+		getUnderAllocatedMips().put(cl.getUid(), mips);
 	}
 
 	/**
 	 * Get the estimated completion time of a given cloudlet.
 	 * 
-	 * @param rcl the cloudlet
+	 * @param cl the cloudlet
 	 * @param time the time
 	 * @return the estimated finish time
 	 */
 	@Override
-	public double getEstimatedFinishTime(ResCloudlet rcl, double time) {
+	public double getEstimatedFinishTime(Cloudlet cl, double time) {
 		return time
-				+ ((rcl.getRemainingCloudletLength()) / getTotalCurrentAllocatedMipsForCloudlet(rcl, time));
+				+ ((cl.getRemainingCloudletLength()) / getTotalCurrentAllocatedMipsForCloudlet(cl, time));
 	}
 
 	/**

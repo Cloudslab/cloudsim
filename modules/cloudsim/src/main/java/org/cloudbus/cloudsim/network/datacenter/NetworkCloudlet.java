@@ -80,7 +80,7 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 	}
 
 	@Override
-	public boolean update(Object info) {
+	public boolean updateCloudlet(Object info) {
 		if (currStageNum >= stages.size()) {
 			return false;
 		}

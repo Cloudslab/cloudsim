@@ -1,12 +1,11 @@
 package org.cloudbus.cloudsim.EX;
 
-import org.cloudbus.cloudsim.ResCloudlet;
+import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.EX.disk.HddCloudlet;
-import org.cloudbus.cloudsim.EX.disk.HddResCloudlet;
 import org.cloudbus.cloudsim.EX.disk.HddVm;
 import org.cloudbus.cloudsim.EX.vm.MonitoredVmEX;
 
@@ -204,12 +203,12 @@ public class MonitoringBrokerEX extends DatacenterBrokerEX {
             double vmMips = vm.getMips() * vm.getNumberOfPes();
             double vmIOMips = 0;
             double vmRam = vm.getRam();
-            for (ResCloudlet cloudlet : vm.getCloudletScheduler().getCloudletExecList()) {
-                sumCPUCloudLets += cloudlet.getRemainingCloudletLength();
+            for (Cloudlet cl : vm.getCloudletScheduler().getCloudletExecList()) {
+                sumCPUCloudLets += cl.getRemainingCloudletLength();
                 if (vm instanceof HddVm) {
-                    if (cloudlet instanceof HddResCloudlet) {
-                        sumIOCloudLets += ((HddResCloudlet) cloudlet).getRemainingCloudletIOLength();
-                        sumRAMCloudLets += ((HddCloudlet) cloudlet.getCloudlet()).getRam();
+                    if (cl instanceof HddCloudlet hddCl) {
+                        sumIOCloudLets += hddCl.getRemainingCloudletIOLength();
+                        sumRAMCloudLets += hddCl.getRam();
                     }
                     vmIOMips = ((HddVm) vm).getIoMips();
                 }

@@ -10,7 +10,7 @@ package org.cloudbus.cloudsim;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.lists.ResCloudletList;
+import org.cloudbus.cloudsim.lists.CloudletList;
 
 /**
  * CloudletSchedulerTimeShared implements a policy of scheduling performed by a virtual machine
@@ -38,53 +38,48 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	@Override
 	public double cloudletResume(int cloudletId) {
 		// look for the cloudlet in the paused list
-		int position = ResCloudletList.getPositionById(getCloudletPausedList(), cloudletId);
+		int position = CloudletList.getPositionById(getCloudletPausedList(), cloudletId);
 		if (position >= 0) {
-			ResCloudlet rcl = getCloudletPausedList().remove(position);
-			rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
-			getCloudletExecList().add(rcl);
+			Cloudlet cl = getCloudletPausedList().remove(position);
+			cl.setStatus(Cloudlet.CloudletStatus.INEXEC);
+			getCloudletExecList().add(cl);
 
 			// calculate the expected time for cloudlet completion
 			// first: how many PEs do we have?
-			return getEstimatedFinishTime(rcl, CloudSim.clock());
+			return getEstimatedFinishTime(cl, CloudSim.clock());
 		}
 		return 0.0;
 	}
 
 	@Override
-	public double cloudletSubmit(Cloudlet cloudlet, double fileTransferTime) {
-		ResCloudlet rcl = new ResCloudlet(cloudlet);
-		rcl.setCloudletStatus(Cloudlet.CloudletStatus.INEXEC);
-		for (int i = 0; i < cloudlet.getNumberOfPes(); i++) {
-			rcl.setMachineAndPeId(0, i);
-		}
-
-		getCloudletExecList().add(rcl);
+	public double cloudletSubmit(Cloudlet cl, double fileTransferTime) {
+		cl.setStatus(Cloudlet.CloudletStatus.INEXEC);
+		getCloudletExecList().add(cl);
 
 		// calculate the expected time for cloudlet completion
 		double capacity = getCurrentCapacity(getCurrentMipsShare());
 		// use the current capacity to estimate the extra amount of
 		// time to file transferring. It must be added to the cloudlet length
 		double extraSize = capacity * fileTransferTime;
-		long length = (long) (cloudlet.getCloudletLength() + extraSize);
-		cloudlet.setCloudletLength(length);
+		long length = (long) (cl.getCloudletLength() + extraSize);
+		cl.setCloudletLength(length);
 
-		return cloudlet.getCloudletLength() / capacity;
+		return cl.getCloudletLength() / capacity;
 	}
 
 	// Simple policy, there is no real scheduling involved
 	@Override
-	public double getTotalCurrentAvailableMipsForCloudlet(ResCloudlet rcl, List<Double> mipsShare) {
-		return getCurrentCapacity(mipsShare) * rcl.getNumberOfPes();
+	public double getTotalCurrentAvailableMipsForCloudlet(Cloudlet cl, List<Double> mipsShare) {
+		return getCurrentCapacity(mipsShare) * cl.getNumberOfPes();
 	}
 
 	@Override
-	public double getTotalCurrentAllocatedMipsForCloudlet(ResCloudlet rcl, double time) {
-		return getTotalCurrentAvailableMipsForCloudlet(rcl, getCurrentMipsShare());
+	public double getTotalCurrentAllocatedMipsForCloudlet(Cloudlet cl, double time) {
+		return getTotalCurrentAvailableMipsForCloudlet(cl, getCurrentMipsShare());
 	}
 
 	@Override
-	public double getTotalCurrentRequestedMipsForCloudlet(ResCloudlet rcl, double time) {
-		return getTotalCurrentAvailableMipsForCloudlet(rcl, getCurrentMipsShare());
+	public double getTotalCurrentRequestedMipsForCloudlet(Cloudlet cl, double time) {
+		return getTotalCurrentAvailableMipsForCloudlet(cl, getCurrentMipsShare());
 	}
 }

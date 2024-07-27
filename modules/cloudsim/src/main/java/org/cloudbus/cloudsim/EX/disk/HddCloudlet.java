@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.EX.disk;
 
 import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.Consts;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.EX.util.Id;
 import org.cloudbus.cloudsim.EX.util.TextUtil;
@@ -16,6 +17,9 @@ import org.cloudbus.cloudsim.EX.util.TextUtil;
 public class HddCloudlet extends Cloudlet {
 
     private static final UtilizationModelFull UTIL_MODEL_FULL = new UtilizationModelFull();
+
+    /** The length of Cloudlet finished so far. */
+    private long cloudletIOFinishedSoFar;
 
     private int numberOfHddPes = 1;
     protected long cloudletIOLength;
@@ -82,6 +86,54 @@ public class HddCloudlet extends Cloudlet {
     public HddCloudlet(final long cloudletLength, final long cloudletIOLength, final double ram, final int userId,
             final boolean dataModifying, final DataItem data) {
         this(cloudletLength, cloudletIOLength, 1, 1, ram, userId, dataModifying, data, false);
+    }
+
+    /**
+     * Updates the state of the aggreagted cloudlet.
+     *
+     * @param cpuFinishedSoFar
+     *            - the number of served CPU instructions.
+     * @param ioFinishedSoFar
+     *            - the number of served IO instructions.
+     */
+    public void updateCloudletFinishedSoFar(final long cpuFinishedSoFar, final long ioFinishedSoFar) {
+        updateCloudletFinishedSoFar(cpuFinishedSoFar);
+        // Do not allow addition of mips to the IOFinishedSoFar variable, if the
+        // IO part of the cloudlet is finished. This is needed to avoid
+        // overflow of the variable.
+        if (getRemainingCloudletIOLength() > 0) {
+            cloudletIOFinishedSoFar += ioFinishedSoFar;
+        }
+    }
+
+    public void updateCloudletFinishedSoFar(final long miLength) {
+        // Do not allow addition of mips to the finishedSoFar variable, if the
+        // CPU part of the cloudlet is finished. This is needed to avoid
+        // overflow of the variable
+        if (getRemainingCloudletLength() > 0) {
+            super.updateCloudletFinishedSoFar(miLength);
+        }
+    }
+
+    /**
+     * Returns how many instructions are left from the aggregated cloudlet.
+     *
+     * @return how many instructions are left from the aggregated cloudlet.
+     */
+    public long getRemainingCloudletIOLength() {
+        long length = getCloudletTotalIOLength() * Consts.MILLION - cloudletIOFinishedSoFar;
+        return length < 0 ? 0 : (long) Math.floor(1.0*length / Consts.MILLION);
+    }
+
+    /**
+     * Returns if the aggregated cloudlet has served all its operations in terms
+     * of both CPU and IO.
+     *
+     * @return if the aggregated cloudlet has served all its operations in terms
+     *         of both CPU and IO.
+     */
+    public boolean isDone() {
+        return getRemainingCloudletIOLength() == 0 && getRemainingCloudletLength() == 0;
     }
 
     /**
