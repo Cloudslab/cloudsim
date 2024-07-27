@@ -364,22 +364,6 @@ public class HddCloudletSchedulerTimeShared extends CloudletSchedulerTimeShared 
     }
 
     /**
-     * Processes a finished cloudlet.
-     * 
-     * @param rcl
-     *            finished cloudlet
-     * @pre rgl != $null
-     * @post $none
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public void cloudletFinish(final ResCloudlet rcl) {
-        rcl.setCloudletStatus(Cloudlet.CloudletStatus.SUCCESS);
-        rcl.finalizeCloudlet();
-        getCloudletFinishedList().add(rcl);
-    }
-
-    /**
      * Resumes execution of a paused cloudlet.
      * 
      * @param cloudletId
