@@ -47,7 +47,7 @@ public class TaskStage {
 	 * -) the amount of data to be sent, in bytes (type == WAIT_RECV)
 	*/
 	@Getter
-	private double taskLength;
+	private long taskLength;
 
 	/** Execution time for this stage.
 	 * @NOTE: this variable is modified at run-time
@@ -69,7 +69,7 @@ public class TaskStage {
 	@Getter
 	private NetworkCloudlet targetCloudlet;
 	
-	public TaskStage(TaskStageStatus type, double taskLength, double stageId, NetworkCloudlet cl) {
+	public TaskStage(TaskStageStatus type, long taskLength, double stageId, NetworkCloudlet cl) {
 		super();
 		this.type = type;
 		this.taskLength = taskLength;

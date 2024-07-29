@@ -74,7 +74,10 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 				utilizationModelRam,
 				utilizationModelBw);
 
-		currStageNum = -1;
+		currStageNum = 0;
+		startTimeCurrStage = -1;
+		timeSpentCurrStage = -1;
+
 		stages = new ArrayList<>();
 		nic = new NetworkInterfaceCard();
 	}
@@ -85,8 +88,7 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 			return false;
 		}
 
-		if (currStageNum == -1) {
-			currStageNum = 0;
+		if (startTimeCurrStage == -1) {
 			startTimeCurrStage = CloudSim.clock();
 		}
 
@@ -136,32 +138,22 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 
 	@Override
 	public long getCloudletLength() {
-		if (currStageNum == -1) { // not started yet
-			return (long) stages.get(0).getTaskLength();
-		}
-
-		if (currStageNum >= stages.size()) { // finished
-			return 0;
-		}
-
-		return (long) stages.get(currStageNum).getTaskLength();
-				/*return (long) stages.stream()
-				.filter(taskStage -> taskStage.getType() == TaskStage.TaskStageStatus.EXECUTION)
-				.mapToDouble(TaskStage::getTime).sum();*/
+		int currStage = Math.min(currStageNum, stages.size()-1);
+		return stages.get(currStage).getTaskLength();
 	}
 
 	@Override
 	public boolean isFinished() {
-		return currStageNum != -1 && currStageNum >= stages.size();
+		return currStageNum >= stages.size();
 	}
 
-	public void addExecutionStage(double execLength) {
+	public void addExecutionStage(long execLength) {
 		stages.add(
 				new TaskStage(TaskStage.TaskStageStatus.EXECUTION, execLength, stages.size(), this));
 		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+execTime));
 	}
 
-	public void addSendStage(double data, NetworkCloudlet receiverCl) {
+	public void addSendStage(long data, NetworkCloudlet receiverCl) {
 		stages.add(
 				new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, data, stages.size(), receiverCl));
 
