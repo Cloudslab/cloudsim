@@ -61,6 +61,9 @@ public abstract class PeProvisioner {
 	 */
 	public abstract boolean allocateMipsForGuest(GuestEntity guest, double mips);
 
+	@Deprecated
+	public boolean allocateMipsForVm(Vm vm, double mips) { return allocateMipsForGuest(vm, mips); }
+
 	/**
 	 * Allocates a new virtual PE with a specific capacity for a given VM.
 	 * 
@@ -74,6 +77,9 @@ public abstract class PeProvisioner {
          * @see #allocateMipsForGuest(GuestEntity, double)
 	 */
 	public abstract boolean allocateMipsForGuest(String vmUid, double mips);
+
+	@Deprecated
+	public boolean allocateMipsForVm(String vmUid, double mips) { return allocateMipsForGuest(vmUid, mips);}
 
 	/**
 	 * Allocates a new set of virtual PEs with a specific capacity for a given VM.
@@ -92,6 +98,9 @@ public abstract class PeProvisioner {
 	 */
 	public abstract boolean allocateMipsForGuest(GuestEntity guest, List<Double> mips);
 
+	@Deprecated
+	public boolean allocateMipsForVm(Vm vm, List<Double> mips) { return allocateMipsForGuest(vm, mips); }
+
 	/**
 	 * Gets the list of allocated virtual PEs' MIPS for a given VM.
 	 *
@@ -102,6 +111,9 @@ public abstract class PeProvisioner {
 	 */
 	public abstract List<Double> getAllocatedMipsForGuest(GuestEntity guest);
 
+	@Deprecated
+	public List<Double> getAllocatedMipsForVm(Vm vm) { return getAllocatedMipsForGuest(vm); }
+
 	/**
 	 * Gets total allocated MIPS for a given VM for all PEs.
 	 *
@@ -111,6 +123,9 @@ public abstract class PeProvisioner {
 	 * @post $none
 	 */
 	public abstract double getTotalAllocatedMipsForGuest(GuestEntity guest);
+
+	@Deprecated
+	public double getTotalAllocatedMipsForVm(Vm vm) { return getTotalAllocatedMipsForGuest(vm); }
 
 	/**
 	 * Gets the MIPS capacity of a virtual Pe allocated to a given VM.
@@ -123,6 +138,9 @@ public abstract class PeProvisioner {
 	 */
 	public abstract double getAllocatedMipsForGuestByVirtualPeId(GuestEntity guest, int peId);
 
+	@Deprecated
+	public double getAllocatedMipsForVmByVirtualPeId(Vm vm, int peId) { return getAllocatedMipsForGuestByVirtualPeId(vm, peId); }
+
 	/**
 	 * Releases all virtual PEs allocated to a given VM.
 	 *
@@ -131,6 +149,9 @@ public abstract class PeProvisioner {
 	 * @post none
 	 */
 	public abstract void deallocateMipsForGuest(GuestEntity guest);
+
+	@Deprecated
+	public void deallocateMipsForVm(Vm vm) { deallocateMipsForGuest(vm);}
 
 	/**
 	 * Releases all virtual PEs allocated to all VMs.
@@ -141,6 +162,9 @@ public abstract class PeProvisioner {
 	public void deallocateMipsForAllGuests() {
 		setAvailableMips(getMips());
 	}
+
+	@Deprecated
+	public void deallocateMipsForAllVms() { deallocateMipsForAllGuests(); }
 
 	/**
 	 * Gets the MIPS.

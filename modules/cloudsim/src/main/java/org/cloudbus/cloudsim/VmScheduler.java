@@ -41,7 +41,7 @@ public abstract class VmScheduler {
 	@Getter @Setter(AccessLevel.PROTECTED)
 	private Map<String, List<Pe>> peMap;
 
-	/** The map of VMs to MIPS, were each key is a VM id and each value is 
+	/** The map of VMs to MIPS, were each key is a VM id and each value is
          * the currently allocated MIPS from the respective PE to that VM. 
          * The PEs where the MIPS capacity is get are defined
          * in the {@link #peMap}.
@@ -54,11 +54,11 @@ public abstract class VmScheduler {
     private double availableMips;
 
 	/** The VMs migrating in the host (arriving). It is the list of VM ids */
-	@Getter @Setter(AccessLevel.PROTECTED)
+	@Setter(AccessLevel.PROTECTED)
 	private List<String> guestsMigratingIn;
 
 	/** The VMs migrating out the host (departing). It is the list of VM ids */
-	@Getter @Setter(AccessLevel.PROTECTED)
+	@Setter(AccessLevel.PROTECTED)
 	private List<String> guestsMigratingOut;
 
 	/**
@@ -88,6 +88,11 @@ public abstract class VmScheduler {
 	 */
 	public abstract boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShareRequested);
 
+	@Deprecated
+	public boolean allocatePesForVm(Vm vm, List<Double> mipsShare) {
+		return allocatePesForGuest(vm, mipsShare);
+	}
+
 	/**
 	 * Releases PEs allocated to a VM. After that, the PEs may be used
 	 * on demand by other VMs.
@@ -97,6 +102,11 @@ public abstract class VmScheduler {
 	 * @post $none
 	 */
 	public abstract void deallocatePesForGuest(GuestEntity guest);
+
+	@Deprecated
+	public void deallocatePesForVm(Vm vm) {
+		deallocatePesForGuest(vm);
+	}
 
 	/**
 	 * Releases PEs allocated to all the VMs of the host the VmScheduler is associated to.
@@ -113,6 +123,11 @@ public abstract class VmScheduler {
 		}
 	}
 
+	@Deprecated
+	public void deallocatePesForAllVms() {
+		deallocatePesForAllGuests();
+	}
+
 	/**
 	 * Gets the pes allocated for a vm.
 	 *
@@ -121,6 +136,11 @@ public abstract class VmScheduler {
 	 */
 	public List<Pe> getPesAllocatedForGuest(GuestEntity guest) {
 		return getPeMap().get(guest.getUid());
+	}
+
+	@Deprecated
+	public List<Pe> getPesAllocatedForVM(Vm vm) {
+		return getPesAllocatedForGuest(vm);
 	}
 
 	/**
@@ -133,6 +153,11 @@ public abstract class VmScheduler {
 	 */
 	public List<Double> getAllocatedMipsForGuest(GuestEntity guest) {
 		return getMipsMapAllocated().get(guest.getUid());
+	}
+
+	@Deprecated
+	public List<Double> getAllocatedMipsForVm(Vm vm) {
+		return getAllocatedMipsForGuest(vm);
 	}
 
 	/**
@@ -150,6 +175,11 @@ public abstract class VmScheduler {
 			}
 		}
 		return allocated;
+	}
+
+	@Deprecated
+	public double getTotalAllocatedMipsForVm(Vm vm) {
+		return getTotalAllocatedMipsForGuest(vm);
 	}
 
 	/**
@@ -189,4 +219,19 @@ public abstract class VmScheduler {
 		}
 		return getPeList().get(0).getMips();
 	}
+
+	public List<String> getGuestsMigratingIn() {
+		return guestsMigratingIn;
+	}
+
+	@Deprecated
+	public List<String> getVmsMigratingIn() { return getGuestsMigratingIn(); }
+
+	public List<String> getGuestsMigratingOut() { return guestsMigratingOut; }
+
+	@Deprecated
+	public List<String> getVmsMigratingOut() { return getGuestsMigratingOut(); }
+
+	@Deprecated
+	public Map<String, List<Double>> getMipsMap() { return mipsMapAllocated; }
 }

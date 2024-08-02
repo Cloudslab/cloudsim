@@ -66,6 +66,9 @@ public abstract class VmAllocationPolicy {
 		return allocateHostForGuest(guest, findHostForGuest(guest));
 	}
 
+	@Deprecated
+	public boolean allocateHostForVm(Vm vm) { return allocateHostForGuest(vm); }
+
 	/**
 	 * Allocates a specified host for a given VM.
 	 *
@@ -97,6 +100,9 @@ public abstract class VmAllocationPolicy {
 		return false;
 	}
 
+	@Deprecated
+	public boolean allocateHostForVm(Vm vm, Host host) { return allocateHostForGuest(vm, host); }
+
 	/**
 	 * Optimize allocation of the VMs according to current utilization.
 	 * 
@@ -125,6 +131,9 @@ public abstract class VmAllocationPolicy {
 		}
 	}
 
+	@Deprecated
+	public void deallocateHostForVm(Vm vm) { deallocateHostForGuest(vm); }
+
 	/**
 	 * Find host for guest entity.
 	 *
@@ -132,6 +141,9 @@ public abstract class VmAllocationPolicy {
 	 * @return the host
 	 */
 	public abstract HostEntity findHostForGuest(GuestEntity guest);
+
+	@Deprecated
+	public Host findHostForVm(Vm vm) { return (Host) findHostForGuest(vm); }
 
 	/**
 	 * Get the host that is executing the given VM.
@@ -142,6 +154,9 @@ public abstract class VmAllocationPolicy {
 	 * @post $none
 	 */
 	public HostEntity getHost(GuestEntity guest) { return getGuestTable().get(guest.getUid()); }
+
+	@Deprecated
+	public Host getHost(Vm vm) { return (Host) getGuestTable().get(vm.getUid()); }
 
 	/**
 	 * Get the host that is executing the given VM belonging to the given user.
@@ -172,5 +187,4 @@ public abstract class VmAllocationPolicy {
 	public <T extends HostEntity> List<T> getHostList() {
 		return (List<T>) hostList;
 	}
-
 }

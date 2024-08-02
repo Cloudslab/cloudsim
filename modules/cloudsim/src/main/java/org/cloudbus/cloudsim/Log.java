@@ -71,6 +71,9 @@ public class Log {
 		}
 	}
 
+	@Deprecated
+	public static void printLine(String message) { println(message); }
+
 	/**
 	 * Prints an empty line.
 	 */
@@ -79,6 +82,9 @@ public class Log {
 			print(LINE_SEPARATOR);
 		}
 	}
+
+	@Deprecated
+	public static void printLine() { println(); }
 
 
 	/**
@@ -111,6 +117,8 @@ public class Log {
 		}
 	}
 
+	@Deprecated
+	public static void printConcatLine(Object... messages) { printlnConcat(messages);}
 	
 	
 	/**
@@ -124,6 +132,8 @@ public class Log {
 	    }
 	}
 
+	@Deprecated
+	public static void printLine(Object message) { println(message); }
 	
 	
 	/**

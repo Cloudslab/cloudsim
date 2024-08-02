@@ -42,7 +42,7 @@ public class Vm implements VirtualEntity {
 	private int userId;
 
 	/** A Unique Identifier (UID) for the VM, that is compounded by the user id and VM id. */
-	@Setter @Getter
+	@Getter @Setter
 	private String uid;
 
 	/** The size the VM image size (the amount of storage it will use, at least initially). */
@@ -78,7 +78,7 @@ public class Vm implements VirtualEntity {
 	private VmScheduler guestScheduler;
 
 	/** The PM that hosts the VM. */
-	@Setter @Getter
+	@Setter
 	private HostEntity host;
 
 
@@ -315,6 +315,11 @@ public class Vm implements VirtualEntity {
 		return smallerTime;
 	}
 
+	@Deprecated
+	public double updateVmProcessing(double currentTime, List<Double> mipsShare) {
+		return updateCloudletsProcessing(currentTime, mipsShare);
+	}
+
 	/**
 	 * Gets the current requested mips .
 	 *
@@ -511,5 +516,15 @@ public class Vm implements VirtualEntity {
 
 	public boolean isFailed() {
 		return failed;
+	}
+
+	public HostEntity getHost() { return host; }
+
+	/**
+	 * DEPRECATED: USE GuestEntity.getUid(userId, vmId) instead!
+	 */
+	@Deprecated
+	public static String getUid(int userId, int vmId) {
+		return userId + "-" + vmId;
 	}
 }

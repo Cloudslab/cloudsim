@@ -55,7 +55,7 @@ public class Host implements HostEntity {
 	private boolean failed;
 
 	/** The VMs migrating in. */
-	private final List<GuestEntity> guestsMigratingIn = new ArrayList<>();
+	private final List<? extends GuestEntity> guestsMigratingIn = new ArrayList<>();
 
 	/** The datacenter where the host is placed. */
 	private Datacenter datacenter;
@@ -78,10 +78,10 @@ public class Host implements HostEntity {
 			List<? extends Pe> peList,
 			VmScheduler vmScheduler) {
 		setId(id);
-		setRamProvisioner(ramProvisioner);
-		setBwProvisioner(bwProvisioner);
+		setGuestRamProvisioner(ramProvisioner);
+		setGuestBwProvisioner(bwProvisioner);
 		setStorage(storage);
-		setVmScheduler(vmScheduler);
+		setGuestScheduler(vmScheduler);
 
 		setPeList(peList);
 		setFailed(false);
@@ -116,6 +116,11 @@ public class Host implements HostEntity {
 		return smallerTime;
 	}
 
+	@Deprecated
+	public double updateVmsProcessing(double currentTime) {
+		return updateCloudletsProcessing(currentTime);
+	}
+
 	/**
 	 * Checks if the host is suitable for vm. If it has enough resources
 	 * to attend the VM.
@@ -129,6 +134,9 @@ public class Host implements HostEntity {
 				&& getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
 				.isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
 	}
+
+	@Deprecated
+	public boolean isSuitableForVm(Vm vm) { return isSuitableForGuest(vm); }
 
 	/**
 	 * Gets the pes number.
@@ -174,6 +182,9 @@ public class Host implements HostEntity {
 		return getGuestScheduler().getAllocatedMipsForGuest(guest);
 	}
 
+	@Deprecated
+	public List<Double> getAllocatedMipsForVm(Vm vm) { return getAllocatedMipsForGuest(vm); }
+
 	/**
 	 * Gets the total allocated MIPS for a VM along all its PEs.
 	 *
@@ -183,6 +194,9 @@ public class Host implements HostEntity {
 	public double getTotalAllocatedMipsForGuest(GuestEntity guest) {
 		return getGuestScheduler().getTotalAllocatedMipsForGuest(guest);
 	}
+
+	@Deprecated
+	public double getTotalAllocatedMipsForVm(Vm vm) { return getTotalAllocatedMipsForGuest(vm); }
 
 	/**
 	 * Returns the maximum available MIPS among all the PEs of the host.
@@ -262,14 +276,20 @@ public class Host implements HostEntity {
 		return ramProvisioner;
 	}
 
+	@Deprecated
+	public RamProvisioner getRamProvisioner() { return getGuestRamProvisioner(); }
+
 	/**
 	 * Sets the ram provisioner.
 	 * 
 	 * @param ramProvisioner the new ram provisioner
 	 */
-	protected void setRamProvisioner(RamProvisioner ramProvisioner) {
+	protected void setGuestRamProvisioner(RamProvisioner ramProvisioner) {
 		this.ramProvisioner = ramProvisioner;
 	}
+
+	@Deprecated
+	protected void setRamProvisioner(RamProvisioner ramProvisioner) { setGuestRamProvisioner(ramProvisioner);}
 
 	/**
 	 * Gets the bw provisioner.
@@ -280,32 +300,42 @@ public class Host implements HostEntity {
 		return bwProvisioner;
 	}
 
+	@Deprecated
+	public BwProvisioner getBwProvisioner() { return getGuestBwProvisioner(); }
+
 	/**
 	 * Sets the bw provisioner.
 	 * 
 	 * @param bwProvisioner the new bw provisioner
 	 */
-	protected void setBwProvisioner(BwProvisioner bwProvisioner) {
+	protected void setGuestBwProvisioner(BwProvisioner bwProvisioner) {
 		this.bwProvisioner = bwProvisioner;
 	}
+
+	@Deprecated
+	protected void setBwProvisioner(BwProvisioner bwProvisioner) { setGuestBwProvisioner(bwProvisioner); }
 
 	/**
 	 * Gets the VM scheduler.
 	 * 
 	 * @return the VM scheduler
 	 */
-	public VmScheduler getGuestScheduler() {
-		return vmScheduler;
-	}
+	public VmScheduler getGuestScheduler() { return vmScheduler; }
+
+	@Deprecated
+	public VmScheduler getVmScheduler() { return getGuestScheduler(); }
 
 	/**
 	 * Sets the VM scheduler.
 	 * 
 	 * @param vmScheduler the vm scheduler
 	 */
-	protected void setVmScheduler(VmScheduler vmScheduler) {
+	protected void setGuestScheduler(VmScheduler vmScheduler) {
 		this.vmScheduler = vmScheduler;
 	}
+
+	@Deprecated
+	protected void setVmScheduler(VmScheduler vmScheduler) { setGuestScheduler(vmScheduler); }
 
 	/**
 	 * Gets the pe list.
@@ -330,14 +360,15 @@ public class Host implements HostEntity {
 
 	/**
 	 * Gets the vm list.
-	 * 
+	 *
 	 * @param <T> the generic type
 	 * @return the vm list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends GuestEntity> List<T> getGuestList() {
-		return (List<T>) guestList;
-	}
+	public <T extends GuestEntity> List<T> getGuestList() { return (List<T>) guestList; }
+
+	@Deprecated
+	public <T extends Vm> List<T> getVmList() { return getGuestList(); }
 
 	/**
 	 * Sets the storage.
@@ -397,9 +428,12 @@ public class Host implements HostEntity {
 	 *
 	 * @return the vms migrating in
 	 */
-	public List<GuestEntity> getGuestsMigratingIn() {
-		return guestsMigratingIn;
+	public <T extends GuestEntity> List<T> getGuestsMigratingIn() {
+		return (List<T>) guestsMigratingIn;
 	}
+
+	@Deprecated
+	public <T extends Vm> List<T> getVmsMigratingIn() { return getGuestsMigratingIn(); }
 
 	/**
 	 * Gets the data center of the host.
@@ -419,4 +453,34 @@ public class Host implements HostEntity {
 		this.datacenter = datacenter;
 	}
 
+
+	/**
+	 * DEPRECATED: TO BE REMOVED!
+	 */
+	@Deprecated
+	public boolean vmCreate(Vm vm) { return guestCreate(vm); }
+
+	@Deprecated
+	public void vmDestroy(Vm vm) { guestDestroy(vm); }
+
+	@Deprecated
+	public void vmDestroyAll() { guestDestroyAll(); }
+
+	@Deprecated
+	protected void vmDeallocate(Vm vm) { guestDeallocate(vm); }
+
+	@Deprecated
+	protected void vmDeallocateAll() { guestDestroyAll(); }
+
+	@Deprecated
+	public Vm getVm(int vmId, int userId) { return (Vm) getGuest(vmId, userId); }
+
+	@Deprecated
+	public void addMigratingInVm(Vm vm) { addMigratingInGuest(vm); }
+
+	@Deprecated
+	public void removeMigratingInVm(Vm vm) { removeMigratingInGuest(vm); }
+
+	@Deprecated
+	public void reallocateMigratingInVms() { reallocateMigratingInGuests(); }
 }

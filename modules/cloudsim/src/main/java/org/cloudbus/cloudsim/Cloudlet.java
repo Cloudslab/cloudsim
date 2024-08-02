@@ -128,7 +128,6 @@ public class Cloudlet {
     /**
      * The time where this Cloudlet completes.
      */
-    @Getter
     private double execFinishTime;
 
     /** The total time to complete this Cloudlet. */
@@ -189,7 +188,6 @@ public class Cloudlet {
     /**
      * The id of the guest entity that is planned to execute the cloudlet.
      */
-    @Setter @Getter
     protected int guestId;
 
     /**
@@ -452,6 +450,10 @@ public class Cloudlet {
         setUtilizationModelRam(utilizationModelRam);
         setUtilizationModelBw(utilizationModelBw);
     }
+
+    /** Backward compatibility with ResCloudlet class in CloudSim6G */
+    @Deprecated
+    public Cloudlet getCloudlet() { return this; }
 
     // ////////////////////// INTERNAL CLASS ///////////////////////////////////
 
@@ -819,6 +821,13 @@ public class Cloudlet {
         return resList.get(index).resourceId;
     }
 
+    public double getExecFinishTime() {
+        return execFinishTime;
+    }
+
+    @Deprecated
+    public double getFinishTime() { return getExecFinishTime(); }
+
     /**
      * Gets the input file size of this Cloudlet <tt>BEFORE</tt> submitting to a
      * CloudResource.
@@ -912,6 +921,11 @@ public class Cloudlet {
         }
         return resList.get(index).arrivalTime;
     }
+
+    @Deprecated
+    public double getCloudletArrivalTime() { return getSubmissionTime(); }
+    @Deprecated
+    public double getArrivalTime() { return getSubmissionTime(); }
 
     /**
      * Sets the execution start time of this Cloudlet inside a CloudResource.
@@ -1419,6 +1433,16 @@ public class Cloudlet {
 
         return result;
     }
+
+    public int getGuestId() { return guestId; }
+
+    @Deprecated
+    public int getVmId() {return getGuestId(); }
+
+    public void setGuestId(int guestId) { this.guestId = guestId; }
+
+    @Deprecated
+    public void setVmId(int vmId) { setGuestId(vmId); }
 
     /**
      * Gets the utilization model of cpu.

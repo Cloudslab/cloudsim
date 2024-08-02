@@ -8,6 +8,7 @@
 
 package org.cloudbus.cloudsim.provisioners;
 
+import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
@@ -55,6 +56,9 @@ public abstract class BwProvisioner {
 	 */
 	public abstract boolean allocateBwForGuest(GuestEntity guest, long bw);
 
+	@Deprecated
+	public boolean allocateBwForVm(Vm vm, long bw) { return allocateBwForGuest(vm, bw); }
+
 	/**
 	 * Gets the allocated BW for VM.
 	 *
@@ -62,6 +66,9 @@ public abstract class BwProvisioner {
 	 * @return the allocated BW for vm
 	 */
 	public abstract long getAllocatedBwForGuest(GuestEntity guest);
+
+	@Deprecated
+	public long getAllocateBwForVm(Vm vm) { return getAllocatedBwForGuest(vm); }
 
 	/**
 	 * Releases BW used by a VM.
@@ -71,6 +78,9 @@ public abstract class BwProvisioner {
 	 * @post none
 	 */
 	public abstract void deallocateBwForGuest(GuestEntity guest);
+
+	@Deprecated
+	public void deallocateBwForVm(Vm vm) { deallocateBwForGuest(vm); }
 
 	/**
 	 * Releases BW used by all VMs.
@@ -82,6 +92,9 @@ public abstract class BwProvisioner {
 		setAvailableBw(getBw());
 	}
 
+	@Deprecated
+	public void deallocateBwForAllVms() { deallocateBwForAllGuests(); }
+
 	/**
 	 * Checks if it is possible to change the current allocated BW for the VM
 	 * to a new amount, depending on the available BW.
@@ -92,6 +105,9 @@ public abstract class BwProvisioner {
 	 * @return true, if is suitable for vm
 	 */
 	public abstract boolean isSuitableForGuest(GuestEntity guest, long bw);
+
+	@Deprecated
+	public boolean isSuitableForVm(Vm vm, long bw) { return isSuitableForGuest(vm, bw); }
 
 	/**
 	 * Gets the bw capacity.

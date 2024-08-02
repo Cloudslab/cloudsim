@@ -343,6 +343,9 @@ public interface HostEntity extends CoreAttributes {
      */
     VmScheduler getGuestScheduler();
 
+    @Deprecated
+    default VmScheduler getVmScheduler() { return getGuestScheduler(); }
+
     /**
      * Gets the bw provisioner.
      *

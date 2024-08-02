@@ -8,6 +8,7 @@
 
 package org.cloudbus.cloudsim.provisioners;
 
+import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.GuestEntity;
 
 /**
@@ -53,6 +54,9 @@ public abstract class RamProvisioner {
 	 */
 	public abstract boolean allocateRamForGuest(GuestEntity guest, int ram);
 
+	@Deprecated
+	public boolean allocateRamForVm(Vm vm, int ram) { return allocateRamForGuest(vm, ram); }
+
 	/**
 	 * Gets the allocated RAM for a given VM.
 	 *
@@ -60,6 +64,9 @@ public abstract class RamProvisioner {
 	 * @return the allocated RAM for the vm
 	 */
 	public abstract int getAllocatedRamForGuest(GuestEntity guest);
+
+	@Deprecated
+	public int getAllocatedRamForVm(Vm vm) { return getAllocatedRamForGuest(vm); };
 
 	/**
 	 * Releases RAM used by a VM.
@@ -69,6 +76,9 @@ public abstract class RamProvisioner {
 	 * @post none
 	 */
 	public abstract void deallocateRamForGuest(GuestEntity guest);
+
+	@Deprecated
+	public void deallocateRamForVm(Vm vm) { deallocateRamForGuest(vm); }
 
 	/**
 	 * Releases RAM used by all VMs.
@@ -80,6 +90,9 @@ public abstract class RamProvisioner {
 		setAvailableRam(getRam());
 	}
 
+	@Deprecated
+	public void deallocateRamForAllVms() { deallocateRamForAllGuests(); }
+
 	/**
 	 * Checks if it is possible to change the current allocated RAM for the VM
 	 * to a new amount, depending on the available RAM.
@@ -90,6 +103,9 @@ public abstract class RamProvisioner {
 	 * @return true, if is suitable for vm
 	 */
 	public abstract boolean isSuitableForGuest(GuestEntity guest, int ram);
+
+	@Deprecated
+	public boolean isSuitableForVm(Vm vm, int ram) { return isSuitableForGuest(vm, ram); }
 
 	/**
 	 * Gets the ram capacity.
