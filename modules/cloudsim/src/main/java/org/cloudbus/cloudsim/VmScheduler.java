@@ -12,9 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 
@@ -33,12 +30,10 @@ import org.cloudbus.cloudsim.lists.PeList;
 public abstract class VmScheduler {
 
 	/** The PEs of the host where the scheduler is associated. */
-	@Getter @Setter(AccessLevel.PROTECTED)
 	private List<? extends Pe> peList;
 
-	/** The map of VMs to PEs, where each key is a VM id and each value is 
+	/** The map of VMs to PEs, where each key is a VM id and each value is
          * a list of PEs allocated to that VM. */
-	@Getter @Setter(AccessLevel.PROTECTED)
 	private Map<String, List<Pe>> peMap;
 
 	/** The map of VMs to MIPS, were each key is a VM id and each value is
@@ -46,19 +41,15 @@ public abstract class VmScheduler {
          * The PEs where the MIPS capacity is get are defined
          * in the {@link #peMap}.
          */
-	@Getter @Setter(AccessLevel.PROTECTED)
 	private Map<String, List<Double>> mipsMapAllocated;
 
 	/** The total available MIPS that can be allocated on demand for VMs. */
-	@Getter @Setter(AccessLevel.PROTECTED)
     private double availableMips;
 
 	/** The VMs migrating in the host (arriving). It is the list of VM ids */
-	@Setter(AccessLevel.PROTECTED)
 	private List<String> guestsMigratingIn;
 
 	/** The VMs migrating out the host (departing). It is the list of VM ids */
-	@Setter(AccessLevel.PROTECTED)
 	private List<String> guestsMigratingOut;
 
 	/**
@@ -220,14 +211,29 @@ public abstract class VmScheduler {
 		return getPeList().get(0).getMips();
 	}
 
+	public List<? extends Pe> getPeList() { return peList; }
+	protected void setPeList(List<? extends Pe> peList) { this.peList = peList; }
+
+	public Map<String, List<Pe>> getPeMap() { return peMap; }
+	protected void setPeMap(Map<String, List<Pe>> peMap) { this.peMap = peMap; }
+
+	public Map<String, List<Double>> getMipsMapAllocated() { return mipsMapAllocated; }
+	protected void setMipsMapAllocated(Map<String, List<Double>> mipsMapAllocated) { this.mipsMapAllocated = mipsMapAllocated; }
+
+	public double getAvailableMips() { return availableMips; }
+	protected void setAvailableMips(double availableMips) { this.availableMips = availableMips; }
+
 	public List<String> getGuestsMigratingIn() {
 		return guestsMigratingIn;
 	}
+	protected void setGuestsMigratingIn(List<String> guestsMigratingIn) { this.guestsMigratingIn = guestsMigratingIn; }
+
+	public List<String> getGuestsMigratingOut() { return guestsMigratingOut; }
+	protected void setGuestsMigratingOut(List<String> guestsMigratingOut) { this.guestsMigratingOut = guestsMigratingOut; }
 
 	@Deprecated
 	public List<String> getVmsMigratingIn() { return getGuestsMigratingIn(); }
 
-	public List<String> getGuestsMigratingOut() { return guestsMigratingOut; }
 
 	@Deprecated
 	public List<String> getVmsMigratingOut() { return getGuestsMigratingOut(); }

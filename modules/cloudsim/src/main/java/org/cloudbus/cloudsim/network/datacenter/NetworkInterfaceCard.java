@@ -1,5 +1,4 @@
 package org.cloudbus.cloudsim.network.datacenter;
-import lombok.Getter;
 
 import java.util.*;
 
@@ -11,14 +10,15 @@ import java.util.*;
  * @since CloudSim Toolkit 7.0
  */
 public class NetworkInterfaceCard {
-    @Getter
     private final List<HostPacket> pktsToSend;
 
-    @Getter
     private final List<HostPacket> receivedPkts;
 
     public NetworkInterfaceCard() {
         pktsToSend = new LinkedList<>();
         receivedPkts = new LinkedList<>();
     }
+
+    public List<HostPacket> getPktsToSend() { return pktsToSend; }
+    public List<HostPacket> getReceivedPkts() { return receivedPkts; }
 }

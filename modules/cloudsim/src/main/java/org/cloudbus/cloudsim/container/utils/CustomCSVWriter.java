@@ -1,21 +1,17 @@
 package org.cloudbus.cloudsim.container.utils;
 
 import com.opencsv.CSVWriter;
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.Log;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 
 /**
  * Created by sareh on 30/07/15.
  * Modified by Remo Andreoli, Jun 2024.
  */
 public class CustomCSVWriter {
-    @Getter @Setter
     String fileAddress;
     boolean newFileCreated = false;
 
@@ -61,6 +57,9 @@ public class CustomCSVWriter {
     public boolean fileExistedAlready() {
         return !newFileCreated;
     }
+
+    public String getFileAddress() { return fileAddress; }
+    public void setFileAddress(String fileAddress) { this.fileAddress = fileAddress; }
 }
 
 

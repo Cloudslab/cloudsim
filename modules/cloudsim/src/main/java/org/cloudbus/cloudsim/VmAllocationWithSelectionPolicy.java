@@ -1,7 +1,5 @@
 package org.cloudbus.cloudsim;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -13,12 +11,8 @@ import java.util.*;
  * Modified by Remo Andreoli (March 2024)
  */
 public class VmAllocationWithSelectionPolicy extends VmAllocationPolicy {
-    /** The vm table. */
-
-    @Getter @Setter
     private SelectionPolicy<HostEntity> selectionPolicy;
 
-    @Getter @Setter
     private Set<HostEntity> excludedHostCandidates;
 
     public VmAllocationWithSelectionPolicy(List<? extends HostEntity> list, SelectionPolicy<HostEntity> selectionPolicy) {
@@ -26,6 +20,12 @@ public class VmAllocationWithSelectionPolicy extends VmAllocationPolicy {
         setExcludedHostCandidates(new HashSet<>());
         setSelectionPolicy(selectionPolicy);
     }
+
+    public SelectionPolicy<HostEntity> getSelectionPolicy() { return selectionPolicy; }
+    public void setSelectionPolicy(SelectionPolicy<HostEntity> selectionPolicy) { this.selectionPolicy = selectionPolicy; }
+
+    public Set<HostEntity> getExcludedHostCandidates() { return excludedHostCandidates; }
+    public void setExcludedHostCandidates(Set<HostEntity> excludedHostCandidates) { this.excludedHostCandidates = excludedHostCandidates; }
 
     @Override
     public HostEntity findHostForGuest(GuestEntity guest) {

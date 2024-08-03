@@ -1,9 +1,5 @@
 package org.cloudbus.cloudsim.selectionPolicies;
 
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.core.HostEntity;
 
 import java.util.*;
@@ -20,11 +16,9 @@ import java.util.*;
 public class SelectionPolicyWorstFit implements SelectionPolicy<HostEntity> {
     /** The map between each VM and the number of Pes used.
      * The map key is a VM UID and the value is the number of used Pes for that VM. */
-    @Getter(AccessLevel.PROTECTED) @Setter(AccessLevel.PROTECTED)
     private Map<String, Integer> usedPes;
 
     /** The number of free Pes for each host from hostCandidates. */
-    @Getter(AccessLevel.PROTECTED) @Setter(AccessLevel.PROTECTED)
     private List<Integer> freePes;
 
     @Override
@@ -44,4 +38,10 @@ public class SelectionPolicyWorstFit implements SelectionPolicy<HostEntity> {
         }
         return selectedHost;
     }
+
+    protected List<Integer> getFreePes() { return freePes; }
+    protected void setFreePes(List<Integer> freePes) { this.freePes = freePes; }
+
+    protected Map<String, Integer> getUsedPes() { return usedPes; }
+    protected void setUsedPes(Map<String, Integer> usedPes) { this.usedPes = usedPes; }
 }

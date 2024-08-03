@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
@@ -64,14 +62,12 @@ public class Cloudlet {
     /**
      * The cloudlet ID.
      */
-    @Getter
     private final int cloudletId;
 
     /**
      * The User or Broker ID. It is advisable that broker set this ID with its
      * own ID, so that CloudResource returns to it after the execution.
      */
-    @Getter
     private int userId;
 
     /**
@@ -114,7 +110,6 @@ public class Cloudlet {
     /**
      * The execution status of this Cloudlet.
      */
-    @Getter
     private CloudletStatus status;
 
     /**
@@ -122,7 +117,6 @@ public class Cloudlet {
      * as CANCEL, PAUSED and RESUMED, this attribute only stores the latest
      * execution time. Previous execution time are ignored.
      */
-    @Getter
     private double execStartTime;
 
     /**
@@ -194,7 +188,6 @@ public class Cloudlet {
      * The id of the container is planned to execute the cloudlet.
      * It may be -1, if containers are not in use
      */
-    @Setter @Getter
     // TODO: Remo Andreoli: to be deprecated in favor of guestId
     protected int containerId = -1;
     
@@ -234,8 +227,6 @@ public class Cloudlet {
      * transfer these files by the network is considered when placing the
      * cloudlet inside a given VM
      */
-    @Getter
-    @lombok.Setter(lombok.AccessLevel.PROTECTED)
     private List<String> requiredFiles = null;
 
     /**
@@ -975,6 +966,8 @@ public class Cloudlet {
         }
     }
 
+    public CloudletStatus getStatus() { return status; }
+
     /**
      * Sets the execution status of the Cloudlet.
      *
@@ -1030,6 +1023,13 @@ public class Cloudlet {
         return false;
     }
 
+    public int getUserId() { return userId; }
+
+    public int getCloudletId() { return cloudletId; }
+
+    public int getContainerId() { return containerId; }
+    public void setContainerId(int containerId) { this.containerId = containerId; }
+
     /**
      * Gets the string representation of the current Cloudlet status code.
      *
@@ -1070,6 +1070,8 @@ public class Cloudlet {
     public long getCloudletTotalLength() {
         return getCloudletLength() * getNumberOfPes();
     }
+
+    public double getExecStartTime() { return execStartTime; }
 
     /**
      * Gets the cost/sec of running the Cloudlet in the latest CloudResource.
@@ -1537,4 +1539,7 @@ public class Cloudlet {
         return getUtilizationModelBw().getUtilization(time);
     }
 
+    public List<String> getRequiredFiles() { return requiredFiles; }
+
+    protected void setRequiredFiles(List<String> requiredFiles) { this.requiredFiles = requiredFiles; }
 }

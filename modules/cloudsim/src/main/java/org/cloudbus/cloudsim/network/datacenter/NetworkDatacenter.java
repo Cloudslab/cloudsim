@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Getter;
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Storage;
@@ -60,7 +59,6 @@ public class NetworkDatacenter extends Datacenter {
 	 * A map of datacenter switches where each key is a switch id
 	 * and the corresponding value is the switch itself.
 	 */
-	@Getter
 	private Map<Integer, Switch> SwitchList;
 
 	/**
@@ -106,6 +104,8 @@ public class NetworkDatacenter extends Datacenter {
 		VmtoHostlist = new HashMap<>();
 		SwitchList = new HashMap<>();
 	}
+
+	public Map<Integer, Switch> getSwitchList() { return SwitchList; }
 
 	@Override
 	protected void processVmCreate(SimEvent ev, boolean ack) {

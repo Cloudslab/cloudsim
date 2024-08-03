@@ -8,8 +8,6 @@
 
 package org.cloudbus.cloudsim;
 
-import lombok.Getter;
-
 /**
  * A class for representing a physical file in a DataCloud environment
  * 
@@ -27,12 +25,11 @@ public class File {
         /**
          * A file attribute.
          */
-	private FileAttribute attribute;    
+	private FileAttribute attribute;
 
-	/** A transaction time for adding, deleting or getting the file. 
+	/** A transaction time for adding, deleting or getting the file.
          * @see #setTransactionTime(double) 
          */
-	@Getter
 	private double transactionTime;
 
 	/** Denotes that this file has not been registered to a Replica Catalogue. */
@@ -93,6 +90,8 @@ public class File {
 		attribute.copyValue(fileAttr);
 		fileAttr.setMasterCopy(false);   // set this file to replica
 	}
+
+	public double getTransactionTime() { return transactionTime; }
 
 	/**
 	 * Clone the current file and set the cloned one as a <b>replica</b>.

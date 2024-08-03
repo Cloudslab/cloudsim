@@ -7,9 +7,6 @@
 
 package org.cloudbus.cloudsim;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.core.VirtualEntity;
@@ -34,114 +31,86 @@ import java.util.List;
 public class Vm implements VirtualEntity {
 
 	/** The VM unique id. */
-	@Getter @Setter
 	private int id;
 
 	/** The user id. */
-	@Getter @Setter
 	private int userId;
 
 	/** A Unique Identifier (UID) for the VM, that is compounded by the user id and VM id. */
-	@Getter @Setter
 	private String uid;
 
 	/** The size the VM image size (the amount of storage it will use, at least initially). */
-	@Getter @Setter
 	private long size;
 
 	/** The MIPS capacity of each VM's PE. */
-	@Getter @Setter
 	private double mips;
 
 	/** The number of PEs required by the VM. */
-	@Getter @Setter
 	private int numberOfPes;
 
 	/** The required ram. */
-	@Getter @Setter
 	private int ram;
 
 	/** The required bw. */
-	@Getter @Setter
 	private long bw;
 
 	/** The Virtual Machine Monitor (VMM) that manages the VM. */
-	@Getter @Setter(AccessLevel.PROTECTED)
 	private String vmm;
 
 	/** The Cloudlet scheduler the VM uses to schedule cloudlets execution. */
-	@Getter @Setter(AccessLevel.PROTECTED)
 	private CloudletScheduler cloudletScheduler;
 
 	/** The Guest scheduler the Vm uses to schedule nested guest entities, such as containers. */
-	@Setter @Getter
 	private VmScheduler guestScheduler;
 
 	/** The PM that hosts the VM. */
-	@Setter
 	private HostEntity host;
 
-
 	/** Indicates if the VM is in migration process. */
-	@Getter @Setter
 	private boolean inMigration;
 	
 	/** Indicates if the VM is in Pause State (e.g. Stop & copy phase) */
-	@Setter @Getter
 	private boolean inPause;
 
 	/** Indicates if the VM is waiting for nested guest entities to come. */
-	@Setter @Getter
 	private boolean inWaiting;
 
 	/** The current allocated storage size. */
-	@Getter @Setter(AccessLevel.PROTECTED)
 	private long currentAllocatedSize;
 
 	/** The current allocated ram. */
-	@Getter @Setter
 	private int currentAllocatedRam;
 
 	/** The current allocated bw. */
-	@Getter @Setter
 	private long currentAllocatedBw;
 
 	/** The current allocated mips for each VM's PE.
 	 * TODO: Maybe replace with a call to getCloudletScheduler().getCurrentMipsShare()
 	 */
-	@Getter @Setter
 	private List<Double> currentAllocatedMips;
 
 	/** Indicates if the VM is being instantiated. */
-	@Setter @Getter
 	private boolean beingInstantiated;
 
 	/** The ram provisioner for (nested) guest entities. */
-	@Setter @Getter
 	private RamProvisioner guestRamProvisioner;
 
 	/** The bw provisioner for (nested) guest entities. */
-	@Setter @Getter
 	private BwProvisioner guestBwProvisioner;
 
 	/** The pe list for nested guest entities. */
-	@Setter @Getter
 	private List<? extends Pe> peList;
 
 	/** The nested guest list. */
-	@Getter
 	private final List<GuestEntity> guestList = new ArrayList<>();
 
 	/** The nested guests migrating in. */
-	@Getter
 	private final List<GuestEntity> guestsMigratingIn = new ArrayList<>();
 
 	/** Tells whether this VM is working properly (as a host for nested guests) or has failed. */
 	private boolean failed;
 
-
-
-	/** The mips allocation history. 
+	/** The mips allocation history.
 	 * TODO Instead of using a list, this attribute would be
 	 * a map, where the key can be the history time
 	 * and the value the history itself.
@@ -149,7 +118,6 @@ public class Vm implements VirtualEntity {
 	 * time, he/she doesn't have to iterate over the entire list
 	 * to find the desired entry.
 	 */
-	@Getter
 	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
 
 	/**
@@ -441,6 +409,81 @@ public class Vm implements VirtualEntity {
 				.isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
 	}
 
+	public CloudletScheduler getCloudletScheduler() { return cloudletScheduler; }
+	public void setCloudletScheduler(CloudletScheduler cloudletScheduler) { this.cloudletScheduler = cloudletScheduler; }
+
+	public VmScheduler getGuestScheduler() { return guestScheduler; }
+	public void setGuestScheduler(VmScheduler guestScheduler) { this.guestScheduler = guestScheduler; }
+
+
+	public int getId() { return id; }
+	public void setId(int id) { this.id = id; }
+
+	public long getBw() { return bw; }
+	public void setBw(long bw) { this.bw = bw; }
+
+	public int getRam() { return ram; }
+	public void setRam(int ram) { this.ram = ram; }
+
+	public int getNumberOfPes() { return numberOfPes; }
+	public void setNumberOfPes(int numberOfPes) { this.numberOfPes = numberOfPes; }
+
+	public double getMips() { return mips; }
+	public void setMips(double mips) { this.mips = mips; }
+
+	public long getSize() { return size; }
+	public void setSize(long size) { this.size = size; }
+
+	public String getUid() { return uid; }
+	public void setUid(String uid) { this.uid = uid; }
+
+	public int getUserId() { return userId; }
+	public void setUserId(int userId) { this.userId = userId; }
+
+	public String getVmm() { return vmm; }
+	public void setVmm(String vmm) { this.vmm = vmm; }
+
+	public void setHost(HostEntity host) { this.host = host; }
+
+	public List<GuestEntity> getGuestList() { return guestList; }
+	public List<GuestEntity> getGuestsMigratingIn() { return guestsMigratingIn; }
+
+	public boolean isInPause() { return inPause; }
+	public void setInPause(boolean inPause) { this.inPause = inPause; }
+
+	public boolean isInMigration() { return inMigration; }
+	public void setInMigration(boolean inMigration) { this.inMigration = inMigration; }
+
+	public boolean isInWaiting() { return inWaiting; }
+	public void setInWaiting(boolean inWaiting) { this.inWaiting = inWaiting; }
+
+	public long getCurrentAllocatedSize() { return currentAllocatedSize; }
+	public void setCurrentAllocatedSize(long currentAllocatedSize) { this.currentAllocatedSize = currentAllocatedSize; }
+
+	public long getCurrentAllocatedBw() { return currentAllocatedBw; }
+	public void setCurrentAllocatedBw(long currentAllocatedBw) { this.currentAllocatedBw = currentAllocatedBw; }
+
+	public int getCurrentAllocatedRam() { return currentAllocatedRam; }
+	public void setCurrentAllocatedRam(int currentAllocatedRam) { this.currentAllocatedRam = currentAllocatedRam; }
+
+	public List<Double> getCurrentAllocatedMips() { return currentAllocatedMips; }
+	public void setCurrentAllocatedMips(List<Double> currentAllocatedMips) {
+		this.currentAllocatedMips = currentAllocatedMips;
+	}
+
+	public boolean isBeingInstantiated() { return beingInstantiated; }
+	public void setBeingInstantiated(boolean beingInstantiated) { this.beingInstantiated = beingInstantiated; }
+
+	public RamProvisioner getGuestRamProvisioner() { return guestRamProvisioner; }
+	public void setGuestRamProvisioner(RamProvisioner guestRamProvisioner) {
+		this.guestRamProvisioner = guestRamProvisioner;
+	}
+
+	public BwProvisioner getGuestBwProvisioner() { return guestBwProvisioner; }
+	public void setGuestBwProvisioner(BwProvisioner guestBwProvisioner) { this.guestBwProvisioner = guestBwProvisioner; }
+
+	public List<? extends Pe> getPeList() { return peList; }
+	public void setPeList(List<? extends Pe> peList) { this.peList = peList; }
 	/**
 	 * TODO: Remo Andreoli: I'm not sure if this is alright, but I need it for compatibility reasons with default guestCreate()
 	 */
@@ -519,6 +562,8 @@ public class Vm implements VirtualEntity {
 	}
 
 	public HostEntity getHost() { return host; }
+
+	public List<VmStateHistoryEntry> getStateHistory() { return stateHistory; }
 
 	/**
 	 * DEPRECATED: USE GuestEntity.getUid(userId, vmId) instead!

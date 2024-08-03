@@ -8,9 +8,6 @@
 
 package org.cloudbus.cloudsim.network.datacenter;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * TaskStage represents various stages a {@link NetworkCloudlet} can have during execution. 
  * Four stage types which are possible: EXECUTION, WAIT_SEND, WAIT_RECV,and FINISH.
@@ -37,7 +34,6 @@ public class TaskStage {
 	/**
 	 * The task type
 	 */
-	@Getter
 	private TaskStageStatus type;
 
 	/**
@@ -46,17 +42,14 @@ public class TaskStage {
 	 * -) the execution length, in MI (type == EXECUTION)
 	 * -) the amount of data to be sent, in bytes (type == WAIT_RECV)
 	*/
-	@Getter
 	private long taskLength;
 
 	/** Execution time for this stage.
 	 * @NOTE: this variable is modified at run-time
 	 */
-	@Getter @Setter
 	private double time;
 
 	/** Stage (task) id. */
-	@Getter
 	private final double stageId;
 
 	/**
@@ -66,7 +59,6 @@ public class TaskStage {
 	 * -) The cloudlet from whom taskLength need to be received (type == WAIT_RECV)
 	 * -) The cloudlet to whom taskLength need to be sent to (type == WAIT_SEND).
 	 */
-	@Getter
 	private NetworkCloudlet targetCloudlet;
 	
 	public TaskStage(TaskStageStatus type, long taskLength, double stageId, NetworkCloudlet cl) {
@@ -78,4 +70,15 @@ public class TaskStage {
 
 		this.targetCloudlet = cl;
 	}
+
+	public TaskStageStatus getType() { return type; }
+
+	public long getTaskLength() { return taskLength; }
+
+	public double getTime() { return time; }
+	public void setTime(double time) { this.time = time; }
+
+	public double getStageId() { return stageId; }
+
+	public NetworkCloudlet getTargetCloudlet() { return targetCloudlet; }
 }

@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Getter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudActionTags;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -45,8 +44,7 @@ public class NetworkHost extends Host {
 
 	/** cloudlet -> nic
 	 * @TODO: Remo Andreoli: Ideally the nic shouldn't skip the guest entity; to be fixed
-	 * */
-	@Getter
+	 */
 	private Map<Integer, NetworkInterfaceCard> nics;
 
 	public NetworkHost(
@@ -118,6 +116,10 @@ public class NetworkHost extends Host {
 				guest.updateCloudletsProcessing(CloudSim.clock(), getGuestScheduler().getAllocatedMipsForGuest(guest));
 			}
 		}
+	}
+
+	public Map<Integer, NetworkInterfaceCard> getNics() {
+		return nics;
 	}
 
 	public Switch getSwitch() {

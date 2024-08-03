@@ -1,7 +1,5 @@
 package org.cloudbus.cloudsim.EX;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.EX.delay.ConstantVmBootDelay;
@@ -18,8 +16,6 @@ import java.util.Objects;
  * 
  */
 public class DatacenterEX extends Datacenter {
-    @Setter
-    @Getter
     private IVmBootDelayDistribution delayDistribution = new ConstantVmBootDelay(0);
 
     public DatacenterEX(String name, DatacenterCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy,
@@ -33,6 +29,9 @@ public class DatacenterEX extends Datacenter {
         super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
         this.delayDistribution = delayDistribution;
     }
+
+    public IVmBootDelayDistribution getDelayDistribution() { return delayDistribution; }
+    public void setDelayDistribution(IVmBootDelayDistribution delayDistribution) { this.delayDistribution = delayDistribution; }
 
     @Override
     protected void processOtherEvent(final SimEvent ev) {

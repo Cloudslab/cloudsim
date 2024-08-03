@@ -10,7 +10,6 @@ package org.cloudbus.cloudsim;
 
 import java.util.Date;
 
-import lombok.Getter;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
@@ -40,12 +39,10 @@ public class FileAttribute {
         /** Check sum. */
 	private int checksum;          
         /** Last updated time (sec) - relative. */
-	private double lastUpdateTime; 
-        /** Creation time (ms) - abosulte/relative. */
-	@Getter
+	private double lastUpdateTime;
+	/** Creation time (ms) - abosulte/relative. */
 	private long creationTime;
-        /** Price of the file. */
-	@Getter
+	/** Price of the file. */
 	private double cost;
         /** Indicates if the file is a master copy or not. 
          * If the attribute is false, it means the file is a replica. */
@@ -97,6 +94,10 @@ public class FileAttribute {
 		masterCopy = true;
 		readOnly = false;
 	}
+
+	public long getCreationTime() { return creationTime; }
+
+	public double getCost() { return cost; }
 
 	/**
 	 * Copy the values of the object into a given FileAttribute instance.

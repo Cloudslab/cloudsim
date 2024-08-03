@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.Getter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.CloudletList;
 
@@ -36,7 +35,6 @@ public abstract class CloudletScheduler {
 	/** The list of current mips share available for the VM using the scheduler.
 	 * It is provided by {@link CloudletScheduler#updateCloudletsProcessing(double, List)} method.
 	 * at every simulation step. */
-	@Getter
 	private List<Double> currentMipsShare;
 
 	/** The list of cloudlet waiting to be executed on the VM. */
@@ -308,6 +306,8 @@ public abstract class CloudletScheduler {
          * //TODO the method name would be isThereFinishedCloudlets to be clearer
 	 */
 	public boolean isFinishedCloudlets() { return !getCloudletFinishedList().isEmpty(); }
+
+	public List<Double> getCurrentMipsShare() { return currentMipsShare; }
 
 	/**
 	 * Returns the next cloudlet in the finished list.

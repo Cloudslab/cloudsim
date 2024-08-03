@@ -8,9 +8,6 @@
 
 package org.cloudbus.cloudsim;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -39,7 +36,6 @@ public abstract class VmAllocationPolicy {
 	/** The map between each guest and its allocated host.
 	 * The map key is a guest UID and the value is the allocated host for that VM.
 	 */
-	@Getter @Setter(AccessLevel.PROTECTED)
 	private Map<String, HostEntity> guestTable;
 
 	/**
@@ -144,6 +140,10 @@ public abstract class VmAllocationPolicy {
 
 	@Deprecated
 	public Host findHostForVm(Vm vm) { return (Host) findHostForGuest(vm); }
+
+
+	public Map<String, HostEntity> getGuestTable() { return guestTable; }
+	protected void setGuestTable(Map<String, HostEntity> guestTable) { this.guestTable = guestTable; }
 
 	/**
 	 * Get the host that is executing the given VM.

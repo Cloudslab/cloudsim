@@ -11,10 +11,7 @@ package org.cloudbus.cloudsim.network.datacenter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -52,7 +49,6 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 	public ArrayList<TaskStage> stages;
 
 	/** Communication channel */
-	@Getter
 	private NetworkInterfaceCard nic;
 
 	public NetworkCloudlet(
@@ -81,6 +77,8 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 		stages = new ArrayList<>();
 		nic = new NetworkInterfaceCard();
 	}
+
+	public NetworkInterfaceCard getNic() { return nic; }
 
 	@Override
 	public boolean updateCloudlet(Object info) {

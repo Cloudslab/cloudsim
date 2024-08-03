@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.List;
 
 import com.opencsv.CSVReader;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Run.
@@ -14,7 +12,6 @@ import lombok.Setter;
 
  */
 public class CustomCSVReader {
-	@Getter @Setter
 	private static List<String[]> fileData;
 
 	public CustomCSVReader(File inputFile) {
@@ -37,5 +34,8 @@ public class CustomCSVReader {
 
 		}
 	}
+
+	public static List<String[]> getFileData() { return fileData; }
+	public static void setFileData(List<String[]> fileData) { CustomCSVReader.fileData = fileData; }
 }
 

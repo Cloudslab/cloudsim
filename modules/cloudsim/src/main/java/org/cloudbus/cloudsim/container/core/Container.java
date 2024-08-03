@@ -1,8 +1,5 @@
 package org.cloudbus.cloudsim.container.core;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -18,66 +15,36 @@ import java.util.List;
  */
 public class Container implements GuestEntity {
 
-    /**
-     * The id.
-     */
-    @Setter(AccessLevel.PROTECTED) @Getter private int id;
+    /** The id. */
+    private int id;
 
-    /**
-     * The user id.
-     */
-    @Setter(AccessLevel.PROTECTED)
-    @Getter
+    /** The user id. */
     private int userId;
 
-    /**
-     * The uid.
-     */
-    @Getter @Setter private String uid;
+    /** The uid. */
+    private String uid;
 
-    /**
-     * The size.
-     */
-    @Getter
-    @Setter
+    /** The size. */
     private long size;
 
-    /**
-     * The MIPS.
-     */
-    @Setter(AccessLevel.PROTECTED)
-    @Getter
+    /** The MIPS. */
     private double mips;
 
-    /**
-     * The number of PEs.
-     */
-    @Getter @Setter private int numberOfPes;
+    /** The number of PEs. */
+    private int numberOfPes;
 
-    /**
-     * The ram.
-     */
-    @Getter @Setter private int ram;
+    /** The ram. */
+    private int ram;
 
-    /**
-     * The bw.
-     */
-    @Getter
-    @Setter
+    /** The bandwidth. */
     private long bw;
 
-    /**
-     * The containerManager.
-     */
-    @Setter(AccessLevel.PROTECTED)
-    @Getter
+    /** The containerManager. */
     private String containerManager;
 
     /**
      * The Cloudlet scheduler.
      */
-    @Setter(AccessLevel.PROTECTED)
-    @Getter
     private CloudletScheduler cloudletScheduler;
 
     /**
@@ -85,50 +52,25 @@ public class Container implements GuestEntity {
      */
     private HostEntity vm;
 
-    /**
-     * In migration flag.
-     */
-    @Setter
-    @Getter
+    /** In migration flag. */
     private boolean inMigration;
 
-    /**
-     * The current allocated size.
-     */
-    @Setter(AccessLevel.PROTECTED)
-    @Getter
+    /** The current allocated size. */
     private long currentAllocatedSize;
 
-    /**
-     * The current allocated ram.
-     */
-    @Setter
-    @Getter
+    /** The current allocated ram. */
     private int currentAllocatedRam;
 
-    /**
-     * The current allocated bw.
-     */
-    @Setter
-    @Getter
+    /** The current allocated bw. */
     private long currentAllocatedBw;
 
-    /**
-     * The current allocated mips.
-     */
-    @Setter
+    /** The current allocated mips. */
     private List<Double> currentAllocatedMips;
 
-    /**
-     * The VM is being instantiated.
-     */
-    @Getter
+    /** The VM is being instantiated. */
     private boolean beingInstantiated;
 
-    /**
-     * The mips allocation history.
-     */
-    @Getter
+    /** The mips allocation history. */
     private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
 
 //    added from the power Vm
@@ -137,24 +79,17 @@ public class Container implements GuestEntity {
      */
     public static final int HISTORY_LENGTH = 30;
 
-    /**
-     * The utilization history.
-     */
-    @Getter(AccessLevel.PROTECTED)
+    /** The utilization history. */
     private final List<Double> utilizationHistory = new LinkedList<>();
 
     /**
      * The previous time.
      */
-    @Setter
-    @Getter
     private double previousTime;
 
     /**
      * The scheduling interval.
      */
-    @Setter(AccessLevel.PROTECTED)
-    @Getter
     private double schedulingInterval;
 
 
@@ -377,15 +312,76 @@ public class Container implements GuestEntity {
         return getCloudletScheduler().getCurrentRequestedMips();
     }
 
+    public int getId() { return id; }
+    protected void setId(int id) { this.id = id; }
+
+    public int getUserId() { return userId; }
+    protected void setUserId(int userId) { this.userId = userId; }
+
+    public String getUid() { return uid; }
+    public void setUid(String uid) { this.uid = uid; }
+
+    public long getSize() { return size; }
+    public void setSize(long size) { this.size = size; }
+
+    public double getMips() { return mips; }
+    protected void setMips(double mips) { this.mips = mips; }
+
+    public int getNumberOfPes() { return numberOfPes; }
+    public void setNumberOfPes(int numberOfPes) { this.numberOfPes = numberOfPes; }
+
+    public int getRam() { return ram; }
+    public void setRam(int ram) { this.ram = ram; }
+
+    public long getBw() { return bw; }
+    public void setBw(long bw) { this.bw = bw; }
+
+    public String getContainerManager() { return containerManager; }
+    protected void setContainerManager(String containerManager) { this.containerManager = containerManager; }
+
+    public CloudletScheduler getCloudletScheduler() { return cloudletScheduler; }
+    protected void setCloudletScheduler(CloudletScheduler cloudletScheduler) {
+        this.cloudletScheduler = cloudletScheduler;
+    }
+
     public HostEntity getHost() {
         return vm;
     }
-
     public void setHost(HostEntity vm) {
         this.vm = vm;
     }
 
+    public boolean isInMigration() { return inMigration; }
+    public void setInMigration(boolean inMigration) { this.inMigration = inMigration; }
+
+    public long getCurrentAllocatedSize() { return currentAllocatedSize; }
+    protected void setCurrentAllocatedSize(long currentAllocatedSize) {
+        this.currentAllocatedSize = currentAllocatedSize;
+    }
+
+    public int getCurrentAllocatedRam() { return currentAllocatedRam; }
+    public void setCurrentAllocatedRam(int currentAllocatedRam) { this.currentAllocatedRam = currentAllocatedRam; }
+
+    public long getCurrentAllocatedBw() { return currentAllocatedBw; }
+    public void setCurrentAllocatedBw(long currentAllocatedBw) { this.currentAllocatedBw = currentAllocatedBw; }
+
+    protected List<Double> getUtilizationHistory() { return utilizationHistory; }
+
+    public double getPreviousTime() { return previousTime; }
+    public void setPreviousTime(double previousTime) { this.previousTime = previousTime; }
+
+    public double getSchedulingInterval() { return schedulingInterval; }
+    protected void setSchedulingInterval(double schedulingInterval) { this.schedulingInterval = schedulingInterval; }
+
     public double getTotalMips() {
         return getMips() * getNumberOfPes();
     }
+
+    public void setCurrentAllocatedMips(List<Double> currentAllocatedMips) {
+        this.currentAllocatedMips = currentAllocatedMips;
+    }
+
+    public boolean isBeingInstantiated() { return beingInstantiated; }
+
+    public List<VmStateHistoryEntry> getStateHistory() { return stateHistory; }
 }

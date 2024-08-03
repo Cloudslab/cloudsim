@@ -1,8 +1,5 @@
 package org.cloudbus.cloudsim.container.core;
 
-
-import lombok.Getter;
-import lombok.Setter;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.*;
 
@@ -19,8 +16,6 @@ public class ContainerDatacenter extends Datacenter {
     /**
      * The container provisioner.
      */
-    @Setter
-    @Getter
     private VmAllocationPolicy containerAllocationPolicy;
 
     /**
@@ -557,11 +552,14 @@ public class ContainerDatacenter extends Datacenter {
         }
     }
 
+    public VmAllocationPolicy getContainerAllocationPolicy() { return containerAllocationPolicy; }
+    public void setContainerAllocationPolicy(VmAllocationPolicy containerAllocationPolicy) {
+        this.containerAllocationPolicy = containerAllocationPolicy;
+    }
 
     public <T extends Container> List<T> getContainerList() {
         return (List<T>) containerList;
     }
-
     public void setContainerList(List<? extends Container> containerList) {
         this.containerList = containerList;
     }
@@ -570,7 +568,6 @@ public class ContainerDatacenter extends Datacenter {
     public String getExperimentName() {
         return experimentName;
     }
-
     public void setExperimentName(String experimentName) {
         this.experimentName = experimentName;
     }
