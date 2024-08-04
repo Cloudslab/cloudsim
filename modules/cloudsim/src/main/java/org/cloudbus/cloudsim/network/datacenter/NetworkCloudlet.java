@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.core.CloudSim;
 
@@ -98,15 +99,14 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 			// update the time
 			timeSpentCurrStage = CloudSim.clock() - startTimeCurrStage;
 
-			if (getRemainingCloudletLength() == 0) {
+			// @TODO: Remo Andreoli: I'm not too sure about this, there is a slight discrepancy between timeSpentInStage
+			//						 and remainingCloudletLength that needs to be addressed
+			if (getRemainingCloudletLength() == 0 || timeSpentCurrStage >= getCloudletLength()) {
 				st.setTime(timeSpentCurrStage);
 				goToNextStage();
 			} else {
 				return true;
 			}
-			/*if (ncl.timeSpentCurrStage >= st.getTime()) {
-				goToNextStage();
-			}*/
 		}
 		if (st.getType() == TaskStage.TaskStageStatus.WAIT_RECV) {
 			List<HostPacket> pkttoremove = new ArrayList<>();

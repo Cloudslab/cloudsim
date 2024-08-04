@@ -28,6 +28,7 @@ public class TandemAppExample2 {
 
 	private static final int numberOfHosts = 2;
 	private static final int numberOfVms = 4;
+	private static final int numberOfActivations = 5;
 
 	// Realistic cloudlet arrival
     private static ExponentialDistr distr;
@@ -70,7 +71,7 @@ public class TandemAppExample2 {
 			guestList = CreateVMs(datacenter.getId());
 
 			appCloudletList = new ArrayList<>();
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < numberOfActivations; i++) {
 				AppCloudlet app = new AppCloudlet(AppCloudlet.APP_Workflow, i, 2000, broker.getId());
 				createTaskList(app);
 				appCloudletList.add(app);

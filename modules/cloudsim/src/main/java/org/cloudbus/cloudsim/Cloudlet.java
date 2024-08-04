@@ -727,7 +727,7 @@ public class Cloudlet {
             return getCloudletLength();
         }
 
-        return Math.min(resList.get(index).cloudletFinishedSoFar, getCloudletLength());
+        return Math.min(resList.get(index).cloudletFinishedSoFar, getCloudletTotalLength());
     }
 
     /**
@@ -1211,7 +1211,7 @@ public class Cloudlet {
         long length = getCloudletTotalLength() - getCloudletFinishedSoFar();
 
         // Remaining Cloudlet length can't be negative number.
-        if (length < 0) {
+        if (length <= 0) {
             return 0;
         }
 
