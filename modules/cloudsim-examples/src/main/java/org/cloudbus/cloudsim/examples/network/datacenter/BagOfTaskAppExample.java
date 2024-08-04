@@ -26,10 +26,24 @@ public class BagOfTaskAppExample {
 
 	private static DatacenterBroker broker;
 
-	private static int numberVm = 4;
+	private static int numberOfHosts = (int) (NetworkConstants.EdgeSwitchPort * NetworkConstants.AggSwitchPort * NetworkConstants.RootSwitchPort);
+
+	private static int numberOfVms = numberOfHosts * NetworkConstants.maxhostVM;;
+
+	private static int numberOfCloudlets = 4;
 
 	/**
-	 * Creates main() to run this example.
+	 * 	 Example of bags of tasks:
+	 * 	 									       Worker1
+	 * 	 									      /
+	 * 	 							Gatherer0 <--- Worker2
+	 * 	 										  \
+	 * 	 										   Worker3
+	 *
+	 *
+	 * 	 with Datacenter configuration:           _______switch______
+	 * 	  								   		 /	  /      |       \
+	 * 	  									 Host0    Host1  Host2    Host3.
 	 * 
 	 * @param args
 	 *            the args
@@ -50,9 +64,10 @@ public class BagOfTaskAppExample {
 			// Datacenters are the resource providers in CloudSim. We need at
 			// list one of them to run a CloudSim simulation
 			datacenter = createDatacenter("Datacenter_0");
+			numberOfVms = datacenter.getHostList().size() * NetworkConstants.maxhostVM;
 
 			// Third step: Create Broker
-			broker = createBroker();
+			broker = new DatacenterBroker("Broker");
 			// Fifth step: Create one Cloudlet
 
 			vmList = CreateVMs(datacenter.getId());
@@ -113,8 +128,7 @@ public class BagOfTaskAppExample {
 		int ram = 2048; // host memory (MB)
 		long storage = 1000000; // host storage
 		int bw = 10000;
-		for (int i = 0; i < NetworkConstants.EdgeSwitchPort * NetworkConstants.AggSwitchPort
-				* NetworkConstants.RootSwitchPort; i++) {
+		for (int i = 0; i < numberOfHosts; i++) {
 			// 2. A Machine contains one or more PEs or CPUs/Cores.
 			// In this example, it will have only one core.
 			// 3. Create PEs and add these into an object of PowerPeList.
@@ -223,27 +237,8 @@ public class BagOfTaskAppExample {
 			e.printStackTrace();
 		}
 		// Create Internal Datacenter network
-		CreateNetwork(2, datacenter);
+		CreateNetwork(datacenter);
 		return datacenter;
-	}
-
-	// We strongly encourage users to develop their own broker policies, to
-	// submit vms and cloudlets according
-	// to the specific rules of the simulated scenario
-	/**
-	 * Creates the broker.
-	 * 
-	 * @return the datacenter broker
-	 */
-	private static DatacenterBroker createBroker() {
-		DatacenterBroker broker = null;
-		try {
-			broker = new DatacenterBroker("Broker");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		return broker;
 	}
 
 	/**
@@ -285,8 +280,7 @@ public class BagOfTaskAppExample {
 	private static ArrayList<Vm> CreateVMs(int datacenterId) {
 		ArrayList<Vm> vmList = new ArrayList<>();
 
-		int numVM = datacenter.getHostList().size() * NetworkConstants.maxhostVM;
-		for (int i = 0; i < numVM; i++) {
+		for (int i = 0; i < numberOfVms; i++) {
 			int vmid = i;
 			int mips = 1;
 			long size = 10000; // image size (MB)
@@ -323,13 +317,13 @@ public class BagOfTaskAppExample {
 
 			// Randomly select vm ids for the cloudlets within the app
 			List<Integer> vmIds = new ArrayList<>();
-			for (int i = 0; i < numberVm; i++) {
+			for (int i = 0; i < numberOfCloudlets; i++) {
 				vmIds.add((int) ufrnd.sample());
 			}
 
 			if (!vmIds.isEmpty()) {
 				createTaskList(app, vmIds);
-				for (int i = 0; i < numberVm; i++) {
+				for (int i = 0; i < numberOfCloudlets; i++) {
 					app.cList.get(i).setUserId(broker.getId());
 				}
 			}
@@ -341,14 +335,14 @@ public class BagOfTaskAppExample {
 
 	static private void createTaskList(AppCloudlet appCloudlet, List<Integer> vmIdList) {
 		//basically, each task runs the simulation and then data is consolidated in one task
-		long executionTime = (long) 100 / numberVm;
+		long executionTime = (long) 100 / numberOfVms;
 		long fileSize = NetworkConstants.FILE_SIZE;
 		long outputSize = NetworkConstants.OUTPUT_SIZE;
 		int pesNumber = NetworkConstants.PES_NUMBER;
 		int stgId=0;
 
 		// First cloudlet (i=0) is the gatherer
-		for(int i=0;i<numberVm;i++){
+		for(int i = 0; i< numberOfCloudlets; i++){
 			UtilizationModel utilizationModel = new UtilizationModelFull();
 			NetworkCloudlet cl = new NetworkCloudlet(NetworkConstants.currentCloudletId, executionTime, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
 			NetworkConstants.currentCloudletId++;
@@ -360,7 +354,7 @@ public class BagOfTaskAppExample {
 		//Configure stages
 		NetworkCloudlet gatherer = appCloudlet.cList.get(0);
 		gatherer.addExecutionStage(NetworkConstants.COMMUNICATION_LENGTH);
-		for(int i=1;i<numberVm;i++) {
+		for(int i = 1; i< numberOfCloudlets; i++) {
 			NetworkCloudlet worker = appCloudlet.cList.get(i);
 			worker.addExecutionStage(NetworkConstants.COMMUNICATION_LENGTH);
 			worker.addSendStage(NetworkConstants.COMMUNICATION_LENGTH, gatherer);
@@ -369,7 +363,7 @@ public class BagOfTaskAppExample {
 		}
 	}
 
-	private static void CreateNetwork(int numhost, NetworkDatacenter dc) {
+	private static void CreateNetwork(NetworkDatacenter dc) {
 
 		// Edge Switch
 		Switch[] edgeswitch = new Switch[1];
