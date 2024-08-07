@@ -116,7 +116,7 @@ public class NetworkExample1 {
 
 			//Sixth step: configure network
 			//load the network topology file
-			NetworkTopology.buildNetworkTopology("modules/cloudsim-examples/src/main/java/org/cloudbus/cloudsim/examples/network/topology.brite");
+			NetworkTopology.buildNetworkTopology(NetworkExample1.class.getClassLoader().getResource("topology.brite").getPath());
 
 			//maps CloudSim entities to BRITE entities
 			//PowerDatacenter will correspond to BRITE node 0
