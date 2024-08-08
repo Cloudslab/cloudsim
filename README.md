@@ -25,6 +25,32 @@ More information can be found on the [CloudSim's web site](http://cloudbus.org/c
 
 The downloaded package contains all the source code, examples, jars, and API html files.
 
+# Install CloudSim (Linux)
+
+1) Install Java JDK21 on your system:
+``` console
+sudo apt install openjdk-21-jdk
+```
+2) Set Java JDK21 as default:
+``` console
+sudo update-java-alternatives --set java-1.21.0-openjdk-amd64
+```
+
+3) Install Maven as shown on the [official website](https://maven.apache.org/install.html)
+4) Compile and run tests:
+``` console
+mvn build
+```
+``` console
+mvn test
+```
+5) Run an example in cloudsim-examples:
+```
+mvn exec:java -pl modules/cloudsim-examples/ -Dexec.mainClass=org.cloudbus.cloudsim.examples.CloudSimExample1
+```
+
+**Suggestion:** Use an IDE such as IDEA Intellij to faciliate steps 4) and 5)
+
 # Publications #
 
   * Anton Beloglazov, and Rajkumar Buyya, [Optimal Online Deterministic Algorithms and Adaptive Heuristics for Energy and Performance Efficient Dynamic Consolidation of Virtual Machines in Cloud Data Centers](http://beloglazov.info/papers/2012-optimal-algorithms-ccpe.pdf), Concurrency and Computation: Practice and Experience, Volume 24, Number 13, Pages: 1397-1420, John Wiley & Sons, Ltd, New York, USA, 2012.
