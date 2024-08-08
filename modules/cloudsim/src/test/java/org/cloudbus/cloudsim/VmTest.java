@@ -34,7 +34,7 @@ public class VmTest {
 
 	private static final double MIPS = 1000;
 
-	private static final int PES_NUMBER = 2;
+	private static final int PES_NUMBER = 4;
 
 	private static final int RAM = 1024;
 
@@ -167,13 +167,27 @@ public class VmTest {
 
 	@Test
 	public void testGetCurrentRequestedMips() {
+		List<Double> expectedCurrentMips = new ArrayList<>(PES_NUMBER);
+		for (int i = 0; i < PES_NUMBER; i++)
+			expectedCurrentMips.add(MIPS);
+
+		assertEquals(expectedCurrentMips, vm.getCurrentRequestedMips());
+	}
+
+	@Test
+	public void testGetCurrentRequestedTotalMips() {
+		assertEquals(MIPS * PES_NUMBER, vm.getCurrentRequestedTotalMips(), 0);
+	}
+
+	@Test
+	public void testGetCurrentRequestedMipsNotBeingInstantiated() {
 		CloudletScheduler cloudletScheduler = createMock(CloudletScheduler.class);
 		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
 		vm.setBeingInstantiated(false);
 
 		List<Double> expectedCurrentMips = new ArrayList<>();
-		expectedCurrentMips.add(MIPS / 2);
-		expectedCurrentMips.add(MIPS / 2);
+		for (int i = 0; i < PES_NUMBER; i++)
+			expectedCurrentMips.add(MIPS);
 
 		expect(cloudletScheduler.getCurrentRequestedMips()).andReturn(expectedCurrentMips);
 
@@ -185,20 +199,20 @@ public class VmTest {
 	}
 
 	@Test
-	public void testGetCurrentRequestedTotalMips() {
+	public void testGetCurrentRequestedTotalMipsNotBeingInstantiated() {
 		CloudletScheduler cloudletScheduler = createMock(CloudletScheduler.class);
 		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
 		vm.setBeingInstantiated(false);
 
 		ArrayList<Double> currentMips = new ArrayList<>();
-		currentMips.add(MIPS);
-		currentMips.add(MIPS);
+		for (int i = 0; i < PES_NUMBER; i++)
+			currentMips.add(MIPS);
 
 		expect(cloudletScheduler.getCurrentRequestedMips()).andReturn(currentMips);
 
 		replay(cloudletScheduler);
 
-		assertEquals(MIPS * 2, vm.getCurrentRequestedTotalMips(), 0);
+		assertEquals(MIPS * PES_NUMBER, vm.getCurrentRequestedTotalMips(), 0);
 
 		verify(cloudletScheduler);
 	}
