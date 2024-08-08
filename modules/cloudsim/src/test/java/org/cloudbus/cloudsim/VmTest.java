@@ -188,6 +188,7 @@ public class VmTest {
 	public void testGetCurrentRequestedTotalMips() {
 		CloudletScheduler cloudletScheduler = createMock(CloudletScheduler.class);
 		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
+		vm.setBeingInstantiated(false);
 
 		ArrayList<Double> currentMips = new ArrayList<>();
 		currentMips.add(MIPS);

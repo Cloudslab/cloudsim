@@ -241,14 +241,14 @@ public class Vm implements VirtualEntity {
 		if (mipsShare != null) {
 			// Cloudlets hosted here
 			double time1 = getCloudletScheduler().updateCloudletsProcessing(currentTime, mipsShare);
-			if (time1 > 0.0 && time1 < smallerTime) {
+			if (time1 < smallerTime) {
 				smallerTime = time1;
 			}
 
 			// Cloudlets hosted in nested guests (if any)
 			for (GuestEntity guest : getGuestList()) {
 				double time2 = guest.updateCloudletsProcessing(currentTime, getGuestScheduler().getAllocatedMipsForGuest(guest));
-				if (time2 > 0.0 && time2 < smallerTime) {
+				if (time2 < smallerTime) {
 					smallerTime = time2;
 				}
 			}
@@ -301,7 +301,7 @@ public class Vm implements VirtualEntity {
 			for (int i = 0; i < getNumberOfPes(); i++) {
 				currentRequestedMips.add(getMips());
 			}
-		} else { // TODO: Remo Andreoli: verify if valid
+		} else {
 			currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
 			for (GuestEntity guest : getGuestList()) {
 				currentRequestedMips.addAll(guest.getCurrentRequestedMips());
