@@ -8,11 +8,10 @@
 package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
+import org.cloudbus.cloudsim.VmAllocationPolicy.GuestMapping;
 import org.cloudbus.cloudsim.core.*;
 
 /**
@@ -462,15 +461,12 @@ public class Datacenter extends SimEntity {
 	 */
 	protected void processVmMigrate(SimEvent ev, boolean ack) {
 		Object tmp = ev.getData();
-		if (!(tmp instanceof Map<?, ?>)) {
-			throw new ClassCastException("The data object must be Map<String, Object>");
+		if (!(tmp instanceof GuestMapping migrate)) {
+			throw new ClassCastException("The data object must be GuestMapping");
 		}
 
-		@SuppressWarnings("unchecked")
-		Map<String, Object> migrate = (HashMap<String, Object>) tmp;
-
-		GuestEntity vm = (GuestEntity) migrate.get("vm");
-		HostEntity host = (HostEntity) migrate.get("host");
+        GuestEntity vm = migrate.vm();
+		HostEntity host = migrate.host();
 		
 		//destroy VM in src host
 		getVmAllocationPolicy().deallocateHostForGuest(vm);

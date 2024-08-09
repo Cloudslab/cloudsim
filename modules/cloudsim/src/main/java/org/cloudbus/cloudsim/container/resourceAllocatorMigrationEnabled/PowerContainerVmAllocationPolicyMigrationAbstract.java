@@ -84,7 +84,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @return the array list< hash map< string, object>>
      */
     @Override
-    public List<Map<String, Object>> optimizeAllocation(List<? extends GuestEntity> vmList) {
+    public List<GuestMapping> optimizeAllocation(List<? extends GuestEntity> vmList) {
         ExecutionTimeMeasurer.start("optimizeAllocationTotal");
 
         ExecutionTimeMeasurer.start("optimizeAllocationHostSelection");
@@ -102,7 +102,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
 
         Log.println("Reallocation of VMs from the over-utilized hosts:");
         ExecutionTimeMeasurer.start("optimizeAllocationVmReallocation");
-        List<Map<String, Object>> migrationMap = getNewVmPlacement(vmsToMigrate, new HashSet<Host>(
+        List<GuestMapping> migrationMap = getNewVmPlacement(vmsToMigrate, new HashSet<Host>(
                 overUtilizedHosts));
         getExecutionTimeHistoryVmReallocation().add(
                 ExecutionTimeMeasurer.end("optimizeAllocationVmReallocation"));
@@ -123,9 +123,9 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param overUtilizedHosts the over utilized hosts
      * @return the migration map from under utilized hosts
      */
-    protected List<Map<String, Object>> getMigrationMapFromUnderUtilizedHosts(
-            List<PowerHost> overUtilizedHosts, List<Map<String, Object>> previouseMap) {
-        List<Map<String, Object>> migrationMap = new LinkedList<>();
+    protected List<GuestMapping> getMigrationMapFromUnderUtilizedHosts(
+            List<PowerHost> overUtilizedHosts, List<GuestMapping> previouseMap) {
+        List<GuestMapping> migrationMap = new LinkedList<>();
         List<PowerHost> switchedOffHosts = getSwitchedOffHosts();
 
         // over-utilized hosts + hosts that are selected to migrate VMs to from over-utilized hosts
@@ -169,7 +169,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
             }
             Log.println();
 
-            List<Map<String, Object>> newVmPlacement = getNewVmPlacementFromUnderUtilizedHost(
+            List<GuestMapping> newVmPlacement = getNewVmPlacementFromUnderUtilizedHost(
                     vmsToMigrateFromUnderUtilizedHost,
                     excludedHostsForFindingNewVmPlacement);
 
@@ -274,10 +274,10 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param migrationMap the migration map
      * @return the list
      */
-    protected List<PowerHost> extractHostListFromMigrationMap(List<Map<String, Object>> migrationMap) {
+    protected List<PowerHost> extractHostListFromMigrationMap(List<GuestMapping> migrationMap) {
         List<PowerHost> hosts = new LinkedList<>();
-        for (Map<String, Object> map : migrationMap) {
-            hosts.add((PowerHost) map.get("host"));
+        for (GuestMapping map : migrationMap) {
+            hosts.add((PowerHost) map.host());
         }
 
         return hosts;
@@ -290,10 +290,10 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param excludedHosts the excluded hosts
      * @return the new vm placement
      */
-    protected List<Map<String, Object>> getNewVmPlacement(
+    protected List<GuestMapping> getNewVmPlacement(
             List<? extends GuestEntity> vmsToMigrate,
             Set<? extends HostEntity> excludedHosts) {
-        List<Map<String, Object>> migrationMap = new LinkedList<>();
+        List<GuestMapping> migrationMap = new LinkedList<>();
         VmList.sortByCpuUtilization(vmsToMigrate);
         for (GuestEntity vm : vmsToMigrate) {
             PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
@@ -301,9 +301,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
                 allocatedHost.guestCreate(vm);
                 Log.printlnConcat("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
 
-                Map<String, Object> migrate = new HashMap<>();
-                migrate.put("vm", vm);
-                migrate.put("host", allocatedHost);
+                GuestMapping migrate = new GuestMapping(vm, allocatedHost);
                 migrationMap.add(migrate);
             }
         }
@@ -317,10 +315,10 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      * @param excludedHosts the excluded hosts
      * @return the new vm placement from under utilized host
      */
-    protected List<Map<String, Object>> getNewVmPlacementFromUnderUtilizedHost(
+    protected List<GuestMapping> getNewVmPlacementFromUnderUtilizedHost(
             List<? extends ContainerVm> vmsToMigrate,
             Set<? extends Host> excludedHosts) {
-        List<Map<String, Object>> migrationMap = new LinkedList<>();
+        List<GuestMapping> migrationMap = new LinkedList<>();
         VmList.sortByCpuUtilization(vmsToMigrate);
         for (ContainerVm vm : vmsToMigrate) {
             PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
@@ -328,14 +326,12 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
                 allocatedHost.guestCreate(vm);
                 Log.printlnConcat("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
 
-                Map<String, Object> migrate = new HashMap<>();
-                migrate.put("vm", vm);
-                migrate.put("host", allocatedHost);
+                GuestMapping migrate = new GuestMapping(vm, allocatedHost);
                 migrationMap.add(migrate);
             } else {
                 Log.println("Not all VMs can be reallocated from the host, reallocation cancelled");
-                for (Map<String, Object> map : migrationMap) {
-                    ((Host) map.get("host")).guestDestroy((ContainerVm) map.get("vm"));
+                for (GuestMapping map : migrationMap) {
+                    (map.host()).guestDestroy(map.vm());
                 }
                 migrationMap.clear();
                 break;

@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.container.core;
 
 import org.cloudbus.cloudsim.*;
+import org.cloudbus.cloudsim.VmAllocationPolicy.GuestMapping;
 import org.cloudbus.cloudsim.container.utils.CustomCSVWriter;
 import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
@@ -8,9 +9,7 @@ import org.cloudbus.cloudsim.power.PowerHost;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sareh on 3/08/15.
@@ -48,7 +47,6 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 
     @Override
     protected void updateCloudletProcessing() {
-
         //        Log.printLine("Power data center is Updating the cloudlet processing");
         if (getCloudletSubmitted() == -1 || getCloudletSubmitted() == CloudSim.clock()) {
             CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.VM_DATACENTER_EVENT));
@@ -64,16 +62,16 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
             double minTime = updateCloudetProcessingWithoutSchedulingFutureEventsForce();
 
             if (!isDisableMigrations()) {
-                List<Map<String, Object>> migrationMap = getVmAllocationPolicy().optimizeAllocation(
+                List<GuestMapping> migrationMap = getVmAllocationPolicy().optimizeAllocation(
                         getVmList());
                 int previousContainerMigrationCount = getContainerMigrationCount();
                 int previousVmMigrationCount = getVmMigrationCount();
                 if (migrationMap != null) {
                     List<HostEntity> vmList = new ArrayList<>();
-                    for (Map<String, Object> migrate : migrationMap) {
-                        if (migrate.containsKey("container")) {
-                            Container container = (Container) migrate.get("container");
-                            HostEntity targetVm = (HostEntity) migrate.get("vm");
+                    for (GuestMapping migrate : migrationMap) {
+                        if (migrate.container() != null) {
+                            Container container = migrate.container();
+                            HostEntity targetVm = (HostEntity) migrate.vm();
                             HostEntity oldVm = container.getHost();
                             if (oldVm == null) {
                                 Log.formatLine(
@@ -93,7 +91,7 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
                             targetVm.addMigratingInGuest(container);
 
 
-                            if (migrate.containsKey("NewEventRequired")) {
+                            if (migrate.NewEventRequired()) {
                                 if (!vmList.contains(targetVm)) {
                                     // A new VM is created  send a vm create request with delay :)
 //                                Send a request to create Vm after 100 second
@@ -145,9 +143,9 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
 
                             }
                         } else {
-                            GuestEntity vm = (GuestEntity) migrate.get("vm");
-                            PowerHost targetHost = (PowerHost) migrate.get("host");
-                            PowerHost oldHost = (PowerHost) vm.getHost();
+                            GuestEntity vm = migrate.vm();
+                            PowerHost targetHost = (PowerHost) migrate.host();
+                            PowerHost oldHost = vm.getHost();
 
                             if (oldHost == null) {
                                 Log.formatLine(
@@ -230,30 +228,18 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
     protected void processVmCreate(SimEvent ev, boolean ack) {
 
 //    here we override the method
-        if (ev.getData() instanceof Map) {
-            Map<String, Object> map = (Map<String, Object>) ev.getData();
-            VirtualEntity containerVm = (Vm) map.get("vm");
-            Host host = (Host) map.get("host");
+        if (ev.getData() instanceof GuestMapping) {
+            GuestMapping map = (GuestMapping) ev.getData();
+            VirtualEntity containerVm = (Vm) map.vm();
+            HostEntity host = map.host();
             boolean result = getVmAllocationPolicy().allocateHostForGuest(containerVm, host);
 //                set the containerVm in waiting state
             containerVm.setInWaiting(true);
 //                containerVm.addMigratingInContainer((Container) map.get("container"));
-            ack = true;
-            if (ack) {
-                Map<String, Object> data = new HashMap<>();
-                data.put("vm", containerVm);
-                data.put("result", containerVm);
-                data.put("datacenterID", getId());
-
-                if (result) {
-                    data.put("result", CloudSimTags.TRUE);
-                } else {
-                    data.put("result", CloudSimTags.FALSE);
-                }
-                send(2, CloudSim.getMinTimeBetweenEvents(), ContainerCloudSimTags.VM_NEW_CREATE, data);
-            }
 
             if (result) {
+                GuestMapping data = new GuestMapping(containerVm, null, null, getId(), false, false);
+                send(2, CloudSim.getMinTimeBetweenEvents(), ContainerCloudSimTags.VM_NEW_CREATE, data);
                 Log.println(String.format("%s VM ID #%d is created on Host #%d", CloudSim.clock(), containerVm.getId(), host.getId()));
                 incrementNewlyCreatedVmsCount();
                 getVmList().add(containerVm);

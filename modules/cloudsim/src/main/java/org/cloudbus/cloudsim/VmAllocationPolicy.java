@@ -8,6 +8,8 @@
 
 package org.cloudbus.cloudsim;
 
+import org.cloudbus.cloudsim.container.core.Container;
+import org.cloudbus.cloudsim.container.core.ContainerVm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -29,6 +31,25 @@ import java.util.Map;
  * @since CloudSim Toolkit 1.0
  */
 public abstract class VmAllocationPolicy {
+
+	public record GuestMapping (
+		GuestEntity vm,
+		HostEntity host,
+		Container container,
+		int datacenterId,
+        boolean NewEventRequired,
+        boolean NewVmRequired)
+	{
+		public GuestMapping(GuestEntity vm, HostEntity host, Container container, boolean newEvReq, boolean newVmReq) {
+			this(vm, host, container, host.getDatacenter().getId(), newEvReq, newVmReq);
+		}
+		public GuestMapping(GuestEntity vm, HostEntity host, Container container) {
+			this(vm, host, container, host.getDatacenter().getId(), false, false);
+		}
+		public GuestMapping(GuestEntity vm, HostEntity host) {
+			this(vm, host, null);
+		}
+	}
 
 	/** The host list. */
 	private List<? extends HostEntity> hostList;
@@ -111,7 +132,7 @@ public abstract class VmAllocationPolicy {
          * or have clear documentation. The only sublcass is the {@link VmAllocationPolicySimple}. 
          * 
 	 */
-	public List<Map<String, Object>> optimizeAllocation(List<? extends GuestEntity> vmList) { return new ArrayList<>(); }
+	public List<GuestMapping> optimizeAllocation(List<? extends GuestEntity> vmList) { return new ArrayList<>(); }
 
 	/**
 	 * Releases the host used by a VM.

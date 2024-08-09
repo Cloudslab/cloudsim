@@ -9,7 +9,6 @@
 package org.cloudbus.cloudsim.power;
 
 import java.util.List;
-import java.util.Map;
 
 import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
@@ -17,6 +16,7 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.VmAllocationPolicy.GuestMapping;
 import org.cloudbus.cloudsim.core.CloudActionTags;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -93,13 +93,13 @@ public class PowerDatacenter extends Datacenter {
 			double minTime = updateCloudetProcessingWithoutSchedulingFutureEventsForce();
 
 			if (!isDisableMigrations()) {
-				List<Map<String, Object>> migrationMap = getVmAllocationPolicy().optimizeAllocation(
+				List<GuestMapping> migrationMap = getVmAllocationPolicy().optimizeAllocation(
 						getVmList());
 
 				if (migrationMap != null) {
-					for (Map<String, Object> migrate : migrationMap) {
-						Vm vm = (Vm) migrate.get("vm");
-						PowerHost targetHost = (PowerHost) migrate.get("host");
+					for (GuestMapping migrate : migrationMap) {
+						Vm vm = (Vm) migrate.vm();
+						PowerHost targetHost = (PowerHost) migrate.host();
 						PowerHost oldHost = (PowerHost) vm.getHost();
 
 						if (oldHost == null) {

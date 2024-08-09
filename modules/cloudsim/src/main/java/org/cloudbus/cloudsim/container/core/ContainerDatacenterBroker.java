@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.container.core;
 
 import org.cloudbus.cloudsim.*;
+import org.cloudbus.cloudsim.VmAllocationPolicy.GuestMapping;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.lists.CloudletList;
@@ -110,7 +111,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
         CloudSimTags tag = ev.getTag();
         // New VM Creation answer (PowerContainerDatacenterCM only)
         if (tag == ContainerCloudSimTags.VM_NEW_CREATE) {
-            processNewVmCreate(ev);
+            processNewVmCreate((GuestMapping)ev.getData());
         } else if (tag == ContainerCloudSimTags.CONTAINER_CREATE_ACK) {
             processContainerCreate(ev);
             // VM Creation answer
@@ -154,25 +155,18 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 
     }
 
-    protected void processNewVmCreate(SimEvent ev) {
-        Map<String, Object> map = (Map<String, Object>) ev.getData();
-        int datacenterId = (int) map.get("datacenterID");
-        int result = (int) map.get("result");
-        GuestEntity containerVm = (ContainerVm) map.get("vm");
+    protected void processNewVmCreate(GuestMapping map) {
+        int datacenterId = map.datacenterId();
+        GuestEntity containerVm = (ContainerVm) map.vm();
         int vmId = containerVm.getId();
-        if (result == CloudSimTags.TRUE) {
-            GuestEntity guest = VmList.getById(getGuestsCreatedList(), vmId);
+        GuestEntity guest = VmList.getById(getGuestsCreatedList(), vmId);
 
-            getGuestList().add(containerVm);
-            getVmsToDatacentersMap().put(vmId, datacenterId);
-            getGuestsCreatedList().add(containerVm);
-            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
+        getGuestList().add(containerVm);
+        getVmsToDatacentersMap().put(vmId, datacenterId);
+        getGuestsCreatedList().add(containerVm);
+        Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
                     " has been created in Datacenter #", datacenterId, ", Host #",
                     guest.getHost().getId());
-        } else {
-            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Creation of VM #", vmId,
-                    " failed in Datacenter #", datacenterId);
-        }
     }
 
     /**

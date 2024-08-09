@@ -120,7 +120,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * @return the array list< hash map< string, object>>
 	 */
 	@Override
-	public List<Map<String, Object>> optimizeAllocation(List<? extends GuestEntity> vmList) {
+	public List<GuestMapping> optimizeAllocation(List<? extends GuestEntity> vmList) {
 		ExecutionTimeMeasurer.start("optimizeAllocationTotal");
 
 		ExecutionTimeMeasurer.start("optimizeAllocationHostSelection");
@@ -138,7 +138,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 
 		Log.println("Reallocation of VMs from the over-utilized hosts:");
 		ExecutionTimeMeasurer.start("optimizeAllocationVmReallocation");
-		List<Map<String, Object>> migrationMap = getNewVmPlacement(vmsToMigrate, new HashSet<>(overUtilizedHosts));
+		List<GuestMapping> migrationMap = getNewVmPlacement(vmsToMigrate, new HashSet<>(overUtilizedHosts));
 		getExecutionTimeHistoryVmReallocation().add(
 				ExecutionTimeMeasurer.end("optimizeAllocationVmReallocation"));
 		Log.println();
@@ -158,9 +158,9 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * @param overUtilizedHosts the over utilized hosts
 	 * @return the migration map from under utilized hosts
 	 */
-	protected List<Map<String, Object>> getMigrationMapFromUnderUtilizedHosts(
+	protected List<GuestMapping> getMigrationMapFromUnderUtilizedHosts(
 			List<PowerHost> overUtilizedHosts) {
-		List<Map<String, Object>> migrationMap = new LinkedList<>();
+		List<GuestMapping> migrationMap = new LinkedList<>();
 		List<PowerHost> switchedOffHosts = getSwitchedOffHosts();
 
 		// over-utilized hosts + hosts that are selected to migrate VMs to from over-utilized hosts
@@ -204,7 +204,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 			}
 			Log.println();
 
-			List<Map<String, Object>> newVmPlacement = getNewVmPlacementFromUnderUtilizedHost(
+			List<GuestMapping> newVmPlacement = getNewVmPlacementFromUnderUtilizedHost(
 					vmsToMigrateFromUnderUtilizedHost,
 					excludedHostsForFindingNewVmPlacement);
 
@@ -304,10 +304,10 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * @param migrationMap the migration map
 	 * @return the list
 	 */
-	protected List<PowerHost> extractHostListFromMigrationMap(List<Map<String, Object>> migrationMap) {
+	protected List<PowerHost> extractHostListFromMigrationMap(List<GuestMapping> migrationMap) {
 		List<PowerHost> hosts = new LinkedList<>();
-		for (Map<String, Object> map : migrationMap) {
-			hosts.add((PowerHost) map.get("host"));
+		for (GuestMapping map : migrationMap) {
+			hosts.add((PowerHost) map.host());
 		}
 		return hosts;
 	}
@@ -319,21 +319,17 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * @param excludedHosts the list of hosts that aren't selected as destination hosts
 	 * @return the new vm placement map
 	 */
-	protected List<Map<String, Object>> getNewVmPlacement(
+	protected List<GuestMapping> getNewVmPlacement(
 			List<GuestEntity> vmsToMigrate,
 			Set<HostEntity> excludedHosts) {
-		List<Map<String, Object>> migrationMap = new LinkedList<>();
+		List<GuestMapping> migrationMap = new LinkedList<>();
 		VmList.sortByCpuUtilization(vmsToMigrate);
 		for (GuestEntity vm : vmsToMigrate) {
 			PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
 			if (allocatedHost != null) {
 				allocatedHost.guestCreate(vm);
 				Log.printlnConcat("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
-
-				Map<String, Object> migrate = new HashMap<>();
-				migrate.put("vm", vm);
-				migrate.put("host", allocatedHost);
-				migrationMap.add(migrate);
+				migrationMap.add(new GuestMapping(vm, allocatedHost));
 			}
 		}
 		return migrationMap;
@@ -346,25 +342,21 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * @param excludedHosts the list of hosts that aren't selected as destination hosts
 	 * @return the new vm placement from under utilized host
 	 */
-	protected List<Map<String, Object>> getNewVmPlacementFromUnderUtilizedHost(
+	protected List<GuestMapping> getNewVmPlacementFromUnderUtilizedHost(
 			List<? extends GuestEntity> vmsToMigrate,
 			Set<? extends HostEntity> excludedHosts) {
-		List<Map<String, Object>> migrationMap = new LinkedList<>();
+		List<GuestMapping> migrationMap = new LinkedList<>();
 		VmList.sortByCpuUtilization(vmsToMigrate);
 		for (GuestEntity vm : vmsToMigrate) {
 			PowerHost allocatedHost = findHostForGuest(vm, excludedHosts);
 			if (allocatedHost != null) {
 				allocatedHost.guestCreate(vm);
 				Log.printlnConcat("VM #", vm.getId(), " allocated to host #", allocatedHost.getId());
-
-				Map<String, Object> migrate = new HashMap<>();
-				migrate.put("vm", vm);
-				migrate.put("host", allocatedHost);
-				migrationMap.add(migrate);
+				migrationMap.add(new GuestMapping(vm, allocatedHost));
 			} else {
 				Log.println("Not all VMs can be reallocated from the host, reallocation cancelled");
-				for (Map<String, Object> map : migrationMap) {
-					((Host) map.get("host")).guestDestroy((Vm) map.get("vm"));
+				for (GuestMapping map : migrationMap) {
+					(map.host()).guestDestroy(map.vm());
 				}
 				migrationMap.clear();
 				break;

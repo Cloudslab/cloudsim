@@ -1,8 +1,7 @@
 package org.cloudbus.cloudsim.container.core;
 
-//import cloudSimGr.containerCloudSim.Experiments.HelperEx;
-//import cloudSimGr.containerCloudSim.Experiments.Paper1.RunnerAbs;
 import org.cloudbus.cloudsim.*;
+import org.cloudbus.cloudsim.VmAllocationPolicy.GuestMapping;
 import org.cloudbus.cloudsim.container.utils.CustomCSVWriter;
 import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.core.predicates.PredicateType;
@@ -11,7 +10,6 @@ import org.cloudbus.cloudsim.power.PowerHost;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sareh on 20/07/15.
@@ -120,14 +118,14 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
             double minTime = updateCloudetProcessingWithoutSchedulingFutureEventsForce();
 
             if (!isDisableVmMigrations()) {
-                List<Map<String, Object>> migrationMap = getVmAllocationPolicy().optimizeAllocation(
+                List<GuestMapping> migrationMap = getVmAllocationPolicy().optimizeAllocation(
                         getVmList());
                 int previousMigrationCount = getVmMigrationCount();
                 if (migrationMap != null) {
-                    for (Map<String, Object> migrate : migrationMap) {
-                        GuestEntity vm = (GuestEntity) migrate.get("vm");
-                        PowerHost targetHost = (PowerHost) migrate.get("host");
-                        PowerHost oldHost = (PowerHost) vm.getHost();
+                    for (GuestMapping migrate : migrationMap) {
+                        GuestEntity vm = migrate.vm();
+                        PowerHost targetHost = (PowerHost) migrate.host();
+                        PowerHost oldHost = vm.getHost();
 
                         if (oldHost == null) {
                             Log.formatLine(
