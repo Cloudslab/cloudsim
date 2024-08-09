@@ -75,7 +75,7 @@ public class PowerContainerVm extends ContainerVm implements PowerGuestEntity {
     @Override
     public double updateCloudletsProcessing(final double currentTime, final List<Double> mipsShare) {
         double time = super.updateCloudletsProcessing(currentTime, mipsShare);
-        if (currentTime > getPreviousTime() && (currentTime - 0.2) % getSchedulingInterval() == 0) {
+        if (currentTime - getPreviousTime() >= getSchedulingInterval()) {
             double utilization = 0;
 
             for (GuestEntity container : getGuestList()) {

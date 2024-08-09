@@ -79,7 +79,7 @@ public class PowerVm extends Vm implements PowerGuestEntity {
 	@Override
 	public double updateCloudletsProcessing(final double currentTime, final List<Double> mipsShare) {
 		double time = super.updateCloudletsProcessing(currentTime, mipsShare);
-		if (currentTime > getPreviousTime() && (currentTime - 0.1) % getSchedulingInterval() == 0) {
+		if (currentTime - getPreviousTime() >= getSchedulingInterval()) {
 			double utilization = getTotalUtilizationOfCpu(getCloudletScheduler().getPreviousTime());
 			if (CloudSim.clock() != 0 || utilization != 0) {
 				addUtilizationHistoryValue(utilization);
