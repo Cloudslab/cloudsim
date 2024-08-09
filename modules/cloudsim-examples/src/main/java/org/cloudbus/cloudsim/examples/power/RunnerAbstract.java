@@ -294,7 +294,7 @@ public abstract class RunnerAbstract {
 	 * @param vmSelectionPolicyName the vm selection policy name
 	 * @return the vm selection policy
 	 */
-	protected <T> SelectionPolicy<T> getVmSelectionPolicy(String vmSelectionPolicyName) {
+	protected <T extends GuestEntity> SelectionPolicy<T> getVmSelectionPolicy(String vmSelectionPolicyName) {
 		SelectionPolicy<T> vmSelectionPolicy = null;
 		switch (vmSelectionPolicyName) {
 			case "mc":

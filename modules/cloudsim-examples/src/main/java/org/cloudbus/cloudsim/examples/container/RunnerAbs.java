@@ -6,13 +6,10 @@ import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerCo
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMC;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized;
 import org.cloudbus.cloudsim.VmAllocationWithSelectionPolicy;
-import org.cloudbus.cloudsim.core.PowerGuestEntity;
+import org.cloudbus.cloudsim.core.*;
 import org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation2;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMaximumUsage;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.GuestEntity;
-import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.selectionPolicies.*;
 
 import java.io.File;
@@ -339,12 +336,12 @@ public abstract class RunnerAbs {
 
 
     // @TODO: Remo Andreoli: is this use of generics correct?
-    protected <T> SelectionPolicy<T> getContainerSelectionPolicy(String containerSelectionPolicyName) {
+    protected <T extends GuestEntity> SelectionPolicy<T> getContainerSelectionPolicy(String containerSelectionPolicyName) {
         SelectionPolicy<T> containerSelectionPolicy = null;
         if (containerSelectionPolicyName.equals("Cor")) {
             containerSelectionPolicy = (SelectionPolicy<T>) new PowerSelectionPolicyMaximumCorrelation2(new SelectionPolicyMaximumUsage());
         } else if (containerSelectionPolicyName.equals("MaxUsage")) {
-            containerSelectionPolicy = (SelectionPolicy<T>) new SelectionPolicyMaximumUsage();
+            containerSelectionPolicy = new SelectionPolicyMaximumUsage<>();
         }
 // else if(vmSelectionPolicyName.equals("mmt")) {
 //            vmSelectionPolicy = new SelectionPolicyMinimumMigrationTime();
@@ -362,12 +359,12 @@ public abstract class RunnerAbs {
     }
 
     // @TODO: Remo Andreoli: is this use of generics correct?
-    protected <T> SelectionPolicy<T> getVmSelectionPolicy(String vmSelectionPolicyName) {
+    protected <T extends GuestEntity> SelectionPolicy<T> getVmSelectionPolicy(String vmSelectionPolicyName) {
         SelectionPolicy<T> vmSelectionPolicy = null;
         if (vmSelectionPolicyName.equals("VmMaxC")) {
             vmSelectionPolicy = (SelectionPolicy<T>) new PowerSelectionPolicyMaximumCorrelation(new SelectionPolicyMaximumUsage());
         } else if (vmSelectionPolicyName.equals("VmMaxU")) {
-            vmSelectionPolicy = (SelectionPolicy<T>) new SelectionPolicyMaximumUsage();
+            vmSelectionPolicy = new SelectionPolicyMaximumUsage<>();
         }
 // else if(vmSelectionPolicyName.equals("mmt")) {
 //            vmSelectionPolicy = new SelectionPolicyMinimumMigrationTime();

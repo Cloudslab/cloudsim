@@ -1,5 +1,7 @@
 package org.cloudbus.cloudsim.selectionPolicies;
 
+import org.cloudbus.cloudsim.core.CoreAttributes;
+
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +15,7 @@ import java.util.Set;
  * @since CloudSim toolkit 7.0
  */
 
-public interface SelectionPolicy<CandidateEntity> {
+public interface SelectionPolicy<T> {
     /**
      * Select a host from the hostCandidates list, ignoring the hosts in the excluded list.
      *
@@ -22,5 +24,5 @@ public interface SelectionPolicy<CandidateEntity> {
      * @param excludedCandidates candidates to be ignored from list
      * @return the selected entity
      */
-    CandidateEntity select(List<CandidateEntity> candidates, Object obj, Set<CandidateEntity> excludedCandidates);
+    T select(List<T> candidates, Object obj, Set<T> excludedCandidates);
 }

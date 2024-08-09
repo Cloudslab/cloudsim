@@ -9,17 +9,17 @@ import java.util.Set;
  * Created by sareh on 16/11/15.
  * Modified by Remo Andreoli (Feb 2024)
  */
-public class SelectionPolicyMaximumUsage implements SelectionPolicy<GuestEntity> {
+public class SelectionPolicyMaximumUsage<T extends GuestEntity> implements SelectionPolicy<T> {
     @Override
-    public GuestEntity select(List<GuestEntity> candidates, Object obj, Set<GuestEntity> excludedCandidates) {
+    public T select(List<T> candidates, Object obj, Set<T> excludedCandidates) {
         if (candidates.isEmpty()) {
             return null;
         }
 
-        GuestEntity selectedGuest = null;
+        T selectedGuest = null;
         double maxMetric = Double.MIN_VALUE;
 
-        for (GuestEntity guest : candidates) {
+        for (T guest : candidates) {
             if (guest.isInMigration()) {
                 continue;
             }

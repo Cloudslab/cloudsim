@@ -132,7 +132,7 @@ public class ContainerCloudSimExample1 {
              *
              */
 
-            SelectionPolicy<GuestEntity> vmSelectionPolicy = new SelectionPolicyMaximumUsage();
+            SelectionPolicy<GuestEntity> vmSelectionPolicy = new SelectionPolicyMaximumUsage<>();
 
 
             /**

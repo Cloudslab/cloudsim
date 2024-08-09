@@ -40,14 +40,14 @@ public class PowerSelectionPolicyMaximumCorrelation implements SelectionPolicy<P
 
 	/** The fallback VM selection policy to be used when
          * the  Maximum Correlation policy doesn't have data to be computed. */
-	private SelectionPolicy<GuestEntity> fallbackPolicy;
+	private SelectionPolicy<PowerGuestEntity> fallbackPolicy;
 
 	/**
 	 * Instantiates a new PowerSelectionPolicyMaximumCorrelation.
 	 * 
 	 * @param fallbackPolicy the fallback policy
 	 */
-	public PowerSelectionPolicyMaximumCorrelation(final SelectionPolicy<GuestEntity> fallbackPolicy) {
+	public PowerSelectionPolicyMaximumCorrelation(final SelectionPolicy<PowerGuestEntity> fallbackPolicy) {
 		super();
 		setFallbackPolicy(fallbackPolicy);
 	}
@@ -62,10 +62,7 @@ public class PowerSelectionPolicyMaximumCorrelation implements SelectionPolicy<P
 		try {
 			metrics = getCorrelationCoefficients(getUtilizationMatrix(candidates));
 		} catch (IllegalArgumentException e) { // the degrees of freedom must be greater than zero
-			List<GuestEntity> baseCandidates = candidates.stream().map(c -> (GuestEntity) c).toList();
-			Set<GuestEntity> baseExcludedCandidates = excludedCandidates.stream().map(xc -> (GuestEntity) xc).collect(Collectors.toSet());
-
-			return (PowerGuestEntity) getFallbackPolicy().select(baseCandidates, host, baseExcludedCandidates);
+			return getFallbackPolicy().select(candidates, host, excludedCandidates);
 		}
 		double maxMetric = Double.MIN_VALUE;
 		int maxIndex = 0;
@@ -156,7 +153,7 @@ public class PowerSelectionPolicyMaximumCorrelation implements SelectionPolicy<P
 	 * 
 	 * @return the fallback policy
 	 */
-	public SelectionPolicy<GuestEntity> getFallbackPolicy() {
+	public SelectionPolicy<PowerGuestEntity> getFallbackPolicy() {
 		return fallbackPolicy;
 	}
 
@@ -165,7 +162,7 @@ public class PowerSelectionPolicyMaximumCorrelation implements SelectionPolicy<P
 	 * 
 	 * @param fallbackPolicy the new fallback policy
 	 */
-	public void setFallbackPolicy(final SelectionPolicy<GuestEntity> fallbackPolicy) {
+	public void setFallbackPolicy(final SelectionPolicy<PowerGuestEntity> fallbackPolicy) {
 		this.fallbackPolicy = fallbackPolicy;
 	}
 }

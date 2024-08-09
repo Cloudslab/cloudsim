@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
  */
 public class PowerSelectionPolicyMinimumCorrelation implements SelectionPolicy<PowerHostEntity> {
 
-    private SelectionPolicy<HostEntity> fallbackPolicy;
+    private SelectionPolicy<PowerHostEntity> fallbackPolicy;
 
-    public PowerSelectionPolicyMinimumCorrelation(final SelectionPolicy<HostEntity> fallbackPolicy) {
+    public PowerSelectionPolicyMinimumCorrelation(final SelectionPolicy<PowerHostEntity> fallbackPolicy) {
         super();
         setFallbackPolicy(fallbackPolicy);
     }
@@ -54,22 +54,17 @@ public class PowerSelectionPolicyMinimumCorrelation implements SelectionPolicy<P
 
         if (selectedHost == null) {
             Log.printlnConcat(CloudSim.clock()+": "+getClass().getSimpleName()+": fallback activated (No host found)");
-            List<HostEntity> baseCandidates = candidates.stream().map(c -> (HostEntity) c).toList();
-            Set<HostEntity> baseExcludedCandidates = excludedCandidates.stream().map(xc -> (HostEntity) xc).collect(Collectors.toSet());
-
-            selectedHost = (PowerHostEntity) fallbackPolicy.select(baseCandidates, obj, baseExcludedCandidates);
+            selectedHost = fallbackPolicy.select(candidates, obj, excludedCandidates);
         }
         return selectedHost;
     }
 
 
-    public SelectionPolicy getFallbackPolicy() {
+    public SelectionPolicy<PowerHostEntity> getFallbackPolicy() {
         return fallbackPolicy;
     }
 
-    public void setFallbackPolicy(SelectionPolicy fallbackPolicy) {
-        this.fallbackPolicy = fallbackPolicy;
-    }
+    public void setFallbackPolicy(SelectionPolicy<PowerHostEntity> fallbackPolicy) { this.fallbackPolicy = fallbackPolicy; }
 
 
 }

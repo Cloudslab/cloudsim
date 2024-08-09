@@ -21,14 +21,14 @@ public class PowerSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<
     /**
      * The fallback policy.
      */
-    private SelectionPolicy<GuestEntity> fallbackPolicy;
+    private SelectionPolicy<PowerGuestEntity> fallbackPolicy;
 
     /**
      * Instantiates a new power vm selection policy maximum correlation.
      *
      * @param fallbackPolicy the fallback policy
      */
-    public PowerSelectionPolicyMaximumCorrelation2(final SelectionPolicy<GuestEntity> fallbackPolicy) {
+    public PowerSelectionPolicyMaximumCorrelation2(final SelectionPolicy<PowerGuestEntity> fallbackPolicy) {
         super();
         setFallbackPolicy(fallbackPolicy);
     }
@@ -43,10 +43,7 @@ public class PowerSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<
 //            Log.printConcatLine("We have to migrate the container with ID", container.getId());
             return selectedGuest;
         } else {
-            List<GuestEntity> baseCandidates = candidates.stream().map(c -> (GuestEntity) c).toList();
-            Set<GuestEntity> baseExcludedCandidates = excludedCandidates.stream().map(xc -> (GuestEntity) xc).collect(Collectors.toSet());
-
-            return (PowerGuestEntity) getFallbackPolicy().select(baseCandidates, host, baseExcludedCandidates);
+            return getFallbackPolicy().select(candidates, host, excludedCandidates);
         }
     }
 
@@ -55,7 +52,7 @@ public class PowerSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<
      *
      * @return the fallback policy
      */
-    public SelectionPolicy<GuestEntity> getFallbackPolicy() {
+    public SelectionPolicy<PowerGuestEntity> getFallbackPolicy() {
         return fallbackPolicy;
     }
 
@@ -65,7 +62,7 @@ public class PowerSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<
      *
      * @param fallbackPolicy the new fallback policy
      */
-    public void setFallbackPolicy(final SelectionPolicy<GuestEntity> fallbackPolicy) {
+    public void setFallbackPolicy(final SelectionPolicy<PowerGuestEntity> fallbackPolicy) {
         this.fallbackPolicy = fallbackPolicy;
     }
 
