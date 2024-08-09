@@ -53,9 +53,14 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
          */
 	private final List<Map<String, Object>> savedAllocation = new ArrayList<>();
 
+	private void growIfNeeded(List<List<Double>> l, int idx) {
+		for (int i = l.size(); i <= idx; i++)
+			l.add(null);
+	}
+
 	/** A map of CPU utilization history (in percentage) for each host,
          where each key is a host id and each value is the CPU utilization percentage history.*/
-	private final Map<Integer, List<Double>> utilizationHistory = new HashMap<>();
+    private final List<List<Double>> utilizationHistory = new ArrayList<>();
 
 	/** 
          * The metric history. 
@@ -63,12 +68,12 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
          * other it stores utilization threshold or predicted utilization, that
          * is very confusing.
          */
-	private final Map<Integer, List<Double>> metricHistory = new HashMap<>();
+	private final List<List<Double>> metricHistory = new ArrayList<>();
 
 	/** The time when entries in each history list was added. 
          * All history lists are updated at the same time.
          */
-	private final Map<Integer, List<Double>> timeHistory = new HashMap<>();
+	private final List<List<Double>> timeHistory = new ArrayList<>();
 
 	/** The history of time spent in VM selection 
          * every time the optimization of VM allocation method is called. 
@@ -496,19 +501,22 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 */
 	protected void addHistoryEntry(HostDynamicWorkload host, double metric) {
 		int hostId = host.getId();
-		if (!getTimeHistory().containsKey(hostId)) {
-			getTimeHistory().put(hostId, new LinkedList<>());
+		growIfNeeded(timeHistory, hostId);
+		if (timeHistory.get(hostId) == null) {
+			timeHistory.set(hostId, new ArrayList<Double>());
 		}
-		if (!getUtilizationHistory().containsKey(hostId)) {
-			getUtilizationHistory().put(hostId, new LinkedList<>());
+		growIfNeeded(utilizationHistory, hostId);
+		if (utilizationHistory.get(hostId) == null) {
+			utilizationHistory.set(hostId, new ArrayList<Double>());
 		}
-		if (!getMetricHistory().containsKey(hostId)) {
-			getMetricHistory().put(hostId, new LinkedList<>());
+		growIfNeeded(metricHistory, hostId);
+		if (metricHistory.get(hostId) == null) {
+			metricHistory.set(hostId, new ArrayList<Double>());
 		}
-		if (!getTimeHistory().get(hostId).contains(CloudSim.clock())) {
-			getTimeHistory().get(hostId).add(CloudSim.clock());
-			getUtilizationHistory().get(hostId).add(host.getUtilizationOfCpu());
-			getMetricHistory().get(hostId).add(metric);
+		if (timeHistory.get(hostId).size() == 0 || timeHistory.get(hostId).getLast() < CloudSim.clock()) {
+			timeHistory.get(hostId).add(CloudSim.clock());
+			utilizationHistory.get(hostId).add(host.getUtilizationOfCpu());
+			metricHistory.get(hostId).add(metric);
 		}
 	}
 
@@ -641,8 +649,10 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * 
 	 * @return the utilization history
 	 */
-	public Map<Integer, List<Double>> getUtilizationHistory() {
-		return utilizationHistory;
+	public List<Double> getUtilizationHistory(int hostId) {
+		if (hostId >= utilizationHistory.size())
+			return null;
+		return utilizationHistory.get(hostId);
 	}
 
 	/**
@@ -650,8 +660,10 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * 
 	 * @return the metric history
 	 */
-	public Map<Integer, List<Double>> getMetricHistory() {
-		return metricHistory;
+	public List<Double> getMetricHistory(int hostId) {
+		if (hostId >= metricHistory.size())
+			return null;
+		return metricHistory.get(hostId);
 	}
 
 	/**
@@ -659,8 +671,10 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * 
 	 * @return the time history
 	 */
-	public Map<Integer, List<Double>> getTimeHistory() {
-		return timeHistory;
+	public List<Double> getTimeHistory(int hostId) {
+		if (hostId >= timeHistory.size())
+			return null;
+		return timeHistory.get(hostId);
 	}
 
 	/**

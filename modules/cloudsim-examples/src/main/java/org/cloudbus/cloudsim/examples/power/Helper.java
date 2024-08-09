@@ -679,7 +679,7 @@ public class Helper {
 		for (int j = 0; j < 10; j++) {
 			Host host = hosts.get(j);
 
-			if (!vmAllocationPolicy.getTimeHistory().containsKey(host.getId())) {
+			if (vmAllocationPolicy.getTimeHistory(host.getId()) == null) {
 				continue;
 			}
 			File file = new File(outputPath + "_" + host.getId() + ".csv");
@@ -691,9 +691,9 @@ public class Helper {
 			}
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-				List<Double> timeData = vmAllocationPolicy.getTimeHistory().get(host.getId());
-				List<Double> utilizationData = vmAllocationPolicy.getUtilizationHistory().get(host.getId());
-				List<Double> metricData = vmAllocationPolicy.getMetricHistory().get(host.getId());
+				List<Double> timeData = vmAllocationPolicy.getTimeHistory(host.getId());
+				List<Double> utilizationData = vmAllocationPolicy.getUtilizationHistory(host.getId());
+				List<Double> metricData = vmAllocationPolicy.getMetricHistory(host.getId());
 
 				for (int i = 0; i < timeData.size(); i++) {
 					writer.write(String.format(
@@ -753,20 +753,20 @@ public class Helper {
 
 			Log.println("Host #" + host.getId());
 			Log.println("Time:");
-			if (!vmAllocationPolicy.getTimeHistory().containsKey(host.getId())) {
+			if (vmAllocationPolicy.getTimeHistory(host.getId()) == null) {
 				continue;
 			}
-			for (Double time : vmAllocationPolicy.getTimeHistory().get(host.getId())) {
+			for (Double time : vmAllocationPolicy.getTimeHistory(host.getId())) {
 				Log.format("%.2f, ", time);
 			}
 			Log.println();
 
-			for (Double utilization : vmAllocationPolicy.getUtilizationHistory().get(host.getId())) {
+			for (Double utilization : vmAllocationPolicy.getUtilizationHistory(host.getId())) {
 				Log.format("%.2f, ", utilization);
 			}
 			Log.println();
 
-			for (Double metric : vmAllocationPolicy.getMetricHistory().get(host.getId())) {
+			for (Double metric : vmAllocationPolicy.getMetricHistory(host.getId())) {
 				Log.format("%.2f, ", metric);
 			}
 			Log.println();
