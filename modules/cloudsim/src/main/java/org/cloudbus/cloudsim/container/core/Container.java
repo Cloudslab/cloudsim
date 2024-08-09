@@ -71,7 +71,7 @@ public class Container implements GuestEntity {
     private boolean beingInstantiated;
 
     /** The mips allocation history. */
-    private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
+    private final List<VmStateHistoryEntry> stateHistory = new ArrayList<>();
 
 //    added from the power Vm
     /**
@@ -80,7 +80,7 @@ public class Container implements GuestEntity {
     public static final int HISTORY_LENGTH = 30;
 
     /** The utilization history. */
-    private final List<Double> utilizationHistory = new LinkedList<>();
+    private final List<Double> utilizationHistory = new ArrayList<>();
 
     /**
      * The previous time.

@@ -9,7 +9,7 @@ import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 import org.cloudbus.cloudsim.util.MathUtil;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public class PowerContainerVm extends ContainerVm implements PowerGuestEntity {
     /**
      * The utilization history.
      */
-    private final List<Double> utilizationHistory = new LinkedList<>();
+    private final List<Double> utilizationHistory = new ArrayList<>();
 
     /**
      * The previous time.

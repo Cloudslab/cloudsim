@@ -8,7 +8,7 @@
 
 package org.cloudbus.cloudsim.power;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.CloudletScheduler;
@@ -36,7 +36,7 @@ import org.cloudbus.cloudsim.util.MathUtil;
  */
 public class PowerVm extends Vm implements PowerGuestEntity {
 	/** The CPU utilization percentage history. */
-	private final List<Double> utilizationHistory = new LinkedList<>();
+	private final List<Double> utilizationHistory = new ArrayList<>();
 
 	/** The previous time that cloudlets were processed. */
 	private double previousTime;

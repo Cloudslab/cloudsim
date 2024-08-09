@@ -79,25 +79,25 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
          * every time the optimization of VM allocation method is called. 
          * @see #optimizeAllocation(java.util.List) 
          */
-	private final List<Double> executionTimeHistoryVmSelection = new LinkedList<>();
+	private final List<Double> executionTimeHistoryVmSelection = new ArrayList<>();
 
 	/** The history of time spent in host selection 
          * every time the optimization of VM allocation method is called. 
          * @see #optimizeAllocation(java.util.List) 
          */
-	private final List<Double> executionTimeHistoryHostSelection = new LinkedList<>();
+	private final List<Double> executionTimeHistoryHostSelection = new ArrayList<>();
 
 	/** The history of time spent in VM reallocation 
          * every time the optimization of VM allocation method is called. 
          * @see #optimizeAllocation(java.util.List) 
          */
-	private final List<Double> executionTimeHistoryVmReallocation = new LinkedList<>();
+	private final List<Double> executionTimeHistoryVmReallocation = new ArrayList<>();
 
 	/** The history of total time spent in every call of the 
          * optimization of VM allocation method. 
          * @see #optimizeAllocation(java.util.List) 
          */
-	private final List<Double> executionTimeHistoryTotal = new LinkedList<>();
+	private final List<Double> executionTimeHistoryTotal = new ArrayList<>();
 
 	/**
 	 * Instantiates a new PowerVmAllocationPolicyMigrationAbstract.

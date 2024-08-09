@@ -46,22 +46,22 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
     /**
      * The execution time history vm selection.
      */
-    private final List<Double> executionTimeHistoryVmSelection = new LinkedList<>();
+    private final List<Double> executionTimeHistoryVmSelection = new ArrayList<>();
 
     /**
      * The execution time history host selection.
      */
-    private final List<Double> executionTimeHistoryHostSelection = new LinkedList<>();
+    private final List<Double> executionTimeHistoryHostSelection = new ArrayList<>();
 
     /**
      * The execution time history vm reallocation.
      */
-    private final List<Double> executionTimeHistoryVmReallocation = new LinkedList<>();
+    private final List<Double> executionTimeHistoryVmReallocation = new ArrayList<>();
 
     /**
      * The execution time history total.
      */
-    private final List<Double> executionTimeHistoryTotal = new LinkedList<>();
+    private final List<Double> executionTimeHistoryTotal = new ArrayList<>();
 
     /**
      * Instantiates a new power vm allocation policy migration abstract.

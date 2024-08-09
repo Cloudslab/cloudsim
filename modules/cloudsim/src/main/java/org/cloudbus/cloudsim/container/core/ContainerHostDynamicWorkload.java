@@ -9,7 +9,6 @@ import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ public class ContainerHostDynamicWorkload extends Host {
         private double previousUtilizationMips;
 
         /** The state history. */
-        private final List<HostStateHistoryEntry> stateHistory = new LinkedList<>();
+        private final List<HostStateHistoryEntry> stateHistory = new ArrayList<>();
 
         /**
          * Instantiates a new host.
