@@ -30,7 +30,12 @@ public class CloudletList {
 	 * @return a Cloudlet with the given ID or $null if not found
 	 */
 	public static <T extends Cloudlet> T getById(List<T> cloudletList, int id) {
-		return cloudletList.stream().filter(cloudlet -> cloudlet.getCloudletId() == id).findFirst().orElse(null);
+		for (T cl : cloudletList) {
+			if (cl.getCloudletId() == id) {
+				return cl;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -52,7 +57,12 @@ public class CloudletList {
 			List<T> list,
 			int cloudletId,
 			int userId) {
-		return list.stream().filter(cl -> cl.getCloudletId() == cloudletId && cl.getUserId() == userId).findFirst().map(cl -> cl).orElse(null);
+		for (T cl : list) {
+			if (cl.getCloudletId() == cloudletId && cl.getUserId() == userId) {
+				return cl;
+			}
+		}
+		return null;
 	}
 
 	/**

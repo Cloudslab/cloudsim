@@ -50,15 +50,12 @@ public class VmList {
          * that has to be priorly assessed.
 	 */
 	public static <T extends GuestEntity> T getById(List<T> vmList, int id) {
-		return vmList.stream().filter(vm -> vm.getId() == id).findFirst().orElse(null);
-
-		/** Old, imperative implementation
 		for (T vm : vmList) {
 			if (vm.getId() == id) {
 				return vm;
 			}
 		}
-		return null; */
+		return null;
 	}
 
 	/**
@@ -72,16 +69,12 @@ public class VmList {
 	 * @post $none
 	 */
 	public static <T extends GuestEntity> T getByIdAndUserId(List<T> vmList, int id, int userId) {
-		return vmList.stream().filter(container -> container.getId() == id && container.getUserId() == userId)
-				.findFirst().orElse(null);
-
-		/** Old, imperative implementation
 		for (T vm : vmList) {
 			if (vm.getId() == id && vm.getUserId() == userId) {
 				return vm;
 			}
 		}
-		return null; */
+		return null;
 	}
 
 	/**

@@ -71,7 +71,11 @@ public class PeList {
 	 * @post $none
 	 */
 	public static <T extends Pe> int getTotalMips(List<T> peList) {
-		return peList.stream().mapToInt(Pe::getMips).sum();
+		int totalMips = 0;
+		for (Pe pe : peList) {
+			totalMips += pe.getMips();
+		}
+		return totalMips;
 	}
 
 	/**
@@ -121,7 +125,12 @@ public class PeList {
 	 * @post $none
 	 */
 	public static <T extends Pe> Pe getFreePe(List<T> peList) {
-		return peList.stream().filter(pe -> pe.getStatus() == Pe.FREE).findFirst().orElse(null);
+		for (T pe : peList) {
+			if (pe.getStatus() == Pe.FREE) {
+				return pe;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -133,7 +142,13 @@ public class PeList {
 	 * @post $result >= 0
 	 */
 	public static <T extends Pe> int getNumberOfFreePes(List<T> peList) {
-		return (int) peList.stream().filter(pe -> pe.getStatus() == Pe.FREE).count();
+		int numberOfFreePes = 0;
+		for (T pe : peList) {
+			if (pe.getStatus() == Pe.FREE) {
+				numberOfFreePes++;
+			}
+		}
+		return numberOfFreePes;
 	}
 
 	/**
@@ -165,7 +180,13 @@ public class PeList {
 	 * @post $result >= 0
 	 */
 	public static <T extends Pe> int getNumberOfBusyPes(List<T> peList) {
-		return (int) peList.stream().filter(pe -> pe.getStatus() == Pe.BUSY).count();
+		int numberOfBusyPes = 0;
+		for (T pe : peList) {
+			if (pe.getStatus() == Pe.BUSY) {
+				numberOfBusyPes++;
+			}
+		}
+		return numberOfBusyPes;
 	}
 
 	/**

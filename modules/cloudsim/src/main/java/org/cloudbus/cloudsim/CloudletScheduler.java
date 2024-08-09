@@ -9,6 +9,7 @@
 package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -471,7 +472,8 @@ public abstract class CloudletScheduler {
 	 * @param currentMipsShare the new current mips share
 	 */
 	protected void setCurrentMipsShare(List<Double> currentMipsShare) {
-		this.currentMipsShare = currentMipsShare.stream().filter(mips -> mips > 0).toList();
+        currentMipsShare.removeIf(mips -> mips <= 0);
+		this.currentMipsShare = currentMipsShare;
 	}
 
 	/**
@@ -487,9 +489,12 @@ public abstract class CloudletScheduler {
 	 * 	@ASSUMPTION: all PEs have the same capacity.
 	 */
 	public double getCurrentCapacity(List<Double> mipsShare) {
-		List<Double> validMips = mipsShare.stream().filter(mips -> mips > 0).toList();
-		int cpus = validMips.size();
-		double capacity = validMips.stream().mapToDouble(Double::doubleValue).sum();
+		mipsShare.removeIf(mips -> mips <= 0);
+
+		double capacity = 0;
+		for (Double mips : mipsShare) {
+			capacity += mips;
+		}
 
 		int pesInUse = 0;
 		for (Cloudlet cl : getCloudletExecList()) {
@@ -498,6 +503,7 @@ public abstract class CloudletScheduler {
 			}
 		}
 
+		int cpus = mipsShare.size();
 		capacity /= Math.max(pesInUse, cpus);
 		return capacity;
 	}

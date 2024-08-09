@@ -40,7 +40,11 @@ public interface GuestEntity extends CoreAttributes {
      * @return the current requested total mips
      */
     default double getCurrentRequestedTotalMips() {
-        return getCurrentRequestedMips().stream().mapToDouble(Double::doubleValue).sum();
+        double totalMips = 0;
+        for (Double mips : getCurrentRequestedMips()) {
+            totalMips += mips;
+        }
+        return totalMips;
     }
 
     /**
@@ -49,7 +53,13 @@ public interface GuestEntity extends CoreAttributes {
      * @return the current requested max mips
      */
     default double getCurrentRequestedMaxMips() {
-        return getCurrentRequestedMips().stream().mapToDouble(Double::doubleValue).max().orElse(0);
+        double maxMips = 0;
+        for (Double mips : getCurrentRequestedMips()) {
+            if (mips > maxMips) {
+                maxMips = mips;
+            }
+        }
+        return maxMips;
     }
 
     /**

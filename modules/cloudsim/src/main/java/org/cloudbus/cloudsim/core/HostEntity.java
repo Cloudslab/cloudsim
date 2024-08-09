@@ -237,7 +237,14 @@ public interface HostEntity extends CoreAttributes {
      * @return the number of guest entities
      */
     default int getNumberOfGuests() {
-        return (int) getGuestList().stream().filter(guest -> !getGuestsMigratingIn().contains(guest)).count();
+        int numberOfGuests = 0;
+
+        for (GuestEntity guest : getGuestList()) {
+            if (!getGuestsMigratingIn().contains(guest)) {
+                numberOfGuests++;
+            }
+        }
+        return numberOfGuests;
     }
     /**
      * Gets the host bw.

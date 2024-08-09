@@ -8,6 +8,7 @@
 
 package org.cloudbus.cloudsim;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -47,8 +48,18 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		int finished = cloudletJustFinishedList.size();
 
 		if (!getCloudletWaitingList().isEmpty()) {
-			List<Cloudlet> toUnpause = getCloudletWaitingList().stream()
-							.filter(cl -> (getCurrentPEs() - usedPes) >= cl.getNumberOfPes()).limit(finished).toList();
+			List<Cloudlet> toUnpause = new ArrayList<>();
+			int i = 0;
+			int cnt = 0;
+
+			while (i < getCloudletWaitingList().size() && cnt <= finished) {
+				Cloudlet cl = getCloudletWaitingList().get(i);
+				if ((getCurrentPEs() - usedPes) >= cl.getNumberOfPes()) {
+					toUnpause.add(cl);
+					cnt++;
+				}
+				i++;
+			}
 
 			for (Cloudlet cl : toUnpause) {
 				cl.setStatus(Cloudlet.CloudletStatus.INEXEC);
