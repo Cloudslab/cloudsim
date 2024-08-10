@@ -9,6 +9,7 @@
 package org.cloudbus.cloudsim.provisioners;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.cloudbus.cloudsim.core.GuestEntity;
@@ -72,7 +73,8 @@ public class RamProvisionerSimple extends RamProvisioner {
 
 	@Override
 	public void deallocateRamForGuest(GuestEntity guest) {
-		if (getRamTable().containsKey(guest.getUid())) {
+		int allocatedRam = getAllocatedRamForGuest(guest);
+		if (allocatedRam > 0) {
 			int amountFreed = getRamTable().remove(guest.getUid());
 			setAvailableRam(getAvailableRam() + amountFreed);
 			guest.setCurrentAllocatedRam(0);

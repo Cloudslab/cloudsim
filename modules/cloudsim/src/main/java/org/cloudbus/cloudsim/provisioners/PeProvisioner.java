@@ -65,13 +65,12 @@ public abstract class PeProvisioner {
 	public boolean allocateMipsForVm(Vm vm, double mips) { return allocateMipsForGuest(vm, mips); }
 
 	/**
-	 * Allocates a new virtual PE with a specific capacity for a given VM.
+	 * Allocates a new virtual PE with a specific capacity for a given VM id.
 	 * 
 	 * @param vmUid the virtual machine for which the new virtual PE is being allocated
 	 * @param mips the mips to be allocated to the virtual PE of the given VM
 	 * 
 	 * @return $true if the virtual PE could be allocated; $false otherwise
-	 * 
 	 * @pre $none
 	 * @post $none
          * @see #allocateMipsForGuest(GuestEntity, double)
@@ -82,9 +81,7 @@ public abstract class PeProvisioner {
 	public boolean allocateMipsForVm(String vmUid, double mips) { return allocateMipsForGuest(vmUid, mips);}
 
 	/**
-	 * Allocates a new set of virtual PEs with a specific capacity for a given VM.
-	 * The virtual PE to be added will use the total or partial mips capacity
-	 * of the physical PE.
+	 * Allocates a new set of virtual PE with a specific capacity, replacing the old set (if any), for a given VM.
 	 *
 	 * @param guest the virtual machine for which the new virtual PE is being allocated
 	 * @param mips  the list of mips capacity of each virtual PE to be allocated to the VM

@@ -64,7 +64,8 @@ public class BwProvisionerSimple extends BwProvisioner {
 
 	@Override
 	public void deallocateBwForGuest(GuestEntity guest) {
-		if (getBwTable().containsKey(guest.getUid())) {
+		long allocatedBw = getAllocatedBwForGuest(guest);
+		if (allocatedBw > 0) {
 			long amountFreed = getBwTable().remove(guest.getUid());
 			setAvailableBw(getAvailableBw() + amountFreed);
 			guest.setCurrentAllocatedBw(0);

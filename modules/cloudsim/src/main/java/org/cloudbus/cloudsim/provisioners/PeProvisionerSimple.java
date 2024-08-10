@@ -54,36 +54,22 @@ public class PeProvisionerSimple extends PeProvisioner {
 			return false;
 		}
 
-		List<Double> allocatedMips;
+        List<Double> allocatedMips = getPeTable().computeIfAbsent(vmUid, k -> new ArrayList<>());
 
-		if (getPeTable().containsKey(vmUid)) {
-			allocatedMips = getPeTable().get(vmUid);
-		} else {
-			allocatedMips = new ArrayList<>();
-		}
-
-		allocatedMips.add(mips);
-		
+        allocatedMips.add(mips);
 		setAvailableMips(getAvailableMips() - mips);
-		getPeTable().put(vmUid, allocatedMips);
 
 		return true;
 	}
 
 	@Override
 	public boolean allocateMipsForGuest(GuestEntity guest, List<Double> mips) {
-		int totalMipsToAllocate = 0;
+		deallocateMipsForGuest(guest);
 		for (double _mips : mips) {
-			totalMipsToAllocate += _mips;
+			if (!allocateMipsForGuest(guest.getUid(), _mips)) {
+				return false;
+			}
 		}
-
-		if (getAvailableMips() + getTotalAllocatedMipsForGuest(guest) < totalMipsToAllocate) {
-			return false;
-		}
-
-		setAvailableMips(getAvailableMips() + getTotalAllocatedMipsForGuest(guest) - totalMipsToAllocate);
-
-		getPeTable().put(guest.getUid(), mips);
 
 		return true;
 	}
@@ -96,11 +82,9 @@ public class PeProvisionerSimple extends PeProvisioner {
 
 	@Override
 	public double getAllocatedMipsForGuestByVirtualPeId(GuestEntity guest, int peId) {
-		if (getPeTable().containsKey(guest.getUid())) {
-			try {
-				return getPeTable().get(guest.getUid()).get(peId);
-			} catch (Exception e) {
-			}
+		List<Double> allocatedMips = getAllocatedMipsForGuest(guest);
+		if (allocatedMips != null && peId < allocatedMips.size()) {
+			return allocatedMips.get(peId);
 		}
 		return 0;
 	}
@@ -115,9 +99,11 @@ public class PeProvisionerSimple extends PeProvisioner {
 
 	@Override
 	public double getTotalAllocatedMipsForGuest(GuestEntity guest) {
-		if (getPeTable().containsKey(guest.getUid())) {
+		List<Double> allocatedMips = getAllocatedMipsForGuest(guest);
+
+		if (allocatedMips != null) {
 			double totalAllocatedMips = 0.0;
-			for (double mips : getPeTable().get(guest.getUid())) {
+			for (double mips : allocatedMips) {
 				totalAllocatedMips += mips;
 			}
 			return totalAllocatedMips;
@@ -127,8 +113,10 @@ public class PeProvisionerSimple extends PeProvisioner {
 
 	@Override
 	public void deallocateMipsForGuest(GuestEntity guest) {
-		if (getPeTable().containsKey(guest.getUid())) {
-			for (double mips : getPeTable().get(guest.getUid())) {
+		List<Double> allocatedMips = getAllocatedMipsForGuest(guest);
+
+		if (allocatedMips != null) {
+			for (double mips : allocatedMips) {
 				setAvailableMips(getAvailableMips() + mips);
 			}
 			getPeTable().remove(guest.getUid());
@@ -153,5 +141,4 @@ public class PeProvisionerSimple extends PeProvisioner {
 	protected void setPeTable(Map<String, ? extends List<Double>> peTable) {
 		this.peTable = (Map<String, List<Double>>) peTable;
 	}
-
 }
