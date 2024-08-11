@@ -70,6 +70,9 @@ public class Cloudlet {
      */
     private int userId;
 
+    /** The Cloudlet UID */
+    private String uid;
+
     /**
      * The execution length of this Cloudlet (Unit: in Million Instructions
      * (MI)). According to this length and the power of the processor (in
@@ -440,6 +443,7 @@ public class Cloudlet {
         setUtilizationModelCpu(utilizationModelCpu);
         setUtilizationModelRam(utilizationModelRam);
         setUtilizationModelBw(utilizationModelBw);
+        updateUid();
     }
 
     /** Backward compatibility with ResCloudlet class in CloudSim6G */
@@ -793,6 +797,7 @@ public class Cloudlet {
      */
     public void setUserId(final int id) {
         userId = id;
+        updateUid();
         if (record) {
             write("Assigns the Cloudlet to " + CloudSim.getEntityName(id) + " (ID #" + id + ")");
         }
@@ -1506,7 +1511,12 @@ public class Cloudlet {
      * @return The UID
      */
     public String getUid() {
-        return getUserId() + "-" + getCloudletId();
+        return uid;
+    }
+
+    /** update uid after change of cloudletId or userId */
+    private void updateUid() {
+        uid = getUserId() + "-" + getCloudletId();
     }
 
     /**
