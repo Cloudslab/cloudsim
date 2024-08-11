@@ -164,7 +164,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
         getGuestList().add(containerVm);
         getVmsToDatacentersMap().put(vmId, datacenterId);
         getGuestsCreatedList().add(containerVm);
-        Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
+        Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": ", guest.getClassName(), " #", vmId,
                     " has been created in Datacenter #", datacenterId, ", Host #",
                     guest.getHost().getId());
     }
@@ -187,7 +187,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 
             getVmsToDatacentersMap().put(vmId, datacenterId);
             getGuestsCreatedList().add(guest);
-            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
+            Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": ", guest.getClassName(), " #", vmId,
                     " has been created in Datacenter #", datacenterId, ", Host #",
                     guest.getHost().getId());
             setNumberOfCreatedVMs(getNumberOfCreatedVMs()+1);
@@ -347,7 +347,7 @@ public class ContainerDatacenterBroker extends DatacenterBroker {
 
                 if (cloudlet.getContainerId() != container.getId()) {
                     bindCloudletToContainer(cloudlet.getCloudletId(), container.getId());
-                    Log.printlnConcat("Binding Cloudlet: ", cloudlet.getCloudletId(), " to Container: ",container.getId());
+                    Log.printlnConcat("Binding Cloudlet: ", cloudlet.getCloudletId(), " to Container: ", container.getId());
                 }
             i++;
 

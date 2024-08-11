@@ -89,8 +89,8 @@ public class NetworkTopology {
 			generateMatrices();
 		} catch (IOException e) {
 			// problem with the file. Does not simulate network
-			Log.println("Problem in processing BRITE file. Network simulation is disabled. Error: "
-					+ e.getMessage());
+			Log.printlnConcat("Problem in processing BRITE file. Network simulation is disabled. Error: ",
+					 e.getMessage());
 		}
 
 	}

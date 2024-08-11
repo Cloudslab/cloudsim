@@ -287,7 +287,7 @@ public class HarddriveStorage implements Storage {
 		// check first whether file name is valid or not
 		File obj = null;
 		if (fileName == null || fileName.length() == 0) {
-			Log.printlnConcat(name, ".getFile(): Warning - invalid " + "file name.");
+			Log.printlnConcat(name, ".getFile(): Warning - invalid file name.");
 			return obj;
 		}
 
@@ -382,7 +382,7 @@ public class HarddriveStorage implements Storage {
 
 		String fileName = file.getName();
 		if (fileName == null || fileName.length() == 0) {
-			Log.printlnConcat(name, "." + methodName, ": Warning - invalid file name.");
+			Log.printlnConcat(name, ".", methodName, ": Warning - invalid file name.");
 			return false;
 		}
 

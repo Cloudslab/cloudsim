@@ -232,11 +232,11 @@ public class DatacenterBroker extends SimEntity {
 		if (result == CloudSimTags.TRUE) {
 			getVmsToDatacentersMap().put(vmId, datacenterId);
 			getGuestsCreatedList().add(guest);
-			Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": "+guest.getClassName()+" #", vmId,
-					" has been created in Datacenter #", datacenterId, ", "+guest.getHost().getClassName()+" #",
+			Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": ", guest.getClassName(), " #", vmId,
+					" has been created in Datacenter #", datacenterId, ", ", guest.getHost().getClassName(), " #",
 					guest.getHost().getId());
 		} else {
-			Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Creation of "+guest.getClassName()+" #", vmId,
+			Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Creation of ", guest.getClassName(), " #", vmId,
 					" failed in Datacenter #", datacenterId);
 		}
 
@@ -260,8 +260,8 @@ public class DatacenterBroker extends SimEntity {
 				if (getGuestsCreatedList().size() > 0) { // if some vm were created
 					submitCloudlets();
 				} else { // no vms created. abort
-					Log.println(CloudSim.clock() + ": " + getName()
-							+ ": none of the required VMs could be created. Aborting");
+					Log.printlnConcat(CloudSim.clock(), ": ", getName(),
+							": none of the required VMs could be created. Aborting");
 					finishExecution();
 				}
 			}
@@ -278,7 +278,7 @@ public class DatacenterBroker extends SimEntity {
 	protected void processCloudletReturn(SimEvent ev) {
 		Cloudlet cloudlet = (Cloudlet) ev.getData();
 		getCloudletReceivedList().add(cloudlet);
-		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": ", cloudlet.getClass().getSimpleName()," #", cloudlet.getCloudletId(),
+		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": ", cloudlet.getClass().getSimpleName(), " #", cloudlet.getCloudletId(),
 				" return received");
 		Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": The number of finished Cloudlets is:", getCloudletReceivedList().size());
 		cloudletsSubmitted--;
@@ -332,8 +332,8 @@ public class DatacenterBroker extends SimEntity {
 		String datacenterName = CloudSim.getEntityName(datacenterId);
 		for (GuestEntity vm : getGuestList()) {
 			if (!getVmsToDatacentersMap().containsKey(vm.getId())) {
-				Log.println(CloudSim.clock() + ": " + getName() + ": Trying to Create "+ vm.getClassName() + " #" + vm.getId()
-						+ " in " + datacenterName);
+				Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Trying to Create ", vm.getClassName(),
+						" #", vm.getId(), " in ", datacenterName);
 				sendNow(datacenterId, CloudActionTags.VM_CREATE_ACK, vm);
 				requestedVms++;
 			}
@@ -402,7 +402,7 @@ public class DatacenterBroker extends SimEntity {
 	 */
 	protected void clearDatacenters() {
 		for (GuestEntity vm : getGuestsCreatedList()) {
-			Log.printlnConcat(CloudSim.clock(), ": " + getName(), ": Destroying "+vm.getClassName()+" #", vm.getId());
+			Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Destroying ", vm.getClassName(), " #", vm.getId());
 			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudActionTags.VM_DESTROY, vm);
 		}
 

@@ -554,7 +554,7 @@ public abstract class SimEntity implements Cloneable {
 		}
 
 		if (entityId < 0) {
-			Log.printlnConcat(getName(), ".send(): Error - " + "invalid entity id ", entityId);
+			Log.printlnConcat(getName(), ".send(): Error - invalid entity id ", entityId);
 			return;
 		}
 

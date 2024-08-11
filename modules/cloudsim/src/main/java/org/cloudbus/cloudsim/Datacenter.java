@@ -102,7 +102,7 @@ public class Datacenter extends SimEntity {
 		}
 		
 		if(getCharacteristics().getNumberOfPes()==0 && getCharacteristics().getHostList().isEmpty()) {
-			Log.println(name+": inter-cloud networking topology created...");
+			Log.printlnConcat(name,": inter-cloud networking topology created...");
 		}
 
 		// stores id of this class
@@ -681,10 +681,11 @@ public class Datacenter extends SimEntity {
 			if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) {
 				estimatedFinishTime += fileTransferTime;
 				send(getId(), estimatedFinishTime, CloudActionTags.VM_DATACENTER_EVENT);
-			} else {
+			}
+			/*else {
 				Log.printlnConcat(CloudSim.clock(), ": [",getName(), "]: Warning - ", cl.getClass().getSimpleName()," #", cl.getCloudletId(),
 						" is paused because not enough free PEs on ", vm.getClassName(), " #", vm.getId());
-			}
+			}*/
 
 			if (ack) {
 				int[] data = new int[3];
@@ -695,10 +696,10 @@ public class Datacenter extends SimEntity {
 				sendNow(cl.getUserId(), CloudActionTags.CLOUDLET_SUBMIT_ACK, data);
 			}
 		} catch (ClassCastException c) {
-			Log.println(getName() + ".processCloudletSubmit(): " + "ClassCastException error.");
+			Log.printlnConcat(getName(), ".processCloudletSubmit(): ", "ClassCastException error.");
 			c.printStackTrace();
 		} catch (Exception e) {
-			Log.println(getName() + ".processCloudletSubmit(): " + "Exception error.");
+			Log.printlnConcat(getName(), ".processCloudletSubmit(): ", "Exception error.");
 			e.printStackTrace();
 		}
 

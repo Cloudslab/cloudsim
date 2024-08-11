@@ -53,7 +53,7 @@ public class PowerSelectionPolicyMinimumCorrelation implements SelectionPolicy<P
         }
 
         if (selectedHost == null) {
-            Log.printlnConcat(CloudSim.clock()+": "+getClass().getSimpleName()+": fallback activated (No host found)");
+            Log.printlnConcat(CloudSim.clock(), ": ", getClass().getSimpleName(), ": fallback activated (No host found)");
             selectedHost = fallbackPolicy.select(candidates, obj, excludedCandidates);
         }
         return selectedHost;
