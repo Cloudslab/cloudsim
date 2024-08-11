@@ -118,7 +118,7 @@ public interface GuestEntity extends CoreAttributes {
     <T extends HostEntity> T getHost();
 
     /**
-     * Gets the host bw.
+     * Gets the host bw (in bits/s).
      *
      * @return the host bw
      * @pre $none

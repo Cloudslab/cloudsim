@@ -45,7 +45,7 @@ public class HostPacket {
 	/**
 	 * The length of the data being sent (in bytes).
 	*/
-	double data;
+	long data;
 
 	/**
 	 * The time the packet was sent.

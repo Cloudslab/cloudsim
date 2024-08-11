@@ -101,7 +101,7 @@ public class NetworkHost extends Host {
 				} else { // send to edge switch, since destination guest is hosted on another host
 					// Assumption: no overprovisioning of guest's bandwidth
 					double avband = (double) sender.getBw() / totalPkts;
-					double delay = (1000 * npkt.pkt.data) / avband;
+					double delay = 8 * npkt.pkt.data / avband;
 
 					((NetworkDatacenter) getDatacenter()).totalDataTransfer += npkt.pkt.data;
 

@@ -317,7 +317,7 @@ public class Switch extends SimEntity {
 			if (!hspktlist.isEmpty()) {
 				double avband = (double) downlinkBw / hspktlist.size();
 				for (NetworkPacket hspkt : hspktlist) {
-					double delay = 1000 * hspkt.pkt.data / avband;
+					double delay = 8 * hspkt.pkt.data / avband;
 
 					this.send(receiverSwitchId, delay, CloudActionTags.NETWORK_PKT_DOWN, hspkt);
 				}
@@ -332,7 +332,7 @@ public class Switch extends SimEntity {
 				// sharing bandwidth between packets
 				double avband = (double) uplinkBw / hspktlist.size();
 				for (NetworkPacket hspkt : hspktlist) {
-					double delay = 1000 * hspkt.pkt.data / avband;
+					double delay = 8 * hspkt.pkt.data / avband;
 
 					this.send(receiverSwitchId, delay, CloudActionTags.NETWORK_PKT_UP, hspkt);
 				}
@@ -345,7 +345,7 @@ public class Switch extends SimEntity {
 			if (!hspktlist.isEmpty()) {
 				double avband = (double) downlinkBw / hspktlist.size();
 				for (NetworkPacket hspkt : hspktlist) {
-					double delay = 1000 * hspkt.pkt.data / avband;
+					double delay = 8 * hspkt.pkt.data / avband;
 					this.send(getId(), delay, CloudActionTags.NETWORK_PKT_REACHED_HOST, hspkt);
 				}
 				hspktlist.clear();

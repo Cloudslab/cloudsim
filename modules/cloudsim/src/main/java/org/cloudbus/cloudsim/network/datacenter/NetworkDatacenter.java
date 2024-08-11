@@ -67,7 +67,7 @@ public class NetworkDatacenter extends Datacenter {
 	 */
 	public Map<Integer, Integer> VmtoHostlist;
 
-	/** Total data transmitted through the network of this datacenter */
+	/** Total data transmitted through the network of this datacenter (in bytes) */
 	public double totalDataTransfer = 0;
 
 	/**

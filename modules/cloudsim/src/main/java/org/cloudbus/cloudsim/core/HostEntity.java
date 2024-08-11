@@ -247,7 +247,7 @@ public interface HostEntity extends CoreAttributes {
         return numberOfGuests;
     }
     /**
-     * Gets the host bw.
+     * Gets the host bw (in bits/s).
      *
      * @return the host bw
      * @pre $none
