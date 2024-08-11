@@ -96,12 +96,12 @@ public class Datacenter extends SimEntity {
 		}
 
 		// If this resource doesn't have any PEs then no useful at all
-		if (getCharacteristics().getNumberOfPes() == 0 && getCharacteristics().getHostList().size() != 0) {
+		if (getCharacteristics().getNumberOfPes() == 0 && !getCharacteristics().getHostList().isEmpty()) {
                     throw new Exception(super.getName()
                         + " : Error - this entity has no PEs. Therefore, can't process any Cloudlets.");
 		}
 		
-		if(getCharacteristics().getNumberOfPes()==0 && getCharacteristics().getHostList().size() == 0) {
+		if(getCharacteristics().getNumberOfPes()==0 && getCharacteristics().getHostList().isEmpty()) {
 			Log.println(name+": inter-cloud networking topology created...");
 		}
 

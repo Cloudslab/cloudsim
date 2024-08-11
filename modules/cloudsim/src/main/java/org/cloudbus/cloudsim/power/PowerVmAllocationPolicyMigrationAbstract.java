@@ -505,7 +505,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 		if (metricHistory.get(hostId) == null) {
 			metricHistory.set(hostId, new ArrayList<Double>());
 		}
-		if (timeHistory.get(hostId).size() == 0 || timeHistory.get(hostId).getLast() < CloudSim.clock()) {
+		if (timeHistory.get(hostId).isEmpty() || timeHistory.get(hostId).getLast() < CloudSim.clock()) {
 			timeHistory.get(hostId).add(CloudSim.clock());
 			utilizationHistory.get(hostId).add(host.getUtilizationOfCpu());
 			metricHistory.get(hostId).add(metric);

@@ -277,8 +277,7 @@ public class PowerContainerDatacenter extends ContainerDatacenter {
                 getVmList().remove(vm);
                 Log.println(String.format("VM #%d has been deallocated from host #%d", vm.getId(), host.getId()));
             }
-            if(host.getGuestList().size() !=0){
-
+            if(!host.getGuestList().isEmpty()){
                 numberOfActiveHosts ++;
             }
         }

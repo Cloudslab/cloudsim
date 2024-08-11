@@ -136,15 +136,14 @@ public class PowerContainerVmAllocationPolicyMigrationAbstractHostSelection exte
     protected PowerHost getUnderUtilizedHost(Set<? extends Host> excludedHosts) {
 
         List<Host> underUtilizedHostList = getUnderUtilizedHostList(excludedHosts);
-        if (underUtilizedHostList.size() == 0) {
+        if (underUtilizedHostList.isEmpty()) {
 
             return null;
         }
         HostList.sortByCpuUtilizationDescending(underUtilizedHostList);
 //        Log.print(String.format("The under Utilized Hosts are %d", underUtilizedHostList.size()));
-        PowerHost underUtilizedHost = (PowerHost) underUtilizedHostList.get(0);
 
-        return underUtilizedHost;
+        return (PowerHost) underUtilizedHostList.get(0);
     }
 
 

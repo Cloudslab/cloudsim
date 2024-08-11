@@ -193,7 +193,7 @@ public class DatacenterCharacteristics {
          * to add Pe's of different capacities through the {@link HostEntity#peList} attribute.
 	 */
 	public int getMipsOfOnePe() {
-		if (getHostList().size() == 0) {
+		if (getHostList().isEmpty()) {
 			return -1;
 		}
 
@@ -219,7 +219,7 @@ public class DatacenterCharacteristics {
          * //TODO The id parameter would be renamed to pmId to be clear.
 	 */
 	public int getMipsOfOnePe(int id, int peId) {
-		if (getHostList().size() == 0) {
+		if (getHostList().isEmpty()) {
 			return -1;
 		}
 

@@ -199,14 +199,14 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
     private List<GuestMapping> getPlacementForLeftContainers(List<? extends GuestEntity> containersToMigrate, Set<? extends Host> excludedHostsList) {
         List<GuestMapping> newMigrationMap = new LinkedList<>();
 
-        if (containersToMigrate.size() == 0) {
+        if (containersToMigrate.isEmpty()) {
             return newMigrationMap;
         }
         HashSet<Host> excludedHostsforOverUtilized = new HashSet<>();
         excludedHostsforOverUtilized.addAll(getSwitchedOffHosts());
         excludedHostsforOverUtilized.addAll(excludedHostsList);
         List<GuestMapping> migrationMap = getNewContainerPlacement(containersToMigrate, excludedHostsforOverUtilized);
-        if (migrationMap.size() == 0) {
+        if (migrationMap.isEmpty()) {
             return migrationMap;
         }
 //        List<Container> containerList = getExtraContainers(migrationMap);
@@ -221,7 +221,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             }
 
         }
-        if (containerList.size() == 0) {
+        if (containerList.isEmpty()) {
             return newMigrationMap;
         }
 
@@ -230,7 +230,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         List<GuestMapping> migrationMapUnderUtilized = findMapInUnderUtilizedHosts(underUtilizedHostList,containerList);
         newMigrationMap.addAll(migrationMapUnderUtilized);
         containerList.removeAll(getAssignedContainers(migrationMapUnderUtilized));
-        if(containerList.size()!= 0){
+        if(!containerList.isEmpty()){
             List<GuestMapping> migrationMapSwitchedOff = findMapInSwitchedOffHosts(containerList);
             newMigrationMap.addAll(migrationMapSwitchedOff);
         }
@@ -246,18 +246,18 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         List<GuestMapping> newMigrationMap = new ArrayList<>();
         //        Create new Vms on underUtilized hosts;
         List<GuestMapping> createdVmMap = new ArrayList<>();
-        if (underUtilizedHostList.size() != 0) {
+        if (!underUtilizedHostList.isEmpty()) {
             for (Host host : underUtilizedHostList) {
 //                   We try to create the largest Vm possible
                 List<ContainerVm> VmList = createVms(host, true);
-                if(VmList.size() != 0) {
+                if(!VmList.isEmpty()) {
                     for(ContainerVm vm:VmList) {
                         GuestMapping map = new GuestMapping(vm, host);
                         createdVmMap.add(map);
                     }
                 }
             }
-            if (createdVmMap.size() ==0) {
+            if (createdVmMap.isEmpty()) {
                 return newMigrationMap;
             }
 
@@ -310,14 +310,14 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         List<PowerHost> switchedOffHostsList = getSwitchedOffHosts();
         List<GuestMapping> newMigrationMap = new ArrayList<>();
 
-        if (containerList.size() == 0) {
+        if (containerList.isEmpty()) {
             return newMigrationMap;
         }
 
         Host previouseHost = null;
         ContainerVm previouseVm = null;
-        while (containerList.size() != 0) {
-            if (switchedOffHostsList.size() == 0) {
+        while (!containerList.isEmpty()) {
+            if (switchedOffHostsList.isEmpty()) {
 
                 Log.print("There is no hosts to create VMs");
                 break;
@@ -325,7 +325,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             List<Container> assignedContainer = new ArrayList<>();
             //choose a random host
             if (previouseHost == null && previouseVm == null) {
-                if(switchedOffHostsList.size() ==0 ){
+                if(switchedOffHostsList.isEmpty()){
                     return newMigrationMap;
                 }
                 int hostIndex = new RandomGen().getNum(switchedOffHostsList.size());
@@ -452,14 +452,12 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             peList.add(new Pe(j, new PeProvisionerSimple(vmMips[vmType])));
         }
         int brokerId = 2;
-        PowerContainerVm vm = new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, vmMips[vmType],
-                (int) vmRam[vmType],
+        return new PowerContainerVm(IDs.pollId(ContainerVm.class), brokerId, vmMips[vmType],
+                vmRam[vmType],
                 vmBw, vmSize, "Xen",
                 new VmSchedulerTimeSharedOverSubscription(peList),
                 new RamProvisionerSimple(vmRam[vmType]),
                 new BwProvisionerSimple(vmBw), peList, 300);
-        return vm;
-
     }
 
 
@@ -539,7 +537,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         for (GuestEntity container : vm.getGuestList()) {
             util += container.getTotalUtilizationOfCpuMips(CloudSim.clock());
         }
-        if (util > 1.0*vm.getHost().getTotalMips() / vm.getHost().getNumberOfPes() * vm.getNumberOfPes()) {
+        if (util > vm.getHost().getTotalMips() / vm.getHost().getNumberOfPes() * vm.getNumberOfPes()) {
             return false;
         }
 

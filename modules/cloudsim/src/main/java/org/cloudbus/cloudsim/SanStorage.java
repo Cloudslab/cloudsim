@@ -92,7 +92,7 @@ public class SanStorage extends HarddriveStorage {
 	@Override
 	public double addFile(List<File> list) {
 		double result = 0.0;
-		if (list == null || list.size() == 0) {
+		if (list == null || list.isEmpty()) {
 			Log.printlnConcat(getName(), ".addFile(): Warning - list is empty.");
 			return result;
 		}

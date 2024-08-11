@@ -66,9 +66,9 @@ public class ScheduledResource extends SimEntity {
 
     private void scheduleNext() {
         CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.NETWORK_PKT_FORWARD));
-        if (amountsLeft.size() == 0)
+        if (amountsLeft.isEmpty())
             return;
-        double delay = amountsLeft.get(0).amountLeft / capacity * amountsLeft.size();
+        double delay = amountsLeft.getFirst().amountLeft / capacity * amountsLeft.size();
         schedule(getId(), delay, CloudActionTags.NETWORK_PKT_FORWARD);
     }
 
