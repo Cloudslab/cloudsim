@@ -16,7 +16,7 @@ import java.util.List;
 public class Container implements GuestEntity {
 
     /** The id. */
-    private int id;
+    private final int id;
 
     /** The user id. */
     private int userId;
@@ -116,7 +116,7 @@ public class Container implements GuestEntity {
             long size,
             String containerManager,
             CloudletScheduler containerCloudletScheduler, double schedulingInterval) {
-        setId(id);
+        this.id = id;
         setUserId(userId);
         setUid(GuestEntity.getUid(userId, id));
         setMips(mips);
@@ -313,7 +313,6 @@ public class Container implements GuestEntity {
     }
 
     public int getId() { return id; }
-    protected void setId(int id) { this.id = id; }
 
     public int getUserId() { return userId; }
     protected void setUserId(int userId) { this.userId = userId; }

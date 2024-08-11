@@ -31,7 +31,7 @@ import java.util.List;
 public class Vm implements VirtualEntity {
 
 	/** The VM unique id. */
-	private int id;
+	private final int id;
 
 	/** The user id. */
 	private int userId;
@@ -153,7 +153,7 @@ public class Vm implements VirtualEntity {
 			long size,
 			String vmm,
 			CloudletScheduler cloudletScheduler) {
-		setId(id);
+		this.id = id;
 		setUserId(userId);
 		setUid(GuestEntity.getUid(userId, id));
 		setMips(mips);
@@ -415,9 +415,7 @@ public class Vm implements VirtualEntity {
 	public VmScheduler getGuestScheduler() { return guestScheduler; }
 	public void setGuestScheduler(VmScheduler guestScheduler) { this.guestScheduler = guestScheduler; }
 
-
 	public int getId() { return id; }
-	public void setId(int id) { this.id = id; }
 
 	public long getBw() { return bw; }
 	public void setBw(long bw) { this.bw = bw; }
