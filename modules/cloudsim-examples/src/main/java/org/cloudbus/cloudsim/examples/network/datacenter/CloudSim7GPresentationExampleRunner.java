@@ -52,7 +52,7 @@ public class CloudSim7GPresentationExampleRunner {
 
         // name -> payload-size map
         Map<String, Integer> vals = new HashMap<>();
-        vals.put("small-payload", 1);
+        vals.put("small-payload", 1000);
         vals.put("big-payload", 1000000000);
 
         if (TandemAppExample5CloudSim7GPresentation.numberOfPeriodicActivations > 1) {

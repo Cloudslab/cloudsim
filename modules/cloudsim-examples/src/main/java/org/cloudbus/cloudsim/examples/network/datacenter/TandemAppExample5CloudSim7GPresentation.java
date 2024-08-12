@@ -31,19 +31,19 @@ public class TandemAppExample5CloudSim7GPresentation {
 	public static int numberOfPeriodicActivations = 20;
 
 
-	public static int firstTaskExecLength = 10000000;
-	public static int secondTaskExecLength = 10000000;
-	public static int payloadSize = 1000000000;
+	public static int firstTaskExecLength = 10000;
+	public static int secondTaskExecLength = 10000;
+	public static long payloadSize = 1000000000; // 1 Gigabyte
 
 	private static ExponentialDistr distr;
 
 	public static int deadline = 2000;
 
-	public static long vmMips = 10000;
-	public static long vmBw = 1024 * 1024 * 1024; // 1 Gbps
+	public static long vmMips = 7800;
+	public static long vmBw = 1000000000; // 1 Gbps
 
-	public static long hostToSwitchBw = 1024 * 1024 * 1024; // 1 Gbps
-	public static long switchToSwitchBw = 1024 * 1024 * 1024;
+	public static long hostToSwitchBw = 1000000000; // 1 Gbps
+	public static long switchToSwitchBw = 1000000000;
 
 	public static Map<String, Integer> cloudletToHost;
 
@@ -129,7 +129,7 @@ public class TandemAppExample5CloudSim7GPresentation {
 			String paddedP = String.format("%04d", deadline);
 			CustomCSVWriter writer = new CustomCSVWriter("/tmp/D"+paddedD+"-P"+paddedP+fileInfo+".csv");
 
-			String[] header = {"appId", "startTime", "endTime", "E2E", "period", "lateness", "noise"};
+			String[] header = {"appId", "startTime", "endTime", "makespan","E2E", "period", "lateness", "noise"};
 			if (!writer.fileExistedAlready()) {
 				writer.writeTofile(header, false);
 			}
@@ -140,10 +140,11 @@ public class TandemAppExample5CloudSim7GPresentation {
 				data[0] = String.valueOf(app.appID);
 				data[1] = String.valueOf(app.cList.get(0).getExecStartTime());
 				data[2] = String.valueOf(app.cList.get(1).getExecFinishTime());
-				data[3] = String.valueOf(deadline);
+				data[3] = String.valueOf(app.cList.get(1).getExecFinishTime() - app.cList.get(0).getExecStartTime());
 				data[4] = String.valueOf(deadline);
-				data[5] = String.valueOf(app.getLateness());
-				data[6] = "False";
+				data[5] = String.valueOf(deadline);
+				data[6] = String.valueOf(app.getLateness());
+				data[7] = "False";
 				writer.writeTofile(data, true);
 			}
 
