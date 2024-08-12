@@ -204,11 +204,7 @@ public class VmTest {
 		Vm vm = new Vm(ID, USER_ID, MIPS, PES_NUMBER, RAM, BW, SIZE, VMM, cloudletScheduler);
 		vm.setBeingInstantiated(false);
 
-		ArrayList<Double> currentMips = new ArrayList<>();
-		for (int i = 0; i < PES_NUMBER; i++)
-			currentMips.add(MIPS);
-
-		expect(cloudletScheduler.getCurrentRequestedMips()).andReturn(currentMips);
+		expect(cloudletScheduler.getCurrentRequestedTotalMips()).andReturn(MIPS * PES_NUMBER);
 
 		replay(cloudletScheduler);
 

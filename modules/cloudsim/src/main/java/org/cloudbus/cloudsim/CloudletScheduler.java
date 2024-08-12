@@ -389,6 +389,19 @@ public abstract class CloudletScheduler {
 	}
 
 	/**
+	 * Gets the total of the current requested mips.
+	 * 
+	 * @return the current mips
+	 */
+	public double getCurrentRequestedTotalMips() {
+		double mips = 0.0;
+		if (currentMipsShare != null)
+			for (double v : currentMipsShare)
+				mips += v;
+		return mips;
+	}
+
+	/**
 	 * Gets the total current available mips for the Cloudlet.
 	 * 
 	 * @param rcl the rcl

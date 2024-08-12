@@ -160,6 +160,21 @@ public class ContainerVm extends Vm {
         return smallerTime;
     }
 
+    @Override
+    public double getCurrentRequestedTotalMips() {
+        double currentRequestedMips = 0.0;
+
+        if (isBeingInstantiated()) {
+            currentRequestedMips += getMips() * getNumberOfPes();
+        } else {
+            for (GuestEntity guest : getGuestList()) {
+                currentRequestedMips += guest.getCurrentRequestedTotalMips();
+            }
+        }
+
+        return currentRequestedMips;
+    }
+
     /**
      * Gets the current requested mips.
      *

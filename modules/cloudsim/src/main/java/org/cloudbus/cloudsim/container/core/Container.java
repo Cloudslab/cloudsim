@@ -295,7 +295,7 @@ public class Container implements GuestEntity {
 
 
     //
-
+    @Override
     public List<Double> getCurrentRequestedMips() {
         if (isBeingInstantiated()) {
             List<Double> currentRequestedMips = new ArrayList<>();
@@ -310,6 +310,14 @@ public class Container implements GuestEntity {
 
 
         return getCloudletScheduler().getCurrentRequestedMips();
+    }
+
+    @Override
+    public double getCurrentRequestedTotalMips() {
+        if (isBeingInstantiated())
+            return getMips() * getNumberOfPes();
+        else
+            return getCloudletScheduler().getCurrentRequestedTotalMips();
     }
 
     public int getId() { return id; }

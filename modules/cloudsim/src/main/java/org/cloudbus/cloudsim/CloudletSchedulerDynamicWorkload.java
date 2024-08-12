@@ -146,6 +146,15 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	}
 
 	@Override
+	public double getCurrentRequestedTotalMips() {
+		List<Double> currentMips = getCurrentRequestedMips();
+		double mips = 0.0;
+		for (double v : currentMips)
+			mips += v;
+		return mips;
+	}
+
+	@Override
 	public double getTotalCurrentRequestedMipsForCloudlet(Cloudlet cl, double time) {
 		return cl.getUtilizationOfCpu(time) * getTotalMips();
 	}
