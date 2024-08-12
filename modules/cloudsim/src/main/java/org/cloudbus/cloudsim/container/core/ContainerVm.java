@@ -167,31 +167,15 @@ public class ContainerVm extends Vm {
      */
     @Override
     public List<Double> getCurrentRequestedMips() {
-
-        double requestedMipsTemp = 0;
-
-
+        List<Double> currentRequestedMips = new ArrayList<>(getNumberOfPes());
         if (isBeingInstantiated()) {
-
-            requestedMipsTemp = getMips();
+            for (int i = 0; i < getNumberOfPes(); i++) {
+                currentRequestedMips.add(getMips());
+            }
         } else {
             for (GuestEntity container : getGuestList()) {
-
-                List<Double> containerCurrentRequestedMips = container.getCurrentRequestedMips();
-                requestedMipsTemp += containerCurrentRequestedMips.get(0) * containerCurrentRequestedMips.size();
-//                Log.formatLine(
-//                        " [Container #%d] utilization is %.2f",
-//                        container.getId() ,
-//                        container.getCurrentRequestedMips().get(0) * container.getCurrentRequestedMips().size() );
-
+                currentRequestedMips.addAll(container.getCurrentRequestedMips());
             }
-//            Log.formatLine("Total mips usage is %.2f", requestedMipsTemp);
-        }
-
-        List<Double> currentRequestedMips = new ArrayList<>(getNumberOfPes());
-
-        for (int i = 0; i < getNumberOfPes(); i++) {
-            currentRequestedMips.add(requestedMipsTemp);
         }
         //Log.printLine("Vm: get Current requested Mips" + currentRequestedMips);
         return currentRequestedMips;
