@@ -69,7 +69,6 @@ public class PowerSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<
     public PowerGuestEntity getContainerVM(List<PowerGuestEntity> migrableContainerVMs, PowerHost host) {
 
         double[] corResult = new double[migrableContainerVMs.size()];
-        Correlation correlation = new Correlation();
         int i = 0;
         double maxValue = -2;
         int id = -1;
@@ -78,7 +77,7 @@ public class PowerSelectionPolicyMaximumCorrelation2 implements SelectionPolicy<
         for (PowerGuestEntity vm : migrableContainerVMs) {
             double[] containerUtilization = vm.getUtilizationHistoryList();
 
-            double cor = correlation.getCor(hostUtilization, containerUtilization);
+            double cor = Correlation.getCor(hostUtilization, containerUtilization);
             if (Double.isNaN(cor)) {
                 cor = -3;
             }

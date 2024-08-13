@@ -33,7 +33,6 @@ public class PowerSelectionPolicyMinimumCorrelation implements SelectionPolicy<P
             throw new IllegalArgumentException("PowerSelectionPolicyMinimumCorrelation.selectHost() requires a power-aware guest entity");
         }
 
-        Correlation correlation = new Correlation();
         double minCor = Double.MAX_VALUE;
         PowerHostEntity selectedHost = null;
         for (PowerHostEntity hostCandidate : candidates) {
@@ -44,7 +43,7 @@ public class PowerSelectionPolicyMinimumCorrelation implements SelectionPolicy<P
             double[] hostUtilization = hostCandidate.getUtilizationHistory();
             if (hostUtilization.length > 5) {
 
-                double cor = correlation.getCor(hostUtilization, utilizationHistory);
+                double cor = Correlation.getCor(hostUtilization, utilizationHistory);
                 if (cor < minCor) {
                     minCor = cor;
                     selectedHost = hostCandidate;
