@@ -1,8 +1,7 @@
 package org.cloudbus.cloudsim.core;
 
+import org.cloudbus.cloudsim.util.HistoryStat;
 import org.cloudbus.cloudsim.util.MathUtil;
-
-import java.util.List;
 
 /**
  * Represents a Virtual Machine (VM), or a container, that stores its CPU utilization percentage history for power
@@ -19,17 +18,16 @@ public interface PowerGuestEntity extends GuestEntity {
      *
      * @return the CPU utilization percentage history
      */
-    List<Double> getUtilizationHistory();
+    HistoryStat getUtilizationHistory();
 
     default double[] getUtilizationHistoryList(){
-        double[] utilizationHistoryList = new double[PowerGuestEntity.HISTORY_LENGTH];
+        HistoryStat utilHistStat = getUtilizationHistory();
+        double[] utilizationHistoryList = new double[utilHistStat.size()];
+        int i = 0;
+        for (double u : utilHistStat)
+            utilizationHistoryList[i++] = u * getMips();
 
-        // if any thing happens check if you need to have mips and the trim
-        for (int i = 0; i < getUtilizationHistory().size(); i++) {
-            utilizationHistoryList[i] += getUtilizationHistory().get(i) * getMips();
-        }
-
-        return MathUtil.trimZeroTail(utilizationHistoryList);
+        return utilizationHistoryList;
     }
 
     /**
@@ -38,10 +36,7 @@ public interface PowerGuestEntity extends GuestEntity {
      * @param utilization the CPU utilization percentage to add
      */
     default void addUtilizationHistoryValue(final double utilization) {
-        getUtilizationHistory().add(0, utilization);
-        if (getUtilizationHistory().size() > HISTORY_LENGTH) {
-            getUtilizationHistory().remove(HISTORY_LENGTH);
-        }
+        getUtilizationHistory().offer(utilization);
     }
 
     /**
@@ -51,12 +46,14 @@ public interface PowerGuestEntity extends GuestEntity {
      */
     default double getUtilizationMad() {
         double mad = 0;
-        if (!getUtilizationHistory().isEmpty()) {
-            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
-            double median = MathUtil.median(getUtilizationHistory());
+        HistoryStat hist = getUtilizationHistory();
+        if (!hist.isEmpty()) {
+            int n = hist.size();
+            double median = hist.getMedian();
             double[] deviationSum = new double[n];
-            for (int i = 0; i < n; i++) {
-                deviationSum[i] = Math.abs(median - getUtilizationHistory().get(i));
+            int i = 0;
+            for (double u : hist) {
+                deviationSum[i++] = Math.abs(median - u);
             }
             mad = MathUtil.median(deviationSum);
         }
@@ -69,15 +66,7 @@ public interface PowerGuestEntity extends GuestEntity {
      * @return the utilization mean in MIPS
      */
     default double getUtilizationMean() {
-        double mean = 0;
-        if (!getUtilizationHistory().isEmpty()) {
-            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
-            for (int i = 0; i < n; i++) {
-                mean += getUtilizationHistory().get(i);
-            }
-            mean /= n;
-        }
-        return mean * getMips();
+        return getUtilizationHistory().getMean() * getMips();
     }
 
     /**
@@ -86,12 +75,13 @@ public interface PowerGuestEntity extends GuestEntity {
      * @return the utilization variance in MIPS
      */
     default double getUtilizationVariance() {
-        double mean = getUtilizationMean();
+        HistoryStat hist = getUtilizationHistory();
+        double mean = hist.getMean();
         double variance = 0;
-        if (!getUtilizationHistory().isEmpty()) {
-            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
-            for (int i = 0; i < n; i++) {
-                double tmp = getUtilizationHistory().get(i) * getMips() - mean;
+        if (!hist.isEmpty()) {
+            int n = hist.size();
+            for (double u : hist) {
+                double tmp = u * getMips() - mean;
                 variance += tmp * tmp;
             }
             variance /= n;

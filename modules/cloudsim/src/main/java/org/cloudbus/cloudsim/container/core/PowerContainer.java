@@ -3,7 +3,7 @@ package org.cloudbus.cloudsim.container.core;
 import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.PowerGuestEntity;
-import org.cloudbus.cloudsim.util.MathUtil;
+import org.cloudbus.cloudsim.util.HistoryStat;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,8 +13,7 @@ import java.util.List;
  */
 public class PowerContainer extends Container implements PowerGuestEntity {
         /** The utilization history. */
-        private final List<Double> utilizationHistory = new LinkedList<>();
-
+        private final HistoryStat utilizationHistoryStat = new HistoryStat(PowerGuestEntity.HISTORY_LENGTH);
 
         /** The previous time. */
         private double previousTime;
@@ -78,8 +77,8 @@ public class PowerContainer extends Container implements PowerGuestEntity {
          *
          * @return the utilization history
          */
-        public List<Double> getUtilizationHistory() {
-            return utilizationHistory;
+        public HistoryStat getUtilizationHistory() {
+            return utilizationHistoryStat;
         }
 
         /**

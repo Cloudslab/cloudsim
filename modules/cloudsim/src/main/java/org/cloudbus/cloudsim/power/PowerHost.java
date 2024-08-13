@@ -8,6 +8,7 @@
 
 package org.cloudbus.cloudsim.power;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.cloudbus.cloudsim.HostDynamicWorkload;
@@ -17,7 +18,6 @@ import org.cloudbus.cloudsim.core.PowerHostEntity;
 import org.cloudbus.cloudsim.power.models.PowerModel;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
-import org.cloudbus.cloudsim.util.MathUtil;
 
 /**
  * PowerHost class enables simulation of power-aware hosts.
@@ -119,11 +119,16 @@ public class PowerHost extends HostDynamicWorkload implements PowerHostEntity {
 	public double[] getUtilizationHistory() {
 		double[] utilizationHistory = new double[PowerHostEntity.HISTORY_LENGTH];
 		double hostMips = getTotalMips();
+		int maxlen = 0;
 		for (PowerVm vm : this.<PowerVm>getGuestList()) {
-			for (int i = 0; i < vm.getUtilizationHistory().size(); i++) {
-				utilizationHistory[i] += vm.getUtilizationHistory().get(i) * vm.getMips() / hostMips;
+			double guestMips = vm.getMips();
+			int i = 0;
+			for (double u : vm.getUtilizationHistory()) {
+				utilizationHistory[i++] += u * guestMips / hostMips;
 			}
+			if (i > maxlen)
+				maxlen = i;
 		}
-		return MathUtil.trimZeroTail(utilizationHistory);
+		return Arrays.copyOf(utilizationHistory, maxlen);
 	}
 }

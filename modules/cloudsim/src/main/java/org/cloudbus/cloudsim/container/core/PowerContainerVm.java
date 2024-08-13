@@ -7,9 +7,8 @@ import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
-import org.cloudbus.cloudsim.util.MathUtil;
+import org.cloudbus.cloudsim.util.HistoryStat;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ public class PowerContainerVm extends ContainerVm implements PowerGuestEntity {
     /**
      * The utilization history.
      */
-    private final List<Double> utilizationHistory = new ArrayList<>();
+    private final HistoryStat utilizationHistoryStat = new HistoryStat(PowerGuestEntity.HISTORY_LENGTH);
 
     /**
      * The previous time.
@@ -99,8 +98,8 @@ public class PowerContainerVm extends ContainerVm implements PowerGuestEntity {
      *
      * @return the utilization history
      */
-    public List<Double> getUtilizationHistory() {
-        return utilizationHistory;
+    public HistoryStat getUtilizationHistory() {
+        return utilizationHistoryStat;
     }
 
     /**

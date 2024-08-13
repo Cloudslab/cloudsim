@@ -8,13 +8,12 @@
 
 package org.cloudbus.cloudsim.selectionPolicies;
 
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.util.MathUtil;
 
@@ -94,10 +93,10 @@ public class PowerSelectionPolicyMaximumCorrelation implements SelectionPolicy<P
 		int m = getMinUtilizationHistorySize(vmList);
 		double[][] utilization = new double[n][m];
 		for (int i = 0; i < n; i++) {
-			List<Double> vmUtilization = vmList.get(i).getUtilizationHistory();
-			for (int j = 0; j < vmUtilization.size(); j++) {
-				utilization[i][j] = vmUtilization.get(j);
-			}
+			ArrayDeque<Double> vmUtilization = vmList.get(i).getUtilizationHistory();
+			int j = 0;
+			for (double u : vmUtilization)
+				utilization[i][j++] = u;
 		}
 		return utilization;
 	}

@@ -15,7 +15,7 @@ import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.PowerGuestEntity;
-import org.cloudbus.cloudsim.util.MathUtil;
+import org.cloudbus.cloudsim.util.HistoryStat;
 
 /**
  * A class of VM that stores its CPU utilization percentage history. The history is used by VM allocation
@@ -37,6 +37,7 @@ import org.cloudbus.cloudsim.util.MathUtil;
 public class PowerVm extends Vm implements PowerGuestEntity {
 	/** The CPU utilization percentage history. */
 	private final List<Double> utilizationHistory = new ArrayList<>();
+	private final HistoryStat utilizationHistoryStat = new HistoryStat(HISTORY_LENGTH);
 
 	/** The previous time that cloudlets were processed. */
 	private double previousTime;
@@ -94,8 +95,8 @@ public class PowerVm extends Vm implements PowerGuestEntity {
 	 * 
 	 * @return the CPU utilization percentage history
 	 */
-	public List<Double> getUtilizationHistory() {
-		return utilizationHistory;
+	public HistoryStat getUtilizationHistory() {
+		return utilizationHistoryStat;
 	}
 
 	/**
