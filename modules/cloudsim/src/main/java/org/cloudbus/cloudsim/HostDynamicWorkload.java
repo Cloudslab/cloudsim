@@ -281,7 +281,7 @@ public class HostDynamicWorkload extends Host {
 				requestedMips,
 				isActive);
 		if (!getStateHistory().isEmpty()) {
-			HostStateHistoryEntry previousState = getStateHistory().get(getStateHistory().size() - 1);
+			HostStateHistoryEntry previousState = getStateHistory().getLast();
 			if (previousState.getTime() == time) {
 				getStateHistory().set(getStateHistory().size() - 1, newState);
 				return;

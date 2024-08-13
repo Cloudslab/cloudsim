@@ -126,7 +126,6 @@ public class DatacenterBroker extends SimEntity {
          * //TODO The name of the method is confused with the {@link #submitCloudlets()},
          * that in fact submit cloudlets to VMs. The term "submit" is being used
          * ambiguously. The method {@link #submitCloudlets()} would be named "sendCloudletsToVMs"
-         * 
          * The method {@link #submitGuestList(List)} may have
          * be checked too.
 	 */
@@ -191,7 +190,7 @@ public class DatacenterBroker extends SimEntity {
 			//TODO: Remo Andreoli: should I need this?
 			// getDatacenterCharacteristicsList().clear();
 			setDatacenterRequestedIdsList(new ArrayList<>());
-			createVmsInDatacenter(getDatacenterIdsList().get(0));
+			createVmsInDatacenter(getDatacenterIdsList().getFirst());
 		}
 	}
 
@@ -257,7 +256,7 @@ public class DatacenterBroker extends SimEntity {
 				}
 
 				// all datacenters already queried
-				if (getGuestsCreatedList().size() > 0) { // if some vm were created
+				if (!getGuestsCreatedList().isEmpty()) { // if some vm were created
 					submitCloudlets();
 				} else { // no vms created. abort
 					Log.printlnConcat(CloudSim.clock(), ": ", getName(),

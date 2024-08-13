@@ -65,7 +65,7 @@ public class FileAttribute {
 	 */
 	public FileAttribute(String fileName, int fileSize) throws ParameterException {
 		// check for errors in the input
-		if (fileName == null || fileName.length() == 0) {
+		if (fileName == null || fileName.isEmpty()) {
 			throw new ParameterException("FileAttribute(): Error - invalid file name.");
 		}
 
@@ -172,7 +172,7 @@ public class FileAttribute {
 	 * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
 	 */
 	public boolean setOwnerName(String name) {
-		if (name == null || name.length() == 0) {
+		if (name == null || name.isEmpty()) {
 			return false;
 		}
 
@@ -362,9 +362,7 @@ public class FileAttribute {
 	 * @return <tt>true</tt> if it is registered, <tt>false</tt> otherwise
 	 */
 	public boolean isRegistered() {
-		boolean result = id != File.NOT_REGISTERED;
-
-		return result;
+		return id != File.NOT_REGISTERED;
 	}
 
 	/**

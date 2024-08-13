@@ -111,10 +111,9 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	 */
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {
-		PowerHost _host = (PowerHost) host;
-		double upperThreshold = 0;
+        double upperThreshold = 0;
 		try {
-    			upperThreshold = 1 - getSafetyParameter() * getHostUtilizationMad(_host);
+    			upperThreshold = 1 - getSafetyParameter() * getHostUtilizationMad(host);
 		} catch (IllegalArgumentException e) {
 			return getFallbackVmAllocationPolicy().isHostOverUtilized(host);
 		}

@@ -138,7 +138,7 @@ public abstract class VmScheduler {
 	 * Returns the MIPS share of each host's Pe that is allocated to a given VM.
 	 *
 	 * @param guest the vm
-	 * @return an array containing the amount of MIPS of each pe that is available to the VM
+	 * @return a list containing the amount of MIPS of each pe that is available to the VM
 	 * @pre $none
 	 * @post $none
 	 */
@@ -208,7 +208,7 @@ public abstract class VmScheduler {
 			Log.println("Pe list is empty");
 			return 0;
 		}
-		return getPeList().get(0).getMips();
+		return getPeList().getFirst().getMips();
 	}
 
 	public List<? extends Pe> getPeList() { return peList; }

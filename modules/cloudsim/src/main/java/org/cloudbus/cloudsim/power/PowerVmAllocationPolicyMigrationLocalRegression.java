@@ -108,8 +108,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 	 */
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {
-		PowerHost _host = (PowerHost) host;
-		double[] utilizationHistory = _host.getUtilizationHistory();
+        double[] utilizationHistory = host.getUtilizationHistory();
 		int length = 10; // we use 10 to make the regression responsive enough to latest values
 		if (utilizationHistory.length < length) {
 			return getFallbackVmAllocationPolicy().isHostOverUtilized(host);
@@ -124,7 +123,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 		} catch (IllegalArgumentException e) {
 			return getFallbackVmAllocationPolicy().isHostOverUtilized(host);
 		}
-		double migrationIntervals = Math.ceil(getMaximumVmMigrationTime(_host) / getSchedulingInterval());
+		double migrationIntervals = Math.ceil(getMaximumVmMigrationTime((PowerHost) host) / getSchedulingInterval());
 		double predictedUtilization = estimates[0] + estimates[1] * (length + migrationIntervals);
 		predictedUtilization *= getSafetyParameter();
 

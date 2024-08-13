@@ -216,8 +216,8 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * 
 	 * @return the total current mips
 	 */
-	public int getTotalCurrentMips() {
-		int totalCurrentMips = 0;
+	public double getTotalCurrentMips() {
+		double totalCurrentMips = 0;
 		for (double mips : getCurrentMipsShare()) {
 			totalCurrentMips += mips;
 		}

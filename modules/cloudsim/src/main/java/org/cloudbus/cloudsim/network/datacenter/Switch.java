@@ -104,12 +104,7 @@ public class Switch extends SimEntity {
 	/**
 	 * The datacenter where the switch is connected to.
 	 */
-	public NetworkDatacenter dc;
-
-        /**
-         * List of  received packets.
-         */
-	//public ArrayList<NetworkPacket> pktlist = new ArrayList<>();
+	public NetworkDatacenter dc;;
 
         /**
          * The time the switch spends to process a received packet.
@@ -230,7 +225,7 @@ public class Switch extends SimEntity {
 
 			// Send to aggregate level
 			// ASSUMPTION: EACH EDGE is Connected to one aggregate level switch only
-			Switch sw = uplinkSwitches.get(0);
+			Switch sw = uplinkSwitches.getFirst();
 			pktsToUplinkSwitches.computeIfAbsent(sw.getId(), k -> new ArrayList<>()).add(hspkt);
 		}
 		else if (level == SwitchLevel.AGGR_LEVEL) { // packet received from edge router
@@ -241,7 +236,7 @@ public class Switch extends SimEntity {
             if (downlinkSwitches.stream().anyMatch(sw -> sw.getId() == switchId)) {
 				pktsToDownlinkSwitches.computeIfAbsent(switchId, k -> new ArrayList<>()).add(hspkt);
 			} else {// send to up to root level (ASSUMPTION: EACH EDGE is Connected to one aggregate level switch only)
-				Switch sw = uplinkSwitches.get(0);
+				Switch sw = uplinkSwitches.getFirst();
 				pktsToUplinkSwitches.computeIfAbsent(sw.getId(), k -> new ArrayList<>()).add(hspkt);
 			}
 		}

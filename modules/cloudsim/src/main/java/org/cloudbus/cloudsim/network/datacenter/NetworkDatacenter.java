@@ -59,7 +59,7 @@ public class NetworkDatacenter extends Datacenter {
 	 * A map of datacenter switches where each key is a switch id
 	 * and the corresponding value is the switch itself.
 	 */
-	private Map<Integer, Switch> SwitchList;
+	private final Map<Integer, Switch> SwitchList;
 
 	/**
 	 * A map between VMs and Hosts, where each key

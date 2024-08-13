@@ -39,8 +39,7 @@ public abstract class PowerModelSpecPower implements PowerModel {
 		double power1 = getPowerData(utilization1);
 		double power2 = getPowerData(utilization2);
 		double delta = (power2 - power1) / 10;
-		double power = power1 + delta * (utilization - (double) utilization1 / 10) * 100;
-		return power;
+        return power1 + delta * (utilization - (double) utilization1 / 10) * 100;
 	}
 
 	/**

@@ -60,7 +60,7 @@ public class File {
 	 *             </ul>
 	 */
 	public File(String fileName, int fileSize) throws ParameterException {
-		if (fileName == null || fileName.length() == 0) {
+		if (fileName == null || fileName.isEmpty()) {
 			throw new ParameterException("File(): Error - invalid file name.");
 		}
 

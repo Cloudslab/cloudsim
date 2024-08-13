@@ -101,10 +101,9 @@ public class PowerVmAllocationPolicyMigrationInterQuartileRange extends
 	 */
 	@Override
 	protected boolean isHostOverUtilized(PowerHost host) {
-		PowerHost _host = (PowerHost) host;
-		double upperThreshold = 0;
+        double upperThreshold = 0;
 		try {
-			upperThreshold = 1 - getSafetyParameter() * getHostUtilizationIqr(_host);
+			upperThreshold = 1 - getSafetyParameter() * getHostUtilizationIqr((PowerHost) host);
 		} catch (IllegalArgumentException e) {
 			return getFallbackVmAllocationPolicy().isHostOverUtilized(host);
 		}

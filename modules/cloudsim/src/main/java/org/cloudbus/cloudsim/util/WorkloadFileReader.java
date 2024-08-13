@@ -167,7 +167,7 @@ public class WorkloadFileReader implements WorkloadModel {
      * @post $none
      */
     public WorkloadFileReader(final String fileName, final int rating) throws FileNotFoundException {
-            if (fileName == null || fileName.length() == 0) {
+            if (fileName == null || fileName.isEmpty()) {
                     throw new IllegalArgumentException("Invalid trace file name.");
             } else if (rating <= 0) {
                     throw new IllegalArgumentException("Resource PE rating must be > 0.");

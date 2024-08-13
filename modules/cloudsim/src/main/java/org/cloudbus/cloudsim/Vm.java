@@ -102,10 +102,10 @@ public class Vm implements VirtualEntity {
 	private List<? extends Pe> peList;
 
 	/** The nested guest list. */
-	private final List<GuestEntity> guestList = new ArrayList<>();
+	private final List<? extends GuestEntity> guestList = new ArrayList<>();
 
 	/** The nested guests migrating in. */
-	private final List<GuestEntity> guestsMigratingIn = new ArrayList<>();
+	private final List<? extends GuestEntity> guestsMigratingIn = new ArrayList<>();
 
 	/** Tells whether this VM is working properly (as a host for nested guests) or has failed. */
 	private boolean failed;
@@ -393,7 +393,7 @@ public class Vm implements VirtualEntity {
 	 * Returns the MIPS share of each Pe that is allocated to a given guest entity.
 	 *
 	 * @param guest the guest entity
-	 * @return an array containing the amount of MIPS of each pe that is available to the guest
+	 * @return a list containing the amount of MIPS of each pe that is available to the guest
 	 * @pre $none
 	 * @post $none
 	 */
@@ -414,7 +414,7 @@ public class Vm implements VirtualEntity {
 	/**
 	 * Checks if is suitable for the guest entity.
 	 *
-	 * @param guest
+	 * @param guest guest entity
 	 * @return true, if is suitable for guest entity
 	 */
 	public boolean isSuitableForGuest(GuestEntity guest) {
@@ -459,8 +459,8 @@ public class Vm implements VirtualEntity {
 
 	public void setHost(HostEntity host) { this.host = host; }
 
-	public List<GuestEntity> getGuestList() { return guestList; }
-	public List<GuestEntity> getGuestsMigratingIn() { return guestsMigratingIn; }
+	public List<? extends GuestEntity> getGuestList() { return guestList; }
+	public List<? extends GuestEntity> getGuestsMigratingIn() { return guestsMigratingIn; }
 
 	public boolean isInPause() { return inPause; }
 	public void setInPause(boolean inPause) { this.inPause = inPause; }

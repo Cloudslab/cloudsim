@@ -16,8 +16,7 @@ import org.cloudbus.cloudsim.core.*;
 
 /**
  * Datacenter class is a CloudResource whose hostList are virtualized. It deals with processing of
- * VM queries (i.e., handling of VMs) instead of processing Cloudlet-related queries. 
- * 
+ * VM queries (i.e., handling of VMs) instead of processing Cloudlet-related queries.
  * So, even though an AllocPolicy will be instantiated (in the init() method of the superclass, 
  * it will not be used, as processing of cloudlets are handled by the CloudletScheduler and 
  * processing of VirtualMachines are handled by the VmAllocationPolicy.
@@ -25,7 +24,6 @@ import org.cloudbus.cloudsim.core.*;
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
- * 
  * //todo In fact, there isn't the method init() in the super class, as stated in
  * the documentation here. An AllocPolicy isn't being instantiated there.
  * The last phrase of the class documentation appears to be out-of-date or wrong.
@@ -280,10 +278,10 @@ public class Datacenter extends SimEntity {
 		file.setMasterCopy(true); // set the file into a master copy
 		int sentFrom = (Integer) pack[1]; // get sender ID
 
-		/******
+		/**
 		 * // DEBUG Log.printLine(super.get_name() + ".addMasterFile(): " + file.getName() +
 		 * " from " + CloudSim.getEntityName(sentFrom));
-		 *******/
+		 */
 
 		Object[] data = new Object[3];
 		data[0] = file.getName();
@@ -560,12 +558,11 @@ public class Datacenter extends SimEntity {
 	protected void processCloudletMove(int[] receivedData, CloudActionTags tag) {
 		updateCloudletProcessing();
 
-		int[] array = receivedData;
-		int cloudletId = array[0];
-		int userId = array[1];
-		int vmId = array[2];
-		int vmDestId = array[3];
-		int destId = array[4];
+        int cloudletId = receivedData[0];
+		int userId = receivedData[1];
+		int vmId = receivedData[2];
+		int vmDestId = receivedData[3];
+		int destId = receivedData[4];
 
 		// get the cloudlet
 		Cloudlet cl = getVmAllocationPolicy().getHost(vmId, userId).getGuest(vmId,userId)
@@ -977,7 +974,6 @@ public class Datacenter extends SimEntity {
 	 * 
 	 * @return the host list
 	 */
-	@SuppressWarnings("unchecked")
 	public <T extends HostEntity> List<T> getHostList() {
 		return getCharacteristics().getHostList();
 	}

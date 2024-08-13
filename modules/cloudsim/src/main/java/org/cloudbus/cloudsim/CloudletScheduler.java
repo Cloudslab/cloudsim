@@ -9,7 +9,6 @@
 package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -147,9 +146,9 @@ public abstract class CloudletScheduler {
 	protected void updateWaitingCloudlets(double currentTime, Object info){}
 
 	/**
-	 * Receives an cloudlet to be executed in the VM managed by this scheduler.
+	 * Receives a cloudlet to be executed in the VM managed by this scheduler.
 	 * 
-	 * @param cl the submited cloudlet
+	 * @param cl the submitted cloudlet
 	 * @param fileTransferTime time required to move the required files from the SAN to the VM
 	 * @return expected finish time of this cloudlet, or 0 if it is in a waiting queue
 	 * @pre gl != null
@@ -319,7 +318,7 @@ public abstract class CloudletScheduler {
 	 */
 	public Cloudlet getNextFinishedCloudlet() {
 		if (!getCloudletFinishedList().isEmpty()) {
-			return getCloudletFinishedList().remove(0);
+			return getCloudletFinishedList().removeFirst();
 		}
 		return null;
 	}
@@ -343,7 +342,7 @@ public abstract class CloudletScheduler {
 	 * @TODO: Remo Andreoli: No clue why it's removing the first element
 	 */
 	public Cloudlet migrateCloudlet() {
-		Cloudlet cl = getCloudletExecList().remove(0);
+		Cloudlet cl = getCloudletExecList().removeFirst();
 		cl.finalizeCloudlet();
 		return cl;
 	}
@@ -499,7 +498,7 @@ public abstract class CloudletScheduler {
 
 	/** Get the individual MIPS capacity available for each cloudlet, according to the number of
 	 *  available PE provided by the current mip share.
-	 * 	@ASSUMPTION: all PEs have the same capacity.
+	 * 	ASSUMPTION: all PEs have the same capacity.
 	 */
 	public double getCurrentCapacity(List<Double> mipsShare) {
 		mipsShare.removeIf(mips -> mips <= 0);

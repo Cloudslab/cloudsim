@@ -65,7 +65,7 @@ public class HarddriveStorage implements Storage {
 	 * @throws ParameterException when the name and the capacity are not valid
 	 */
 	public HarddriveStorage(String name, double capacity) throws ParameterException {
-		if (name == null || name.length() == 0) {
+		if (name == null || name.isEmpty()) {
 			throw new ParameterException("HarddriveStorage(): Error - invalid storage name.");
 		}
 
@@ -286,7 +286,7 @@ public class HarddriveStorage implements Storage {
 	public File getFile(String fileName) {
 		// check first whether file name is valid or not
 		File obj = null;
-		if (fileName == null || fileName.length() == 0) {
+		if (fileName == null || fileName.isEmpty()) {
 			Log.printlnConcat(name, ".getFile(): Warning - invalid file name.");
 			return obj;
 		}
@@ -381,7 +381,7 @@ public class HarddriveStorage implements Storage {
 		}
 
 		String fileName = file.getName();
-		if (fileName == null || fileName.length() == 0) {
+		if (fileName == null || fileName.isEmpty()) {
 			Log.printlnConcat(name, ".", methodName, ": Warning - invalid file name.");
 			return false;
 		}
@@ -445,7 +445,7 @@ public class HarddriveStorage implements Storage {
 
 	@Override
 	public File deleteFile(String fileName) {
-		if (fileName == null || fileName.length() == 0) {
+		if (fileName == null || fileName.isEmpty()) {
 			return null;
 		}
 
@@ -496,7 +496,7 @@ public class HarddriveStorage implements Storage {
 	@Override
 	public boolean contains(String fileName) {
 		boolean result = false;
-		if (fileName == null || fileName.length() == 0) {
+		if (fileName == null || fileName.isEmpty()) {
 			Log.printlnConcat(name, ".contains(): Warning - invalid file name");
 			return result;
 		}

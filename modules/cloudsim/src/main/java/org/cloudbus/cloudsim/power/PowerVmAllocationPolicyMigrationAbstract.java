@@ -586,8 +586,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 		double requestedTotalMips = vm.getCurrentRequestedTotalMips();
 		double hostUtilizationMips = getUtilizationOfCpuMips(host);
 		double hostPotentialUtilizationMips = hostUtilizationMips + requestedTotalMips;
-		double pePotentialUtilization = hostPotentialUtilizationMips / host.getTotalMips();
-		return pePotentialUtilization;
+        return hostPotentialUtilizationMips / host.getTotalMips();
 	}
 	
 	/**
