@@ -13,6 +13,10 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * CloudletSchedulerSpaceShared implements a policy of scheduling performed by a virtual machine
  * to run its {@link Cloudlet Cloudlets}.
@@ -25,6 +29,9 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
  */
+
+private static final Logger logger = Logger.getLogger(CloudletSchedulerSpaceShared.class.getName());
+
 public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	/** The number of PEs currently available for the VM using the scheduler,
          * according to the mips share provided to it by
@@ -299,6 +306,11 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	@Override
 	public double cloudletSubmit(Cloudlet cloudlet, double fileTransferTime) {
 		// it can go to the exec list
+		ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.INFO);
+        logger.setLevel(Level.INFO);
+        logger.addHandler(consoleHandler);
+		
 		if ((currentCpus - usedPes) >= cloudlet.getNumberOfPes()) {
 			ResCloudlet rcl = new ResCloudlet(cloudlet);
 			rcl.setCloudletStatus(Cloudlet.INEXEC);
@@ -307,11 +319,13 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 			}
 			getCloudletExecList().add(rcl);
 			usedPes += cloudlet.getNumberOfPes();
+			logger.info("Cloud #" + cl.getCloudletId() + " queued. Time for loading files: " + fileTransferTime);
 		} else {// no enough free PEs: go to the waiting queue
 			ResCloudlet rcl = new ResCloudlet(cloudlet);
 			rcl.setCloudletStatus(Cloudlet.QUEUED);
 			getCloudletWaitingList().add(rcl);
 			return 0.0;
+			logger.info("Cloud #" + cl.getCloudletId() + " no enough free PEs: go to the waiting queue ");
 		}
 
 		// calculate the expected time for cloudlet completion
