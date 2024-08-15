@@ -37,6 +37,9 @@ public abstract class CloudletScheduler {
 	 * at every simulation step. */
 	private List<Double> currentMipsShare;
 
+
+	private double currentCapacity;
+
 	/** The list of cloudlet waiting to be executed on the VM. */
 	protected List<? extends Cloudlet> cloudletWaitingList;
 
@@ -85,6 +88,7 @@ public abstract class CloudletScheduler {
 	 */
 	public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
 		setCurrentMipsShare(mipsShare);
+
 		double timeSpan = currentTime - getPreviousTime(); // time since last update
 
 		// Update cloudlets in exec list
@@ -486,6 +490,8 @@ public abstract class CloudletScheduler {
 	protected void setCurrentMipsShare(List<Double> currentMipsShare) {
         currentMipsShare.removeIf(mips -> mips <= 0);
 		this.currentMipsShare = currentMipsShare;
+
+		updateCurrentCapacity();
 	}
 
 	/**
@@ -498,13 +504,20 @@ public abstract class CloudletScheduler {
 
 	/** Get the individual MIPS capacity available for each cloudlet, according to the number of
 	 *  available PE provided by the current mip share.
-	 * 	ASSUMPTION: all PEs have the same capacity.
 	 */
-	public double getCurrentCapacity(List<Double> mipsShare) {
-		mipsShare.removeIf(mips -> mips <= 0);
+	public double getCurrentCapacity() {
+		return currentCapacity;
+	}
+
+	/**
+	 * ASSUMPTION: all PEs have the same capacity.
+	 * @return capacity
+	 */
+	public double updateCurrentCapacity() {
+		currentMipsShare.removeIf(mips -> mips <= 0);
 
 		double capacity = 0;
-		for (Double mips : mipsShare) {
+		for (Double mips : currentMipsShare) {
 			capacity += mips;
 		}
 
@@ -515,13 +528,19 @@ public abstract class CloudletScheduler {
 			}
 		}
 
-		int cpus = mipsShare.size();
+		int cpus = currentMipsShare.size();
 		capacity /= Math.max(pesInUse, cpus);
+
+
+		currentCapacity = capacity;
+
 		return capacity;
 	}
 
 	@Deprecated
-	protected double getCapacity(List<Double> mipsShare) { return getCurrentCapacity(mipsShare); }
+	protected double getCapacity(List<Double> mipsShare) {
+		setCurrentMipsShare(mipsShare);
+		return getCurrentCapacity(); }
 
 	/**
 	 * Gets the cloudlet waiting list.

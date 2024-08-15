@@ -57,7 +57,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		getCloudletExecList().add(cl);
 
 		// calculate the expected time for cloudlet completion
-		double capacity = getCurrentCapacity(getCurrentMipsShare());
+		double capacity = getCurrentCapacity();
 		// use the current capacity to estimate the extra amount of
 		// time to file transferring. It must be added to the cloudlet length
 		double extraSize = capacity * fileTransferTime;
@@ -70,7 +70,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 	// Simple policy, there is no real scheduling involved
 	@Override
 	public double getTotalCurrentAvailableMipsForCloudlet(Cloudlet cl, List<Double> mipsShare) {
-		return getCurrentCapacity(mipsShare) * cl.getNumberOfPes();
+		return getCurrentCapacity() * cl.getNumberOfPes();
 	}
 
 	@Override
