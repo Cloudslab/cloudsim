@@ -12,16 +12,43 @@ import java.util.PriorityQueue;
  */
 public class HistoryStat extends ArrayDeque<Double> {
     private final int max_size;
-    private final PriorityQueue<Double> lower;
-    private final PriorityQueue<Double> higher;
     private double sum = 0.0;
+    private PriorityQueue<Double> lower;
+    private PriorityQueue<Double> higher;
 
     public HistoryStat(int max_size) {
         super(max_size);
         assert(max_size >= 2);
         this.max_size = max_size;
+    }
+
+    private void enableFastMedian() {
         lower = new PriorityQueue<>((max_size + 1) / 2, Comparator.reverseOrder());
         higher  = new PriorityQueue<>((max_size + 1) / 2, Comparator.naturalOrder());
+        for (double val : this)
+            addHeaps(val);
+    }
+
+    private void addHeaps(double val) {
+        double low = Double.MAX_VALUE;
+        if (!lower.isEmpty())
+            low = lower.peek();
+        if (val <= low) {
+            lower.add(val);
+            if (lower.size() > higher.size() + 1)
+                higher.add(lower.poll());
+        } else {
+            higher.add(val);
+            if (higher.size() > lower.size() + 1)
+                lower.add(higher.poll());
+        }
+    }
+
+    private void delHeaps(double val) {
+        if (!lower.isEmpty() && val <= lower.peek())
+            lower.remove(val);
+        else
+            higher.remove(val);
     }
 
     @Override
@@ -29,29 +56,20 @@ public class HistoryStat extends ArrayDeque<Double> {
         if (size() == max_size) {
             double oldest = poll();
             sum -= oldest;
-            if (!lower.isEmpty() && oldest <= lower.peek())
-                lower.remove(oldest);
-            else
-                higher.remove(oldest);
+            if (lower != null)
+                delHeaps(oldest);
         }
         boolean rv = super.offer(val);
         sum += val;
-        double low = Double.MAX_VALUE;
-        if (!lower.isEmpty())
-            low = lower.peek();
-        if (val <= low) {
-            lower.add(val);
-            if (lower.size() >= higher.size() + 2)
-                higher.add(lower.poll());
-        } else {
-            higher.add(val);
-            if (higher.size() >= lower.size() + 2)
-                lower.add(higher.poll());
-        }
+        if (lower != null)
+            addHeaps(val);
         return rv;
     }
 
     public double getMedian() {
+        if (lower == null) {
+            enableFastMedian();
+        }
         if (lower.isEmpty() && higher.isEmpty())
             return 0.0;
         if (lower.isEmpty() || lower.size() < higher.size())
