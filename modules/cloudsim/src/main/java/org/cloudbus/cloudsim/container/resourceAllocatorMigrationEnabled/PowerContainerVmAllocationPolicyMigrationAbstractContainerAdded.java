@@ -578,8 +578,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         }
         double hostUtilizationMips = getUtilizationOfCpuMips(host);
         double hostPotentialUtilizationMips = hostUtilizationMips + requestedTotalMips;
-        double pePotentialUtilization = hostPotentialUtilizationMips / host.getTotalMips();
-        return pePotentialUtilization;
+        return hostPotentialUtilizationMips / host.getTotalMips();
     }
 
     /**
@@ -629,11 +628,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
                     if (vm.getGuestsMigratingIn().contains(container)) {
                         continue;
                     }
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("host", host);
-                    map.put("vm", vm);
-                    map.put("container", container);
-                    getSavedAllocation().add(map);
+                    getSavedAllocation().add(new GuestMapping((GuestEntity) vm, (HostEntity) host, (Container) container));
                 }
             }
         }
@@ -655,10 +650,10 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
             host.guestDestroyAll();
             host.reallocateMigratingInGuests();
         }
-        for (Map<String, Object> map : getSavedAllocation()) {
-            PowerContainerVm vm = (PowerContainerVm) map.get("vm");
+        for (GuestMapping map : getSavedAllocation()) {
+            PowerContainerVm vm = (PowerContainerVm) map.vm();
 
-            PowerHost host = (PowerHost) map.get("host");
+            PowerHost host = (PowerHost) map.host();
             if (!host.getGuestList().contains(vm)) {
                 if (!host.guestCreate(vm)) {
                     Log.printlnConcat("Couldn't restore VM #", vm.getId(), " on host #", host.getId());
@@ -671,10 +666,10 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
 //            vm.reallocateMigratingInContainers();
         }
 //        List<ContainerVm > restoredVms = new ArrayList<>();
-        for (Map<String, Object> map : getSavedAllocation()) {
-            PowerContainerVm vm = (PowerContainerVm) map.get("vm");
-            if (map.get("container") != null && map.containsKey("container")) {
-                Container container = (Container) map.get("container");
+        for (GuestMapping map : getSavedAllocation()) {
+            PowerContainerVm vm = (PowerContainerVm) map.vm();
+            if (map.container() != null) {
+                Container container = map.container();
 //                Log.print(container);
 
                 if (!vm.getGuestList().contains(container)) {

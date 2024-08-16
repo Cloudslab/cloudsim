@@ -228,14 +228,13 @@ public class PowerContainerDatacenterCM extends PowerContainerDatacenter {
     protected void processVmCreate(SimEvent ev, boolean ack) {
 
 //    here we override the method
-        if (ev.getData() instanceof GuestMapping) {
-            GuestMapping map = (GuestMapping) ev.getData();
+        if (ev.getData() instanceof GuestMapping map) {
             VirtualEntity containerVm = (Vm) map.vm();
             HostEntity host = map.host();
             boolean result = getVmAllocationPolicy().allocateHostForGuest(containerVm, host);
 //                set the containerVm in waiting state
             containerVm.setInWaiting(true);
-//                containerVm.addMigratingInContainer((Container) map.get("container"));
+//                containerVm.addMigratingInContainer((Container) map.container());
 
             if (result) {
                 GuestMapping data = new GuestMapping(containerVm, null, null, getId(), false, false);

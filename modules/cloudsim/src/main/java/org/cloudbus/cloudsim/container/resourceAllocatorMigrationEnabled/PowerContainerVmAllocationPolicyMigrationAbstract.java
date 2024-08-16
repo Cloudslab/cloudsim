@@ -26,7 +26,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
     /**
      * The saved allocation.
      */
-    private final List<Map<String, Object>> savedAllocation = new ArrayList<>();
+    private final List<GuestMapping> savedAllocation = new ArrayList<>();
 
     /**
      * The utilization history.
@@ -531,10 +531,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
                 if (host.getGuestsMigratingIn().contains(vm)) {
                     continue;
                 }
-                Map<String, Object> map = new HashMap<>();
-                map.put("host", host);
-                map.put("vm", vm);
-                getSavedAllocation().add(map);
+                getSavedAllocation().add(new GuestMapping(vm, host));
             }
         }
     }
@@ -547,9 +544,9 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
             host.guestDestroyAll();
             host.reallocateMigratingInGuests();
         }
-        for (Map<String, Object> map : getSavedAllocation()) {
-            ContainerVm vm = (ContainerVm) map.get("vm");
-            PowerHost host = (PowerHost) map.get("host");
+        for (GuestMapping map : getSavedAllocation()) {
+            ContainerVm vm = (ContainerVm) map.vm();
+            PowerHost host = (PowerHost) map.host();
             if (!host.guestCreate(vm)) {
                 Log.printlnConcat("Couldn't restore VM #", vm.getId(), " on host #", host.getId());
                 System.exit(0);
@@ -615,7 +612,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      *
      * @return the saved allocation
      */
-    protected List<Map<String, Object>> getSavedAllocation() {
+    protected List<GuestMapping> getSavedAllocation() {
         return savedAllocation;
     }
 

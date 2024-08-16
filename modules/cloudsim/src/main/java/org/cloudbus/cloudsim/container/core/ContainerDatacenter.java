@@ -190,17 +190,13 @@ public class ContainerDatacenter extends Datacenter {
      * @post $none
      */
     protected void processContainerMigrate(SimEvent ev, boolean ack) {
-
         Object tmp = ev.getData();
-        if (!(tmp instanceof Map<?, ?>)) {
-            throw new ClassCastException("The data object must be Map<String, Object>");
+        if (!(tmp instanceof VmAllocationPolicy.GuestMapping migrate)) {
+            throw new ClassCastException("The data object must be GuestMapping");
         }
 
-        @SuppressWarnings("unchecked")
-        Map<String, Object> migrate = (HashMap<String, Object>) tmp;
-
-        Container container = (Container) migrate.get("container");
-        HostEntity containerVm = (HostEntity) migrate.get("vm");
+        Container container = migrate.container();
+        HostEntity containerVm = (HostEntity) migrate.vm();
 
         getContainerAllocationPolicy().deallocateHostForGuest(container);
         if(containerVm.getGuestsMigratingIn().contains(container)){

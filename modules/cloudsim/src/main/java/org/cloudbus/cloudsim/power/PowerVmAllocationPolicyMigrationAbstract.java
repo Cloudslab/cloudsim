@@ -46,12 +46,8 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	/** The vm selection policy. */
 	private SelectionPolicy<GuestEntity> vmSelectionPolicy;
 
-	/** A list of maps between a VM and the host where it is place.
-         * //TODO This list of map is implemented in the worst way.
-         * It should be used just a Map<Vm, Host> to find out 
-         * what PM is hosting a given VM.
-         */
-	private final List<Map<String, Object>> savedAllocation = new ArrayList<>();
+	/** A list of maps between a VM and the host where it is place. */
+	private final List<GuestMapping> savedAllocation = new ArrayList<>();
 
 	private void growIfNeeded(List<List<Double>> l, int idx) {
 		for (int i = l.size(); i <= idx; i++)
@@ -523,10 +519,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 				if (host.getGuestsMigratingIn().contains(vm)) {
 					continue;
 				}
-				Map<String, Object> map = new HashMap<>();
-				map.put("host", host);
-				map.put("vm", vm);
-				getSavedAllocation().add(map);
+				getSavedAllocation().add(new GuestMapping(vm, host));
 			}
 		}
 	}
@@ -540,9 +533,9 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 			host.guestDestroyAll();
 			host.reallocateMigratingInGuests();
 		}
-		for (Map<String, Object> map : getSavedAllocation()) {
-			Vm vm = (Vm) map.get("vm");
-			PowerHost host = (PowerHost) map.get("host");
+		for (GuestMapping map : getSavedAllocation()) {
+			Vm vm = (Vm) map.vm();
+			PowerHost host = (PowerHost) map.host();
 			if (!host.guestCreate(vm)) {
 				Log.printlnConcat("Couldn't restore VM #", vm.getId(), " on host #", host.getId());
 				System.exit(0);
@@ -613,7 +606,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 	 * 
 	 * @return the saved allocation
 	 */
-	protected List<Map<String, Object>> getSavedAllocation() {
+	protected List<GuestMapping> getSavedAllocation() {
 		return savedAllocation;
 	}
 
