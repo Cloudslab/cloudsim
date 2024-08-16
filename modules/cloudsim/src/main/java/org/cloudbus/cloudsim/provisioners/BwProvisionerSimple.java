@@ -41,35 +41,33 @@ public class BwProvisionerSimple extends BwProvisioner {
 
 	@Override
 	public boolean allocateBwForGuest(GuestEntity guest, long bw) {
-		deallocateBwForGuest(guest);
+		long old_bw = getAllocatedBwForGuest(guest);
 
-		if (getAvailableBw() >= bw) {
-			setAvailableBw(getAvailableBw() - bw);
-			getBwTable().put(guest.getUid(), bw);
-			guest.setCurrentAllocatedBw(getAllocatedBwForGuest(guest));
+		if (getAvailableBw() + old_bw >= bw) {
+			setAvailableBw(getAvailableBw() + old_bw - bw);
+			bwTable.put(guest.getUid(), bw);
+			guest.setCurrentAllocatedBw(bw);
 			return true;
 		}
 
-		guest.setCurrentAllocatedBw(getAllocatedBwForGuest(guest));
 		return false;
 	}
 
 	@Override
 	public long getAllocatedBwForGuest(GuestEntity guest) {
-		if (getBwTable().containsKey(guest.getUid())) {
-			return getBwTable().get(guest.getUid());
-		}
-		return 0;
+		Long bw = bwTable.get(guest.getUid());
+		if (bw != null)
+			return bw;
+		else
+			return 0;
 	}
 
 	@Override
 	public void deallocateBwForGuest(GuestEntity guest) {
-		long allocatedBw = getAllocatedBwForGuest(guest);
-		if (allocatedBw > 0) {
-			long amountFreed = getBwTable().remove(guest.getUid());
-			setAvailableBw(getAvailableBw() + amountFreed);
-			guest.setCurrentAllocatedBw(0);
-		}
+		Long allocatedBw = bwTable.remove(guest.getUid());
+		if (allocatedBw != null)
+			setAvailableBw(getAvailableBw() + allocatedBw);
+		guest.setCurrentAllocatedBw(0);
 	}
 
 	@Override

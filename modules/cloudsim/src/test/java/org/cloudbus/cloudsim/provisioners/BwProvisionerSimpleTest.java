@@ -64,6 +64,24 @@ public class BwProvisionerSimpleTest {
 	}
 
 	@Test
+	public void testAllocateBwforExistingVm() {
+		Vm vm1 = new Vm(0, 0, 0, 0, 0, BW / 2, 0, "", null);
+		Vm vm2 = new Vm(1, 0, 0, 0, 0, BW / 4, 0, "", null);
+
+		assertTrue(bwProvisioner.isSuitableForGuest(vm1, BW / 2));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm1, BW / 2));
+		assertEquals(BW / 2, bwProvisioner.getAvailableBw());
+
+		assertTrue(bwProvisioner.isSuitableForGuest(vm2, BW / 4));
+		assertTrue(bwProvisioner.allocateBwForGuest(vm2, BW / 4));
+		assertEquals(BW / 4, bwProvisioner.getAvailableBw());
+
+		assertFalse(bwProvisioner.isSuitableForGuest(vm2, BW));
+		assertFalse(bwProvisioner.allocateBwForGuest(vm2, BW));
+		assertEquals(BW / 4, bwProvisioner.getAvailableBw());
+	}
+
+	@Test
 	public void testGetAllocatedBwforVm() {
 		Vm vm1 = new Vm(0, 0, 0, 0, 0, BW / 2, 0, "", null);
 		Vm vm2 = new Vm(1, 0, 0, 0, 0, BW, 0, "", null);
