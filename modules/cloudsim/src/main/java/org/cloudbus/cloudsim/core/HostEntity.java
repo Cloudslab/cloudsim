@@ -240,7 +240,7 @@ public interface HostEntity extends CoreAttributes {
         int numberOfGuests = 0;
 
         for (GuestEntity guest : getGuestList()) {
-            if (!getGuestsMigratingIn().contains(guest)) {
+            if (!guest.isInMigration()) {
                 numberOfGuests++;
             }
         }
