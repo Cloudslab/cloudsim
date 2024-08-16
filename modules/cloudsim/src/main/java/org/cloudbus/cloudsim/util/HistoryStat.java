@@ -4,6 +4,12 @@ import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+/**
+ * Variant of ArrayDeque that provides fast computation of the mean and median of a moving window of last offer()ed samples.
+ * The median uses two heaps that are not used until the first invocation of the getMedian() method.
+ * 
+ * @TODO The implementation needs to be completed with all methods from the ArrayDeque interface.
+ */
 public class HistoryStat extends ArrayDeque<Double> {
     private final int max_size;
     private final PriorityQueue<Double> lower;
@@ -23,7 +29,7 @@ public class HistoryStat extends ArrayDeque<Double> {
         if (size() == max_size) {
             double oldest = poll();
             sum -= oldest;
-            if (oldest <= lower.peek())
+            if (!lower.isEmpty() && oldest <= lower.peek())
                 lower.remove(oldest);
             else
                 higher.remove(oldest);
