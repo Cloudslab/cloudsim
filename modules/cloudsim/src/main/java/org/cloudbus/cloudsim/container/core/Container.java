@@ -3,10 +3,8 @@ package org.cloudbus.cloudsim.container.core;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
-import org.cloudbus.cloudsim.util.MathUtil;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -78,9 +76,6 @@ public class Container implements GuestEntity {
      * The Constant HISTORY_LENGTH.
      */
     public static final int HISTORY_LENGTH = 30;
-
-    /** The utilization history. */
-    private final List<Double> utilizationHistory = new ArrayList<>();
 
     /**
      * The previous time.
@@ -226,74 +221,6 @@ public class Container implements GuestEntity {
         this.beingInstantiated = beingInstantiated;
     }
 
-    /**
-     * Gets the utilization MAD in MIPS.
-     *
-     * @return the utilization mean in MIPS
-     */
-    public double getUtilizationMad() {
-        double mad = 0;
-        if (!getUtilizationHistory().isEmpty()) {
-            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
-            double median = MathUtil.median(getUtilizationHistory());
-            double[] deviationSum = new double[n];
-            for (int i = 0; i < n; i++) {
-                deviationSum[i] = Math.abs(median - getUtilizationHistory().get(i));
-            }
-            mad = MathUtil.median(deviationSum);
-        }
-        return mad;
-    }
-
-    /**
-     * Gets the utilization mean in percents.
-     *
-     * @return the utilization mean in MIPS
-     */
-    public double getUtilizationMean() {
-        double mean = 0;
-        if (!getUtilizationHistory().isEmpty()) {
-            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
-            for (int i = 0; i < n; i++) {
-                mean += getUtilizationHistory().get(i);
-            }
-            mean /= n;
-        }
-        return mean * getMips();
-    }
-
-    /**
-     * Gets the utilization variance in MIPS.
-     *
-     * @return the utilization variance in MIPS
-     */
-    public double getUtilizationVariance() {
-        double mean = getUtilizationMean();
-        double variance = 0;
-        if (!getUtilizationHistory().isEmpty()) {
-            int n = Math.min(HISTORY_LENGTH, getUtilizationHistory().size());
-            for (int i = 0; i < n; i++) {
-                double tmp = getUtilizationHistory().get(i) * getMips() - mean;
-                variance += tmp * tmp;
-            }
-            variance /= n;
-        }
-        return variance;
-    }
-
-    /**
-     * Adds the utilization history value.
-     *
-     * @param utilization the utilization
-     */
-    public void addUtilizationHistoryValue(final double utilization) {
-        getUtilizationHistory().add(0, utilization);
-        if (getUtilizationHistory().size() > HISTORY_LENGTH) {
-            getUtilizationHistory().remove(HISTORY_LENGTH);
-        }
-    }
-
-
     //
     @Override
     public List<Double> getCurrentRequestedMips() {
@@ -371,8 +298,6 @@ public class Container implements GuestEntity {
 
     public long getCurrentAllocatedBw() { return currentAllocatedBw; }
     public void setCurrentAllocatedBw(long currentAllocatedBw) { this.currentAllocatedBw = currentAllocatedBw; }
-
-    protected List<Double> getUtilizationHistory() { return utilizationHistory; }
 
     public double getPreviousTime() { return previousTime; }
     public void setPreviousTime(double previousTime) { this.previousTime = previousTime; }
