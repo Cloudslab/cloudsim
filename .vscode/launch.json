@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "request": "launch",
+            "type": "node",
+            "name": "Launch CloudSimExample9",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "exec:java",
+            "args": [
+                "-pl",
+                "modules/cloudsim-examples/",
+                "-Dexec.mainClass=org.cloudbus.cloudsim.examples.CloudSimExample9"
+            ],
+            "runtimeExecutable": "mvn"
+        },
+        {
+            "request": "launch",
+            "type": "node",
+            "name": "Launch ContainerCloudSimExample1",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "exec:java",
+            "args": [
+                "-pl",
+                "modules/cloudsim-examples/",
+                "-Dexec.mainClass=org.cloudbus.cloudsim.examples.container.ContainerCloudSimExample1"
+            ],
+            "runtimeExecutable": "mvn"
+        }
+    ]
+}
