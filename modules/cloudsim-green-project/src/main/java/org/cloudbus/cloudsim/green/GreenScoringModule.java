@@ -1,4 +1,7 @@
-import org.cloudbus.cloudsim.*;
+package org.cloudbus.cloudsim.green;
+
+import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.Host;
 
 class GreenScoringModule {
     private double renewableEnergyUsageGoal = 0.7; // 70% of workloads on renewable energy

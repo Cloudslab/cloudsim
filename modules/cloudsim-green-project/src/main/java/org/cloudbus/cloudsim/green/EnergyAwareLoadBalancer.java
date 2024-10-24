@@ -1,4 +1,8 @@
+package org.cloudbus.cloudsim.green;
+
 import org.cloudbus.cloudsim.*;
+
+import java.util.*;
 
 class EnergyAwareLoadBalancer {
     public void balanceLoad(List<Host> allHosts, List<Cloudlet> cloudlets) {

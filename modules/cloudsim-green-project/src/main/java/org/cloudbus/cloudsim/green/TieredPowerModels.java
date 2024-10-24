@@ -1,8 +1,16 @@
+package org.cloudbus.cloudsim.green;
+
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.*;
+import org.cloudbus.cloudsim.power.models.PowerModel;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 // Define power models for different Tiers
@@ -67,7 +75,7 @@ public class CloudSimExample {
             List<Pe> peList = new ArrayList<>();
             peList.add(new Pe(0, new PeProvisionerSimple(1000))); // Each host has 1000 MIPS capacity
 
-            Host host = new PowerHost(i, new RamProvisionerSimple(4096), new BwProvisionerSimple(10000), 
+            Host host = new PowerHost(i, new RamProvisionerSimple(4096), new BwProvisionerSimple(10000),
                                       1000000, peList, new VmSchedulerTimeShared(peList), powerModel);
             hostList.add(host);
         }
