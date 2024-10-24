@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 // Define power models for different Tiers
-class RenewableEnergyPowerModel extends PowerModel {
+class RenewableEnergyPowerModel implements PowerModel {
     @Override
     public double getPower(double utilization) {
         // Assuming energy is available based on time (e.g., day/night for solar energy)
@@ -32,14 +32,14 @@ class RenewableEnergyPowerModel extends PowerModel {
     }
 }
 
-class EnergyEfficientPowerModel extends PowerModel {
+class EnergyEfficientPowerModel implements PowerModel {
     @Override
     public double getPower(double utilization) {
         return 100 + utilization * 100; // Power-efficient hardware consumes moderate power
     }
 }
 
-class HighPerformancePowerModel extends PowerModel {
+class HighPerformancePowerModel implements PowerModel {
     @Override
     public double getPower(double utilization) {
         return 200 + utilization * 300; // High-performance hardware consumes more power
@@ -49,7 +49,7 @@ class HighPerformancePowerModel extends PowerModel {
 // Define Tiers
 public class CloudSimExample {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         // Initialize CloudSim
         CloudSim.init(1, Calendar.getInstance(), false);
 
@@ -82,11 +82,11 @@ public class CloudSimExample {
         return hostList;
     }
 
-    private static Datacenter createDatacenter(List<Host>... hostLists) {
+    private static Datacenter createDatacenter(List<Host>... hostLists) throws Exception {
         List<Host> allHosts = new ArrayList<>();
         for (List<Host> hosts : hostLists) {
             allHosts.addAll(hosts);
         }
-        return new Datacenter("Datacenter", allHosts, new VmAllocationPolicySimple(allHosts), new LinkedList<>(), 0);
+        return new Datacenter("Datacenter", (DatacenterCharacteristics) allHosts, new VmAllocationPolicySimple(allHosts), new LinkedList<>(), 0);
     }
 }
