@@ -210,6 +210,10 @@ public class Vm implements VirtualEntity {
 			throw new RuntimeException("numberOfPes != peList.size");
 		}
 
+		if (PeList.getTotalMips(peList) > mips) {
+			throw new RuntimeException("PeList.getTotalMips(peList) > mips");
+		}
+
 		if (containerRamProvisioner.getRam() > getRam()) {
 			throw new RuntimeException("ramProvisioner.ram > ram");
 		}
