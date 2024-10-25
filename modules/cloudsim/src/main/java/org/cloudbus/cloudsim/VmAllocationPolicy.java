@@ -97,24 +97,24 @@ public abstract class VmAllocationPolicy {
 	 */
 	public boolean allocateHostForGuest(GuestEntity guest, HostEntity host) {
 		if (host == null) { // Can't be allocated because host is empty
-			Log.printlnConcat(CloudSim.clock(), ": ", "No Datacenter Found", ": Allocation of ", guest.getClassName(), " is failed (No Host Found!)");
+			Log.printlnConcat(CloudSim.clock(), ": ", "No Datacenter Found", ": Allocation of ", guest.getClassName(), " #", guest.getId(), " is failed (No Suitable Host Found!)");
 			return false;
 		}
 		String datacenterName = host.getDatacenter().getName();
 
 		if (host == guest) { // cannot be hosted on itself (VirtualEntity edge-case)
-			Log.printlnConcat(CloudSim.clock(), ": ", datacenterName, ".vmAllocator: Allocation of ", guest.getClassName(), " #", guest.getId(), " to ", host.getClassName(), " #", host.getId(), " failed (cannot be allocated on itself)");
+			Log.printlnConcat(CloudSim.clock(), ": ", datacenterName, ".guestAllocator: Allocation of ", guest.getClassName(), " #", guest.getId(), " to ", host.getClassName(), " #", host.getId(), " failed (cannot be allocated on itself)");
 			return false;
 		}
 
 		if (host.isBeingInstantiated()){ // cannot be hosted by an unallocated host (VirtualEntity edge-case)
-			Log.printlnConcat(CloudSim.clock(), ": ", datacenterName, ".vmAllocator: Allocation of ", guest.getClassName(), " #", guest.getId(), " to ", host.getClassName(), " #", host.getId(), " failed because the host entity is not instantiated");
+			Log.printlnConcat(CloudSim.clock(), ": ", datacenterName, ".guestAllocator: Allocation of ", guest.getClassName(), " #", guest.getId(), " to ", host.getClassName(), " #", host.getId(), " failed because the host entity is not instantiated");
 			return false;
 		}
 
 		if (host.guestCreate(guest)) { // if vm has been successfully created in the host
 			getGuestTable().put(guest.getUid(), host);
-			Log.printlnConcat(CloudSim.clock(), ": ", datacenterName, ".vmAllocator: .vmAllocator]: ", guest.getClassName(), " #", guest.getId(), " has been allocated to ", host.getClassName(), " #", host.getId());
+			Log.printlnConcat(CloudSim.clock(), ": ", datacenterName, ".guestAllocator: .vmAllocator]: ", guest.getClassName(), " #", guest.getId(), " has been allocated to ", host.getClassName(), " #", host.getId());
 			return true;
 		}
 

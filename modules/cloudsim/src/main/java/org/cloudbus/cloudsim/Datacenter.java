@@ -395,26 +395,28 @@ public class Datacenter extends SimEntity {
 	 * @post $none
 	 */
 	protected void processVmCreate(SimEvent ev, boolean ack) {
-		GuestEntity vm = (GuestEntity) ev.getData();
+		GuestEntity guest = (GuestEntity) ev.getData();
 
-		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm);
+		boolean result = getVmAllocationPolicy().allocateHostForGuest(guest);
 		if (ack) {
 			int[] data = new int[3];
 			data[0] = getId();
-			data[1] = vm.getId();
+			data[1] = guest.getId();
 			data[2] = result ? CloudSimTags.TRUE : CloudSimTags.FALSE;
-			send(vm.getUserId(), CloudSim.getMinTimeBetweenEvents(), CloudActionTags.VM_CREATE_ACK, data);
+			send(guest.getUserId(), CloudSim.getMinTimeBetweenEvents(), CloudActionTags.VM_CREATE_ACK, data);
 		}
 
 		if (result) {
-			getVmList().add(vm);
+			getVmList().add(guest);
 
-			if (vm.isBeingInstantiated()) {
-				vm.setBeingInstantiated(false);
+			if (guest.isBeingInstantiated()) {
+				guest.setBeingInstantiated(false);
 			}
 
-			vm.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getGuestScheduler()
-					.getAllocatedMipsForGuest(vm));
+			guest.updateCloudletsProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(guest).getGuestScheduler()
+					.getAllocatedMipsForGuest(guest));
+		} else {
+			Log.printlnConcat(CloudSim.clock(), ": Datacenter.guestAllocator: Couldn't find a host for ", guest.getClassName(), " #", guest.getId());
 		}
 	}
 
