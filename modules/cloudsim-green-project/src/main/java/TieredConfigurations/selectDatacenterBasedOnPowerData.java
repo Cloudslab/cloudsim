@@ -32,7 +32,7 @@ public static void main(String[] args) {
         CloudSim.init(numUsers, null, false);
 
         // Example power data, in real scenario this will come from the API
-        PowerData powerData = new PowerData(85.0, 22.0);
+        PowerData powerData = new PowerData();
 
         // Select the datacenter based on fossilFreePercentage
         Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(powerData);
