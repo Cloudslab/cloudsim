@@ -48,7 +48,35 @@
                 "-Dexec.mainClass=org.cloudbus.cloudsim.green.CloudSimExample"
             ],
             "runtimeExecutable": "mvn"
-        }
+        },
+        {
+            "request": "launch",
+            "type": "node",
+            "name": "Launch tieredconfigurations.PowerMain",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "exec:java",
+            "args": [
+                "-pl",
+                "modules/cloudsim-green-project/",
+                "-Dexec.mainClass=org.cloudbus.cloudsim.tieredconfigurations.PowerMain"
+            ],
+            "runtimeExecutable": "mvn"
+        },
+        {
+            "request": "launch",
+            "type": "node",
+            "name": "Launch tieredconfigurations.CloudSimExample",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "exec:java",
+            "args": [
+                "-pl",
+                "modules/cloudsim-green-project/",
+                "-Dexec.mainClass=org.cloudbus.cloudsim.tieredconfigurations.CloudSimExample"
+            ],
+            "runtimeExecutable": "mvn"
+        },
         {
             "request": "launch",
             "type": "node",
