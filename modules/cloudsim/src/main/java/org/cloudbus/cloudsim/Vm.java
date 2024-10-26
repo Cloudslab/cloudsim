@@ -415,20 +415,6 @@ public class Vm implements VirtualEntity {
 		return getGuestScheduler().getTotalAllocatedMipsForGuest(guest);
 	}
 
-	/**
-	 * Checks if is suitable for the guest entity.
-	 *
-	 * @param guest guest entity
-	 * @return true, if is suitable for guest entity
-	 */
-	public boolean isSuitableForGuest(GuestEntity guest) {
-
-		return (getGuestScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips()
-				&& getGuestScheduler().getAvailableMips() >= guest.getTotalMips()
-				&& getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
-				.isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
-	}
-
 	public CloudletScheduler getCloudletScheduler() { return cloudletScheduler; }
 	public void setCloudletScheduler(CloudletScheduler cloudletScheduler) { this.cloudletScheduler = cloudletScheduler; }
 

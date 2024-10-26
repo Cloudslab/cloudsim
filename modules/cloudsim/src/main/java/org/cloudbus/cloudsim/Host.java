@@ -121,19 +121,7 @@ public class Host implements HostEntity {
 		return updateCloudletsProcessing(currentTime);
 	}
 
-	/**
-	 * Checks if the host is suitable for vm. If it has enough resources
-	 * to attend the VM.
-	 *
-	 * @param guest the vm
-	 * @return true, if is suitable for vm
-	 */
-	public boolean isSuitableForGuest(GuestEntity guest) {
-		return (getGuestScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips()
-				&& getGuestScheduler().getAvailableMips() >= guest.getCurrentRequestedTotalMips()
-				&& getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
-				.isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
-	}
+
 
 	@Deprecated
 	public boolean isSuitableForVm(Vm vm) { return isSuitableForGuest(vm); }

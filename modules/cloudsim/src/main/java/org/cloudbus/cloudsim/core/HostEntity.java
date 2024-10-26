@@ -402,7 +402,12 @@ public interface HostEntity extends CoreAttributes {
      * @param guest the guest
      * @return true, if is suitable for guest
      */
-    boolean isSuitableForGuest(GuestEntity guest);
+    default boolean isSuitableForGuest(GuestEntity guest) {
+        return (getGuestScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips() &&
+                getGuestScheduler().getAvailableMips() >= guest.getCurrentRequestedTotalMips() &&
+                getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) &&
+                getGuestBwProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
+    }
 
     /**
      * Checks if the host PEs have failed.

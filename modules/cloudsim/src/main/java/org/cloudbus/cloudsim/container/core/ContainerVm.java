@@ -288,9 +288,10 @@ public class ContainerVm extends Vm {
      */
     public boolean isSuitableForGuest(GuestEntity guest) {
 
-        return (getContainerScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips()&& getContainerScheduler().getAvailableMips() >= guest.getTotalMips()
-                && getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) && getGuestBwProvisioner()
-                .isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
+        return (getContainerScheduler().getPeCapacity() >= guest.getCurrentRequestedMaxMips() &&
+                getContainerScheduler().getAvailableMips() >= guest.getTotalMips() &&
+                getGuestRamProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedRam()) &&
+                getGuestBwProvisioner().isSuitableForGuest(guest, guest.getCurrentRequestedBw()));
     }
 
     /**
