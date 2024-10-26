@@ -8,7 +8,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  build-and-run:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,7 +19,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           check-latest: false
-          cache: 'maven'
       - name: Build with Maven
         run: 'mvn clean install'
         shell: bash
