@@ -1,4 +1,4 @@
-package EnergyAPI;
+package org.cloudbus.cloudsim.energyapi;
 
 public class GreenMetricsCalculator {
     /**

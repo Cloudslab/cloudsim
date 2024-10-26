@@ -1,4 +1,4 @@
-package EnergyAPI;
+package org.cloudbus.cloudsim.energyapi;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
