@@ -1,8 +1,10 @@
-package TieredConfigurations;
+package org.cloudbus.cloudsim.tieredconfigurations;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+
+import org.cloudbus.cloudsim.energyapi.ElectricityMapsAPI;
 
 public class PowerData {
     private double fossilFreePercentage;
@@ -10,7 +12,7 @@ public class PowerData {
 
     // Constructor
     public PowerData() throws IOException {
-        EnergyAPI.ElectricityMapsAPI electricityMapsAPI = new EnergyAPI.ElectricityMapsAPI("JtPlg2xeVfyLW");
+        ElectricityMapsAPI electricityMapsAPI = new ElectricityMapsAPI("JtPlg2xeVfyLW");
         // Parse the JSON data
         JsonObject jsonObject = JsonParser.parseString(electricityMapsAPI.getPowerBreakdown("FR")).getAsJsonObject();
 

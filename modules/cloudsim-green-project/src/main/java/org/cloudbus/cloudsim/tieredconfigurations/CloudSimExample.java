@@ -1,4 +1,4 @@
-package TieredConfigurations;
+package org.cloudbus.cloudsim.tieredconfigurations;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;

@@ -2,6 +2,7 @@
 <classpath>
    <classpathentry kind="src" path="modules/cloudsim/src/main/java"/>
    <classpathentry kind="src" path="modules/cloudsim-examples/src/main/java"/>
+   <classpathentry kind="src" path="modules/cloudsim-green-project/src/main/java"/>
    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
    <!-- Add any additional libraries or dependencies here -->
    <classpathentry kind="output" path="bin"/>
