@@ -10,6 +10,9 @@ public class Main {
             String carbonData = electricityMapsAPI.getCarbonIntensity("FR");
             System.out.println("Carbon Intensity Data: " + carbonData);
 
+            String powerBreakdown = electricityMapsAPI.getPowerBreakdown("FR");
+            System.out.println("Power Breakdown Data: " + powerBreakdown);
+
             // Initialize and test WattTime API
             EnergyAPI.WattTimeAPI wattTimeAPI = new EnergyAPI.WattTimeAPI();
             // wattTimeAPI.registerUser("KKRS123", "kkrs123!", "kevinle2@illinois.edu", "Testing123");
