@@ -3,6 +3,7 @@ package TieredConfigurations;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.GuestEntity;
 
 import java.util.List;
 
@@ -14,18 +15,19 @@ public class CustomDatacenterBroker extends DatacenterBroker {
 
     // Method to submit a list of VMs
     public void submitCustomVmList(List<Vm> list) {
+        // Loop through the VM list and cast each VM to GuestEntity, then add it to vmList
         for (Vm vm : list) {
             vm.setUserId(getId());
+            ((List<GuestEntity>) vmList).add(vm);  // Cast each Vm to GuestEntity and add to vmList
         }
-        this.vmList.addAll(list);  // Add VMs directly to the protected list
     }
 
     // Method to submit a list of Cloudlets
     public void submitCustomCloudletList(List<Cloudlet> list) {
         for (Cloudlet cloudlet : list) {
             cloudlet.setUserId(getId());
+            ((List<Cloudlet>) cloudletList).add(cloudlet);  // Add Cloudlets individually to the cloudletList
         }
-        this.cloudletList.addAll(list);  // Add Cloudlets directly to the protected list
     }
 
     // Method to bind Cloudlets to VMs
