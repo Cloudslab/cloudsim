@@ -114,7 +114,7 @@ public abstract class VmAllocationPolicy {
 
 		if (host.guestCreate(guest)) { // if vm has been successfully created in the host
 			getGuestTable().put(guest.getUid(), host);
-			Log.printlnConcat(CloudSim.clock(), ": ", datacenterName, ".guestAllocator: .vmAllocator]: ", guest.getClassName(), " #", guest.getId(), " has been allocated to ", host.getClassName(), " #", host.getId());
+			Log.printlnConcat(CloudSim.clock(), ": ", datacenterName, ".guestAllocator: ", guest.getClassName(), " #", guest.getId(), " has been allocated to ", host.getClassName(), " #", host.getId());
 			return true;
 		}
 

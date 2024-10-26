@@ -51,28 +51,28 @@ public interface HostEntity extends CoreAttributes {
      */
     default boolean guestCreate(GuestEntity guest) {
         if (getStorage() < guest.getSize()) {
-            Log.formatLine("%.2f: [GuestScheduler.ContainerCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
-                    " failed by storage", CloudSim.clock());
+            Log.printlnConcat(CloudSim.clock(), "[GuestScheduler.guestCreate] Allocation of ", guest.getClassName(), " #",guest.getId(),
+                    " failed by storage");
             return false;
         }
 
         if (!getGuestRamProvisioner().allocateRamForGuest(guest, guest.getCurrentRequestedRam())) {
-            Log.formatLine("%.2f: [GuestScheduler.ContainerCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
-                    " failed by RAM", CloudSim.clock());
+            Log.printlnConcat(CloudSim.clock(), "[GuestScheduler.guestCreate] Allocation of ", guest.getClassName(), " #",guest.getId(),
+                    " failed by RAM ");
             return false;
         }
 
         if (!getGuestBwProvisioner().allocateBwForGuest(guest, guest.getCurrentRequestedBw())) {
-            Log.formatLine("%.2f: [GuestScheduler.ContainerCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
-                    " failed by BW", CloudSim.clock());
+            Log.printlnConcat(CloudSim.clock(), "[GuestScheduler.guestCreate] Allocation of ", guest.getClassName(), " #",guest.getId(),
+                    " failed by BW");
             getGuestRamProvisioner().deallocateRamForGuest(guest);
             return false;
         }
 
         // NOTE: this calls peProvisioner.allocateMipsForGuest
         if (!getGuestScheduler().allocatePesForGuest(guest, guest.getCurrentRequestedMips())) {
-            Log.formatLine("%.2f: [GuestScheduler.ContainerCreate] Allocation of "+guest.getClassName()+" #"+guest.getId()+" to "+getClassName()+" #"+getId()+
-                    " failed by MIPS", CloudSim.clock());
+            Log.printlnConcat(CloudSim.clock(), "[GuestScheduler.guestCreate] Allocation of ", guest.getClassName(), " #",guest.getId(),
+                    " failed by Number of PEs or MIPS");
             getGuestRamProvisioner().deallocateRamForGuest(guest);
             getGuestBwProvisioner().deallocateBwForGuest(guest);
             return false;

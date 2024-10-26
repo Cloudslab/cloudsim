@@ -77,15 +77,11 @@ public class HostDynamicWorkload extends Host {
 			double totalAllocatedMips = getGuestScheduler().getTotalAllocatedMipsForGuest(vm);
 
 			if (!Log.isDisabled()) {
-				Log.formatLine(
-						"%.2f: [Host #" + getId() + "] Total allocated MIPS for VM #" + vm.getId()
-								+ " (Host #" + vm.getHost().getId()
-								+ ") is %.2f, was requested %.2f out of total %.2f (%.2f%%)",
-						CloudSim.clock(),
-						totalAllocatedMips,
-						totalRequestedMips,
-						vm.getMips(),
-						totalRequestedMips / vm.getMips() * 100);
+				Log.printlnConcat(CloudSim.clock(),
+						": [Host #", getId(), "] Total allocated MIPS for VM #", vm.getId()
+								, " (Host #", vm.getHost().getId()
+								, ") is ", totalAllocatedMips,", was requested ", totalRequestedMips
+								, " out of total ",vm.getMips(), " (", totalRequestedMips / vm.getMips() * 100,"%.2f%%)");
 
 				List<Pe> pes = getGuestScheduler().getPesAllocatedForGuest(vm);
 				StringBuilder pesString = new StringBuilder();
@@ -93,20 +89,19 @@ public class HostDynamicWorkload extends Host {
 					pesString.append(String.format(" PE #" + pe.getId() + ": %.2f.", pe.getPeProvisioner()
 							.getTotalAllocatedMipsForGuest(vm)));
 				}
-				Log.formatLine(
-						"%.2f: [Host #" + getId() + "] MIPS for VM #" + vm.getId() + " by PEs ("
-								+ getNumberOfPes() + " * " + getGuestScheduler().getPeCapacity() + ")."
-								+ pesString,
-						CloudSim.clock());
+				Log.printlnConcat(CloudSim.clock(),
+						": [Host #", getId(), "] MIPS for VM #", vm.getId(), " by PEs ("
+								, getNumberOfPes(), " * ", getGuestScheduler().getPeCapacity() + ")."
+								, pesString);
 			}
 
 			if (getGuestsMigratingIn().contains(vm)) {
-				Log.formatLine("%.2f: [Host #" + getId() + "] VM #" + vm.getId()
-						+ " is being migrated to Host #" + getId(), CloudSim.clock());
+				Log.printlnConcat(CloudSim.clock(), ": [Host #", getId(), "] VM #" + vm.getId()
+						, " is being migrated to Host #", getId());
 			} else {
 				if (totalAllocatedMips + 0.1 < totalRequestedMips) {
-					Log.formatLine("%.2f: [Host #" + getId() + "] Under allocated MIPS for VM #" + vm.getId()
-							+ ": %.2f", CloudSim.clock(), totalRequestedMips - totalAllocatedMips);
+					Log.printlnConcat(CloudSim.clock(), ": [Host #", getId(), "] Under allocated MIPS for VM #", vm.getId()
+							, ": ", totalRequestedMips - totalAllocatedMips);
 				}
 
 				vm.addStateHistoryEntry(
@@ -116,9 +111,8 @@ public class HostDynamicWorkload extends Host {
 						(vm.isInMigration() && !getGuestsMigratingIn().contains(vm)));
 
 				if (vm.isInMigration()) {
-					Log.formatLine(
-							"%.2f: [Host #" + getId() + "] VM #" + vm.getId() + " is in migration",
-							CloudSim.clock());
+					Log.printlnConcat(CloudSim.clock(),
+							": [Host #", getId(), "] VM #", vm.getId(), " is in migration");
 					totalAllocatedMips /= 0.9; // performance degradation due to migration - 10%
 				}
 			}
