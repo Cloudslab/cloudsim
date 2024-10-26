@@ -38,7 +38,12 @@ public static void main(String[] args) {
         Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(powerData);
 
         // Create broker
-        CustomDatacenterBroker broker = new CustomDatacenterBroker("Broker");
+        CustomDatacenterBroker broker = null;
+        try {
+            broker = new CustomDatacenterBroker("Broker");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Create VMs and Cloudlets
         List<Vm> vmList = createVMs();
