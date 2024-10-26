@@ -23,3 +23,6 @@ jobs:
       - name: Build with Maven
         run: 'mvn clean install'
         shell: bash
+      - name: Run EnergyAPI.Main
+        run: 'mvn exec:java -pl modules/cloudsim-green-project/ -Dexec.mainClass=org.cloudbus.cloudsim.energyapi.Main'
+        shell: bash
