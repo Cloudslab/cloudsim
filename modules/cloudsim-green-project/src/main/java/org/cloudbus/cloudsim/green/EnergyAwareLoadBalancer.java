@@ -1,18 +1,21 @@
 package org.cloudbus.cloudsim.green;
 
-import org.cloudbus.cloudsim.*;
+import java.util.List;
 
-import java.util.*;
+import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
+import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Vm;
 
 class EnergyAwareLoadBalancer {
     public void balanceLoad(List<Host> allHosts, List<Cloudlet> cloudlets) {
         for (Cloudlet cloudlet : cloudlets) {
             Host bestHost = findBestHost(allHosts, cloudlet);
             if (bestHost != null) {
-                // Assign cloudlet to the best host
-                Vm vm = new Vm(cloudlet.getCloudletId(), bestHost.getId(), cloudlet.getCloudletLength(), 1, 512, 1000, 1000, "Xen", new CloudletSchedulerTimeShared());
+                Vm vm = new Vm(cloudlet.getCloudletId(), bestHost.getId(), cloudlet.getCloudletLength(), 
+                               1, 512, 1000, 1000, "Xen", new CloudletSchedulerTimeShared());
                 bestHost.vmCreate(vm);
-                bestHost.getVmScheduler().cloudletSubmit(cloudlet);
+                vm.getCloudletScheduler().cloudletSubmit(cloudlet);
             }
         }
     }

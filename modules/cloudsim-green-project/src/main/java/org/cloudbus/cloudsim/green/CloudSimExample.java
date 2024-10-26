@@ -68,9 +68,10 @@ public class CloudSimExample {
         List<Host> highPerformanceHosts = createHosts(new HighPerformancePowerModel(), 8); // 8 high-performance hosts
 
         // Add them to the Datacenter
-        Datacenter datacenter = createDatacenter(renewableEnergyHosts, energyEfficientHosts, highPerformanceHosts);
+        Datacenter dc = createDatacenter(renewableEnergyHosts, energyEfficientHosts, highPerformanceHosts);
         
         // Proceed with orchestrator and workload scheduling...
+        System.out.println(dc);
     }
 
     private static List<Host> createHosts(PowerModel powerModel, int count) {

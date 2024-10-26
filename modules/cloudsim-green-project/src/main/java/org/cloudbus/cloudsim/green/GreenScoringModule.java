@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.green;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.power.PowerHost;
 
 class GreenScoringModule {
     private double renewableEnergyUsageGoal = 0.7; // 70% of workloads on renewable energy
@@ -10,7 +10,7 @@ class GreenScoringModule {
     private double currentRenewableEnergyUsage = 0;
     private double currentCarbonEmissions = 0;
 
-    public void trackEnergyUsage(Host host, Cloudlet cloudlet) {
+    public void trackEnergyUsage(PowerHost host, Cloudlet cloudlet) {
         // Track renewable energy usage based on host type
         if (host.getPowerModel() instanceof RenewableEnergyPowerModel) {
             currentRenewableEnergyUsage += cloudlet.getCloudletLength();
@@ -25,7 +25,7 @@ class GreenScoringModule {
                 && currentCarbonEmissions <= carbonEmissionLimit;
     }
 
-    private double calculateCarbonEmissions(Host host, Cloudlet cloudlet) {
+    private double calculateCarbonEmissions(PowerHost host, Cloudlet cloudlet) {
         return host.getPowerModel().getPower(0.5) * cloudlet.getCloudletLength() * 0.0001; // Simplified carbon formula
     }
 
