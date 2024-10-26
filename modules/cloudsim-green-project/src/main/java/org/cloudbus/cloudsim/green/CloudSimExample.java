@@ -1,17 +1,22 @@
 package org.cloudbus.cloudsim.green;
 
-import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.power.*;
-import org.cloudbus.cloudsim.power.models.PowerModel;
-import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
-import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.cloudbus.cloudsim.Datacenter;
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
+import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.VmAllocationPolicySimple;
+import org.cloudbus.cloudsim.VmSchedulerTimeShared;
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.power.PowerHost;
+import org.cloudbus.cloudsim.power.models.PowerModel;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 // Define power models for different Tiers
 class RenewableEnergyPowerModel implements PowerModel {
@@ -63,9 +68,10 @@ public class CloudSimExample {
         List<Host> highPerformanceHosts = createHosts(new HighPerformancePowerModel(), 8); // 8 high-performance hosts
 
         // Add them to the Datacenter
-        Datacenter datacenter = createDatacenter(renewableEnergyHosts, energyEfficientHosts, highPerformanceHosts);
+        Datacenter dc = createDatacenter(renewableEnergyHosts, energyEfficientHosts, highPerformanceHosts);
         
         // Proceed with orchestrator and workload scheduling...
+        System.out.println(dc);
     }
 
     private static List<Host> createHosts(PowerModel powerModel, int count) {
@@ -87,6 +93,10 @@ public class CloudSimExample {
         for (List<Host> hosts : hostLists) {
             allHosts.addAll(hosts);
         }
-        return new Datacenter("Datacenter", (DatacenterCharacteristics) allHosts, new VmAllocationPolicySimple(allHosts), new LinkedList<>(), 0);
+        return new Datacenter("Datacenter",
+            new DatacenterCharacteristics(null, null, null, allHosts, 0, 0, 0, 0, 0),
+            new VmAllocationPolicySimple(allHosts),
+            new LinkedList<>(),
+            5);
     }
 }

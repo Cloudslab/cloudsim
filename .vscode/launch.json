@@ -3,7 +3,56 @@
         {
             "request": "launch",
             "type": "node",
-            "name": "Launch CloudSimExample9",
+            "name": "Clean",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "clean",
+            "runtimeExecutable": "mvn"
+        },
+        {
+            "request": "launch",
+            "type": "node",
+            "name": "Build/Install/Run",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "clean",
+            "args": [
+                "install"
+            ],
+            "runtimeExecutable": "mvn"
+        },
+        {
+            "request": "launch",
+            "type": "node",
+            "name": "Launch energyapi.Main",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "exec:java",
+            "args": [
+                "-pl",
+                "modules/cloudsim-green-project/",
+                "-Dexec.mainClass=org.cloudbus.cloudsim.energyapi.Main"
+            ],
+            "runtimeExecutable": "mvn"
+        },
+        {
+            "request": "launch",
+            "type": "node",
+            "name": "Launch green.CloudSimExample",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "exec:java",
+            "args": [
+                "-pl",
+                "modules/cloudsim-green-project/",
+                "-Dexec.mainClass=org.cloudbus.cloudsim.green.CloudSimExample"
+            ],
+            "runtimeExecutable": "mvn"
+        }
+        {
+            "request": "launch",
+            "type": "node",
+            "name": "Launch examples.CloudSimExample9",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "program": "exec:java",
@@ -17,14 +66,14 @@
         {
             "request": "launch",
             "type": "node",
-            "name": "Launch ContainerCloudSimExample1",
+            "name": "Launch examples.container.ContainerCloudSimExample1",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "program": "exec:java",
             "args": [
                 "-pl",
                 "modules/cloudsim-examples/",
-                "-Dexec.mainClass=org.cloudbus.cloudsim.examples.container.ContainerCloudSimExample1"
+                "-Dexec.mainClass=org.cloudbus.cloudsim.examples.container.ContainerCloudSimExample5"
             ],
             "runtimeExecutable": "mvn"
         }
