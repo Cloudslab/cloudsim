@@ -22,7 +22,6 @@
     <modules>
         <module>modules/cloudsim</module>
         <module>modules/cloudsim-examples</module>
-        <module>modules/cloudsim-green-project</module>
     </modules>
 
     <dependencyManagement>
