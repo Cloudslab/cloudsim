@@ -93,6 +93,10 @@ public class CloudSimExample {
         for (List<Host> hosts : hostLists) {
             allHosts.addAll(hosts);
         }
-        return new Datacenter("Datacenter", (DatacenterCharacteristics) allHosts, new VmAllocationPolicySimple(allHosts), new LinkedList<>(), 0);
+        return new Datacenter("Datacenter",
+            new DatacenterCharacteristics(null, null, null, allHosts, 0, 0, 0, 0, 0),
+            new VmAllocationPolicySimple(allHosts),
+            new LinkedList<>(),
+            5);
     }
 }

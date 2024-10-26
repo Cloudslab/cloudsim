@@ -38,6 +38,20 @@
         {
             "request": "launch",
             "type": "node",
+            "name": "Launch green.CloudSimExample",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "exec:java",
+            "args": [
+                "-pl",
+                "modules/cloudsim-green-project/",
+                "-Dexec.mainClass=org.cloudbus.cloudsim.green.CloudSimExample"
+            ],
+            "runtimeExecutable": "mvn"
+        }
+        {
+            "request": "launch",
+            "type": "node",
             "name": "Launch examples.CloudSimExample9",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
