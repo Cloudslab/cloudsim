@@ -1,10 +1,14 @@
 package org.cloudbus.cloudsim.tieredconfigurations;
 
-import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.core.CloudSim;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
+import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.UtilizationModelFull;
+import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.CloudSim;
 
 public class CloudSimExample {
 
@@ -32,7 +36,11 @@ public class CloudSimExample {
             broker.submitCustomCloudletList(cloudletList);
 
             // Bind Cloudlets to VMs
-            broker.bindCloudletsToVms(cloudletList, vmList);
+            // broker.bindCloudletsToVms(cloudletList, vmList);
+
+            // load balancing
+            EnergyAwareLoadBalancer loadBalancer = new EnergyAwareLoadBalancer();
+            loadBalancer.balanceLoad(cloudletList, vmList);
 
             // Start the simulation
             CloudSim.startSimulation();
