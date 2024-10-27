@@ -63,16 +63,18 @@ public class CloudSimMultiExtensionExample1 {
 
 			// Create host
 			int mips = 1000;
-			int hostId = 0;
 			int ram = 2048; // host memory (MB)
 			long storage = 1000000; // host storage
 			int bw = 10000;
 
 			List<Pe> peList = new ArrayList<>();
 			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
+			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
+			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
+			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
 
 			hostList.add(
-					new Host(hostId, new RamProvisionerSimple(ram), new BwProvisionerSimple(bw), storage, peList, new VmSchedulerSpaceShared(peList))
+					new Host(0, new RamProvisionerSimple(ram), new BwProvisionerSimple(bw), storage, peList, new VmSchedulerSpaceShared(peList))
 			);
 
 			// Create Vms
@@ -82,31 +84,43 @@ public class CloudSimMultiExtensionExample1 {
 			long size = 10000; // image size (MB)
 			ram = 512; // vm memory (MB)
 			bw = 1000;
-			int pesNumber = 1; // number of cpus
+			int pesNumber = 2; // number of cpus
 			String vmm = "Xen"; // VMM name
 
 			// create Vm (not eligible for containers)
-			//VirtualEntity vm1 = new Vm(0, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared());
-			//vmlist.add(vm1);
+			//VirtualEntity vm0 = new Vm(0, brokerId, mips/2, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+			//vmlist.add(vm0);
 
 			// create Vm (eligible for containers)
 			peList = new ArrayList<>();
-			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
-			VirtualEntity vm2 = new Vm(1, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared(),
+			peList.add(new Pe(0, new PeProvisionerSimple(mips/4)));
+			peList.add(new Pe(1, new PeProvisionerSimple(mips/4)));
+			VirtualEntity vm1 = new Vm(1, brokerId, (double) mips/2, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared(),
 					                                                         new VmSchedulerTimeShared(peList),
 																			 new RamProvisionerSimple(ram),
 																			 new BwProvisionerSimple(bw),
 																			 peList);
-			vmlist.add(vm2);
-			hostList.add(vm2);
+			vmlist.add(vm1);
+			hostList.add(vm1);
+
+			peList = new ArrayList<>();
+			peList.add(new Pe(0, new PeProvisionerSimple(mips/4)));
+			peList.add(new Pe(1, new PeProvisionerSimple(mips/4)));
+			VirtualEntity vm3 = new Vm(2, brokerId, (double) mips /2, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared(),
+					new VmSchedulerTimeShared(peList),
+					new RamProvisionerSimple(ram),
+					new BwProvisionerSimple(bw),
+					peList);
+			vmlist.add(vm3);
+			hostList.add(vm3);
 
 			// Create container
 			containerlist = new ArrayList<>();
-			GuestEntity container = new Container(2, brokerId, mips/2, pesNumber, ram/2, bw/2, size/2, "Docker",
-																			new CloudletSchedulerSpaceShared(), 0);
+			GuestEntity container = new Container(3, brokerId, 100, pesNumber, ram/2, bw/2, size/2, "Docker",
+																			new CloudletSchedulerTimeShared(), 0);
 			containerlist.add(container);
 
-			GuestEntity container2 = new Container(3, brokerId, mips/2, pesNumber, ram/2, bw/2, size/2, "Docker",
+			GuestEntity container2 = new Container(4, brokerId, 100, pesNumber, ram/2, bw/2, size/2, "Docker",
 					new CloudletSchedulerSpaceShared(), 0);
 			containerlist.add(container2);
 
@@ -129,14 +143,28 @@ public class CloudSimMultiExtensionExample1 {
                                         outputSize, utilizationModel, utilizationModel, 
                                         utilizationModel);
 			cloudlet.setUserId(brokerId);
-			//cloudlet.setGuestId(2);
+			cloudlet.setGuestId(3);
 			cloudletList.add(cloudlet);
 
 			cloudlet = new Cloudlet(1, length, pesNumber, fileSize,
 					outputSize, utilizationModel, utilizationModel,
 					utilizationModel);
 			cloudlet.setUserId(brokerId);
-			//cloudlet.setGuestId(2);
+			cloudlet.setGuestId(3);
+			cloudletList.add(cloudlet);
+
+			cloudlet = new Cloudlet(2, length, pesNumber, fileSize,
+					outputSize, utilizationModel, utilizationModel,
+					utilizationModel);
+			cloudlet.setUserId(brokerId);
+			cloudlet.setGuestId(4);
+			cloudletList.add(cloudlet);
+
+			cloudlet = new Cloudlet(3, length, pesNumber, fileSize,
+					outputSize, utilizationModel, utilizationModel,
+					utilizationModel);
+			cloudlet.setUserId(brokerId);
+			cloudlet.setGuestId(4);
 			cloudletList.add(cloudlet);
 
 
