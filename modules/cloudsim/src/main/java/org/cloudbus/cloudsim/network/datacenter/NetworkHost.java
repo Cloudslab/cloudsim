@@ -85,22 +85,25 @@ public class NetworkHost extends Host {
 				nic.getPktsToSend().removeAll(retrievedPkts);
 			}
 
-			int totalPkts = pktToSendFromGuest.size();
-
+			int totalGuestPkts = pktToSendFromGuest.size();
+			List<NetworkPacket> pktToSendFromGuestExternally = new ArrayList<>();
 			for (HostPacket hpkt : pktToSendFromGuest) {
-				NetworkPacket npkt = new NetworkPacket(getId(), hpkt);
-				GuestEntity receiver = VmList.getById(this.getGuestList(), npkt.receiverGuestId);
+				GuestEntity receiver = VmList.getById(this.getGuestList(), hpkt.receiverGuestId);
 				if (receiver != null) { // send locally to Vm, no network delay
 					flag = true;
-
-					npkt.sendTime = npkt.recvTime;
-					npkt.pkt.recvTime = CloudSim.clock();
+					hpkt.recvTime = CloudSim.clock();
 
 					// insert the packet in received list on destination guest
-					nics.get(npkt.pkt.receiverCloudletId).getReceivedPkts().add(npkt.pkt);
-				} else { // send to edge switch, since destination guest is hosted on another host
+					nics.get(hpkt.receiverCloudletId).getReceivedPkts().add(hpkt);
+					totalGuestPkts--;
+				} else {
+					pktToSendFromGuestExternally.add(new NetworkPacket(getId(), hpkt));
+				}
+
+				// send to edge switch, since destination guest is hosted on another host
+				for (NetworkPacket npkt : pktToSendFromGuestExternally) {
 					// Assumption: no overprovisioning of guest's bandwidth
-					double avband = (double) sender.getBw() / totalPkts;
+					double avband = (double) sender.getBw() / totalGuestPkts;
 					double delay = 8 * npkt.pkt.data / avband;
 
 					((NetworkDatacenter) getDatacenter()).totalDataTransfer += npkt.pkt.data;
