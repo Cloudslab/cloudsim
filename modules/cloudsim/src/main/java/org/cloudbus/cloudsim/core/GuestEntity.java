@@ -209,6 +209,12 @@ public interface GuestEntity extends CoreAttributes {
     CloudletScheduler getCloudletScheduler();
 
     /**
+     * Virtualization overhead for cloudlets placed on this guest entity, in milliseconds
+     */
+    int getVirtualizationOverhead();
+    void setVirtualizationOverhead(int overhead);
+
+    /**
      * Sets the host that runs this guest.
      *
      * @param host Host running the guest entity

@@ -120,6 +120,8 @@ public class Vm implements VirtualEntity {
 	 */
 	private final List<VmStateHistoryEntry> stateHistory = new ArrayList<>();
 
+	private int virtualizationOverhead;
+
 	/**
 	 * Creates a new Vm object.
 	 * 
@@ -227,6 +229,7 @@ public class Vm implements VirtualEntity {
 		setPeList(peList);
 		setGuestRamProvisioner(containerRamProvisioner);
 		setGuestBwProvisioner(containerBwProvisioner);
+		setVirtualizationOverhead(0);
 	}
 
 	/**
@@ -416,6 +419,13 @@ public class Vm implements VirtualEntity {
 	}
 
 	public CloudletScheduler getCloudletScheduler() { return cloudletScheduler; }
+
+	@Override
+	public int getVirtualizationOverhead() { return virtualizationOverhead; }
+
+	@Override
+	public void setVirtualizationOverhead(int overhead) { virtualizationOverhead = overhead; }
+
 	public void setCloudletScheduler(CloudletScheduler cloudletScheduler) { this.cloudletScheduler = cloudletScheduler; }
 
 	public VmScheduler getGuestScheduler() { return guestScheduler; }

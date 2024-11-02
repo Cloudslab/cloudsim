@@ -95,6 +95,8 @@ public class Container implements GuestEntity {
     private double schedulingInterval;
 
 
+    private int virtualizationOverhead;
+
     /**
      * Creates a new Container object.
      * @param id
@@ -135,6 +137,7 @@ public class Container implements GuestEntity {
         setCurrentAllocatedRam(0);
         setCurrentAllocatedSize(0);
         setSchedulingInterval(schedulingInterval);
+        setVirtualizationOverhead(0);
     }
 
     /**
@@ -281,6 +284,13 @@ public class Container implements GuestEntity {
     protected void setContainerManager(String containerManager) { this.containerManager = containerManager; }
 
     public CloudletScheduler getCloudletScheduler() { return cloudletScheduler; }
+
+    @Override
+    public int getVirtualizationOverhead() { return virtualizationOverhead; }
+
+    @Override
+    public void setVirtualizationOverhead(int overhead) { virtualizationOverhead = overhead; }
+
     protected void setCloudletScheduler(CloudletScheduler cloudletScheduler) {
         this.cloudletScheduler = cloudletScheduler;
     }

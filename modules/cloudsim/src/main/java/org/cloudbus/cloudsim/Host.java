@@ -7,11 +7,11 @@
 
 package org.cloudbus.cloudsim;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
+import org.cloudbus.cloudsim.core.VirtualEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
@@ -60,6 +60,9 @@ public class Host implements HostEntity {
 	/** The datacenter where the host is placed. */
 	private Datacenter datacenter;
 
+	/** guest id -> overhead */
+	private Map<Integer, Integer> cachedVirtualizationOverhead;
+
 	/**
 	 * Instantiates a new host.
 	 * 
@@ -85,6 +88,8 @@ public class Host implements HostEntity {
 
 		setPeList(peList);
 		setFailed(false);
+
+		cachedVirtualizationOverhead = new HashMap<>();
 	}
 
 	/**
@@ -125,6 +130,41 @@ public class Host implements HostEntity {
 
 	@Deprecated
 	public boolean isSuitableForVm(Vm vm) { return isSuitableForGuest(vm); }
+
+	/**
+	 * Find guest (which could be nested) and return its total virtualization overhead
+	 *
+	 * @param guestId guest to compute the total virtualization overhead
+	 * @param it iterator to a guest list
+	 * @param acc accumulated virtualization overhead so far
+	 * @return 0 if guest is not present
+	 */
+	public int getTotalVirtualizationOverhead(int guestId, Iterator<GuestEntity> it, int acc) {
+		if (cachedVirtualizationOverhead.containsKey(guestId)) {
+			return acc + cachedVirtualizationOverhead.get(guestId);
+		}
+
+		if (!it.hasNext()) {
+			return 0;
+		}
+
+		GuestEntity currGuest = it.next();
+		if (!cachedVirtualizationOverhead.containsKey(currGuest.getId())) {
+			cachedVirtualizationOverhead.put(currGuest.getId(), acc + currGuest.getVirtualizationOverhead());
+		}
+
+		if (currGuest.getId() == guestId) {
+			return acc + currGuest.getVirtualizationOverhead();
+		}
+
+		int nested = 0;
+		if (currGuest instanceof VirtualEntity vm)
+			nested = getTotalVirtualizationOverhead(guestId, vm.getGuestList().iterator(), acc+currGuest.getVirtualizationOverhead());
+
+		int next = getTotalVirtualizationOverhead(guestId, it, acc);
+
+		return Math.max(nested, next);
+	}
 
 	/**
 	 * Gets the pes number.

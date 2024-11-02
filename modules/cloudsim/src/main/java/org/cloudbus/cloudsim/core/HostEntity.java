@@ -12,8 +12,7 @@ import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * An interface for implementing Host entities. A Host entity is used for hosting guest entities
