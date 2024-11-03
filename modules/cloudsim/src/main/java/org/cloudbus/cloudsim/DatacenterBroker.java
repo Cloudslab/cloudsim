@@ -366,10 +366,10 @@ public class DatacenterBroker extends SimEntity {
 					if(!Log.isDisabled()) {
 						if (vm != null) {
 							Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
-									cloudlet.getCloudletId(), ": bount "+vm.getClassName()+" #"+vm.getId()+" not available");
+									cloudlet.getCloudletId(), ": bount ", vm.getClassName(), " #", vm.getId(), " not available");
 						} else {
 							Log.printlnConcat(CloudSim.clock(), ": ", getName(), ": Postponing execution of cloudlet ",
-									cloudlet.getCloudletId(), ": bount guest entity doesn't exist");
+									cloudlet.getCloudletId(), ": bount guest entity of id ", cloudlet.getGuestId(), " doesn't exist");
 						}
 					}
 					continue;
