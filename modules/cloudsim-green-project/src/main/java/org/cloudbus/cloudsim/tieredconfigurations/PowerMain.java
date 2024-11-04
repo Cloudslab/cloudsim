@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-class PowerMain {
+public class PowerMain {
     private static List<Cloudlet> cloudletList;
     private static List<Vm> vmList;
     public static Datacenter selectDatacenterBasedOnPowerData(PowerData powerData) throws Exception {
