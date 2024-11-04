@@ -46,6 +46,7 @@ public class NetworkHost extends Host {
 	 * @TODO: Remo Andreoli: Ideally the nic shouldn't skip the guest entity; to be fixed
 	 */
 	private Map<Integer, NetworkInterfaceCard> nics;
+	private Map<Integer, List<NetworkPacket>> sendPktExternally;
 
 	public NetworkHost(
 			int id,
@@ -56,6 +57,7 @@ public class NetworkHost extends Host {
 			VmScheduler vmScheduler) {
 		super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler);
 		nics = new HashMap<>();
+		sendPktExternally = new HashMap<>();
 	}
 
 	@Override
@@ -75,19 +77,8 @@ public class NetworkHost extends Host {
 	private void sendPackets() {
 		boolean flag = false;
 
-		for (GuestEntity sender : super.getGuestList()) {
-			// Retrieve packets to be sent for guest entity
-			List<HostPacket> pktToSendFromGuest = new ArrayList<>();
-			for (NetworkInterfaceCard nic : nics.values()) {
-				List<HostPacket> retrievedPkts = nic.getPktsToSend().stream().filter(pkt -> pkt.senderGuestId == sender.getId()).toList();
-
-				pktToSendFromGuest.addAll(retrievedPkts);
-				nic.getPktsToSend().removeAll(retrievedPkts);
-			}
-
-			int totalGuestPkts = pktToSendFromGuest.size();
-			List<NetworkPacket> pktToSendFromGuestExternally = new ArrayList<>();
-			for (HostPacket hpkt : pktToSendFromGuest) {
+		for (NetworkInterfaceCard nic : nics.values()) {
+			for (HostPacket hpkt : nic.getPktsToSend()) {
 				GuestEntity receiver = VmList.getById(this.getGuestList(), hpkt.receiverGuestId);
 				if (receiver != null) { // send locally to Vm, no network delay
 					flag = true;
@@ -95,24 +86,33 @@ public class NetworkHost extends Host {
 
 					// insert the packet in received list on destination guest
 					nics.get(hpkt.receiverCloudletId).getReceivedPkts().add(hpkt);
-					totalGuestPkts--;
 				} else {
-					pktToSendFromGuestExternally.add(new NetworkPacket(getId(), hpkt));
-				}
-
-				// send to edge switch, since destination guest is hosted on another host
-				for (NetworkPacket npkt : pktToSendFromGuestExternally) {
-					// Assumption: no overprovisioning of guest's bandwidth
-					double avband = (double) sender.getBw() / totalGuestPkts;
-					double delay = 8 * npkt.pkt.data / avband;
-
-					((NetworkDatacenter) getDatacenter()).totalDataTransfer += npkt.pkt.data;
-
-					// send to switch with delay
-					CloudSim.send(getDatacenter().getId(), sw.getId(), delay, CloudActionTags.NETWORK_PKT_UP, npkt);
+					sendPktExternally.computeIfAbsent(hpkt.senderGuestId, k -> new ArrayList<>())
+									 .add(new NetworkPacket(getId(), hpkt));
 				}
 			}
+			nic.getPktsToSend().clear();
 		}
+
+		// send to edge switch, since destination guest is hosted on another host
+		for (Integer guestId : sendPktExternally.keySet()) {
+			GuestEntity sender = VmList.getById(this.getGuestList(), guestId);
+			if (sender == null) {
+				throw new RuntimeException("senderVm not found! is it nested?");
+			}
+
+			for (NetworkPacket npkt : sendPktExternally.get(guestId)) {
+				// Assumption: no overprovisioning of guest's bandwidth
+				double avband = (double) sender.getBw() / sendPktExternally.get(guestId).size();
+				double delay = 8 * npkt.pkt.data / avband;
+
+				((NetworkDatacenter) getDatacenter()).totalDataTransfer += npkt.pkt.data;
+
+				// send to switch with delay
+				CloudSim.send(getDatacenter().getId(), sw.getId(), delay, CloudActionTags.NETWORK_PKT_UP, npkt);
+			}
+		}
+		sendPktExternally.clear();
 
 		if (flag) {
 			for (GuestEntity guest : super.getGuestList()) {
