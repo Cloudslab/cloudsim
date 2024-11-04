@@ -10,7 +10,6 @@ public class PowerData {
     private double fossilFreePercentage;
     private double renewablePercentage;
 
-    // Constructor
     public PowerData() throws IOException {
         ElectricityMapsAPI electricityMapsAPI = new ElectricityMapsAPI("JtPlg2xeVfyLW");
         // Parse the JSON data
