@@ -10,20 +10,6 @@ import java.util.List;
 public class PowerMain {
     private static List<Cloudlet> cloudletList;
     private static List<Vm> vmList;
-    public static Datacenter selectDatacenterBasedOnPowerData(PowerData powerData) throws Exception {
-        double fossilFreePercentage = powerData.getFossilFreePercentage();
-
-        if (fossilFreePercentage > 70) {
-            System.out.println("Selecting High Resource Datacenter...");
-            return DatacenterFactory.createHighResourceDatacenter("High_Resource_Datacenter");
-        } else if (fossilFreePercentage > 35) {
-            System.out.println("Selecting Medium Resource Datacenter...");
-            return DatacenterFactory.createMediumResourceDatacenter("Medium_Resource_Datacenter");
-        } else {
-            System.out.println("Selecting Low Resource Datacenter...");
-            return DatacenterFactory.createLowResourceDatacenter("Low_Resource_Datacenter");
-        }
-    }
 
     public static void main(String[] args) {
         try {
@@ -50,7 +36,8 @@ public class PowerMain {
             // List<Cloudlet> cloudletList = createCloudlets();
 
             // create VM and add vm to the vmList
-            vmList.add(createVM(brokerId));
+            vmList.add(createVM(brokerId, 0));
+            vmList.add(createVM(brokerId, 1));
 
             // submit vm list to the broker
             broker.submitGuestList(vmList);
@@ -59,7 +46,18 @@ public class PowerMain {
             cloudletList = new ArrayList<>();
 
             // add the cloudlet to the list
-            cloudletList.add(createCloudlet(brokerId, 0));
+            int id = 0;
+            cloudletList.add(createCloudlet(id, brokerId, 0, 10000));
+            id++;
+            cloudletList.add(createCloudlet(id, brokerId, 0, 100000));
+            id++;
+            cloudletList.add(createCloudlet(id, brokerId, 0, 1000000));
+            id++;
+            cloudletList.add(createCloudlet(id, brokerId, 1, 10000));
+            id++;
+            cloudletList.add(createCloudlet(id, brokerId, 1, 100000));
+            id++;
+            cloudletList.add(createCloudlet(id, brokerId, 1, 1000000));
 
             // submit cloudlet list to the broker
             broker.submitCloudletList(cloudletList);
@@ -78,6 +76,24 @@ public class PowerMain {
         }
     }
 
+    public static Datacenter selectDatacenterBasedOnPowerData(PowerData powerData) throws Exception {
+        double fossilFreePercentage = powerData.getFossilFreePercentage();
+        Datacenter highResDatacenter = DatacenterFactory.createHighResourceDatacenter("High_Resource_Datacenter");
+        Datacenter mediumResDatacenter = DatacenterFactory.createMediumResourceDatacenter("Medium_Resource_Datacenter");
+        Datacenter lowResDatacenter = DatacenterFactory.createLowResourceDatacenter("Low_Resource_Datacenter");
+
+        if (fossilFreePercentage > 70) {
+            System.out.println("Selecting High Resource Datacenter...");
+            return highResDatacenter;
+        } else if (fossilFreePercentage > 35) {
+            System.out.println("Selecting Medium Resource Datacenter...");
+            return mediumResDatacenter;
+        } else {
+            System.out.println("Selecting Low Resource Datacenter...");
+            return lowResDatacenter;
+        }
+    }
+
     public static void printCloudletResults(List<Cloudlet> cloudlets) {
         String indent = "    ";
         System.out.println("========== OUTPUT ==========");
@@ -89,14 +105,13 @@ public class PowerMain {
 
             if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
                 System.out.println("SUCCESS" + indent + indent + cloudlet.getResourceId() + indent + indent
-                        + indent + cloudlet.getVmId() + indent + indent + cloudlet.getActualCPUTime() + indent + indent
-                        + cloudlet.getExecStartTime() + indent + indent + cloudlet.getFinishTime());
+                        + indent + cloudlet.getVmId() + indent + indent + Double.parseDouble(String.format("%.3f",cloudlet.getActualCPUTime())) + indent + indent
+                        + cloudlet.getExecStartTime() + indent + indent + Double.parseDouble(String.format("%.3f",cloudlet.getFinishTime())));
             }
         }
     }
 
-    public static Vm createVM(int brokerId) {
-        int vmid = 0;
+    public static Vm createVM(int brokerId, int vmid) {
         int mips = 1000;
         long size = 10000; // Image size (MB)
         int ram = 512; // RAM (MB)
@@ -110,10 +125,10 @@ public class PowerMain {
         return vm;
     }
 
-    public static Cloudlet createCloudlet(int brokerId, int vmid) {
-        int cloudletId = 0;
+    public static Cloudlet createCloudlet(int id, int brokerId, int vmid, long length) {
+        int cloudletId = id;
         // Cloudlet properties
-        long length = 400000;
+//        long length = 400000;
         long fileSize = 300;
         long outputSize = 300;
         int pesNumber = 1;
