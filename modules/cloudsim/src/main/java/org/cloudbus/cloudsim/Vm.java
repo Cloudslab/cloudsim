@@ -252,7 +252,7 @@ public class Vm implements VirtualEntity {
 			// Cloudlets hosted in nested guests (if any)
 			for (GuestEntity guest : getGuestList()) {
 				double time2 = guest.updateCloudletsProcessing(currentTime, getGuestScheduler().getAllocatedMipsForGuest(guest));
-				if (time2 < smallerTime) {
+				if (time2 > 0 && time2 < smallerTime) {
 					smallerTime = time2;
 				}
 			}
