@@ -25,6 +25,6 @@ jobs:
       - name: Run EnergyAPI.Main
         run: 'mvn exec:java -pl modules/cloudsim-green-project/ -Dexec.mainClass=org.cloudbus.cloudsim.energyapi.Main'
         shell: bash
-      - name: Run tieredconfigurations.CloudSimExample
+      - name: Run tieredconfigurations.PowerMain
         run: 'mvn exec:java -pl modules/cloudsim-green-project/ -Dexec.mainClass=org.cloudbus.cloudsim.tieredconfigurations.CloudSimExample'
         shell: bash
