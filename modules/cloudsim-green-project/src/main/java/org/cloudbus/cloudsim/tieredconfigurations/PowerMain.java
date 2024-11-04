@@ -105,8 +105,8 @@ public class PowerMain {
 
             if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
                 System.out.println("SUCCESS" + indent + indent + cloudlet.getResourceId() + indent + indent
-                        + indent + cloudlet.getVmId() + indent + indent + cloudlet.getActualCPUTime() + indent + indent
-                        + cloudlet.getExecStartTime() + indent + indent + cloudlet.getFinishTime());
+                        + indent + cloudlet.getVmId() + indent + indent + Double.parseDouble(String.format("%.3f",cloudlet.getActualCPUTime())) + indent + indent
+                        + cloudlet.getExecStartTime() + indent + indent + Double.parseDouble(String.format("%.3f",cloudlet.getFinishTime())));
             }
         }
     }
