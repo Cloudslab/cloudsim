@@ -37,9 +37,9 @@ class PowerMain {
             Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(powerData);
 
             // Create broker
-            CustomDatacenterBroker broker = null;
+            DatacenterBroker broker = null;
             try {
-                broker = new CustomDatacenterBroker("Broker");
+                broker = new DatacenterBroker("Broker");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -49,8 +49,8 @@ class PowerMain {
             List<Cloudlet> cloudletList = CloudSimExample.createCloudlets();
 
             // Submit VMs and Cloudlets to the broker
-            broker.submitCustomVmList(vmList);
-            broker.submitCustomCloudletList(cloudletList);
+            broker.submitGuestList(vmList);
+            broker.submitCloudletList(cloudletList);
 
             // Start simulation
             CloudSim.startSimulation();
