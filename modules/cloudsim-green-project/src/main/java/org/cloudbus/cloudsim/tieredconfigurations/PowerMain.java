@@ -65,6 +65,10 @@ public class PowerMain {
             // submit cloudlet list to the broker
             broker.submitCloudletList(cloudletList);
 
+            // Set the amount of time to simulate here, it is in seconds, but it doesn't run for that time, it
+            // simulates that amount of time instead, so 3600 is 1 hour, but your code will run in an instant
+            CloudSim.terminateSimulation(3600);
+
             // Sixth step: Starts the simulation
             CloudSim.startSimulation();
 
