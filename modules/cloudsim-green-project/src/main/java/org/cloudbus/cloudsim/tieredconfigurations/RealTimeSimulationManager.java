@@ -38,7 +38,7 @@ public class RealTimeSimulationManager {
     }
 
 //    private void simulatePowerDataChange() {
-//        // Simulate fluctuation in fossil-free percentage for demonstration purposes
+//        // Simulate fossil-free percentage change for testing
 //        double newFossilFreePercentage = Math.random() * 100;
 //        powerData.setFossilFreePercentage(newFossilFreePercentage);
 //        System.out.println("Simulated Power Data Update: Fossil-Free Percentage = " + newFossilFreePercentage);
