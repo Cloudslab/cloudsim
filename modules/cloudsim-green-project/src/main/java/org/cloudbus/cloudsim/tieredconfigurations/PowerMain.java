@@ -10,6 +10,7 @@ import java.util.List;
 public class PowerMain {
     private static List<Cloudlet> cloudletList;
     private static List<Vm> vmList;
+    private static RealTimeSimulationManager simulationManager;
 
     public static void main(String[] args) {
         try {
@@ -21,10 +22,12 @@ public class PowerMain {
             CloudSim.init(numUsers, calendar, trace_flag);
 
             // Example power data, in real scenario this will come from the API
-            PowerData powerData = new PowerData();
+            PowerData initialPowerData = new PowerData();
+            simulationManager = new RealTimeSimulationManager(initialPowerData);
 
             // Second step: Create Datacenters based on fossil fuel percentage
-            Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(powerData);
+            Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(initialPowerData);
+            simulationManager.startRealTimeUpdates();
 
             // Third step: Create Broker
             DatacenterBroker broker = createBroker();
@@ -62,6 +65,10 @@ public class PowerMain {
             // submit cloudlet list to the broker
             broker.submitCloudletList(cloudletList);
 
+            // Set the amount of time to simulate here, it is in seconds, but it doesn't run for that time, it
+            // simulates that amount of time instead, so 3600 is 1 hour, but your code will run in an instant
+            CloudSim.terminateSimulation(3600);
+
             // Sixth step: Starts the simulation
             CloudSim.startSimulation();
 
@@ -70,6 +77,8 @@ public class PowerMain {
             // Final step: Print results when simulation is over
             List<Cloudlet> resultList = broker.getCloudletReceivedList();
             printCloudletResults(resultList);
+
+            simulationManager.stopRealTimeUpdates();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,6 +102,22 @@ public class PowerMain {
             return lowResDatacenter;
         }
     }
+
+    //same as the one above, except this one creates the datacenters only when needed
+//    public static Datacenter selectDatacenterBasedOnPowerData(PowerData powerData) throws Exception {
+//        double fossilFreePercentage = powerData.getFossilFreePercentage();
+//
+//        if (fossilFreePercentage > 70) {
+//            System.out.println("Selecting High Resource Datacenter...");
+//            return DatacenterFactory.createHighResourceDatacenter("High_Resource_Datacenter");
+//        } else if (fossilFreePercentage > 35) {
+//            System.out.println("Selecting Medium Resource Datacenter...");
+//            return DatacenterFactory.createMediumResourceDatacenter("Medium_Resource_Datacenter");
+//        } else {
+//            System.out.println("Selecting Low Resource Datacenter...");
+//            return DatacenterFactory.createLowResourceDatacenter("Low_Resource_Datacenter");
+//        }
+//    }
 
     public static void printCloudletResults(List<Cloudlet> cloudlets) {
         String indent = "    ";
