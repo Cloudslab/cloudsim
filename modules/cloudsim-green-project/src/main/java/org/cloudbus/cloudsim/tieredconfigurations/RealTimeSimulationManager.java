@@ -17,8 +17,9 @@ public class RealTimeSimulationManager {
         this.powerData = initialPowerData;
     }
 
+    // Check every 5 minutes
     public void startRealTimeUpdates() {
-        scheduler.scheduleAtFixedRate(this::updatePowerDataAndReselectDatacenter, 0, 1, TimeUnit.HOURS);
+        scheduler.scheduleAtFixedRate(this::updatePowerDataAndReselectDatacenter, 0, 5, TimeUnit.MINUTES);
     }
 
     private void updatePowerDataAndReselectDatacenter() {
