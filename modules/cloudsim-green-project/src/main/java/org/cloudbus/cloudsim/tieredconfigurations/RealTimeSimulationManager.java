@@ -30,7 +30,7 @@ public class RealTimeSimulationManager {
 
             // Reselect the datacenter based on updated power data
             currentDatacenter = PowerMain.selectDatacenterBasedOnPowerData(powerData);
-            System.out.println("Updated Datacenter(" + getCurrentDatacenter().getName() + ") selection based on fossil-free percentage: " + fossilFreePercentage);
+            System.out.println("Changed Datacenter(" + getCurrentDatacenter().getName() + ") selection based on fossil-free percentage: " + fossilFreePercentage);
 
         } catch (Exception e) {
             e.printStackTrace();
