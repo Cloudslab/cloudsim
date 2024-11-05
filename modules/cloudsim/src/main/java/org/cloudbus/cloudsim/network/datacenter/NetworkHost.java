@@ -17,6 +17,7 @@ import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudActionTags;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.NetworkedEntity;
 import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
@@ -38,7 +39,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisioner;
  * @author Remo Andreoli
  * @since CloudSim Toolkit 3.0
  */
-public class NetworkHost extends Host {
+public class NetworkHost extends Host implements NetworkedEntity {
 	/** Edge switch to which the Host is connected. */
 	private Switch sw;
 
@@ -74,7 +75,7 @@ public class NetworkHost extends Host {
 	 * Sends packets checks whether a packet belongs to a local VM or to a 
          * VM hosted on other machine.
 	 */
-	private void sendPackets() {
+    public void sendPackets() {
 		boolean flag = false;
 
 		for (NetworkInterfaceCard nic : nics.values()) {

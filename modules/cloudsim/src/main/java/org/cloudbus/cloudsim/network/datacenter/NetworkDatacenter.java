@@ -113,7 +113,7 @@ public class NetworkDatacenter extends Datacenter {
 		GuestEntity vm = (GuestEntity) ev.getData();
 
 		if (vm.getHost() != null) {
-			VmToSwitchid.put(vm.getId(), ((NetworkHost) vm.getHost()).getSwitch().getId());
+			VmToSwitchid.put(vm.getId(), ((NetworkedEntity) vm.getHost()).getSwitch().getId());
 			VmtoHostlist.put(vm.getId(), vm.getHost().getId());
 		}
 	}
@@ -126,7 +126,7 @@ public class NetworkDatacenter extends Datacenter {
 
 		int userId = ncl.getUserId();
 		int vmId = ncl.getGuestId();
-		NetworkHost host = (NetworkHost) getVmAllocationPolicy().getHost(vmId, userId);
+		NetworkedEntity host = (NetworkedEntity) getVmAllocationPolicy().getHost(vmId, userId);
 
 		host.getNics().put(ncl.getCloudletId(), ncl.getNic());
 	}
