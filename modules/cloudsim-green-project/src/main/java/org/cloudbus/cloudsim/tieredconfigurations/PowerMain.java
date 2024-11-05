@@ -10,6 +10,7 @@ import java.util.List;
 public class PowerMain {
     private static List<Cloudlet> cloudletList;
     private static List<Vm> vmList;
+    private static RealTimeSimulationManager simulationManager;
 
     public static void main(String[] args) {
         try {
@@ -21,10 +22,12 @@ public class PowerMain {
             CloudSim.init(numUsers, calendar, trace_flag);
 
             // Example power data, in real scenario this will come from the API
-            PowerData powerData = new PowerData();
+            PowerData initialPowerData = new PowerData();
+            simulationManager = new RealTimeSimulationManager(initialPowerData);
 
             // Second step: Create Datacenters based on fossil fuel percentage
-            Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(powerData);
+            Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(initialPowerData);
+            simulationManager.startRealTimeUpdates();
 
             // Third step: Create Broker
             DatacenterBroker broker = createBroker();
@@ -70,6 +73,8 @@ public class PowerMain {
             // Final step: Print results when simulation is over
             List<Cloudlet> resultList = broker.getCloudletReceivedList();
             printCloudletResults(resultList);
+
+            simulationManager.stopRealTimeUpdates();
 
         } catch (Exception e) {
             e.printStackTrace();
