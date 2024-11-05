@@ -94,6 +94,22 @@ public class PowerMain {
         }
     }
 
+    //same as the one above, except this one creates the datacenters only when needed
+//    public static Datacenter selectDatacenterBasedOnPowerData(PowerData powerData) throws Exception {
+//        double fossilFreePercentage = powerData.getFossilFreePercentage();
+//
+//        if (fossilFreePercentage > 70) {
+//            System.out.println("Selecting High Resource Datacenter...");
+//            return DatacenterFactory.createHighResourceDatacenter("High_Resource_Datacenter");
+//        } else if (fossilFreePercentage > 35) {
+//            System.out.println("Selecting Medium Resource Datacenter...");
+//            return DatacenterFactory.createMediumResourceDatacenter("Medium_Resource_Datacenter");
+//        } else {
+//            System.out.println("Selecting Low Resource Datacenter...");
+//            return DatacenterFactory.createLowResourceDatacenter("Low_Resource_Datacenter");
+//        }
+//    }
+
     public static void printCloudletResults(List<Cloudlet> cloudlets) {
         String indent = "    ";
         System.out.println("========== OUTPUT ==========");
