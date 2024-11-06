@@ -1,6 +1,13 @@
 {
     "configurations": [
         {
+            "type": "java",
+            "name": "CloudletDataParser",
+            "request": "launch",
+            "mainClass": "org.cloudbus.cloudsim.workload.CloudletDataParser",
+            "projectName": "cloudsim-green-project"
+        },
+        {
             "request": "launch",
             "type": "node",
             "name": "Clean",

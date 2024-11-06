@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.tieredconfigurations;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.workload.CloudletDataParser;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,7 +49,7 @@ public class PowerMain {
             // Fifth step: Create one Cloudlet
             cloudletList = new ArrayList<>();
 
-            // add the cloudlet to the list
+            // add the cloudlet to the list ######### To be replaced ########
             int id = 0;
             cloudletList.add(createCloudlet(id, brokerId, 0, 10000));
             id++;
@@ -61,6 +62,10 @@ public class PowerMain {
             cloudletList.add(createCloudlet(id, brokerId, 1, 100000));
             id++;
             cloudletList.add(createCloudlet(id, brokerId, 1, 1000000));
+
+            //######### To be replaced ########
+            //cloudletList = CloudletDataParser.parseCloudletData(filePath);
+
 
             // submit cloudlet list to the broker
             broker.submitCloudletList(cloudletList);
@@ -123,15 +128,18 @@ public class PowerMain {
         String indent = "    ";
         System.out.println("========== OUTPUT ==========");
         System.out.println("Cloudlet ID" + indent + "STATUS" + indent + "Data Center ID" + indent + "VM ID" + indent
-                + "Time" + indent + "Start Time" + indent + "Finish Time");
+                + "Time" + indent + "Start Time" + indent + "Finish Time" + indent + "Memory Utilization");
 
         for (Cloudlet cloudlet : cloudlets) {
             System.out.print(indent + cloudlet.getCloudletId() + indent + indent + "  ");
 
             if (cloudlet.getStatus() == Cloudlet.CloudletStatus.SUCCESS) {
+                UtilizationModel memoryUtilizationModel = cloudlet.getUtilizationModelRam();
+                double memoryUtilization = memoryUtilizationModel.getUtilization(CloudSim.clock());
                 System.out.println("SUCCESS" + indent + indent + cloudlet.getResourceId() + indent + indent
                         + indent + cloudlet.getVmId() + indent + indent + Double.parseDouble(String.format("%.3f",cloudlet.getActualCPUTime())) + indent + indent
-                        + cloudlet.getExecStartTime() + indent + indent + Double.parseDouble(String.format("%.3f",cloudlet.getFinishTime())));
+                        + cloudlet.getExecStartTime() + indent + indent + Double.parseDouble(String.format("%.3f",cloudlet.getFinishTime()))
+                        + indent + indent + Double.parseDouble(String.format("%.3f",memoryUtilization)));
             }
         }
     }
