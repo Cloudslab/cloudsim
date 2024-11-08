@@ -110,11 +110,17 @@ public class NetworkDatacenter extends Datacenter {
 	@Override
 	protected void processVmCreate(SimEvent ev, boolean ack) {
 		super.processVmCreate(ev, ack);
-		GuestEntity vm = (GuestEntity) ev.getData();
+		GuestEntity guest = (GuestEntity) ev.getData();
+		HostEntity host = guest.getHost();
 
-		if (vm.getHost() != null) {
-			VmToSwitchid.put(vm.getId(), ((NetworkedEntity) vm.getHost()).getSwitch().getId());
-			VmtoHostlist.put(vm.getId(), vm.getHost().getId());
+		if (host != null) {
+			// very ugly, but no other way to support nested virtualization with the current network routing logic
+			while (host instanceof VirtualEntity vm) {
+				host = vm.getHost();
+			}
+
+			VmToSwitchid.put(guest.getId(), ((NetworkedEntity) host).getSwitch().getId());
+			VmtoHostlist.put(guest.getId(), host.getId());
 		}
 	}
 

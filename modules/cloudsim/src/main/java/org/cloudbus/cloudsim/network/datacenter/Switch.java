@@ -339,9 +339,13 @@ public class Switch extends SimEntity {
 			List<NetworkPacket> hspktlist = es.getValue();
 			if (!hspktlist.isEmpty()) {
 				double avband = (double) downlinkBw / hspktlist.size();
-				for (NetworkPacket hspkt : hspktlist) {
-					double delay = 8 * hspkt.pkt.data / avband;
-					this.send(getId(), delay, CloudActionTags.NETWORK_PKT_REACHED_HOST, hspkt);
+				for (NetworkPacket npkt : hspktlist) {
+					NetworkHost hs = hostList.get(npkt.receiverHostId);
+
+					// simulate traversal overhead of the virtualization layers (host -> (nested) receiver guest)
+					int virtOverhead = hs.getTotalVirtualizationOverhead(npkt.receiverGuestId, hs.getGuestList().iterator(), 0);
+					double delay = (8 * npkt.pkt.data / avband) + virtOverhead;
+					this.send(getId(), delay, CloudActionTags.NETWORK_PKT_REACHED_HOST, npkt);
 				}
 				hspktlist.clear();
 			}

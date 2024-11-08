@@ -42,23 +42,22 @@ public class HostPacket {
 	/** Id of the receiver cloudlet. */
 	int receiverCloudletId;
 
-	/**
-	 * The length of the data being sent (in bytes).
-	*/
+
+	/** The length of the data being sent (in bytes). */
 	long data;
 
-	/**
-	 * The time the packet was sent.
-	 */
+	/** The time the packet was sent. */
 	double sendTime;
 
-	/**
-	 * The time the packet was received.
-	 */
+	/** The time the packet was received. */
 	double recvTime;
 
+
+	/** Accumulated virtualization overhead (for virtual networks) */
+	int accumulatedVirtualizationOverhead;
+
 	public HostPacket(NetworkCloudlet cl, int taskStageId) {
-			// Vm-level info
+			// Guest-level info
 			senderGuestId = cl.getGuestId();
 			receiverGuestId = cl.stages.get(taskStageId).getTargetCloudlet().getGuestId();
 
@@ -71,5 +70,7 @@ public class HostPacket {
 
 			sendTime = CloudSim.clock();
 			recvTime = -1;
+
+			accumulatedVirtualizationOverhead = 0;
 	}
 }

@@ -52,10 +52,7 @@ public class Container implements GuestEntity {
      */
     private CloudletScheduler cloudletScheduler;
 
-    /**
-     * The ContainerVm.
-     */
-    private HostEntity vm;
+    private HostEntity host;
 
     /** In migration flag. */
     private boolean inMigration;
@@ -295,11 +292,9 @@ public class Container implements GuestEntity {
         this.cloudletScheduler = cloudletScheduler;
     }
 
-    public HostEntity getHost() {
-        return vm;
-    }
-    public void setHost(HostEntity vm) {
-        this.vm = vm;
+    public HostEntity getHost() { return host; }
+    public void setHost(HostEntity host) {
+        this.host = host;
     }
 
     public boolean isInMigration() { return inMigration; }

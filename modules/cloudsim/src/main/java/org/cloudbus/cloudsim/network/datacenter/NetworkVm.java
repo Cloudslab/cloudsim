@@ -8,7 +8,12 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
 import org.cloudbus.cloudsim.*;
+import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.core.NetworkedEntity;
+import org.cloudbus.cloudsim.core.VirtualEntity;
+import org.cloudbus.cloudsim.lists.CloudletList;
+import org.cloudbus.cloudsim.lists.VmList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
 
@@ -25,10 +30,6 @@ import java.util.Map;
  * @since CloudSim Toolkit 7.0
  */
 public class NetworkVm extends Vm implements NetworkedEntity {
-    public NetworkVm(int id, int userId, double mips, int numberOfPes, int ram, long bw, long size, String vmm, CloudletScheduler cloudletScheduler) {
-        super(id, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler);
-    }
-
     public NetworkVm(int id, int userId, double mips, int numberOfPes, int ram, long bw, long size, String vmm, CloudletScheduler cloudletScheduler, VmScheduler guestScheduler, RamProvisioner containerRamProvisioner, BwProvisioner containerBwProvisioner, List<? extends Pe> peList) {
         super(id, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler, guestScheduler, containerRamProvisioner, containerBwProvisioner, peList);
     }
@@ -41,27 +42,39 @@ public class NetworkVm extends Vm implements NetworkedEntity {
     public double updateCloudletsProcessing(double currentTime, List<Double> mipsShare) {
         double smallerTime = super.updateCloudletsProcessing(currentTime, mipsShare);
 
-        // Sort of bridging: Overwrite the sender id, which may be that of a nested guest, for correct packet routing
-        for (NetworkInterfaceCard nic : getNics().values()) {
-            for (HostPacket hpkt : nic.getPktsToSend()) {
-                hpkt.senderGuestId = getId();
-            }
-        }
+        // send the packets to physical host
+        sendPackets();
 
         return smallerTime;
     }
 
     @Override
     public void sendPackets() {
-        if (getHost() == null) {
-            throw new RuntimeException("Vm has not been placed");
+        // Sort of NATing: Overwrite the sender id, which may be that of a nested guest, for correct packet routing
+        // and introduce an (optional) virtualization overhead to simulate the pass-through the virtual network
+        // (nested) guest -> host
+        for (NetworkInterfaceCard nic : getNics().values()) {
+            for (HostPacket hpkt : nic.getPktsToSend()) {
+                GuestEntity sender = VmList.getById(getGuestList(), hpkt.senderGuestId);
+                if (sender != null && hpkt.senderGuestId != getId()) {
+                    hpkt.senderGuestId = getId();
+                }
+
+                // Nested virtualization edge-case, but locally routed packet
+                if (VmList.getById(this.getGuestList(), hpkt.receiverGuestId) != null) {
+                    getNics().get(hpkt.receiverCloudletId).getReceivedPkts().add(hpkt);
+                    nic.getPktsToSend().remove(hpkt);
+                }
+
+                hpkt.accumulatedVirtualizationOverhead += getVirtualizationOverhead();
+            }
         }
     }
 
     @Override
     public Map<Integer, NetworkInterfaceCard> getNics() {
         if (getHost() == null) {
-            throw new RuntimeException("Vm has not been placed");
+            throw new RuntimeException(getClassName()+" has not been placed");
         }
 
         return ((NetworkedEntity) getHost()).getNics();
@@ -70,7 +83,7 @@ public class NetworkVm extends Vm implements NetworkedEntity {
     @Override
     public Switch getSwitch() {
         if (getHost() == null) {
-            throw new RuntimeException("Vm has not been placed");
+            throw new RuntimeException(getClassName()+" has not been placed");
         }
         return ((NetworkedEntity) getHost()).getSwitch();
     }
@@ -78,7 +91,7 @@ public class NetworkVm extends Vm implements NetworkedEntity {
     @Override
     public void setSwitch(Switch sw) {
         if (getHost() == null) {
-            throw new RuntimeException("Vm has not been placed");
+            throw new RuntimeException(getClassName()+"has not been placed");
         }
         ((NetworkedEntity) getHost()).setSwitch(sw);
     }

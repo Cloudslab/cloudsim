@@ -105,7 +105,7 @@ public class NetworkHost extends Host implements NetworkedEntity {
 			for (NetworkPacket npkt : sendPktExternally.get(guestId)) {
 				// Assumption: no overprovisioning of guest's bandwidth
 				double avband = (double) sender.getBw() / sendPktExternally.get(guestId).size();
-				double delay = 8 * npkt.pkt.data / avband;
+				double delay = (8 * npkt.pkt.data / avband) + npkt.pkt.accumulatedVirtualizationOverhead;
 
 				((NetworkDatacenter) getDatacenter()).totalDataTransfer += npkt.pkt.data;
 
