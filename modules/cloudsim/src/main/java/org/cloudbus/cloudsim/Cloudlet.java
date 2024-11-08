@@ -160,14 +160,6 @@ public class Cloudlet {
     private final List<Resource> resList;
 
     /**
-     * The index of the last resource where the cloudlet was executed. If the
-     * cloudlet is migrated during its execution, this index is updated. The
-     * value -1 indicates the cloudlet has not been executed
-     * yet.
-     */
-    private int index;
-
-    /**
      * The classType or priority of this Cloudlet for scheduling on a resource.
      */
     private int classType;
@@ -430,8 +422,7 @@ public class Cloudlet {
         // Normally, a Cloudlet is only executed on a resource without being
         // migrated to others. Hence, to reduce memory consumption, set the
         // size of this ArrayList to be less than the default one.
-        resList = new ArrayList<>(2);
-        index = -1;
+        resList = new LinkedList<>();
         this.record = record;
 
         guestId = -1;
@@ -626,12 +617,12 @@ public class Cloudlet {
      * @post $none
      */
     public double getWaitingTime() {
-        if (index == -1) {
+        if (resList.isEmpty()) {
             return 0;
         }
 
         // use the latest resource submission time
-        final double subTime = resList.get(index).arrivalTime;
+        final double subTime = resList.getLast().arrivalTime;
         return execStartTime - subTime;
     }
 
@@ -727,11 +718,11 @@ public class Cloudlet {
      * @post $result >= 0.0
      */
     public long getCloudletFinishedSoFar() {
-        if (index == -1) {
-            return getCloudletLength();
+        if (resList.isEmpty()) {
+            return 0;
         }
 
-        return Math.min(resList.get(index).cloudletFinishedSoFar, getCloudletTotalLength());
+        return Math.min(resList.getLast().cloudletFinishedSoFar, getCloudletTotalLength());
     }
 
     /**
@@ -743,12 +734,12 @@ public class Cloudlet {
      * @post $none
      */
     public boolean isFinished() {
-        if (index == -1) {
+        if (resList.isEmpty()) {
             return false;
         }
 
         // if result is 0 or -ve then this Cloudlet has finished
-        return getCloudletLength() - resList.get(index).cloudletFinishedSoFar <= 0.0;
+        return getCloudletLength() - resList.getLast().cloudletFinishedSoFar <= 0.0;
     }
 
     /**
@@ -775,11 +766,11 @@ public class Cloudlet {
      */
     public void setCloudletFinishedSoFar(final long length) {
         // if length is -ve then ignore
-        if (length < 0.0 || index < 0) {
+        if (length < 0.0 || resList.isEmpty()) {
             return;
         }
 
-        resList.get(index).cloudletFinishedSoFar = length;
+        resList.getLast().cloudletFinishedSoFar = length;
 
         if (record) {
             write("Sets the length's finished so far to " + length);
@@ -811,10 +802,10 @@ public class Cloudlet {
      * @post $result >= -1
      */
     public int getResourceId() {
-        if (index == -1) {
+        if (resList.isEmpty()) {
             return -1;
         }
-        return resList.get(index).resourceId;
+        return resList.getLast().resourceId;
     }
 
     public double getExecFinishTime() {
@@ -871,17 +862,17 @@ public class Cloudlet {
         // add into a list if moving to a new grid resource
         resList.add(res);
 
-        if (index == -1 && record) {
+        if (resList.size() == 1 && record) {
             write("Allocates this Cloudlet to " + res.resourceName + " (ID #" + resourceID
                     + ") with cost = $" + cost + "/sec");
         } else if (record) {
-            final int id = resList.get(index).resourceId;
-            final String name = resList.get(index).resourceName;
+            final int id = resList.getLast().resourceId;
+            final String name = resList.getLast().resourceName;
             write("Moves Cloudlet from " + name + " (ID #" + id + ") to " + res.resourceName + " (ID #"
                     + resourceID + ") with cost = $" + cost + "/sec");
         }
 
-        index++;  // initially, index = -1
+        setSubmissionTime(CloudSim.clock());
     }
 
     /**
@@ -892,11 +883,11 @@ public class Cloudlet {
      * @post $none
      */
     public void setSubmissionTime(final double clockTime) {
-        if (clockTime < 0.0 || index < 0) {
+        if (clockTime < 0.0 || resList.isEmpty()) {
             return;
         }
 
-        resList.get(index).arrivalTime = clockTime;
+        resList.getLast().arrivalTime = clockTime;
 
         if (record) {
             write("Sets the submission time to " + num.format(clockTime));
@@ -912,10 +903,10 @@ public class Cloudlet {
      * @post $result >= 0.0
      */
     public double getSubmissionTime() {
-        if (index == -1) {
+        if (resList.isEmpty()) {
             return 0.0;
         }
-        return resList.get(index).arrivalTime;
+        return resList.getLast().arrivalTime;
     }
 
     @Deprecated
@@ -957,11 +948,11 @@ public class Cloudlet {
      * @see Resource#actualCPUTime
      */
     public void setExecParam(final double wallTime, final double actualTime) {
-        if (wallTime < 0.0 || actualTime < 0.0 || index < 0) {
+        if (wallTime < 0.0 || actualTime < 0.0 || resList.isEmpty()) {
             return;
         }
 
-        final Resource res = resList.get(index);
+        final Resource res = resList.getLast();
         res.wallClockTime = wallTime;
         res.actualCPUTime = actualTime;
 
@@ -1008,7 +999,6 @@ public class Cloudlet {
             if (status == Cloudlet.CloudletStatus.CANCELED || status == Cloudlet.CloudletStatus.PAUSED || status == Cloudlet.CloudletStatus.SUCCESS) {
                 // then update the Cloudlet completion time
                 totalCompletionTime += (clock - execStartTime);
-                index = 0;
                 return true;
             }
         }
@@ -1087,10 +1077,10 @@ public class Cloudlet {
      * @post $result >= 0.0
      */
     public double getCostPerSec() {
-        if (index == -1) {
+        if (resList.isEmpty()) {
             return 0.0;
         }
-        return resList.get(index).costPerSec;
+        return resList.getLast().costPerSec;
     }
 
     /**
@@ -1102,10 +1092,10 @@ public class Cloudlet {
      * @post $result >= 0.0
      */
     public double getWallClockTime() {
-        if (index == -1) {
+        if (resList.isEmpty()) {
             return 0.0;
         }
-        return resList.get(index).wallClockTime;
+        return resList.getLast().wallClockTime;
     }
 
     /**
@@ -1436,9 +1426,7 @@ public class Cloudlet {
      * @return <tt>true</tt> if required, <tt>false</tt> otherwise
      */
     public boolean requiresFiles() {
-        boolean result = getRequiredFiles() != null && getRequiredFiles().size() > 0;
-
-        return result;
+        return getRequiredFiles() != null && !getRequiredFiles().isEmpty();
     }
 
     public int getGuestId() { return guestId; }
