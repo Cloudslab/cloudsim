@@ -79,8 +79,8 @@ def saveToCsv(data, fileName, fieldnames):
         writer.writerow(row)
 
 def collectData():
-    # 8640024 seconds = 24 hours
-    duration = 8640024
+    # 86400 seconds = 24 hours
+    duration = 86400
     endTime = datetime.now() + timedelta(seconds=duration)
 
     fieldnames = []
