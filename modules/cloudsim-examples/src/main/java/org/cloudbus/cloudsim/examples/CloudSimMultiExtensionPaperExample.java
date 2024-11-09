@@ -5,6 +5,8 @@ import org.cloudbus.cloudsim.EX.DatacenterBrokerEX;
 import org.cloudbus.cloudsim.container.utils.CustomCSVWriter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.HostEntity;
+import org.cloudbus.cloudsim.core.VirtualEntity;
 import org.cloudbus.cloudsim.distributions.ExponentialDistr;
 import org.cloudbus.cloudsim.examples.network.datacenter.NetworkConstants;
 import org.cloudbus.cloudsim.network.datacenter.*;
@@ -14,24 +16,32 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyLeastFull;
 
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
 public class CloudSimMultiExtensionPaperExample {
 
-	private static List<GuestEntity> guestList;
+	private static List<VirtualEntity> vmList;
+	private static List<GuestEntity> containerList;
 
-	private static List<NetworkHost> hostList;
+	private static List<HostEntity> hostList;
 
     private static List<AppCloudlet> appCloudletList;
 
 	private static DatacenterBrokerEX broker;
 
+	// For reproducibility purposes (for the CloudSim 7G paper):
+	// Please don't touch these 3 variables, or you may cause some out-of-bound exceptions
+	// when configuring the various cloudlet placement and virtualization configurations.
 	public static final int numberOfHosts = 4;
-	public static final int numberOfVms = 4;
-	public static int numberOfPeriodicActivations = 20;
+	public static int numberOfVms = 4;
+	public static int numberOfContainers = 4;
 
+	public static int vmVirtOverhead = 5;
+	public static int contVirtOverhead = 3;
 
+	public static int numberOfPeriodicActivations = 1;
 	public static int firstTaskExecLength = 10000;
 	public static int secondTaskExecLength = 10000;
 	public static long payloadSize = 1000000000; // 1 Gigabyte
@@ -43,10 +53,14 @@ public class CloudSimMultiExtensionPaperExample {
 	public static long vmMips = 7800;
 	public static long vmBw = 1000000000; // 1 Gbps
 
+	public static long contMips = vmMips;
+	public static long contBw = vmBw;
+
 	public static long hostToSwitchBw = 1000000000; // 1 Gbps
 	public static long switchToSwitchBw = 1000000000;
 
-	public static Map<String, Integer> cloudletToHost;
+	public static Map<String, Integer> cloudletToGuest;
+	public static boolean nestedContainers = false;
 
 	public static String fileInfo = "";
 
@@ -61,8 +75,8 @@ public class CloudSimMultiExtensionPaperExample {
 * 										ToR switch        ToR switch
 * 								   		 /	 \  		   /	 \
 * 									 Host0    Host1     Host2    Host3
-	 * 						   		  VM0      VM1       VM2      VM3
-	 *
+	 * 						   		  VM4      VM5       VM6      VM7
+	 *                               [C8]     [C9]      [C10]     [C11]  optional
 	 *
 	 * Depending on the cloudlet placement, the network may be used or not.
 	 * 
@@ -70,6 +84,7 @@ public class CloudSimMultiExtensionPaperExample {
 	 * @author Remo Andreoli
 	 */
 	public static void main(String[] args) {
+		NetworkConstants.currentCloudletId = 0;
 		distr = new ExponentialDistr(5, (double) firstTaskExecLength/vmMips + (double) secondTaskExecLength/vmMips);
 
 		Log.println("Starting TandemAppExample5...");
@@ -82,13 +97,12 @@ public class CloudSimMultiExtensionPaperExample {
 			// Initialize the CloudSim library
 			CloudSim.init(num_user, calendar, trace_flag);
 
-			hostList = CreateHosts();
-
-			// Third step: Create Broker (Make sure the broker stays alive the whole time)
 			broker = new DatacenterBrokerEX("Broker", 1000000);
 
-			// Create vms
-			guestList = CreateVms();
+			hostList = CreateHosts();
+
+			vmList = CreateVms();
+			containerList = CreateContainers();
 
 			appCloudletList = new ArrayList<>();
 
@@ -105,7 +119,8 @@ public class CloudSimMultiExtensionPaperExample {
 			NetworkDatacenter datacenter = createDatacenter("Datacenter_0");
 
 			// submit vm list to the broker
-			broker.submitGuestList(guestList);
+			broker.submitGuestList(vmList);
+			broker.submitGuestList(containerList);
 
 			// Sixth step: Starts the simulation
 			CloudSim.startSimulation();
@@ -131,20 +146,21 @@ public class CloudSimMultiExtensionPaperExample {
 			CustomCSVWriter writer = new CustomCSVWriter("/tmp/D"+paddedD+"-P"+paddedP+fileInfo+".csv");
 
 			String[] header = {"appId", "startTime", "endTime", "makespan","E2E", "period", "lateness", "noise"};
-			if (!writer.fileExistedAlready()) {
-				writer.writeTofile(header, false);
-			}
+			writer.writeTofile(header, false);
+
+			DecimalFormat df = new DecimalFormat("#.#####");
+			df.setRoundingMode(RoundingMode.CEILING);
 
 			for (AppCloudlet app : appCloudletList) {
 				String[] data = new String[header.length];
 
 				data[0] = String.valueOf(app.appID);
-				data[1] = String.valueOf(app.cList.get(0).getExecStartTime());
-				data[2] = String.valueOf(app.cList.get(1).getExecFinishTime());
-				data[3] = String.valueOf(app.cList.get(1).getExecFinishTime() - app.cList.get(0).getExecStartTime());
+				data[1] = df.format(app.cList.get(0).getExecStartTime());
+				data[2] = df.format(app.cList.get(1).getExecFinishTime());
+				data[3] = df.format(app.cList.get(1).getExecFinishTime() - app.cList.get(0).getExecStartTime());
 				data[4] = String.valueOf(deadline);
 				data[5] = String.valueOf(deadline);
-				data[6] = String.valueOf(app.getLateness());
+				data[6] = df.format(app.getLateness());
 				data[7] = "False";
 				writer.writeTofile(data, true);
 			}
@@ -183,7 +199,7 @@ public class CloudSimMultiExtensionPaperExample {
 				arch,
 				os,
 				vmm,
-				hostList,
+                hostList,
 				time_zone,
 				cost,
 				costPerMem,
@@ -237,13 +253,13 @@ public class CloudSimMultiExtensionPaperExample {
 
 	}
 
-	private static List<NetworkHost> CreateHosts() {
+	private static List<HostEntity> CreateHosts() {
 		int mips = 100000;
 		int ram = 100000; // host memory (MB)
 		long storage = 1000000; // host storage
 		long bw = 10L * 1024 * 1024 * 1024; // 10 Gbps
 
-		List<NetworkHost> hostList = new ArrayList<>();
+		List<HostEntity> hostList = new ArrayList<>();
 		for (int i=0; i<numberOfHosts; i++) {
 			List<Pe> peList = new ArrayList<>();
 			peList.add(new Pe(0, new PeProvisionerSimple(mips)));
@@ -259,20 +275,22 @@ public class CloudSimMultiExtensionPaperExample {
 
 		return hostList;
 	}
-	/**
-	 * Creates virtual machines in a datacenter
-	 */
-	private static List<GuestEntity> CreateVms() {
-		ArrayList<GuestEntity> vmList = new ArrayList<>();
+
+
+	private static List<VirtualEntity> CreateVms() {
+		ArrayList<VirtualEntity> gList = new ArrayList<>();
 
 		long size = 2048; // image size (MB)
 		int ram = 4096; // vm memory (MB)
 		int pesNumber = 1;
 		String vmm = "Xen";
 
+		List<Pe> peList = new ArrayList<>();
+		peList.add(new Pe(0, new PeProvisionerSimple(vmMips)));
+
 		for (int i=0; i<numberOfVms; i++) {
-			vmList.add(new Vm(
-					i,
+			gList.add(new NetworkVm(
+					4 + i,
 					broker.getId(),
 					vmMips,
 					pesNumber,
@@ -280,10 +298,48 @@ public class CloudSimMultiExtensionPaperExample {
 					vmBw,
 					size,
 					vmm,
-					new CloudletSchedulerTimeShared()));
+					new CloudletSchedulerTimeShared(),
+					new VmSchedulerTimeShared(peList),
+					new RamProvisionerSimple(ram),
+					new BwProvisionerSimple(vmBw),
+					peList));
+			gList.getLast().setVirtualizationOverhead(vmVirtOverhead);
+
+			// For nested virtualization
+			if (nestedContainers)
+				hostList.add(gList.getLast());
 		}
 
-		return vmList;
+		return gList;
+	}
+
+	private static List<GuestEntity> CreateContainers() {
+		ArrayList<GuestEntity> gList = new ArrayList<>();
+
+		long size = 2048; // image size (MB)
+		int ram = 4096; // vm memory (MB)
+		int pesNumber = 1;
+		String vmm = "Xen";
+
+		for (int i=0; i<numberOfContainers; i++) {
+			gList.add(new NetworkContainer(
+					8 + i,
+					broker.getId(),
+					contMips,
+					pesNumber,
+					ram,
+					contBw,
+					size,
+					vmm,
+					new CloudletSchedulerTimeShared()));
+			gList.getLast().setVirtualizationOverhead(contVirtOverhead);
+
+			if (nestedContainers) {
+				gList.getLast().setHost(hostList.get(numberOfHosts + i));
+			}
+		}
+
+		return gList;
 	}
 
 	static private void createTaskList(AppCloudlet appCloudlet) {
@@ -304,10 +360,10 @@ public class CloudSimMultiExtensionPaperExample {
 		NetworkConstants.currentCloudletId++;
 		cla.setUserId(broker.getId());
 
-		if (cloudletToHost != null && cloudletToHost.containsKey("cla")) {
-			cla.setGuestId(cloudletToHost.get("cla"));
+		if (cloudletToGuest != null && cloudletToGuest.containsKey("cla")) {
+			cla.setGuestId(cloudletToGuest.get("cla"));
 		} else {
-			cla.setGuestId(guestList.get(0).getId());
+			cla.setGuestId(vmList.getFirst().getId());
 		}
 		appCloudlet.cList.add(cla);
 
@@ -322,10 +378,10 @@ public class CloudSimMultiExtensionPaperExample {
 				utilizationModel);
 		NetworkConstants.currentCloudletId++;
 		clb.setUserId(broker.getId());
-		if (cloudletToHost != null && cloudletToHost.containsKey("clb")) {
-			clb.setGuestId(cloudletToHost.get("clb"));
+		if (cloudletToGuest != null && cloudletToGuest.containsKey("clb")) {
+			clb.setGuestId(cloudletToGuest.get("clb"));
 		} else {
-			clb.setGuestId(guestList.get(1).getId());
+			clb.setGuestId(vmList.get(1).getId());
 		}
 		appCloudlet.cList.add(clb);
 
