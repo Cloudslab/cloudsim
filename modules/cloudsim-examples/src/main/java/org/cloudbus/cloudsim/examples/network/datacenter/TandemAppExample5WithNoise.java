@@ -342,7 +342,7 @@ public class TandemAppExample5WithNoise {
 					vmBw,
 					size,
 					containerTechnology,
-					new CloudletSchedulerTimeShared(), -1));
+					new CloudletSchedulerTimeShared()));
 		}
 
 		return containerList;

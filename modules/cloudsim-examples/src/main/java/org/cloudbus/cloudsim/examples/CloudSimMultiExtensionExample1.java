@@ -117,11 +117,11 @@ public class CloudSimMultiExtensionExample1 {
 			// Create container
 			containerlist = new ArrayList<>();
 			GuestEntity container = new Container(3, brokerId, 100, pesNumber, ram/2, bw/2, size/2, "Docker",
-																			new CloudletSchedulerTimeShared(), 0);
+																			new CloudletSchedulerTimeShared());
 			containerlist.add(container);
 
 			GuestEntity container2 = new Container(4, brokerId, 100, pesNumber, ram/2, bw/2, size/2, "Docker",
-					new CloudletSchedulerSpaceShared(), 0);
+					new CloudletSchedulerSpaceShared());
 			containerlist.add(container2);
 
 			// Create Datacenters

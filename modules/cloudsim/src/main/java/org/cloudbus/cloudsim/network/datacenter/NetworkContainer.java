@@ -38,10 +38,9 @@ public class NetworkContainer extends Container implements NetworkedEntity {
      * @param size
      * @param containerManager
      * @param containerCloudletScheduler
-     * @param schedulingInterval
      */
-    public NetworkContainer(int id, int userId, double mips, int numberOfPes, int ram, long bw, long size, String containerManager, CloudletScheduler containerCloudletScheduler, double schedulingInterval) {
-        super(id, userId, mips, numberOfPes, ram, bw, size, containerManager, containerCloudletScheduler, schedulingInterval);
+    public NetworkContainer(int id, int userId, double mips, int numberOfPes, int ram, long bw, long size, String containerManager, CloudletScheduler containerCloudletScheduler) {
+        super(id, userId, mips, numberOfPes, ram, bw, size, containerManager, containerCloudletScheduler);
     }
 
     @Override

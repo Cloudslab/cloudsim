@@ -75,22 +75,8 @@ public class Container implements GuestEntity {
     /** The mips allocation history. */
     private final List<VmStateHistoryEntry> stateHistory = new ArrayList<>();
 
-//    added from the power Vm
-    /**
-     * The Constant HISTORY_LENGTH.
-     */
-    public static final int HISTORY_LENGTH = 30;
-
-    /**
-     * The previous time.
-     */
+    /** The previous time. */
     private double previousTime;
-
-    /**
-     * The scheduling interval.
-     */
-    private double schedulingInterval;
-
 
     private int virtualizationOverhead;
 
@@ -105,7 +91,6 @@ public class Container implements GuestEntity {
      * @param size
      * @param containerManager
      * @param containerCloudletScheduler
-     * @param schedulingInterval
      */
     public Container(
             int id,
@@ -116,7 +101,7 @@ public class Container implements GuestEntity {
             long bw,
             long size,
             String containerManager,
-            CloudletScheduler containerCloudletScheduler, double schedulingInterval) {
+            CloudletScheduler containerCloudletScheduler) {
         this.id = id;
         setUserId(userId);
         setUid(GuestEntity.getUid(userId, id));
@@ -133,7 +118,6 @@ public class Container implements GuestEntity {
         setCurrentAllocatedMips(null);
         setCurrentAllocatedRam(0);
         setCurrentAllocatedSize(0);
-        setSchedulingInterval(schedulingInterval);
         setVirtualizationOverhead(0);
     }
 
@@ -313,9 +297,6 @@ public class Container implements GuestEntity {
 
     public double getPreviousTime() { return previousTime; }
     public void setPreviousTime(double previousTime) { this.previousTime = previousTime; }
-
-    public double getSchedulingInterval() { return schedulingInterval; }
-    protected void setSchedulingInterval(double schedulingInterval) { this.schedulingInterval = schedulingInterval; }
 
     public double getTotalMips() {
         return getMips() * getNumberOfPes();

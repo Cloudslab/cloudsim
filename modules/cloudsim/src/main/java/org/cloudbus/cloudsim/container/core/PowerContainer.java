@@ -12,7 +12,6 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.PowerGuestEntity;
 import org.cloudbus.cloudsim.util.HistoryStat;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -25,6 +24,8 @@ public class PowerContainer extends Container implements PowerGuestEntity {
         /** The previous time. */
         private double previousTime;
 
+        /** The scheduling interval to update the processing of cloudlets running in this VM. */
+        private double schedulingInterval;
 
         /**
          * Instantiates a new power vm.
@@ -51,7 +52,8 @@ public class PowerContainer extends Container implements PowerGuestEntity {
                 final String vmm,
                 final CloudletScheduler cloudletScheduler,
                 final double schedulingInterval) {
-            super(id, userId, mips, pesNumber, ram, bw, size, vmm, cloudletScheduler, schedulingInterval);
+            super(id, userId, mips, pesNumber, ram, bw, size, vmm, cloudletScheduler);
+            this.schedulingInterval = schedulingInterval;
         }
 
         /**
@@ -105,4 +107,7 @@ public class PowerContainer extends Container implements PowerGuestEntity {
         public void setPreviousTime(final double previousTime) {
             this.previousTime = previousTime;
         }
+
+    public double getSchedulingInterval() { return schedulingInterval; }
+    protected void setSchedulingInterval(double schedulingInterval) { this.schedulingInterval = schedulingInterval; }
     }

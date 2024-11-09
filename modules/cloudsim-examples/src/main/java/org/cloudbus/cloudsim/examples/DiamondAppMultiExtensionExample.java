@@ -253,7 +253,7 @@ public class DiamondAppMultiExtensionExample {
 					bw,
 					size,
 					containerManager,
-					new CloudletSchedulerTimeShared(), 0));
+					new CloudletSchedulerTimeShared()));
 		}
 
 		return vmList;

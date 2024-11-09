@@ -68,7 +68,7 @@ public class CloudSimMultiExtensionExample2 {
 			hostList.add((HostEntity) guestList.get(1));
 
 			GuestEntity container = new NetworkContainer(4, broker.getId(), 100, 1, 1, 1, 1, "Docker",
-					new CloudletSchedulerTimeShared(), 0);
+					new CloudletSchedulerTimeShared());
 			container.setVirtualizationOverhead(10);
 			container.setHost((HostEntity) guestList.get(1));
 			containerList.add(container);
