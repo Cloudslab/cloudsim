@@ -5,7 +5,7 @@ import org.cloudbus.cloudsim.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CloudSim7GPaperExampleRunner {
+public class TandemAppExample5WithNoiseRunner {
     private static final String testName = "test";
 
     // i) $T0$ and $T1$ are co-located, meaning that data is transmitted locally without using the physical network
@@ -52,19 +52,19 @@ public class CloudSim7GPaperExampleRunner {
         configs.put(getConfigII(), "-II");
         configs.put(getConfigIII(), "-III");
 
-        TandemAppExample5CloudSim7GPaper.numberOfPeriodicActivations = 50;
+        TandemAppExample5WithNoise.numberOfPeriodicActivations = 50;
 
         // Runner loop
         for (var entry : configs.entrySet()) {
             // cloudlet->vm map
-            TandemAppExample5CloudSim7GPaper.cloudletToHost = entry.getKey();
-            TandemAppExample5CloudSim7GPaper.fileInfo = entry.getValue() + "-" + testName;
+            TandemAppExample5WithNoise.cloudletToHost = entry.getKey();
+            TandemAppExample5WithNoise.fileInfo = entry.getValue() + "-" + testName;
 
             for (int val : vals) {
                 System.out.println("Running '"+testName+"' example with period "+val+" and config "+entry.getValue());
 
-                TandemAppExample5CloudSim7GPaper.period = val;
-                TandemAppExample5CloudSim7GPaper.main(emptyArgs);
+                TandemAppExample5WithNoise.period = val;
+                TandemAppExample5WithNoise.main(emptyArgs);
             }
         }
     }

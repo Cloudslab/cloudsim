@@ -1,24 +1,23 @@
-package org.cloudbus.cloudsim.examples.network.datacenter;
+package org.cloudbus.cloudsim.examples;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.EX.DatacenterBrokerEX;
-import org.cloudbus.cloudsim.container.core.Container;
-import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyLeastFull;
-import org.cloudbus.cloudsim.VmAllocationWithSelectionPolicy;
 import org.cloudbus.cloudsim.container.utils.CustomCSVWriter;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.distributions.ExponentialDistr;
+import org.cloudbus.cloudsim.examples.network.datacenter.NetworkConstants;
 import org.cloudbus.cloudsim.network.datacenter.*;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyLeastFull;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class TandemAppExample5CloudSim7GPaper {
+public class CloudSimMultiExtensionPaperExample {
 
 	private static List<GuestEntity> guestList;
 
@@ -26,31 +25,26 @@ public class TandemAppExample5CloudSim7GPaper {
 
     private static List<AppCloudlet> appCloudletList;
 
-	private static List<Cloudlet> noisyCloudletList;
-
 	private static DatacenterBrokerEX broker;
 
 	public static final int numberOfHosts = 4;
-	public static final int numberOfVms = 8;
-	public static final int numberOfContainers = 2;
-	public static int numberOfPeriodicActivations = 1;
-	public static int numberOfNoisyCloudlets = 0;
+	public static final int numberOfVms = 4;
+	public static int numberOfPeriodicActivations = 20;
 
 
-	public static int firstTaskExecLength = 10000000;
-	public static int secondTaskExecLength = 10000000;
-	public static int payloadSize = 1000000000;
+	public static int firstTaskExecLength = 10000;
+	public static int secondTaskExecLength = 10000;
+	public static long payloadSize = 1000000000; // 1 Gigabyte
 
 	private static ExponentialDistr distr;
 
-	public static int deadline = 300;
-	public static int period = 300;
+	public static int deadline = 2000;
 
-	public static long vmMips = 10000;
-	public static long vmBw = 1024 * 1024 * 1024; // 1 Gbps
+	public static long vmMips = 7800;
+	public static long vmBw = 1000000000; // 1 Gbps
 
-	public static long hostToSwitchBw = 1024 * 1024 * 1024; // 1 Gbps
-	public static long switchToSwitchBw = 1024 * 1024 * 1024;
+	public static long hostToSwitchBw = 1000000000; // 1 Gbps
+	public static long switchToSwitchBw = 1000000000;
 
 	public static Map<String, Integer> cloudletToHost;
 
@@ -58,17 +52,16 @@ public class TandemAppExample5CloudSim7GPaper {
 
 	/**
 	 *
-	 * A customised version of TandemAppExample5 for the CloudSim7G paper.
+	 * A customised version of TandemAppExample5 for the CloudSim7G lab presentation and Wiley SPE paper.
 	 *
 	 * Example of periodic tandem DAG: A ---> B
-	 * with noisy cloudlets (with realistic arrival sampled from exponential distribution).
 	 * with Datacenter configuration:
 *                                                Agg. Switch
 * 										         /        \
 * 										ToR switch        ToR switch
 * 								   		 /	 \  		   /	 \
 * 									 Host0    Host1     Host2    Host3
-	 * 						   		VM0 VM4  VM1 VM5   VM2 VM6  VM3 VM7
+	 * 						   		  VM0      VM1       VM2      VM3
 	 *
 	 *
 	 * Depending on the cloudlet placement, the network may be used or not.
@@ -97,9 +90,6 @@ public class TandemAppExample5CloudSim7GPaper {
 			// Create vms
 			guestList = CreateVms();
 
-			// Create containers
-			guestList.addAll(CreateContainers());
-
 			appCloudletList = new ArrayList<>();
 
 			for (int i = 0; i < numberOfPeriodicActivations; i++) {
@@ -107,20 +97,7 @@ public class TandemAppExample5CloudSim7GPaper {
 				createTaskList(app);
 				appCloudletList.add(app);
 
-				broker.submitCloudletList(app.cList, 0.02 + i * period);
-			}
-
-			noisyCloudletList = new ArrayList<>();
-			UtilizationModel u = new UtilizationModelFull();
-			for (int i = 0; i < numberOfNoisyCloudlets; i++) {
-				Cloudlet cloudlet = new Cloudlet(1000 + i, 1000000, 1, 1, 1, u, u, u);
-				cloudlet.setUserId(broker.getId());
-
-				int vmIndex = (i % 2 == 0) ? 0 : 2;
-				cloudlet.setGuestId(vmIndex);
-
-				noisyCloudletList.add(cloudlet);
-				broker.submitCloudletList(List.of(cloudlet), distr.sample());
+				broker.submitCloudletList(app.cList, distr.sample());
 			}
 
 			// Datacenters are the resource providers in CloudSim. We need at
@@ -150,10 +127,10 @@ public class TandemAppExample5CloudSim7GPaper {
 			}*/
 
 			String paddedD = String.format("%04d", deadline);
-			String paddedP = String.format("%04d", period);
+			String paddedP = String.format("%04d", deadline);
 			CustomCSVWriter writer = new CustomCSVWriter("/tmp/D"+paddedD+"-P"+paddedP+fileInfo+".csv");
 
-			String[] header = {"appId", "startTime", "endTime", "E2E", "period", "lateness", "noise"};
+			String[] header = {"appId", "startTime", "endTime", "makespan","E2E", "period", "lateness", "noise"};
 			if (!writer.fileExistedAlready()) {
 				writer.writeTofile(header, false);
 			}
@@ -164,24 +141,16 @@ public class TandemAppExample5CloudSim7GPaper {
 				data[0] = String.valueOf(app.appID);
 				data[1] = String.valueOf(app.cList.get(0).getExecStartTime());
 				data[2] = String.valueOf(app.cList.get(1).getExecFinishTime());
-				data[3] = String.valueOf(deadline);
-				data[4] = String.valueOf(period);
-				data[5] = String.valueOf(app.getLateness());
-				data[6] = "False";
+				data[3] = String.valueOf(app.cList.get(1).getExecFinishTime() - app.cList.get(0).getExecStartTime());
+				data[4] = String.valueOf(deadline);
+				data[5] = String.valueOf(deadline);
+				data[6] = String.valueOf(app.getLateness());
+				data[7] = "False";
 				writer.writeTofile(data, true);
 			}
 
-			for (Cloudlet cl : noisyCloudletList) {
-				String[] data = new String[header.length];
-
-				data[0] = String.valueOf(cl.getCloudletId());
-				data[1] = String.valueOf(cl.getExecStartTime());
-				data[2] = String.valueOf(cl.getExecFinishTime());
-				data[3] = "0";
-				data[4] = "0";
-				data[5] = "0";
-				data[6] = "True";
-				writer.writeTofile(data, true);
+			for (AppCloudlet app : appCloudletList) {
+				Log.println("App #"+ app.appID + " " +(app.cList.get(1).getExecFinishTime() - app.cList.get(0).getExecStartTime()));
 			}
 
 			System.out.println("Result in "+writer.getFileAddress());
@@ -302,9 +271,6 @@ public class TandemAppExample5CloudSim7GPaper {
 		String vmm = "Xen";
 
 		for (int i=0; i<numberOfVms; i++) {
-			List<Pe> peList = new ArrayList<>();
-			peList.add(new Pe(0, new PeProvisionerSimple(vmMips)));
-
 			vmList.add(new Vm(
 					i,
 					broker.getId(),
@@ -314,38 +280,10 @@ public class TandemAppExample5CloudSim7GPaper {
 					vmBw,
 					size,
 					vmm,
-					new CloudletSchedulerTimeShared(),
-					new VmSchedulerTimeShared(peList),
-					new RamProvisionerSimple(ram),
-					new BwProvisionerSimple(vmBw),
-					peList));
+					new CloudletSchedulerTimeShared()));
 		}
 
 		return vmList;
-	}
-
-	private static List<GuestEntity> CreateContainers() {
-		ArrayList<GuestEntity> containerList = new ArrayList<>();
-
-		long size = 2048; // image size (MB)
-		int ram = 4096; // vm memory (MB)
-		int pesNumber = 1;
-		String containerTechnology = "Docker";
-
-		for (int i=numberOfVms; i<numberOfVms+numberOfContainers; i++) {
-			containerList.add(new Container(
-					i,
-					broker.getId(),
-					vmMips,
-					pesNumber,
-					ram,
-					vmBw,
-					size,
-					containerTechnology,
-					new CloudletSchedulerTimeShared(), -1));
-		}
-
-		return containerList;
 	}
 
 	static private void createTaskList(AppCloudlet appCloudlet) {
