@@ -29,4 +29,12 @@ public class PowerData {
     public double getRenewablePercentage() {
         return renewablePercentage;
     }
+
+    public void setFossilFreePercentage(double percentage) {
+        this.fossilFreePercentage = percentage;
+    }
+    
+    public void setRenewablePercentage(double percentage) {
+        this.renewablePercentage = percentage;
+    }
 }
