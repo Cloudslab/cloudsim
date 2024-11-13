@@ -24,11 +24,12 @@ public class PowerMain {
 
             // Example power data, in real scenario this will come from the API
             PowerData initialPowerData = new PowerData();
-            simulationManager = new RealTimeSimulationManager(initialPowerData);
+            simulationManager = new RealTimeSimulationManager("SimulationTimeManager",initialPowerData);
 
             // Second step: Create Datacenters based on fossil fuel percentage
             Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(initialPowerData);
-            simulationManager.startRealTimeUpdates();
+            CloudSim.addEntity(simulationManager);
+            // simulationManager.startRealTimeUpdates();
 
             // Third step: Create Broker
             DatacenterBroker broker = createBroker();
@@ -51,17 +52,17 @@ public class PowerMain {
 
             // add the cloudlet to the list ######### To be replaced ########
             int id = 0;
-            cloudletList.add(createCloudlet(id, brokerId, 0, 10000));
-            id++;
-            cloudletList.add(createCloudlet(id, brokerId, 0, 100000));
-            id++;
             cloudletList.add(createCloudlet(id, brokerId, 0, 1000000));
             id++;
-            cloudletList.add(createCloudlet(id, brokerId, 1, 10000));
+            cloudletList.add(createCloudlet(id, brokerId, 0, 10000000));
             id++;
-            cloudletList.add(createCloudlet(id, brokerId, 1, 100000));
+            cloudletList.add(createCloudlet(id, brokerId, 0, 100000000));
             id++;
             cloudletList.add(createCloudlet(id, brokerId, 1, 1000000));
+            id++;
+            cloudletList.add(createCloudlet(id, brokerId, 1, 10000000));
+            id++;
+            cloudletList.add(createCloudlet(id, brokerId, 1, 100000000));
 
             //######### To be replaced ########
             //cloudletList = CloudletDataParser.parseCloudletData(filePath);
@@ -72,7 +73,7 @@ public class PowerMain {
 
             // Set the amount of time to simulate here, it is in seconds, but it doesn't run for that time, it
             // simulates that amount of time instead, so 3600 is 1 hour, but your code will run in an instant
-            CloudSim.terminateSimulation(3600);
+//            CloudSim.terminateSimulation(84000);
 
             // Sixth step: Starts the simulation
             CloudSim.startSimulation();
@@ -83,7 +84,7 @@ public class PowerMain {
             List<Cloudlet> resultList = broker.getCloudletReceivedList();
             printCloudletResults(resultList);
 
-            simulationManager.stopRealTimeUpdates();
+//            simulationManager.stopRealTimeUpdates();
 
         } catch (Exception e) {
             e.printStackTrace();
