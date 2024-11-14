@@ -67,6 +67,12 @@ public class NetworkVm extends Vm implements NetworkedEntity {
                 }
 
                 hpkt.accumulatedVirtualizationOverhead += getVirtualizationOverhead();
+
+                // Nested virtualization edge-case, but locally routed packet
+                if (VmList.getById(this.getGuestList(), hpkt.receiverGuestId) != null) {
+                    getNics().get(hpkt.receiverCloudletId).getReceivedPkts().add(hpkt);
+                    nic.getPktsToSend().remove(hpkt);
+                }
             }
         }
     }

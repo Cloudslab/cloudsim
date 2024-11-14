@@ -104,7 +104,7 @@ public class Switch extends SimEntity {
 	/**
 	 * The datacenter where the switch is connected to.
 	 */
-	public NetworkDatacenter dc;;
+	public NetworkDatacenter dc;
 
         /**
          * The time the switch spends to process a received packet.
@@ -180,20 +180,20 @@ public class Switch extends SimEntity {
 	 * @param ev Event/packet to process
 	 */
 	protected void processPacketDown(SimEvent ev) {
-		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		int recvVMid = hspkt.pkt.receiverGuestId;
+		NetworkPacket npkt = (NetworkPacket) ev.getData();
+		int recvVMid = npkt.pkt.receiverGuestId;
 		CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.NETWORK_PKT_FORWARD));
 		schedule(getId(), switchingDelay, CloudActionTags.NETWORK_PKT_FORWARD);
 
 		// packet is to be received by the host
 		if (level == SwitchLevel.EDGE_LEVEL) {
 			int hostid = dc.VmtoHostlist.get(recvVMid);
-			hspkt.receiverHostId = hostid;
-			pktsToHosts.computeIfAbsent(hostid, k -> new ArrayList<>()).add(hspkt);;
+			npkt.receiverHostId = hostid;
+			pktsToHosts.computeIfAbsent(hostid, k -> new ArrayList<>()).add(npkt);
 		} else if (level == SwitchLevel.AGGR_LEVEL) { // From root level to edge level
 			// find the id for edgelevel switch
 			int switchId = dc.VmToSwitchid.get(recvVMid);
-			pktsToDownlinkSwitches.computeIfAbsent(switchId, k -> new ArrayList<>()).add(hspkt);
+			pktsToDownlinkSwitches.computeIfAbsent(switchId, k -> new ArrayList<>()).add(npkt);
 		}
 
 	}
@@ -342,8 +342,21 @@ public class Switch extends SimEntity {
 				for (NetworkPacket npkt : hspktlist) {
 					NetworkHost hs = hostList.get(npkt.receiverHostId);
 
+					if (hs == null) { // nested virtualization edge-case
+						for (NetworkHost candidateHs: hostList.values()) {
+							if (candidateHs.getNics().get(npkt.pkt.receiverCloudletId) != null) {
+								hs = candidateHs;
+
+								// Replace packet host
+								npkt.receiverHostId = hs.getId();
+								break;
+							}
+						}
+					}
+
 					// simulate traversal overhead of the virtualization layers (host -> (nested) receiver guest)
-					int virtOverhead = hs.getTotalVirtualizationOverhead(npkt.receiverGuestId, hs.getGuestList().iterator(), 0);
+                    assert hs != null;
+                    int virtOverhead = hs.getTotalVirtualizationOverhead(npkt.receiverGuestId, hs.getGuestList().iterator(), 0);
 					double delay = (8 * npkt.pkt.data / avband) + virtOverhead;
 					this.send(getId(), delay, CloudActionTags.NETWORK_PKT_REACHED_HOST, npkt);
 				}
