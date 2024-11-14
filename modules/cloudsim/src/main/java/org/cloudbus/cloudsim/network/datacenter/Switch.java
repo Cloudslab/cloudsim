@@ -165,12 +165,12 @@ public class Switch extends SimEntity {
          * @param ev The packet sent.
          */
 	protected void storePacketInHost(SimEvent ev) {
-		NetworkPacket hspkt = (NetworkPacket) ev.getData();
+		NetworkPacket npkt = (NetworkPacket) ev.getData();
 
-		NetworkHost hs = hostList.get(hspkt.receiverHostId);
-		NetworkInterfaceCard nic = hs.getNics().get(hspkt.pkt.receiverCloudletId);
+		NetworkHost hs = hostList.get(npkt.receiverHostId);
+		NetworkInterfaceCard nic = hs.getNics().get(npkt.pkt.receiverCloudletId);
 
-		nic.getReceivedPkts().add(hspkt.pkt);
+		nic.getReceivedPkts().add(npkt.pkt);
 	}
 
 	/**
@@ -205,8 +205,8 @@ public class Switch extends SimEntity {
 	 * @param ev Event/packet to process
 	 */
 	protected void processPacketUp(SimEvent ev) {
-		NetworkPacket hspkt = (NetworkPacket) ev.getData();
-		int recvVMid = hspkt.pkt.receiverGuestId;
+		NetworkPacket npkt = (NetworkPacket) ev.getData();
+		int recvVMid = npkt.pkt.receiverGuestId;
 
 		CloudSim.cancelAll(getId(), new PredicateType(CloudActionTags.NETWORK_PKT_FORWARD));
 		schedule(getId(), switchingDelay, CloudActionTags.NETWORK_PKT_FORWARD);
@@ -215,18 +215,18 @@ public class Switch extends SimEntity {
 		if (level == SwitchLevel.EDGE_LEVEL) {
 			int hostId = dc.VmtoHostlist.get(recvVMid);
 			NetworkHost hs = hostList.get(hostId);
-			hspkt.receiverHostId = hostId;
+			npkt.receiverHostId = hostId;
 
 			// Receiver host directly connected to the switch -- found!
 			if (hs != null) {
-				pktsToHosts.computeIfAbsent(hostId, k -> new ArrayList<>()).add(hspkt);
+				pktsToHosts.computeIfAbsent(hostId, k -> new ArrayList<>()).add(npkt);
 				return;
 			}
 
 			// Send to aggregate level
 			// ASSUMPTION: EACH EDGE is Connected to one aggregate level switch only
 			Switch sw = uplinkSwitches.getFirst();
-			pktsToUplinkSwitches.computeIfAbsent(sw.getId(), k -> new ArrayList<>()).add(hspkt);
+			pktsToUplinkSwitches.computeIfAbsent(sw.getId(), k -> new ArrayList<>()).add(npkt);
 		}
 		else if (level == SwitchLevel.AGGR_LEVEL) { // packet received from edge router
 			// find the id for edgelevel switch
@@ -234,10 +234,10 @@ public class Switch extends SimEntity {
 
 			// send to edge (it's not going up, but same level)
             if (downlinkSwitches.stream().anyMatch(sw -> sw.getId() == switchId)) {
-				pktsToDownlinkSwitches.computeIfAbsent(switchId, k -> new ArrayList<>()).add(hspkt);
+				pktsToDownlinkSwitches.computeIfAbsent(switchId, k -> new ArrayList<>()).add(npkt);
 			} else {// send to up to root level (ASSUMPTION: EACH EDGE is Connected to one aggregate level switch only)
 				Switch sw = uplinkSwitches.getFirst();
-				pktsToUplinkSwitches.computeIfAbsent(sw.getId(), k -> new ArrayList<>()).add(hspkt);
+				pktsToUplinkSwitches.computeIfAbsent(sw.getId(), k -> new ArrayList<>()).add(npkt);
 			}
 		}
 		// @TODO: Remo Andreoli: confusing, this packet is going down, not up!!!
@@ -257,7 +257,7 @@ public class Switch extends SimEntity {
 			if (aggrSwitchId < 0) {
 				Log.println(" No destination for this packet");
 			} else {
-				pktsToDownlinkSwitches.computeIfAbsent(aggrSwitchId, k -> new ArrayList<>()).add(hspkt);
+				pktsToDownlinkSwitches.computeIfAbsent(aggrSwitchId, k -> new ArrayList<>()).add(npkt);
 			}
 		} else {
 			throw new IllegalStateException("Unknown switch level " + level);
@@ -356,7 +356,7 @@ public class Switch extends SimEntity {
 
 					// simulate traversal overhead of the virtualization layers (host -> (nested) receiver guest)
                     assert hs != null;
-                    int virtOverhead = hs.getTotalVirtualizationOverhead(npkt.receiverGuestId, hs.getGuestList().iterator(), 0);
+                    int virtOverhead = hs.getTotalVirtualizationOverhead(npkt.getReceiverGuestId(), hs.getGuestList().iterator(), 0);
 					double delay = (8 * npkt.pkt.data / avband) + virtOverhead;
 					this.send(getId(), delay, CloudActionTags.NETWORK_PKT_REACHED_HOST, npkt);
 				}

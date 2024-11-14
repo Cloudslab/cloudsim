@@ -9,9 +9,7 @@
 package org.cloudbus.cloudsim.network.datacenter;
 
 /**
- * NewtorkPacket represents the packet which travel from one server to another. Each packet contains
- * IDs of the sender and receiver guest which are communicating, time at which it is sent and received,
- * type and virtual IDs of tasks.
+ * NetworkPacket represents the packet which travel from one physical host to another.
  * 
  * <br/>Please refer to following publication for more details:<br/>
  * <ul>
@@ -21,51 +19,26 @@ package org.cloudbus.cloudsim.network.datacenter;
  * </ul>
  * 
  * @author Saurabh Kumar Garg
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
- * //TODO Attributes should be private
  */
 public class NetworkPacket {
-    /**
-     * Information about the virtual send and receiver entities of the packet.
-     */
+    /** Information about the ''virtual'' sender and receiver of the packet. */
     HostPacket pkt;
 
-    /**
-     * Id of the sender host.
-     */
+    /** Id of the sender host. */
     int senderHostId;
 
-    /**
-     * Id of the receiver host.
-     */
+    /** Id of the receiver host. */
     int receiverHostId;
-
-    /**
-     * Id of the sender guest.
-     */
-    int senderGuestId;
-
-    /**
-     * Id of the receiver guest.
-     */
-    int receiverGuestId;
-
-    /** Time when the packet was sent. */
-    double sendTime;
-
-    /** Time when the packet was received. */
-    double recvTime;
 
     public NetworkPacket(int hostId, HostPacket pkt) {
         this.pkt = pkt;
 
         senderHostId = hostId;
         receiverHostId = -1; // still unknown
-
-        senderGuestId = pkt.senderGuestId;
-        receiverGuestId = pkt.receiverGuestId;
-
-        sendTime = pkt.sendTime;
-        recvTime = -1;
     }
+
+    public int getSenderGuestId() { return pkt.senderGuestId; }
+    public int getReceiverGuestId() { return pkt.receiverGuestId; }
 }
