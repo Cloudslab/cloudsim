@@ -87,7 +87,7 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 		}
 
 		if (startTimeCurrStage == -1) {
-			startTimeCurrStage = CloudSim.clock();
+			startTimeCurrStage = getSubmissionTime();
 		}
 
 		// if execution stage, update the cloudlet execFinishTime
@@ -98,9 +98,7 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 			// update the time
 			timeSpentCurrStage = CloudSim.clock() - startTimeCurrStage;
 
-			// @TODO: Remo Andreoli: I'm not too sure about this, there is a slight discrepancy between timeSpentInStage
-			//						 and remainingCloudletLength that needs to be addressed
-			if (getRemainingCloudletLength() == 0 || timeSpentCurrStage >= getCloudletLength()) {
+			if (getRemainingCloudletLength() == 0) {
 				st.setTime(timeSpentCurrStage);
 				goToNextStage();
 			} else {
@@ -108,23 +106,19 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 			}
 		}
 		if (st.getType() == TaskStage.TaskStageStatus.WAIT_RECV) {
-			List<HostPacket> pkttoremove = new ArrayList<>();
-
-			Iterator<HostPacket> it = nic.getReceivedPkts().iterator();
+			Iterator<HostPacket> iter = nic.getReceivedPkts().iterator();
 			HostPacket pkt;
-			if (it.hasNext()) {
-				pkt = it.next();
+			if (iter.hasNext()) {
+				pkt = iter.next();
 				// Assumption: packet will not arrive in the same cycle
 				if (pkt.receiverGuestId == getGuestId()) {
 					pkt.recvTime = CloudSim.clock();
 					st.setTime(CloudSim.clock() - pkt.sendTime);
 					goToNextStage();
-					pkttoremove.add(pkt);
+					iter.remove();
 				}
 			}
-			nic.getReceivedPkts().removeAll(pkttoremove);
-			// if(pkt!=null)
-			// else wait for receiving the packet
+
 			return false;
 		}
 
