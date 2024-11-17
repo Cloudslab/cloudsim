@@ -1,8 +1,10 @@
+// Kevin Le (kevinle2)
+
 package org.cloudbus.cloudsim.tieredconfigurations.power;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.tieredconfigurations.PowerData;
+import org.cloudbus.cloudsim.tieredconfigurations.power.PowerAwareData;
 import org.cloudbus.cloudsim.tieredconfigurations.power.PowerDatacenterFactory;
 import org.cloudbus.cloudsim.power.PowerDatacenter;
 import org.cloudbus.cloudsim.power.PowerVm;
@@ -34,9 +36,15 @@ public class PowerAwareMain {
             CloudSim.init(numUsers, calendar, traceFlag);
 
             // Step 2: Load fossil-free percentages
-            Queue<Double> fossilFreePercentages = loadFossilFreePercentages("/powerBreakdownData.csv");
-            System.out.println(fossilFreePercentages);
-            PowerData initialPowerData = new PowerData(fossilFreePercentages.poll(), 0);
+            Queue<Double> powerConsumptionTotals = loadPowerConsumptionTotals(
+                    //"modules/cloudsim-green-project/src/main/java/org/cloudbus/cloudsim/energyapi/powerBreakdownData.csv"
+                    "/powerBreakdownData.csv"
+            );
+            double min = powerConsumptionTotals.stream().min(Double::compareTo).orElse(0.0);
+            double max = powerConsumptionTotals.stream().max(Double::compareTo).orElse(1.0);
+            double avg = powerConsumptionTotals.stream().mapToDouble(Double::doubleValue).average().orElse((min + max) / 2);
+
+            PowerAwareData initialPowerData = new PowerAwareData(powerConsumptionTotals.poll());
 
             // Step 3: Create fixed power datacenters
             highResDatacenter = PowerDatacenterFactory.createHighResourcePowerDatacenter("High_Resource_PowerDatacenter");
@@ -70,20 +78,16 @@ public class PowerAwareMain {
                 String tempName = "";
                 while (CloudSim.running()) {
                     if (CloudSim.clock() <= temp) {
-                        if (!fossilFreePercentages.isEmpty() && temp / 3600 > hour) {
-                            initialPowerData.setFossilFreePercentage(fossilFreePercentages.poll());
+                        if (!powerConsumptionTotals.isEmpty() && temp / 3600 > hour) {
+                            initialPowerData.setPowerConsumptionTotal(powerConsumptionTotals.poll());
                             hour += 1;
                         }
-                        initialPowerData.setFossilFreePercentage(initialPowerData.getFossilFreePercentage());
-                        PowerDatacenter selectedDatacenter = selectDatacenterBasedOnPowerData(initialPowerData);
+                        Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(initialPowerData.getPowerConsumptionTotal(), min, avg, max);
                         if (!selectedDatacenter.getName().equals(tempName)) {
-                            System.out.println(" ------- Hour: " + temp / 3600 + " Update Datacenter: ("
-                                    + selectedDatacenter.getName() + ") Simulating based on fossil-free percentage: "
-                                    + initialPowerData.getFossilFreePercentage());
+                            System.out.println(" ------- Hour: " + temp / 3600 + " Update Datacenter: (" + selectedDatacenter.getName() + ") Simulating based on power consumption: " + initialPowerData.getPowerConsumptionTotal());
                             tempName = selectedDatacenter.getName();
                         } else {
-                            System.out.println(" ------- Hour: " + temp / 3600 + " No Datacenter change based on " +
-                                    "fossil-free percentage: " + initialPowerData.getFossilFreePercentage());
+                            System.out.println(" ------- Hour: " + temp / 3600 + " No Datacenter change based on power consumption: " + initialPowerData.getPowerConsumptionTotal());
                         }
                         temp += 1800;
                     }
@@ -105,11 +109,13 @@ public class PowerAwareMain {
         }
     }
 
-    private static PowerDatacenter selectDatacenterBasedOnPowerData(PowerData powerData) {
-        double fossilFreePercentage = powerData.getFossilFreePercentage();
-        if (fossilFreePercentage > 70) {
+    private static Datacenter selectDatacenterBasedOnPowerData(double powerConsumptionTotal, double min, double avg, double max) {
+        double lowerThreshold = min + (avg - min) / 2; // Midpoint between min and avg
+        double upperThreshold = avg + (max - avg) / 2; // Midpoint between avg and max
+
+        if (powerConsumptionTotal > upperThreshold) {
             return highResDatacenter;
-        } else if (fossilFreePercentage > 35) {
+        } else if (powerConsumptionTotal > lowerThreshold) {
             return mediumResDatacenter;
         } else {
             return lowResDatacenter;
@@ -157,8 +163,8 @@ public class PowerAwareMain {
         return new DatacenterBroker("Broker");
     }
 
-    public static Queue<Double> loadFossilFreePercentages(String filePath) {
-        Queue<Double> percentages = new LinkedList<>();
+    public static Queue<Double> loadPowerConsumptionTotals(String filePath) {
+        Queue<Double> totals = new LinkedList<>();
         try (InputStream inputStream = PowerAwareMain.class.getResourceAsStream(filePath);
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
@@ -169,12 +175,12 @@ public class PowerAwareMain {
                     continue;
                 }
                 String[] columns = line.split(",");
-                double fossilFreePercentage = Double.parseDouble(columns[28].trim());
-                percentages.add(fossilFreePercentage);
+                double powerConsumptionTotal = Double.parseDouble(columns[30].trim());
+                totals.add(powerConsumptionTotal);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return percentages;
+        return totals;
     }
 }
