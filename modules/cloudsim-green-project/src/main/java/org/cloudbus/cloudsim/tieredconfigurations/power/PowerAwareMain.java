@@ -1,11 +1,14 @@
-package org.cloudbus.cloudsim.tieredconfigurations;
+package org.cloudbus.cloudsim.tieredconfigurations.power;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.tieredconfigurations.PowerData;
+import org.cloudbus.cloudsim.tieredconfigurations.power.PowerDatacenterFactory;
+import org.cloudbus.cloudsim.power.PowerDatacenter;
+import org.cloudbus.cloudsim.power.PowerVm;
 import org.cloudbus.cloudsim.workload.CloudletDataParser;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,12 +18,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class PowerMain {
+public class PowerAwareMain {
     private static List<Cloudlet> cloudletList;
     private static List<Vm> vmList;
-    private static Datacenter highResDatacenter;
-    private static Datacenter mediumResDatacenter;
-    private static Datacenter lowResDatacenter;
+    private static PowerDatacenter highResDatacenter;
+    private static PowerDatacenter mediumResDatacenter;
+    private static PowerDatacenter lowResDatacenter;
 
     public static void main(String[] args) {
         try {
@@ -31,17 +34,14 @@ public class PowerMain {
             CloudSim.init(numUsers, calendar, traceFlag);
 
             // Step 2: Load fossil-free percentages
-            Queue<Double> fossilFreePercentages = loadFossilFreePercentages(
-                    //"modules/cloudsim-green-project/src/main/java/org/cloudbus/cloudsim/energyapi/powerBreakdownData.csv"
-                    "/powerBreakdownData.csv"
-            );
+            Queue<Double> fossilFreePercentages = loadFossilFreePercentages("/powerBreakdownData.csv");
             System.out.println(fossilFreePercentages);
             PowerData initialPowerData = new PowerData(fossilFreePercentages.poll(), 0);
 
-            // Step 3: Create fixed datacenters
-            highResDatacenter = DatacenterFactory.createHighResourceDatacenter("High_Resource_Datacenter");
-            mediumResDatacenter = DatacenterFactory.createMediumResourceDatacenter("Medium_Resource_Datacenter");
-            lowResDatacenter = DatacenterFactory.createLowResourceDatacenter("Low_Resource_Datacenter");
+            // Step 3: Create fixed power datacenters
+            highResDatacenter = PowerDatacenterFactory.createHighResourcePowerDatacenter("High_Resource_PowerDatacenter");
+            mediumResDatacenter = PowerDatacenterFactory.createMediumResourcePowerDatacenter("Medium_Resource_PowerDatacenter");
+            lowResDatacenter = PowerDatacenterFactory.createLowResourcePowerDatacenter("Low_Resource_PowerDatacenter");
 
             // Step 4: Create broker
             DatacenterBroker broker = createBroker();
@@ -49,8 +49,8 @@ public class PowerMain {
 
             // Step 5: Create VMs and Cloudlets
             vmList = new ArrayList<>();
-            vmList.add(createVM(brokerId, 0));
-            vmList.add(createVM(brokerId, 1));
+            vmList.add(createPowerVM(brokerId, 0));
+            vmList.add(createPowerVM(brokerId, 1));
             broker.submitGuestList(vmList);
 
             cloudletList = new ArrayList<>();
@@ -70,25 +70,22 @@ public class PowerMain {
                 String tempName = "";
                 while (CloudSim.running()) {
                     if (CloudSim.clock() <= temp) {
-//                        System.out.println("Clock: " + CloudSim.clock());
-                        if(!fossilFreePercentages.isEmpty() && temp/3600 > hour) {
+                        if (!fossilFreePercentages.isEmpty() && temp / 3600 > hour) {
                             initialPowerData.setFossilFreePercentage(fossilFreePercentages.poll());
                             hour += 1;
                         }
                         initialPowerData.setFossilFreePercentage(initialPowerData.getFossilFreePercentage());
-                        Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(initialPowerData);
+                        PowerDatacenter selectedDatacenter = selectDatacenterBasedOnPowerData(initialPowerData);
                         if (!selectedDatacenter.getName().equals(tempName)) {
-                            System.out.println(" ------- Hour: " + temp/3600 + " Update Datacenter: ("
+                            System.out.println(" ------- Hour: " + temp / 3600 + " Update Datacenter: ("
                                     + selectedDatacenter.getName() + ") Simulating based on fossil-free percentage: "
                                     + initialPowerData.getFossilFreePercentage());
                             tempName = selectedDatacenter.getName();
-                        }
-                        else {
-                            System.out.println(" ------- Hour: " + temp/3600 + " No Datacenter change based on " +
+                        } else {
+                            System.out.println(" ------- Hour: " + temp / 3600 + " No Datacenter change based on " +
                                     "fossil-free percentage: " + initialPowerData.getFossilFreePercentage());
                         }
                         temp += 1800;
-//                        if(temp > CloudSim.clock()) {temp = CloudSim.clock();}
                     }
                 }
             };
@@ -108,7 +105,7 @@ public class PowerMain {
         }
     }
 
-    private static Datacenter selectDatacenterBasedOnPowerData(PowerData powerData) {
+    private static PowerDatacenter selectDatacenterBasedOnPowerData(PowerData powerData) {
         double fossilFreePercentage = powerData.getFossilFreePercentage();
         if (fossilFreePercentage > 70) {
             return highResDatacenter;
@@ -119,16 +116,17 @@ public class PowerMain {
         }
     }
 
-    public static Vm createVM(int brokerId, int vmid) {
+    public static PowerVm createPowerVM(int brokerId, int vmid) {
         int mips = 1000;
         long size = 10000; // Image size (MB)
         int ram = 512; // RAM (MB)
         long bw = 1000; // Bandwidth
         int pesNumber = 1; // Number of CPUs
         String vmm = "Xen"; // VMM name
+        double schedulingInterval = 0.1;
 
-        // Create the VM
-        return new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+        // Create the Power VM
+        return new PowerVm(vmid, brokerId, mips, pesNumber, ram, bw, size, 1, vmm, new CloudletSchedulerTimeShared(), schedulingInterval);
     }
 
     public static Cloudlet createCloudlet(int id, int brokerId, int vmid, long length) {
@@ -161,8 +159,8 @@ public class PowerMain {
 
     public static Queue<Double> loadFossilFreePercentages(String filePath) {
         Queue<Double> percentages = new LinkedList<>();
-        try (InputStream inputStream = PowerMain.class.getResourceAsStream(filePath);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (InputStream inputStream = PowerAwareMain.class.getResourceAsStream(filePath);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             boolean isHeader = true;
             while ((line = reader.readLine()) != null) {
