@@ -10,16 +10,18 @@ public class PowerData {
     private double fossilFreePercentage;
     private double renewablePercentage;
 
-    public PowerData() throws IOException {
-        ElectricityMapsAPI electricityMapsAPI = new ElectricityMapsAPI("JtPlg2xeVfyLW");
+    public PowerData(double fossil, double renewable ) throws IOException {
+        //ElectricityMapsAPI electricityMapsAPI = new ElectricityMapsAPI("JtPlg2xeVfyLW");
         // Parse the JSON data
-        JsonObject jsonObject = JsonParser.parseString(electricityMapsAPI.getPowerBreakdown("FR")).getAsJsonObject();
+        //JsonObject jsonObject = JsonParser.parseString(electricityMapsAPI.getPowerBreakdown("FR")).getAsJsonObject();
 
         // Extract the fossilFreePercentage and renewablePercentage values
-        this.fossilFreePercentage = jsonObject.get("fossilFreePercentage").getAsDouble();
-        this.renewablePercentage = jsonObject.get("renewablePercentage").getAsDouble();
-        System.out.println("Fossil Free Percentage: " + this.fossilFreePercentage);
-        System.out.println("Renewable Percentage: " + this.renewablePercentage);
+        this.fossilFreePercentage = fossil;
+        this.renewablePercentage = renewable;
+//        this.fossilFreePercentage = jsonObject.get("fossilFreePercentage").getAsDouble();
+//        this.renewablePercentage = jsonObject.get("renewablePercentage").getAsDouble();
+//        System.out.println("Fossil Free Percentage: " + this.fossilFreePercentage);
+//        System.out.println("Renewable Percentage: " + this.renewablePercentage);
     }
 
     public double getFossilFreePercentage() {
