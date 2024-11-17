@@ -8,6 +8,8 @@
 
 package org.cloudbus.cloudsim.core;
 
+import org.cloudbus.cloudsim.Log;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.SortedSet;
@@ -100,4 +102,12 @@ public class FutureQueue {
 		sortedSet.clear();
 	}
 
+	public void print() {
+		Iterator<SimEvent> iter = iterator();
+		int i = 0;
+		while(iter.hasNext()) {
+			Log.printlnConcat("[", i, "] -> ", iter.next().toString());
+			i++;
+		}
+	}
 }
