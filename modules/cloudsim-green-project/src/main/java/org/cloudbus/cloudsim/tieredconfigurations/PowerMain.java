@@ -29,7 +29,8 @@ public class PowerMain {
 
             // Step 2: Load fossil-free percentages
             Queue<Double> fossilFreePercentages = loadFossilFreePercentages(
-                    "modules/cloudsim-green-project/src/main/java/org/cloudbus/cloudsim/energyapi/powerBreakdownData.csv"
+                    //"modules/cloudsim-green-project/src/main/java/org/cloudbus/cloudsim/energyapi/powerBreakdownData.csv"
+                    "/powerBreakdownData.csv"
             );
             System.out.println(fossilFreePercentages);
             PowerData initialPowerData = new PowerData(fossilFreePercentages.poll(), 0);
@@ -157,7 +158,8 @@ public class PowerMain {
 
     public static Queue<Double> loadFossilFreePercentages(String filePath) {
         Queue<Double> percentages = new LinkedList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (InputStream inputStream = PowerMain.class.getResourceAsStream(filePath);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             boolean isHeader = true;
             while ((line = reader.readLine()) != null) {
