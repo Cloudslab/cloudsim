@@ -206,7 +206,7 @@ public class BorgMapper {
         }
     }
 
-    private static BorgDatasetRow parseLineToRow(String line) {
+    public static BorgDatasetRow parseLineToRow(String line) {
         // Implement the logic to parse a line from the CSV file into a BorgDatasetRow
         // object
         // This is a placeholder implementation
