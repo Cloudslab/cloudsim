@@ -1,8 +1,11 @@
+# written by Kevin Le (kevinle2)
+
 import requests
 import csv
 import time
 from datetime import datetime, timedelta
 import os
+
 
 API_KEY = 'JtPlg2xeVfyLW'
 CSV_FILE = 'powerBreakdownData.csv'
