@@ -2,6 +2,9 @@ package org.cloudbus.cloudsim.tieredconfigurations;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.visualdata.DatacenterSelectionData;
+import org.cloudbus.cloudsim.visualdata.CloudletExecutionData;
+
 import org.cloudbus.cloudsim.workload.CloudletDataParser;
 
 import java.io.BufferedReader;
@@ -68,6 +71,9 @@ public class PowerMain {
                 double temp = 0;
                 double hour = 0;
                 String tempName = "";
+
+                List<String[]> datacenterLogs = new ArrayList<>();
+
                 while (CloudSim.running()) {
                     if (CloudSim.clock() <= temp) {
 //                        System.out.println("Clock: " + CloudSim.clock());
@@ -87,10 +93,18 @@ public class PowerMain {
                             System.out.println(" ------- Hour: " + temp/3600 + " No Datacenter change based on " +
                                     "fossil-free percentage: " + initialPowerData.getFossilFreePercentage());
                         }
+                        datacenterLogs.add(new String[]{
+                                String.valueOf(temp / 3600),
+                                selectedDatacenter.getName(),
+                                String.valueOf(initialPowerData.getFossilFreePercentage())
+                        });
                         temp += 1800;
 //                        if(temp > CloudSim.clock()) {temp = CloudSim.clock();}
                     }
                 }
+
+                // Time Series Plot for Datacenter Selection Over Time
+                DatacenterSelectionData.saveDatacenterSelectionCSV("modules/cloudsim-green-project/src/main/java/org/cloudbus/cloudsim/visualdata/datacenterSelection.csv", datacenterLogs);
             };
 
             new Thread(monitor).start();
@@ -102,6 +116,9 @@ public class PowerMain {
 
             // Step 8: Print Results
             printCloudletResults(broker.getCloudletReceivedList());
+
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -153,6 +170,10 @@ public class PowerMain {
                         cloudlet.getActualCPUTime(), cloudlet.getExecStartTime(), cloudlet.getFinishTime());
             }
         }
+
+        // Bar/Scatter Plot for Cloudlet Execution Data over Time
+        String filePath = "modules/cloudsim-green-project/src/main/java/org/cloudbus/cloudsim/visualdata/cloudletExecutionTime.csv";
+        CloudletExecutionData.exportCloudletExecutionTime(cloudlets, filePath);
     }
 
     private static DatacenterBroker createBroker() throws Exception {
