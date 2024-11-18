@@ -104,7 +104,8 @@ public class PowerMain {
                 }
 
                 // Time Series Plot for Datacenter Selection Over Time
-                DatacenterSelectionData.saveDatacenterSelectionCSV("modules/cloudsim-green-project/src/main/java/org/cloudbus/cloudsim/visualdata/datacenterSelection.csv", datacenterLogs);
+                System.out.println("Current working directory: " + System.getProperty("user.dir"));
+                DatacenterSelectionData.saveDatacenterSelectionCSV("./datacenterSelection.csv", datacenterLogs);
             };
 
             new Thread(monitor).start();
@@ -172,7 +173,7 @@ public class PowerMain {
         }
 
         // Bar/Scatter Plot for Cloudlet Execution Data over Time
-        String filePath = "modules/cloudsim-green-project/src/main/java/org/cloudbus/cloudsim/visualdata/cloudletExecutionTime.csv";
+        String filePath = "./cloudletExecutionTime.csv";
         CloudletExecutionData.exportCloudletExecutionTime(cloudlets, filePath);
     }
 

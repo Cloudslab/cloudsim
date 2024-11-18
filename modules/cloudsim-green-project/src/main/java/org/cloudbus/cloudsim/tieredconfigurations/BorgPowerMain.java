@@ -2,6 +2,11 @@ package org.cloudbus.cloudsim.tieredconfigurations;
 
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.visualdata.DatacenterSelectionData;
+import org.cloudbus.cloudsim.visualdata.CloudletExecutionData;
+
+import org.cloudbus.cloudsim.workload.CloudletDataParser;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,6 +21,9 @@ import java.util.HashMap;
 import java.util.Queue;
 import org.cloudbus.cloudsim.workload.BorgMapper;
 import org.cloudbus.cloudsim.workload.BorgMapper.CloudLet; 
+import org.cloudbus.cloudsim.tieredconfigurations.PowerAwareDatacenterBroker;
+import org.cloudbus.cloudsim.power.PowerDatacenter;
+import org.cloudbus.cloudsim.tieredconfigurations.power.PowerDatacenterFactory;
 
 public class BorgPowerMain {
     private static List<Cloudlet> cloudletList;
@@ -95,6 +103,9 @@ public class BorgPowerMain {
                 //track the hours elapsed
                 double hour = 0;
                 String tempName = "";
+
+                List<String[]> datacenterLogs = new ArrayList<>();
+
                 while (CloudSim.running()) {
                     if (CloudSim.clock() <= temp) {
 //                        System.out.println("Clock: " + CloudSim.clock());
@@ -114,10 +125,19 @@ public class BorgPowerMain {
                             System.out.println(" ------- Hour: " + temp/3600 + " No Datacenter change based on " +
                                     "fossil-free percentage: " + initialPowerData.getFossilFreePercentage());
                         }
+                        datacenterLogs.add(new String[]{
+                                String.valueOf(temp / 3600),
+                                selectedDatacenter.getName(),
+                                String.valueOf(initialPowerData.getFossilFreePercentage())
+                        });
                         temp += 1800;
 //                        if(temp > CloudSim.clock()) {temp = CloudSim.clock();}
                     }
                 }
+
+                // Time Series Plot for Datacenter Selection Over Time
+                System.out.println("Current working directory: " + System.getProperty("user.dir"));
+                DatacenterSelectionData.saveDatacenterSelectionCSV("./datacenterSelection.csv", datacenterLogs);
             };
 
             new Thread(monitor).start();
@@ -125,7 +145,7 @@ public class BorgPowerMain {
             // Step 7: Start Simulation
             CloudSim.startSimulation();
 
-            CloudSim.terminateSimulation(120);
+            //CloudSim.terminateSimulation(120);
 
             CloudSim.stopSimulation();
 
@@ -187,6 +207,10 @@ public class BorgPowerMain {
                         cloudlet.getActualCPUTime(), cloudlet.getExecStartTime(), cloudlet.getFinishTime());
             }
         }
+
+        // Bar/Scatter Plot for Cloudlet Execution Data over Time
+        String filePath = "./cloudletExecutionTime.csv";
+        CloudletExecutionData.exportCloudletExecutionTime(cloudlets, filePath);
     }
 
     private static DatacenterBroker createBroker() throws Exception {
