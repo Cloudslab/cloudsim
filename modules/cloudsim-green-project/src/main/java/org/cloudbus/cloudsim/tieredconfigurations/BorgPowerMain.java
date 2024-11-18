@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.Queue;
 import org.cloudbus.cloudsim.workload.BorgMapper;
 import org.cloudbus.cloudsim.workload.BorgMapper.CloudLet; 
-import org.cloudbus.cloudsim.tieredconfigurations.PowerAwareDatacenterBroker;
-import org.cloudbus.cloudsim.power.PowerDatacenter;
-import org.cloudbus.cloudsim.tieredconfigurations.power.PowerDatacenterFactory;
 
 public class BorgPowerMain {
     private static List<Cloudlet> cloudletList;
