@@ -11,12 +11,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Queue;
-import org.cloudbus.cloudsim.workload.BorgMapper; 
+import org.cloudbus.cloudsim.workload.BorgMapper;
+import org.cloudbus.cloudsim.workload.BorgMapper.CloudLet; 
 
 public class BorgPowerMain {
     private static List<Cloudlet> cloudletList;
     private static List<Vm> vmList;
+    private static Map<Integer, Vm> vmMap;
     private static Datacenter highResDatacenter;
     private static Datacenter mediumResDatacenter;
     private static Datacenter lowResDatacenter;
@@ -27,7 +31,7 @@ public class BorgPowerMain {
             int numUsers = 1;
             Calendar calendar = Calendar.getInstance();
             boolean traceFlag = false;
-            CloudSim.init(numUsers, calendar, traceFlag);
+            CloudSim.init(numUsers, calendar, traceFlag, 0.720);
 
             // Step 2: Load fossil-free percentages
             Queue<Double> fossilFreePercentages = loadFossilFreePercentages("/powerBreakdownData.csv");
@@ -46,9 +50,7 @@ public class BorgPowerMain {
             // Step 5: Initialize VM and Cloudlet lists
             vmList = new ArrayList<>();
             cloudletList = new ArrayList<>();
-
-            broker.submitGuestList(vmList);
-            broker.submitCloudletList(cloudletList);
+            vmMap = new HashMap<>();
 
             // Step 6: Load Borg dataset
             String borgFilePath = "/borg_traces_data.csv";
@@ -78,10 +80,19 @@ public class BorgPowerMain {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            vmList.addAll(vmMap.values());
+            
+            broker.submitGuestList(vmList);
+            broker.submitCloudletList(cloudletList);
+            System.out.println("Submitted " + cloudletList.size() + " cloudlets to broker, " + vmList.size() + " VMs to broker");
+
 
             // Step 7: Simulate for each hour
+            //monitors and updates the datacenter selection based on the fossil-free energy %
             Runnable monitor = () -> {
+                //track simulation time
                 double temp = 0;
+                //track the hours elapsed
                 double hour = 0;
                 String tempName = "";
                 while (CloudSim.running()) {
@@ -114,6 +125,8 @@ public class BorgPowerMain {
             // Step 7: Start Simulation
             CloudSim.startSimulation();
 
+            CloudSim.terminateSimulation(120);
+
             CloudSim.stopSimulation();
 
             // Step 8: Print Results
@@ -127,14 +140,22 @@ public class BorgPowerMain {
     private static void processBatch(List<BorgMapper.BorgDatasetRow> batch, DatacenterBroker broker, int brokerId) {
         for (BorgMapper.BorgDatasetRow row : batch) {
             // Create VM and Cloudlet from the row
-            Vm vm = new Vm(row.instanceIndex, brokerId, row.mips, row.pes, row.memory, 1000, 10000, "Xen", new CloudletSchedulerTimeShared());
-            Cloudlet cloudlet = new Cloudlet(row.instanceIndex, row.cloudletLength, row.pes, row.cloudletFileSize, row.cloudletOutputSize,
-                    new UtilizationModelFull(), new UtilizationModelFull(), new UtilizationModelFull());
+                    // Create CloudLet instance
+            Vm vm = null; 
+            if (vmMap.get(row.instanceIndex) == null) { 
+                vm = new Vm(row.instanceIndex, brokerId, row.mips, row.pes, row.memory, 1000, 10000, "Xen", new CloudletSchedulerTimeShared());
+                System.out.println("Created VM: " + vm.getId());
+                vmMap.put(row.instanceIndex, vm);
+            } else {
+                vm = vmMap.get(row.instanceIndex);
+            }
+            Cloudlet cloudlet = new Cloudlet(row.cloudletId, row.cloudletLength, row.pes, row.cloudletFileSize, row.cloudletOutputSize,
+                    new UtilizationModelStochastic(), new UtilizationModelStochastic(), new UtilizationModelStochastic());
             cloudlet.setUserId(brokerId);
-            cloudlet.setVmId(vm.getId());
-
-            // Add VM and Cloudlet to the lists
-            vmList.add(vm);
+            cloudlet.setGuestId(vm.getId());
+            cloudlet.setSubmissionTime(System.currentTimeMillis()+720);
+            
+            // Cloudlet to the lists
             cloudletList.add(cloudlet);
         }
 
@@ -155,29 +176,6 @@ public class BorgPowerMain {
         }
     }
 
-    public static Vm createVM(int brokerId, int vmid) {
-        int mips = 1000;
-        long size = 10000; // Image size (MB)
-        int ram = 512; // RAM (MB)
-        long bw = 1000; // Bandwidth
-        int pesNumber = 1; // Number of CPUs
-        String vmm = "Xen"; // VMM name
-
-        // Create the VM
-        return new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
-    }
-
-    public static Cloudlet createCloudlet(int id, int brokerId, int vmid, long length) {
-        long fileSize = 300;
-        long outputSize = 300;
-        int pesNumber = 1;
-        UtilizationModel utilizationModel = new UtilizationModelFull();
-
-        Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-        cloudlet.setUserId(brokerId);
-        cloudlet.setGuestId(vmid);
-        return cloudlet;
-    }
 
     private static void printCloudletResults(List<Cloudlet> cloudlets) {
         System.out.println("========== OUTPUT ==========");

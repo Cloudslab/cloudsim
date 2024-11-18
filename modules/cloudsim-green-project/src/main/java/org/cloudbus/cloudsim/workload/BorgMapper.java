@@ -54,6 +54,7 @@ public class BorgMapper {
         public boolean failed;
         public int cloudletLength;
         public int mips;
+        public int cloudletId;
         public int cloudletFileSize;
         public int cloudletOutputSize;
         public double utilizationModelCpu;
@@ -133,7 +134,7 @@ public class BorgMapper {
 
         // Create CloudLet instance
         CloudLet cloudlet = new CloudLet(
-                row.instanceIndex, // cloudletId
+                row.cloudletId, // cloudletId
                 row.cloudletLength, // cloudletLength
                 row.mips, // pesNumber
                 row.cloudletFileSize, // cloudletFileSize
@@ -218,7 +219,7 @@ public class BorgMapper {
         // System.out.println("Values: " + values.length + line.indexOf("cpu"));
         if (values.length == 12 && line.indexOf("cpu") != -1) {
             row = new BorgDatasetRow();
-
+            row.cloudletId = Integer.parseInt(values[0]);
             row.instanceIndex = values[2].isEmpty() ? 0 : Integer.parseInt(values[2]);
             double cpuValue = 0.0, memoryValue = 0.0;
             int cpu, memory, mips;
