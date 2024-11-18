@@ -74,32 +74,42 @@ public class PowerMain {
 
                 List<String[]> datacenterLogs = new ArrayList<>();
 
-                while (CloudSim.running()) {
-                    if (CloudSim.clock() <= temp) {
-//                        System.out.println("Clock: " + CloudSim.clock());
-                        if(!fossilFreePercentages.isEmpty() && temp/3600 > hour) {
+                while (!fossilFreePercentages.isEmpty()) {
+                    if (CloudSim.running() && CloudSim.clock() <= temp) {
+                        if (!fossilFreePercentages.isEmpty() && temp / 3600 > hour) {
                             initialPowerData.setFossilFreePercentage(fossilFreePercentages.poll());
                             hour += 1;
                         }
+
                         initialPowerData.setFossilFreePercentage(initialPowerData.getFossilFreePercentage());
                         Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(initialPowerData);
+
                         if (!selectedDatacenter.getName().equals(tempName)) {
-                            System.out.println(" ------- Hour: " + temp/3600 + " Update Datacenter: ("
+                            System.out.println(" ------- Hour: " + temp / 3600 + " Update Datacenter: ("
                                     + selectedDatacenter.getName() + ") Simulating based on fossil-free percentage: "
                                     + initialPowerData.getFossilFreePercentage());
                             tempName = selectedDatacenter.getName();
+                        } else {
+                            System.out.println(" ------- Hour: " + temp / 3600 + " No Datacenter change based on fossil-free percentage: "
+                                    + initialPowerData.getFossilFreePercentage());
                         }
-                        else {
-                            System.out.println(" ------- Hour: " + temp/3600 + " No Datacenter change based on " +
-                                    "fossil-free percentage: " + initialPowerData.getFossilFreePercentage());
-                        }
+
+                        datacenterLogs.add(new String[]{
+                                String.valueOf(temp / 3600),
+                                selectedDatacenter.getName(),
+                                String.valueOf(initialPowerData.getFossilFreePercentage())
+                        });
+
+                        temp += 1800;
+                    } else if (!CloudSim.running() && !fossilFreePercentages.isEmpty()) {
+                        initialPowerData.setFossilFreePercentage(fossilFreePercentages.poll());
+                        Datacenter selectedDatacenter = selectDatacenterBasedOnPowerData(initialPowerData);
                         datacenterLogs.add(new String[]{
                                 String.valueOf(temp / 3600),
                                 selectedDatacenter.getName(),
                                 String.valueOf(initialPowerData.getFossilFreePercentage())
                         });
                         temp += 1800;
-//                        if(temp > CloudSim.clock()) {temp = CloudSim.clock();}
                     }
                 }
 
