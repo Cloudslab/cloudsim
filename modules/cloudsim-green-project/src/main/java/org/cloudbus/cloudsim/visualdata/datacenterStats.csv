@@ -1,0 +1,4 @@
+Datacenter,CPU Power (MIPS),RAM (MB),Storage (GB),Bandwidth (Mbps)
+High Resource Datacenter,2000,32768,2000,20000
+Medium Resource Datacenter,1500,16384,1000,10000
+Low Resource Datacenter,1000,8192,500,5000
