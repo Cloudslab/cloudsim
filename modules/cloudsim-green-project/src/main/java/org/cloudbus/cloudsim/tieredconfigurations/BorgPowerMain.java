@@ -59,7 +59,7 @@ public class BorgPowerMain {
 
             // Step 6: Load Borg dataset
             String borgFilePath = "/borg_traces_data.csv";
-            int batchSize = 5;
+            int batchSize = 1000;
 
             try (InputStream inputStream = BorgMapper.class.getResourceAsStream(borgFilePath);
                  BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -94,6 +94,7 @@ public class BorgPowerMain {
 
             // Step 7: Simulate for each hour
             //monitors and updates the datacenter selection based on the fossil-free energy %
+            
             Runnable monitor = () -> {
                 //track simulation time
                 double temp = 0;
@@ -102,7 +103,7 @@ public class BorgPowerMain {
                 String tempName = "";
 
                 List<String[]> datacenterLogs = new ArrayList<>();
-
+                
                 while (CloudSim.running()) {
                     if (CloudSim.clock() <= temp) {
 //                        System.out.println("Clock: " + CloudSim.clock());
@@ -131,18 +132,18 @@ public class BorgPowerMain {
 //                        if(temp > CloudSim.clock()) {temp = CloudSim.clock();}
                     }
                 }
-
+                
                 // Time Series Plot for Datacenter Selection Over Time
                 System.out.println("Current working directory: " + System.getProperty("user.dir"));
                 DatacenterSelectionData.saveDatacenterSelectionCSV("./datacenterSelection.csv", datacenterLogs);
             };
 
             new Thread(monitor).start();
-
+                      
             // Step 7: Start Simulation
             CloudSim.startSimulation();
 
-            //CloudSim.terminateSimulation(120);
+            CloudSim.terminateSimulation(System.currentTimeMillis() + 120000);
 
             CloudSim.stopSimulation();
 
@@ -171,14 +172,14 @@ public class BorgPowerMain {
             cloudlet.setUserId(brokerId);
             cloudlet.setGuestId(vm.getId());
             cloudlet.setSubmissionTime(System.currentTimeMillis()+720);
-            
+            System.out.println("Created cloudlet " + cloudlet.getCloudletId() + " for VM " + vm.getId());
             // Cloudlet to the lists
             cloudletList.add(cloudlet);
         }
 
         // Submit VMs and Cloudlets to the broker
-        broker.submitGuestList(vmList);
-        broker.submitCloudletList(cloudletList);
+        //broker.submitGuestList(vmList);
+        //broker.submitCloudletList(cloudletList);
     }
 
 
