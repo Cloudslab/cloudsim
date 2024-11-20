@@ -25,3 +25,6 @@ jobs:
       - name: Run tieredconfigurations.PowerMain
         run: 'mvn exec:java -pl modules/cloudsim-green-project/ -Dexec.mainClass=org.cloudbus.cloudsim.tieredconfigurations.PowerMain'
         shell: bash
+      - name: Run tieredconfigurations.BorgPowerMain
+        run: 'mvn exec:java -pl modules/cloudsim-green-project/ -Dexec.mainClass=org.cloudbus.cloudsim.tieredconfigurations.BorgPowerMain'
+        shell: bash
