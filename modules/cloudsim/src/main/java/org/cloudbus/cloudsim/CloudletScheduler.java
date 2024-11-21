@@ -192,7 +192,7 @@ public abstract class CloudletScheduler {
 			if (cl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(cl);
 			} else {
-				cl.setStatus(Cloudlet.CloudletStatus.CANCELED);
+				cl.updateStatus(Cloudlet.CloudletStatus.CANCELED);
 			}
 			return cl;
 		}
@@ -228,7 +228,7 @@ public abstract class CloudletScheduler {
 			if (cl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(cl);
 			} else {
-				cl.setStatus(Cloudlet.CloudletStatus.PAUSED);
+				cl.updateStatus(Cloudlet.CloudletStatus.PAUSED);
 				getCloudletPausedList().add(cl);
 			}
 			return true;
@@ -242,7 +242,7 @@ public abstract class CloudletScheduler {
 			if (cl.getRemainingCloudletLength() == 0) {
 				cloudletFinish(cl);
 			} else {
-				cl.setStatus(Cloudlet.CloudletStatus.PAUSED);
+				cl.updateStatus(Cloudlet.CloudletStatus.PAUSED);
 				getCloudletPausedList().add(cl);
 			}
 			return true;
@@ -268,7 +268,7 @@ public abstract class CloudletScheduler {
 	 * @post $none
 	 */
 	public void cloudletFinish(Cloudlet cl) {
-		cl.setStatus(Cloudlet.CloudletStatus.SUCCESS);
+		cl.updateStatus(Cloudlet.CloudletStatus.SUCCESS);
 		cl.finalizeCloudlet();
 		getCloudletFinishedList().add(cl);
 	}

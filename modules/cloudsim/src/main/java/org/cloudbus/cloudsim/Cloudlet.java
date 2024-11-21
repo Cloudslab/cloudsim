@@ -8,7 +8,6 @@
 package org.cloudbus.cloudsim;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -972,7 +971,7 @@ public class Cloudlet {
      * @pre status >= 0
      * @post $none
      */
-    public boolean setStatus(final CloudletStatus status) {
+    public boolean updateStatus(final CloudletStatus status) {
         // gets Cloudlet's previous status
         Cloudlet.CloudletStatus prevStatus = getStatus();
 
@@ -1017,6 +1016,11 @@ public class Cloudlet {
 
         return false;
     }
+
+    @Deprecated
+    public boolean setStatus(CloudletStatus newStatus) { return updateStatus(newStatus); }
+    @Deprecated
+    public void setCloudletStatus(final CloudletStatus newStatus) { updateStatus(newStatus); }
 
     public int getUserId() { return userId; }
 

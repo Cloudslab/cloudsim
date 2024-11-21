@@ -62,7 +62,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 			}
 
 			for (Cloudlet cl : toUnpause) {
-				cl.setStatus(Cloudlet.CloudletStatus.INEXEC);
+				cl.updateStatus(Cloudlet.CloudletStatus.INEXEC);
 				getCloudletExecList().add(cl);
 				usedPes += cl.getNumberOfPes();
 			}
@@ -80,7 +80,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 
 			// it can go to the exec list
 			if ((getCurrentPEs() - usedPes) >= cl.getNumberOfPes()) {
-				cl.setStatus(Cloudlet.CloudletStatus.INEXEC);
+				cl.updateStatus(Cloudlet.CloudletStatus.INEXEC);
 
 				long size = cl.getRemainingCloudletLength();
 				size *= cl.getNumberOfPes();
@@ -92,7 +92,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 				// calculate the expected time for cloudlet completion
 				return getEstimatedFinishTime(cl, CloudSim.clock());
 			} else {// no enough free PEs: go to the waiting queue
-				cl.setStatus(Cloudlet.CloudletStatus.QUEUED);
+				cl.updateStatus(Cloudlet.CloudletStatus.QUEUED);
 
 				long size = cl.getRemainingCloudletLength();
 				size *= cl.getNumberOfPes();
@@ -109,11 +109,11 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	@Override
 	public double cloudletSubmit(Cloudlet cl, double fileTransferTime) {
         if ((getCurrentPEs() - usedPes) >= cl.getNumberOfPes()) { // it can go to the exec list
-            cl.setStatus(Cloudlet.CloudletStatus.INEXEC);
+            cl.updateStatus(Cloudlet.CloudletStatus.INEXEC);
 			getCloudletExecList().add(cl);
 			usedPes += cl.getNumberOfPes();
 		} else {// no enough free PEs: go to the waiting queue
-            cl.setStatus(Cloudlet.CloudletStatus.QUEUED);
+            cl.updateStatus(Cloudlet.CloudletStatus.QUEUED);
 			getCloudletWaitingList().add(cl);
 			return 0.0;
 		}

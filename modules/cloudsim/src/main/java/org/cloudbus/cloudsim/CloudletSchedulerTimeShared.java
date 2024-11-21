@@ -41,7 +41,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 		int position = CloudletList.getPositionById(getCloudletPausedList(), cloudletId);
 		if (position >= 0) {
 			Cloudlet cl = getCloudletPausedList().remove(position);
-			cl.setStatus(Cloudlet.CloudletStatus.INEXEC);
+			cl.updateStatus(Cloudlet.CloudletStatus.INEXEC);
 			getCloudletExecList().add(cl);
 
 			// calculate the expected time for cloudlet completion
@@ -53,7 +53,7 @@ public class CloudletSchedulerTimeShared extends CloudletScheduler {
 
 	@Override
 	public double cloudletSubmit(Cloudlet cl, double fileTransferTime) {
-		cl.setStatus(Cloudlet.CloudletStatus.INEXEC);
+		cl.updateStatus(Cloudlet.CloudletStatus.INEXEC);
 		getCloudletExecList().add(cl);
 
 		// calculate the expected time for cloudlet completion

@@ -66,7 +66,7 @@ public class SimpleDBBalancer extends BaseDBLoadBalancer implements IDBBalancer 
                     cloudlet.getCloudletId(), cloudlet.getData().getId());
 
             try {
-                cloudlet.setStatus(Cloudlet.CloudletStatus.FAILED);
+                cloudlet.updateStatus(Cloudlet.CloudletStatus.FAILED);
             } catch (Exception e) {
                 CustomLog.logError(Level.SEVERE, "Unexpected error occurred", e);
             }
