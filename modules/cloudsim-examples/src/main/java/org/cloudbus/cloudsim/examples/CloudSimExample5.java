@@ -41,6 +41,8 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * run cloudlets of two users on them.
  */
 public class CloudSimExample5 {
+	public static DatacenterBroker broker1;
+	public static DatacenterBroker broker2;
 
 	/** The cloudlet lists. */
 	private static List<Cloudlet> cloudletList1;
@@ -73,10 +75,10 @@ public class CloudSimExample5 {
 			Datacenter datacenter1 = createDatacenter("Datacenter_1");
 
 			//Third step: Create Brokers
-			DatacenterBroker broker1 = createBroker(1);
+			broker1 = new DatacenterBroker("Broker1");
 			int brokerId1 = broker1.getId();
 
-			DatacenterBroker broker2 = createBroker(2);
+			broker2 = new DatacenterBroker("Broker2");
 			int brokerId2 = broker2.getId();
 
 			//Fourth step: Create one virtual machine for each broker/user
@@ -217,20 +219,6 @@ public class CloudSimExample5 {
 		}
 
 		return datacenter;
-	}
-
-	//We strongly encourage users to develop their own broker policies, to submit vms and cloudlets according
-	//to the specific rules of the simulated scenario
-	private static DatacenterBroker createBroker(int id){
-
-		DatacenterBroker broker = null;
-		try {
-			broker = new DatacenterBroker("Broker"+id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		return broker;
 	}
 
 	/**

@@ -24,6 +24,8 @@ import java.util.*;
  * @author Remo Andreoli
  */
 public class CloudSimExample9 {
+	public static DatacenterBroker broker;
+
 	/** The cloudlet list. */
 	private static List<Cloudlet> cloudletList;
 	/** The vmlist. */
@@ -48,10 +50,10 @@ public class CloudSimExample9 {
 			// Second step: Create Datacenters
 			// Datacenters are the resource providers in CloudSim. We need at
 			// list one of them to run a CloudSim simulation
-			Datacenter datacenter0 = createDatacenter("Datacenter_0");
+			createDatacenter("Datacenter_0");
 
 			// Third step: Create Broker
-			DatacenterBroker broker = createBroker();
+			broker = new DatacenterBroker("Broker");
 			int brokerId = broker.getId();
 
 			// Fourth step: Create one virtual machine
@@ -74,12 +76,11 @@ public class CloudSimExample9 {
 			// submit vm list to the broker
 			broker.submitGuestList(vmlist);
 
-			// Fifth step: Create one Cloudlet
+
 			cloudletList = new ArrayList<>();
 
 			// Cloudlet properties
 			int id = 0;
-			long length = 1000;
 			long fileSize = 300;
 			long outputSize = 300;
 			UtilizationModel utilizationModel = new UtilizationModelFull();
@@ -231,25 +232,6 @@ public class CloudSimExample9 {
 		}
 
 		return datacenter;
-	}
-
-	// We strongly encourage users to develop their own broker policies, to
-	// submit vms and cloudlets according
-	// to the specific rules of the simulated scenario
-	/**
-	 * Creates the broker.
-	 *
-	 * @return the datacenter broker
-	 */
-	private static DatacenterBroker createBroker() {
-		DatacenterBroker broker = null;
-		try {
-			broker = new DatacenterBroker("Broker");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		return broker;
 	}
 
 	/**

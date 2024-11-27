@@ -42,6 +42,8 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * topology on them.
  */
 public class NetworkExample3 {
+	public static DatacenterBroker broker1;
+	public static DatacenterBroker broker2;
 
 	/** The cloudlet list. */
 	private static List<Cloudlet> cloudletList1;
@@ -74,10 +76,10 @@ public class NetworkExample3 {
 			Datacenter datacenter1 = createDatacenter("Datacenter_1");
 
 			//Third step: Create Brokers
-			DatacenterBroker broker1 = createBroker(1);
+			broker1 =  new DatacenterBroker("Broker1");
 			int brokerId1 = broker1.getId();
 
-			DatacenterBroker broker2 = createBroker(2);
+			broker2 = new DatacenterBroker("Broker2");
 			int brokerId2 = broker2.getId();
 
 			//Fourth step: Create one virtual machine for each broker/user

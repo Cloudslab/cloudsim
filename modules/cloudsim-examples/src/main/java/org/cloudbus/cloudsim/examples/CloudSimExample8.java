@@ -44,6 +44,8 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * a globar manager entity (GlobalBroker).
  */
 public class CloudSimExample8 {
+	public static DatacenterBroker broker;
+	public static GlobalBroker globalBroker;
 
 	/** The cloudlet list. */
 	private static List<Cloudlet> cloudletList;
@@ -117,7 +119,7 @@ public class CloudSimExample8 {
 			// Initialize the CloudSim library
 			CloudSim.init(num_user, calendar, trace_flag);
 
-			GlobalBroker globalBroker = new GlobalBroker("GlobalBroker");
+			globalBroker = new GlobalBroker("GlobalBroker");
 
 			// Second step: Create Datacenters
 			//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
@@ -125,7 +127,7 @@ public class CloudSimExample8 {
 			Datacenter datacenter1 = createDatacenter("Datacenter_1");
 
 			//Third step: Create Broker
-			DatacenterBroker broker = createBroker("Broker_0");
+			broker = new DatacenterBroker("Broker_0");
 			int brokerId = broker.getId();
 
 			//Fourth step: Create VMs and Cloudlets and send them to broker

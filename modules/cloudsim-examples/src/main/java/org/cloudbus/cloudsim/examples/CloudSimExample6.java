@@ -40,6 +40,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * scalable simulations.
  */
 public class CloudSimExample6 {
+	public static DatacenterBroker broker;
 
 	/** The cloudlet list. */
 	private static List<Cloudlet> cloudletList;
@@ -47,10 +48,9 @@ public class CloudSimExample6 {
 	/** The vmlist. */
 	private static List<Vm> vmlist;
 
-	private static List<Vm> createVM(int userId, int vms) {
-
+	private static List<Vm> createVM(int userId, final int vms) {
 		//Creates a container to store VMs. This list is passed to the broker later
-		LinkedList<Vm> list = new LinkedList<>();
+		List<Vm> list = new ArrayList<>();
 
 		//VM Parameters
 		long size = 10000; //image size (MB)
@@ -61,14 +61,8 @@ public class CloudSimExample6 {
 		String vmm = "Xen"; //VMM name
 
 		//create VMs
-		Vm[] vm = new Vm[vms];
-
 		for(int i=0;i<vms;i++){
-			vm[i] = new Vm(i, userId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
-			//for creating a VM with a space shared scheduling policy for cloudlets:
-			//vm[i] = Vm(i, userId, mips, pesNumber, ram, bw, size, priority, vmm, new CloudletSchedulerSpaceShared());
-
-			list.add(vm[i]);
+			list.add(new Vm(i, userId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared()));
 		}
 
 		return list;
@@ -77,7 +71,7 @@ public class CloudSimExample6 {
 
 	private static List<Cloudlet> createCloudlet(int userId, int cloudlets){
 		// Creates a container to store Cloudlets
-		LinkedList<Cloudlet> list = new LinkedList<>();
+		List<Cloudlet> list = new ArrayList<>();
 
 		//cloudlet parameters
 		long length = 1000;
@@ -86,13 +80,9 @@ public class CloudSimExample6 {
 		int pesNumber = 1;
 		UtilizationModel utilizationModel = new UtilizationModelFull();
 
-		Cloudlet[] cloudlet = new Cloudlet[cloudlets];
-
 		for(int i=0;i<cloudlets;i++){
-			cloudlet[i] = new Cloudlet(i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-			// setting the owner of these Cloudlets
-			cloudlet[i].setUserId(userId);
-			list.add(cloudlet[i]);
+			list.add(new Cloudlet(i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel));
+			list.getLast().setUserId(userId);
 		}
 
 		return list;
@@ -118,12 +108,12 @@ public class CloudSimExample6 {
 			CloudSim.init(num_user, calendar, trace_flag);
 
 			// Second step: Create Datacenters
-			//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
+			//Datacenters are the resource providers in CloudSim. We need at least one of them to run a CloudSim simulation
 			Datacenter datacenter0 = createDatacenter("Datacenter_0");
 			Datacenter datacenter1 = createDatacenter("Datacenter_1");
 
 			//Third step: Create Broker
-			DatacenterBroker broker = createBroker();
+			broker = new DatacenterBroker("Broker");;
 			int brokerId = broker.getId();
 
 			//Fourth step: Create VMs and Cloudlets and send them to broker
@@ -264,26 +254,11 @@ public class CloudSimExample6 {
 		return datacenter;
 	}
 
-	//We strongly encourage users to develop their own broker policies, to submit vms and cloudlets according
-	//to the specific rules of the simulated scenario
-	private static DatacenterBroker createBroker(){
-
-		DatacenterBroker broker = null;
-		try {
-			broker = new DatacenterBroker("Broker");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		return broker;
-	}
-
 	/**
 	 * Prints the Cloudlet objects
 	 * @param list  list of Cloudlets
 	 */
 	private static void printCloudletList(List<Cloudlet> list) {
-		int size = list.size();
 		Cloudlet cloudlet;
 
 		String indent = "    ";
