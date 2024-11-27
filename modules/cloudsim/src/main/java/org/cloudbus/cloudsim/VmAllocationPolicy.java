@@ -96,6 +96,10 @@ public abstract class VmAllocationPolicy {
 	 * @post $none
 	 */
 	public boolean allocateHostForGuest(GuestEntity guest, HostEntity host) {
+		if (host == null) { // Can't be allocated because host is empty
+			Log.printlnConcat(CloudSim.clock(), ": ", "No Datacenter Found", ": Allocation of ", guest.getClassName(), " is failed (No Host Found!)");
+			return false;
+		}
 		String datacenterName = host.getDatacenter().getName();
 
 		if (host == guest) { // cannot be hosted on itself (VirtualEntity edge-case)
