@@ -507,10 +507,8 @@ public class CloudSim {
 		SimEntity ent;
 		boolean queue_empty;
 		
-		int entities_size = entities.size();
-
-		for (SimEntity entity : entities) {
-			ent = entity;
+		for (int i = 0; i < entities.size(); i++) {
+			ent = entities.get(i);
 			if (ent.getState() == SimEntity.RUNNABLE) {
 				ent.run();
 			}
