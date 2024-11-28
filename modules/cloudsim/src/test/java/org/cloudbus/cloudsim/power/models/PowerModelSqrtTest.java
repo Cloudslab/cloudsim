@@ -8,12 +8,13 @@
 
 package org.cloudbus.cloudsim.power.models;
 
-import static org.junit.Assert.assertEquals;
 
 import org.cloudbus.cloudsim.Log;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author		Anton Beloglazov
@@ -26,7 +27,7 @@ public class PowerModelSqrtTest {
 
 	private PowerModelSqrt powerModel;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		powerModel = new PowerModelSqrt(MAX_POWER, STATIC_POWER_PERCENT);
 	}
@@ -36,14 +37,14 @@ public class PowerModelSqrtTest {
 		assertEquals(MAX_POWER, powerModel.getMaxPower(), 0);
 	}
 
-	@Test (expected = IllegalArgumentException.class)
+	@Test
 	public void testGetPowerArgumentLessThenZero() throws IllegalArgumentException {
-		powerModel.getPower(-1);
+		assertThrows(IllegalArgumentException.class, () -> powerModel.getPower(-1));
 	}
 
-	@Test (expected = IllegalArgumentException.class)
+	@Test
 	public void testGetPowerArgumentLargerThenOne() throws IllegalArgumentException {
-		powerModel.getPower(2);
+		assertThrows(IllegalArgumentException.class, () -> powerModel.getPower(2));
 	}
 
 	@Test
@@ -54,7 +55,6 @@ public class PowerModelSqrtTest {
 	}
 
 	@Test
-	@Ignore
 	public void testPrintPower() {
 		for (int i = 0; i <= 100; i++) {
 			Log.print(String.format("%d;%.2f\n", i, powerModel.getPower((double) i / 100)));

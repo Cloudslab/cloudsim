@@ -8,14 +8,15 @@
 
 package org.cloudbus.cloudsim;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * @author		Anton Beloglazov
+ * @author 		Remo Andreoli
  * @since		CloudSim Toolkit 2.0
  */
 public class PeTest {

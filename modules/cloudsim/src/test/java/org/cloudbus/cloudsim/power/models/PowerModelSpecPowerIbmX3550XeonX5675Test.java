@@ -8,10 +8,11 @@
 
 package org.cloudbus.cloudsim.power.models;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author		Anton Beloglazov
@@ -21,19 +22,19 @@ public class PowerModelSpecPowerIbmX3550XeonX5675Test {
 
 	private PowerModel powerModel;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		powerModel = new PowerModelSpecPowerIbmX3550XeonX5675();
 	}
 
-	@Test (expected = IllegalArgumentException.class)
+	@Test
 	public void testGetPowerArgumentLessThenZero() throws IllegalArgumentException {
-		powerModel.getPower(-1);
+		assertThrows(IllegalArgumentException.class, () -> powerModel.getPower(-1));
 	}
 
-	@Test (expected = IllegalArgumentException.class)
+	@Test
 	public void testGetPowerArgumentLargerThenOne() throws IllegalArgumentException {
-		powerModel.getPower(2);
+		assertThrows(IllegalArgumentException.class, () -> powerModel.getPower(2));
 	}
 
 	@Test

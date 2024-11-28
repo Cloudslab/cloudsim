@@ -8,11 +8,6 @@
 
 package org.cloudbus.cloudsim;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +15,14 @@ import java.util.List;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author		Anton Beloglazov
+ * @author 		Remo Andreoli
  * @since		CloudSim Toolkit 2.0
  */
 public class HostTest {
@@ -45,7 +42,7 @@ public class HostTest {
 	private Host host;
 	private List<Pe> peList;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		peList = new ArrayList<>();
 		peList.add(new Pe(0, new PeProvisionerSimple(MIPS)));
@@ -117,9 +114,8 @@ public class HostTest {
 		assertEquals(MIPS * 2, host.getGuestScheduler().getAvailableMips(), 0);
 	}
 
-	@Ignore
-	@Test
-	public void testUpdateVmsProcessing() {
+//	@Test
+//	public void testUpdateVmsProcessing() {
 //		UtilizationModelStochastic utilizationModel1 = new UtilizationModelStochastic();
 //		UtilizationModelStochastic utilizationModel2 = new UtilizationModelStochastic();
 //
@@ -170,8 +166,7 @@ public class HostTest {
 //		assertEquals(0, vmScheduler.updateVMProcessing(GRIDLET_LENGTH, mipsShare), 0);
 //
 //		assertTrue(vmScheduler.isFinishedGridlets());
-
-	}
+//	}
 
 //	@Test
 //	public void testUpdateVmsProcessing() {

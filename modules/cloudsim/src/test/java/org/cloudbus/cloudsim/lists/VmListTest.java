@@ -8,15 +8,16 @@
 
 package org.cloudbus.cloudsim.lists;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Vm;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * @author		Anton Beloglazov
@@ -26,7 +27,7 @@ public class VmListTest {
 
 	private List<Vm> vmList;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		vmList = new ArrayList<>();
 	}

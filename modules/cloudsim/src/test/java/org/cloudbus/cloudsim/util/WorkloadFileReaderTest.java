@@ -1,34 +1,30 @@
 package org.cloudbus.cloudsim.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WorkloadFileReaderTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 

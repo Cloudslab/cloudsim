@@ -7,17 +7,15 @@
 
 package org.cloudbus.cloudsim;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Anton Beloglazov
@@ -37,7 +35,7 @@ public class VmSchedulerTimeSharedOverSubscriptionTest {
 
 	// private Vm vm3;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		peList = new ArrayList<>();
 		peList.add(new Pe(0, new PeProvisionerSimple(MIPS)));

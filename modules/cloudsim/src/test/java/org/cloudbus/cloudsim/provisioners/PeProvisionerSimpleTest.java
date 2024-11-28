@@ -8,19 +8,18 @@
 
 package org.cloudbus.cloudsim.provisioners;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
 import org.cloudbus.cloudsim.Vm;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author		Anton Beloglazov
+ * @author      Remo Andreoli
  * @since		CloudSim Toolkit 2.0
  */
 public class PeProvisionerSimpleTest {
@@ -29,7 +28,7 @@ public class PeProvisionerSimpleTest {
 
 	private PeProvisionerSimple peProvisioner;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		peProvisioner = new PeProvisionerSimple(MIPS);
 	}

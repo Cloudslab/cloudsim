@@ -8,13 +8,11 @@
 
 package org.cloudbus.cloudsim.provisioners;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.cloudbus.cloudsim.Vm;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author		Anton Beloglazov
@@ -26,7 +24,7 @@ public class RamProvisionerSimpleTest {
 
 	private RamProvisionerSimple ramProvisioner;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		ramProvisioner = new RamProvisionerSimple(RAM);
 	}

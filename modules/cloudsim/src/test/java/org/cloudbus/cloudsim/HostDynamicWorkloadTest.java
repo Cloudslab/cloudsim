@@ -8,8 +8,6 @@
 
 package org.cloudbus.cloudsim;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +15,15 @@ import java.util.List;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author		Anton Beloglazov
+ * @author 		Remo Andreoli
  * @since		CloudSim Toolkit 2.0
  */
 public class HostDynamicWorkloadTest {
@@ -35,7 +37,7 @@ public class HostDynamicWorkloadTest {
 	private HostDynamicWorkload host;
 	private List<Pe> peList;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		peList = new ArrayList<>();
 		peList.add(new Pe(0, new PeProvisionerSimple(MIPS)));

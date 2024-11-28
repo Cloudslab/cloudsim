@@ -8,16 +8,15 @@
 
 package org.cloudbus.cloudsim.provisioners;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.cloudbus.cloudsim.Vm;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author		Anton Beloglazov
+ * @author      Remo Andreoli
  * @since		CloudSim Toolkit 2.0
  */
 public class BwProvisionerSimpleTest {
@@ -26,7 +25,7 @@ public class BwProvisionerSimpleTest {
 
 	private BwProvisionerSimple bwProvisioner;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		bwProvisioner = new BwProvisionerSimple(BW);
 	}

@@ -1,13 +1,14 @@
 package org.cloudbus.cloudsim.power;
 
-import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
 import org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyRandomSelection;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PowerSelectionPolicyMaximumCorrelationTest {
 
@@ -20,7 +21,7 @@ public class PowerSelectionPolicyMaximumCorrelationTest {
 
 	private PowerSelectionPolicyMaximumCorrelation vmSelectionPolicyMaximumCorrelation;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		vmSelectionPolicyMaximumCorrelation = new PowerSelectionPolicyMaximumCorrelation(
 				new SelectionPolicyRandomSelection<>());

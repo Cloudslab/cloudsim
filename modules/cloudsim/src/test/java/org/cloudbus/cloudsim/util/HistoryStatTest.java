@@ -1,14 +1,15 @@
 package org.cloudbus.cloudsim.util;
 
-import static org.junit.Assert.assertEquals;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import static org.cloudbus.cloudsim.core.PowerGuestEntity.HISTORY_LENGTH;
-import org.junit.Test;
-import org.junit.Before;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HistoryStatTest {
     HistoryStat stat;
@@ -20,7 +21,7 @@ public class HistoryStatTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         stat = new HistoryStat(HISTORY_LENGTH);
         history = new ArrayList<>(HISTORY_LENGTH);
@@ -63,7 +64,7 @@ public class HistoryStatTest {
 
         for (int step = 0; step < 100; step++) {
             final int N = 1000;
-            double samples[] = new double[N];
+            double[] samples = new double[N];
             for (int i = 0; i < N; i++)
                 samples[i] = gen.nextDouble();
 

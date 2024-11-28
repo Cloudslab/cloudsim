@@ -8,20 +8,19 @@
 
 package org.cloudbus.cloudsim;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author		Anton Beloglazov
+ * @author 		Remo Andreoli
  * @since		CloudSim Toolkit 2.0
  */
 public class LogTest {
@@ -31,7 +30,7 @@ public class LogTest {
         private static final DecimalFormatSymbols dfs = 
             DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT));
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		Log.setOutput(OUTPUT);
 	}

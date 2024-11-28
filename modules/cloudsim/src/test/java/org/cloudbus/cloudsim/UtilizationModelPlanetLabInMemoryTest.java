@@ -1,9 +1,9 @@
 package org.cloudbus.cloudsim;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UtilizationModelPlanetLabInMemoryTest {
 
@@ -13,7 +13,7 @@ public class UtilizationModelPlanetLabInMemoryTest {
 
 	private UtilizationModelPlanetLabInMemory utilizationModel;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		utilizationModel = new UtilizationModelPlanetLabInMemory(getClass().getClassLoader()
 				.getResource(FILE).getPath(), SCHEDULING_INTERVAL);
@@ -35,5 +35,4 @@ public class UtilizationModelPlanetLabInMemoryTest {
 				0.01);
 		assertEquals(0.51, utilizationModel.getUtilization(287 * SCHEDULING_INTERVAL), 0);
 	}
-
 }

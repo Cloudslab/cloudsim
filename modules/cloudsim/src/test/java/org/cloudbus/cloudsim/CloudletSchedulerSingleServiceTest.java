@@ -8,25 +8,23 @@
 
 package org.cloudbus.cloudsim;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
-
 /**
  * @author		Anton Beloglazov
+ * @author 		Remo Andreoli
  * @since		CloudSim Toolkit 2.0
  */
 public class CloudletSchedulerSingleServiceTest {
@@ -40,7 +38,7 @@ public class CloudletSchedulerSingleServiceTest {
 
 	private CloudletSchedulerDynamicWorkload vmScheduler;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		vmScheduler = new CloudletSchedulerDynamicWorkload(MIPS, PES_NUMBER);
 	}
