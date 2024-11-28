@@ -520,6 +520,7 @@ public abstract class SimEntity implements Cloneable {
 	 * @param e the new event buffer
 	 */
 	protected void setEventBuffer(SimEvent e) {
+		assert(evbuf == null);
 		evbuf = e;
 	}
 
