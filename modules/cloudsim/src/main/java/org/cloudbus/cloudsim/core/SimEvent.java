@@ -62,36 +62,19 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	public static final int CREATE = 3;
 
-	/**
-	 * Creates a blank event.
-	 */
-	public SimEvent() {
-		etype = ENULL;
-		time = -1L;
-		endWaitingTime = -1.0;
-		entSrc = -1;
-		entDst = -1;
-		tag = CloudActionTags.BLANK;
-		data = null;
-	}
-
 	// ------------------- PACKAGE LEVEL METHODS --------------------------
-	SimEvent(int evtype, double time, int src, int dest, CloudSimTags tag, Object edata) {
-		etype = evtype;
+	SimEvent(int type, double time, int src, int dest, CloudSimTags tag, Object edata) {
+		etype = type;
 		this.time = time;
 		entSrc = src;
 		entDst = dest;
 		this.tag = tag;
 		data = edata;
+		endWaitingTime = -1.0;
 	}
 
-	SimEvent(int evtype, double time, int src) {
-		etype = evtype;
-		this.time = time;
-		entSrc = src;
-		entDst = -1;
-		tag = CloudActionTags.BLANK;
-		data = null;
+	SimEvent(int type, double time, int src) {
+		this(type, time, src, src, CloudActionTags.BLANK, null);
 	}
 
 	protected void setSerial(long serial) {
