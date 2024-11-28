@@ -11,21 +11,16 @@ package org.cloudbus.cloudsim.core;
 import org.cloudbus.cloudsim.Log;
 
 import java.util.Iterator;
-import java.util.TreeSet;
+import java.util.PriorityQueue;
 
 /**
- * This class implements the future event queue used by {@link CloudSim}. 
- * The event queue uses a {@link TreeSet} in order to store the events.
- * 
- * @author Marcos Dias de Assuncao
+ * This class implements the event queue used by {@link CloudSim}.
+ *
  * @author Remo Andreoli
- * @since CloudSim Toolkit 1.0
- * @see java.util.TreeSet
- * 
- * //TODO It would be used a common interface for queues
- * such as this one and {@link DeferredQueue}
+ * @since CloudSim Toolkit 7.0
+ *
  */
-public class FutureQueue extends TreeSet<SimEvent> {
+public class EventQueue extends PriorityQueue<SimEvent> {
 	/** A incremental number used for event attribute */
 	private long serial = 0;
 

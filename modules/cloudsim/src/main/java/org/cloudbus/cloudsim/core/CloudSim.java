@@ -257,8 +257,6 @@ public class CloudSim {
 	 * Gets a new copy of initial simulation Calendar.
 	 * 
 	 * @return a new copy of Calendar object or if CloudSim hasn't been initialized
-	 * @see gridsim.CloudSim#init(int, Calendar, boolean, String[], String[], String)
-	 * @see gridsim.CloudSim#init(int, Calendar, boolean)
 	 * @pre $none
 	 * @post $none
 	 */
@@ -306,10 +304,10 @@ public class CloudSim {
 	private static List<SimEntity> entities;
 
 	/** The future event queue. */
-	protected static FutureQueue future;
+	protected static EventQueue future;
 
 	/** The deferred event queue. */
-	protected static DeferredQueue deferred;
+	protected static EventQueue deferred;
 
 	/** 
          * The current simulation clock.
@@ -343,8 +341,8 @@ public class CloudSim {
 		Log.println("Initialising...");
 		entities = new ArrayList<>();
 		entitiesByName = new LinkedHashMap<>();
-		future = new FutureQueue();
-		deferred = new DeferredQueue();
+		future = new EventQueue();
+		deferred = new EventQueue();
 		waitPredicates = new HashMap<>();
 		clock = 0;
 		running = false;
@@ -515,9 +513,9 @@ public class CloudSim {
 			return false;
 		}
 
-		double clk = future.getFirst().eventTime();
-		while (!future.isEmpty() && future.getFirst().eventTime() == clk) {
-			processEvent(future.pollFirst());
+		double clk = future.peek().eventTime();
+		while (!future.isEmpty() && future.peek().eventTime() == clk) {
+			processEvent(future.poll());
 		}
 
 		return true;
@@ -736,10 +734,10 @@ public class CloudSim {
 							dest_ent.setState(SimEntity.RUNNABLE);
 							waitPredicates.remove(destObj);
 						} else {
-							deferred.addEvent(e);
+							deferred.add(e);
 						}
 					} else {
-						deferred.addEvent(e);
+						deferred.add(e);
 					}
 				}
 			}
@@ -843,7 +841,7 @@ public class CloudSim {
 			}
 
 			if (pauseAt != -1
-					&& ((!future.isEmpty() && clock <= pauseAt && pauseAt <= future.getFirst()
+					&& ((!future.isEmpty() && clock <= pauseAt && pauseAt <= future.peek()
 							.eventTime()) || future.isEmpty() && pauseAt <= clock)) {
 				pauseSimulation();
 				clock = pauseAt;
