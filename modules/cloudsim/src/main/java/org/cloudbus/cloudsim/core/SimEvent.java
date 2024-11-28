@@ -147,19 +147,22 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 	 * 
 	 * @return the id number
 	 */
-	public int getDestination() {
-		return entDst;
-	}
+	public int getDestinationId() { return entDst; }
+	@Deprecated
+	public int getDestination() { return entDst; }
 
 	/**
 	 * Get the unique id number of the entity which scheduled this event.
 	 * 
 	 * @return the id number
 	 */
+	public int getSourceId() {
+		return entSrc;
+	}
+	@Deprecated
 	public int getSource() {
 		return entSrc;
 	}
-
 	/**
 	 * Get the simulation time that this event was scheduled.
 	 * 
@@ -217,23 +220,5 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 	@Override
 	public Object clone() {
 		return new SimEvent(etype, time, entSrc, entDst, tag, data);
-	}
-
-	/**
-	 * Set the source entity of this event.
-	 * 
-	 * @param s The unique id number of the entity
-	 */
-	public void setSource(int s) {
-		entSrc = s;
-	}
-
-	/**
-	 * Set the destination entity of this event.
-	 * 
-	 * @param d The unique id number of the entity
-	 */
-	public void setDestination(int d) {
-		entDst = d;
 	}
 }

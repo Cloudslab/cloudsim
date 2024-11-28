@@ -50,7 +50,7 @@ public class PredicateNotFrom extends Predicate {
 	 */
 	@Override
 	public boolean match(SimEvent ev) {
-		int src = ev.getSource();
+		int src = ev.getSourceId();
 		for (int id : ids) {
 			if (src == id) {
 				return false;

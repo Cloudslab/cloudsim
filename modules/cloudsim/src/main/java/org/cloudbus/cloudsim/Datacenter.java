@@ -492,7 +492,7 @@ public class Datacenter extends SimEntity {
 			data[0] = getId();
 			data[1] = vm.getId();
 			data[2] = CloudSimTags.TRUE;
-			sendNow(ev.getSource(), CloudActionTags.VM_CREATE_ACK, data);
+			sendNow(ev.getSourceId(), CloudActionTags.VM_CREATE_ACK, data);
 		}
 
 		Log.formatLine(

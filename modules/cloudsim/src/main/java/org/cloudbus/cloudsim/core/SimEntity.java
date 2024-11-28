@@ -85,88 +85,88 @@ public abstract class SimEntity implements Cloneable {
 	 * Sends an event to another entity by id number, with data. Note that the tag <code>9999</code>
 	 * is reserved.
 	 * 
-	 * @param dest The unique id number of the destination entity
+	 * @param dstId The unique id number of the destination entity
 	 * @param delay How long from the current simulation time the event should be sent
 	 * @param tag event type.
 	 * @param data The data to be sent with the event.
 	 */
-	public void schedule(int dest, double delay, CloudSimTags tag, Object data) {
+	public void schedule(int dstId, double delay, CloudSimTags tag, Object data) {
 		if (!CloudSim.running()) {
 			return;
 		}
-		CloudSim.send(id, dest, delay, tag, data);
+		CloudSim.send(id, dstId, delay, tag, data);
 	}
 
 	/**
 	 * Sends an event to another entity by id number and with <b>no</b> data. Note that the tag
 	 * <code>9999</code> is reserved.
 	 * 
-	 * @param dest The unique id number of the destination entity
+	 * @param dstId The unique id number of the destination entity
 	 * @param delay How long from the current simulation time the event should be sent
 	 * @param tag event type.
 	 */
-	public void schedule(int dest, double delay, CloudSimTags tag) {
-		schedule(dest, delay, tag, null);
+	public void schedule(int dstId, double delay, CloudSimTags tag) {
+		schedule(dstId, delay, tag, null);
 	}
 
 	/**
 	 * Sends an event to another entity through a port with a given name, with data. Note that the
 	 * tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The name of the port to send the event through
+	 * @param dstName The name of the port to send the event through
 	 * @param delay How long from the current simulation time the event should be sent
 	 * @param tag event type.
 	 * @param data The data to be sent with the event.
 	 */
-	public void schedule(String dest, double delay, CloudSimTags tag, Object data) {
-		schedule(CloudSim.getEntityId(dest), delay, tag, data);
+	public void schedule(String dstName, double delay, CloudSimTags tag, Object data) {
+		schedule(CloudSim.getEntityId(dstName), delay, tag, data);
 	}
 
 	/**
 	 * Sends an event to another entity through a port with a given name, with <b>no</b> data. Note
 	 * that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The name of the port to send the event through
+	 * @param dstName The name of the port to send the event through
 	 * @param delay How long from the current simulation time the event should be sent
 	 * @param tag event type.
 	 */
-	public void schedule(String dest, double delay, CloudSimTags tag) {
-		schedule(dest, delay, tag, null);
+	public void schedule(String dstName, double delay, CloudSimTags tag) {
+		schedule(dstName, delay, tag, null);
 	}
 
 	/**
 	 * Sends an event to another entity by id number, with data
          * but no delay. Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The unique id number of the destination entity
+	 * @param dstId The unique id number of the destination entity
 	 * @param tag event type.
 	 * @param data The data to be sent with the event.
 	 */
-	public void scheduleNow(int dest, CloudSimTags tag, Object data) {
-		schedule(dest, 0, tag, data);
+	public void scheduleNow(int dstId, CloudSimTags tag, Object data) {
+		schedule(dstId, 0, tag, data);
 	}
 
 	/**
 	 * Sends an event to another entity by id number and with <b>no</b> data
          * and no delay. Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The unique id number of the destination entity
+	 * @param dstId The unique id number of the destination entity
 	 * @param tag event type.
 	 */
-	public void scheduleNow(int dest, CloudSimTags tag) {
-		schedule(dest, 0, tag, null);
+	public void scheduleNow(int dstId, CloudSimTags tag) {
+		schedule(dstId, 0, tag, null);
 	}
 
 	/**
 	 * Sends an event to another entity through a port with a given name, with data
          * but no delay. Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The name of the port to send the event through
+	 * @param dstName The name of the port to send the event through
 	 * @param tag event type.
 	 * @param data The data to be sent with the event.
 	 */
-	public void scheduleNow(String dest, CloudSimTags tag, Object data) {
-		schedule(CloudSim.getEntityId(dest), 0, tag, data);
+	public void scheduleNow(String dstName, CloudSimTags tag, Object data) {
+		schedule(CloudSim.getEntityId(dstName), 0, tag, data);
 	}
 
 	/**
@@ -174,64 +174,64 @@ public abstract class SimEntity implements Cloneable {
          * and no delay. 
          * Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The name of the port to send the event through
+	 * @param dstName The name of the port to send the event through
 	 * @param tag event type.
 	 */
-	public void scheduleNow(String dest, CloudSimTags tag) {
-		schedule(dest, 0, tag, null);
+	public void scheduleNow(String dstName, CloudSimTags tag) {
+		schedule(dstName, 0, tag, null);
 	}
 
 	/**
 	 * Sends a high priority event to another entity by id number, with data. 
          * Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The unique id number of the destination entity
+	 * @param dstId The unique id number of the destination entity
 	 * @param delay How long from the current simulation time the event should be sent
 	 * @param tag event type.
 	 * @param data The data to be sent with the event.
 	 */
-	public void scheduleFirst(int dest, double delay, CloudSimTags tag, Object data) {
+	public void scheduleFirst(int dstId, double delay, CloudSimTags tag, Object data) {
 		if (!CloudSim.running()) {
 			return;
 		}
-		CloudSim.sendFirst(id, dest, delay, tag, data);
+		CloudSim.sendFirst(id, dstId, delay, tag, data);
 	}
 
 	/**
 	 * Sends a high priority event to another entity by id number and with <b>no</b> data. 
          * Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The unique id number of the destination entity
+	 * @param dstId The unique id number of the destination entity
 	 * @param delay How long from the current simulation time the event should be sent
 	 * @param tag event type.
 	 */
-	public void scheduleFirst(int dest, double delay, CloudSimTags tag) {
-		scheduleFirst(dest, delay, tag, null);
+	public void scheduleFirst(int dstId, double delay, CloudSimTags tag) {
+		scheduleFirst(dstId, delay, tag, null);
 	}
 
 	/**
 	 * Sends a high priority event to another entity through a port with a given name, with data.
 	 * Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The name of the port to send the event through
+	 * @param dstName The name of the port to send the event through
 	 * @param delay How long from the current simulation time the event should be sent
 	 * @param tag event type.
 	 * @param data The data to be sent with the event.
 	 */
-	public void scheduleFirst(String dest, double delay, CloudSimTags tag, Object data) {
-		scheduleFirst(CloudSim.getEntityId(dest), delay, tag, data);
+	public void scheduleFirst(String dstName, double delay, CloudSimTags tag, Object data) {
+		scheduleFirst(CloudSim.getEntityId(dstName), delay, tag, data);
 	}
 
 	/**
 	 * Sends a high priority event to another entity through a port with a given name, with <b>no</b>
 	 * data. Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The name of the port to send the event through
+	 * @param dstName The name of the port to send the event through
 	 * @param delay How long from the current simulation time the event should be sent
 	 * @param tag event type.
 	 */
-	public void scheduleFirst(String dest, double delay, CloudSimTags tag) {
-		scheduleFirst(dest, delay, tag, null);
+	public void scheduleFirst(String dstName, double delay, CloudSimTags tag) {
+		scheduleFirst(dstName, delay, tag, null);
 	}
 
 	/**
@@ -239,12 +239,12 @@ public abstract class SimEntity implements Cloneable {
          * and no delay. 
          * Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The unique id number of the destination entity
+	 * @param dstId The unique id number of the destination entity
 	 * @param tag event type.
 	 * @param data The data to be sent with the event.
 	 */
-	public void scheduleFirstNow(int dest, CloudSimTags tag, Object data) {
-		scheduleFirst(dest, 0, tag, data);
+	public void scheduleFirstNow(int dstId, CloudSimTags tag, Object data) {
+		scheduleFirst(dstId, 0, tag, data);
 	}
 
 	/**
@@ -252,11 +252,11 @@ public abstract class SimEntity implements Cloneable {
          * and no delay. 
          * Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The unique id number of the destination entity
+	 * @param dstId The unique id number of the destination entity
 	 * @param tag event type.
 	 */
-	public void scheduleFirstNow(int dest, CloudSimTags tag) {
-		scheduleFirst(dest, 0, tag, null);
+	public void scheduleFirstNow(int dstId, CloudSimTags tag) {
+		scheduleFirst(dstId, 0, tag, null);
 	}
 
 	/**
@@ -264,23 +264,23 @@ public abstract class SimEntity implements Cloneable {
          * and no delay.
 	 * Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The name of the port to send the event through
+	 * @param dstName The name of the port to send the event through
 	 * @param tag event type.
 	 * @param data The data to be sent with the event.
 	 */
-	public void scheduleFirstNow(String dest, CloudSimTags tag, Object data) {
-		scheduleFirst(CloudSim.getEntityId(dest), 0, tag, data);
+	public void scheduleFirstNow(String dstName, CloudSimTags tag, Object data) {
+		scheduleFirst(CloudSim.getEntityId(dstName), 0, tag, data);
 	}
 
 	/**
 	 * Sends a high priority event to another entity through a port with a given name, with <b>no</b>
 	 * data and no delay. Note that the tag <code>9999</code> is reserved.
 	 * 
-	 * @param dest The name of the port to send the event through
+	 * @param dstName The name of the port to send the event through
 	 * @param tag event type.
 	 */
-	public void scheduleFirstNow(String dest, CloudSimTags tag) {
-		scheduleFirst(dest, 0, tag, null);
+	public void scheduleFirstNow(String dstName, CloudSimTags tag) {
+		scheduleFirst(dstName, 0, tag, null);
 	}
 
 	/**
@@ -530,18 +530,18 @@ public abstract class SimEntity implements Cloneable {
 	 * Sends an event/message to another entity by <tt>delaying</tt> the simulation time from the
 	 * current time, with a tag representing the event type.
 	 * 
-	 * @param entityId the id number of the destination entity
+	 * @param dstId the id number of the destination entity
 	 * @param delay how long from the current simulation time the event should be sent. If delay is
 	 *            a negative number, then it will be changed to 0
 	 * @param cloudSimTag an user-defined number representing the type of an event/message
 	 * @param data A reference to data to be sent with the event
-	 * @pre entityID > 0
+	 * @pre dstId > 0
 	 * @pre delay >= 0.0
 	 * @pre data != null
 	 * @post $none
 	 */
-	protected void send(int entityId, double delay, CloudSimTags cloudSimTag, Object data) {
-		if (entityId < 0) {
+	protected void send(int dstId, double delay, CloudSimTags cloudSimTag, Object data) {
+		if (dstId < 0) {
 			return;
 		}
 
@@ -554,40 +554,40 @@ public abstract class SimEntity implements Cloneable {
 			throw new IllegalArgumentException("The specified delay is infinite value");
 		}
 
-		if (entityId < 0) {
-			Log.printlnConcat(getName(), ".send(): Error - invalid entity id ", entityId);
+		if (dstId < 0) {
+			Log.printlnConcat(getName(), ".send(): Error - invalid entity id ", dstId);
 			return;
 		}
 
 		int srcId = getId();
-		if (entityId != srcId) {// only delay messages between different entities
-			delay += getNetworkDelay(srcId, entityId);
+		if (dstId != srcId) {// only delay messages between different entities
+			delay += getNetworkDelay(srcId, dstId);
 		}
 
-		schedule(entityId, delay, cloudSimTag, data);
+		schedule(dstId, delay, cloudSimTag, data);
 	}
 
 	/**
 	 * Sends an event/message to another entity by <tt>delaying</tt> the simulation time from the
 	 * current time, with a tag representing the event type.
 	 *
-	 * @param entityId the id number of the destination entity
+	 * @param dstId the id number of the destination entity
 	 * @param delay    how long from the current simulation time the event should be sent. If delay is
 	 *                 a negative number, then it will be changed to 0
 	 * @param tag      an user-defined number representing the type of an event/message
-	 * @pre entityID > 0
+	 * @pre dstId > 0
 	 * @pre delay >= 0.0
 	 * @post $none
 	 */
-	protected void send(int entityId, double delay, CloudSimTags tag) {
-		send(entityId, delay, tag, null);
+	protected void send(int dstId, double delay, CloudSimTags tag) {
+		send(dstId, delay, tag, null);
 	}
 
 	/**
 	 * Sends an event/message to another entity by <tt>delaying</tt> the simulation time from the
 	 * current time, with a tag representing the event type.
 	 *
-	 * @param entityName the name of the destination entity
+	 * @param dstName the name of the destination entity
 	 * @param delay      how long from the current simulation time the event should be sent. If delay is
 	 *                   a negative number, then it will be changed to 0
 	 * @param tag        an user-defined number representing the type of an event/message
@@ -597,15 +597,15 @@ public abstract class SimEntity implements Cloneable {
 	 * @pre data != null
 	 * @post $none
 	 */
-	protected void send(String entityName, double delay, CloudSimTags tag, Object data) {
-		send(CloudSim.getEntityId(entityName), delay, tag, data);
+	protected void send(String dstName, double delay, CloudSimTags tag, Object data) {
+		send(CloudSim.getEntityId(dstName), delay, tag, data);
 	}
 
 	/**
 	 * Sends an event/message to another entity by <tt>delaying</tt> the simulation time from the
 	 * current time, with a tag representing the event type.
 	 *
-	 * @param entityName the name of the destination entity
+	 * @param dstName the name of the destination entity
 	 * @param delay      how long from the current simulation time the event should be sent. If delay is
 	 *                   a negative number, then it will be changed to 0
 	 * @param tag        an user-defined number representing the type of an event/message
@@ -613,42 +613,42 @@ public abstract class SimEntity implements Cloneable {
 	 * @pre delay >= 0.0
 	 * @post $none
 	 */
-	protected void send(String entityName, double delay, CloudSimTags tag) {
-		send(entityName, delay, tag, null);
+	protected void send(String dstName, double delay, CloudSimTags tag) {
+		send(dstName, delay, tag, null);
 	}
 
 	/**
 	 * Sends an event/message to another entity, with a tag representing the event type.
 	 *
-	 * @param entityId the id number of the destination entity
+	 * @param dstId the id number of the destination entity
 	 * @param tag      an user-defined number representing the type of an event/message
 	 * @param data     A reference to data to be sent with the event
-	 * @pre entityID > 0
+	 * @pre dstId > 0
 	 * @pre delay >= 0.0
 	 * @pre data != null
 	 * @post $none
 	 */
-	protected void sendNow(int entityId, CloudSimTags tag, Object data) {
-		send(entityId, 0, tag, data);
+	protected void sendNow(int dstId, CloudSimTags tag, Object data) {
+		send(dstId, 0, tag, data);
 	}
 
 	/**
 	 * Sends an event/message to another entity, with a tag representing the event type.
 	 *
-	 * @param entityId the id number of the destination entity
+	 * @param dstId the id number of the destination entity
 	 * @param tag      an user-defined number representing the type of an event/message
-	 * @pre entityID > 0
+	 * @pre dstId > 0
 	 * @pre delay >= 0.0
 	 * @post $none
 	 */
-	protected void sendNow(int entityId, CloudSimTags tag) {
-		send(entityId, 0, tag, null);
+	protected void sendNow(int dstId, CloudSimTags tag) {
+		send(dstId, 0, tag, null);
 	}
 
 	/**
 	 * Sends an event/message to another entity, with a tag representing the event type.
 	 *
-	 * @param entityName the name of the destination entity
+	 * @param dstId the name of the destination entity
 	 * @param tag        an user-defined number representing the type of an event/message
 	 * @param data       A reference to data to be sent with the event
 	 * @pre entityName != null
@@ -656,21 +656,21 @@ public abstract class SimEntity implements Cloneable {
 	 * @pre data != null
 	 * @post $none
 	 */
-	protected void sendNow(String entityName, CloudSimTags tag, Object data) {
-		send(CloudSim.getEntityId(entityName), 0, tag, data);
+	protected void sendNow(String dstId, CloudSimTags tag, Object data) {
+		send(CloudSim.getEntityId(dstId), 0, tag, data);
 	}
 
 	/**
 	 * Sends an event/message to another entity, with a tag representing the event type.
 	 *
-	 * @param entityName the name of the destination entity
+	 * @param dstName the name of the destination entity
 	 * @param tag        an user-defined number representing the type of an event/message
 	 * @pre entityName != null
 	 * @pre delay >= 0.0
 	 * @post $none
 	 */
-	protected void sendNow(String entityName, CloudSimTags tag) {
-		send(entityName, 0, tag, null);
+	protected void sendNow(String dstName, CloudSimTags tag) {
+		send(dstName, 0, tag, null);
 	}
 
 	/**

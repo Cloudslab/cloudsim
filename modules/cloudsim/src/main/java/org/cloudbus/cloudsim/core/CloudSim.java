@@ -146,20 +146,20 @@ public class CloudSim {
 	 * @param cal starting time for this simulation. If it is <tt>null</tt>, then the time will be
 	 *            taken from <tt>Calendar.getInstance()</tt>
 	 * @param traceFlag <tt>true</tt> if CloudSim trace need to be written
-	 * @param periodBetweenEvents - the minimal period between events. Events within shorter periods
+	 * @param minTimeBetweenEvents - the minimal period between events. Events within shorter periods
 	 * after the last event are discarded.
 	 * @see CloudSimShutdown
 	 * @see CloudInformationService
 	 * @pre numUser >= 0
 	 * @post $none
 	 */
-	public static void init(int numUser, Calendar cal, boolean traceFlag, double periodBetweenEvents) {
-	    if (periodBetweenEvents <= 0) {
-		throw new IllegalArgumentException("The minimal time between events should be positive, but is:" + periodBetweenEvents);
+	public static void init(int numUser, Calendar cal, boolean traceFlag, double minTimeBetweenEvents) {
+	    if (minTimeBetweenEvents <= 0) {
+		throw new IllegalArgumentException("The minimal time between events should be positive, but is:" + minTimeBetweenEvents);
 	    }
 	    
 	    init(numUser, cal, traceFlag);
-	    minTimeBetweenEvents = periodBetweenEvents;
+	    CloudSim.minTimeBetweenEvents = minTimeBetweenEvents;
 	}
 	
 	
@@ -531,25 +531,25 @@ public class CloudSim {
 	/**
 	 * Used to pause an entity for some time.
 	 * 
-	 * @param src the src
+	 * @param srcId the entity source id
 	 * @param delay the delay
 	 */
-	public static void pause(int src, double delay) {
-		SimEvent e = new SimEvent(SimEvent.HOLD_DONE, clock + delay, src);
+	public static void pause(int srcId, double delay) {
+		SimEvent e = new SimEvent(SimEvent.HOLD_DONE, clock + delay, srcId);
 		future.addEvent(e);
-		entities.get(src).setState(SimEntity.HOLDING);
+		entities.get(srcId).setState(SimEntity.HOLDING);
 	}
 
 	/**
 	 * Used to send an event from one entity to another.
 	 * 
-	 * @param src the src
-	 * @param dest the dest
+	 * @param srcId the src
+	 * @param dstId the dest
 	 * @param delay the delay
 	 * @param tag the tag
 	 * @param data the data
 	 */
-	public static void send(int src, int dest, double delay, CloudSimTags tag, Object data) {
+	public static void send(int srcId, int dstId, double delay, CloudSimTags tag, Object data) {
 		if (delay < 0) {
 			throw new IllegalArgumentException("Send delay can't be negative.");
 		}
@@ -557,25 +557,25 @@ public class CloudSim {
 			throw new RuntimeException("Send delay can't be infinite.");
 		}
 
-		SimEvent e = new SimEvent(SimEvent.SEND, clock + delay, src, dest, tag, data);
+		SimEvent e = new SimEvent(SimEvent.SEND, clock + delay, srcId, dstId, tag, data);
 		future.addEvent(e);
 	}
 
 	/**
 	 * Used to send an event from one entity to another, with priority in the queue.
 	 * 
-	 * @param src the src
-	 * @param dest the dest
+	 * @param srcId the src
+	 * @param dstId the dest
 	 * @param delay the delay
 	 * @param tag the tag
 	 * @param data the data
 	 */
-	public static void sendFirst(int src, int dest, double delay, CloudSimTags tag, Object data) {
+	public static void sendFirst(int srcId, int dstId, double delay, CloudSimTags tag, Object data) {
 		if (delay < 0) {
 			throw new IllegalArgumentException("Send delay can't be negative.");
 		}
 
-		SimEvent e = new SimEvent(SimEvent.SEND, clock + delay, src, dest, tag, data);
+		SimEvent e = new SimEvent(SimEvent.SEND, clock + delay, srcId, dstId, tag, data);
 		future.addEventFirst(e);
 	}
 
@@ -584,14 +584,14 @@ public class CloudSim {
 	 * to Sim_system. Only events that satisfy the predicate will be passed to the entity. This is
 	 * done to avoid unnecessary context switches.
 	 * 
-	 * @param src the src
+	 * @param srcId the src
 	 * @param p the p
 	 */
-	public static void wait(int src, Predicate p) {
-		entities.get(src).setState(SimEntity.WAITING);
+	public static void wait(int srcId, Predicate p) {
+		entities.get(srcId).setState(SimEntity.WAITING);
 		if (p != SIM_ANY) {
 			// If a predicate has been used store it in order to check it
-			waitPredicates.put(src, p);
+			waitPredicates.put(srcId, p);
 		}
 	}
 
@@ -605,7 +605,7 @@ public class CloudSim {
 	public static int waiting(int d, Predicate p) {
 		int count = 0;
 		for (SimEvent event : deferred) {
-			if ((event.getDestination() == d) && (p.match(event))) {
+			if ((event.getDestinationId() == d) && (p.match(event))) {
 				count++;
 			}
 		}
@@ -615,16 +615,16 @@ public class CloudSim {
 	/**
 	 * Selects an event matching a predicate.
 	 * 
-	 * @param src the src
+	 * @param dstId the entity destination id
 	 * @param p the p
 	 * @return the sim event
 	 */
-	public static SimEvent select(int src, Predicate p) {
+	public static SimEvent select(int dstId, Predicate p) {
 		SimEvent ev;
 		Iterator<SimEvent> iterator = deferred.iterator();
 		while (iterator.hasNext()) {
 			ev = iterator.next();
-			if (ev.getDestination() == src && p.match(ev)) {
+			if (ev.getDestinationId() == dstId && p.match(ev)) {
 				iterator.remove();
 				return ev;
 			}
@@ -635,15 +635,15 @@ public class CloudSim {
 	/**
 	 * Find first deferred event matching a predicate.
 	 * 
-	 * @param src the src
+	 * @param dstId the entity destination id
 	 * @param p the p
 	 * @return the sim event
 	 */
-	public static SimEvent findFirstDeferred(int src, Predicate p) {
+	public static SimEvent findFirstDeferred(int dstId, Predicate p) {
 		SimEvent ev;
         for (SimEvent simEvent : deferred) {
             ev = simEvent;
-            if (ev.getDestination() == src && p.match(ev)) {
+            if (ev.getDestinationId() == dstId && p.match(ev)) {
                 return ev;
             }
         }
@@ -653,16 +653,16 @@ public class CloudSim {
 	/**
 	 * Removes an event from the event queue.
 	 * 
-	 * @param src the src
+	 * @param srcId the entity source id
 	 * @param p the p
 	 * @return the sim event
 	 */
-	public static SimEvent cancel(int src, Predicate p) {
+	public static SimEvent cancel(int srcId, Predicate p) {
 		SimEvent ev;
 		Iterator<SimEvent> iter = future.iterator();
 		while (iter.hasNext()) {
 			ev = iter.next();
-			if (ev.getSource() == src && p.match(ev)) {
+			if (ev.getSourceId() == srcId && p.match(ev)) {
 				iter.remove();
 				return ev;
 			}
@@ -674,17 +674,17 @@ public class CloudSim {
 	 * Removes all events that match a given predicate from the future event queue returns true if
 	 * at least one event has been cancelled; false otherwise.
 	 * 
-	 * @param src the src
+	 * @param srcId the entity source id
 	 * @param p the p
 	 * @return true, if successful
 	 */
-	public static boolean cancelAll(int src, Predicate p) {
+	public static boolean cancelAll(int srcId, Predicate p) {
 		SimEvent ev;
 		int previousSize = future.size();
 		Iterator<SimEvent> iter = future.iterator();
 		while (iter.hasNext()) {
 			ev = iter.next();
-			if (ev.getSource() == src && p.match(ev)) {
+			if (ev.getSourceId() == srcId && p.match(ev)) {
 				iter.remove();
 			}
 		}
@@ -701,7 +701,7 @@ public class CloudSim {
 	 * @param e the e
 	 */
 	private static void processEvent(SimEvent e) {
-		int dest, src;
+		int dstId, srcId;
 		SimEntity dest_ent;
 		// Update the system's clock
 		if (e.eventTime() < clock) {
@@ -718,13 +718,13 @@ public class CloudSim {
 			}
 			case SimEvent.SEND -> {
 				// Check for matching wait
-				dest = e.getDestination();
-				if (dest < 0) {
+				dstId = e.getDestinationId();
+				if (dstId < 0) {
 					throw new IllegalArgumentException("Attempt to send to a null entity detected.");
 				} else {
-					dest_ent = entities.get(dest);
+					dest_ent = entities.get(dstId);
 					if (dest_ent.getState() == SimEntity.WAITING) {
-						Integer destObj = dest;
+						Integer destObj = dstId;
 						Predicate p = waitPredicates.get(destObj);
 
 						// @NOTE: There use to be a third OR'd condition (tag == 9999) here,
@@ -742,11 +742,11 @@ public class CloudSim {
 				}
 			}
 			case SimEvent.HOLD_DONE -> {
-				src = e.getSource();
-				if (src < 0) {
+				srcId = e.getSourceId();
+				if (srcId < 0) {
 					throw new IllegalArgumentException("Null entity holding.");
 				} else {
-					entities.get(src).setState(SimEntity.RUNNABLE);
+					entities.get(srcId).setState(SimEntity.RUNNABLE);
 				}
 			}
 			default -> {

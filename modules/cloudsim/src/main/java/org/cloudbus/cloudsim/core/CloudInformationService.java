@@ -232,7 +232,7 @@ public class CloudInformationService extends SimEntity {
 		}
 
 		Log.println("CloudInformationSevice.processOtherEvent(): " + "Unable to handle a request from "
-				+ CloudSim.getEntityName(ev.getSource()) + " with event tag = " + ev.getTag());
+				+ CloudSim.getEntityName(ev.getSourceId()) + " with event tag = " + ev.getTag());
 	}
 
 	/**

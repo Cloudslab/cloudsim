@@ -51,7 +51,7 @@ public class PredicateFrom extends Predicate {
 	 */
 	@Override
 	public boolean match(SimEvent ev) {
-		int src = ev.getSource();
+		int src = ev.getSourceId();
                 /*
                 //TODO Instead of using an array where each position stores
                 the id of an entity (that requires a loop over the array, it would be 

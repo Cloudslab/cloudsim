@@ -11,9 +11,7 @@ import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sareh on 10/07/15.
@@ -114,7 +112,7 @@ public class ContainerDatacenter extends Datacenter {
                     data[2] = CloudSimTags.FALSE;
                 }
 
-                send(ev.getSource(), CloudSim.getMinTimeBetweenEvents(), ContainerCloudSimTags.CONTAINER_CREATE_ACK, data);
+                send(ev.getSourceId(), CloudSim.getMinTimeBetweenEvents(), ContainerCloudSimTags.CONTAINER_CREATE_ACK, data);
             }
             if (result) {
                 getContainerList().add(container);
@@ -228,7 +226,7 @@ public class ContainerDatacenter extends Datacenter {
             } else {
                 data[2] = CloudSimTags.FALSE;
             }
-            sendNow(ev.getSource(), ContainerCloudSimTags.CONTAINER_CREATE_ACK, data);
+            sendNow(ev.getSourceId(), ContainerCloudSimTags.CONTAINER_CREATE_ACK, data);
         }
 
         Log.formatLine(
