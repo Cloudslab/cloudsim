@@ -8,9 +8,7 @@
 
 package org.cloudbus.cloudsim.core;
 
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ListIterator;
 
 /**
@@ -18,15 +16,16 @@ import java.util.ListIterator;
  * The event queue uses a linked list to store the events.
  * 
  * @author Marcos Dias de Assuncao
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  * @see CloudSim
  * @see SimEvent
+ *
+ * @TODO: Why is this a linked-list that tries to preserve temporal order?
+ *  this should probably be replaced with a priority list, or we should simply remove the temporal preservation logic,
+ *  given that FutureQueue guarantees that events are added in here in temporal order.
  */
-public class DeferredQueue {
-
-	/** The list of events. */
-	private final List<SimEvent> list = new LinkedList<>();
-
+public class DeferredQueue extends LinkedList<SimEvent> {
 	/** The max time that an added event is scheduled. */
 	private double maxTime = -1;
 
@@ -41,12 +40,12 @@ public class DeferredQueue {
 		// with the same event_time(). Yes, this matters.
 		double eventTime = newEvent.eventTime();
 		if (eventTime >= maxTime) {
-			list.add(newEvent);
+			this.add(newEvent);
 			maxTime = eventTime;
 			return;
 		}
 
-		ListIterator<SimEvent> iterator = list.listIterator();
+		ListIterator<SimEvent> iterator = this.listIterator();
 		SimEvent event;
 		while (iterator.hasNext()) {
 			event = iterator.next();
@@ -57,32 +56,6 @@ public class DeferredQueue {
 			}
 		}
 
-		list.add(newEvent);
+		this.add(newEvent);
 	}
-
-	/**
-	 * Returns an iterator to the events in the queue.
-	 * 
-	 * @return the iterator
-	 */
-	public Iterator<SimEvent> iterator() {
-		return list.iterator();
-	}
-
-	/**
-	 * Returns the size of this event queue.
-	 * 
-	 * @return the number of events in the queue.
-	 */
-	public int size() {
-		return list.size();
-	}
-
-	/**
-	 * Clears the queue.
-	 */
-	public void clear() {
-		list.clear();
-	}
-
 }

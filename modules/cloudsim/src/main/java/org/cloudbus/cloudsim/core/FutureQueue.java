@@ -10,9 +10,7 @@ package org.cloudbus.cloudsim.core;
 
 import org.cloudbus.cloudsim.Log;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -20,20 +18,15 @@ import java.util.TreeSet;
  * The event queue uses a {@link TreeSet} in order to store the events.
  * 
  * @author Marcos Dias de Assuncao
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
- * @see Simulation
  * @see java.util.TreeSet
  * 
  * //TODO It would be used a common interface for queues
  * such as this one and {@link DeferredQueue}
  */
-public class FutureQueue {
-
-	/** The sorted set of events. */
-	private final SortedSet<SimEvent> sortedSet = new TreeSet<>();
-
-	/** A incremental number used for {@link SimEvent#serial} event attribute.
-         */
+public class FutureQueue extends TreeSet<SimEvent> {
+	/** A incremental number used for event attribute */
 	private long serial = 0;
 
 	/**
@@ -44,7 +37,7 @@ public class FutureQueue {
 	 */
 	public void addEvent(SimEvent newEvent) {
 		newEvent.setSerial(serial++);
-		sortedSet.add(newEvent);
+		this.add(newEvent);
 	}
 
 	/**
@@ -54,52 +47,7 @@ public class FutureQueue {
 	 */
 	public void addEventFirst(SimEvent newEvent) {
 		newEvent.setSerial(0);
-		sortedSet.add(newEvent);
-	}
-
-	/**
-	 * Returns an iterator to the queue.
-	 * 
-	 * @return the iterator
-	 */
-	public Iterator<SimEvent> iterator() {
-		return sortedSet.iterator();
-	}
-
-	/**
-	 * Returns the size of this event queue.
-	 * 
-	 * @return the size
-	 */
-	public int size() {
-		return sortedSet.size();
-	}
-
-	/**
-	 * Removes the event from the queue.
-	 * 
-	 * @param event the event
-	 * @return true, if successful
-	 */
-	public boolean remove(SimEvent event) {
-		return sortedSet.remove(event);
-	}
-
-	/**
-	 * Removes all the events from the queue.
-	 * 
-	 * @param events the events
-	 * @return true, if successful
-	 */
-	public boolean removeAll(Collection<SimEvent> events) {
-		return sortedSet.removeAll(events);
-	}
-
-	/**
-	 * Clears the queue.
-	 */
-	public void clear() {
-		sortedSet.clear();
+		this.add(newEvent);
 	}
 
 	public void print() {

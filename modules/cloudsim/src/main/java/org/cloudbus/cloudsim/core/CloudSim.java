@@ -498,55 +498,29 @@ public class CloudSim {
 	 * Internal method used to run one tick of the simulation. This method should <b>not</b> be
 	 * called in simulations.
 	 * 
-	 * @return true, if successful otherwise
-         * //TODO If the method shouldn't be called by the user,
-         * it should be protected in any way, such as changing
-         * its visibility to package.
+	 * @return true if there are events to be processed, false if event queue is empty
 	 */
-	public static boolean runClockTick() {
+	private static boolean runClockTick() {
 		SimEntity ent;
-		boolean queue_empty;
-		
 		for (int i = 0; i < entities.size(); i++) {
 			ent = entities.get(i);
 			if (ent.getState() == SimEntity.RUNNABLE) {
 				ent.run();
 			}
 		}
-				
-		// If there are more future events then deal with them
-		if (future.size() > 0) {
-			List<SimEvent> toRemove = new ArrayList<>();
-			Iterator<SimEvent> fit = future.iterator();
-			queue_empty = false;
-			SimEvent first = fit.next();
-			processEvent(first);
-			future.remove(first);
 
-			fit = future.iterator();
-
-			// Check if next events are at same time...
-			boolean trymore = fit.hasNext();
-			while (trymore) {
-				SimEvent next = fit.next();
-				if (next.eventTime() == first.eventTime()) {
-					processEvent(next);
-					toRemove.add(next);
-					trymore = fit.hasNext();
-				} else {
-					trymore = false;
-				}
-			}
-
-			future.removeAll(toRemove);
-
-		} else {
-			queue_empty = true;
+		if (future.isEmpty()) {
 			running = false;
 			printMessage(CloudSim.clock()+": Simulation: No more future events");
+			return false;
 		}
 
-		return queue_empty;
+		double clk = future.getFirst().eventTime();
+		while (!future.isEmpty() && future.getFirst().eventTime() == clk) {
+			processEvent(future.pollFirst());
+		}
+
+		return true;
 	}
 
 	/**
@@ -554,18 +528,6 @@ public class CloudSim {
 	 */
 	public static void runStop() {
 		printMessage("Simulation completed.");
-	}
-
-	/**
-	 * Used to hold an entity for some time.
-	 * 
-	 * @param src the src
-	 * @param delay the delay
-	 */
-	public static void hold(int src, long delay) {
-		SimEvent e = new SimEvent(SimEvent.HOLD_DONE, clock + delay, src);
-		future.addEvent(e);
-		entities.get(src).setState(SimEntity.HOLDING);
 	}
 
 	/**
@@ -644,10 +606,7 @@ public class CloudSim {
 	 */
 	public static int waiting(int d, Predicate p) {
 		int count = 0;
-		SimEvent event;
-		Iterator<SimEvent> iterator = deferred.iterator();
-		while (iterator.hasNext()) {
-			event = iterator.next();
+		for (SimEvent event : deferred) {
 			if ((event.getDestination() == d) && (p.match(event))) {
 				count++;
 			}
@@ -663,16 +622,16 @@ public class CloudSim {
 	 * @return the sim event
 	 */
 	public static SimEvent select(int src, Predicate p) {
-		SimEvent ev = null;
+		SimEvent ev;
 		Iterator<SimEvent> iterator = deferred.iterator();
 		while (iterator.hasNext()) {
 			ev = iterator.next();
 			if (ev.getDestination() == src && p.match(ev)) {
 				iterator.remove();
-				break;
+				return ev;
 			}
 		}
-		return ev;
+		return null;
 	}
 
 	/**
@@ -683,15 +642,14 @@ public class CloudSim {
 	 * @return the sim event
 	 */
 	public static SimEvent findFirstDeferred(int src, Predicate p) {
-		SimEvent ev = null;
-		Iterator<SimEvent> iterator = deferred.iterator();
-		while (iterator.hasNext()) {
-			ev = iterator.next();
-			if (ev.getDestination() == src && p.match(ev)) {
-				break;
-			}
-		}
-		return ev;
+		SimEvent ev;
+        for (SimEvent simEvent : deferred) {
+            ev = simEvent;
+            if (ev.getDestination() == src && p.match(ev)) {
+                return ev;
+            }
+        }
+		return null;
 	}
 
 	/**
@@ -702,17 +660,16 @@ public class CloudSim {
 	 * @return the sim event
 	 */
 	public static SimEvent cancel(int src, Predicate p) {
-		SimEvent ev = null;
+		SimEvent ev;
 		Iterator<SimEvent> iter = future.iterator();
 		while (iter.hasNext()) {
 			ev = iter.next();
 			if (ev.getSource() == src && p.match(ev)) {
 				iter.remove();
-				break;
+				return ev;
 			}
 		}
-
-		return ev;
+		return null;
 	}
 
 	/**
@@ -724,7 +681,7 @@ public class CloudSim {
 	 * @return true, if successful
 	 */
 	public static boolean cancelAll(int src, Predicate p) {
-		SimEvent ev = null;
+		SimEvent ev;
 		int previousSize = future.size();
 		Iterator<SimEvent> iter = future.iterator();
 		while (iter.hasNext()) {
@@ -767,14 +724,13 @@ public class CloudSim {
 				if (dest < 0) {
 					throw new IllegalArgumentException("Attempt to send to a null entity detected.");
 				} else {
-					CloudSimTags tag = e.getTag();
 					dest_ent = entities.get(dest);
 					if (dest_ent.getState() == SimEntity.WAITING) {
 						Integer destObj = dest;
 						Predicate p = waitPredicates.get(destObj);
 
-						// @NOTE: Remo Andreoli: There use to be the condition (tag == 9999) here,
-						// but the tag value doesn't exist in previous version of CloudSim
+						// @NOTE: There use to be a third OR'd condition (tag == 9999) here,
+						// but the tag never existed within the repository!
 						if ((p == null) || (p.match(e))) {
 							dest_ent.setEventBuffer((SimEvent) e.clone());
 							dest_ent.setState(SimEntity.RUNNABLE);
@@ -875,7 +831,7 @@ public class CloudSim {
 			runStart();
 		}
 		while (true) {
-			if (runClockTick() || abruptTerminate) {
+			if (!runClockTick() || abruptTerminate) {
 				break;
 			}
 
@@ -887,8 +843,8 @@ public class CloudSim {
 			}
 
 			if (pauseAt != -1
-					&& ((future.size() > 0 && clock <= pauseAt && pauseAt <= future.iterator().next()
-							.eventTime()) || future.size() == 0 && pauseAt <= clock)) {
+					&& ((!future.isEmpty() && clock <= pauseAt && pauseAt <= future.getFirst()
+							.eventTime()) || future.isEmpty() && pauseAt <= clock)) {
 				pauseSimulation();
 				clock = pauseAt;
 			}
