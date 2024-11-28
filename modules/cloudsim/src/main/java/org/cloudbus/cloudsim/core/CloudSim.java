@@ -515,7 +515,7 @@ public class CloudSim {
 
 		double clk = future.peek().eventTime();
 		while (!future.isEmpty() && future.peek().eventTime() == clk) {
-			processEvent(future.poll());
+			dispatchEvent(future.poll());
 		}
 
 		return true;
@@ -696,13 +696,15 @@ public class CloudSim {
 	//
 
 	/**
-	 * Processes an event.
+	 * Dispatch event to destination entity
 	 * 
 	 * @param e the e
 	 */
-	private static void processEvent(SimEvent e) {
-		int dstId, srcId;
-		SimEntity dest_ent;
+	private static void dispatchEvent(SimEvent e) {
+		int dstId = e.getDestinationId();
+		int srcId = e.getSourceId();
+		SimEntity dest_ent = entities.get(dstId);
+
 		// Update the system's clock
 		if (e.eventTime() < clock) {
 			throw new IllegalArgumentException("Past event detected.");
@@ -713,42 +715,20 @@ public class CloudSim {
 		switch (e.getType()) {
 			case SimEvent.ENULL -> throw new IllegalArgumentException("Event has a null type.");
 			case SimEvent.CREATE -> {
-				SimEntity newe = (SimEntity) e.getData();
-				addEntityDynamically(newe);
+				addEntityDynamically((SimEntity) e.getData());
 			}
 			case SimEvent.SEND -> {
-				// Check for matching wait
-				dstId = e.getDestinationId();
-				if (dstId < 0) {
-					throw new IllegalArgumentException("Attempt to send to a null entity detected.");
-				} else {
-					dest_ent = entities.get(dstId);
-					if (dest_ent.getState() == SimEntity.WAITING) {
-						Integer destObj = dstId;
-						Predicate p = waitPredicates.get(destObj);
+                if (dest_ent.getState() == SimEntity.WAITING) { // NOTE: this branch is never used
+                    Predicate p = waitPredicates.get(dstId);
 
-						// @NOTE: There use to be a third OR'd condition (tag == 9999) here,
-						// but the tag never existed within the repository!
-						if ((p == null) || (p.match(e))) {
-							dest_ent.setEventBuffer((SimEvent) e.clone());
-							dest_ent.setState(SimEntity.RUNNABLE);
-							waitPredicates.remove(destObj);
-						} else {
-							deferred.add(e);
-						}
-					} else {
-						deferred.add(e);
-					}
-				}
-			}
-			case SimEvent.HOLD_DONE -> {
-				srcId = e.getSourceId();
-				if (srcId < 0) {
-					throw new IllegalArgumentException("Null entity holding.");
-				} else {
-					entities.get(srcId).setState(SimEntity.RUNNABLE);
-				}
-			}
+                    if ((p == null) || (p.match(e))) {
+                        dest_ent.setState(SimEntity.RUNNABLE);
+                        waitPredicates.remove(dstId);
+                    }
+                }
+				deferred.add(e);
+            }
+			case SimEvent.HOLD_DONE -> entities.get(srcId).setState(SimEntity.RUNNABLE);
 			default -> {
 			}
 		}
