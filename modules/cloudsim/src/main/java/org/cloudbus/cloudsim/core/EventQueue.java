@@ -45,6 +45,14 @@ public class EventQueue extends PriorityQueue<SimEvent> {
 		this.add(newEvent);
 	}
 
+	@Override
+	public SimEvent poll() {
+		if (!CloudSim.running()) {
+			return null;
+		}
+		return super.poll();
+	}
+
 	public void print() {
 		Iterator<SimEvent> iter = iterator();
 		int i = 0;

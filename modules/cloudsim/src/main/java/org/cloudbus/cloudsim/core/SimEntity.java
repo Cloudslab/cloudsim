@@ -12,6 +12,8 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.NetworkTopology;
 import org.cloudbus.cloudsim.core.predicates.Predicate;
 
+import java.util.Iterator;
+
 /**
  * This class represents a simulation entity. An entity handles events and can send events to other
  * entities. When this class is extended, there are a few methods that need to be implemented:
@@ -30,15 +32,18 @@ import org.cloudbus.cloudsim.core.predicates.Predicate;
  * @since CloudSim Toolkit 1.0
  */
 public abstract class SimEntity implements Cloneable {
+	/** Entity states */
+	public enum EntityStatus {
+		RUNNABLE,
+		WAITING,
+		HOLDING,
+		FINISHED
+	}
 
-	/** The entity name. */
 	private String name;
-
-	/** The entity id. */
 	private int id;
-
-	/** The entity's current state. */
-	private int state;
+	private EntityStatus state;
+	protected EventQueue incomingEvents;
 
 	/**
 	 * Creates a new entity.
@@ -51,7 +56,9 @@ public abstract class SimEntity implements Cloneable {
 		}
 		this.name = name;
 		id = -1;
-		state = RUNNABLE;
+		state = EntityStatus.RUNNABLE;
+		incomingEvents = new EventQueue();
+
 		CloudSim.addEntity(this);
 	}
 
@@ -73,8 +80,68 @@ public abstract class SimEntity implements Cloneable {
 		return id;
 	}
 
-	// The schedule functions
+	public EventQueue getIncomingEvents() {
+		return incomingEvents;
+	}
 
+	/** Handle incoming event functions */
+	/**
+	 * Checks if events for a specific entity are present in the deferred event queue.
+	 *
+	 * @param p the p
+	 * @return the int
+	 */
+	public int waiting(Predicate p) {
+		int count = 0;
+		for (SimEvent event : incomingEvents) {
+			if ((event.getDestinationId() == id) && (p.match(event))) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * Selects an event matching a predicate.
+	 *
+	 * @param p the p
+	 * @return the sim event
+	 */
+	public SimEvent selectEvent(Predicate p) {
+		if (!CloudSim.running()) {
+			return null;
+		}
+
+		SimEvent ev;
+		Iterator<SimEvent> iterator = incomingEvents.iterator();
+		while (iterator.hasNext()) {
+			ev = iterator.next();
+			if (ev.getDestinationId() == id && p.match(ev)) {
+				iterator.remove();
+				return ev;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Find first deferred event matching a predicate.
+	 *
+	 * @param p the p
+	 * @return the sim event
+	 */
+	public SimEvent findFirstDeferred(Predicate p) {
+		SimEvent ev;
+		for (SimEvent simEvent : incomingEvents) {
+			ev = simEvent;
+			if (ev.getDestinationId() == id && p.match(ev)) {
+				return ev;
+			}
+		}
+		return null;
+	}
+
+	/** Schedule event functions */
 	/**
 	 * Sends an event to another entity by id number, with data.
 	 * 
@@ -282,35 +349,23 @@ public abstract class SimEntity implements Cloneable {
 
 	/**
 	 * Counts how many events matching a predicate are waiting in the entity's deferred queue.
-	 * 
+	 *
 	 * @param p The event selection predicate
 	 * @return The count of matching events
 	 */
+	@Deprecated
 	public int numEventsWaiting(Predicate p) {
-		return CloudSim.waiting(id, p);
+		return waiting(p);
 	}
 
 	/**
 	 * Counts how many events are waiting in the entity's deferred queue.
-	 * 
+	 *
 	 * @return The count of events
 	 */
+	@Deprecated
 	public int numEventsWaiting() {
-		return CloudSim.waiting(id, CloudSim.SIM_ANY);
-	}
-
-	/**
-	 * Extracts the first event matching a predicate waiting in the entity's deferred queue.
-	 * 
-	 * @param p The event selection predicate
-	 * @return the simulation event
-	 */
-	public SimEvent selectEvent(Predicate p) {
-		if (!CloudSim.running()) {
-			return null;
-		}
-
-		return CloudSim.select(id, p);
+		return waiting(CloudSim.SIM_ANY);
 	}
 
 	/**
@@ -353,17 +408,7 @@ public abstract class SimEntity implements Cloneable {
 		}
 
 		CloudSim.wait(id, p);
-		state = WAITING;
-	}
-
-	/**
-	 * Gets the first event waiting in the entity's deferred queue, or if there are none, wait for an
-	 * event to arrive.
-	 * 
-	 * @return the simulation event
-	 */
-	public SimEvent getNextEvent() {
-		return getNextEvent(CloudSim.SIM_ANY);
+		state = EntityStatus.WAITING;
 	}
 
 	/**
@@ -390,24 +435,26 @@ public abstract class SimEntity implements Cloneable {
 	 */
 	public void shutdownEntity() {
 		Log.printlnConcat(CloudSim.clock(), ": ", getName(), " is shutting down...");
+		incomingEvents = null;
+		state = EntityStatus.FINISHED;
 	}
 
-        /**
-         * The run loop to process events fired during the simulation.
-         * The events that will be processed are defined
-         * in the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
-         * 
-         * @see #processEvent(org.cloudbus.cloudsim.core.SimEvent) 
-         */
+	/**
+	 * The run loop to process events fired during the simulation.
+	 * The events that will be processed are defined
+	 * in the {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)} method.
+	 *
+	 * @see #processEvent(org.cloudbus.cloudsim.core.SimEvent)
+	 */
 	public void run() {
-		SimEvent ev = getNextEvent();
+		SimEvent ev =  incomingEvents.poll();
 
 		while (ev != null) {
 			processEvent(ev);
-			if (state != RUNNABLE) {
+			if (state != EntityStatus.RUNNABLE) {
 				break;
 			}
-			ev = getNextEvent();
+			ev = incomingEvents.poll();
 		}
 	}
 
@@ -444,30 +491,16 @@ public abstract class SimEntity implements Cloneable {
 	 * 
 	 * @return the state
 	 */
-	protected int getState() {
+	protected EntityStatus getState() {
 		return state;
 	}
-
-	// The entity states
-        ////TODO The states should be an enum.
-	/** The Constant RUNNABLE. */
-	public static final int RUNNABLE = 0;
-
-	/** The Constant WAITING. */
-	public static final int WAITING = 1;
-
-	/** The Constant HOLDING. */
-	public static final int HOLDING = 2;
-
-	/** The Constant FINISHED. */
-	public static final int FINISHED = 3;
 
 	/**
 	 * Sets the entity state.
 	 * 
 	 * @param state the new state
 	 */
-	protected void setState(int state) {
+	protected void setState(EntityStatus state) {
 		this.state = state;
 	}
 

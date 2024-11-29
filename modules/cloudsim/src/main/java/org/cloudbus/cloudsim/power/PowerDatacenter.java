@@ -250,7 +250,7 @@ public class PowerDatacenter extends Datacenter {
 	protected void processVmMigrate(SimEvent ev, boolean ack) {
 		updateCloudetProcessingWithoutSchedulingFutureEvents();
 		super.processVmMigrate(ev, ack);
-		SimEvent event = CloudSim.findFirstDeferred(getId(), new PredicateType(CloudActionTags.VM_MIGRATE));
+		SimEvent event = findFirstDeferred(new PredicateType(CloudActionTags.VM_MIGRATE));
 		if (event == null || event.eventTime() > CloudSim.clock()) {
 			updateCloudetProcessingWithoutSchedulingFutureEventsForce();
 		}

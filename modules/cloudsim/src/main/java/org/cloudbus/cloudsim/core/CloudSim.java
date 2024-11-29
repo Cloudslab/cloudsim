@@ -23,18 +23,16 @@ import org.cloudbus.cloudsim.core.predicates.PredicateAny;
 import org.cloudbus.cloudsim.core.predicates.PredicateNone;
 
 /**
- * This class extends the CloudSimCore to enable network simulation in CloudSim. Also, it disables
- * all the network models from CloudSim, to provide a simpler simulation of networking. In the
- * network model used by CloudSim, a topology file written in BRITE format is used to describe the
- * network. Later, nodes in such file are mapped to CloudSim entities. Delay calculated from the
- * BRITE model are added to the messages send through CloudSim. Messages using the old model are
- * converted to the apropriate methods with the correct parameters.
+ *
+ * The main class of the simulation.
+ * It provides all the methods to start, pause and stop simulated entities.
+ * It stores and dispatches all the discrete events to be processed at run-time by the entities.
  * 
  * @author Rodrigo N. Calheiros
  * @author Anton Beloglazov
+ * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
  */
-@SuppressWarnings("BusyWait")
 public class CloudSim {
 
 	/** The Constant CLOUDSIM_VERSION_STRING. */
@@ -223,10 +221,9 @@ public class CloudSim {
 	 * 
 	 * @return true, if successful; false otherwise.
 	 */
-	public static boolean terminateSimulation() {
+	public static void terminateSimulation() {
 		running = false;
 		printMessage("Simulation: Reached termination time.");
-		return true;
 	}
 
 	/**
@@ -306,8 +303,6 @@ public class CloudSim {
 	/** The future event queue. */
 	protected static EventQueue future;
 
-	/** The deferred event queue. */
-	protected static EventQueue deferred;
 
 	/** 
          * The current simulation clock.
@@ -342,7 +337,6 @@ public class CloudSim {
 		entities = new ArrayList<>();
 		entitiesByName = new LinkedHashMap<>();
 		future = new EventQueue();
-		deferred = new EventQueue();
 		waitPredicates = new HashMap<>();
 		clock = 0;
 		running = false;
@@ -502,7 +496,7 @@ public class CloudSim {
 		SimEntity ent;
 		for (int i = 0; i < entities.size(); i++) {
 			ent = entities.get(i);
-			if (ent.getState() == SimEntity.RUNNABLE) {
+			if (ent.getState() == SimEntity.EntityStatus.RUNNABLE) {
 				ent.run();
 			}
 		}
@@ -537,7 +531,7 @@ public class CloudSim {
 	public static void pause(int srcId, double delay) {
 		SimEvent e = new SimEvent(SimEvent.HOLD_DONE, clock + delay, srcId);
 		future.addEvent(e);
-		entities.get(srcId).setState(SimEntity.HOLDING);
+		entities.get(srcId).setState(SimEntity.EntityStatus.HOLDING);
 	}
 
 	/**
@@ -588,66 +582,11 @@ public class CloudSim {
 	 * @param p the p
 	 */
 	public static void wait(int srcId, Predicate p) {
-		entities.get(srcId).setState(SimEntity.WAITING);
+		entities.get(srcId).setState(SimEntity.EntityStatus.WAITING);
 		if (p != SIM_ANY) {
 			// If a predicate has been used store it in order to check it
 			waitPredicates.put(srcId, p);
 		}
-	}
-
-	/**
-	 * Checks if events for a specific entity are present in the deferred event queue.
-	 * 
-	 * @param d the d
-	 * @param p the p
-	 * @return the int
-	 */
-	public static int waiting(int d, Predicate p) {
-		int count = 0;
-		for (SimEvent event : deferred) {
-			if ((event.getDestinationId() == d) && (p.match(event))) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	/**
-	 * Selects an event matching a predicate.
-	 * 
-	 * @param dstId the entity destination id
-	 * @param p the p
-	 * @return the sim event
-	 */
-	public static SimEvent select(int dstId, Predicate p) {
-		SimEvent ev;
-		Iterator<SimEvent> iterator = deferred.iterator();
-		while (iterator.hasNext()) {
-			ev = iterator.next();
-			if (ev.getDestinationId() == dstId && p.match(ev)) {
-				iterator.remove();
-				return ev;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Find first deferred event matching a predicate.
-	 * 
-	 * @param dstId the entity destination id
-	 * @param p the p
-	 * @return the sim event
-	 */
-	public static SimEvent findFirstDeferred(int dstId, Predicate p) {
-		SimEvent ev;
-        for (SimEvent simEvent : deferred) {
-            ev = simEvent;
-            if (ev.getDestinationId() == dstId && p.match(ev)) {
-                return ev;
-            }
-        }
-		return null;
 	}
 
 	/**
@@ -703,7 +642,7 @@ public class CloudSim {
 	private static void dispatchEvent(SimEvent e) {
 		int dstId = e.getDestinationId();
 		int srcId = e.getSourceId();
-		SimEntity dest_ent = entities.get(dstId);
+		SimEntity destEnt = entities.get(dstId);
 
 		// Update the system's clock
 		if (e.eventTime() < clock) {
@@ -718,17 +657,17 @@ public class CloudSim {
 				addEntityDynamically((SimEntity) e.getData());
 			}
 			case SimEvent.SEND -> {
-                if (dest_ent.getState() == SimEntity.WAITING) { // NOTE: this branch is never used
+                if (destEnt.getState() == SimEntity.EntityStatus.WAITING) { // NOTE: this branch is never used
                     Predicate p = waitPredicates.get(dstId);
 
                     if ((p == null) || (p.match(e))) {
-                        dest_ent.setState(SimEntity.RUNNABLE);
+                        destEnt.setState(SimEntity.EntityStatus.RUNNABLE);
                         waitPredicates.remove(dstId);
                     }
                 }
-				deferred.add(e);
+				destEnt.getIncomingEvents().add(e);
             }
-			case SimEvent.HOLD_DONE -> entities.get(srcId).setState(SimEntity.RUNNABLE);
+			case SimEvent.HOLD_DONE -> entities.get(srcId).setState(SimEntity.EntityStatus.RUNNABLE);
 			default -> {
 			}
 		}
@@ -848,11 +787,11 @@ public class CloudSim {
 	 * Internal method that allows the entities to terminate. This method should <b>not</b> be used
 	 * in user simulations.
 	 */
-	public static void finishSimulation() {
+	private static void finishSimulation() {
 		// Allow all entities to exit their body method
 		if (!abruptTerminate) {
 			for (SimEntity ent : entities) {
-				if (ent.getState() != SimEntity.FINISHED) {
+				if (ent.getState() != SimEntity.EntityStatus.FINISHED) {
 					ent.run();
 				}
 			}
@@ -867,7 +806,6 @@ public class CloudSim {
 		entities = null;
 		entitiesByName = null;
 		future = null;
-		deferred = null;
 		clock = 0L;
 		running = false;
 
