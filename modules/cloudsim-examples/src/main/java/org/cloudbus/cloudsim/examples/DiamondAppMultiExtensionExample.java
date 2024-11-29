@@ -339,9 +339,9 @@ public class DiamondAppMultiExtensionExample {
 		clc.addSendStage(1000, cld);
 
 		//
-		clc.addRecvStage(clb);
-		clc.addRecvStage(clc);
-		clc.addExecutionStage(1000);
+		cld.addRecvStage(clb);
+		cld.addRecvStage(clc);
+		cld.addExecutionStage(1000);
 	}
 
 	private static void CreateNetwork(NetworkDatacenter dc) {
