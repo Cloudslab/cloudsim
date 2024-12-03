@@ -93,10 +93,9 @@ public abstract class CloudletScheduler {
 
 		// Update cloudlets in exec list
 		for (Cloudlet cl : getCloudletExecList()) {
-			if (cl.updateCloudlet(null)) {
-				cl.updateCloudletFinishedSoFar((long) (timeSpan *
-						getTotalCurrentAllocatedMipsForCloudlet(cl, currentTime)));
-			}
+			cl.updateCloudletFinishedSoFar((long) (timeSpan *
+					getTotalCurrentAllocatedMipsForCloudlet(cl, currentTime)));
+			cl.updateCloudlet(null);
 		}
 
 		// Remove finished cloudlets
