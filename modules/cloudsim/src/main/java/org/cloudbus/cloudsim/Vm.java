@@ -118,7 +118,7 @@ public class Vm implements VirtualEntity {
 	 * time, he/she doesn't have to iterate over the entire list
 	 * to find the desired entry.
 	 */
-	private final List<VmStateHistoryEntry> stateHistory = new ArrayList<>();
+	private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
 
 	private int virtualizationOverhead;
 

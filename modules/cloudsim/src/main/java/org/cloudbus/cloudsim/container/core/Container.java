@@ -12,6 +12,7 @@ import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -73,7 +74,7 @@ public class Container implements GuestEntity {
     private boolean beingInstantiated;
 
     /** The mips allocation history. */
-    private final List<VmStateHistoryEntry> stateHistory = new ArrayList<>();
+    private final List<VmStateHistoryEntry> stateHistory = new LinkedList<>();
 
     /** The previous time. */
     private double previousTime;

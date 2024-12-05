@@ -194,10 +194,10 @@ public class Helper {
 			boolean previousIsActive = true;
 			double lastTimeSwitchedOn = 0;
 			for (HostStateHistoryEntry entry : ((HostDynamicWorkload) host).getStateHistory()) {
-				if (previousIsActive == true && entry.isActive() == false) {
+				if (previousIsActive && !entry.isActive()) {
 					timeBeforeShutdown.add(entry.getTime() - lastTimeSwitchedOn);
 				}
-				if (previousIsActive == false && entry.isActive() == true) {
+				if (!previousIsActive && entry.isActive()) {
 					lastTimeSwitchedOn = entry.getTime();
 				}
 				previousIsActive = entry.isActive();
@@ -218,10 +218,10 @@ public class Helper {
 			boolean previousIsInMigration = false;
 			double lastTimeMigrationFinished = 0;
 			for (VmStateHistoryEntry entry : vm.getStateHistory()) {
-				if (previousIsInMigration == true && entry.isInMigration() == false) {
+				if (previousIsInMigration && !entry.isInMigration()) {
 					timeBeforeVmMigration.add(entry.getTime() - lastTimeMigrationFinished);
 				}
-				if (previousIsInMigration == false && entry.isInMigration() == true) {
+				if (!previousIsInMigration && entry.isInMigration()) {
 					lastTimeMigrationFinished = entry.getTime();
 				}
 				previousIsInMigration = entry.isInMigration();

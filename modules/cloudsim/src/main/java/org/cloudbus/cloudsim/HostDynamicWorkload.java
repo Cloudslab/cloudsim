@@ -9,6 +9,7 @@
 package org.cloudbus.cloudsim;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -33,7 +34,7 @@ public class HostDynamicWorkload extends Host {
 	private double previousUtilizationMips;
 
 	/** The host utilization state history. */
-	private final List<HostStateHistoryEntry> stateHistory = new ArrayList<>();
+	private final List<HostStateHistoryEntry> stateHistory = new LinkedList<>();
 
 	/**
 	 * Instantiates a new host.
