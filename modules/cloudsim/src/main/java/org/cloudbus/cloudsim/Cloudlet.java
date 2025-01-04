@@ -721,7 +721,7 @@ public class Cloudlet {
             return 0;
         }
 
-        return Math.min(resList.getLast().cloudletFinishedSoFar, getCloudletTotalLength());
+        return resList.getLast().cloudletFinishedSoFar;
     }
 
     /**
@@ -736,11 +736,9 @@ public class Cloudlet {
         if (resList.isEmpty()) {
             return false;
         }
-
         // if result is 0 or -ve then this Cloudlet has finished
-        return getCloudletLength() - resList.getLast().cloudletFinishedSoFar <= 0.0;
+        return getRemainingCloudletLength() <= 0.0;
     }
-
     /**
      * Updates the length of cloudlet that has already been completed.
      *
@@ -1207,14 +1205,13 @@ public class Cloudlet {
      * @post $result >= 0
      */
     public long getRemainingCloudletLength() {
-        long length = getCloudletTotalLength() - getCloudletFinishedSoFar();
+        long length = getCloudletTotalLength()*Consts.MILLION - getCloudletFinishedSoFar();
 
         // Remaining Cloudlet length can't be negative number.
         if (length <= 0) {
             return 0;
         }
-
-        return (long) Math.floor(1.0*length);
+        return length/Consts.MILLION;
     }
 
     /**
