@@ -335,7 +335,7 @@ public abstract class RunnerAbs {
     }
 
 
-    // @TODO: Remo Andreoli: is this use of generics correct?
+    // @TODO: is this use of generics correct?
     protected <T extends GuestEntity> SelectionPolicy<T> getContainerSelectionPolicy(String containerSelectionPolicyName) {
         SelectionPolicy<T> containerSelectionPolicy = null;
         if (containerSelectionPolicyName.equals("Cor")) {
@@ -358,7 +358,7 @@ public abstract class RunnerAbs {
         return containerSelectionPolicy;
     }
 
-    // @TODO: Remo Andreoli: is this use of generics correct?
+    // @TODO: is this use of generics correct?
     protected <T extends GuestEntity> SelectionPolicy<T> getVmSelectionPolicy(String vmSelectionPolicyName) {
         SelectionPolicy<T> vmSelectionPolicy = null;
         if (vmSelectionPolicyName.equals("VmMaxC")) {

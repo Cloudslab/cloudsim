@@ -33,7 +33,7 @@ public class PeList {
 	 * @post $none
 	 */
 	public static <T extends Pe> Pe getById(List<T> peList, int id) {
-                /*//TODO such kind of search would be made using a HashMap
+                /*//@TODO such kind of search would be made using a HashMap
                 (to avoid always iterating over the list),
                 where the key is the id of the object and the value the object
                 itself. The same occurs for lists of hosts and VMs.*/

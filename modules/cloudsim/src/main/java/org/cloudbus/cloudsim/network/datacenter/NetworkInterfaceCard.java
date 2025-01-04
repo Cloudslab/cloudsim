@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  * This class represents a communication interface between host entities and networked cloudlets.
- * @TODO: Remo Andreoli: this needs to include the guest entities too, eventually
+ * @TODO: this needs to include the guest entities too, eventually
  *
  * @author Remo Andreoli
  * @since CloudSim Toolkit 7.0

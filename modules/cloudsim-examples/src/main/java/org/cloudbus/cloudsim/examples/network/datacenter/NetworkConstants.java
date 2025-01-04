@@ -12,7 +12,7 @@ import org.cloudbus.cloudsim.network.datacenter.TaskStage;
 
 /**
  * Network constants
- * //TODO This class uses several hard-coded values that appears to be used
+ * //@TODO This class uses several hard-coded values that appears to be used
  * only for examples. If yes, it should be moved to the examples package.
  * The exceptions are the  {@link TaskStage} types and number of
  * switches by level.

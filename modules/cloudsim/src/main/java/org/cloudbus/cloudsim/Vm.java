@@ -85,7 +85,7 @@ public class Vm implements VirtualEntity {
 	private long currentAllocatedBw;
 
 	/** The current allocated mips for each VM's PE.
-	 * TODO: Maybe replace with a call to getCloudletScheduler().getCurrentMipsShare()
+	 * @TODO: Maybe replace with a call to getCloudletScheduler().getCurrentMipsShare()
 	 */
 	private List<Double> currentAllocatedMips;
 
@@ -111,7 +111,7 @@ public class Vm implements VirtualEntity {
 	private boolean failed;
 
 	/** The mips allocation history.
-	 * TODO Instead of using a list, this attribute would be
+	 * @TODO Instead of using a list, this attribute would be
 	 * a map, where the key can be the history time
 	 * and the value the history itself.
 	 * By this way, if one wants to get the history for a given
@@ -499,7 +499,7 @@ public class Vm implements VirtualEntity {
 	public List<? extends Pe> getPeList() { return peList; }
 	public void setPeList(List<? extends Pe> peList) { this.peList = peList; }
 	/**
-	 * TODO: Remo Andreoli: I'm not sure if this is alright, but I need it for compatibility reasons with default guestCreate()
+	 * @TODO: I'm not sure if this is alright, but I need it for compatibility reasons with default guestCreate()
 	 */
 	public long getStorage() {
 		return getSize();

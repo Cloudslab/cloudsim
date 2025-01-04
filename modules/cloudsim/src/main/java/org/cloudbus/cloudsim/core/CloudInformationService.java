@@ -32,7 +32,7 @@ public class CloudInformationService extends SimEntity {
 
 	/** A list containing the id of all entities that are registered at the 
          * Cloud Information Service (CIS). 
-         * //TODO It is not clear if this list is a list of host id's or datacenter id's.
+         * //@TODO It is not clear if this list is a list of host id's or datacenter id's.
          * The previous attribute documentation just said "For all types of hostList".
          * It can be seen at the method {@link #processEvent(org.cloudbus.cloudsim.core.SimEvent)}
          * that the list is updated when a CloudActionTags.REGISTER_RESOURCE event
@@ -58,7 +58,7 @@ public class CloudInformationService extends SimEntity {
 	 * @pre name != null
 	 * @post $none
          * 
-         * //TODO The use of Exception is not recommended. Specific exceptions
+         * //@TODO The use of Exception is not recommended. Specific exceptions
          * would be thrown (such as {@link IllegalArgumentException})
          * or {@link RuntimeException}
 	 */

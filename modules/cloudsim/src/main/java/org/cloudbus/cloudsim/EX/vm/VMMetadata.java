@@ -35,7 +35,7 @@ public class VMMetadata implements Cloneable {
     }
 
 
-    // TODO new properties go here...
+    // @TODO new properties go here...
 
     /**
      * Returns the type of the VM.
@@ -88,7 +88,7 @@ public class VMMetadata implements Cloneable {
         VMMetadata result = new VMMetadata();
         for (Field f : getClass().getDeclaredFields()) {
             try {
-                // TODO take care of copying collections/arrays
+                // @TODO take care of copying collections/arrays
                 f.set(result, f.get(this));
             } catch (IllegalAccessException e) {
                 throw new IllegalStateException(e);

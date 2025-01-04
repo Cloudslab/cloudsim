@@ -212,7 +212,7 @@ public class ExperimentsRunner {
             System.err.println("to kill all experiments");
             System.err.println();
         } else {
-            // TODO implement for other OS-es or in a platform independent way
+            // @TODO implement for other OS-es or in a platform independent way
             System.err.println("Could not detect the PID of the current processess ...");
         }
     }

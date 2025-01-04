@@ -54,7 +54,7 @@ public class VmSchedulerTimeShared extends VmScheduler {
 	@Override
 	public boolean allocatePesForGuest(GuestEntity guest, List<Double> mipsShareRequested) {
 		/*
-		 * //TODO add the same to RAM and BW provisioners
+		 * //@TODO add the same to RAM and BW provisioners
 		 */
 		if (guest.isInMigration()) {
 			if (!getGuestsMigratingIn().contains(guest.getUid()) && !getGuestsMigratingOut().contains(guest.getUid())) {

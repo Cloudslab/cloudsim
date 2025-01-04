@@ -17,8 +17,8 @@ import org.cloudbus.cloudsim.provisioners.PeProvisioner;
  *
  * @author Manzur Murshed
  * @author Rajkumar Buyya
- * //TODO This assumption is not being assured on different class (where other TODOs where introduced)
- * //TODO Pe statuses have to be defined using an enum
+ * //@TODO This assumption is not being assured on different class (where other TODOs where introduced)
+ * //@TODO Pe statuses have to be defined using an enum
  * @since CloudSim Toolkit 1.0
  */
 public class Pe {

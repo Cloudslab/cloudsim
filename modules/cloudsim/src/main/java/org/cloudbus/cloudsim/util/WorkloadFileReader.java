@@ -45,7 +45,7 @@ import org.cloudbus.cloudsim.UtilizationModelFull;
  * processor runs job #1 for 100 seconds, if the processors have the same specification.
  * </ul>
  *
- * //TODO The last item in the list above is not true. The cloudlet length is not
+ * //@TODO The last item in the list above is not true. The cloudlet length is not
  * divided by the number of PEs. If there is more than 1 PE, all PEs run the same
  * number of MI as specified in the {@link Cloudlet#cloudletLength} attribute.
  * See {@link Cloudlet#setNumberOfPes(int)} method documentation.
@@ -196,7 +196,7 @@ public class WorkloadFileReader implements WorkloadModel {
                     fieldArray = new String[MAX_FIELD];
 
                     try {
-                            /*//TODO It would be implemented
+                            /*//@TODO It would be implemented
                             using specific classes to avoid using ifs.
                             If a new format is included, the code has to be
                             changed to include another if*/
@@ -314,7 +314,7 @@ public class WorkloadFileReader implements WorkloadModel {
      * and the {@link #rating}, the {@link Cloudlet#cloudletLength} is computed.
      * @param numProc number of Cloudlet's PEs
      * @param reqRunTime user estimated run time 
-     * (//TODO the parameter is not being used and it is not clear what it is)
+     * (//@TODO the parameter is not being used and it is not clear what it is)
      * @param userID user id
      * @param groupID user's group id
      * @pre id >= 0
@@ -356,7 +356,7 @@ public class WorkloadFileReader implements WorkloadModel {
      * @param line the line number
      * @pre array != null
      * @pre line > 0
-     * //TODO The name of the method doesn't describe what it in fact does.
+     * //@TODO The name of the method doesn't describe what it in fact does.
      */
     private void extractField(final String[] array, final int line) {
             try {

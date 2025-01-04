@@ -100,7 +100,7 @@ public class Host implements HostEntity {
 	 *         {@link Double#MAX_VALUE} if there is no future events expected in this host
 	 * @pre currentTime >= 0.0
 	 * @post $none
-         * //TODO there is an inconsistency between the return value of this method
+         * //@TODO there is an inconsistency between the return value of this method
          * and the individual call of {@link GuestEntity#updateCloudletsProcessing(double, List) ,
          * and consequently the {@link CloudletScheduler#updateCloudletsProcessing(double, List) }.
          * The current method returns {@link Double#MAX_VALUE}  while the other ones
@@ -416,7 +416,7 @@ public class Host implements HostEntity {
 		return failed;
 	}
 
-	/** TODO: Remo Andreoli: Not in use, what to do with this? */
+	/** @TODO: Not in use, what to do with this? */
 	@Override
 	public boolean isInWaiting() { return false; }
 	@Override

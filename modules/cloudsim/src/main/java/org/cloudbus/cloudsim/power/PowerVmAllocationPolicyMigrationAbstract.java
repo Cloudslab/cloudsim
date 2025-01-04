@@ -60,7 +60,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends VmAllocat
 
 	/** 
          * The metric history. 
-         * //TODO the map stores different data. Sometimes it stores the upper threshold,
+         * //@TODO the map stores different data. Sometimes it stores the upper threshold,
          * other it stores utilization threshold or predicted utilization, that
          * is very confusing.
          */

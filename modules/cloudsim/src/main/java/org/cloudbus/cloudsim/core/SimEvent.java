@@ -36,7 +36,7 @@ public class SimEvent implements Cloneable, Comparable<SimEvent> {
 
 	/** 
          * Any data the event is carrying. 
-         * //TODO I would be used generics to define the type of the event data.
+         * //@TODO I would be used generics to define the type of the event data.
          * But this modification would incur several changes in the simulator core
          * that has to be assessed first.
          **/

@@ -40,7 +40,7 @@ public class CloudSimShutdown extends SimEntity {
 	 * @pre numUser >= 0
 	 * @post $none
          * 
-         * //TODO The use of Exception is not recommended. Specific exceptions
+         * //@TODO The use of Exception is not recommended. Specific exceptions
          * would be thrown (such as {@link IllegalArgumentException})
          * or {@link RuntimeException}
 	 */

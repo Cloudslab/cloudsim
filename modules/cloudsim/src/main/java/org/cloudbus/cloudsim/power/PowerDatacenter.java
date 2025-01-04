@@ -148,7 +148,7 @@ public class PowerDatacenter extends Datacenter {
 	 * 
 	 * @return the double
          * @see #updateCloudetProcessingWithoutSchedulingFutureEventsForce() 
-         * //TODO There is an inconsistence in the return value of this
+         * //@TODO There is an inconsistence in the return value of this
          * method with return value of similar methods
          * such as {@link #updateCloudetProcessingWithoutSchedulingFutureEventsForce()},
          * that returns {@link Double#MAX_VALUE} by default.

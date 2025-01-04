@@ -28,12 +28,12 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @since CloudSim Toolkit 2.0
  * CloudletSchedulerSingleService as its Test Suite
  */
-//TODO The name of the class doesn't represent its goal. A clearer name would be
+//@TODO The name of the class doesn't represent its goal. A clearer name would be
 public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShared {
 
 	/** The individual MIPS capacity of each PE allocated to the VM using the scheduler,
          * considering that all PEs have the same capacity. 
-         * //TODO Despite of the class considers that all PEs have the same capacity,
+         * //@TODO Despite of the class considers that all PEs have the same capacity,
          * it accepts a list of PEs with different MIPS at the method 
          * {@link CloudletScheduler#updateCloudletsProcessing(double, List) }
          */
@@ -67,7 +67,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 		super();
 		setMips(mips);
 		setNumberOfPes(numberOfPes);
-                /*//TODO There shouldn't be a setter to total mips, considering
+                /*//@TODO There shouldn't be a setter to total mips, considering
                 that it is computed from number of PEs and mips.
                 If the number of pes of mips is set any time after here,
                 the total mips will be wrong. Just the getTotalMips is enough,
@@ -187,7 +187,7 @@ public class CloudletSchedulerDynamicWorkload extends CloudletSchedulerTimeShare
 	 * 
 	 * @param cl the cloudlet
 	 * @param mips the mips
-         * //TODO It is not clear the goal of this method. The related test case
+         * //@TODO It is not clear the goal of this method. The related test case
          * doesn't make it clear too. The method doesn't appear to be used anywhere.
 	 */
 	public void updateUnderAllocatedMipsForCloudlet(Cloudlet cl, double mips) {

@@ -35,7 +35,7 @@ import org.cloudbus.cloudsim.network.TopologicalNode;
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 1.0
  * 
- * //TODO The class only have static methods, that indicates it doesn't have to be instantiated.
+ * //@TODO The class only have static methods, that indicates it doesn't have to be instantiated.
  * In fact, it doesn't appear it is being instantiated anywhere.
  * A private default constructor would be created to avoid instantiation.
  */

@@ -536,7 +536,7 @@ public class ContainerDatacenter extends Datacenter {
      * @pre $none
      * @post $none
      *
-     * TODO: Remo Andreoli: Generalise this to work with every hybrid host-guest entity
+     * @TODO: Generalise this to work with every hybrid host-guest entity
      */
     protected void checkCloudletCompletion() {
         for (HostEntity host : getVmAllocationPolicy().getHostList()) {

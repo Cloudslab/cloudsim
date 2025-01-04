@@ -26,7 +26,7 @@ import org.cloudbus.cloudsim.lists.PeList;
  * @author Anton Beloglazov
  * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
- * //TODO the characteristics are used only for datacenter (as the class name indicates),
+ * //@TODO the characteristics are used only for datacenter (as the class name indicates),
  * however, the class documentation uses the generic term "resource" instead of "datacenter",
  * giving the idea that the class can be used to describe characteristics of other resources.
  * However, the class was found being used only for datacenters.
@@ -55,7 +55,7 @@ public class DatacenterCharacteristics {
          * constants such as {@link #TIME_SHARED}
          * and {@link #SPACE_SHARED}.
          * 
-         * //TODO The use of int constants difficult to know the valid values
+         * //@TODO The use of int constants difficult to know the valid values
          * for the property. It may be used a enum instead.
          */
 	private int allocationPolicy;
@@ -130,7 +130,7 @@ public class DatacenterCharacteristics {
 		setArchitecture(architecture);
 		setOs(os);
 		setHostList(hostList);
-                /*//TODO allocationPolicy is not a parameter. It is setting
+                /*//@TODO allocationPolicy is not a parameter. It is setting
                 the attribute to itself, what has not effect. */
 		setAllocationPolicy(allocationPolicy);
 		setCostPerSecond(costPerSec);
@@ -187,7 +187,7 @@ public class DatacenterCharacteristics {
          * 
 	 * @pre $none
 	 * @post $result >= -1
-         * //TODO It considers that all PEs of all PM have the same MIPS capacity,
+         * //@TODO It considers that all PEs of all PM have the same MIPS capacity,
          * what is not ensured because it is possible to add PMs of different configurations
          * to a datacenter. Even for the {@link HostEntity} it is possible
          * to add Pe's of different capacities through the {@link HostEntity#peList} attribute.
@@ -197,7 +197,7 @@ public class DatacenterCharacteristics {
 			return -1;
 		}
 
-                /*//TODO Why is it always get the MIPS of the first host in the datacenter?
+                /*//@TODO Why is it always get the MIPS of the first host in the datacenter?
                 The note in the method states that it is considered that all PEs into
                 a PM have the same MIPS capacity, but different PM can have different
                 PEs' MIPS.*/
@@ -216,7 +216,7 @@ public class DatacenterCharacteristics {
 	 * @pre peID >= 0
 	 * @post $result >= -1
          * 
-         * //TODO The id parameter would be renamed to pmId to be clear.
+         * //@TODO The id parameter would be renamed to pmId to be clear.
 	 */
 	public int getMipsOfOnePe(int id, int peId) {
 		if (getHostList().isEmpty()) {
@@ -245,7 +245,7 @@ public class DatacenterCharacteristics {
 	 */
 	public int getMips() {
 		int mips = 0;
-                /*//TODO It assumes that the heterogeinety of PE's capacity of PMs
+                /*//@TODO It assumes that the heterogeinety of PE's capacity of PMs
                 is dependent of the CPU allocation policy of the Datacenter.
                 However, I don't see any relation between PMs heterogeinety and
                 allocation policy.
@@ -254,7 +254,7 @@ public class DatacenterCharacteristics {
                 The same is true for a space shared or even any other policy. 
                 */
                 
-                /*//TODO the method doesn't use polymorphism to ensure that it will
+                /*//@TODO the method doesn't use polymorphism to ensure that it will
                 automatically behave according to the instance of the allocationPolicy used.
                 The use of a switch here breaks the Open/Close Principle (OCP).
                 Thus, it doesn't allow the class to be closed for changes
@@ -264,7 +264,7 @@ public class DatacenterCharacteristics {
                 */
 		switch (getAllocationPolicy()) {
                         // Assuming all PEs in all PMs have same rating.
-                        /*//TODO But it is possible to add PMs of different configurations
+                        /*//@TODO But it is possible to add PMs of different configurations
                             in a hostList attached to a DatacenterCharacteristic attribute
                             of a Datacenter*/
 			case DatacenterCharacteristics.TIME_SHARED:
@@ -292,7 +292,7 @@ public class DatacenterCharacteristics {
 	 * Gets the amount of CPU time (in seconds) that the cloudlet will spend
          * to finish processing, considering the current CPU allocation policy 
          * (currently only for TIME_SHARED) and cloudlet load. 
-         * //TODO <tt>NOTE:</tt> The
+         * //@TODO <tt>NOTE:</tt> The
 	 * CPU time for SPACE_SHARED and ADVANCE_RESERVATION are not yet implemented.
 	 * 
 	 * @param cloudletLength the length of a Cloudlet
@@ -307,7 +307,7 @@ public class DatacenterCharacteristics {
 		double cpuTime = 0.0;
 
 		if (getAllocationPolicy() == DatacenterCharacteristics.TIME_SHARED) {
-			/* //TODO It is not exacly clear what this method does.
+			/* //@TODO It is not exacly clear what this method does.
                                 I guess it computes how many time the cloudlet will
                                 spend using the CPU to finish its job, considering
                                 the CPU allocation policy. By this way,
@@ -384,7 +384,7 @@ public class DatacenterCharacteristics {
 	 * @return the cost using CPU of PM in the Datacenter
 	 * @pre $none
 	 * @post $result >= 0.0
-         * //TODO Again, it considers that all PEs of all PM have the same MIPS capacity,
+         * //@TODO Again, it considers that all PEs of all PM have the same MIPS capacity,
          * what is not ensured because it is possible to add PMs of different configurations
          * to a datacenter
 	 */
@@ -555,7 +555,7 @@ public class DatacenterCharacteristics {
 	 * 
 	 * @param <T> the generic type
 	 * @return the host list
-         * //TODO check this warning below
+         * //@TODO check this warning below
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends HostEntity> List<T> getHostList() {

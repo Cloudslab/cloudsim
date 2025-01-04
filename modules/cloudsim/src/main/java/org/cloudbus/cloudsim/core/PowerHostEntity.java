@@ -95,7 +95,7 @@ public interface PowerHostEntity extends HostEntity {
     /**
      * Gets the migratable containers.
      *
-     * @TODO: Remo Andreoli: this should be better standardised
+     * @TODO: this should be better standardised
      *
      * @return the migratable containers
      */

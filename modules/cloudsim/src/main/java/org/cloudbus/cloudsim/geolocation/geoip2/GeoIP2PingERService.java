@@ -51,7 +51,7 @@ public class GeoIP2PingERService extends BaseGeolocationService implements IGeol
     private final Cache<String, Double> ipDistanceCache = CacheBuilder.newBuilder().concurrencyLevel(1)
             .initialCapacity(INITIAL_CACHE_SIZE).maximumSize(CACHE_SIZE).build();
 
-    // TODO Extract these TSV/CSV constants elsewhere as they can be reused ...
+    // @TODO Extract these TSV/CSV constants elsewhere as they can be reused ...
     /** The separator in the tsv file. */
     private static final char TSV_SEP = '\t';
     /** The separator in the csv file. */

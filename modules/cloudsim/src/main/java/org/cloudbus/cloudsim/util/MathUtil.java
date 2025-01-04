@@ -20,7 +20,7 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
  * 
  * @author Anton Beloglazov
  * @since CloudSim Toolkit 3.0
- * //TODO Using Java 8 Stream, some methods here can be improved or removed.
+ * //@TODO Using Java 8 Stream, some methods here can be improved or removed.
  */
 public class MathUtil {
 
@@ -43,7 +43,7 @@ public class MathUtil {
 	 * 
 	 * @param list the list of numbers
 	 * @return the double[]
-         * //TODO The method {@link List#toArray()} could be used directly
+         * //@TODO The method {@link List#toArray()} could be used directly
          * instead of creating this method.
 	 */
 	public static double[] listToArray(final List<? extends Number> list) {
@@ -323,7 +323,7 @@ public class MathUtil {
 	 * 
 	 * @param n the number of weights
 	 * @return an array of tricube weigths with n elements
-         * //TODO The word "weight" is misspelled in the method name.
+         * //@TODO The word "weight" is misspelled in the method name.
 	 */
 	public static double[] getTricubeWeigts(final int n) {
 		double[] weights = new double[n];
@@ -346,7 +346,7 @@ public class MathUtil {
 	 * 
 	 * @param residuals the residuals array
 	 * @return the tricube bisquare weigths
-         * //TODO The word "weight" is misspelled in the method name.
+         * //@TODO The word "weight" is misspelled in the method name.
 	 */
 	public static double[] getTricubeBisquareWeigts(final double[] residuals) {
 		int n = residuals.length;

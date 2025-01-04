@@ -143,7 +143,7 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 	 * @pre $none
 	 * @post $none
          * 
-         * //TODO it doesn't check if the list is empty
+         * //@TODO it doesn't check if the list is empty
 	 */
 	@Override
 	public Cloudlet migrateCloudlet() {

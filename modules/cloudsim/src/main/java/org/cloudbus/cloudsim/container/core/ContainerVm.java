@@ -100,7 +100,7 @@ public class ContainerVm extends Vm {
             List<? extends Pe> peList
     ) {
         super(id, userId, mips, peList.size(), ram, bw, size, vmm, null);
-        // TODO: Remo Andreoli -> avoid null here, try to reconcile ContainerScheduler and CloudletScheduler classes
+        // @TODO: Remo Andreoli -> avoid null here, try to reconcile ContainerScheduler and CloudletScheduler classes
         setPeList(peList);
         setContainerScheduler(containerScheduler);
 
@@ -399,7 +399,7 @@ public class ContainerVm extends Vm {
     }
 
     /**
-     * TODO: Remo Andreoli: I'm not sure if this is alright, but I need it for compatibility reasons with default guestCreate()
+     * @TODO: I'm not sure if this is alright, but I need it for compatibility reasons with default guestCreate()
      */
     public long getStorage() {
         return getSize();

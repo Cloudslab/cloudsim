@@ -41,7 +41,7 @@ public class NetworkHost extends Host implements NetworkedEntity {
 	private Switch sw;
 
 	/** cloudlet -> nic
-	 * @TODO: Remo Andreoli: Ideally the nic shouldn't skip the guest entity; to be fixed
+	 * @TODO: Ideally the nic shouldn't skip the guest entity; to be fixed
 	 */
 	private Map<Integer, NetworkInterfaceCard> nics;
 	private Map<Integer, List<NetworkPacket>> sendPktExternally;

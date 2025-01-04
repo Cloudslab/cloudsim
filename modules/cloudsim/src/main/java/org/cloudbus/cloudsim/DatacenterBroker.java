@@ -123,7 +123,7 @@ public class DatacenterBroker extends SimEntity {
 	 * @pre list !=null
 	 * @post $none
          * 
-         * //TODO The name of the method is confused with the {@link #submitCloudlets()},
+         * //@TODO The name of the method is confused with the {@link #submitCloudlets()},
          * that in fact submit cloudlets to VMs. The term "submit" is being used
          * ambiguously. The method {@link #submitCloudlets()} would be named "sendCloudletsToVMs"
          * The method {@link #submitGuestList(List)} may have
@@ -187,7 +187,7 @@ public class DatacenterBroker extends SimEntity {
 		getDatacenterCharacteristicsList().put(characteristics.getId(), characteristics);
 
 		if (getDatacenterCharacteristicsList().size() == getDatacenterIdsList().size()) {
-			//TODO: Remo Andreoli: should I need this?
+			// @TODO: should I need this?
 			// getDatacenterCharacteristicsList().clear();
 			setDatacenterRequestedIdsList(new ArrayList<>());
 			createVmsInDatacenter(getDatacenterIdsList().getFirst());
@@ -290,7 +290,7 @@ public class DatacenterBroker extends SimEntity {
 				// all the cloudlets sent finished. It means that some bount
 				// cloudlet is waiting its VM be created
 				clearDatacenters();
-				createVmsInDatacenter(0); // TODO: Remo Andreoli: why datacentedId = 0 ?? should iterate over all the datacenters
+				createVmsInDatacenter(0); // @TODO: why datacentedId = 0 ?? should iterate over all the datacenters
 			}
 
 		}
@@ -305,7 +305,7 @@ public class DatacenterBroker extends SimEntity {
 	 * @param ev a SimEvent object
 	 * @pre ev != null
 	 * @post $none
-         * //TODO to ensure the method will be overridden, it should be defined
+         * //@TODO to ensure the method will be overridden, it should be defined
          * as abstract in a super class from where new brokers have to be extended.
 	 */
 	protected void processOtherEvent(SimEvent ev) {

@@ -206,7 +206,7 @@ public class HostDynamicWorkload extends Host {
 	 * Get current utilization of CPU in MIPS.
 	 * 
 	 * @return current utilization of CPU in MIPS
-         * //TODO This method only calls the  {@link #getUtilizationMips()}.
+         * //@TODO This method only calls the  {@link #getUtilizationMips()}.
          * getUtilizationMips may be deprecated and its code copied here.
 	 */
 	public double getUtilizationOfCpuMips() {

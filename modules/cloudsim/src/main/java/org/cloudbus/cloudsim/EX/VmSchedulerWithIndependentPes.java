@@ -16,7 +16,7 @@ import java.util.Map;
  * 
  * <br>
  * <br>
- * TODO - ideally this class should extend {@link VmScheduler}, but this way, it
+ * @TODO - ideally this class should extend {@link VmScheduler}, but this way, it
  * would "abandon" some of its member variables and thus will subtype
  * improperly. Consider introducing a new interface IVmScheduler common to both
  * {@link VmScheduler} and this class.

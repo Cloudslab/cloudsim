@@ -88,7 +88,7 @@ public abstract class PeProvisioner {
 	 * @return $true if the set of virtual PEs could be allocated; $false otherwise
 	 * @pre $none
 	 * @post $none
-	 * //TODO In this case, each PE can have a different capacity, what
+	 * //@TODO In this case, each PE can have a different capacity, what
 	 * in many places this situation is not considered, such as
 	 * in the {@link Vm}, {@link Pe} and {@link DatacenterCharacteristics}
 	 * classes.

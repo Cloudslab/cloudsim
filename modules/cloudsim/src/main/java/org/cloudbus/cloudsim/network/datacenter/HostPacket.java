@@ -24,7 +24,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author Saurabh Kumar Garg
  * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
- * //TODO Attributes should be private
+ * //@TODO Attributes should be private
  */
 public class HostPacket {
 	/**

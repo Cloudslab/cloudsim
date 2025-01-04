@@ -306,7 +306,7 @@ public abstract class CloudletScheduler {
 	 * @return $true if there is at least one finished cloudlet; $false otherwise
 	 * @pre $none
 	 * @post $none
-         * //TODO the method name would be isThereFinishedCloudlets to be clearer
+         * //@TODO the method name would be isThereFinishedCloudlets to be clearer
 	 */
 	public boolean isFinishedCloudlets() { return !getCloudletFinishedList().isEmpty(); }
 
@@ -342,7 +342,7 @@ public abstract class CloudletScheduler {
 	 * @pre $none
 	 * @post $none
 	 *
-	 * @TODO: Remo Andreoli: No clue why it's removing the first element
+	 * @TODO: No clue why it's removing the first element
 	 */
 	public Cloudlet migrateCloudlet() {
 		Cloudlet cl = getCloudletExecList().removeFirst();
@@ -409,7 +409,7 @@ public abstract class CloudletScheduler {
 	 * @param rcl the rcl
 	 * @param mipsShare the mips share
 	 * @return the total current mips
-         * //TODO In fact, this method is returning different data depending
+         * //@TODO In fact, this method is returning different data depending
          * of the subclass. It is expected that the way the method use to compute
          * the resulting value can be different in every subclass,
          * but is not supposed that each subclass returns a complete different 

@@ -114,7 +114,7 @@ public class Datacenter extends SimEntity {
 	 * @pre $none
 	 * @post $none
          * 
-         * //TODO This method doesn't appear to be used
+         * //@TODO This method doesn't appear to be used
 	 */
 	protected void registerOtherEntity() {
 		// empty. This should be override by a child class
@@ -479,7 +479,7 @@ public class Datacenter extends SimEntity {
 		getVmAllocationPolicy().deallocateHostForGuest(vm);
 		host.removeMigratingInGuest(vm);
 
-		// @TODO: Remo Andreoli: what happens to the vmId / containerId of the cloudlets hosted on the Vm?
+		// @TODO: what happens to the vmId / containerId of the cloudlets hosted on the Vm?
 		// create VM in dest host
 		boolean result = getVmAllocationPolicy().allocateHostForGuest(vm, host);
 		if (!result) {

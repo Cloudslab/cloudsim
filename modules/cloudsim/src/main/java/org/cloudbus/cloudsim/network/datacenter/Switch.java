@@ -240,7 +240,7 @@ public class Switch extends SimEntity {
 				pktsToUplinkSwitches.computeIfAbsent(sw.getId(), k -> new ArrayList<>()).add(npkt);
 			}
 		}
-		// @TODO: Remo Andreoli: confusing, this packet is going down, not up!!!
+		// @TODO: confusing, this packet is going down, not up!!!
 		else if (level == SwitchLevel.ROOT_LEVEL) { // packet received from aggregate router
 			// get id of edge switch
 			int edgeSwitchId = dc.VmToSwitchid.get(recvVMid);
@@ -266,7 +266,7 @@ public class Switch extends SimEntity {
         
 	/**
 	 * Register a host that is connected to the switch.
-	 * Resource characteristics answer (@TODO: Remo Andreoli: not in use)
+	 * Resource characteristics answer (@TODO: not in use)
 	 * @param ev
 	 *
 	 */
@@ -365,7 +365,7 @@ public class Switch extends SimEntity {
 		}
 	}
 
-	// TODO: Remo Andreoli: These are never used, remove?
+	// @TODO: These are never used, remove?
         /**
          * Gets the host of a given VM.
          * @param vmid The id of the VM

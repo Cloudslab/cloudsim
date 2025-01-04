@@ -20,7 +20,7 @@ import java.util.logging.Level;
  */
 public class GeoIP2IPGenerator extends BaseIPGenerator implements IPGenerator {
 
-    // TODO Extract these CSV constants elsewhere as they can be reused ...
+    // @TODO Extract these CSV constants elsewhere as they can be reused ...
     /** The separator in the csv file. */
     private static final char CSV_SEP = ',';
     /** The quote symbol in the csv and tsv file. */

@@ -27,7 +27,7 @@ import org.cloudbus.cloudsim.core.*;
  * method of the superclass, it will not be used, as processing of cloudlets are handled by the
  * CloudletScheduler and processing of VirtualMachines are handled by the VmAllocationPolicy.
  * 
- * //TODO If an AllocPolicy is not being used, why it is being created. Perhaps
+ * //@TODO If an AllocPolicy is not being used, why it is being created. Perhaps
  * a better class hierarchy should be created, introducing some abstract class
  * or interface.
  * 

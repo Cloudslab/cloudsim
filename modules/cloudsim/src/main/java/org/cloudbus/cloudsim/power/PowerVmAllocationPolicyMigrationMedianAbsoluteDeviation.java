@@ -144,7 +144,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends
 	 * Sets the safety parameter.
 	 * 
 	 * @param safetyParameter the new safety parameter
-         * //TODO It should raise an InvalidArgumentException instead of calling System.exit(0)
+         * //@TODO It should raise an InvalidArgumentException instead of calling System.exit(0)
 	 */
 	protected void setSafetyParameter(double safetyParameter) {
 		if (safetyParameter < 0) {

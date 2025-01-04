@@ -84,7 +84,7 @@ public class PowerSelectionPolicyMaximumCorrelation implements SelectionPolicy<P
 	 */
 	protected double[][] getUtilizationMatrix(final List<PowerGuestEntity> vmList) {
 		int n = vmList.size();
-                /*//TODO It gets the min size of the history among all VMs considering
+                /*//@TODO It gets the min size of the history among all VMs considering
                 that different VMs can have different history sizes.
                 However, the j loop is not using the m variable
                 but the size of the vm list. If a VM list has 

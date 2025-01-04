@@ -199,7 +199,7 @@ public abstract class VmScheduler {
 	 * Returns PE capacity in MIPS.
 	 * 
 	 * @return mips
-         * //TODO It considers that all PEs have the same capacity,
+         * //@TODO It considers that all PEs have the same capacity,
          * what has been shown doesn't be assured. The peList
          * received by the VmScheduler can be heterogeneous PEs.
 	 */

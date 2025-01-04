@@ -31,7 +31,7 @@ public interface HostEntity extends CoreAttributes {
      *         {@link Double#MAX_VALUE} if there is no future events expected in this host
      * @pre currentTime >= 0.0
      * @post $none
-     * //TODO there is an inconsistency between the return value of this method
+     * //@TODO there is an inconsistency between the return value of this method
      * and the individual call of {@link GuestEntity#updateCloudletsProcessing(double, List) ,
      * and consequently the {@link CloudletScheduler#updateCloudletsProcessing(double, List) }.
      * The current method returns {@link Double#MAX_VALUE}  while the other ones
@@ -96,7 +96,7 @@ public interface HostEntity extends CoreAttributes {
             getGuestList().remove(guest);
             //Log.printlnConcat(getClassName()," # ",getId()," guestDestroy: ", guest.getClassName()," #", guest.getId(), " is deleted from the list");
 
-            /*while(getGuestList().contains(guest)){ // TODO: Remo Andreoli: Do I really need this?
+            /*while(getGuestList().contains(guest)){ // @TODO: Do I really need this?
                 Log.printlnConcat(guest.getClassName(), " #", guest.getId(), " is still not deallocated yet; Polling...");
             }*/
             guest.setHost(null);
@@ -239,7 +239,7 @@ public interface HostEntity extends CoreAttributes {
 
     /**
      * Gets the number of guest entities hosted by this host entity.
-     * TODO: Remo Andreoli: Maybe "return getGuestList().size()" is a better default
+     * @TODO: Maybe "return getGuestList().size()" is a better default
      * @return the number of guest entities
      */
     default int getNumberOfGuests() {

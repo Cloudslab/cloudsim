@@ -23,7 +23,7 @@ import org.cloudbus.cloudsim.Cloudlet;
  * @since CloudSim Toolkit 7.o
  *
  * 
- * //TODO The attributes have to be defined as private.
+ * //@TODO The attributes have to be defined as private.
  */
 public class AppCloudlet {
 

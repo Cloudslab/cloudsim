@@ -31,7 +31,7 @@ import org.cloudbus.cloudsim.core.GuestEntity;
  * @since CloudSim Toolkit 3.0
  */
 public class SelectionPolicyMinimumMigrationTime<T extends GuestEntity> implements SelectionPolicy<T> {
-	// @TODO: Remo Andreoli: how does it compute the MMT???
+	// @TODO: how does it compute the MMT???
 	@Override
 	public T select(List<T> candidates, Object obj, Set<T> excludedCandidates) {
 		if (candidates.isEmpty()) {

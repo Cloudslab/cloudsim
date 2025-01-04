@@ -19,7 +19,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author Anthony Sulistio
  * @since CloudSim Toolkit 1.0
  * 
- * //TODO Some attributes of this class may be duplicated from the {@link File} class,
+ * //@TODO Some attributes of this class may be duplicated from the {@link File} class,
  * such as name (logical file name), that is clearly related to the file.
  * There would be a relation between File and FileAttribute. There is a lot of duplicated
  * methods to, such as {@link #setMasterCopy(boolean)} or {@link #isReadOnly()}

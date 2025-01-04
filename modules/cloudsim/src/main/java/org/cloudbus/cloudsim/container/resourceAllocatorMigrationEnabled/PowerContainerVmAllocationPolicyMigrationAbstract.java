@@ -260,7 +260,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
 
     /**
      * Find host for vm.
-     * TODO: Remo Andreoli: this is supposed to be an Override from PowerVmAllocationPolicyAbstract, fix
+     * @TODO: this is supposed to be an Override from PowerVmAllocationPolicyAbstract, fix
      * @param vm the vm
      * @return the power host
      */
@@ -508,7 +508,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
      *
      * @param host   the host
      * @param metric the metric
-     * TODO: Remo Andreoli: I had to change this (ContainerHostDynamicWorkload -> PowerHost); I don't know if it's a problem
+     * @TODO: I had to change this (ContainerHostDynamicWorkload -> PowerHost); I don't know if it's a problem
      */
     protected void addHistoryEntry(PowerHost host, double metric) {
         int hostId = host.getId();

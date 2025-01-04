@@ -95,7 +95,7 @@ public class Cloudlet {
     /**
      * The output file size of this Cloudlet after execution (unit: in byte).
      * <p>
-     * //TODO See
+     * //@TODO See
      * <a href="https://groups.google.com/forum/#!topic/cloudsim/MyZ7OnrXuuI">this
      * discussion</a>
      */
@@ -131,7 +131,7 @@ public class Cloudlet {
     /**
      * The ID of a reservation made for this cloudlet.
      * <p>
-     * //TODO This attribute doesn't appear to be used
+     * //@TODO This attribute doesn't appear to be used
      */
     private int reservationId = -1;
 
@@ -182,7 +182,7 @@ public class Cloudlet {
      * The id of the container is planned to execute the cloudlet.
      * It may be -1, if containers are not in use
      */
-    // TODO: Remo Andreoli: to be deprecated in favor of guestId
+    // @TODO: to be deprecated in favor of guestId
     protected int containerId = -1;
     
     /**
@@ -580,7 +580,7 @@ public class Cloudlet {
      * @pre netServiceLevel >= 0
      * @post $none
      * <p>
-     * //TODO The name of the setter is inconsistent with the attribute name,
+     * //@TODO The name of the setter is inconsistent with the attribute name,
      * what might be misinterpreted by other developers.
      */
     public boolean setNetServiceLevel(final int netServiceLevel) {
@@ -600,7 +600,7 @@ public class Cloudlet {
      * @return the network service level
      * @pre $none
      * @post $none
-     * //TODO The name of the getter is inconsistent with the attribute name,
+     * //@TODO The name of the getter is inconsistent with the attribute name,
      * what might be misinterpreted by other developers.
      */
     public int getNetServiceLevel() {

@@ -30,8 +30,8 @@ import org.cloudbus.cloudsim.core.CloudSim;
  * @author Saurabh Kumar Garg
  * @author Remo Andreoli
  * @since CloudSim Toolkit 1.0
- * //TODO Attributes should be private
- * //TODO The different cloudlet classes should have a class hierarchy, by means
+ * //@TODO Attributes should be private
+ * //@TODO The different cloudlet classes should have a class hierarchy, by means
  * of a super class and/or interface.
  */
 public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloudlet> {
@@ -141,21 +141,21 @@ public class NetworkCloudlet extends Cloudlet implements Comparable<NetworkCloud
 	public void addExecutionStage(long execLength) {
 		stages.add(
 				new TaskStage(TaskStage.TaskStageStatus.EXECUTION, execLength, stages.size(), this));
-		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+execTime));
+		//@TODO: setCloudletLength((long) (getCloudletLength()+execTime));
 	}
 
 	public void addSendStage(long data, NetworkCloudlet receiverCl) {
 		stages.add(
 				new TaskStage(TaskStage.TaskStageStatus.WAIT_SEND, data, stages.size(), receiverCl));
 
-		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+ data*transmissionTime));
+		//@TODO: setCloudletLength((long) (getCloudletLength()+ data*transmissionTime));
 	}
 
 	public void addRecvStage(NetworkCloudlet senderCl) {
 		stages.add(
 				new TaskStage(TaskStage.TaskStageStatus.WAIT_RECV, 0, stages.size(), senderCl));
 
-		//@TODO: Remo Andreoli: setCloudletLength((long) (getCloudletLength()+ expectedWaitTime));
+		//@TODO: setCloudletLength((long) (getCloudletLength()+ expectedWaitTime));
 	}
 
 	/** Provide statistics on the execution times of each stage */
