@@ -41,5 +41,4 @@ public class VmAllocationPolicySimpler extends VmAllocationPolicy {
 		}
 		return null;
 	}
-
 }

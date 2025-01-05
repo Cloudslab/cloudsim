@@ -7,8 +7,8 @@
 
 package org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled;
 import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.VirtualEntity;
 import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy;
 
@@ -48,7 +48,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThreshold extends Po
     protected boolean isHostOverUtilized(PowerHost host) {
         addHistoryEntry(host, getUtilizationThreshold());
         double totalRequestedMips = 0;
-        for (ContainerVm vm : host.<ContainerVm>getGuestList()) {
+        for (VirtualEntity vm : host.<VirtualEntity>getGuestList()) {
             totalRequestedMips += vm.getCurrentRequestedTotalMips();
         }
         double utilization = totalRequestedMips / host.getTotalMips();
