@@ -43,31 +43,25 @@ public class CloudletSchedulerSpaceShared extends CloudletScheduler {
 		usedPes = 0;
 	}
 
+	// wake up one cloudlet from the waiting list
+	@Override
 	protected void updateWaitingCloudlets(double currentTime, Object info) {
-		// for each finished cloudlet, add a new one from the waiting list
-		int finished = cloudletJustFinishedList.size();
+		if(getCloudletWaitingList().isEmpty()) {
+			return;
+		}
 
-		if (!getCloudletWaitingList().isEmpty()) {
-			List<Cloudlet> toUnpause = new ArrayList<>();
-			int i = 0;
-			int cnt = 0;
+		int i = 0;
+		while (i < getCloudletWaitingList().size()) {
+			Cloudlet cl = getCloudletWaitingList().get(i);
+			if ((getCurrentPEs() - usedPes) >= cl.getNumberOfPes()) {
+				getCloudletWaitingList().remove(cl);
 
-			while (i < getCloudletWaitingList().size() && cnt <= finished) {
-				Cloudlet cl = getCloudletWaitingList().get(i);
-				if ((getCurrentPEs() - usedPes) >= cl.getNumberOfPes()) {
-					toUnpause.add(cl);
-					cnt++;
-				}
-				i++;
-			}
-
-			for (Cloudlet cl : toUnpause) {
 				cl.updateStatus(Cloudlet.CloudletStatus.INEXEC);
 				getCloudletExecList().add(cl);
 				usedPes += cl.getNumberOfPes();
+				break;
 			}
-
-			getCloudletWaitingList().removeAll(toUnpause);
+			i++;
 		}
 	}
 
