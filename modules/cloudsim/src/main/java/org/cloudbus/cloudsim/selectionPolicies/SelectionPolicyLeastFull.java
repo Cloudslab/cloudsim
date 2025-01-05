@@ -19,13 +19,13 @@ import java.util.Set;
  *
  * @since CloudSim toolkit 7.0
  */
-public class SelectionPolicyLeastFull implements SelectionPolicy<HostEntity> {
+public class SelectionPolicyLeastFull<T extends HostEntity> implements SelectionPolicy<T> {
     @Override
-    public HostEntity select(List<HostEntity> candidates, Object obj, Set<HostEntity> excludedCandidates) {
+    public T select(List<T> candidates, Object obj, Set<T> excludedCandidates) {
         double maxAvailable = Double.MIN_VALUE;
-        HostEntity selectedHost = null;
+        T selectedHost = null;
 
-        for (HostEntity hostCandidate : candidates) {
+        for (T hostCandidate : candidates) {
             if (excludedCandidates.contains(hostCandidate)) {
                 continue;
             }

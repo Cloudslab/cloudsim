@@ -20,7 +20,7 @@ import java.util.*;
  * @since CloudSim toolkit 7.0
  */
 
-public class SelectionPolicyWorstFit implements SelectionPolicy<HostEntity> {
+public class SelectionPolicyWorstFit<T extends HostEntity> implements SelectionPolicy<T> {
     /** The map between each VM and the number of Pes used.
      * The map key is a VM UID and the value is the number of used Pes for that VM. */
     private Map<String, Integer> usedPes;
@@ -29,11 +29,11 @@ public class SelectionPolicyWorstFit implements SelectionPolicy<HostEntity> {
     private List<Integer> freePes;
 
     @Override
-    public HostEntity select(List<HostEntity> candidates, Object obj, Set<HostEntity> excludedCandidates) {
+    public T select(List<T> candidates, Object obj, Set<T> excludedCandidates) {
         int moreFree = Integer.MIN_VALUE;
-        HostEntity selectedHost = null;
+        T selectedHost = null;
 
-        for (HostEntity hostCandidate : candidates) {
+        for (T hostCandidate : candidates) {
             if (excludedCandidates.contains(hostCandidate)) {
                 continue;
             }
