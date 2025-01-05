@@ -29,6 +29,9 @@ import java.util.List;
  * <p/>
  * Created by sareh on 9/07/15.
  * Modified by Remo Andreoli (Feb 2024)
+ *
+ * @NOTE: This class should not be used, since its functionalities are integrated in Vm.
+ *        The only difference is that ContainerVm cannot run cloudlets.
  */
 public class ContainerVm extends Vm {
 
@@ -50,16 +53,6 @@ public class ContainerVm extends Vm {
      * The bw provisioner.
      */
     private BwProvisioner containerBwProvisioner;
-
-    /**
-     * The vm list.
-     */
-    private final List<? extends Container> containerList = new ArrayList<>();
-
-    /**
-     * The pe list.
-     */
-    private List<? extends Pe> peList;
 
     /**
      * Tells whether this machine is working properly or has failed.
@@ -210,23 +203,15 @@ public class ContainerVm extends Vm {
      */
     @Override
     public long getCurrentRequestedBw() {
-
         if (isBeingInstantiated()) {
             return getBw();
-        } else {
-
-            long requestedBwTemp = 0;
-
-            for (GuestEntity container : getGuestList()) {
-                requestedBwTemp += container.getCurrentRequestedBw();
-
-            }
-
-            //Log.printLine("Vm: get Current requested Mips" + requestedBwTemp);
-            return requestedBwTemp;
-
-
         }
+        long requestedBwTemp = 0;
+        for (GuestEntity container : getGuestList()) {
+            requestedBwTemp += container.getCurrentRequestedBw();
+        }
+        //Log.printLine("Vm: get Current requested Mips" + requestedBwTemp);
+        return requestedBwTemp;
     }
 
     /**
@@ -238,19 +223,13 @@ public class ContainerVm extends Vm {
     public int getCurrentRequestedRam() {
         if (isBeingInstantiated()) {
             return getRam();
-        } else {
-
-            int requestedRamTemp = 0;
-
-            for (GuestEntity container : getGuestList()) {
-                requestedRamTemp += container.getCurrentRequestedRam();
-
-            }
-
-            //Log.printLine("Vm: get Current requested Mips" + requestedRamTemp);
-            return requestedRamTemp;
-
         }
+        int requestedRamTemp = 0;
+        for (GuestEntity container : getGuestList()) {
+            requestedRamTemp += container.getCurrentRequestedRam();
+        }
+        //Log.printLine("Vm: get Current requested Mips" + requestedRamTemp);
+        return requestedRamTemp;
     }
 
     /**
@@ -261,12 +240,10 @@ public class ContainerVm extends Vm {
      */
     @Override
     public double getTotalUtilizationOfCpu(double time) {
-        float TotalUtilizationOfCpu = 0;
-
+        double TotalUtilizationOfCpu = 0;
         for (GuestEntity container : getGuestList()) {
             TotalUtilizationOfCpu += container.getTotalUtilizationOfCpu(time);
         }
-
         //Log.printLine("Vm: get Current requested Mips" + TotalUtilizationOfCpu);
         return TotalUtilizationOfCpu;
     }
@@ -304,16 +281,6 @@ public class ContainerVm extends Vm {
     }
 
     /**
-     * Gets the free pes number.
-     *
-     * @return the free pes number
-     */
-    public int getNumberOfFreePes() {
-//        Log.printLine("ContainerVm: get the free Pes......" + PeList.getNumberOfFreePes(getPeList()));
-        return PeList.getNumberOfFreePes(getPeList());
-    }
-
-    /**
      * Gets the total mips.
      *
      * @return the total mips
@@ -321,11 +288,6 @@ public class ContainerVm extends Vm {
     public double getTotalMips() {
 //        Log.printLine("ContainerVm: get the total mips......" + PeList.getTotalMips(getPeList()));
         return PeList.getTotalMips(getPeList());
-    }
-
-    @Override
-    public Datacenter getDatacenter() {
-        return getHost().getDatacenter();
     }
 
     @Override
@@ -337,7 +299,7 @@ public class ContainerVm extends Vm {
      * Returns the MIPS share of each Pe that is allocated to a given container.
      *
      * @param guest the container
-     * @return an array containing the amount of MIPS of each pe that is available to the container
+     * @return a list containing the amount of MIPS of each pe that is available to the container
      * @pre $none
      * @post $none
      */
@@ -399,58 +361,12 @@ public class ContainerVm extends Vm {
     }
 
     /**
-     * @TODO: I'm not sure if this is alright, but I need it for compatibility reasons with default guestCreate()
-     */
-    public long getStorage() {
-        return getSize();
-    }
-    public void setStorage(long storage) { setSize(storage); }
-    /**
      * Gets the VM scheduler.
      *
      * @return the VM scheduler
      */
     public VmScheduler getContainerScheduler() {
         return containerScheduler;
-    }
-
-
-    /**
-     * Checks if is failed.
-     *
-     * @return true, if is failed
-     */
-    public boolean isFailed() {
-        return failed;
-    }
-
-    /**
-     * Sets the PEs of this machine to a FAILED status. NOTE: <tt>resName</tt> is used for debugging
-     * purposes, which is <b>ON</b> by default. Use {@link #setFailed(boolean)} if you do not want
-     * this information.
-     *
-     * @param resName the name of the resource
-     * @param failed  the failed
-     * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
-     */
-    public boolean setFailed(String resName, boolean failed) {
-        // all the PEs are failed (or recovered, depending on fail)
-        this.failed = failed;
-        PeList.setStatusFailed(getPeList(), resName, getId(), failed);
-        return true;
-    }
-
-    /**
-     * Sets the PEs of this machine to a FAILED status.
-     *
-     * @param failed the failed
-     * @return <tt>true</tt> if successful, <tt>false</tt> otherwise
-     */
-    public boolean setFailed(boolean failed) {
-        // all the PEs are failed (or recovered, depending on fail)
-        this.failed = failed;
-        PeList.setStatusFailed(getPeList(), failed);
-        return true;
     }
 
     /**
