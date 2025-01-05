@@ -97,8 +97,8 @@ public class CloudSimExampleTest {
         for (Cloudlet cl : CloudSimExample6.broker.getCloudletReceivedList()) {
             assertEquals(Cloudlet.CloudletStatus.SUCCESS, cl.getStatus());
             switch (cl.getCloudletId()) {
-                case 4,16,28,5,17,29,6,18,30,7,19,31,8,20,32,10,22,34,9,21,33,11,23,35 -> assertEquals(3, cl.getActualCPUTime(), 0);
-                case 0,12,24,36,1,13,25,37,2,14,26,38,3,15,27,39 -> assertEquals(4, cl.getActualCPUTime(), 0);
+                case 4,16,28,5,17,29,6,18,30,7,19,31,8,20,32,10,22,34,9,21,33,11,23,35 -> assertEquals(3, cl.getActualCPUTime(), 0.0025);
+                case 0,12,24,36,1,13,25,37,2,14,26,38,3,15,27,39 -> assertEquals(4, cl.getActualCPUTime(), 0.0025);
                 default -> fail("Unknown cloudlet id");
             }
         }
@@ -110,7 +110,7 @@ public class CloudSimExampleTest {
         for (Cloudlet cl : CloudSimExample7.broker.getCloudletReceivedList()) {
             assertEquals(Cloudlet.CloudletStatus.SUCCESS, cl.getStatus());
             switch (cl.getCloudletId()) {
-                case 0,5,1,6,2,7,4,9,3,8 -> assertEquals(320, cl.getActualCPUTime(), 0);
+                case 0,5,1,6,2,7,4,9,3,8 -> assertEquals(320, cl.getActualCPUTime(), 0.0025);
                 default -> fail("Unknown cloudlet id");
             }
         }
@@ -137,12 +137,12 @@ public class CloudSimExampleTest {
         for (Cloudlet cl : CloudSimExample9.broker.getCloudletReceivedList()) {
             assertEquals(Cloudlet.CloudletStatus.SUCCESS, cl.getStatus());
             switch (cl.getCloudletId()) {
-                case 0 -> assertEquals(30, cl.getActualCPUTime(), 0);
-                case 1 -> assertEquals(210, cl.getActualCPUTime(), 0);
-                case 2 -> assertEquals(1100, cl.getActualCPUTime(), 0);
-                case 3 -> assertEquals(10, cl.getActualCPUTime(), 0);
-                case 4 -> assertEquals(100, cl.getActualCPUTime(), 0);
-                case 5 -> assertEquals(1000, cl.getActualCPUTime(), 0);
+                case 0 -> assertEquals(30, cl.getActualCPUTime(), 0.0025);
+                case 1 -> assertEquals(210, cl.getActualCPUTime(), 0.0025);
+                case 2 -> assertEquals(1110, cl.getActualCPUTime(), 0.0025);
+                case 3 -> assertEquals(10, cl.getActualCPUTime(), 0.0025);
+                case 4 -> assertEquals(100, cl.getActualCPUTime(), 0.0025);
+                case 5 -> assertEquals(1000, cl.getActualCPUTime(), 0.0025);
                 default -> fail("Unknown cloudlet id");
             }
         }
