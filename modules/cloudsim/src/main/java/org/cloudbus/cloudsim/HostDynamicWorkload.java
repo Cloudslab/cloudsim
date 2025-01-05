@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
+import org.cloudbus.cloudsim.core.VirtualEntity;
 import org.cloudbus.cloudsim.lists.PeList;
 import org.cloudbus.cloudsim.provisioners.BwProvisioner;
 import org.cloudbus.cloudsim.provisioners.RamProvisioner;
@@ -132,21 +133,48 @@ public class HostDynamicWorkload extends Host {
 	}
 
 	/**
-	 * Gets the list of completed vms.
-	 * 
+	 * Gets the completed vms.
+	 *
 	 * @return the completed vms
 	 */
 	public List<GuestEntity> getCompletedVms() {
 		List<GuestEntity> vmsToRemove = new ArrayList<>();
-		for (GuestEntity vm : getGuestList()) {
-			if (vm.isInMigration()) {
+		for (GuestEntity guest : getGuestList()) {
+			if (guest.isInMigration()) {
 				continue;
 			}
-			if (vm.getCurrentRequestedTotalMips() == 0) {
+			// If vm is in waiting state then don't kill it yet !!!!!!!!!
+			if (guest instanceof VirtualEntity vm && vm.isInWaiting()) {
+				continue;
+			}
+
+			if (guest.getCurrentRequestedTotalMips() == 0) {
+				vmsToRemove.add(guest);
+			}
+
+			if (guest instanceof VirtualEntity vm && vm.getNumberOfGuests()==0) {
 				vmsToRemove.add(vm);
 			}
 		}
 		return vmsToRemove;
+	}
+
+	/**
+	 * Gets the completed vms.
+	 *
+	 * @return the completed vms
+	 */
+	public int getNumberOfGuests() {
+		int numberofContainers = 0;
+
+		for (GuestEntity guest : getGuestList()) {
+			if (guest instanceof VirtualEntity vm) {
+				numberofContainers += vm.getNumberOfGuests();
+				Log.print("The number of containers in VM# " + vm.getId() + "is: " + vm.getNumberOfGuests());
+				Log.println();
+			}
+		}
+		return numberofContainers;
 	}
 
 	/**
@@ -284,5 +312,4 @@ public class HostDynamicWorkload extends Host {
 		}
 		getStateHistory().add(newState);
 	}
-
 }

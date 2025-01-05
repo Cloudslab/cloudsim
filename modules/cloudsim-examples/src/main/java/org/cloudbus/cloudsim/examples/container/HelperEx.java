@@ -550,7 +550,7 @@ public class HelperEx {
         for (Host host : hosts) {
             boolean previousIsActive = true;
             double lastTimeSwitchedOn = 0;
-            for (HostStateHistoryEntry entry : ((ContainerHostDynamicWorkload) host).getStateHistory()) {
+            for (HostStateHistoryEntry entry : ((HostDynamicWorkload) host).getStateHistory()) {
                 if (previousIsActive && !entry.isActive()) {
                     timeBeforeShutdown.add(entry.getTime() - lastTimeSwitchedOn);
                 }
@@ -595,8 +595,8 @@ public class HelperEx {
         double slaViolationTimePerHost = 0;
         double totalTime = 0;
 
-        for (Host _host : hosts) {
-            ContainerHostDynamicWorkload host = (ContainerHostDynamicWorkload) _host;
+        for (HostEntity _host : hosts) {
+            HostDynamicWorkload host = (HostDynamicWorkload) _host;
             double previousTime = -1;
             double previousAllocated = 0;
             double previousRequested = 0;
@@ -631,8 +631,8 @@ public class HelperEx {
         double slaViolationTimePerHost = 0;
         double totalTime = 0;
 
-        for (Host _host : hosts) {
-            ContainerHostDynamicWorkload host = (ContainerHostDynamicWorkload) _host;
+        for (HostEntity _host : hosts) {
+            HostDynamicWorkload host = (HostDynamicWorkload) _host;
             double previousTime = -1;
             double previousAllocated = 0;
             double previousRequested = 0;
