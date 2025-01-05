@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The RunnerAbs Class is the modified version of {@link org.cloudbus.cloudsim.examples.power.RunnerAbstract}
@@ -252,12 +253,10 @@ public abstract class RunnerAbs {
 
     protected VmAllocationPolicy getContainerAllocationPolicy(String containerAllocationPolicyName) {
         VmAllocationPolicy containerAllocationPolicy;
-        if (containerAllocationPolicyName == "Simple") {
-
+        if (Objects.equals(containerAllocationPolicyName, "Simple")) {
             containerAllocationPolicy = new VmAllocationPolicySimple(vmList); // DVFS policy without VM migrations
         } else {
-
-            SelectionPolicy selectionPolicy = getContainerPlacementPolicy(containerAllocationPolicyName);
+            SelectionPolicy<HostEntity> selectionPolicy = getContainerPlacementPolicy(containerAllocationPolicyName);
             containerAllocationPolicy = new VmAllocationWithSelectionPolicy(vmList, selectionPolicy); // DVFS policy without VM migrations
         }
 
@@ -265,14 +264,14 @@ public abstract class RunnerAbs {
 
     }
 
-    protected SelectionPolicy getContainerPlacementPolicy(String name) {
-        SelectionPolicy selectionPolicy;
+    protected SelectionPolicy<HostEntity> getContainerPlacementPolicy(String name) {
+        SelectionPolicy<HostEntity> selectionPolicy;
         switch (name) {
             case "LeastFull":
-                selectionPolicy = new SelectionPolicyLeastFull();
+                selectionPolicy = new SelectionPolicyLeastFull<>();
                 break;
             case "MostFull":
-                selectionPolicy = new SelectionPolicyMostFull();
+                selectionPolicy = new SelectionPolicyMostFull<>();
                 break;
 
             case "FirstFit":
@@ -290,34 +289,19 @@ public abstract class RunnerAbs {
     }
 
     protected SelectionPolicy<HostEntity> getHostSelectionPolicy(String hostSelectionPolicyName) {
-        Object hostSelectionPolicy = null;
-        if (hostSelectionPolicyName == "FirstFit") {
-
+        SelectionPolicy<HostEntity> hostSelectionPolicy = null;
+        if (Objects.equals(hostSelectionPolicyName, "FirstFit")) {
             hostSelectionPolicy = new SelectionPolicyFirstFit<>();
-
-
-        } else if (hostSelectionPolicyName == "LeastFull") {
-
-            hostSelectionPolicy = new SelectionPolicyLeastFull();
-
-
-        } else if (hostSelectionPolicyName == "MostFull") {
-
-            hostSelectionPolicy = new SelectionPolicyMostFull();
-
-
+        } else if (Objects.equals(hostSelectionPolicyName, "LeastFull")) {
+            hostSelectionPolicy = new SelectionPolicyLeastFull<>();
+        } else if (Objects.equals(hostSelectionPolicyName, "MostFull")) {
+            hostSelectionPolicy = new SelectionPolicyMostFull<>();
         }
 //        else if (hostSelectionPolicyName == "MinCor") {
-
     //            hostSelectionPolicy = new PowerSelectionPolicyMinimumCorrelation();
-
-
 //        }
-    else if (hostSelectionPolicyName == "RandomSelection") {
-
-            hostSelectionPolicy = new SelectionPolicyRandomSelection();
-
-
+    else if (Objects.equals(hostSelectionPolicyName, "RandomSelection")) {
+            hostSelectionPolicy = new SelectionPolicyRandomSelection<>();
         }
 // else if(vmSelectionPolicyName.equals("mmt")) {
 //            vmSelectionPolicy = new SelectionPolicyMinimumMigrationTime();
@@ -330,16 +314,14 @@ public abstract class RunnerAbs {
             System.out.println("Unknown Host selection policy: " + hostSelectionPolicyName);
             System.exit(0);
         }
-
-        return (SelectionPolicy) hostSelectionPolicy;
+        return hostSelectionPolicy;
     }
 
-
-    // @TODO: is this use of generics correct?
-    protected <T extends GuestEntity> SelectionPolicy<T> getContainerSelectionPolicy(String containerSelectionPolicyName) {
-        SelectionPolicy<T> containerSelectionPolicy = null;
+    
+    protected SelectionPolicy<PowerGuestEntity> getContainerSelectionPolicy(String containerSelectionPolicyName) {
+        SelectionPolicy<PowerGuestEntity> containerSelectionPolicy = null;
         if (containerSelectionPolicyName.equals("Cor")) {
-            containerSelectionPolicy = (SelectionPolicy<T>) new PowerSelectionPolicyMaximumCorrelation2(new SelectionPolicyMaximumUsage());
+            containerSelectionPolicy = new PowerSelectionPolicyMaximumCorrelation2(new SelectionPolicyMaximumUsage<>());
         } else if (containerSelectionPolicyName.equals("MaxUsage")) {
             containerSelectionPolicy = new SelectionPolicyMaximumUsage<>();
         }
@@ -396,6 +378,4 @@ public abstract class RunnerAbs {
     public void setOverBookingFactor(double overBookingFactor) {
         this.overBookingFactor = overBookingFactor;
     }
-
-
 }
