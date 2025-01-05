@@ -38,7 +38,7 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtil
      * @param utilizationThreshold the utilization threshold
      */
     public PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtilized(
-            List<? extends Host> hostList,
+            List<? extends HostEntity> hostList,
             SelectionPolicy<GuestEntity> vmSelectionPolicy, SelectionPolicy<PowerGuestEntity> containerSelectionPolicy,
             SelectionPolicy<HostEntity> hostSelectionPolicy, double utilizationThreshold, double underUtilizationThresh,
             int numberOfVmTypes, int[] vmPes, int[] vmRam, long vmBw, long vmSize, double[] vmMips) {
@@ -86,11 +86,4 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMCUnderUtil
     protected double getUtilizationThreshold() {
         return utilizationThreshold;
     }
-    @Override
-    public void setDatacenter(ContainerDatacenter datacenter) {
-        super.setDatacenter(datacenter);
-    }
-
-
-
 }

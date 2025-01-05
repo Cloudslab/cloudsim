@@ -86,11 +86,6 @@ public class PowerContainerVmAllocationPolicyMigrationStaticThresholdMC extends 
     protected double getUtilizationThreshold() {
         return utilizationThreshold;
     }
-    @Override
-    public void setDatacenter(ContainerDatacenter datacenter) {
-        super.setDatacenter(datacenter);
-    }
-
 }
 
 

@@ -9,7 +9,6 @@
 package org.cloudbus.cloudsim;
 
 import org.cloudbus.cloudsim.container.core.Container;
-import org.cloudbus.cloudsim.container.core.ContainerVm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.GuestEntity;
 import org.cloudbus.cloudsim.core.HostEntity;
@@ -212,4 +211,7 @@ public abstract class VmAllocationPolicy {
 	public <T extends HostEntity> List<T> getHostList() {
 		return (List<T>) hostList;
 	}
+
+	// Needed by ContainerCloudSim
+	public <T extends Datacenter> void setDatacenter(T datacenter) { }
 }

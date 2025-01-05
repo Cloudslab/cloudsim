@@ -81,7 +81,6 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
             SelectionPolicy<GuestEntity> vmSelectionPolicy) {
         super(hostList);
         setVmSelectionPolicy(vmSelectionPolicy);
-
     }
 
     /**
@@ -255,6 +254,7 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
             isHostOverUtilizedAfterAllocation = isHostOverUtilized(host);
             host.guestDestroy(vm);
         }
+
         return isHostOverUtilizedAfterAllocation;
     }
 
@@ -703,7 +703,6 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstract extends 
     public List<Double> getExecutionTimeHistoryTotal() {
         return executionTimeHistoryTotal;
     }
-
 
 //    public abstract List<? extends Container> getContainersToMigrateFromHosts(List<PowerHost> overUtilizedHosts);
 }

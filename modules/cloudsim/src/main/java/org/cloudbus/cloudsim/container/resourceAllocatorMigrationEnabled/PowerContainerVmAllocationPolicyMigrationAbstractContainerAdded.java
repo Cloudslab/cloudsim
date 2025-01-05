@@ -721,8 +721,9 @@ public abstract class PowerContainerVmAllocationPolicyMigrationAbstractContainer
         return datacenter;
     }
 
-    public void setDatacenter(ContainerDatacenter datacenter) {
-        this.datacenter = datacenter;
+    @Override
+    public <T extends Datacenter> void setDatacenter(T datacenter) {
+        this.datacenter = (ContainerDatacenter) datacenter;
     }
 
     public SelectionPolicy<PowerGuestEntity> getContainerSelectionPolicy() {

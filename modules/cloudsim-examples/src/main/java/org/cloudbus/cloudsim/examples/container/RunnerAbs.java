@@ -40,7 +40,7 @@ public abstract class RunnerAbs {
     /**
      * The host list.
      */
-    protected static List<Host> hostList;
+    protected static List<HostEntity> hostList;
 
     /**
      * The Cloudlet List
@@ -171,7 +171,8 @@ public abstract class RunnerAbs {
                     getExperimentName(), ConstantsExamples.SCHEDULING_INTERVAL, getLogAddress(),
                     ConstantsExamples.VM_STARTTUP_DELAY, ConstantsExamples.CONTAINER_STARTTUP_DELAY);
 //            PowerContainerDatacenter e = (PowerContainerDatacenter) HelperEx.createDatacenter("Datacenter", PowerContainerDatacenter.class, hostList, vmAllocationPolicy, containerAllocationPolicy);
-            // not needed: vmAllocationPolicy.setDatacenter(e);
+            vmAllocationPolicy.setDatacenter(e);
+
             e.setDisableVmMigrations(false);
             broker.submitGuestList(vmList);
             broker.submitContainerList(containerList);

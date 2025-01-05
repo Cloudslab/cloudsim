@@ -6,6 +6,7 @@ import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.container.core.*;
 import org.cloudbus.cloudsim.container.resourceAllocatorMigrationEnabled.PowerContainerVmAllocationPolicyMigrationAbstract;
 import org.cloudbus.cloudsim.container.utils.IDs;
+import org.cloudbus.cloudsim.core.HostEntity;
 import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
@@ -115,22 +116,22 @@ public class HelperEx {
     }
 
 
-    public static List<Host> createHostList(int hostsNumber) {
-        ArrayList hostList = new ArrayList();
+    public static List<HostEntity> createHostList(int hostsNumber) {
+        List<HostEntity> hostList = new ArrayList<>();
         for (int i = 0; i < hostsNumber; ++i) {
 //            int hostType =  new RandomGen().getNum(ConstantsExamples.HOST_TYPES);
             int hostType = i / (int) Math.ceil((double) hostsNumber / 3.0D);
 //            int hostType = i % 2;
 //            int hostType = 2;
-            ArrayList peList = new ArrayList();
+            List<Pe> peList = new ArrayList<>();
 
             for (int j = 0; j < ConstantsExamples.HOST_PES[hostType]; ++j) {
-                peList.add(new Pe(j, new PeProvisionerSimple((double) ConstantsExamples.HOST_MIPS[hostType])));
+                peList.add(new Pe(j, new PeProvisionerSimple(ConstantsExamples.HOST_MIPS[hostType])));
             }
 
 //            hostList.add(new PowerHost(i, new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
 //                    new BwProvisionerSimple(1000000L), 1000000L, peList, new VmSchedulerTimeSharedOverSubscription(peList), ConstantsExamples.HOST_POWER[hostType]));
-            hostList.add(new PowerHost(IDs.pollId(Host.class), new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
+            hostList.add(new PowerHost(IDs.pollId(HostEntity.class), new RamProvisionerSimple(ConstantsExamples.HOST_RAM[hostType]),
                     new BwProvisionerSimple(1000000L), 1000000L, peList, new VmSchedulerTimeSharedOverSubscription(peList), ConstantsExamples.HOST_POWER[hostType]));
         }
 
@@ -223,7 +224,7 @@ public class HelperEx {
      */
 
     public static ContainerDatacenter createDatacenter(String name, Class<? extends ContainerDatacenter> datacenterClass,
-                                                       List<Host> hostList,
+                                                       List<HostEntity> hostList,
                                                        VmAllocationPolicy vmAllocationPolicy,
                                                        VmAllocationPolicy containerAllocationPolicy,
                                                        String experimentName, double schedulingInterval, String logAddress, double VMStartupDelay,
@@ -263,7 +264,7 @@ public class HelperEx {
             boolean outputInCsv,
             String outputFolder) {
         Log.enable();
-        List<Host> hosts = datacenter.getHostList();
+        List<HostEntity> hosts = datacenter.getHostList();
 
         int numberOfHosts = hosts.size();
         int numberOfVms = vms.size();
@@ -545,9 +546,9 @@ public class HelperEx {
      * @param hosts the hosts
      * @return the times before host shutdown
      */
-    public static List<Double> getTimesBeforeHostShutdown(List<Host> hosts) {
+    public static List<Double> getTimesBeforeHostShutdown(List<HostEntity> hosts) {
         List<Double> timeBeforeShutdown = new LinkedList<>();
-        for (Host host : hosts) {
+        for (HostEntity host : hosts) {
             boolean previousIsActive = true;
             double lastTimeSwitchedOn = 0;
             for (HostStateHistoryEntry entry : ((HostDynamicWorkload) host).getStateHistory()) {
@@ -591,7 +592,7 @@ public class HelperEx {
      * @param hosts the hosts
      * @return the sla time per active host
      */
-    protected static double getSlaTimePerActiveHost(List<Host> hosts) {
+    protected static double getSlaTimePerActiveHost(List<HostEntity> hosts) {
         double slaViolationTimePerHost = 0;
         double totalTime = 0;
 
@@ -627,7 +628,7 @@ public class HelperEx {
      * @param hosts the hosts
      * @return the sla time per host
      */
-    protected static double getSlaTimePerHost(List<Host> hosts) {
+    protected static double getSlaTimePerHost(List<HostEntity> hosts) {
         double slaViolationTimePerHost = 0;
         double totalTime = 0;
 
@@ -780,12 +781,12 @@ public class HelperEx {
      * @param outputPath         the output path
      */
     public static void writeMetricHistory(
-            List<? extends Host> hosts,
+            List<? extends HostEntity> hosts,
             PowerContainerVmAllocationPolicyMigrationAbstract vmAllocationPolicy,
             String outputPath) {
         // for (Host host : hosts) {
         for (int j = 0; j < 10; j++) {
-            Host host = hosts.get(j);
+            HostEntity host = hosts.get(j);
 
             if (!vmAllocationPolicy.getTimeHistory().containsKey(host.getId())) {
                 continue;
@@ -825,10 +826,10 @@ public class HelperEx {
      * @param vmAllocationPolicy the vm allocation policy
      */
     public static void printMetricHistory(
-            List<? extends Host> hosts,
+            List<? extends HostEntity> hosts,
             PowerContainerVmAllocationPolicyMigrationAbstract vmAllocationPolicy) {
         for (int i = 0; i < 10; i++) {
-            Host host = hosts.get(i);
+            HostEntity host = hosts.get(i);
 
             Log.println("Host #" + host.getId());
             Log.println("Time:");
@@ -861,7 +862,7 @@ public class HelperEx {
         List<ContainerVm> vms = broker.getGuestsCreatedList();
         List<Container>  containers = broker.getContainersCreatedList();
         Log.enable();
-        List<Host> hosts = datacenter.getHostList();
+        List<HostEntity> hosts = datacenter.getHostList();
         Map<String, Double> slaMetrics = getSlaMetrics(vms);
         String[] msg = { "ExperimentName","hostSelectionPolicy","vmAllocationPolicy", "OLThreshold","ULThreshold",  "VMSPolicy","ContainerSpolicy","ContainerPlacement","Percentile",
                 "numberOfHosts",
@@ -1096,10 +1097,10 @@ public class HelperEx {
     }
 
 
-    public static int getNumberofOverUtilization(List<? extends Host> hosts,
+    public static int getNumberofOverUtilization(List<? extends HostEntity> hosts,
                                                  PowerContainerVmAllocationPolicyMigrationAbstract vmAllocationPolicy) {
         int numberOfOverUtilization = 0;
-        for (Host host : hosts) {
+        for (HostEntity host : hosts) {
             if (!vmAllocationPolicy.getTimeHistory().containsKey(host.getId())) {
                 continue;
             }
