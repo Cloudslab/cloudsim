@@ -122,7 +122,7 @@ public class HddCloudlet extends Cloudlet {
      */
     public long getRemainingCloudletIOLength() {
         long length = getCloudletTotalIOLength() * Consts.MILLION - cloudletIOFinishedSoFar;
-        return length < 0 ? 0 : (long) Math.floor(1.0*length / Consts.MILLION);
+        return length <= 0 ? 0 : length / Consts.MILLION;
     }
 
     /**
