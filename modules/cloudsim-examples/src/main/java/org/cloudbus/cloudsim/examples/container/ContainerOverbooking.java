@@ -10,7 +10,7 @@ import java.io.IOException;
  * @author Sareh Fotuhi Piraghaj
  */
 public class ContainerOverbooking {
-
+    static int repeat = 1;
     /**
      * The main method.
      *
@@ -22,9 +22,10 @@ public class ContainerOverbooking {
          * The experiments can be repeated for (repeat - runtime +1) times.
          * Please set these values as the arguments of the main function or set them bellow:
          */
-        int runTime = Integer.parseInt(args[0]);
-        int repeat = Integer.parseInt(args[1]);
-        for (int i = 10; i < repeat; i += 10) {
+        if (args.length >= 1) {
+            repeat = Integer.parseInt(args[0]);
+        }
+        for (int i = 0; i < repeat; i++) {
             boolean enableOutput = true;
             boolean outputToFile = true;
             /**
@@ -34,7 +35,7 @@ public class ContainerOverbooking {
             /**
              * The output folder for the logs. The log files would be located in this folder.
              */
-            String outputFolder = "/Results";
+            String outputFolder = "/tmp/Results";
             /**
              * The allocation policy for VMs. It has the under utilization and over utilization thresholds used for
              * determining the underloaded and oberloaded hosts.
@@ -73,7 +74,7 @@ public class ContainerOverbooking {
                     vmSelectionPolicy,
                     containerSelectionPolicy,
                     hostSelectionPolicy,
-                    i, Integer.toString(runTime), outputFolder);
+                    i, Integer.toString(i), outputFolder);
         }
 
     }

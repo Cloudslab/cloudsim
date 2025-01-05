@@ -152,7 +152,7 @@ public class ContainerCloudSimExample1 {
             /**
              * 10- The address for logging the statistics of the VMs, containers in the data center.
              */
-            String logAddress = "~/Results";
+            String logAddress = "/tmp/ContainerCloudSimExample1";
 
             PowerContainerDatacenter e = (PowerContainerDatacenter) createDatacenter("datacenter",
                     PowerContainerDatacenterCM.class, hostList, vmAllocationPolicy, containerAllocationPolicy,
