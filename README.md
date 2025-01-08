@@ -1,8 +1,8 @@
 # CloudSim: A Framework For Modeling And Simulation Of Cloud Computing Infrastructures And Services #
 
-Cloud computing is the leading approach for delivering reliable, secure, fault-tolerant, sustainable, and scalable computational services. Hence timely, repeatable, and controllable methodologies for performance evaluation of new cloud applications and policies before their actual development are required. Because utilization of real testbeds limits the experiments to the scale of the testbed and makes the reproduction of results an extremely difficult undertaking, simulation may be used.
+Cloud Computing is the leading approach for delivering reliable, secure, fault-tolerant, sustainable, and scalable computational services. Hence timely, repeatable, and controllable methodologies for performance evaluation of new cloud applications and policies before their actual development are required. Because utilization of real testbeds limits the experiments to the scale of the testbed and makes the reproduction of results an extremely difficult undertaking, simulation may be used.
 
-CloudSim goal is to provide a generalized and extensible simulation framework that enables modeling, simulation, and experimentation of emerging Cloud computing infrastructures and application services, allowing its users to focus on specific system design issues that they want to investigate, without getting concerned about the low level details related to Cloud-based infrastructures and services.
+CloudSim's goal is to provide a generalized and extensible simulation framework that enables modeling, simulation, and experimentation of emerging Cloud Computing infrastructures and application services, allowing its users to focus on specific system design issues that they want to investigate, without getting concerned about the low level details related to Cloud-Based infrastructures and services.
 
 CloudSim is developed in [the Cloud Computing and Distributed Systems (CLOUDS) Laboratory](http://cloudbus.org/), at [the Computer Science and Software Engineering Department](http://www.csse.unimelb.edu.au/) of [the University of Melbourne](http://www.unimelb.edu.au/).
 
@@ -11,47 +11,67 @@ More information can be found on the [CloudSim's web site](http://cloudbus.org/c
 
 # Main features #
 
-  * support for modeling and simulation of large scale Cloud computing data centers
-  * support for modeling and simulation of virtualized server hosts, with customizable policies for provisioning host resources to virtual machines
-  * support for modeling and simulation of application containers
-  * support for modeling and simulation of energy-aware computational resources
-  * support for modeling and simulation of data center network topologies and message-passing applications
-  * support for modeling and simulation of federated clouds
-  * support for dynamic insertion of simulation elements, stop and resume of simulation
-  * support for user-defined policies for allocation of hosts to virtual machines and policies for allocation of host resources to virtual machines
+  * Support for modeling and simulation of large scale Cloud Computing data centers
+  * Support for modeling and simulation of virtualized server hosts, with customizable policies for provisioning host resources to Virtual Machines
+  * Support for modeling and simulation of application containers
+  * Support for modeling and simulation of energy-aware computational resources
+  * Support for modeling and simulation of data center network topologies and message-passing applications
+  * Support for modeling and simulation of federated clouds
+  * Support for dynamic insertion of simulation elements, stop and resume of simulation
+  * Support for user-defined policies for allocation of hosts to Virtual Machines and policies for allocation of host resources to Virtual Machines
 
 
 # Download #
 
 The downloaded package contains all the source code, examples, jars, and API html files.
 
-# Install CloudSim (Linux)
-
-1) Install Java JDK21 on your system:
-``` console
-sudo apt install openjdk-21-jdk
-```
-2) Set Java JDK21 as default:
-``` console
-sudo update-java-alternatives --set java-1.21.0-openjdk-amd64
-```
-
-3) Install Maven as shown on the [official website](https://maven.apache.org/install.html)
-4) Compile and run tests:
-``` console
-mvn build
-```
-``` console
-mvn test
-```
-5) Run an example in cloudsim-examples:
-```
+# Installation of CloudSim
+**Windows**
+1) Install Java Java Development Kit(JDK) 21 o your system from [Official Website](https://www.oracle.com/in/java/technologies/downloads/#java21) as shown in [JDK Installation Instructions](https://docs.oracle.com/en/java/javase/23/install/overview-jdk-installation.html)
+2) Install Maven as shown on the [Official Website](https://maven.apache.org/install.html)
+4) Compile and Run tests in Command Prompt:
+  ```prompt
+  mvn build
+  mvn test
+  ```
+5) Run an example (CloudsimExample1) in cloudsim-examples in Command Prompt:
+```prompt
 mvn exec:java -pl modules/cloudsim-examples/ -Dexec.mainClass=org.cloudbus.cloudsim.examples.CloudSimExample1
 ```
 
-**Suggestion:** Use an IDE such as IDEA Intellij to faciliate steps 4) and 5)
+**Linux**
+  1) Install Java JDK21 on your system:
+  - On Debian-based Linux & Windows WSL2: 
+    ```bash
+    sudo apt install openjdk-21-jdk
+    ```
+  - On Red Hat-based Linux:  
+    ```bash  
+    sudo yum install java-21-openjdk
+    ```
+  2) Set Java JDK21 as default: 
+  - On Debian-based Linux & Windows WSL2:
+    ```bash
+    sudo update-java-alternatives --set java-1.21.0-openjdk-amd64
+    ```
+  - On Red Hat-based Linux: 
+    ```bash
+    sudo update-alternatives --config 'java'
+    ```
+  3) Install Maven as shown on the [Official Website](https://maven.apache.org/install.html)
+  4) Compile and Run tests in Terminal:
+  ```bash
+  mvn build
+  mvn test
+  ```
+  5) Run an example (CloudsimExample1) in cloudsim-examples in Terminal:
+  ```bash
+  mvn exec:java -pl modules/cloudsim-examples/ -Dexec.mainClass=org.cloudbus.cloudsim.examples.CloudSimExample1
+  ```
 
-# Preferred Publication (currently under revision, available on arxiv only as a pre-print) #
+  **Suggestion:** Use an IDE such as IDEA Intellij to faciliate steps 4) and 5) from both Windows and Linux (Except WSL & WSL2 Without GUI)
+
+# Preferred Publication (Currently Under Revision, Available on arxiv only as a pre-print) #
   * Remo Andreoli, Jie Zhao, Tommaso Cucinotta, and Rajkumar Buyya, [CloudSim 7G: An Integrated Toolkit for Modeling and Simulation of Future Generation Cloud Computing Environments](https://arxiv.org/pdf/2408.13386), arXiv:2408.13386 [cs.DC], 2024.
     
 # Publications (Legacy) #
