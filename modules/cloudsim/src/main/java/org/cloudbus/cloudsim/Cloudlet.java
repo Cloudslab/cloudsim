@@ -721,7 +721,7 @@ public class Cloudlet {
             return 0;
         }
 
-        return resList.getLast().cloudletFinishedSoFar;
+        return Math.min(resList.getLast().cloudletFinishedSoFar, getCloudletTotalLength()*Consts.MILLION);
     }
 
     /**
