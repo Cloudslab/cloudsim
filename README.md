@@ -33,6 +33,8 @@ Either clone the repository or download a [release](https://github.com/Cloudslab
   ```prompt
   mvn clean package
   ```
+You will find the jars in `modules/cloudsim/target/cloudsim-$VERSION.jar` and `modules/cloudsim-examples/target/cloudsim-examples-$VERSION.jar`
+
 5) Run an example (e.g., CloudSimExample1) in cloudsim-examples using the command prompt:
 ```prompt
 mvn exec:java -pl modules/cloudsim-examples/ -Dexec.mainClass=org.cloudbus.cloudsim.examples.CloudSimExample1
@@ -58,10 +60,12 @@ mvn exec:java -pl modules/cloudsim-examples/ -Dexec.mainClass=org.cloudbus.cloud
     sudo update-alternatives --config 'java'
     ```
   3) Install Maven as shown on the [Official Website](https://maven.apache.org/install.html)
-  4) Compile and run tests using the terminal:
+  4) Compile and run tests:
   ```bash
-  mvn clean package
+    mvn clean package
   ```
+  You will find the jars in `modules/cloudsim/target/cloudsim-$VERSION.jar` and `modules/cloudsim-examples/target/cloudsim-examples-$VERSION.jar`
+
   5) Run an example (e.g., CloudSimExample1) in cloudsim-examples using the terminal:
   ```bash
   mvn exec:java -pl modules/cloudsim-examples/ -Dexec.mainClass=org.cloudbus.cloudsim.examples.CloudSimExample1
