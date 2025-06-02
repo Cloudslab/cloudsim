@@ -1205,6 +1205,10 @@ public class Cloudlet {
      * @post $result >= 0
      */
     public long getRemainingCloudletLength() {
+        // Check if Cloudlet is finished
+        if (getCloudletLength() == getCloudletFinishedSoFar())
+            return 0;
+
         long length = getCloudletTotalLength()*Consts.MILLION - getCloudletFinishedSoFar();
 
         // Remaining Cloudlet length can't be negative number.

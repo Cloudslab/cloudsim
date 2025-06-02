@@ -57,6 +57,8 @@ public class CloudletTest {
 		assertSame(utilizationModelCpu, cloudlet.getUtilizationModelCpu());
 		assertSame(utilizationModelRam, cloudlet.getUtilizationModelRam());
 		assertSame(utilizationModelBw, cloudlet.getUtilizationModelBw());
+		assertEquals(CLOUDLET_LENGTH * PES_NUMBER, cloudlet.getRemainingCloudletLength());
+		assertEquals(0, cloudlet.getCloudletFinishedSoFar());
 	}
 
 	@Test
