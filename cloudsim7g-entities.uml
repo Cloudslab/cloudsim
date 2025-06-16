@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.cloudbus.cloudsim.container.core.Container</OriginalElement>
+  <nodes>
+    <node x="472.5" y="261.5">org.cloudbus.cloudsim.Host</node>
+    <node x="-391.5" y="541.5">org.cloudbus.cloudsim.power.PowerVm</node>
+    <node x="19.5" y="661.5">org.cloudbus.cloudsim.EX.disk.HddVm</node>
+    <node x="431.5" y="401.5">org.cloudbus.cloudsim.EX.disk.HddHost</node>
+    <node x="191.5" y="261.5">org.cloudbus.cloudsim.core.PowerHostEntity</node>
+    <node x="-202.5" y="541.5">org.cloudbus.cloudsim.network.datacenter.NetworkVm</node>
+    <node x="-19.5" y="401.5">org.cloudbus.cloudsim.power.PowerHost</node>
+    <node x="-512.0" y="261.5">org.cloudbus.cloudsim.container.core.Container</node>
+    <node x="189.5" y="401.5">org.cloudbus.cloudsim.network.datacenter.NetworkHost</node>
+    <node x="27.0" y="541.5">org.cloudbus.cloudsim.EX.vm.VmEX</node>
+    <node x="-159.5" y="401.5">org.cloudbus.cloudsim.Vm</node>
+    <node x="-322.0" y="121.5">org.cloudbus.cloudsim.core.GuestEntity</node>
+    <node x="263.5" y="121.5">org.cloudbus.cloudsim.core.HostEntity</node>
+    <node x="-337.0" y="-18.5">org.cloudbus.cloudsim.core.CoreAttributes</node>
+    <node x="-484.0" y="401.5">org.cloudbus.cloudsim.container.core.PowerContainer</node>
+    <node x="-24.5" y="261.5">org.cloudbus.cloudsim.core.VirtualEntity</node>
+    <node x="-314.0" y="261.5">org.cloudbus.cloudsim.core.PowerGuestEntity</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.cloudbus.cloudsim.power.PowerVm" target="org.cloudbus.cloudsim.Vm" relationship="GENERALIZATION">
+      <point x="39.75" y="-18.5" />
+      <point x="-272.25" y="520.0" />
+      <point x="-112.0" y="520.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.power.PowerHost" target="org.cloudbus.cloudsim.core.PowerHostEntity" relationship="REALIZATION">
+      <point x="-43.75" y="-18.5" />
+      <point x="24.25" y="360.0" />
+      <point x="308.0" y="360.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.core.PowerContainer" target="org.cloudbus.cloudsim.container.core.Container" relationship="GENERALIZATION">
+      <point x="-56.0" y="-18.5" />
+      <point x="-428.0" y="380.0" />
+      <point x="-432.0" y="380.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Vm" target="org.cloudbus.cloudsim.core.VirtualEntity" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="-112.0" y="320.0" />
+      <point x="68.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.HostEntity" target="org.cloudbus.cloudsim.core.CoreAttributes" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="348.0" y="100.0" />
+      <point x="-232.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.Host" target="org.cloudbus.cloudsim.core.HostEntity" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="528.0" y="240.0" />
+      <point x="390.25" y="240.0" />
+      <point x="42.25" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.EX.disk.HddHost" target="org.cloudbus.cloudsim.Host" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="508.0" y="380.0" />
+      <point x="288.0" y="380.0" />
+      <point x="288.0" y="320.0" />
+      <point x="528.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.power.PowerHost" target="org.cloudbus.cloudsim.Host" relationship="GENERALIZATION">
+      <point x="43.75" y="-18.5" />
+      <point x="111.75" y="380.0" />
+      <point x="288.0" y="380.0" />
+      <point x="288.0" y="320.0" />
+      <point x="528.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.core.PowerContainer" target="org.cloudbus.cloudsim.core.PowerGuestEntity" relationship="REALIZATION">
+      <point x="56.0" y="-18.5" />
+      <point x="-316.0" y="380.0" />
+      <point x="-232.0" y="380.0" />
+      <point x="-232.0" y="320.0" />
+      <point x="-192.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.PowerHostEntity" target="org.cloudbus.cloudsim.core.HostEntity" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="308.0" y="180.0" />
+      <point x="305.75" y="180.0" />
+      <point x="-42.25" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.EX.disk.HddVm" target="org.cloudbus.cloudsim.EX.vm.VmEX" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.VirtualEntity" target="org.cloudbus.cloudsim.core.HostEntity" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="68.0" y="220.0" />
+      <point x="308.0" y="220.0" />
+      <point x="308.0" y="180.0" />
+      <point x="305.75" y="180.0" />
+      <point x="-42.25" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.network.datacenter.NetworkVm" target="org.cloudbus.cloudsim.Vm" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.core.Container" target="org.cloudbus.cloudsim.core.GuestEntity" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="-432.0" y="240.0" />
+      <point x="-277.0" y="240.0" />
+      <point x="-45.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.VirtualEntity" target="org.cloudbus.cloudsim.core.GuestEntity" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="68.0" y="240.0" />
+      <point x="-192.0" y="240.0" />
+      <point x="-192.0" y="180.0" />
+      <point x="-187.0" y="180.0" />
+      <point x="45.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.EX.vm.VmEX" target="org.cloudbus.cloudsim.Vm" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="88.0" y="520.0" />
+      <point x="-112.0" y="520.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.network.datacenter.NetworkHost" target="org.cloudbus.cloudsim.Host" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="288.0" y="320.0" />
+      <point x="528.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.PowerGuestEntity" target="org.cloudbus.cloudsim.core.GuestEntity" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="-192.0" y="180.0" />
+      <point x="-187.0" y="180.0" />
+      <point x="45.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.power.PowerVm" target="org.cloudbus.cloudsim.core.PowerGuestEntity" relationship="REALIZATION">
+      <point x="-39.75" y="-18.5" />
+      <point x="-351.75" y="500.0" />
+      <point x="-232.0" y="500.0" />
+      <point x="-232.0" y="320.0" />
+      <point x="-192.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.core.GuestEntity" target="org.cloudbus.cloudsim.core.CoreAttributes" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.9186991869918699" showDependencies="false" x="46.5" y="350.0" />
+  <SelectedNodes>
+    <node>org.cloudbus.cloudsim.network.datacenter.NetworkVm</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

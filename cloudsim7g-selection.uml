@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation</OriginalElement>
+  <nodes>
+    <node x="-291.0" y="121.5">org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation2</node>
+    <node x="4395.5" y="121.5">org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMinimumUtilization</node>
+    <node x="3914.0" y="121.5">org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMinimumMigrationTime</node>
+    <node x="3566.0" y="121.5">org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyLeastFull</node>
+    <node x="3041.0" y="121.5">org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyFirstFit</node>
+    <node x="2631.0" y="121.5">org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMaximumUsage</node>
+    <node x="-244.5" y="-18.5">org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy</node>
+    <node x="2095.5" y="121.5">org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation</node>
+    <node x="1748.0" y="121.5">org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMostFull</node>
+    <node x="248.0" y="121.5">org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyWorstFit</node>
+    <node x="1128.0" y="121.5">org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyRandomSelection</node>
+    <node x="598.5" y="121.5">org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMinimumCorrelation</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMostFull" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1899.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMaximumUsage" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="2819.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMinimumUtilization" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="4599.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyMinimumMigrationTime" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="4139.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyFirstFit" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="3279.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyWorstFit" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="399.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation2" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMinimumCorrelation" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="839.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="2339.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyLeastFull" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="3719.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicyRandomSelection" target="org.cloudbus.cloudsim.selectionPolicies.SelectionPolicy" relationship="REALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1419.0" y="100.0" />
+      <point x="-41.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.3777864685177943" showDependencies="false" x="2256.0" y="70.0" />
+  <SelectedNodes>
+    <node>org.cloudbus.cloudsim.selectionPolicies.PowerSelectionPolicyMaximumCorrelation</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.cloudbus.cloudsim.Cloudlet</OriginalElement>
+  <nodes>
+    <node x="-168.11602209944772" y="366.7436707056455">org.cloudbus.cloudsim.power.PowerHost</node>
+    <node x="25.88397790055228" y="366.7436707056455">org.cloudbus.cloudsim.vmplus.disk.HddHost</node>
+    <node x="-637.6963259210888" y="366.7436707056455">org.cloudbus.cloudsim.vmplus.disk.HddCloudlet</node>
+    <node x="53.68350434096283" y="146.09826361483817">org.cloudbus.cloudsim.power.PowerVm</node>
+    <node x="-884.4322642969294" y="26.09826361483819">org.cloudbus.cloudsim.container.core.ContainerHost</node>
+    <node x="-274.3164956590372" y="26.09826361483819">org.cloudbus.cloudsim.Vm</node>
+    <node x="-899.6963259210888" y="366.7436707056455">org.cloudbus.cloudsim.network.datacenter.NetworkCloudlet</node>
+    <node x="-916.4322642969294" y="146.09826361483817">org.cloudbus.cloudsim.container.core.PowerContainerHost</node>
+    <node x="-1185.1963259210888" y="366.7436707056455">org.cloudbus.cloudsim.container.core.ContainerCloudlet</node>
+    <node x="-1143.6963259210886" y="26.09826361483819">org.cloudbus.cloudsim.container.core.Container</node>
+    <node x="-339.3164956590372" y="235.14343392585073">org.cloudbus.cloudsim.Host</node>
+    <node x="-382.3164956590372" y="366.7436707056455">org.cloudbus.cloudsim.network.datacenter.NetworkHost</node>
+    <node x="-620.8743799779832" y="146.09826361483817">org.cloudbus.cloudsim.container.core.PowerContainerVm</node>
+    <node x="-106.31649565903717" y="146.09826361483817">org.cloudbus.cloudsim.vmplus.vm.VMex</node>
+    <node x="-1175.6963259210886" y="146.09826361483817">org.cloudbus.cloudsim.container.core.PowerContainer</node>
+    <node x="-115.31649565903717" y="226.7436707056455">org.cloudbus.cloudsim.vmplus.disk.HddVm</node>
+    <node x="-317.3164956590372" y="146.09826361483817">org.cloudbus.cloudsim.network.datacenter.NetworkVm</node>
+    <node x="-588.8743799779832" y="26.09826361483819">org.cloudbus.cloudsim.container.core.ContainerVm</node>
+    <node x="-1136.6963259210888" y="226.7436707056455">org.cloudbus.cloudsim.Cloudlet</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.cloudbus.cloudsim.container.core.PowerContainerHost" target="org.cloudbus.cloudsim.container.core.ContainerHost" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.power.PowerVm" target="org.cloudbus.cloudsim.Vm" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="133.18350434096283" y="124.59826361483819" />
+      <point x="-226.81649565903717" y="124.59826361483819" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.vmplus.disk.HddVm" target="org.cloudbus.cloudsim.vmplus.vm.VMex" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.core.PowerContainer" target="org.cloudbus.cloudsim.container.core.Container" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.network.datacenter.NetworkCloudlet" target="org.cloudbus.cloudsim.Cloudlet" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="-783.6963259210888" y="345.2436707056455" />
+      <point x="-1063.6963259210888" y="345.2436707056455" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.power.PowerHost" target="org.cloudbus.cloudsim.Host" relationship="GENERALIZATION">
+      <point x="4.956590371705261E-4" y="-18.499670705645485" />
+      <point x="-80.61552644041055" y="320.0" />
+      <point x="-283.816" y="320.0" />
+      <point x="4.956590371989478E-4" y="18.499566074149243" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.core.ContainerCloudlet" target="org.cloudbus.cloudsim.Cloudlet" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.vmplus.disk.HddCloudlet" target="org.cloudbus.cloudsim.Cloudlet" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="-543.6963259210888" y="345.2436707056455" />
+      <point x="-1063.6963259210888" y="345.2436707056455" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.vmplus.vm.VMex" target="org.cloudbus.cloudsim.Vm" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="-46.81649565903717" y="124.59826361483819" />
+      <point x="-226.81649565903717" y="124.59826361483819" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.core.PowerContainerVm" target="org.cloudbus.cloudsim.container.core.ContainerVm" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.network.datacenter.NetworkVm" target="org.cloudbus.cloudsim.Vm" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.vmplus.disk.HddHost" target="org.cloudbus.cloudsim.Host" relationship="GENERALIZATION">
+      <point x="4.956590371705261E-4" y="-18.499670705645485" />
+      <point x="102.38447355958945" y="320.0" />
+      <point x="-283.816" y="320.0" />
+      <point x="4.956590371989478E-4" y="18.499566074149243" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.network.datacenter.NetworkHost" target="org.cloudbus.cloudsim.Host" relationship="GENERALIZATION">
+      <point x="4.956590371989478E-4" y="-18.499670705645485" />
+      <point x="4.956590371989478E-4" y="18.499566074149243" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.7143058491895702" showDependencies="false" x="-424.0000000000001" y="273.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

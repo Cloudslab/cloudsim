@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyMostFull</OriginalElement>
+  <nodes>
+    <node x="219.0" y="561.5">org.cloudbus.cloudsim.power.PowerVmSelectionPolicyRandomSelection</node>
+    <node x="-309.0" y="781.5">org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMaximumCorrelation</node>
+    <node x="1415.0" y="1001.5">org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumCorrelation</node>
+    <node x="-314.5" y="121.5">org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyFirstFit</node>
+    <node x="1297.5" y="781.5">org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMinimumMigrationTime</node>
+    <node x="856.0" y="781.5">org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyCor</node>
+    <node x="63.0" y="341.5">org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyRandomSelection</node>
+    <node x="-206.0" y="641.5">org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy</node>
+    <node x="-213.5" y="421.5">org.cloudbus.cloudsim.power.PowerVmSelectionPolicy</node>
+    <node x="1055.5" y="121.5">org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyLeastFull</node>
+    <node x="530.5" y="341.5">org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyMinimumCorrelation</node>
+    <node x="939.5" y="1001.5">org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVMSelectionPolicyCor</node>
+    <node x="532.5" y="121.5">org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyRandomSelection</node>
+    <node x="1016.0" y="341.5">org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyFirstFit</node>
+    <node x="97.5" y="121.5">org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyMostFull</node>
+    <node x="281.5" y="1001.5">org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMinimumMigrationTime</node>
+    <node x="-280.0" y="-18.5">org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicy</node>
+    <node x="-269.5" y="201.5">org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy</node>
+    <node x="730.0" y="561.5">org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime</node>
+    <node x="1366.0" y="341.5">org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyLeastFull</node>
+    <node x="1303.5" y="561.5">org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation</node>
+    <node x="-321.5" y="1001.5">org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage</node>
+    <node x="-242.0" y="861.5">org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy</node>
+    <node x="-308.5" y="561.5">org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumUtilization</node>
+    <node x="-312.0" y="341.5">org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyMostFull</node>
+    <node x="294.5" y="781.5">org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMaximumUsage</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMaximumCorrelation" target="org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumCorrelation" target="org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1723.0" y="980.0" />
+      <point x="-37.0" y="980.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation" target="org.cloudbus.cloudsim.power.PowerVmSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1563.0" y="540.0" />
+      <point x="-57.0" y="540.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyMostFull" target="org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="303.0" y="100.0" />
+      <point x="-117.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyCor" target="org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1063.0" y="760.0" />
+      <point x="-17.0" y="760.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.power.PowerVmSelectionPolicyRandomSelection" target="org.cloudbus.cloudsim.power.PowerVmSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="463.0" y="540.0" />
+      <point x="-57.0" y="540.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMinimumMigrationTime" target="org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1603.0" y="760.0" />
+      <point x="-17.0" y="760.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumUtilization" target="org.cloudbus.cloudsim.power.PowerVmSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime" target="org.cloudbus.cloudsim.power.PowerVmSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1003.0" y="540.0" />
+      <point x="-57.0" y="540.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyMostFull" target="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyLeastFull" target="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1543.0" y="320.0" />
+      <point x="-137.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMaximumUsage" target="org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyRandomSelection" target="org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="783.0" y="100.0" />
+      <point x="-117.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyFirstFit" target="org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyRandomSelection" target="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="283.0" y="320.0" />
+      <point x="-137.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyMinimumCorrelation" target="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="763.0" y="320.0" />
+      <point x="-137.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVMSelectionPolicyCor" target="org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1163.0" y="980.0" />
+      <point x="-37.0" y="980.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyLeastFull" target="org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1263.0" y="100.0" />
+      <point x="-117.0" y="100.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicyFirstFit" target="org.cloudbus.cloudsim.container.hostSelectionPolicies.HostSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="1183.0" y="320.0" />
+      <point x="-137.0" y="320.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicyMaximumUsage" target="org.cloudbus.cloudsim.container.containerSelectionPolicies.PowerContainerSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="563.0" y="760.0" />
+      <point x="-17.0" y="760.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicyMinimumMigrationTime" target="org.cloudbus.cloudsim.container.vmSelectionPolicies.PowerContainerVmSelectionPolicy" relationship="GENERALIZATION">
+      <point x="0.0" y="-18.5" />
+      <point x="603.0" y="980.0" />
+      <point x="-37.0" y="980.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.48396017699115046" showDependencies="false" x="902.1554285714287" y="608.0355714285713" />
+  <SelectedNodes>
+    <node>org.cloudbus.cloudsim.container.containerPlacementPolicies.ContainerPlacementPolicyMostFull</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
