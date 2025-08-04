@@ -22,7 +22,7 @@ import java.util.Set;
 public class SelectionPolicyLeastFull<T extends HostEntity> implements SelectionPolicy<T> {
     @Override
     public T select(List<T> candidates, Object obj, Set<T> excludedCandidates) {
-        double maxAvailable = Double.MIN_VALUE;
+        double maxAvailable = 0;
         T selectedHost = null;
 
         for (T hostCandidate : candidates) {
@@ -30,9 +30,11 @@ public class SelectionPolicyLeastFull<T extends HostEntity> implements Selection
                 continue;
             }
 
+            //@todo: this doesn't work well if we mix powerHosts and normal Hosts because it would compare
+            //       normalized (cpu utilization) and "raw" (available mips) metrics
             double hostAvailable;
             if (hostCandidate instanceof PowerHost powerHost) {
-                hostAvailable = powerHost.getUtilizationOfCpu();
+                hostAvailable = 1.0 - powerHost.getUtilizationOfCpu();
             } else {
                 hostAvailable = hostCandidate.getGuestScheduler().getAvailableMips();
             }

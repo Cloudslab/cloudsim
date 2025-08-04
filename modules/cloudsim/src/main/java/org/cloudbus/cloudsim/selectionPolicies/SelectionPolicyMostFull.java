@@ -30,9 +30,11 @@ public class SelectionPolicyMostFull<T extends HostEntity> implements SelectionP
                 continue;
             }
 
+            //@todo: this doesn't work well if we mix powerHosts and normal Hosts because it would compare
+            //       normalized (cpu utilization) and "raw" (available mips) metrics
             double hostAvailable;
             if (hostCandidate instanceof PowerHost powerHost) {
-                hostAvailable = powerHost.getUtilizationOfCpu();
+                hostAvailable = 1.0 - powerHost.getUtilizationOfCpu();
             } else {
                 hostAvailable = hostCandidate.getGuestScheduler().getAvailableMips();
             }
