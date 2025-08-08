@@ -665,7 +665,9 @@ public class CloudSim {
                         waitPredicates.remove(dstId);
                     }
                 }
-				destEnt.getIncomingEvents().add(e);
+				if(destEnt.getIncomingEvents() != null) {
+					destEnt.getIncomingEvents().add(e);
+				}
             }
 			case SimEvent.HOLD_DONE -> entities.get(srcId).setState(SimEntity.EntityStatus.RUNNABLE);
 			default -> {

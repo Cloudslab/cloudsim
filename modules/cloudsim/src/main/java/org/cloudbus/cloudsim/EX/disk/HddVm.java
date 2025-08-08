@@ -196,7 +196,7 @@ public class HddVm extends MonitoredVmEX {
 
     @Override
     public List<Double> getCurrentRequestedMips() {
-        if (getHost().getGuestScheduler() instanceof VmSchedulerMapVmsToPes<?> scheduler) {
+       if (getHost() != null && getHost().getGuestScheduler() instanceof VmSchedulerMapVmsToPes<?> scheduler) {
 
             List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
             if (isBeingInstantiated()) {
