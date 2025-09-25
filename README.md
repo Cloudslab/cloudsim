@@ -74,7 +74,7 @@ mvn exec:java -pl modules/cloudsim-examples/ -Dexec.mainClass=org.cloudbus.cloud
   **Suggestion:** Use an IDE such as IDEA Intellij to faciliate steps 4) and 5)
 
 # Preferred Publication #
-  * Remo Andreoli, Jie Zhao, Tommaso Cucinotta, and Rajkumar Buyya, [CloudSim 7G: An Integrated Toolkit for Modeling and Simulation of Future Generation Cloud Computing Environments](https://onlinelibrary.wiley.com/doi/10.1002/spe.3413), Software: Practice and Experience, Volume 55, Issue 6, Pages: 1041-1058, ISSN: 0038-0644, Wiley Press, New York, USA, June 2025.
+  * **Remo Andreoli, Jie Zhao, Tommaso Cucinotta, and Rajkumar Buyya, [CloudSim 7G: An Integrated Toolkit for Modeling and Simulation of Future Generation Cloud Computing Environments](https://onlinelibrary.wiley.com/doi/10.1002/spe.3413), Software: Practice and Experience, Volume 55, Issue 6, Pages: 1041-1058, ISSN: 0038-0644, Wiley Press, New York, USA, June 2025.**
 
     
 # Publications (Legacy) #
