@@ -169,10 +169,6 @@ public class HostDynamicWorkload extends Host {
 			if (guest.getCurrentRequestedTotalMips() == 0) {
 				vmsToRemove.add(guest);
 			}
-
-			if (guest instanceof VirtualEntity vm && vm.getNumberOfGuests()==0) {
-				vmsToRemove.add(vm);
-			}
 		}
 		return vmsToRemove;
 	}
