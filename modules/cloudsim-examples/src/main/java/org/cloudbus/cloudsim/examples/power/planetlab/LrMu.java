@@ -1,6 +1,8 @@
 package org.cloudbus.cloudsim.examples.power.planetlab;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A simulation of a heterogeneous power aware data center that applies the Local Regression (LR) VM
@@ -32,7 +34,7 @@ public class LrMu {
 	public static void main(String[] args) throws IOException {
 		boolean enableOutput = true;
 		boolean outputToFile = false;
-		String inputFolder = LrMu.class.getClassLoader().getResource("workload/planetlab").getPath();
+		String inputFolder = URLDecoder.decode(LrMu.class.getClassLoader().getResource("workload/planetlab").getPath(), StandardCharsets.UTF_8);
 		String outputFolder = "output";
 		String workload = "20110303"; // PlanetLab workload
 		String vmAllocationPolicy = "lr"; // Local Regression (LR) VM allocation policy

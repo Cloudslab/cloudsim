@@ -3,6 +3,8 @@ package org.cloudbus.cloudsim;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UtilizationModelPlanetLabInMemoryTest {
@@ -15,8 +17,8 @@ public class UtilizationModelPlanetLabInMemoryTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		utilizationModel = new UtilizationModelPlanetLabInMemory(getClass().getClassLoader()
-				.getResource(FILE).getPath(), SCHEDULING_INTERVAL);
+		String filePath = Paths.get(getClass().getClassLoader().getResource(FILE).toURI()).toString();
+		utilizationModel = new UtilizationModelPlanetLabInMemory(filePath, SCHEDULING_INTERVAL);
 	}
 
 	@Test
