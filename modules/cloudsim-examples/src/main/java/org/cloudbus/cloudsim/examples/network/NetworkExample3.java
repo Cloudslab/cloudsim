@@ -34,6 +34,8 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A simple example showing how to create
@@ -137,7 +139,7 @@ public class NetworkExample3 {
 
 			//Sixth step: configure network
 			//load the network topology file
-			NetworkTopology.buildNetworkTopology(NetworkExample1.class.getClassLoader().getResource("topology.brite").getPath());
+			NetworkTopology.buildNetworkTopology(URLDecoder.decode(NetworkExample1.class.getClassLoader().getResource("topology.brite").getPath(), StandardCharsets.UTF_8));
 
 			//maps CloudSim entities to BRITE entities
 			//Datacenter0 will correspond to BRITE node 0

@@ -10,6 +10,8 @@ import org.cloudbus.cloudsim.examples.power.Constants;
 import org.cloudbus.cloudsim.examples.power.Helper;
 import org.cloudbus.cloudsim.power.PowerDatacenterNonPowerAware;
 import org.cloudbus.cloudsim.power.PowerHost;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A simulation of a heterogeneous non-power aware data center: all hosts consume maximum power all
@@ -42,8 +44,7 @@ public class NonPowerAware {
 	public static void main(String[] args) throws IOException {
 		String experimentName = "planetlab_npa";
 		String outputFolder = "output";
-		String inputFolder = NonPowerAware.class.getClassLoader().getResource("workload/planetlab/20110303")
-				.getPath();
+		String inputFolder = URLDecoder.decode(URLDecoder.decode(NonPowerAware.class.getClassLoader().getResource("workload/planetlab/20110303").getPath(), StandardCharsets.UTF_8), StandardCharsets.UTF_8);
 
 		Log.setDisabled(!Constants.ENABLE_OUTPUT);
 		Log.println("Starting " + experimentName);

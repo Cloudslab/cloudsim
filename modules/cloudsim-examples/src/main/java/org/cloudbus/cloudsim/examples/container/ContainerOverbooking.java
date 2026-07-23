@@ -2,6 +2,8 @@ package org.cloudbus.cloudsim.examples.container;
 
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This Example is following the format for {@link org.cloudbus.cloudsim.examples.power.planetlab.Dvfs}
@@ -31,7 +33,7 @@ public class ContainerOverbooking {
             /**
              * Getting the path of the planet lab workload that is included in the cloudSim Package
              */
-            String inputFolder = ContainerOverbooking.class.getClassLoader().getResource("workload/planetlab").getPath();
+            String inputFolder = URLDecoder.decode(ContainerOverbooking.class.getClassLoader().getResource("workload/planetlab").getPath(), StandardCharsets.UTF_8);
             /**
              * The output folder for the logs. The log files would be located in this folder.
              */
