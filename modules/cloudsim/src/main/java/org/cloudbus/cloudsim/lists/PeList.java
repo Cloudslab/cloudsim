@@ -54,7 +54,7 @@ public class PeList {
 	 * @pre id >= 0
 	 * @post $none
 	 */
-	public static <T extends Pe> int getMips(List<T> peList, int id) {
+	public static <T extends Pe> double getMips(List<T> peList, int id) {
 		Pe pe = getById(peList, id);
 		if (pe != null) {
 			return pe.getMips();
@@ -70,8 +70,8 @@ public class PeList {
 	 * @pre $none
 	 * @post $none
 	 */
-	public static <T extends Pe> int getTotalMips(List<T> peList) {
-		int totalMips = 0;
+	public static <T extends Pe> double getTotalMips(List<T> peList) {
+		double totalMips = 0;
 		for (Pe pe : peList) {
 			totalMips += pe.getMips();
 		}

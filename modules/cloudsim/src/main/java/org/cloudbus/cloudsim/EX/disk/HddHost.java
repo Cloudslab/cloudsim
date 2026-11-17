@@ -122,7 +122,7 @@ public class HddHost extends Host {
      * 
      * @return the total MIPS.
      */
-    public int getTotalIOMips() {
+    public double getTotalIOMips() {
         return PeList.getTotalMips(getHddList());
     }
 
