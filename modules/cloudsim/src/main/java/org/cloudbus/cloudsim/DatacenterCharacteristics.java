@@ -192,7 +192,7 @@ public class DatacenterCharacteristics {
          * to a datacenter. Even for the {@link HostEntity} it is possible
          * to add Pe's of different capacities through the {@link HostEntity#peList} attribute.
 	 */
-	public int getMipsOfOnePe() {
+	public double getMipsOfOnePe() {
 		if (getHostList().isEmpty()) {
 			return -1;
 		}
@@ -218,7 +218,7 @@ public class DatacenterCharacteristics {
          * 
          * //@TODO The id parameter would be renamed to pmId to be clear.
 	 */
-	public int getMipsOfOnePe(int id, int peId) {
+	public double getMipsOfOnePe(int id, int peId) {
 		if (getHostList().isEmpty()) {
 			return -1;
 		}
@@ -243,8 +243,8 @@ public class DatacenterCharacteristics {
 	 * @pre $none
 	 * @post $result >= 0
 	 */
-	public int getMips() {
-		int mips = 0;
+	public double getMips() {
+		double mips = 0;
                 /*//@TODO It assumes that the heterogeinety of PE's capacity of PMs
                 is dependent of the CPU allocation policy of the Datacenter.
                 However, I don't see any relation between PMs heterogeinety and

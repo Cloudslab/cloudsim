@@ -138,8 +138,8 @@ public class Pe {
      * @pre $none
      * @post $result >= 0
      */
-    public int getMips() {
-        return (int) getPeProvisioner().getMips();
+    public double getMips() {
+        return getPeProvisioner().getMips();
     }
 
     /**
